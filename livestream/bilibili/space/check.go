@@ -24,12 +24,12 @@ func (Space CheckSctruct) Check(limit string) CheckSctruct {
 	)
 	body, curlerr = engine.Curl(urls, nil)
 	if curlerr != nil {
-		log.Error(curlerr, string(body))
-
 		log.Info("Trying use tor")
 		body, curlerr = engine.CoolerCurl(urls)
 		if curlerr != nil {
 			log.Error(curlerr)
+		} else {
+			log.Info("Successfully use tor")
 		}
 	}
 

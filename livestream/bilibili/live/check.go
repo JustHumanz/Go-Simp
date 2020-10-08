@@ -9,11 +9,21 @@ import (
 )
 
 func GetRoomStatus(RoomID int) getInfoByRoom {
-	body, err := engine.Curl("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id="+strconv.Itoa(RoomID), nil)
-	if err != nil {
-		log.Error(err, string(body))
+	var (
+		body    []byte
+		curlerr error
+		tmp     getInfoByRoom
+		url     = "https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=" + strconv.Itoa(RoomID)
+	)
+	body, curlerr = engine.Curl(url, nil)
+	if curlerr != nil {
+		body, curlerr = engine.CoolerCurl(url)
+		if curlerr != nil {
+			log.Error(curlerr)
+		} else {
+			log.Info("Successfully use tor")
+		}
 	}
-	var tmp getInfoByRoom
 	jsonErr := json.Unmarshal(body, &tmp)
 	if jsonErr != nil {
 		log.Fatal(jsonErr)
@@ -33,12 +43,12 @@ func GetRoom2(SpaceID int) RoomID2 {
 	)
 	body, curlerr = engine.Curl(urls, nil)
 	if curlerr != nil {
-		log.Error(curlerr, string(body))
-
 		log.Info("Trying use tor")
 		body, curlerr = engine.CoolerCurl(urls)
 		if curlerr != nil {
 			log.Error(curlerr)
+		} else {
+			log.Info("Successfully use tor")
 		}
 	}
 

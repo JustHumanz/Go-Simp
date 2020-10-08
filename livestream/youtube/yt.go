@@ -53,12 +53,11 @@ func GetWaiting(VideoID string) string {
 	)
 	bit, curlerr = engine.Curl(urls, nil)
 	if curlerr != nil {
-		log.Error(curlerr, string(bit))
-
-		log.Info("Trying use tor")
 		bit, curlerr = engine.CoolerCurl(urls)
 		if curlerr != nil {
 			log.Error(curlerr)
+		} else {
+			log.Info("Successfully use tor")
 		}
 	}
 	reg, err := regexp.Compile("[^a-zA-Z0-9]+")
@@ -84,17 +83,35 @@ func CheckPrivate() {
 
 	Check := func(Youtube database.YtDbData, wg *sync.WaitGroup) {
 		defer wg.Done()
-		_, err := engine.Curl("https://i3.ytimg.com/vi/"+Youtube.VideoID+"/hqdefault.jpg", nil)
-		if err != nil {
-			log.WithFields(log.Fields{
-				"VideoID": Youtube.VideoID,
-			}).Warn("Private Video")
-			Youtube.UpdateYt("private")
-		} else if err == nil && Youtube.Status == "private" {
-			log.WithFields(log.Fields{
-				"VideoID": Youtube.VideoID,
-			}).Warn("From Private Video to past")
-			Youtube.UpdateYt("past")
+		var (
+			tor bool
+			err error
+			url = "https://i3.ytimg.com/vi/" + Youtube.VideoID + "/hqdefault.jpg"
+		)
+		for {
+			if tor {
+				_, err = engine.CoolerCurl(url)
+			} else {
+				_, err = engine.Curl(url, nil)
+			}
+			if err != nil && strings.HasPrefix(err.Error(), "404") {
+				log.WithFields(log.Fields{
+					"VideoID": Youtube.VideoID,
+				}).Info("Private Video")
+				Youtube.UpdateYt("private")
+				break
+			} else if err == nil && Youtube.Status == "private" {
+				log.WithFields(log.Fields{
+					"VideoID": Youtube.VideoID,
+				}).Info("From Private Video to past")
+				Youtube.UpdateYt("past")
+				break
+			} else {
+				log.Error(err.Error())
+				log.Info("Trying use tor")
+				tor = true
+				continue
+			}
 		}
 	}
 

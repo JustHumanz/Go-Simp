@@ -116,8 +116,8 @@ func Curl(url string, addheader []string) ([]byte, error) {
 			"Status": res.StatusCode,
 			"Reason": res.Status,
 			"URL":    url,
-		}).Warn("Status code not daijobu")
-		return []byte{}, errors.New("Curl Error")
+		}).Error("Status code not daijobu")
+		return []byte{}, errors.New(res.Status)
 	}
 
 	defer res.Body.Close()
@@ -131,7 +131,7 @@ func Curl(url string, addheader []string) ([]byte, error) {
 	return body, nil
 }
 
-//make a cooler http request *with tor*
+//make a cooler http request *with multitor*
 func CoolerCurl(urls string) ([]byte, error) {
 	var counter int
 	for {

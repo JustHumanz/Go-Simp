@@ -49,12 +49,13 @@ func CheckNew() {
 					)
 					body, err := engine.Curl(urls, nil)
 					if err != nil {
-						log.Error(err, string(body))
 						log.Info("Trying use tor")
 
 						body, errcurl = engine.CoolerCurl(urls)
 						if errcurl != nil {
 							log.Error(errcurl)
+						} else {
+							log.Info("Successfully use tor")
 						}
 					}
 					var (
