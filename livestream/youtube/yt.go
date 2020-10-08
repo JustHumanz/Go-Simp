@@ -28,6 +28,7 @@ func Start(Bot *discordgo.Session) {
 	yttoken = config.YtToken[0]
 	log.Info("Youtube module ready")
 	//CheckSchedule()
+	CheckPrivate()
 }
 
 func CheckSchedule() {
@@ -94,6 +95,7 @@ func CheckPrivate() {
 			} else {
 				_, err = engine.Curl(url, nil)
 			}
+
 			if err != nil && strings.HasPrefix(err.Error(), "404") {
 				log.WithFields(log.Fields{
 					"VideoID": Youtube.VideoID,
@@ -106,11 +108,16 @@ func CheckPrivate() {
 				}).Info("From Private Video to past")
 				Youtube.UpdateYt("past")
 				break
-			} else {
-				log.Error(err.Error())
+			} else if err != nil {
+				log.Error(err)
 				log.Info("Trying use tor")
 				tor = true
 				continue
+			} else {
+				log.WithFields(log.Fields{
+					"VideoID": Youtube.VideoID,
+				}).Info("Video was daijobu")
+				break
 			}
 		}
 	}
