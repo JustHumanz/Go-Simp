@@ -1,0 +1,31 @@
+{
+  "name": "rest-api",
+  "version": "1.0.0",
+  "description": "VTBot Rest-API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JustHumanz/Go-simp.git"
+  },
+  "keywords": [
+    "VTuber",
+    "Bot",
+    "Discord",
+    "Discordgo"
+  ],
+  "author": "JustHumanz",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/JustHumanz/Go-simp/issues"
+  },
+  "homepage": "https://github.com/JustHumanz/Go-simp#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "knex": "^0.21.5",
+    "mysql": "^2.18.1"
+  }
+}
