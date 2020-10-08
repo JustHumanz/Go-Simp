@@ -55,13 +55,19 @@ func (Data Member) BliBiliFace() string {
 		return ""
 	} else {
 		var (
-			Info Avatar
+			Info    Avatar
+			body    []byte
+			errcurl error
+			url     = "https://api.bilibili.com/x/space/acc/info?mid=" + strconv.Itoa(Data.BiliBiliID)
 		)
-		body, err := engine.Curl("https://api.bilibili.com/x/space/acc/info?mid="+strconv.Itoa(Data.BiliBiliID), nil)
-		if err != nil {
-			log.Error(err, string(body))
+		body, errcurl = engine.Curl(url, nil)
+		if errcurl != nil {
+			body, errcurl = engine.CoolerCurl(url)
+			if errcurl != nil {
+				log.Error(errcurl)
+			}
 		}
-		err = json.Unmarshal(body, &Info)
+		err := json.Unmarshal(body, &Info)
 		if err != nil {
 			log.Error(err)
 			return ""
