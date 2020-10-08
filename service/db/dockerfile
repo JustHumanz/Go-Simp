@@ -1,7 +1,6 @@
 FROM golang:alpine
 
-RUN apk update && apk add mysql-client git bash tor
-RUN go get -t github.com/n0madic/twitter-scraper
+RUN apk update && apk add mysql-client git bash
 RUN go get -u github.com/JustHumanz/Go-simp
 
 RUN mkdir /apps/

@@ -1,6 +1,6 @@
 # Vtuber DiscordBot
 
-![alt text](https://raw.githubusercontent.com/JustHumanz/Vtube_bot/master/Img/go-simp.png "Go-Simp")  
+![alt text](https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/go-simp.png "Go-Simp")  
 ##### [Original Source](https://twitter.com/any_star_/status/1288184424320790528)
 ![Inline docs](https://badgen.net/badge/Code%20style/Toxic-Asean/blue?icon=github) ![Inline docs](https://badgen.net/badge/Code%20quality/Better%20than%20yandere%20dev%20code/green?icon=github)
 ----
