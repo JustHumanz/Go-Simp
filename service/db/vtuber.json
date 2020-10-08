@@ -1,0 +1,958 @@
+{
+    "Vtuber":{
+        "Independen":{
+            "Members":[
+                {
+                    "Name":"Nana",
+                    "EN_Name":"Kagura Nana",
+                    "JP_Name":"かぐらなな",
+                    "Hashtag": {
+                        "Twitter": "#かぐらーと",
+                        "BiliBili": "神楽七奈"
+                    },
+                    "Yt_ID": [
+                         "UCbfv8uuUXt3RSJGEwxny5Rw"
+                    ],
+                    "BiliBili_ID": 386900246,
+                    "BiliRoom_ID": 21304638,
+                    "Twitter_Username": "nana_kaguraaa",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Ui-mama",
+                    "EN_Name":"Shigure Ui",
+                    "JP_Name":"しぐれうい",
+                    "Hashtag": {
+                        "Twitter": "#ういしぐれぇ",
+                        "BiliBili": "时雨羽衣"
+                    },
+                    "Yt_ID": [
+                         "UCt30jJgChL8qeT9VPadidSw"
+                    ],
+                    "BiliBili_ID": 2601367,
+                    "BiliRoom_ID": 9389401,
+                    "Twitter_Username": "ui_shig",
+                    "Region":"JP"
+                },{
+                    "Name":"Kotone",
+                    "EN_Name":"Tenjin Kotone",
+                    "JP_Name":"天神子兎音",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": [
+                         "UCAr7rLi_Wn09G-XfTA07d4g"
+                    ],
+                    "BiliBili_ID": 360221708,
+                    "BiliRoom_ID": 13744134,
+                    "Twitter_Username": "kotonegami",
+                    "Region":"JP"
+                },{
+                    "Name":"Evelyn",
+                    "EN_Name":"Evelyn",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#PienEpelPaint",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": [
+                         "UCMxxFFeuhFQ30quuePTym0A"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "EvelynVtuber",
+                    "Region":"ID"
+                }
+            ]
+        },
+        "Group":[
+        {
+            "GroupName": "Hanayori",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Vtube_bot/master/Img/hana.png",
+            "Members" : [
+                {
+                    "Name":"Kanochi",
+                    "EN_Name":"Kano",
+                    "JP_Name":"鹿乃",
+                    "Hashtag": {
+                        "Twitter": "#鹿乃art",
+                        "BiliBili": "鹿乃"
+                    },
+                    "Yt_ID": [
+                         "UCfuz6xYbYFGsWWBi3SpJI1w"
+                    ],
+                    "BiliBili_ID": 316381099,
+                    "BiliRoom_ID": 15152878,
+                    "Twitter_Username": "kano_hanayori",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Parerun",
+                    "EN_Name":"Hanamaru Hareru",
+                    "JP_Name":"花丸はれる",
+                    "Hashtag": {
+                        "Twitter": "#はなまるお絵かき",
+                        "BiliBili": "花丸晴琉"
+                    },
+                    "Yt_ID":[
+                        "UCyIcOCH-VWaRKH9IkR8hz7Q"
+                    ],
+                    "BiliBili_ID": 441381282,
+                    "BiliRoom_ID": 21547895,
+                    "Twitter_Username": "hanamaruhareru",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Kohi",
+                    "EN_Name":"Kohigashi Hitona",
+                    "JP_Name":"小東ひとな",
+                    "Hashtag": {
+                        "Twitter": "#ひとなーと",
+                        "BiliBili": "小东人鱼"
+                    },
+                    "Yt_ID":[
+                        "UCV2m2UifDGr3ebjSnDv5rUA"
+                    ],
+                    "BiliBili_ID": 441382432,
+                    "BiliRoom_ID": 21547904,
+                    "Twitter_Username": "kohigashihitona",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Nononon",
+                    "EN_Name":"Nonomiya Nonono",
+                    "JP_Name":"野々宮ののの",
+                    "Hashtag": {
+                        "Twitter": "#ののののえ",
+                        "BiliBili": "野野宫ののの"
+                    },
+                    "Yt_ID":[
+                        "UCiexEBp7-D46FXUtQ-BpgWg"
+                    ],
+                    "BiliBili_ID": 441403698,
+                    "BiliRoom_ID": 21671418,
+                    "Twitter_Username": "nonomiyanonono",
+                    "Region":"JP"
+                }
+            ]
+        },
+        {
+            "GroupName": "Hololive",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Vtube_bot/master/Img/holo.png",
+            "Members" : [
+                {
+                    "Name":"Risu",
+                    "EN_Name":"Ayunda Risu",
+                    "JP_Name":"アユンダ・リス",
+                    "Hashtag": {
+                        "Twitter": "#GambaRisu",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCOyYb1c43VlX9rc_lT6NKQw"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "ayunda_risu",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Moona",
+                    "EN_Name":"Moona Hoshinova",
+                    "JP_Name":"ムーナ・ホシノヴァ",
+                    "Hashtag": {
+                        "Twitter": "#HoshinovArt",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCP0BspO_AMEe3aQqqpo89Dg"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "moonahoshinova",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Lofi",
+                    "EN_Name":"Airani Iofifteen",
+                    "JP_Name":"アイラニ・イオフィフティーン",
+                    "Hashtag": {
+                        "Twitter": "#ioarts",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCAoy6rzhSf4ydcYjJw3WoVg"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "airaniiofifteen",
+                    "Region":"ID"
+                },
+        
+                {
+                    "Name":"FBK",
+                    "EN_Name":"Shirakami Fubuki",
+                    "JP_Name":"白上フブキ",
+                    "Hashtag": {
+                        "Twitter": "#絵フブキ",
+                        "BiliBili": "白上フブキ"
+                    },
+                    "Yt_ID":[
+                        "UCdn5BQ06XqgXoAxIhbqw5Rg"
+                    ],
+                    "BiliBili_ID": 332704117,
+                    "BiliRoom_ID": 11588230,
+                    "Twitter_Username": "shirakamifubuki",
+                    "Region":"JP"
+                },
+        
+                {
+                    "Name":"Koronen",
+                    "EN_Name":"Inugami Korone",
+                    "JP_Name":"戌神ころね",
+                    "Hashtag": {
+                        "Twitter": "#できたてころね",
+                        "BiliBili": "戌神沁音" 
+                    },
+                    "Yt_ID":[
+                        "UChAnqc_AY5_I3Px5dig3X1Q"  
+                    ],
+                    "BiliBili_ID": 412135619,
+                    "BiliRoom_ID": 21421141,
+                    "Twitter_Username": "inugamikorone",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Matsuri",
+                    "EN_Name":"Natsuiro Matsuri",
+                    "JP_Name":"夏色まつり",
+                    "Hashtag": {
+                        "Twitter": "#祭絵",
+                        "BiliBili": "夏色祭"
+                    },
+                    "Yt_ID":[
+                        "UCQ0UDLQCjY0rmuxCDE38FGg"
+                    ],
+                    "BiliBili_ID": 336731767,
+                    "BiliRoom_ID": 13946381,
+                    "Twitter_Username": "natsuiromatsuri",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Aqua",
+                    "EN_Name":"Minato Aqua",
+                    "JP_Name":"湊あくあ",
+                    "Hashtag": {
+                        "Twitter": "#あくあーと",
+                        "BiliBili": "aquart"
+                    },
+                    "Yt_ID":[
+                        "UC1opHUrw8rvnsadT-iGp7Cg"
+                    ],
+                    "BiliBili_ID": 375504219,
+                    "BiliRoom_ID": 14917277,
+                    "Twitter_Username": "minatoaqua",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Pekora",
+                    "EN_Name":"Usada Pekora",
+                    "JP_Name":"兎田ぺこら",
+                    "Hashtag": {
+                        "Twitter": "#ぺこらーと",
+                        "BiliBili": "兔田佩克拉"
+                    },
+                    "Yt_ID":[
+                        "UC1DCedRgGHBdm81E1llLhOQ"
+                    ],
+                    "BiliBili_ID": 443305053,
+                    "BiliRoom_ID": 21560356,
+                    "Twitter_Username": "usadapekora",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Senchou",
+                    "EN_Name":"Houshou Marine",
+                    "JP_Name":"宝鐘マリン",
+                    "Hashtag": {
+                        "Twitter": "#マリンのお宝",
+                        "BiliBili": "宝钟玛琳"
+                    },
+                    "Yt_ID":[
+                        "UCCzUftO8KOVkV4wQG1vkUvg"
+                    ],
+                    "BiliBili_ID": 454955503,
+                    "BiliRoom_ID": 21584153,
+                    "Twitter_Username": "houshoumarine",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Haato",
+                    "EN_Name":"Akai Haato",
+                    "JP_Name":"赤井はあと",
+                    "Hashtag": {
+                        "Twitter": "#はあとart",
+                        "BiliBili": "赤井心"
+                    },
+                    "Yt_ID":[
+                        "UC1CfXB_kRs3C-zaeTG3oGyg"
+                    ],
+                    "BiliBili_ID": 339567211,
+                    "BiliRoom_ID": 14275133,
+                    "Twitter_Username": "akaihaato",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Sheep",
+                    "EN_Name":"Tsunomaki Watame",
+                    "JP_Name":"角巻わため",
+                    "Hashtag": {
+                        "Twitter": "#つのまきあーと",
+                        "BiliBili": "角卷绵芽"
+                    },
+                    "Yt_ID":[
+                        "UCqm3BQLlJfvkTsX_hvm0UmA"
+                    ],
+                    "BiliBili_ID": 491474050,
+                    "BiliRoom_ID": 21752694,
+                    "Twitter_Username": "tsunomakiwatame",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Kaichou",
+                    "EN_Name":"Kiryu Coco",
+                    "JP_Name":"桐生ココ",
+                    "Hashtag": {
+                        "Twitter": "#みかじ絵",
+                        "BiliBili": "桐生ココ"
+                    },
+                    "Yt_ID":[
+                        "UCS9uQI-jC3DE0L4IpXyvr6w"
+                    ],
+                    "BiliBili_ID": 491474049,
+                    "BiliRoom_ID": 21752686,
+                    "Twitter_Username": "kiryucoco",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Choco-sensei",
+                    "EN_Name":"Yuzuki Choco",
+                    "JP_Name":"癒月ちょこ",
+                    "Hashtag": {
+                        "Twitter": "#しょこらーと",
+                        "BiliBili": "癒月巧可"
+                    },
+                    "Yt_ID":[
+                        "UC1suqwovbL1kzsoaZgFZLKg"
+                    ],
+                    "BiliBili_ID": 389858754,
+                    "BiliRoom_ID": 21107534,
+                    "Twitter_Username": "yuzukichococh",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Okayun",
+                    "EN_Name":"Nekomata Okayu",
+                    "JP_Name":"猫又おかゆ",
+                    "Hashtag": {
+                        "Twitter": "#絵かゆ",
+                        "BiliBili": "猫又小粥"
+                    },
+                    "Yt_ID":[
+                        "UCvaTdHTWBGv3MKj3KVqJVCw"
+                    ],
+                    "BiliBili_ID": 412135222,
+                    "BiliRoom_ID": 21420932,
+                    "Twitter_Username": "nekomataokayu",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Subaru",
+                    "EN_Name":"Oozora Subaru",
+                    "JP_Name":"大空スバル",
+                    "Hashtag": {
+                        "Twitter": "#プロテインザスバル",
+                        "BiliBili": "大空昴"
+                    },
+                    "Yt_ID":[
+                        "UCvzGlP9oQwU--Y0r9id_jnA"
+                    ],
+                    "BiliBili_ID": 389859190,
+                    "BiliRoom_ID": 21129632,
+                    "Twitter_Username": "oozorasubaru",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Sora",
+                    "EN_Name":"Tokino Sora",
+                    "JP_Name":"ときのそら",
+                    "Hashtag": {
+                        "Twitter": "#soraArt",
+                        "BiliBili": "时乃空"
+                    },
+                    "Yt_ID":[
+                        "UCp6993wxpyDPHUpavwDFqgg"
+                    ],
+                    "BiliBili_ID": 286179206,
+                    "BiliRoom_ID": 8899503,
+                    "Twitter_Username": "tokino_sora",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Miko-chi",
+                    "EN_Name":"Sakura Miko",
+                    "JP_Name":"さくらみこ",
+                    "Hashtag": {
+                        "Twitter": "#miko_Art",
+                        "BiliBili": "樱巫女"
+                    },
+                    "Yt_ID":[
+                        "UC-hM6YJuNYVAmUWxeIr9FeA"
+                    ],
+                    "BiliBili_ID": 366690056,
+                    "BiliRoom_ID": 21144047,
+                    "Twitter_Username": "sakuramiko35",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Mio",
+                    "EN_Name":"Ookami Mio",
+                    "JP_Name":"大神ミオ",
+                    "Hashtag": {
+                        "Twitter": "#みおーん絵",
+                        "BiliBili": "大神澪"
+                    },
+                    "Yt_ID":[
+                        "UCp-5t9SrOQwXMU7iIjQfARg"
+                    ],
+                    "BiliBili_ID": 389862071,
+                    "BiliRoom_ID": 21133979,
+                    "Twitter_Username": "ookamimio",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Shishiron",
+                    "EN_Name":"Shishiro Botan",
+                    "JP_Name":"獅白ぼたん",
+                    "Hashtag": {
+                        "Twitter": "#ししらーと",
+                        "BiliBili": "狮白牡丹"
+                    },
+                    "Yt_ID":[
+                        "UCUKD-uaobj9jiqB-VXt71mA"
+                    ],
+                    "BiliBili_ID": 624252710,
+                    "BiliRoom_ID": 22349494,
+                    "Twitter_Username": "shishirobotan",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Polka",
+                    "EN_Name":"Omaru Polka",
+                    "JP_Name":"尾丸ポルカ",
+                    "Hashtag": {
+                        "Twitter": "#絵まる",
+                        "BiliBili": "尾丸波尔卡"
+                    },
+                    "Yt_ID":[
+                        "UCK9V2B22uJYu3N7eR_BT9QA"
+                    ],
+                    "BiliBili_ID": 624252712,
+                    "BiliRoom_ID": 22349506,
+                    "Twitter_Username": "omarupolka",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Lamy",
+                    "EN_Name":"Yukihana Lamy",
+                    "JP_Name":"雪花ラミィ",
+                    "Hashtag": {
+                        "Twitter": "#らみあ〜と",
+                        "BiliBili": "雪花菈米"
+                    },
+                    "Yt_ID":[
+                        "UCFKOVgVbGmX65RxO3EtH3iw"
+                    ],
+                    "BiliBili_ID": 624252706,
+                    "BiliRoom_ID": 22349508,
+                    "Twitter_Username": "yukihanalamy",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Taoling",
+                    "EN_Name":"Momosuzu Nene",
+                    "JP_Name":"桃鈴ねね",
+                    "Hashtag": {
+                        "Twitter": "#ねねアルバム",
+                        "BiliBili": "桃铃音音"
+                    },
+                    "Yt_ID":[
+                        "UCAWSyEs_Io8MtpY3m-zqILA"
+                    ],
+                    "BiliBili_ID": 624252709,
+                    "BiliRoom_ID": 22349492,
+                    "Twitter_Username": "momosuzunene",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Gura",
+                    "EN_Name":"Gawr Gura",
+                    "JP_Name":"がうる・ぐら",
+                    "Hashtag": {
+                        "Twitter": "#gawrt",
+                        "BiliBili": "噶呜古拉"
+                    },
+                    "Yt_ID":[
+                        "UCoSrY_IQQVpmIRZ9Xf-y93g"
+                    ],
+                    "BiliBili_ID": 674600648,
+                    "BiliRoom_ID": 22503372,
+                    "Twitter_Username": "gawrgura",
+                    "Region":"US"
+                },
+                {
+                    "Name":"Ame",
+                    "EN_Name":"Watson Amelia",
+                    "JP_Name":"ワトソン・アメリア",
+                    "Hashtag": {
+                        "Twitter": "#ameliaRT",
+                        "BiliBili": "华生・阿米莉亚"
+                    },
+                    "Yt_ID":[
+                        "UCyl1z3jo3XHR1riLFKG5UAg"
+                    ],
+                    "BiliBili_ID": 674600649,
+                    "BiliRoom_ID": 22503378,
+                    "Twitter_Username": "watsonameliaEN",
+                    "Region":"US"
+                }
+                
+            ]
+            
+        },{
+            "GroupName": "Nijisanji",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Vtube_bot/master/Img/niji.png",
+            "Members" :[
+                {
+                    "Name":"Konlulu",
+                    "EN_Name":"Suzuhara Lulu",
+                    "JP_Name":"鈴原るる",
+                    "Hashtag": {
+                        "Twitter": "#るるのアトリエ",
+                        "BiliBili": "铃原露露"
+                    },
+                    "Yt_ID":[
+                        "UC_a1ZYZ8ZTXpjg9xUY9sj8w"
+                    ],
+                    "BiliBili_ID": 666726794,
+                    "BiliRoom_ID": 22470215,
+                    "Twitter_Username": "lulu_suzuhara",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Debiru",
+                    "EN_Name":"Debidebi Debiru",
+                    "JP_Name":"でびでび・でびる",
+                    "Hashtag": {
+                        "Twitter": "#でびるさまにささげるえ",
+                        "BiliBili": "德比德比・德比鲁"
+                    },
+                    "Yt_ID":[
+                        "UCjlmCrq4TP1I4xguOtJ-31w"
+                    ],
+                    "BiliBili_ID": 441666968,
+                    "BiliRoom_ID": 21501731,
+                    "Twitter_Username": "debidebiru_sama",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Alice",
+                    "EN_Name":"Mononobe Alice",
+                    "JP_Name":"物述有栖",
+                    "Hashtag": {
+                        "Twitter": "#有栖の絵本",
+                        "BiliBili": "物述有栖"
+                    },
+                    "Yt_ID":[
+                        "UCt0clH12Xk1-Ej5PXKGfdPA"
+                    ],
+                    "BiliBili_ID": 434565011,
+                    "BiliRoom_ID": 21449083,
+                    "Twitter_Username": "AliceMononobe",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Noraneko",
+                    "EN_Name":"Fumino Tamaki",
+                    "JP_Name":"文野環",
+                    "Hashtag": {
+                        "Twitter": "#のらねっこあら",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCBiqkFJljoxAj10SoP2w2Cg"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "nekokan_chu",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Hanamaki",
+                    "EN_Name":"Hana Macchia",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#hanamaki_art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCpJtk0myFr5WnyfsmnInP-w"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Hana_Macchia",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Miyu",
+                    "EN_Name":"Miyu Ottavia",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#miyu_ottaviart",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCOmjciHZ8Au3iKMElKXCF_g"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "MiyuOttavia",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Zea",
+                    "EN_Name":"Zea Cornelia",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#ZEA_art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCA3WE2WRSpoIvtnoVGq4VAw"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "ZEA_Cornelia",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Takamama",
+                    "EN_Name":"Taka Radjiman",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#Taka_Radjimart",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCZ5dNZsqBjBzbBl0l_IdmXg"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Taka_Radjiman",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Jukut",
+                    "EN_Name":"Riksa Dhirendra",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#riks_art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCkL9OLKjIQbKk2CztbpOCFg"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "RiksaDhirendra",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Cia",
+                    "EN_Name":"Amicia Michella",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#Amicia_MichellArt",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCrR7JxkbeLY82e8gsj_I0pQ"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "AmiciaMichella",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Rai",
+                    "EN_Name":"Rai Galilei",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#Rai_Art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UC8Snw5i4eOJXEQqURAK17hQ"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Rai_Galilei",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Zura",
+                    "EN_Name":"Azura Cecillia",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#Azura_Art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCk5r533QVMgJUdWwqegH2TA"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Azura_Cecillia",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Layla",
+                    "EN_Name":"Layla Alstroemeria",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#Layl_art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCyRkQSuhJILuGOuXk10voPg"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "LaylaAlstro2434",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Nara",
+                    "EN_Name":"Nara Haramaung",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#Maunggambart",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCoWH3sDpeXG1aXmOxveX4KA"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Nara_Haramaung",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Bobon",
+                    "EN_Name":"Bonnivier Pranaja",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#bonnivierart",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCHjeZylSgXDSnor8wUnwU_g"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "bobon_pranaja",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Etna",
+                    "EN_Name":"Etna Crimson",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#Etna_Art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCjFu-9GHnabzSFRAYm1B9Dw"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Etna_Crimson",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Siska",
+                    "EN_Name":"Siska Leontyne",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#Siska_art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UC5qSx7KzdRwbsO1QmJc4d-w"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "SiskaLeontyne",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Yuya",
+                    "EN_Name":"Shin Yuya",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#yuyamuyart",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCjGE11ZnF0JSR8egVAwh-3A"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "YuyaShin2434",
+                    "Region":"ID"
+                }
+                
+            ]
+        },{
+            "GroupName": "Kizuna_AI",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Vtube_bot/master/Img/kizuna.png",
+            "Members" :[
+                {
+                    "Name":"Ai-chan",
+                    "EN_Name":"Kizuna AI",
+                    "JP_Name":"キズナアイ",
+                    "Hashtag": {
+                        "Twitter": "#きずなーぽすと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": [
+                         "UC4YaOt1yT-ZeyB0OmxHgolA",
+                         "UCbFwe3COkDrbNsbMyGNCsDg"
+                    ],
+                    "BiliBili_ID": 1473830,
+                    "BiliRoom_ID": 1485080,
+                    "Twitter_Username": "aichan_nel",
+                    "Region":"JP"
+                }
+            ]
+        },{
+            "GroupName": "ENTUM",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Vtube_bot/master/Img/entum.png",
+            "Members" :[
+                {
+                    "Name":"hina-chan",
+                    "EN_Name":"Nekomiya Hinata",
+                    "JP_Name":"猫宮ひなた",
+                    "Hashtag": {
+                        "Twitter": "#ルーブルひなた",
+                        "BiliBili": "猫宫日向"
+                    },
+                    "Yt_ID": [
+                         "UCevD0wKzJFpfIkvHOiQsfLQ"
+                    ],
+                    "BiliBili_ID": 291296062,
+                    "BiliRoom_ID": 9286381,
+                    "Twitter_Username": "nekomiya_hinata",
+                    "Region":"JP"
+                }
+            ]
+        },{
+            "GroupName": "MAHA5",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Vtube_bot/master/Img/MAHA5.png",
+            "Members" :[
+                {
+                    "Name":"Alia Adelia",
+                    "EN_Name":"Adelia",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#aliaadelia_art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": [
+                         "UCzc8GwjUvecxpjhGtuewYOQ"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "aliaadelia_v",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Andi Adinata",
+                    "EN_Name":"Andi",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#andiadinata_art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": [
+                         "UC9QnAjC7mT4ggHuedr1_kqQ"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "andiadinata_id",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Lumi Celestia",
+                    "EN_Name":"Lumi",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#Lumicelestia_art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": [
+                         "UCge_6FJHyeOCxRtWCmaVTAQ"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "LumiCelestia",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Zen Gunawan",
+                    "EN_Name":"Zen",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#zeni_rupa",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": [
+                         "UCUummegUoc-w7EDdk8Ps7BQ"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "ZenGunawan",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Nia Redalion",
+                    "EN_Name":"Nia",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#Niaredalion_Art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": [
+                         "UCD2W-dcuukl4oChTKATdSiw"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "NiaRedalion",
+                    "Region":"ID"
+                }
+            ]
+        }
+    ]
+    }
+}

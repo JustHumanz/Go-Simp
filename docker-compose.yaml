@@ -1,0 +1,61 @@
+version: "3.7"
+
+services:
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: 1sampai8
+      MYSQL_DATABASE: Vtuber
+      MYSQL_USER: vtuber
+      MYSQL_PASSWORD: kano2525
+    volumes:
+      - ./service/db/Vtuber.sql:/docker-entrypoint-initdb.d/Vtuber.sql
+    command: --sql_mode="ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO"
+    restart: on-failure
+
+  multi_tor:
+    image: evait/multitor
+    environment: 
+    - TOR_INSTANCES=20
+
+  db_migrate:
+    build: service/db/
+    image: db_migrate
+    depends_on:
+      - mysql
+    env_file:
+      - ./.env
+    restart: on-failure
+
+  mainbot:
+    build: .
+    image: mainbot
+    volumes:
+      - ./config/config.json:/apps/config/config.json
+    depends_on:
+      - mysql
+      - db_migrate
+      - multi_tor
+    env_file:
+      - ./.env
+    restart: on-failure
+
+  yotube-scrap:
+    build: service/yt-scrap
+    image: yt-scrap
+
+    env_file:
+      - ./.env
+
+  rest_api:
+    build: service/rest-api
+    image: rest-api
+
+    depends_on:
+      - mysql
+      - db_migrate
+    env_file:
+      - ./.env
+    ports:
+      - "1107:2525"
+    restart: on-failure

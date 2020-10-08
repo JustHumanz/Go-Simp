@@ -1,0 +1,25 @@
+{
+    "Token": "#Discord bot token#",
+    "BotPrefix": {
+        "Fanart": "art!>",
+        "Youtube": "yt!>",
+        "Bilibili": "bil!>",
+        "General": "vtub!>"
+    },
+    "Emoji": {
+        "Fanart": [
+            "❤️", 
+            "😍", 
+            "👌", 
+            "👍", 
+            "🤔", 
+            "🥴"
+        ],
+        "Livestream":[
+            "❤️"
+        ]
+    },
+    "YtToken": "#Token#",
+    "YtToken2": "#Token#"
+
+}

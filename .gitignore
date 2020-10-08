@@ -1,0 +1,11 @@
+testing/
+*.log
+config.json
+token.json
+index.html
+endpoint
+__pycache__
+*.env
+Vtuber-prod.sql
+service/rest-api/node_modules
+docker-compose-prod.yaml

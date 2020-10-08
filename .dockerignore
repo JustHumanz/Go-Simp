@@ -1,0 +1,4 @@
+service/*
+config.json
+*.env
+Vtuber-prod.sql
