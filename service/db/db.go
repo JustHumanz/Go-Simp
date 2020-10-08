@@ -61,11 +61,17 @@ func (Data Member) BliBiliFace() string {
 			url     = "https://api.bilibili.com/x/space/acc/info?mid=" + strconv.Itoa(Data.BiliBiliID)
 		)
 		body, errcurl = engine.Curl(url, nil)
-		if errcurl != nil {
+		if body == nil {
+			log.Info("Not daijobu,trying use multitor")
 			body, errcurl = engine.CoolerCurl(url)
+
 			if errcurl != nil {
 				log.Error(errcurl)
+				return ""
 			}
+		} else if errcurl != nil {
+			log.Error(errcurl)
+			return ""
 		}
 		err := json.Unmarshal(body, &Info)
 		if err != nil {

@@ -98,7 +98,7 @@ func Curl(url string, addheader []string) ([]byte, error) {
 	}
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		return []byte(err.Error()), err
+		return nil, err
 	}
 	req.Header.Set("cache-control", "no-cache")
 	req.Header.Set("User-Agent", RandomAgent())
@@ -108,7 +108,7 @@ func Curl(url string, addheader []string) ([]byte, error) {
 
 	res, err := spaceClient.Do(req)
 	if err != nil {
-		return []byte{}, err
+		return nil, err
 	}
 
 	if res.StatusCode != http.StatusOK {
@@ -117,7 +117,7 @@ func Curl(url string, addheader []string) ([]byte, error) {
 			"Reason": res.Status,
 			"URL":    url,
 		}).Error("Status code not daijobu")
-		return []byte{}, errors.New(res.Status)
+		return nil, errors.New(res.Status)
 	}
 
 	defer res.Body.Close()
