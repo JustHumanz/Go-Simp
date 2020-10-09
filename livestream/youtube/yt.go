@@ -60,7 +60,7 @@ func GetWaiting(VideoID string) (string, error) {
 			log.WithFields(log.Fields{
 				"Request": VideoID,
 				"Func":    "YtGetWaiting",
-			}).Info("Successfully use multi")
+			}).Info("Successfully use multi tor")
 		}
 	}
 	reg, err := regexp.Compile("[^a-zA-Z0-9]+")
