@@ -28,6 +28,7 @@ RUN pip3 install selenium
 RUN pip3 install pyvirtualdisplay
 RUN pip3 install Selenium-Screenshot
 RUN pip3 install mysql-connector-python
+RUN pip3 install isodate
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8

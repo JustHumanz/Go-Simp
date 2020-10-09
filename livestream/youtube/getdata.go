@@ -51,13 +51,6 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 		Data, err := YtAPI(VideoID)
 		if err != nil {
 			log.Error(err)
-			oldtoken := yttoken
-			ChangeToken()
-			log.WithFields(log.Fields{
-				"Old Token": oldtoken,
-				"New Token": yttoken,
-			}).Warn("Token out of limit,try to change")
-			return
 		}
 		MemberFixName := engine.FixName(Name.EnName, Name.JpName)
 		for i := 0; i < len(Data.Items); i++ {
@@ -267,12 +260,12 @@ func YtAPI(VideoID []string) (YtData, error) {
 	body, curlerr = engine.Curl(urls, nil)
 	if curlerr != nil {
 		log.Error(curlerr, string(body))
-
-		log.Info("Trying use tor")
-		body, curlerr = engine.CoolerCurl(urls)
-		if curlerr != nil {
-			log.Error(curlerr)
-		}
+		oldtoken := yttoken
+		ChangeToken()
+		log.WithFields(log.Fields{
+			"Old Token": oldtoken,
+			"New Token": yttoken,
+		}).Warn("Token out of limit,try to change")
 	}
 
 	err := json.Unmarshal(body, &Data)
