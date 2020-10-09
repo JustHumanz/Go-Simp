@@ -122,7 +122,6 @@ const GetTwitter = async (Name, Limit,result) => {
   }).orWhereIn('VtuberGroup.VtuberGroupName',Name)
   .orderBy("Twitter.id",'desc')
   .limit(Limit)
-
     if (data != null){
       data.forEach(i => {
         delete i.id

@@ -95,7 +95,7 @@ def changedatetime(date):
 
 def main():
     print("Get VtuberName_EN,Youtube_ID,id")
-    dbconn.execute("SELECT VtuberName_EN,Youtube_ID,id FROM Vtuber.VtuberMember")
+    dbconn.execute("SELECT VtuberName_EN,Youtube_ID,id FROM Vtuber.VtuberMember order by id DESC")
     res = dbconn.fetchall()
     for i in res:
         VideoIdList = scrapper(i[1])

@@ -88,7 +88,7 @@ exports.twitterd = (req, res) => {
         });
         return
     }
-    model.GetTwitter(req.params.nog, Limit,(err, data) => {
+    model.GetTwitter(req.params.nog.split(","), Limit,(err, data) => {
         if (err) {
         if (err.kind === "not_found") {
             res.status(404).send({
@@ -111,7 +111,7 @@ exports.tBilibili = (req, res) => {
         });
         return
     }
-    model.GetTBilibili(req.params.nog, Limit,(err, data) => {
+    model.GetTBilibili(req.params.nog.split(","), Limit,(err, data) => {
         if (err) {
         if (err.kind === "not_found") {
             res.status(404).send({
