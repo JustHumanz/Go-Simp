@@ -28,7 +28,6 @@ func Start(Bot *discordgo.Session) {
 	yttoken = config.YtToken[0]
 	log.Info("Youtube module ready")
 	//CheckSchedule()
-	CheckPrivate()
 }
 
 func CheckSchedule() {
@@ -39,38 +38,40 @@ func CheckSchedule() {
 				"Vtube":        Member.EnName,
 				"Youtube ID":   Member.YoutubeID,
 				"Vtube Region": Member.Region,
-			}).Info("Checking yt")
+			}).Info("Checking Youtube")
 			go Filter(Member, Group, &wg)
 		}
+		wg.Wait()
 	}
-	wg.Wait()
 }
 
-func GetWaiting(VideoID string) string {
+func GetWaiting(VideoID string) (string, error) {
 	var (
 		bit     []byte
 		curlerr error
 		urls    = "https://www.youtube.com/watch?v=" + VideoID
 	)
 	bit, curlerr = engine.Curl(urls, nil)
-	if curlerr != nil {
+	if curlerr != nil || bit == nil {
 		bit, curlerr = engine.CoolerCurl(urls)
 		if curlerr != nil {
-			log.Error(curlerr)
+			return "0", curlerr
 		} else {
-			log.Info("Successfully use tor")
+			log.WithFields(log.Fields{
+				"Request": VideoID,
+				"Func":    "YtGetWaiting",
+			}).Info("Successfully use multi")
 		}
 	}
 	reg, err := regexp.Compile("[^a-zA-Z0-9]+")
 	if err != nil {
-		log.Error(err)
-		return "0"
+		return "0", err
 	}
 	waitcount := ""
 	for _, element := range regexp.MustCompile(`(?m)viewCount.*?text.*?([0-9\s]+)\s(waiting)`).FindAllStringSubmatch(reg.ReplaceAllString(string(bit), " "), -1) {
 		waitcount = strings.Replace(element[1], " ", "", -1)
 	}
-	return waitcount
+	return waitcount, nil
 }
 
 func CheckPrivate() {
@@ -93,7 +94,7 @@ func CheckPrivate() {
 				_, err = engine.Curl(url, nil)
 			}
 
-			if err != nil && strings.HasPrefix(err.Error(), "404") {
+			if err != nil && strings.HasPrefix(err.Error(), "404") && Youtube.Status != "private" {
 				log.WithFields(log.Fields{
 					"VideoID": Youtube.VideoID,
 				}).Info("Private Video")
@@ -130,7 +131,7 @@ func CheckPrivate() {
 					for j, Y := range YtData {
 						wg.Add(1)
 						go Check(Y, &wg)
-						if j == 20 {
+						if j == 20 || j == len(YtData)-1 {
 							wg.Wait()
 						}
 					}

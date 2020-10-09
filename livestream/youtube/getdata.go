@@ -79,8 +79,10 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 			Check, DataDB := database.CheckVideoID(VideoID[i])
 
 			if Data.Items[i].Snippet.VideoStatus == "upcoming" {
-				Viewers = GetWaiting(VideoID[i])
-
+				Viewers, err = GetWaiting(VideoID[i])
+				if err != nil {
+					log.Error(err)
+				}
 			} else if Data.Items[i].LiveDetails.Viewers == "" {
 				Viewers = Data.Items[i].Statistics.ViewCount
 
@@ -91,8 +93,10 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 
 			if Data.Items[i].LiveDetails.StartTime.IsZero() {
 				Starttime = Data.Items[i].LiveDetails.ActualStartTime
-			} else {
+			} else if !Data.Items[i].LiveDetails.StartTime.IsZero() {
 				Starttime = Data.Items[i].LiveDetails.StartTime
+			} else {
+				Starttime = Data.Items[i].Snippet.PublishedAt
 			}
 
 			_, err := engine.Curl("http://i3.ytimg.com/vi/"+VideoID[i]+"/maxresdefault.jpg", nil)
