@@ -45,10 +45,8 @@ func GetRSS(YtID string) []string {
 func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 	funcvar := engine.GetFunctionName(Filter)
 	engine.Debugging(funcvar, "In", Name)
-	ChannelID := strings.Split(Name.YoutubeID, "\n")
-
 	defer wg.Done()
-	for _, YoutubeID := range ChannelID {
+	for _, YoutubeID := range strings.Split(Name.YoutubeID, "\n") {
 		VideoID := GetRSS(YoutubeID)
 		Data, err := YtAPI(VideoID)
 		if err != nil {
@@ -128,7 +126,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 					log.WithFields(log.Fields{
 						"VideoData ID": VideoID[i],
 						"Status":       "Live",
-					}).Info("Update video status from " + Data.Items[i].Snippet.VideoStatus + " to live")
+					}).Info("Update video status from " + DataDB.Status + " to live")
 					DataDB.UpdateYt("live")
 
 					log.Info("Send to notify")

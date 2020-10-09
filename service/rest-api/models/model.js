@@ -2,22 +2,34 @@ const knex = require("../config/db.js");
 
 
 async function streamquery(Name,Table,Status,Limit){
-  let data = await knex.select('VtuberMember.VtuberName','VtuberMember.VtuberName_EN',
-  'VtuberMember.VtuberName_JP','VtuberGroup.VtuberGroupName',
-  'VtuberMember.Youtube_ID','VtuberMember.BiliBili_SpaceID','VtuberMember.Region',
-  ''+Table+'.*').from(Table)
-.innerJoin('VtuberMember',''+Table+'.VtuberMember_id','VtuberMember.id')
-.innerJoin('VtuberGroup','VtuberMember.VtuberGroup_id','VtuberGroup.id')
-.where(function() {
-  this.where('VtuberMember.VtuberName', Name)
-  .orWhere('VtuberMember.VtuberName_EN',Name)
-  .orWhere('VtuberMember.VtuberName_JP',Name)
-  .orWhere('VtuberGroup.VtuberGroupName',Name)
-})
-.andWhere(''+Table+'.Status',Status)
-.orderBy('ScheduledStart',"desc")
-.limit(Limit)
-return data
+  if (Name =="all"){
+    return  await knex.select('VtuberMember.VtuberName','VtuberMember.VtuberName_EN',
+    'VtuberMember.VtuberName_JP','VtuberGroup.VtuberGroupName',
+    'VtuberMember.Youtube_ID','VtuberMember.BiliBili_SpaceID','VtuberMember.Region',
+    ''+Table+'.*').from(Table)
+  .innerJoin('VtuberMember',''+Table+'.VtuberMember_id','VtuberMember.id')
+  .innerJoin('VtuberGroup','VtuberMember.VtuberGroup_id','VtuberGroup.id')
+  .where(''+Table+'.Status',Status)
+  .orderBy('ScheduledStart',"desc")
+  .limit(Limit)
+
+  } else {
+    return await knex.select('VtuberMember.VtuberName','VtuberMember.VtuberName_EN',
+    'VtuberMember.VtuberName_JP','VtuberGroup.VtuberGroupName',
+    'VtuberMember.Youtube_ID','VtuberMember.BiliBili_SpaceID','VtuberMember.Region',
+    ''+Table+'.*').from(Table)
+  .innerJoin('VtuberMember',''+Table+'.VtuberMember_id','VtuberMember.id')
+  .innerJoin('VtuberGroup','VtuberMember.VtuberGroup_id','VtuberGroup.id')
+  .where(function() {
+    this.orWhereIn('VtuberMember.VtuberName', Name)
+    .orWhereIn('VtuberMember.VtuberName_EN',Name)
+    .orWhereIn('VtuberMember.VtuberName_JP',Name)
+    .orWhereIn('VtuberGroup.VtuberGroupName',Name)
+  })
+  .andWhere(''+Table+'.Status',Status)
+  .orderBy('ScheduledStart',"desc")
+  .limit(Limit)
+  }
 }
 
 
@@ -42,12 +54,12 @@ const GetMemberName = async (Name, result) => {
     let data = await knex('VtuberMember').whereIn('VtuberName_EN',Name)
       .orWhereIn('VtuberName',Name)
       .orWhereIn('VtuberName_JP',Name)
-    if (data.length){
-      console.log(data)
+    if (data != null){
       data.forEach(i => {
         delete i.id
         delete i.VtuberGroup_id
       });
+      console.log(data)
       result(null,data)
     } else {
       result({ kind: "not_found" }, null);
@@ -58,12 +70,11 @@ const GetMemberName = async (Name, result) => {
   }
 };
 
-
 const GetGroupAll = async result => {    
   try {
     let data = await knex('VtuberGroup')
     console.log(data)
-    if (data.length){
+    if (data != null){
       data.forEach(i => {
         delete i.id
       });
@@ -82,11 +93,11 @@ const GetGroupAll = async result => {
 const GetGroupName = async (Name, result) => {
   try {
     let data = await knex('VtuberGroup').whereIn('VtuberGroupName',Name)
-    if (data.length){
-      console.log(data)
+    if (data != null){
       data.forEach(i => {
         delete i.id
       });
+      console.log(data)
       result(null,data)
     } else {
       result({ kind: "not_found" }, null);
@@ -105,20 +116,20 @@ const GetTwitter = async (Name, Limit,result) => {
   .innerJoin('VtuberMember','Twitter.VtuberMember_id','VtuberMember.id')
   .innerJoin('VtuberGroup','VtuberMember.VtuberGroup_id','VtuberGroup.id')
   .where(function() {
-    this.where('VtuberMember.VtuberName', Name)
-    .orWhere('VtuberMember.VtuberName_EN',Name)
-    .orWhere('VtuberMember.VtuberName_JP',Name)
-  }).orWhere('VtuberGroup.VtuberGroupName',Name)
+    this.orWhereIn('VtuberMember.VtuberName', Name)
+    .orWhereIn('VtuberMember.VtuberName_EN',Name)
+    .orWhereIn('VtuberMember.VtuberName_JP',Name)
+  }).orWhereIn('VtuberGroup.VtuberGroupName',Name)
   .orderBy("Twitter.id",'desc')
   .limit(Limit)
 
-    if (data.length){
-      console.log(data)
+    if (data != null){
       data.forEach(i => {
         delete i.id
         delete i.VtuberMember_id
         i.Photos = i.Photos.split("\n");
       });
+      console.log(data)
       result(null,data)
     } else {
       result({ kind: "not_found" }, null);
@@ -138,14 +149,14 @@ const GetTBilibili = async (Name, Limit,result) => {
   .innerJoin('VtuberMember','TBiliBili.VtuberMember_id','VtuberMember.id')
   .innerJoin('VtuberGroup','VtuberMember.VtuberGroup_id','VtuberGroup.id')
   .where(function() {
-    this.where('VtuberMember.VtuberName', Name)
-    .orWhere('VtuberMember.VtuberName_EN',Name)
-    .orWhere('VtuberMember.VtuberName_JP',Name)
-  }).orWhere('VtuberGroup.VtuberGroupName',Name)
+    this.orWhereIn('VtuberMember.VtuberName', Name)
+    .orWhereIn('VtuberMember.VtuberName_EN',Name)
+    .orWhereIn('VtuberMember.VtuberName_JP',Name)
+  }).orWhereIn('VtuberGroup.VtuberGroupName',Name)
   .orderBy("TBiliBili.id",'desc')
   .limit(Limit)
 
-    if (data.length){
+    if (data != null){
       console.log(data)
       data.forEach(i => {
         delete i.id
@@ -169,13 +180,13 @@ const GetYtLivestream = async (Name, Status, Limit,result) => {
   try {
     data = await streamquery(Name,'Youtube',Status,Limit)
     console.log(data)
-    if (data.length){
+    if (data != null){
       console.log(data)
       data.forEach(i => {
-        i.Youtube_ID = i.Youtube_ID.split("\n")
         delete i.id
         delete i.VtuberGroup_id
         delete i.VtuberMember_id
+        i.Viewers = parseInt(i.Viewers,10)
       });
       result(null,data)
     } else {
@@ -193,7 +204,7 @@ const GetLiveBilibili = async (Name, Status, Limit,result) => {
   console.log(Name, Status, Limit)
   try {
     data = await streamquery(Name,'LiveBiliBili',Status,Limit)
-    if (data.length){
+    if (data != null){
       console.log(data)
       data.forEach(i => {
         delete i.id
@@ -211,7 +222,7 @@ const GetLiveBilibili = async (Name, Status, Limit,result) => {
 };
 
 
-const GetSpaceBiliBIli = async (Name, Limit,result) => {
+const GetSpaceBiliBili = async (Name, Limit,result) => {
   console.log(Name, Limit)
   try {
     let data = await knex.select('VtuberMember.VtuberName','VtuberMember.VtuberName_EN',
@@ -221,22 +232,26 @@ const GetSpaceBiliBIli = async (Name, Limit,result) => {
   .innerJoin('VtuberMember','BiliBili.VtuberMember_id','VtuberMember.id')
   .innerJoin('VtuberGroup','VtuberMember.VtuberGroup_id','VtuberGroup.id')
   .where(function() {
-    this.where('VtuberMember.VtuberName', Name)
-    .orWhere('VtuberMember.VtuberName_EN',Name)
-    .orWhere('VtuberMember.VtuberName_JP',Name)
-    .orWhere('VtuberGroup.VtuberGroupName',Name)
+    this.orWhereIn('VtuberMember.VtuberName', Name)
+    .orWhereIn('VtuberMember.VtuberName_EN',Name)
+    .orWhereIn('VtuberMember.VtuberName_JP',Name)
+    .orWhereIn('VtuberGroup.VtuberGroupName',Name)
   })
   .orderBy('UploadDate',"desc")
   .limit(Limit)
+  if(data != null){
+    data.forEach(i => {
+      delete i.id
+      delete i.VtuberGroup_id
+      delete i.VtuberMember_id
+      i.Viewers = parseInt(i.Viewers,10)
+    });
+  
+    result(null,data) 
+  } else {
+    result({ kind: "not_found" }, null); 
+  }
 
-  data.forEach(i => {
-    delete i.id
-    delete i.VtuberGroup_id
-    delete i.VtuberMember_id
-    i.Viewers = parseInt(i.Viewers,10)
-  });
-
-  result(null,data)
   } catch (error) {
     console.log(error)
     result({kind:"Error kntl"},null)
@@ -253,18 +268,23 @@ const Getsubscriber = async (Name, result) => {
   .innerJoin('VtuberMember','Subscriber.VtuberMember_id','VtuberMember.id')
   .innerJoin('VtuberGroup','VtuberMember.VtuberGroup_id','VtuberGroup.id')
   .where(function() {
-    this.where('VtuberMember.VtuberName', Name)
-    .orWhere('VtuberMember.VtuberName_EN',Name)
-    .orWhere('VtuberMember.VtuberName_JP',Name)
-    .orWhere('VtuberGroup.VtuberGroupName',Name)
+    this.orWhereIn('VtuberMember.VtuberName', Name)
+    .orWhereIn('VtuberMember.VtuberName_EN',Name)
+    .orWhereIn('VtuberMember.VtuberName_JP',Name)
+    .orWhereIn('VtuberGroup.VtuberGroupName',Name)
   })
-  data.forEach(i => {
-    delete i.id
-    delete i.VtuberGroup_id
-    delete i.VtuberMember_id
-  });
+  if (data != null) {
+    data.forEach(i => {
+      delete i.id
+      delete i.VtuberGroup_id
+      delete i.VtuberMember_id
+    });
+    result(null,data)
 
-  result(null,data)
+  } else {
+    result({ kind: "not_found" }, null); 
+  }
+
   } catch (error) {
     console.log(error)
     result({kind:"Error kntl"},null)
@@ -281,6 +301,6 @@ module.exports = {
   GetTwitter : GetTwitter,
   GetTBilibili : GetTBilibili,
   GetLiveBilibili: GetLiveBilibili,
-  GetSpaceBiliBIli: GetSpaceBiliBIli,
+  GetSpaceBiliBili: GetSpaceBiliBili,
   Getsubscriber: Getsubscriber,
 }

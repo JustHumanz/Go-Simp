@@ -16,32 +16,32 @@ module.exports = app => {
     app.get("/group", Controller.groupAll);
     //example /group (string)
     
-    // Retrieve a single vtuber with vtubername[VtuberName/VtuberName_EN/VtuberName_JP/VtuberName_CN]
+    // Retrieve a single vtuber with vtubername[VtuberName/VtuberName_EN/VtuberName_JP]
     app.get("/group/:group", Controller.groupName);
     //example /group/hololive,hanayori (array,separated with commas)
 
     // Select all Yt
-    app.get("/:nog/youtube/:status", Controller.ytlivestream);
-    //example /hololive/youtube/past or /kanochi/youtube/upcoming
+    app.get("/youtube/:nog/:status", Controller.ytlivestream);
+    //example /youtube/hololive/past or /youtube/kanochi/upcoming
 
     // Select vtuber fanart
-    app.get("/:nog/twitter", Controller.twitterd)
-    //example /hololive/twitter 
+    app.get("/twitter/:nog", Controller.twitterd)
+    //example twitter/hololive 
 
     //T.bilibili
-    app.get("/:nog/tbilibili", Controller.tBilibili)
-    //example /hololive/tbilibili 
+    app.get("tbilibili/:nog", Controller.tBilibili)
+    //example tbilibili/hololive
 
     //live.bilibili
-    app.get("/:nog/livebilibili/:status", Controller.liveBilibili)
-    //example /hololive/livebilibili/past
+    app.get("livebilibili/:nog/:status", Controller.liveBilibili)
+    //example livebilibili/nijisanji/past
 
     //space.bilibili
-    app.get("/:nog/spacebilibili", Controller.spaceBilibili)
-    //example /hololive/spacebilibili or /fbk/spacebilibili
+    app.get("spacebilibili/:nog", Controller.spaceBilibili)
+    //example spacebilibili/hololive/ or spacebilibili/fbk/
 
      //subscriber Vtuber count
-    app.get("/:nog/subscriber", Controller.subscriber)
-    //example /hololive/subscriber or /fbk/subscriber
+    app.get("subscriber/:nog", Controller.subscriber)
+    //example subscriber/nijisanji or subscriber/fbk
 
   };

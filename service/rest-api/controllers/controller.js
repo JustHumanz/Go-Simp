@@ -65,7 +65,7 @@ exports.ytlivestream = (req, res) => {
         });
         return
     } 
-    model.GetYtLivestream(req.params.nog,req.params.status, Limit,(err, data) => {
+    model.GetYtLivestream(req.params.nog.split(","),req.params.status, Limit,(err, data) => {
         if (err) {
         if (err.kind === "not_found") {
             res.status(404).send({
@@ -130,12 +130,12 @@ exports.tBilibili = (req, res) => {
 exports.liveBilibili = (req, res) => {
     const Limit =  req.query.limit || 10
     if (Limit >= 30 ){
-        res.status(200).send({
+        res.status(401).send({
             message: `out of limit`
         });
         return
     }
-    model.GetLiveBilibili(req.params.nog,req.params.status, Limit,(err, data) => {
+    model.GetLiveBilibili(req.params.nog.split(","),req.params.status, Limit,(err, data) => {
         if (err) {
         if (err.kind === "not_found") {
             res.status(404).send({
@@ -152,13 +152,13 @@ exports.liveBilibili = (req, res) => {
 
 exports.spaceBilibili = (req, res) => {
     const Limit =  req.query.limit || 30
-    if (Limit >= 30 ){
-        res.status(200).send({
+    if (Limit >= 60 ){
+        res.status(401).send({
             message: `out of limit`
         });
         return
     }
-    model.GetSpaceBiliBIli(req.params.nog, Limit,(err, data) => {
+    model.GetSpaceBiliBili(req.params.nog.split(","), Limit,(err, data) => {
         if (err) {
         if (err.kind === "not_found") {
             res.status(404).send({
@@ -175,7 +175,7 @@ exports.spaceBilibili = (req, res) => {
 
 
 exports.subscriber = (req, res) => {
-    model.Getsubscriber(req.params.nog,(err, data) => {
+    model.Getsubscriber(req.params.nog.split(","),(err, data) => {
         if (err) {
         if (err.kind === "not_found") {
             res.status(404).send({
