@@ -66,14 +66,11 @@ func GetWaiting(VideoID string) string {
 		log.Error(err)
 		return "0"
 	}
-	for _, element := range regexp.MustCompile(`(?m)viewCount.*?text.*?([0-9\s]+)\s(waiting|menunggu)`).FindAllStringSubmatch(reg.ReplaceAllString(string(bit), " "), -1) {
-		if element[1] == "" {
-			return "0"
-		} else {
-			return strings.Replace(element[1], " ", "", -1)
-		}
+	waitcount := ""
+	for _, element := range regexp.MustCompile(`(?m)viewCount.*?text.*?([0-9\s]+)\s(waiting)`).FindAllStringSubmatch(reg.ReplaceAllString(string(bit), " "), -1) {
+		waitcount = strings.Replace(element[1], " ", "", -1)
 	}
-	return "0"
+	return waitcount
 }
 
 func CheckPrivate() {

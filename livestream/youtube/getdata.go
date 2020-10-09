@@ -150,7 +150,6 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 						"Status":       "Past",
 					}).Info("Update viwers")
 					DataDB.UpdateYt("past")
-
 				} else if Data.Items[i].Snippet.VideoStatus == "live" {
 					log.WithFields(log.Fields{
 						"VideoData id": VideoID[i],
@@ -160,6 +159,14 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 					DataDB.UpdateYt("live")
 
 				} else if Data.Items[i].Snippet.VideoStatus == "upcoming" {
+					if Data.Items[i].LiveDetails.StartTime != PushData.Data.Schedul {
+						DataDB.Schedul = Data.Items[i].LiveDetails.StartTime
+						log.Info("Livestream schdule changed")
+						DataDB.UpdateYt("upcoming")
+
+						log.Info("Send to notify")
+						PushData.SendNuke("upcoming")
+					}
 					//send to reminder
 					loc := Zawarudo(DataDB.Region)
 					UpcominginMinutes := int(math.Round(PushData.Data.Schedul.In(loc).Sub(time.Now().In(loc)).Minutes()))
