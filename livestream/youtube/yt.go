@@ -17,7 +17,6 @@ import (
 var (
 	BotSession *discordgo.Session
 	yttoken    string
-	wg         sync.WaitGroup
 )
 
 func Start(Bot *discordgo.Session) {
@@ -32,6 +31,7 @@ func Start(Bot *discordgo.Session) {
 
 func CheckSchedule() {
 	for _, Group := range database.GetGroup() {
+		var wg sync.WaitGroup
 		for _, Member := range database.GetName(Group.ID) {
 			wg.Add(1)
 			log.WithFields(log.Fields{
