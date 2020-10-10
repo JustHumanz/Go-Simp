@@ -5,7 +5,7 @@ async function streamquery(Name,Table,Status,Limit){
   if (Name =="all"){
     return  await knex.select('VtuberMember.VtuberName','VtuberMember.VtuberName_EN',
     'VtuberMember.VtuberName_JP','VtuberGroup.VtuberGroupName',
-    'VtuberMember.Youtube_ID','VtuberMember.BiliBili_SpaceID','VtuberMember.Region',
+    'VtuberMember.Youtube_ID','VtuberMember.Youtube_Avatar','VtuberMember.BiliBili_RoomID','VtuberMember.BiliBili_Avatar','VtuberMember.Region',
     ''+Table+'.*').from(Table)
   .innerJoin('VtuberMember',''+Table+'.VtuberMember_id','VtuberMember.id')
   .innerJoin('VtuberGroup','VtuberMember.VtuberGroup_id','VtuberGroup.id')
@@ -16,7 +16,7 @@ async function streamquery(Name,Table,Status,Limit){
   } else {
     return await knex.select('VtuberMember.VtuberName','VtuberMember.VtuberName_EN',
     'VtuberMember.VtuberName_JP','VtuberGroup.VtuberGroupName',
-    'VtuberMember.Youtube_ID','VtuberMember.BiliBili_SpaceID','VtuberMember.Region',
+    'VtuberMember.Youtube_ID','VtuberMember.BiliBili_RoomID','VtuberMember.BiliBili_Avatar','VtuberMember.Region',
     ''+Table+'.*').from(Table)
   .innerJoin('VtuberMember',''+Table+'.VtuberMember_id','VtuberMember.id')
   .innerJoin('VtuberGroup','VtuberMember.VtuberGroup_id','VtuberGroup.id')
@@ -185,6 +185,8 @@ const GetYtLivestream = async (Name, Status, Limit,result) => {
         delete i.id
         delete i.VtuberGroup_id
         delete i.VtuberMember_id
+        delete i.BiliBili_SpaceID
+        delete i.BiliBili_Avatar
         i.Viewers = parseInt(i.Viewers,10)
       });
       result(null,data)
@@ -209,6 +211,8 @@ const GetLiveBilibili = async (Name, Status, Limit,result) => {
         delete i.id
         delete i.VtuberGroup_id
         delete i.VtuberMember_id
+        delete i.Youtube_ID
+        delete i.Youtube_Avatar
       });
       result(null,data)
     } else {

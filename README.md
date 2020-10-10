@@ -6,7 +6,7 @@
 ----
 
 ## Introduction
-A simple VTuber bot to serve notification Fanart and Live stream  
+A simple VTuber bot to serve notification Fanart and Livestream  
 
 
 ### Current notification support
@@ -18,8 +18,8 @@ A simple VTuber bot to serve notification Fanart and Live stream
 | Hanayori  | ✓       | ✓             | ✓              | ✓       |✓           |
 | Hololive  | ✓       | ✓             | ✓              | ✓       |✓           |
 | Nijisanji | ✓       | ✓             | ✓              | ✓       |✓           |
-|Kizuna_AI  | ✓       | ✓             |✓                | ✓       |✖           |
-|ENTUM  | ✓       | ✓             |✓               | ✓       |✓       |
+| Kizuna_AI | ✓       | ✓             |✓               | ✓       |✓           |
+| ENTUM     | ✓       | ✓             |✓               | ✓       |✓           |
 
 ##### Member
 
@@ -67,7 +67,7 @@ A simple VTuber bot to serve notification Fanart and Live stream
 ### Command
 ```vtbot>Enable [art/live/all] [Vtuber Group]```
 This command will declare if [Vtuber Group] enable in this channel
-Example: `vtbot>enable hanayori so other users can use vtbot>tag me kanochi`  
+Example: `vtbot>enable hanayori` so other users can use `vtbot>tag me kanochi`  
 
 ```vtbot>Update [art/live/all] [Vtuber Group]```
 Use this command if you want to change enable state  
@@ -77,11 +77,11 @@ Just like enable but this disable command :3
 
 ```art>[Group/Member nickname]```  
 Show fanart with randomly with their fanart hashtag  
-Example: `art>Kanochi or art>hololive`  
+Example: `art>Kanochi` or `art>hololive`  
 
 ```vtbot>Tag me [Group/Member nickname]```  
 This command will add you to tags list if any new fanart  
-Example: ```art>tag me Kanochi```,then you will get tagged when there is a new fanart of kano  
+Example: `art>tag me Kanochi`,then you will get tagged when there is a new fanart of kano  
 
 ```vtbot>Del tag [Group/Member nickname]```  
 This command will remove you from tags list  
@@ -127,6 +127,8 @@ Well,you using it right now
 
 ```vtbot>Help JP```  
 Like this but in Japanese  
+
+**Notifications(both fanart or livestream) will not be sent if there no one user tagged**  
 
 ### Notification&Command 
 #### New Upcoming live stream

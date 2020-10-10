@@ -29,19 +29,21 @@ module.exports = app => {
     //example twitter/hololive 
 
     //T.bilibili
-    app.get("tbilibili/:nog", Controller.tBilibili)
+    app.get("/tbilibili/:nog", Controller.tBilibili)
     //example tbilibili/hololive
 
     //live.bilibili
-    app.get("livebilibili/:nog/:status", Controller.liveBilibili)
+    app.get("/livebilibili/:nog/:status", Controller.liveBilibili)
     //example livebilibili/nijisanji/past
 
     //space.bilibili
-    app.get("spacebilibili/:nog", Controller.spaceBilibili)
+    app.get("/spacebilibili/:nog", Controller.spaceBilibili)
     //example spacebilibili/hololive/ or spacebilibili/fbk/
 
      //subscriber Vtuber count
-    app.get("subscriber/:nog", Controller.subscriber)
+    app.get("/subscriber/:nog", Controller.subscriber)
     //example subscriber/nijisanji or subscriber/fbk
-
+    app.get('/doc',function(req,res) {
+      res.sendFile(__dirname +'/doc.html');
+    });
   };

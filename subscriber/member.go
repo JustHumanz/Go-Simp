@@ -30,7 +30,7 @@ func Start(c *cron.Cron) {
 		os.Exit(1)
 	}
 	go Bot.AddHandler(SubsMessage)
-	c.AddFunc("@every 23h0m0s", CheckYtSubsCount)
+	c.AddFunc("@every 1h0m0s", CheckYtSubsCount)
 	c.AddFunc("@every 0h15m0s", CheckTwFollowCount)
 	c.AddFunc("@every 0h20m0s", CheckBiliFollowCount)
 	log.Info("Subs&Follow Checker module ready")

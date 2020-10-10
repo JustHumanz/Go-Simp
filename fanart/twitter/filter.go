@@ -39,7 +39,7 @@ func (Data Statuses) CheckHashTag(Group []database.MemberGroupID, wg *sync.WaitG
 		westtaiwan, _ := regexp.MatchString("(?m)(freecoco|asacocoleak|cocodidbothingwrong|freecocoandhaachama)", strings.ToLower(hashtag.Text))
 		if !westtaiwan {
 			for i := 0; i < len(Group); i++ {
-				if "#"+hashtag.Text == Group[i].TwitterHashtags && Data.User.FollowersCount > 10 && Data.User.FriendsCount > 20 { //fuck off dummy account
+				if "#"+hashtag.Text == Group[i].TwitterHashtags && Data.User.FollowersCount > 20 && Data.User.FriendsCount > 30 { //fuck off dummy account
 					//new
 					log.WithFields(log.Fields{
 						"Hashtags":   Group[i].TwitterHashtags,
