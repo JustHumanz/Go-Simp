@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/JustHumanz/Go-simp/config"
 	"github.com/JustHumanz/Go-simp/database"
 	"github.com/JustHumanz/Go-simp/engine"
 	"github.com/JustHumanz/Go-simp/livestream/bilibili/space"
@@ -88,7 +89,7 @@ func CheckBiliFollowCount() {
 								SendNude(engine.NewEmbed().
 									SetAuthor(Group.NameGroup, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
 									SetTitle(engine.FixName(Name.EnName, Name.JpName)).
-									SetThumbnail("https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/bilibili.png").
+									SetThumbnail(config.BiliBiliIMG).
 									SetDescription("Congratulation for "+strconv.Itoa(i)+" followers").
 									SetImage(Avatar).
 									AddField("Views", strconv.Itoa(bilistate.LikeView.Data.Archive.View)).
@@ -109,7 +110,7 @@ func CheckBiliFollowCount() {
 								SendNude(engine.NewEmbed().
 									SetAuthor(Group.NameGroup, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
 									SetTitle(engine.FixName(Name.EnName, Name.JpName)).
-									SetThumbnail("https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/bilibili.png").
+									SetThumbnail(config.BiliBiliIMG).
 									SetDescription("Congratulation for "+strconv.Itoa(i)+" followers").
 									SetImage(Avatar).
 									AddField("Views", strconv.Itoa(bilistate.LikeView.Data.Archive.View)).

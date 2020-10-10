@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	config "github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 
@@ -86,7 +87,7 @@ func (PushData NotifStruct) SendNuke(Status string) {
 		AddField(msg, msg1).
 		InlineAllFields().
 		AddField(msg4, msg5).
-		SetFooter(msg3, "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/youtube.png").
+		SetFooter(msg3, config.YoutubeIMG).
 		SetColor(Color).MessageEmbed
 
 	id, DiscordChannelID := database.ChannelTag(PushData.Member.ID, 2)

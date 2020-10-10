@@ -24,7 +24,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 	var (
 		Member      bool
 		Group       bool
-		Pic         = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/404.jpg"
+		Pic         = config.NotFound
 		Msg         string
 		wg          sync.WaitGroup
 		embed       *discordgo.MessageEmbed
@@ -62,7 +62,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					SetImage(Pic).
 					SetColor(Color).
 					InlineAllFields().
-					SetFooter(Msg, "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/bilibili.png").MessageEmbed
+					SetFooter(Msg, config.TwitterIMG).MessageEmbed
 			} else {
 				embed = NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
@@ -73,7 +73,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					SetImage(Pic).
 					SetColor(Color).
 					InlineAllFields().
-					SetFooter(Msg, "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/twitter.png").MessageEmbed
+					SetFooter(Msg, config.TwitterIMG).MessageEmbed
 			}
 			msg, err := s.ChannelMessageSendEmbed(m.ChannelID, embed)
 			if err != nil {
@@ -100,7 +100,6 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if m.Content == Prefix+Data2[ii].Name || m.Content == Prefix+Data2[ii].JpName {
 						DataFix := Data2[ii].GetMemberURL()
 						if DataFix.Videos != "" {
-							Pic = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/301.jpg"
 							Msg = "Video type,check original post"
 						} else if DataFix.Photos != nil {
 							Pic = DataFix.Photos[0]
@@ -501,7 +500,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 			} else {
 				s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 					SetTitle("404 Not found").
-					SetImage("https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/404.jpg").
+					SetImage(config.NotFound).
 					SetColor(Color).MessageEmbed)
 			}
 		} else if m.Content == Prefix+"channel tags" {
@@ -531,12 +530,12 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 					SetDescription("```\r"+tableString.String()+"```").
-					SetThumbnail("https://raw.githubusercontent.com/JustHumanz/Vtube_bot/master/Img/go-simp.png").
+					SetThumbnail(config.Go_Simp).
 					SetColor(Color).MessageEmbed)
 			} else {
 				s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 					SetTitle("404 Not found").
-					SetImage("https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/404.jpg").
+					SetImage(config.NotFound).
 					SetColor(Color).MessageEmbed)
 			}
 		} else if m.Content == Prefix+"vtuber data" {
@@ -560,7 +559,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 			table.Render()
 			embed := NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-				SetThumbnail("https://raw.githubusercontent.com/JustHumanz/Vtube_bot/master/Img/go-simp.png").
+				SetThumbnail(config.Go_Simp).
 				SetDescription("```" + tableString.String() + "```").
 				SetColor(Color).
 				SetFooter("use `Nickname` as parameter").MessageEmbed

@@ -5,6 +5,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/JustHumanz/Go-simp/config"
+
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 	"github.com/bwmarrin/discordgo"
@@ -30,7 +32,7 @@ func Space(s *discordgo.Session, m *discordgo.MessageCreate) {
 				AddField(Data.Msg, Data.Msg1).
 				AddField("Type", Data.Msg3).
 				AddField("Duration", Data.Length).
-				SetFooter(Data.Msg2, "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/bilibili.png").
+				SetFooter(Data.Msg2, config.BiliBiliIMG).
 				InlineAllFields().
 				SetColor(Color).MessageEmbed
 			s.ChannelMessageSendEmbed(m.ChannelID, embed)
@@ -39,7 +41,7 @@ func Space(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 				SetTitle(Data.VTName).
 				SetDescription(Data.Msg).
-				SetImage("https://hanayori.justhumanz.me/static/img/asset/parerunworry.png").MessageEmbed
+				SetImage(config.WorryIMG).MessageEmbed
 			s.ChannelMessageSendEmbed(m.ChannelID, embed)
 		}
 	}
@@ -136,7 +138,7 @@ func Message(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 				SetTitle(Data.VTName).
 				SetDescription(Data.Msg).
-				SetImage("https://hanayori.justhumanz.me/static/img/asset/parerunworry.png").MessageEmbed
+				SetImage(config.WorryIMG).MessageEmbed
 			s.ChannelMessageSendEmbed(m.ChannelID, embed)
 		}
 	}

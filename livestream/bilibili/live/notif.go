@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	config "github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 
@@ -78,7 +79,7 @@ func (Data LiveBili) Crotttt(GroupIcon string) LiveBili {
 		SetImage(DataRoom.Thumbnail, "image").
 		SetURL(BiliBiliURL).
 		AddField(msg, msg1).
-		SetFooter(msg3, "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/bilibili.png").
+		SetFooter(msg3, config.BiliBiliIMG).
 		InlineAllFields().
 		SetColor(Color).MessageEmbed
 	return Data

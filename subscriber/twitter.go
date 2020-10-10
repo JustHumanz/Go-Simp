@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/JustHumanz/Go-simp/config"
 	"github.com/JustHumanz/Go-simp/database"
 	"github.com/JustHumanz/Go-simp/engine"
 	log "github.com/sirupsen/logrus"
@@ -24,7 +25,7 @@ func CheckTwFollowCount() {
 						SendNude(engine.NewEmbed().
 							SetAuthor(Group.NameGroup, Group.IconURL, "https://twitter.com/"+Name.TwitterName).
 							SetTitle(engine.FixName(Name.EnName, Name.JpName)).
-							SetThumbnail("https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/twitter.png").
+							SetThumbnail(config.TwitterIMG).
 							SetDescription("Congratulation for "+strconv.Itoa(i)+" followers").
 							SetImage(Avatar).
 							AddField("Tweets Count", strconv.Itoa(Twitter.FollowersCount)).
@@ -44,7 +45,7 @@ func CheckTwFollowCount() {
 						SendNude(engine.NewEmbed().
 							SetAuthor(Group.NameGroup, Group.IconURL, "https://twitter.com/"+Name.TwitterName).
 							SetTitle(engine.FixName(Name.EnName, Name.JpName)).
-							SetThumbnail("https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/twitter.png").
+							SetThumbnail(config.TwitterIMG).
 							SetDescription("Congratulation for "+strconv.Itoa(i)+" followers").
 							SetImage(Avatar).
 							AddField("Tweets Count", strconv.Itoa(Twitter.FollowersCount)).

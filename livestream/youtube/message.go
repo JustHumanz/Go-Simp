@@ -37,7 +37,7 @@ func YtGroup(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetURL("https://www.youtube.com/watch?v="+Data.VideoID).
 				AddField(Data.Msg, Data.Msg1).
 				AddField("Viewers", Data.Msg3).
-				SetFooter(Data.Msg2, "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/youtube.png").
+				SetFooter(Data.Msg2, config.YoutubeIMG).
 				InlineAllFields().
 				SetColor(Color).MessageEmbed)
 		} else {
@@ -45,7 +45,7 @@ func YtGroup(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 				SetTitle(Data.VTName).
 				SetDescription(Data.Msg).
-				SetImage("https://hanayori.justhumanz.me/static/img/asset/parerunworry.png").MessageEmbed)
+				SetImage(config.WorryIMG).MessageEmbed)
 		}
 	}
 
@@ -215,7 +215,7 @@ func YtGroup(s *discordgo.Session, m *discordgo.MessageCreate) {
 										AddField("Viewers", DataMember[z].Viewers).
 										AddField("Live duration", durationlive.String()).
 										AddField("Live ended", duration.String()+" Ago").
-										SetFooter(DataMember[z].Schedul.In(loc).Format(time.RFC822), "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/youtube.png").
+										SetFooter(DataMember[z].Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 										InlineAllFields().
 										SetColor(Color).MessageEmbed)
 								}
@@ -251,7 +251,7 @@ func YtGroup(s *discordgo.Session, m *discordgo.MessageCreate) {
 									AddField("Viewers", Data[ii].Viewers).
 									AddField("Live duration", durationlive.String()).
 									AddField("Live ended", duration.String()+" Ago").
-									SetFooter(Data[ii].Schedul.In(loc).Format(time.RFC822), "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/youtube.png").
+									SetFooter(Data[ii].Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 									InlineAllFields().
 									SetColor(Color).MessageEmbed)
 							}

@@ -5,6 +5,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 
@@ -59,7 +60,7 @@ func (NotifData Notif) PushNotif(Color int) {
 					SetImage(NotifData.PhotosImgur).
 					AddField("User Tags", strings.Join(UserTagsList, " ")).
 					AddField("Similar art", msg).
-					SetFooter("1/"+strconv.Itoa(NotifData.PhotosCount)+" photos", "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/bilibili.png").
+					SetFooter("1/"+strconv.Itoa(NotifData.PhotosCount)+" photos", config.BiliBiliIMG).
 					InlineAllFields().
 					SetColor(Color).MessageEmbed
 				msg, err := BotSession.ChannelMessageSendEmbed(DiscordChannel, Embed)

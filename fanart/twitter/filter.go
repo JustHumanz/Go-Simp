@@ -7,6 +7,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	log "github.com/sirupsen/logrus"
 )
@@ -67,7 +68,7 @@ func (Data Statuses) CheckHashTag(Group []database.MemberGroupID, wg *sync.WaitG
 						SendMedia = Data.ExtendedEntities.Media[0].MediaURLHTTPS
 						msg = "Video type,check original post"
 					} else {
-						SendMedia = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/404.jpg"
+						SendMedia = config.NotFound
 						msg = "Image or Video oversize,check original post"
 					}
 					TwitterData := PushData{

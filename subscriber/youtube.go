@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/JustHumanz/Go-simp/config"
 	"github.com/JustHumanz/Go-simp/database"
 	"github.com/JustHumanz/Go-simp/engine"
 	log "github.com/sirupsen/logrus"
@@ -38,7 +39,7 @@ func CheckYtSubsCount() {
 							SendNude(engine.NewEmbed().
 								SetAuthor(Data[k].NameGroup, Data[k].IconURL, "https://www.youtube.com/channel/"+Name.YoutubeID+"?sub_confirmation=1").
 								SetTitle(engine.FixName(Name.EnName, Name.JpName)).
-								SetThumbnail("https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/youtube.png").
+								SetThumbnail(config.YoutubeIMG).
 								SetDescription("Congratulation for "+strconv.Itoa(i)+" subs").
 								SetImage(Avatar).
 								AddField("Views", strconv.Itoa(ytstate.Data.Views)).
@@ -59,7 +60,7 @@ func CheckYtSubsCount() {
 							SendNude(engine.NewEmbed().
 								SetAuthor(Data[k].NameGroup, Data[k].IconURL, "https://www.youtube.com/channel/"+Name.YoutubeID+"?sub_confirmation=1").
 								SetTitle(engine.FixName(Name.EnName, Name.JpName)).
-								SetThumbnail("https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/youtube.png").
+								SetThumbnail(config.YoutubeIMG).
 								SetDescription("Congratulation for "+strconv.Itoa(i)+" subs").
 								SetImage(Avatar).
 								AddField("Views", strconv.Itoa(ytstate.Data.Views)).

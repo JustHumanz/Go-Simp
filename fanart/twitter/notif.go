@@ -5,6 +5,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	"github.com/JustHumanz/Go-simp/engine"
 	"github.com/prometheus/common/log"
@@ -49,7 +50,7 @@ func (Data PushData) SendNude() error {
 						SetImage(Data.Image).
 						AddField("User Tags", strings.Join(UserTagsList, " ")).
 						SetColor(Color).
-						SetFooter(Data.Msg, "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/twitter.png").MessageEmbed
+						SetFooter(Data.Msg, config.TwitterIMG).MessageEmbed
 					msg, err := BotSession.ChannelMessageSendEmbed(DiscordChannel, Embed)
 					if err != nil {
 						log.Error(msg, err)

@@ -25,50 +25,68 @@ var (
 	TwitterToken   string
 	ImgurClient    string
 	BiliBiliSes    string
-	NotFound       string
 	SauceAPI       string
 	Logging        string
 	OwnerDiscordID string
 	// Private variables
-	config *configStruct
+	config ConfigFile
 )
 
-func init() {
-	log.SetFormatter(&log.TextFormatter{FullTimestamp: true})
-	TwitterToken = os.Getenv("TWBEARER")
-	ImgurClient = os.Getenv("IMGUR")
-	BiliBiliSes = os.Getenv("BILISESS")
-	NotFound = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/404.jpg"
-	SauceAPI = os.Getenv("SAUCEAPI")
-	Logging = os.Getenv("LOG")
-	OwnerDiscordID = os.Getenv("OWNER")
-}
+const (
+	NotFound    = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/404.jpg"
+	YoutubeIMG  = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/youtube.png"
+	BiliBiliIMG = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/bilibili.png"
+	TwitterIMG  = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/twitter.png"
+	WorryIMG    = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/parerunworry.png"
+	Go_Simp     = "https://raw.githubusercontent.com/JustHumanz/Vtube_bot/master/Img/go-simp.png"
+)
 
-type configStruct struct {
-	Token     string   `json:"Token"`
-	BotPrefix Prefix   `json:"BotPrefix"`
-	Emoji     Emoji    `json:"Emoji"`
-	YtToken   []string `json:"YtToken"`
-}
-
-type Emoji struct {
-	Fanart     []string `json:"Fanart"`
-	Livestream []string `json:"Livestream"`
-}
-
-type Prefix struct {
-	Fanart, Youtube, Bilibili, General string
+type ConfigFile struct {
+	Discord       string `json:"Discord"`
+	TwitterBearer string `json:"TwitterBearer"`
+	ImgurClinet   string `json:"ImgurClinet"`
+	BiliSess      string `json:"BiliSess"`
+	SauceAPI      string `json:"SauceAPI"`
+	SQL           struct {
+		User string `json:"User"`
+		Pass string `json:"Pass"`
+		Host string `json:"Host"`
+	} `json:"Sql"`
+	BotPrefix struct {
+		Fanart   string `json:"Fanart"`
+		Youtube  string `json:"Youtube"`
+		Bilibili string `json:"Bilibili"`
+		General  string `json:"General"`
+	} `json:"BotPrefix"`
+	Emoji struct {
+		Fanart     []string `json:"Fanart"`
+		Livestream []string `json:"Livestream"`
+	} `json:"Emoji"`
+	YtToken []string `json:"YtToken"`
 }
 
 //read from config file
 func ReadConfig() (*sql.DB, error) {
 	fmt.Println("Reading config file...")
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true})
 
+	file, err := ioutil.ReadFile("config/config.json")
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+
+	fmt.Println(string(file))
+
+	err = json.Unmarshal(file, &config)
+
+	if err != nil {
+		return nil, err
+	}
 	log.Info("Open DB")
-	user := os.Getenv("SQLUSER")
-	pass := os.Getenv("SQLPASS")
-	host := os.Getenv("DBHOST")
-	db, err := sql.Open("mysql", ""+user+":"+pass+"@tcp("+host+":3306)/Vtuber?parseTime=true")
+
+	db, err := sql.Open("mysql", ""+config.SQL.User+":"+config.SQL.Pass+"@tcp("+config.SQL.Host+":3306)/Vtuber?parseTime=true")
 	if err != nil {
 		log.Error(err, " Something worng with database,make sure you create Vtuber database first")
 		os.Exit(1)
@@ -81,21 +99,15 @@ func ReadConfig() (*sql.DB, error) {
 		os.Exit(1)
 	}
 
-	file, err := ioutil.ReadFile("config/config.json")
+	TwitterToken = config.TwitterBearer
+	ImgurClient = config.ImgurClinet
+	BiliBiliSes = config.BiliSess
+	//NotFound =
+	SauceAPI = config.SauceAPI
+	Logging = os.Getenv("LOG")
+	OwnerDiscordID = os.Getenv("OWNER")
 
-	if err != nil {
-		fmt.Println(err.Error())
-		return db, err
-	}
-
-	fmt.Println(string(file))
-
-	err = json.Unmarshal(file, &config)
-
-	if err != nil {
-		return db, err
-	}
-	Token = config.Token
+	Token = config.Discord
 	YtToken = config.YtToken
 	EmojiFanart = config.Emoji.Fanart
 
