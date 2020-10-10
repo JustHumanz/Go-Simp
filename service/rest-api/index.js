@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "https://github.com/JustHumanz/Go-simp/blob/master/service/rest-api/routes/routes.js" });
+  res.json({ message: "see at /doc" });
 });
 
 require("./routes/routes.js")(app);
