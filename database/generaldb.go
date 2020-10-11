@@ -168,7 +168,7 @@ func (Member Name) GetMemberURL() DataFanart {
 			err = rows.Scan(&Data.PermanentURL, &Data.Author, &Data.Likes, &PhotoTmp, &Data.Videos, &Data.Text)
 			BruhMoment(err, "", false)
 		}
-		Data.Photos = strings.Fields(PhotoTmp)
+		Data.Photos = strings.Split(PhotoTmp, "\n")
 		Data.State = "Twitter"
 	} else {
 		rows, err := DB.Query(`SELECT PermanentURL,Author,Likes,Photos,Text,Dynamic_id FROM TBiliBili WHERE VtuberMember_id=? ORDER by RAND() LIMIT 1`, Member.ID)
@@ -180,7 +180,7 @@ func (Member Name) GetMemberURL() DataFanart {
 			BruhMoment(err, "", false)
 
 		}
-		Data.Photos = strings.Fields(PhotoTmp)
+		Data.Photos = strings.Split(PhotoTmp, "\n")
 		Data.State = "TBiliBili"
 	}
 	return Data

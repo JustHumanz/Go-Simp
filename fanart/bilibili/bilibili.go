@@ -15,13 +15,13 @@ import (
 	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 )
 
 var (
 	BotSession *discordgo.Session
-	IMGRAPI    string
 	wg         sync.WaitGroup
 )
 
@@ -139,6 +139,8 @@ func (Data SubTbili) Mirroring() (string, int, error) {
 	buf := &bytes.Buffer{}
 	writer := multipart.NewWriter(buf)
 	err := writer.WriteField("image", link)
+	err = writer.WriteField("title", Data.Item.Title)
+	err = writer.WriteField("name", Data.User.Name)
 	err = writer.Close()
 	if err != nil {
 		log.Error(err)
@@ -154,7 +156,7 @@ func (Data SubTbili) Mirroring() (string, int, error) {
 		return "", 0, err
 	}
 
-	req.Header.Set("Authorization", "Client-ID "+IMGRAPI)
+	req.Header.Set("Authorization", "Client-ID "+config.ImgurClient)
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Votre) AppleWebKit/601.2 (KHTML, like Gecko)")
 	req.Header.Set("Content-Type", writer.FormDataContentType())
 

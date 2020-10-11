@@ -3,9 +3,9 @@ package engine
 type Sauce struct {
 	Header struct {
 		UserID           interface{} `json:"user_id"`
-		AccountType      string      `json:"account_type"`
-		ShortLimit       string      `json:"short_limit"`
-		LongLimit        string      `json:"long_limit"`
+		AccountType      interface{} `json:"account_type"`
+		ShortLimit       interface{} `json:"short_limit"`
+		LongLimit        interface{} `json:"long_limit"`
 		LongRemaining    int         `json:"long_remaining"`
 		ShortRemaining   int         `json:"short_remaining"`
 		Status           int         `json:"status"`

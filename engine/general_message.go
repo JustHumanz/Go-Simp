@@ -107,6 +107,8 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 							if err != nil {
 								log.Error(err)
 							}
+						} else {
+							Msg = "Video type,check original post"
 						}
 						Member = SendNude(FixName(Data2[ii].EnName, Data2[ii].JpName),
 							DataFix.Author, RemovePic(DataFix.Text),
