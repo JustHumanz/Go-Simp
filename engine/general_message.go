@@ -469,7 +469,7 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 				SetTitle("Help").
 				SetDescription("日本語が話せるようになってヘルプメニューを作りたい\n~Dev").
-				SetImage("https://i.pinimg.com/736x/c8/1f/55/c81f554101a36e4b853318b7f937fcbc.jpg").
+				SetImage("https://i.imgur.com/f0no1r7.png").
 				SetFooter("More like,help me").
 				SetColor(Color).MessageEmbed)
 			return

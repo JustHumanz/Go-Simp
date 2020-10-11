@@ -69,7 +69,7 @@
         "Group":[
         {
             "GroupName": "Hanayori",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Vtube_bot/master/Img/hana.png",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/hana.png",
             "Members" : [
                 {
                     "Name":"Kanochi",
@@ -139,7 +139,7 @@
         },
         {
             "GroupName": "Hololive",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Vtube_bot/master/Img/holo.png",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/holo.png",
             "Members" : [
                 {
                     "Name":"Risu",
@@ -532,7 +532,7 @@
             
         },{
             "GroupName": "Nijisanji",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Vtube_bot/master/Img/niji.png",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/niji.png",
             "Members" :[
                 {
                     "Name":"Konlulu",
@@ -821,12 +821,28 @@
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "YuyaShin2434",
                     "Region":"ID"
+                },
+                {
+                    "Name":"Aadya",
+                    "EN_Name":"Aadya",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#Aadyart",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UC_aB_-PHLFHiP61djM0oOiQ"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Aadya_VTuber",
+                    "Region":"EN"
                 }
                 
             ]
         },{
             "GroupName": "Kizuna_AI",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Vtube_bot/master/Img/kizuna.png",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/kizuna.png",
             "Members" :[
                 {
                     "Name":"Ai-chan",
@@ -848,7 +864,7 @@
             ]
         },{
             "GroupName": "ENTUM",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Vtube_bot/master/Img/entum.png",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/entum.png",
             "Members" :[
                 {
                     "Name":"hina-chan",
@@ -869,7 +885,7 @@
             ]
         },{
             "GroupName": "MAHA5",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Vtube_bot/master/Img/MAHA5.png",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/MAHA5.png",
             "Members" :[
                 {
                     "Name":"Alia Adelia",
