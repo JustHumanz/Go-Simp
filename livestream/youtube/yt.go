@@ -20,10 +20,7 @@ var (
 )
 
 func Start(Bot *discordgo.Session) {
-	funcvar := engine.GetFunctionName(Start)
-	engine.Debugging(funcvar, "Starting ", BotSession)
 	BotSession = Bot
-	go BotSession.AddHandler(YtGroup)
 	yttoken = config.YtToken[0]
 	log.Info("Youtube module ready")
 	//CheckSchedule()

@@ -4,7 +4,6 @@ import (
 	"sync"
 	"time"
 
-	config "github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 	"github.com/bwmarrin/discordgo"
@@ -12,17 +11,14 @@ import (
 )
 
 var (
-	Prefix     string
 	loc        *time.Location
 	BotSession *discordgo.Session
 )
 
 func Start(Bot *discordgo.Session) {
 	BotSession = Bot
-	Prefix = config.PBilibili
-	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
-	go BotSession.AddHandler(Message)
-	go BotSession.AddHandler(Space)
+	//go BotSession.AddHandler(Message)
+	//go BotSession.AddHandler(Space)
 }
 
 func CheckSchedule() {

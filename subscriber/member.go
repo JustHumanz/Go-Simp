@@ -1,10 +1,7 @@
 package subscriber
 
 import (
-	"math/rand"
 	"os"
-	"strconv"
-	"strings"
 
 	"github.com/bwmarrin/discordgo"
 	"gopkg.in/robfig/cron.v2"
@@ -29,7 +26,6 @@ func Start(c *cron.Cron) {
 		log.Error("BiliBili Session not found")
 		os.Exit(1)
 	}
-	go Bot.AddHandler(SubsMessage)
 	c.AddFunc("@every 1h0m0s", CheckYtSubsCount)
 	c.AddFunc("@every 0h15m0s", CheckTwFollowCount)
 	c.AddFunc("@every 0h20m0s", CheckBiliFollowCount)
@@ -41,74 +37,6 @@ func SendNude(Embed *discordgo.MessageEmbed, Group database.GroupName) {
 		msg, err := Bot.ChannelMessageSendEmbed(Channel, Embed)
 		if err != nil {
 			log.Error(msg, err)
-		}
-	}
-}
-func gacha() bool {
-	return rand.Float32() < 0.5
-}
-
-func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
-	prefix := config.PGeneral
-	m.Content = strings.ToLower(m.Content)
-	CommandArray := strings.Split(m.Content, " ")
-	if strings.HasPrefix(m.Content, prefix) {
-		if CommandArray[0] == prefix+"subscriber" {
-			for _, Group := range Data {
-				Members := database.GetName(Group.ID)
-				for _, Member := range Members {
-					if CommandArray[1] == strings.ToLower(Member.Name) {
-						var (
-							embed  *discordgo.MessageEmbed
-							Avatar string
-						)
-						SubsData := Member.GetSubsCount()
-						if gacha() {
-							Avatar = Member.YoutubeAvatar
-						} else {
-							if Member.BiliRoomID != 0 {
-								Avatar = Member.BiliBiliAvatar
-							} else {
-								Avatar = Member.YoutubeAvatar
-							}
-						}
-						Color, err := engine.GetColor("/tmp/asa3.tmp", m.Author.Avatar)
-						if err != nil {
-							log.Error(err)
-						}
-						if SubsData.BiliFollow != 0 {
-							embed = engine.NewEmbed().
-								SetAuthor(m.Author.Username, m.Author.AvatarURL("80"), "https://www.youtube.com/channel/"+Member.YoutubeID+"?sub_confirmation=1").
-								SetTitle(engine.FixName(Member.EnName, Member.JpName)).
-								SetImage(Avatar).
-								AddField("Youtube subscriber", strconv.Itoa(SubsData.YtSubs)).
-								AddField("Youtube views", strconv.Itoa(SubsData.YtViews)).
-								AddField("Youtube videos", strconv.Itoa(SubsData.YtVideos)).
-								AddField("BiliBili followers", strconv.Itoa(SubsData.BiliFollow)).
-								AddField("BiliBili views", strconv.Itoa(SubsData.BiliViews)).
-								AddField("BiliBili videos", strconv.Itoa(SubsData.BiliVideos)).
-								AddField("Twitter followers", strconv.Itoa(SubsData.TwFollow)).
-								InlineAllFields().
-								SetColor(Color).MessageEmbed
-						} else {
-							embed = engine.NewEmbed().
-								SetAuthor(m.Author.Username, m.Author.AvatarURL("80"), "https://www.youtube.com/channel/"+Member.YoutubeID+"?sub_confirmation=1").
-								SetTitle(engine.FixName(Member.EnName, Member.JpName)).
-								SetImage(Avatar).
-								AddField("Youtube subscriber", strconv.Itoa(SubsData.YtSubs)).
-								AddField("Youtube views", strconv.Itoa(SubsData.YtViews)).
-								AddField("Youtube videos", strconv.Itoa(SubsData.YtVideos)).
-								AddField("Twitter followers", strconv.Itoa(SubsData.TwFollow)).
-								InlineAllFields().
-								SetColor(Color).MessageEmbed
-						}
-						msg, err := s.ChannelMessageSendEmbed(m.ChannelID, embed)
-						if err != nil {
-							log.Error(err, msg)
-						}
-					}
-				}
-			}
 		}
 	}
 }

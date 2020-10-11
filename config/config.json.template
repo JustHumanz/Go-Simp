@@ -1,5 +1,14 @@
 {
-    "Token": "#Discord bot token#",
+    "Discord": "#Discord Token",
+    "TwitterBearer": "#TwitterBearer",
+    "ImgurClinet": "#ImgurClinet",
+    "BiliSess": "#BiliBili Sess",
+    "SauceAPI": "#SauceAPI",
+    "Sql": {
+        "User": "#DBuser",
+        "Pass": "#DBpass",
+        "Host": "#DBhost"
+    },
     "BotPrefix": {
         "Fanart": "art!>",
         "Youtube": "yt!>",
@@ -8,18 +17,15 @@
     },
     "Emoji": {
         "Fanart": [
-            "❤️", 
-            "😍", 
-            "👌", 
-            "👍", 
-            "🤔", 
-            "🥴"
+            "❤️"
         ],
         "Livestream":[
             "❤️"
         ]
     },
-    "YtToken": "#Token#",
-    "YtToken2": "#Token#"
+    "YtToken": [
+        "#GoogleAPI Token",
+        "#GoogleAPI Token"
+    ]
 
 }

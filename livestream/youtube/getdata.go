@@ -64,10 +64,12 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 			duration := durafmt.Parse(ParseDuration(Data.Items[i].ContentDetails.Duration))
 			if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|mv|covered|op)", strings.ToLower(Data.Items[i].Snippet.Title)); Cover {
 				yttype = "Covering"
+			} else if Chat, _ := regexp.MatchString("(?m)(free|chat|room)", Data.Items[i].Snippet.Title); Chat {
+				yttype = "ChatRoom"
 			} else {
 				yttype = "Streaming"
 			}
-			Check, DataDB := database.CheckVideoID(VideoID[i])
+			DataDB := database.CheckVideoID(VideoID[i])
 
 			if Data.Items[i].Snippet.VideoStatus == "upcoming" {
 				Viewers, err = GetWaiting(VideoID[i])
@@ -76,10 +78,8 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 				}
 			} else if Data.Items[i].LiveDetails.Viewers == "" {
 				Viewers = Data.Items[i].Statistics.ViewCount
-
 			} else {
 				Viewers = Data.Items[i].LiveDetails.Viewers
-
 			}
 
 			if Data.Items[i].LiveDetails.StartTime.IsZero() {
@@ -102,7 +102,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 				Group:  Group,
 				Member: Name,
 			}
-			if Check {
+			if DataDB != (database.YtDbData{}) {
 				DataDB.Viewers = Viewers
 				DataDB.End = Data.Items[i].LiveDetails.EndTime
 				DataDB.Length = duration.String()

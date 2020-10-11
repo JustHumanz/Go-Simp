@@ -1,28 +1,28 @@
-package bilibili
+package engine
 
 import (
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/JustHumanz/Go-simp/config"
-
+	config "github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
-	engine "github.com/JustHumanz/Go-simp/engine"
 	"github.com/bwmarrin/discordgo"
 	"github.com/hako/durafmt"
 	log "github.com/sirupsen/logrus"
 )
 
-func Space(s *discordgo.Session, m *discordgo.MessageCreate) {
+func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
+	loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
+	Prefix := config.PBilibili
 	m.Content = strings.ToLower(m.Content)
-	SendEmbed := func(Data engine.Memberst) {
+	SendEmbed := func(Data Memberst) {
 		if Data.VideoID != "" {
-			Color, err := engine.GetColor("/tmp/bil1.tmp", Data.Thumb)
+			Color, err := GetColor("/tmp/bil1.tmp", Data.Thumb)
 			if err != nil {
 				log.Error(err)
 			}
-			embed := engine.NewEmbed().
+			embed := NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 				SetTitle(Data.VTName).
 				SetDescription(Data.Desc).
@@ -37,7 +37,7 @@ func Space(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetColor(Color).MessageEmbed
 			s.ChannelMessageSendEmbed(m.ChannelID, embed)
 		} else {
-			embed := engine.NewEmbed().
+			embed := NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 				SetTitle(Data.VTName).
 				SetDescription(Data.Msg).
@@ -53,9 +53,9 @@ func Space(s *discordgo.Session, m *discordgo.MessageCreate) {
 			GroupName := strings.TrimSpace(Payload)
 			FindGroupArry := strings.Split(GroupName, ",")
 			for i := 0; i < len(FindGroupArry); i++ {
-				VTuberGroup, err := engine.FindGropName(FindGroupArry[i])
+				VTuberGroup, err := FindGropName(FindGroupArry[i])
 				if err != nil {
-					VTData := engine.ValidName(FindGroupArry[i])
+					VTData := ValidName(FindGroupArry[i])
 					if VTData.ID == 0 {
 						s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry[i]+"`,Name of Vtuber Group was not found")
 					} else {
@@ -76,7 +76,7 @@ func Space(s *discordgo.Session, m *discordgo.MessageCreate) {
 								SendEmbed(VTData)
 							}
 						} else {
-							SendEmbed(engine.Memberst{
+							SendEmbed(Memberst{
 								Msg: "It looks like `" + VTData.VTName + "` doesn't have a schedule livestream for now",
 							})
 						}
@@ -89,8 +89,8 @@ func Space(s *discordgo.Session, m *discordgo.MessageCreate) {
 							expiresAt := time.Now().In(loc)
 							diff := expiresAt.In(loc).Sub(Data[ii].UploadDate)
 							duration := durafmt.Parse(diff).LimitFirstN(2)
-							SendEmbed(engine.Memberst{
-								VTName:     engine.FixName(Data[ii].EnName, Data[ii].JpName),
+							SendEmbed(Memberst{
+								VTName:     FixName(Data[ii].EnName, Data[ii].JpName),
 								BiliAvatar: Data[ii].Avatar,
 								Desc:       Data[ii].Title,
 								Thumb:      Data[ii].Thumbnail,
@@ -103,7 +103,7 @@ func Space(s *discordgo.Session, m *discordgo.MessageCreate) {
 							})
 						}
 					} else {
-						SendEmbed(engine.Memberst{
+						SendEmbed(Memberst{
 							Msg: "It looks like `" + VTuberGroup.NameGroup + "` doesn't have a schedule livestream for now",
 						})
 					}
@@ -114,15 +114,17 @@ func Space(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 }
 
-func Message(s *discordgo.Session, m *discordgo.MessageCreate) {
+func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
+	Prefix := config.PBilibili
+	loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
 	m.Content = strings.ToLower(m.Content)
-	SendEmbed := func(Data engine.Memberst) {
+	SendEmbed := func(Data Memberst) {
 		if Data.VideoID != "" {
-			Color, err := engine.GetColor("/tmp/bil1.tmp", Data.Thumb)
+			Color, err := GetColor("/tmp/bil1.tmp", Data.Thumb)
 			if err != nil {
 				log.Error(err)
 			}
-			embed := engine.NewEmbed().
+			embed := NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 				SetTitle(Data.VTName).
 				SetDescription(Data.Desc).
@@ -134,7 +136,7 @@ func Message(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetColor(Color).MessageEmbed
 			s.ChannelMessageSendEmbed(m.ChannelID, embed)
 		} else {
-			embed := engine.NewEmbed().
+			embed := NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 				SetTitle(Data.VTName).
 				SetDescription(Data.Msg).
@@ -151,9 +153,9 @@ func Message(s *discordgo.Session, m *discordgo.MessageCreate) {
 			FindGroupArry := strings.Split(GroupName, ",")
 			if CommandArray[0] == Prefix+"live" {
 				for i := 0; i < len(FindGroupArry); i++ {
-					VTuberGroup, err := engine.FindGropName(FindGroupArry[i])
+					VTuberGroup, err := FindGropName(FindGroupArry[i])
 					if err != nil {
-						VTData := engine.ValidName(FindGroupArry[i])
+						VTData := ValidName(FindGroupArry[i])
 						if VTData.ID == 0 {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry[i]+"`,Name of Vtuber Group was not found")
 						} else {
@@ -172,7 +174,7 @@ func Message(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SendEmbed(VTData)
 								}
 							} else {
-								SendEmbed(engine.Memberst{
+								SendEmbed(Memberst{
 									Msg: "It looks like `" + VTData.VTName + "` doesn't have a livestream right now",
 								})
 							}
@@ -184,8 +186,8 @@ func Message(s *discordgo.Session, m *discordgo.MessageCreate) {
 								expiresAt := time.Now().In(loc)
 								diff := expiresAt.In(loc).Sub(Data[ii].ScheduledStart)
 								duration := durafmt.Parse(diff).LimitFirstN(2)
-								SendEmbed(engine.Memberst{
-									VTName:     engine.FixName(Data[ii].EnName, Data[ii].JpName),
+								SendEmbed(Memberst{
+									VTName:     FixName(Data[ii].EnName, Data[ii].JpName),
 									BiliAvatar: Data[ii].Avatar,
 									Desc:       Data[ii].Description,
 									Thumb:      Data[ii].Thumbnail,
@@ -196,7 +198,7 @@ func Message(s *discordgo.Session, m *discordgo.MessageCreate) {
 								})
 							}
 						} else {
-							SendEmbed(engine.Memberst{
+							SendEmbed(Memberst{
 								Msg: "It looks like `" + VTuberGroup.NameGroup + "` doesn't have a livestream right now",
 							})
 						}
@@ -204,9 +206,9 @@ func Message(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			} else if CommandArray[0] == Prefix+"past" || CommandArray[0] == Prefix+"last" {
 				for i := 0; i < len(FindGroupArry); i++ {
-					VTuberGroup, err := engine.FindGropName(FindGroupArry[i])
+					VTuberGroup, err := FindGropName(FindGroupArry[i])
 					if err != nil {
-						VTData := engine.ValidName(FindGroupArry[i])
+						VTData := ValidName(FindGroupArry[i])
 						if VTData.ID == 0 {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry[i]+"`,Name of Vtuber Group was not found")
 						} else {
@@ -225,7 +227,7 @@ func Message(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SendEmbed(VTData)
 								}
 							} else {
-								SendEmbed(engine.Memberst{
+								SendEmbed(Memberst{
 									Msg: "It looks like `" + VTData.VTName + "` doesn't have a Past livestream right now",
 								})
 							}
@@ -237,8 +239,8 @@ func Message(s *discordgo.Session, m *discordgo.MessageCreate) {
 								expiresAt := time.Now().In(loc)
 								diff := expiresAt.In(loc).Sub(Data[ii].ScheduledStart)
 								duration := durafmt.Parse(diff).LimitFirstN(2)
-								SendEmbed(engine.Memberst{
-									VTName:     engine.FixName(Data[ii].EnName, Data[ii].JpName),
+								SendEmbed(Memberst{
+									VTName:     FixName(Data[ii].EnName, Data[ii].JpName),
 									BiliAvatar: Data[ii].Avatar,
 									Desc:       Data[ii].Description,
 									Thumb:      Data[ii].Thumbnail,
@@ -249,7 +251,7 @@ func Message(s *discordgo.Session, m *discordgo.MessageCreate) {
 								})
 							}
 						} else {
-							SendEmbed(engine.Memberst{
+							SendEmbed(Memberst{
 								Msg: "It looks like `" + VTuberGroup.NameGroup + "` doesn't have a Past livestream right now",
 							})
 						}

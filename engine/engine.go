@@ -56,6 +56,10 @@ func Start(b *discordgo.Session, m string) {
 	go BotSession.AddHandler(Enable)
 	go BotSession.AddHandler(Status)
 	go BotSession.AddHandler(Help)
+	go BotSession.AddHandler(BiliBiliMessage)
+	go BotSession.AddHandler(BiliBiliSpace)
+	go BotSession.AddHandler(YoutubeMessage)
+	go BotSession.AddHandler(SubsMessage)
 	go BotSession.AddHandler(Humanz)
 
 	log.Info("Engine module ready")
@@ -98,6 +102,7 @@ func Curl(url string, addheader []string) ([]byte, error) {
 	}
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
+		go BotSession.AddHandler(YoutubeMessage)
 		return nil, err
 	}
 	req.Header.Set("cache-control", "no-cache")
@@ -138,7 +143,7 @@ func CoolerCurl(urls string) ([]byte, error) {
 		counter++
 		proxyURL, err := url.Parse("http://multi_tor:16379")
 		if err != nil {
-			return []byte{}, err
+			return nil, err
 		}
 
 		client := &http.Client{
@@ -150,21 +155,21 @@ func CoolerCurl(urls string) ([]byte, error) {
 
 		request, err := http.NewRequest("GET", urls, nil)
 		if err != nil {
-			return []byte{}, err
+			return nil, err
 		}
 
 		response, err := client.Do(request)
 		if err != nil && counter == 3 {
-			return []byte{}, err
+			return nil, err
 		}
 
 		if response.StatusCode != http.StatusOK && counter == 3 {
-			return []byte{}, errors.New("Tor get Status code " + strconv.Itoa(response.StatusCode))
+			return nil, errors.New("Tor get Status code " + strconv.Itoa(response.StatusCode))
 		}
 
 		data, err := ioutil.ReadAll(response.Body)
 		if err != nil {
-			return []byte{}, err
+			return nil, err
 		}
 		return data, nil
 	}

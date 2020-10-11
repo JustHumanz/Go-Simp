@@ -61,7 +61,7 @@ func (Data YtDbData) InputYt(MemberID int64) {
 }
 
 //Check new video or not
-func CheckVideoID(VideoID string) (bool, YtDbData) {
+func CheckVideoID(VideoID string) YtDbData {
 	funcvar := GetFunctionName(CheckVideoID)
 	Debugging(funcvar, "In", VideoID)
 	var Data YtDbData
@@ -74,9 +74,9 @@ func CheckVideoID(VideoID string) (bool, YtDbData) {
 		BruhMoment(err, "", false)
 	}
 	if Data.ID == 0 {
-		return false, Data
+		return YtDbData{}
 	} else {
-		return true, Data
+		return Data
 	}
 }
 

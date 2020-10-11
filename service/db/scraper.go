@@ -88,11 +88,12 @@ func FilterYt(Dat database.Name) {
 		for i := 0; i < len(Data.Items); i++ {
 			if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|mv)", Data.Items[i].Snippet.Title); Cover {
 				yttype = "Covering"
+			} else if Chat, _ := regexp.MatchString("(?m)(free|chat|room)", Data.Items[i].Snippet.Title); Chat {
+				yttype = "ChatRoom"
 			} else {
 				yttype = "Streaming"
 			}
-			Check, _ := database.CheckVideoID(VideoID[i])
-			if Check {
+			if database.CheckVideoID(VideoID[i]) != (database.YtDbData{}) {
 				continue
 			} else {
 				log.Info("New video")
