@@ -210,11 +210,11 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 										SetImage(DataMember[z].Thumb).
 										SetThumbnail(VTData.YtAvatar).
 										SetURL("https://www.youtube.com/watch?v="+DataMember[z].VideoID).
-										AddField("Viewers", DataMember[z].Viewers).
 										AddField("Live duration", durationlive.String()).
 										AddField("Live ended", duration.String()+" Ago").
-										SetFooter(DataMember[z].Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 										InlineAllFields().
+										AddField("Viewers", DataMember[z].Viewers).
+										SetFooter(DataMember[z].Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 										SetColor(Color).MessageEmbed)
 								}
 							} else {
@@ -246,11 +246,11 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetDescription(Data[ii].Title).
 									SetImage(Data[ii].Thumb).
 									SetURL("https://www.youtube.com/watch?v="+Data[ii].VideoID).
-									AddField("Viewers", Data[ii].Viewers).
 									AddField("Live duration", durationlive.String()).
 									AddField("Live ended", duration.String()+" Ago").
-									SetFooter(Data[ii].Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 									InlineAllFields().
+									AddField("Viewers", Data[ii].Viewers).
+									SetFooter(Data[ii].Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 									SetColor(Color).MessageEmbed)
 							}
 						} else {
