@@ -14,8 +14,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/JustHumanz/Go-simp/config"
-
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 	bilibili "github.com/JustHumanz/Go-simp/livestream/bilibili/live"
@@ -65,7 +63,7 @@ func init() {
 	DBHost = os.Getenv("DBHOST")
 	user = os.Getenv("SQLUSER")
 	pass = os.Getenv("SQLPASS")
-	BiliSession = config.BiliBiliSes
+	BiliSession = os.Getenv("BILISESS")
 
 	if DBHost == "" || user == "" || pass == "" || YtToken == "" || BiliSession == "" {
 		log.Error("Database hosts,user,pass,YtToken,BILISESS not found")
