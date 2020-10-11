@@ -5,10 +5,10 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/JustHumanz/Go-simp/config"
+	config "github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
-	"github.com/JustHumanz/Go-simp/engine"
-	"github.com/prometheus/common/log"
+	engine "github.com/JustHumanz/Go-simp/engine"
+	log "github.com/sirupsen/logrus"
 )
 
 type PushData struct {
@@ -60,8 +60,10 @@ func (Data PushData) SendNude() error {
 					})
 				}
 			} else {
-				log.Info("Same post,multiple hashtags")
-				log.Info("UrlTMP :", UrlTMP, " PermanentURL: ", url)
+				log.WithFields(log.Fields{
+					"Old URL": UrlTMP,
+					"New URL": url,
+				}).Info("Same post,multiple hashtags")
 			}
 		}(DiscordChannelID[i], wg)
 	}

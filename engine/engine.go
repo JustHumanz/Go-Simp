@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"errors"
@@ -11,6 +12,7 @@ import (
 	"io"
 	"io/ioutil"
 	"math/rand"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
@@ -96,13 +98,13 @@ func GetFunctionName(i interface{}) string {
 
 //make a http request
 func Curl(url string, addheader []string) ([]byte, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
 	var body []byte
-	spaceClient := http.Client{
-		Timeout: time.Second * 30, // Timeout after 30 seconds
-	}
+	spaceClient := http.Client{}
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		go BotSession.AddHandler(YoutubeMessage)
 		return nil, err
 	}
 	req.Header.Set("cache-control", "no-cache")
@@ -111,7 +113,7 @@ func Curl(url string, addheader []string) ([]byte, error) {
 		req.Header.Set(addheader[0], addheader[1])
 	}
 
-	res, err := spaceClient.Do(req)
+	res, err := spaceClient.Do(req.WithContext(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -139,6 +141,9 @@ func Curl(url string, addheader []string) ([]byte, error) {
 //make a cooler http request *with multitor*
 func CoolerCurl(urls string) ([]byte, error) {
 	var counter int
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
 	for {
 		counter++
 		proxyURL, err := url.Parse("http://multi_tor:16379")
@@ -149,8 +154,10 @@ func CoolerCurl(urls string) ([]byte, error) {
 		client := &http.Client{
 			Transport: &http.Transport{
 				Proxy: http.ProxyURL(proxyURL),
+				DialContext: (&net.Dialer{
+					Timeout: 10 * time.Second,
+				}).DialContext,
 			},
-			Timeout: 30 * time.Second,
 		}
 
 		request, err := http.NewRequest("GET", urls, nil)
@@ -158,7 +165,7 @@ func CoolerCurl(urls string) ([]byte, error) {
 			return nil, err
 		}
 
-		response, err := client.Do(request)
+		response, err := client.Do(request.WithContext(ctx))
 		if err != nil && counter == 3 {
 			return nil, err
 		}
