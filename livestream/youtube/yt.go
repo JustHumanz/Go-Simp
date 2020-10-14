@@ -50,7 +50,7 @@ func GetWaiting(VideoID string) (string, error) {
 	)
 	bit, curlerr = engine.Curl(urls, nil)
 	if curlerr != nil || bit == nil {
-		bit, curlerr = engine.CoolerCurl(urls)
+		bit, curlerr = engine.CoolerCurl(urls, nil)
 		if curlerr != nil {
 			return "0", curlerr
 		} else {
@@ -86,7 +86,7 @@ func CheckPrivate() {
 		)
 		for {
 			if tor {
-				_, err = engine.CoolerCurl(url)
+				_, err = engine.CoolerCurl(url, nil)
 			} else {
 				_, err = engine.Curl(url, nil)
 			}

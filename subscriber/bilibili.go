@@ -34,7 +34,7 @@ func CheckBiliFollowCount() {
 						log.Error(curlerr, string(body))
 
 						log.Info("Trying use tor")
-						body, curlerr = engine.CoolerCurl(urls)
+						body, curlerr = engine.CoolerCurl(urls, nil)
 						if curlerr != nil {
 							log.Error(curlerr)
 						}

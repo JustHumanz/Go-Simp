@@ -18,6 +18,8 @@ func CurlTwitter(Group int64) {
 		Hashtags  []string
 		TWdata    TwitterStruct
 		GroupName string
+		body      []byte
+		err       error
 	)
 	for _, hashtag := range database.GetHashtag(Group) {
 		if hashtag.TwitterHashtags != "" {
@@ -30,10 +32,19 @@ func CurlTwitter(Group int64) {
 		"GroupName": GroupName,
 	}).Info(strings.Join(Hashtags, " OR "))
 
-	query := url.QueryEscape(strings.Join(Hashtags, " OR ") + " " + "filter:links -filter:replies filter:media -filter:retweets")
-	body, err := engine.Curl("https://api.twitter.com/1.1/search/tweets.json?q="+query, []string{"Authorization", "Bearer " + config.TwitterToken})
+	url := "https://api.twitter.com/1.1/search/tweets.json?q=" + url.QueryEscape(strings.Join(Hashtags, " OR ")+" "+"filter:links -filter:replies filter:media -filter:retweets")
+	body, err = engine.Curl(url, []string{"Authorization", "Bearer " + config.TwitterToken})
 	if err != nil {
-		log.Error(err, string(body))
+		if strings.HasPrefix(err.Error(), "401 Unauthorized") {
+			body, err = engine.CoolerCurl(url, []string{"Authorization", "Bearer " + config.TwitterToken})
+			if err != nil {
+				log.Error(err, string(body))
+				return
+			}
+		} else {
+			log.Error(err, string(body))
+			return
+		}
 	}
 	err = json.Unmarshal(body, &TWdata)
 	if err != nil {

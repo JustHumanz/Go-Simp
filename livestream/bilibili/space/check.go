@@ -25,7 +25,7 @@ func (Space CheckSctruct) Check(limit string) CheckSctruct {
 	body, curlerr = engine.Curl(urls, nil)
 	if curlerr != nil {
 		log.Info("Trying use tor")
-		body, curlerr = engine.CoolerCurl(urls)
+		body, curlerr = engine.CoolerCurl(urls, nil)
 		if curlerr != nil {
 			log.Error(curlerr)
 		} else {

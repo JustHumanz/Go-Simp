@@ -139,7 +139,7 @@ func Curl(url string, addheader []string) ([]byte, error) {
 }
 
 //make a cooler http request *with multitor*
-func CoolerCurl(urls string) ([]byte, error) {
+func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 	var counter int
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -164,7 +164,11 @@ func CoolerCurl(urls string) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
-
+		request.Header.Set("cache-control", "no-cache")
+		request.Header.Set("User-Agent", RandomAgent())
+		if addheader != nil {
+			request.Header.Set(addheader[0], addheader[1])
+		}
 		response, err := client.Do(request.WithContext(ctx))
 		if err != nil && counter == 3 {
 			return nil, err
@@ -250,7 +254,7 @@ func SaucenaoCheck(url string) (bool, []string, error) {
 		log.Error(curlerr, string(body))
 		log.Info("Trying use tor")
 
-		body, curlerr = CoolerCurl(urls)
+		body, curlerr = CoolerCurl(urls, nil)
 		if curlerr != nil {
 			log.Error(curlerr)
 			return true, nil, curlerr

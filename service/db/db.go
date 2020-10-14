@@ -23,7 +23,6 @@ func CreateDB() error {
 		log.Error(err, " Something worng with database,make sure you create Vtuber database first")
 		os.Exit(1)
 	}
-
 	_, err = db.Exec("CREATE DATABASE Vtuber")
 
 	_, err = db.Exec(`USE Vtuber`)

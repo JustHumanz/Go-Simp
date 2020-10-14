@@ -47,7 +47,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					log.Error(errcurl, string(body))
 					log.Info("Trying use tor")
 
-					body, errcurl = CoolerCurl(urls)
+					body, errcurl = CoolerCurl(urls, nil)
 					if errcurl != nil {
 						log.Error(errcurl)
 					}

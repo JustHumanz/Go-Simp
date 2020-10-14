@@ -17,6 +17,7 @@ var (
 
 func Start(Bot *discordgo.Session) {
 	BotSession = Bot
+	loc, _ = time.LoadLocation("Asia/Shanghai")
 	//go BotSession.AddHandler(Message)
 	//go BotSession.AddHandler(Space)
 }

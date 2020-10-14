@@ -51,7 +51,7 @@ func CheckNew() {
 					if err != nil {
 						log.Info("Trying use tor")
 
-						body, errcurl = engine.CoolerCurl(urls)
+						body, errcurl = engine.CoolerCurl(urls, nil)
 						if errcurl != nil {
 							log.Error(errcurl)
 						} else {

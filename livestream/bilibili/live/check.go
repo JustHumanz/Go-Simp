@@ -17,7 +17,7 @@ func GetRoomStatus(RoomID int) getInfoByRoom {
 	)
 	body, curlerr = engine.Curl(url, nil)
 	if curlerr != nil {
-		body, curlerr = engine.CoolerCurl(url)
+		body, curlerr = engine.CoolerCurl(url, nil)
 		if curlerr != nil {
 			log.Error(curlerr)
 		} else {
@@ -44,7 +44,7 @@ func GetRoom2(SpaceID int) RoomID2 {
 	body, curlerr = engine.Curl(urls, nil)
 	if curlerr != nil {
 		log.Info("Trying use tor")
-		body, curlerr = engine.CoolerCurl(urls)
+		body, curlerr = engine.CoolerCurl(urls, nil)
 		if curlerr != nil {
 			log.Error(curlerr)
 		} else {
