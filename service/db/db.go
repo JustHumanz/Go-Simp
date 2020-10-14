@@ -143,7 +143,7 @@ func CreateDB() (*sql.DB, error) {
 		Title varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
 		Thumbnails varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
 		Description text COLLATE utf8mb4_unicode_ci NOT NULL,
-		UploadDate timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+		UploadDate timestamp NOT NULL DEFAULT current_timestamp(),
 		Viewers int(11) COLLATE utf8mb4_unicode_ci NOT NULL,
 		Length varchar(11) COLLATE utf8mb4_unicode_ci NOT NULL,
 		VtuberMember_id int(11) NOT NULL,
