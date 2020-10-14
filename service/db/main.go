@@ -57,6 +57,11 @@ func init() {
 	YtToken = os.Getenv("GTOKEN")
 	BiliSession = os.Getenv("SBILI")
 	Limit = 100
+
+	db, err = CreateDB()
+	if err != nil {
+		log.Error(err)
+	}
 }
 
 func main() {
@@ -66,7 +71,6 @@ func main() {
 	flag.Parse()
 
 	if (*Service) == "bootstrapping" {
-		db, _ = CreateDB()
 		AddData(res)
 		go CheckYT()
 		go CheckSchedule()
