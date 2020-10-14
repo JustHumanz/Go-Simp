@@ -97,14 +97,15 @@ func main() {
 	}
 
 	if (*Service) == "bootstrapping" {
-		db, err = config.ReadConfig()
+		conf, err := config.ReadConfig()
 		if err != nil {
 			log.Error(err)
 		}
+
 		YtToken = config.YtToken[0]
 		BiliSession = config.BiliBiliSes
 
-		err := CreateDB()
+		db, err = CreateDB(conf.SQL.User, conf.SQL.Pass, conf.SQL.Host)
 		if err != nil {
 			log.Error(err)
 		}

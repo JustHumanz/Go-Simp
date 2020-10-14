@@ -66,37 +66,22 @@ type ConfigFile struct {
 }
 
 //read from config file
-func ReadConfig() (*sql.DB, error) {
+func ReadConfig() (ConfigFile, error) {
 	fmt.Println("Reading config file...")
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true})
 
 	file, err := ioutil.ReadFile("config.toml")
 
 	if err != nil {
-		return nil, err
+		return ConfigFile{}, err
 	}
 
 	fmt.Println(string(file))
 
 	_, err = toml.Decode(string(file), &config)
 	if err != nil {
-		return nil, err
+		return ConfigFile{}, err
 	}
-	log.Info("Open DB")
-
-	db, err := sql.Open("mysql", ""+config.SQL.User+":"+config.SQL.Pass+"@tcp("+config.SQL.Host+":3306)/Vtuber?parseTime=true")
-	if err != nil {
-		log.Error(err, " Something worng with database,make sure you create Vtuber database first")
-		os.Exit(1)
-	}
-
-	//make sure can access database
-	_, err = db.Exec(`SELECT NOW()`)
-	if err != nil {
-		log.Error(err, " Something worng with database,make sure you create Vtuber database first")
-		os.Exit(1)
-	}
-
 	TwitterToken = config.TwitterBearer
 	ImgurClient = config.ImgurClinet
 	BiliBiliSes = config.BiliSess
@@ -114,5 +99,23 @@ func ReadConfig() (*sql.DB, error) {
 	PYoutube = config.BotPrefix.Youtube
 	PBilibili = config.BotPrefix.Bilibili
 
-	return db, nil
+	return config, nil
+}
+
+func (Data ConfigFile) CheckSQL() *sql.DB {
+	log.Info("Open DB")
+
+	db, err := sql.Open("mysql", ""+config.SQL.User+":"+config.SQL.Pass+"@tcp("+config.SQL.Host+":3306)/Vtuber?parseTime=true")
+	if err != nil {
+		log.Error(err, " Something worng with database,make sure you create Vtuber database first")
+		os.Exit(1)
+	}
+
+	//make sure can access database
+	_, err = db.Exec(`SELECT NOW()`)
+	if err != nil {
+		log.Error(err, " Something worng with database,make sure you create Vtuber database first")
+		os.Exit(1)
+	}
+	return db
 }

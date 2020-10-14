@@ -18,11 +18,12 @@ import (
 )
 
 func main() {
-	db, err := config.ReadConfig()
+	conf, err := config.ReadConfig()
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}
+	db := conf.CheckSQL()
 
 	Bot, _ := discordgo.New("Bot " + config.Token)
 
