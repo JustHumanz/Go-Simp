@@ -22,8 +22,8 @@ services:
       - mysql
       - db_migrate
       - multi_tor
-    restart: on-failure
     command: go run .
+    restart: on-failure
 
   db_migrate:
     image: mainbot

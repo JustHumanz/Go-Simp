@@ -532,7 +532,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 					SetDescription("```\r"+tableString.String()+"```").
-					SetThumbnail(config.Go_Simp).
+					SetThumbnail(config.GoSimpIMG).
 					SetColor(Color).MessageEmbed)
 			} else {
 				s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
@@ -561,7 +561,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 			table.Render()
 			embed := NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-				SetThumbnail(config.Go_Simp).
+				SetThumbnail(config.GoSimpIMG).
 				SetDescription("```" + tableString.String() + "```").
 				SetColor(Color).
 				SetFooter("use `Nickname` as parameter").MessageEmbed

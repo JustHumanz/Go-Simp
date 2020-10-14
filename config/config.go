@@ -38,7 +38,7 @@ const (
 	BiliBiliIMG = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/bilibili.png"
 	TwitterIMG  = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/twitter.png"
 	WorryIMG    = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/parerunworry.png"
-	Go_Simp     = "https://raw.githubusercontent.com/JustHumanz/Vtube_bot/master/Img/go-simp.png"
+	GoSimpIMG   = "https://raw.githubusercontent.com/JustHumanz/Vtube_bot/master/Img/go-simp.png"
 )
 
 type ConfigFile struct {
