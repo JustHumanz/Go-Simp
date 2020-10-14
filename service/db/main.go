@@ -14,6 +14,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/JustHumanz/Go-simp/config"
+
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 	bilibili "github.com/JustHumanz/Go-simp/livestream/bilibili/live"
@@ -27,9 +29,6 @@ var (
 	Limit       int
 	db          *sql.DB
 	YtToken     string
-	DBHost      string
-	user        string
-	pass        string
 	member      string
 	Publish     time.Time
 	Roomstatus  string
@@ -59,17 +58,6 @@ func init() {
 	}
 
 	Limit = 100
-	YtToken = os.Getenv("YtToken")
-	DBHost = os.Getenv("DBHOST")
-	user = os.Getenv("SQLUSER")
-	pass = os.Getenv("SQLPASS")
-	BiliSession = os.Getenv("BILISESS")
-
-	if DBHost == "" || user == "" || pass == "" || YtToken == "" || BiliSession == "" {
-		log.Error("Database hosts,user,pass,YtToken,BILISESS not found")
-		os.Exit(1)
-	}
-
 }
 
 func (Data NewVtuber) SendNotif(Bot *discordgo.Session) {
@@ -95,7 +83,6 @@ func (Data NewVtuber) SendNotif(Bot *discordgo.Session) {
 }
 
 func main() {
-	db = CreateDB()
 	Service := flag.String("service", "bootstrapping", "select service mode[bootstrapping/twitter_scrap]")
 	ScrapMember := flag.Bool("vtuber", false, "enable this if you want to scrap tweet(fanart) each member")
 	flag.StringVar(&member, "member", "kano", "list of vtuber name (split by space)")
@@ -110,8 +97,17 @@ func main() {
 	}
 
 	if (*Service) == "bootstrapping" {
-		db := CreateDB()
-		database.Start(db)
+		db, err = config.ReadConfig()
+		if err != nil {
+			log.Error(err)
+		}
+		YtToken = config.YtToken[0]
+		BiliSession = config.BiliBiliSes
+
+		err := CreateDB()
+		if err != nil {
+			log.Error(err)
+		}
 		AddData(res)
 		go CheckYT()
 		go CheckSchedule()
@@ -150,9 +146,6 @@ func main() {
 			os.Exit(0)
 		}
 	} else {
-		db := CreateDB()
-		database.Start(db)
-
 		AddData(res)
 		for _, NewData := range New {
 			NewData.SendNotif(Bot)

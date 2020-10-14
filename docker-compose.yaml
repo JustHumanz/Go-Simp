@@ -18,20 +18,9 @@ services:
     environment: 
     - TOR_INSTANCES=20
 
-  db_migrate:
-    build: service/db/
-    image: db_migrate
-    depends_on:
-      - mysql
-    env_file:
-      - ./.env
-    restart: on-failure
-
   mainbot:
     build: .
     image: mainbot
-    volumes:
-      - ./config/config.json:/apps/config/config.json
     depends_on:
       - mysql
       - db_migrate
@@ -39,6 +28,14 @@ services:
     env_file:
       - ./.env
     restart: on-failure
+
+  db_migrate:
+    image: mainbot
+    depends_on:
+      - mysql
+    env_file:
+      - ./.env
+    restart: on-failure    
 
   yotube-scrap:
     build: service/yt-scrap

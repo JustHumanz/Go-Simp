@@ -2,11 +2,11 @@ package config
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
 
+	"github.com/BurntSushi/toml"
 	_ "github.com/go-sql-driver/mysql"
 	log "github.com/sirupsen/logrus"
 )
@@ -42,27 +42,27 @@ const (
 )
 
 type ConfigFile struct {
-	Discord       string `json:"Discord"`
-	TwitterBearer string `json:"TwitterBearer"`
-	ImgurClinet   string `json:"ImgurClinet"`
-	BiliSess      string `json:"BiliSess"`
-	SauceAPI      string `json:"SauceAPI"`
+	Discord       string `toml:"Discord"`
+	TwitterBearer string `toml:"TwitterBearer"`
+	ImgurClinet   string `toml:"ImgurClinet"`
+	BiliSess      string `toml:"BiliSess"`
+	SauceAPI      string `toml:"SauceAPI"`
 	SQL           struct {
-		User string `json:"User"`
-		Pass string `json:"Pass"`
-		Host string `json:"Host"`
-	} `json:"Sql"`
+		User string `toml:"User"`
+		Pass string `toml:"Pass"`
+		Host string `toml:"Host"`
+	} `toml:"Sql"`
 	BotPrefix struct {
-		Fanart   string `json:"Fanart"`
-		Youtube  string `json:"Youtube"`
-		Bilibili string `json:"Bilibili"`
-		General  string `json:"General"`
-	} `json:"BotPrefix"`
+		Fanart   string `toml:"Fanart"`
+		Youtube  string `toml:"Youtube"`
+		Bilibili string `toml:"Bilibili"`
+		General  string `toml:"General"`
+	} `toml:"BotPrefix"`
 	Emoji struct {
-		Fanart     []string `json:"Fanart"`
-		Livestream []string `json:"Livestream"`
-	} `json:"Emoji"`
-	YtToken []string `json:"YtToken"`
+		Fanart     []string `toml:"Fanart"`
+		Livestream []string `toml:"Livestream"`
+	} `toml:"Emoji"`
+	YtToken []string `toml:"YtToken"`
 }
 
 //read from config file
@@ -70,17 +70,15 @@ func ReadConfig() (*sql.DB, error) {
 	fmt.Println("Reading config file...")
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true})
 
-	file, err := ioutil.ReadFile("config/config.json")
+	file, err := ioutil.ReadFile("../config/config.toml")
 
 	if err != nil {
-		fmt.Println(err.Error())
 		return nil, err
 	}
 
 	fmt.Println(string(file))
 
-	err = json.Unmarshal(file, &config)
-
+	_, err = toml.Decode(string(file), &config)
 	if err != nil {
 		return nil, err
 	}
