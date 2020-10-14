@@ -10,3 +10,4 @@ Vtuber-prod.sql
 service/rest-api/node_modules
 docker-compose-prod.yaml
 vendor
+*.toml
