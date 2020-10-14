@@ -70,7 +70,7 @@ func ReadConfig() (*sql.DB, error) {
 	fmt.Println("Reading config file...")
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true})
 
-	file, err := ioutil.ReadFile("../config/config.toml")
+	file, err := ioutil.ReadFile("../config.toml")
 
 	if err != nil {
 		return nil, err

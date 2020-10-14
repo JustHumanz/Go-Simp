@@ -8,9 +8,6 @@ services:
       MYSQL_DATABASE: Vtuber
       MYSQL_USER: vtuber
       MYSQL_PASSWORD: kano2525
-    volumes:
-      - ./service/db/Vtuber.sql:/docker-entrypoint-initdb.d/Vtuber.sql
-    command: --sql_mode="ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO"
     restart: on-failure
 
   multi_tor:
@@ -25,16 +22,15 @@ services:
       - mysql
       - db_migrate
       - multi_tor
-    env_file:
-      - ./.env
     restart: on-failure
+    command: go run .
 
   db_migrate:
     image: mainbot
     depends_on:
       - mysql
-    env_file:
-      - ./.env
+    working_dir: /go/src/github.com/JustHumanz/Go-Simp/service/db
+    command: go run .
     restart: on-failure    
 
   yotube-scrap:
