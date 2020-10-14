@@ -14,8 +14,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/JustHumanz/Go-simp/config"
-
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 	bilibili "github.com/JustHumanz/Go-simp/livestream/bilibili/live"
@@ -56,7 +54,8 @@ func init() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-
+	YtToken = os.Getenv("GTOKEN")
+	BiliSession = os.Getenv("SBILI")
 	Limit = 100
 }
 
@@ -67,18 +66,7 @@ func main() {
 	flag.Parse()
 
 	if (*Service) == "bootstrapping" {
-		conf, err := config.ReadConfig()
-		if err != nil {
-			log.Error(err)
-		}
-
-		YtToken = conf.YtToken[0]
-		BiliSession = conf.BiliSess
-
-		db, err = CreateDB(conf.SQL.User, conf.SQL.Pass, conf.SQL.Host)
-		if err != nil {
-			log.Error(err)
-		}
+		db, _ = CreateDB()
 		AddData(res)
 		go CheckYT()
 		go CheckSchedule()

@@ -15,10 +15,10 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func CreateDB(USER, PASS, HOST string) (*sql.DB, error) {
+func CreateDB() (*sql.DB, error) {
 	log.Info("Create Database")
 
-	db, err := sql.Open("mysql", ""+USER+":"+PASS+"@tcp("+HOST+":3306)/")
+	db, err := sql.Open("mysql", os.Getenv("DBUSER")+":"+os.Getenv("DBPASS")+"@tcp("+os.Getenv("DBHOST")+":3306)/")
 	if err != nil {
 		log.Error(err, " Something worng with database,make sure you create Vtuber database first")
 		os.Exit(1)
