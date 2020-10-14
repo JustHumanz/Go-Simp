@@ -30,7 +30,7 @@ services:
     depends_on:
       - mysql
     working_dir: /go/src/github.com/JustHumanz/Go-Simp/service/db
-    command: go run .
+    command: go run . -service bootstrapping
     restart: on-failure    
 
   yotube-scrap:

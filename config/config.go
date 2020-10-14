@@ -105,7 +105,7 @@ func ReadConfig() (ConfigFile, error) {
 func (Data ConfigFile) CheckSQL() *sql.DB {
 	log.Info("Open DB")
 
-	db, err := sql.Open("mysql", ""+config.SQL.User+":"+config.SQL.Pass+"@tcp("+config.SQL.Host+":3306)/Vtuber?parseTime=true")
+	db, err := sql.Open("mysql", config.SQL.User+":"+config.SQL.Pass+"@tcp("+config.SQL.Host+":3306)/Vtuber?parseTime=true")
 	if err != nil {
 		log.Error(err, " Something worng with database,make sure you create Vtuber database first")
 		os.Exit(1)

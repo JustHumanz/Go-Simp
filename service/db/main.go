@@ -60,41 +60,11 @@ func init() {
 	Limit = 100
 }
 
-func (Data NewVtuber) SendNotif(Bot *discordgo.Session) {
-	Avatar := Data.Member.YtAvatar()
-	Color, err := engine.GetColor("/tmp/notf.gg", Avatar)
-	if err != nil {
-		fmt.Println(err)
-	}
-	Channels := Data.Group.GetChannelByGroup()
-	for _, Channel := range Channels {
-		msg, err := Bot.ChannelMessageSendEmbed(Channel, engine.NewEmbed().
-			SetAuthor(Data.Group.NameGroup, Data.Group.IconURL).
-			SetTitle(engine.FixName(Data.Member.ENName, Data.Member.JPName)).
-			SetImage(Avatar).
-			SetThumbnail("https://justhumanz.me/update.png").
-			SetDescription("New Vtuber has been added to list").
-			SetURL("https://www.youtube.com/channel/"+Data.Member.YtID[0]+"?sub_confirmation=1").
-			SetColor(Color).MessageEmbed)
-		if err != nil {
-			log.Error(msg, err)
-		}
-	}
-}
-
 func main() {
 	Service := flag.String("service", "bootstrapping", "select service mode[bootstrapping/twitter_scrap]")
 	ScrapMember := flag.Bool("vtuber", false, "enable this if you want to scrap tweet(fanart) each member")
 	flag.StringVar(&member, "member", "kano", "list of vtuber name (split by space)")
 	flag.Parse()
-
-	Bot, _ := discordgo.New("Bot " + os.Getenv("DISCORD"))
-
-	err := Bot.Open()
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
 
 	if (*Service) == "bootstrapping" {
 		conf, err := config.ReadConfig()
@@ -102,8 +72,8 @@ func main() {
 			log.Error(err)
 		}
 
-		YtToken = config.YtToken[0]
-		BiliSession = config.BiliBiliSes
+		YtToken = conf.YtToken[0]
+		BiliSession = conf.BiliSess
 
 		db, err = CreateDB(conf.SQL.User, conf.SQL.Pass, conf.SQL.Host)
 		if err != nil {
@@ -148,9 +118,9 @@ func main() {
 		}
 	} else {
 		AddData(res)
-		for _, NewData := range New {
-			NewData.SendNotif(Bot)
-		}
+		//for _, NewData := range New {
+		//	NewData.SendNotif(Bot)
+		// }
 		//Tweet("Independen", 0, Limit)
 		log.Info("Done")
 		os.Exit(0)
@@ -353,6 +323,28 @@ func CheckVideoSpace() {
 					})
 				}
 			}
+		}
+	}
+}
+
+func (Data NewVtuber) SendNotif(Bot *discordgo.Session) {
+	Avatar := Data.Member.YtAvatar()
+	Color, err := engine.GetColor("/tmp/notf.gg", Avatar)
+	if err != nil {
+		fmt.Println(err)
+	}
+	Channels := Data.Group.GetChannelByGroup()
+	for _, Channel := range Channels {
+		msg, err := Bot.ChannelMessageSendEmbed(Channel, engine.NewEmbed().
+			SetAuthor(Data.Group.NameGroup, Data.Group.IconURL).
+			SetTitle(engine.FixName(Data.Member.ENName, Data.Member.JPName)).
+			SetImage(Avatar).
+			SetThumbnail("https://justhumanz.me/update.png").
+			SetDescription("New Vtuber has been added to list").
+			SetURL("https://www.youtube.com/channel/"+Data.Member.YtID[0]+"?sub_confirmation=1").
+			SetColor(Color).MessageEmbed)
+		if err != nil {
+			log.Error(msg, err)
 		}
 	}
 }
