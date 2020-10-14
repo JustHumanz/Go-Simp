@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `VtuberMember` (
   `Youtube_ID` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Youtube_Avatar` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `BiliBili_SpaceID` INT(11) DEFAULT NULL,
-  `BiliBili_RoomID`INT(11) DEFAULT NULL,
+  `BiliBili_RoomID` INT(11) DEFAULT NULL,
   `BiliBili_Avatar` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Twitter_Username` varchar(24) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Region` varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
