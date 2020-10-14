@@ -58,7 +58,7 @@ func init() {
 	BiliSession = os.Getenv("SBILI")
 	Limit = 100
 
-	db, err = CreateDB()
+	err = CreateDB()
 	if err != nil {
 		log.Error(err)
 	}
@@ -71,6 +71,7 @@ func main() {
 	flag.Parse()
 
 	if (*Service) == "bootstrapping" {
+		db = DBConn()
 		AddData(res)
 		go CheckYT()
 		go CheckSchedule()

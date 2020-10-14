@@ -15,7 +15,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func CreateDB() (*sql.DB, error) {
+func CreateDB() error {
 	log.Info("Create Database")
 
 	db, err := sql.Open("mysql", os.Getenv("DBUSER")+":"+os.Getenv("DBPASS")+"@tcp("+os.Getenv("DBHOST")+":3306)/")
@@ -28,7 +28,7 @@ func CreateDB() (*sql.DB, error) {
 
 	_, err = db.Exec(`USE Vtuber`)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS Channel (
 		id int(11) NOT NULL AUTO_INCREMENT,
@@ -38,7 +38,7 @@ func CreateDB() (*sql.DB, error) {
 		PRIMARY KEY (id)
 	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS User (
@@ -50,7 +50,7 @@ func CreateDB() (*sql.DB, error) {
 		PRIMARY KEY (id)
 	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS Twitter (
@@ -66,7 +66,7 @@ func CreateDB() (*sql.DB, error) {
 		PRIMARY KEY (id)
 	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS TBiliBili (
@@ -82,7 +82,7 @@ func CreateDB() (*sql.DB, error) {
 		PRIMARY KEY (id)
 	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS VtuberGroup (
@@ -92,7 +92,7 @@ func CreateDB() (*sql.DB, error) {
 		PRIMARY KEY (id)
 	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS VtuberMember (
@@ -113,7 +113,7 @@ func CreateDB() (*sql.DB, error) {
 		PRIMARY KEY (id)
 	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS Youtube (
@@ -133,7 +133,7 @@ func CreateDB() (*sql.DB, error) {
 		PRIMARY KEY (id)
 	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS BiliBili (
@@ -150,7 +150,7 @@ func CreateDB() (*sql.DB, error) {
 		PRIMARY KEY (id)
 	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS LiveBiliBili (
@@ -167,7 +167,7 @@ func CreateDB() (*sql.DB, error) {
 		PRIMARY KEY (id)
 	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS Vtuber.Subscriber (
@@ -183,12 +183,22 @@ func CreateDB() (*sql.DB, error) {
 		PRIMARY KEY (id)
 		);`)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	db.SetMaxIdleConns(30)
 	db.SetMaxOpenConns(50)
 	log.Info("DB ok")
-	return db, nil
+	db.Close()
+	return nil
+}
+
+func DBConn() *sql.DB {
+	db, err := sql.Open("mysql", os.Getenv("DBUSER")+":"+os.Getenv("DBPASS")+"@tcp("+os.Getenv("DBHOST")+":3306)/Vtuber?parseTime=true")
+	if err != nil {
+		log.Error(err, " Something worng with database,make sure you create Vtuber database first")
+		os.Exit(1)
+	}
+	return db
 }
 
 func GetHashtag(Group string) []database.MemberGroupID {
