@@ -1,6 +1,7 @@
 package bilibili
 
 import (
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -65,7 +66,12 @@ func (NotifData Notif) PushNotif(Color int) {
 					SetColor(Color).MessageEmbed
 				msg, err := BotSession.ChannelMessageSendEmbed(DiscordChannel, Embed)
 				if err != nil {
-					log.Error(msg, err)
+					log.Error(msg, err.Error())
+					match, _ := regexp.MatchString("Unknown Channel", err.Error())
+					if match {
+						log.Info("Delete Discord Channel ", DiscordChannel)
+						database.DelChannel(DiscordChannel, NotifData.MemberID)
+					}
 				}
 				err = engine.Reacting(map[string]string{
 					"ChannelID": DiscordChannel,

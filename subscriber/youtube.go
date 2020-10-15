@@ -3,6 +3,7 @@ package subscriber
 import (
 	"encoding/json"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/JustHumanz/Go-simp/config"
@@ -13,17 +14,19 @@ import (
 
 func CheckYtSubsCount() {
 	for k := 0; k < len(Data); k++ {
-		Names := database.GetName(Data[k].ID)
-		for _, Name := range Names {
+		for _, Name := range database.GetName(Data[k].ID) {
 			var (
 				ytstate Subs
 			)
 			head := []string{"Referer", "https://akshatmittal.com/youtube-realtime/"}
-			body, err := engine.Curl("https://counts.live/api/youtube-subscriber-count/"+Name.YoutubeID+"/live", head)
+			body, err := engine.Curl("https://counts.live/api/youtube-subscriber-count/"+strings.Split(Name.YoutubeID, "\n")[0]+"/live", head)
 			if err != nil {
 				log.Error(err, string(body))
 			}
 			err = json.Unmarshal(body, &ytstate)
+			if err != nil {
+				log.Error(err)
+			}
 			//Check Subs count
 			YtSubsDB := Name.GetSubsCount()
 

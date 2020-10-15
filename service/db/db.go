@@ -234,7 +234,7 @@ func (Data Member) BliBiliFace() string {
 		body, errcurl = engine.Curl(url, nil)
 		if body == nil {
 			log.Info("Not daijobu,trying use multitor")
-			body, errcurl = engine.CoolerCurl(url)
+			body, errcurl = engine.CoolerCurl(url, nil)
 
 			if errcurl != nil {
 				log.Error(errcurl)

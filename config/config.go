@@ -22,7 +22,7 @@ var (
 	PYoutube       string
 	PBilibili      string
 	PGeneral       string
-	TwitterToken   string
+	TwitterToken   []string
 	ImgurClient    string
 	BiliBiliSes    string
 	SauceAPI       string
@@ -42,11 +42,11 @@ const (
 )
 
 type ConfigFile struct {
-	Discord       string `toml:"Discord"`
-	TwitterBearer string `toml:"TwitterBearer"`
-	ImgurClinet   string `toml:"ImgurClinet"`
-	BiliSess      string `toml:"BiliSess"`
-	SauceAPI      string `toml:"SauceAPI"`
+	Discord       string   `toml:"Discord"`
+	TwitterBearer []string `toml:"TwitterBearer"`
+	ImgurClinet   string   `toml:"ImgurClinet"`
+	BiliSess      string   `toml:"BiliSess"`
+	SauceAPI      string   `toml:"SauceAPI"`
 	SQL           struct {
 		User string `toml:"User"`
 		Pass string `toml:"Pass"`

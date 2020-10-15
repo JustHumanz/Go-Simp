@@ -54,6 +54,11 @@ func (Data PushData) SendNude() error {
 					msg, err := BotSession.ChannelMessageSendEmbed(DiscordChannel, Embed)
 					if err != nil {
 						log.Error(msg, err)
+						match, _ := regexp.MatchString("Unknown Channel", err.Error())
+						if match {
+							log.Info("Delete Discord Channel ", DiscordChannel)
+							database.DelChannel(DiscordChannel, Data.Group.MemberID)
+						}
 					}
 					engine.Reacting(map[string]string{
 						"ChannelID": DiscordChannel,

@@ -506,8 +506,8 @@
                     "Yt_ID":[
                         "UCoSrY_IQQVpmIRZ9Xf-y93g"
                     ],
-                    "BiliBili_ID": 674600648,
-                    "BiliRoom_ID": 22503372,
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
                     "Twitter_Username": "gawrgura",
                     "Region":"US"
                 },
@@ -522,9 +522,41 @@
                     "Yt_ID":[
                         "UCyl1z3jo3XHR1riLFKG5UAg"
                     ],
-                    "BiliBili_ID": 674600649,
-                    "BiliRoom_ID": 22503378,
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
                     "Twitter_Username": "watsonameliaEN",
+                    "Region":"US"
+                },
+                {
+                    "Name":"Calli",
+                    "EN_Name":"Mori Calliope",
+                    "JP_Name":"森美声/もりかりおぺ",
+                    "Hashtag": {
+                        "Twitter": "#callillustT",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCL_qhgtOy0dy1Agp8vkySQg"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "moricalliope",
+                    "Region":"US"
+                },
+                {
+                    "Name":"Kusotori",
+                    "EN_Name":"Takanashi Kiara",
+                    "JP_Name":"小鳥遊キアラ/たかなしきあら",
+                    "Hashtag": {
+                        "Twitter": "#artsofashes",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCHsx4Hqa-1ORjQTh9TYDhww"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "takanashikiara",
                     "Region":"US"
                 }
                 
@@ -884,6 +916,59 @@
                 }
             ]
         },{
+            "GroupName": "VOMS",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/vox.png",
+            "Members" :[
+                {
+                    "Name":"Pikamee",
+                    "EN_Name":"Amano Pikamee",
+                    "JP_Name":"天野ピカミィ",
+                    "Hashtag": {
+                        "Twitter": "#pikart",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": [
+                         "UCajhBT4nMrg3DLS-bLL2RCg"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "amanopikamee",
+                    "Region":"JP"
+                },{
+                    "Name":"Tomoshika",
+                    "EN_Name":"Hikasa Tomoshika",
+                    "JP_Name":"緋笠トモシカ",
+                    "Hashtag": {
+                        "Twitter": "#トモシ画",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": [
+                         "UC3vzVK_N_SUVKqbX69L_X4g"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Tomoshika_H",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Monoe",
+                    "EN_Name":"Jitomi Monoe",
+                    "JP_Name":"磁富モノエ",
+                    "Hashtag": {
+                        "Twitter": "#磁っとみて",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": [
+                         "UCaFhsCKSSS821N-EcWmPkUQ"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Jitomi_Monoe",
+                    "Region":"JP"
+                }
+            ]
+        }
+        ,{
             "GroupName": "MAHA5",
             "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/MAHA5.png",
             "Members" :[

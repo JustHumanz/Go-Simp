@@ -12,6 +12,19 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+func Changebearer() {
+	twbearerold := twbearer
+	for _, Token := range config.TwitterToken {
+		if Token != twbearer {
+			twbearer = Token
+		}
+	}
+	log.WithFields(log.Fields{
+		"Old": twbearerold,
+		"New": twbearer,
+	}).Info("Change Twitter bearer")
+}
+
 //Start get data from twitter by group name
 func CurlTwitter(Group int64) {
 	var (
@@ -33,10 +46,11 @@ func CurlTwitter(Group int64) {
 	}).Info(strings.Join(Hashtags, " OR "))
 
 	url := "https://api.twitter.com/1.1/search/tweets.json?q=" + url.QueryEscape(strings.Join(Hashtags, " OR ")+" "+"filter:links -filter:replies filter:media -filter:retweets")
-	body, err = engine.Curl(url, []string{"Authorization", "Bearer " + config.TwitterToken})
+	body, err = engine.Curl(url, []string{"Authorization", "Bearer " + twbearer})
 	if err != nil {
 		if strings.HasPrefix(err.Error(), "401 Unauthorized") {
-			body, err = engine.CoolerCurl(url, []string{"Authorization", "Bearer " + config.TwitterToken})
+			Changebearer()
+			body, err = engine.CoolerCurl(url, []string{"Authorization", "Bearer " + twbearer})
 			if err != nil {
 				log.Error(err, string(body))
 				return

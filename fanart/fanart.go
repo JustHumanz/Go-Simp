@@ -13,7 +13,7 @@ import (
 func Start(c *cron.Cron) {
 	bot := engine.BotSession
 	db := database.DB
-	twitter.Twitterd(bot, db, 20)
+	twitter.Twitterd(bot, db)
 	bilibili.BiliBili(bot)
 
 	c.AddFunc("@every 0h1m0s", twitter.CheckNew)

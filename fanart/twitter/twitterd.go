@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"sync"
 
+	"github.com/JustHumanz/Go-simp/config"
+
 	database "github.com/JustHumanz/Go-simp/database"
 
 	"github.com/bwmarrin/discordgo"
@@ -12,13 +14,13 @@ import (
 var (
 	BotSession *discordgo.Session
 	db         *sql.DB
-	limit      int
+	twbearer   string
 )
 
-func Twitterd(bot *discordgo.Session, dbs *sql.DB, lmt int) {
+func Twitterd(bot *discordgo.Session, dbs *sql.DB) {
 	BotSession = bot
 	db = dbs
-	limit = lmt
+	twbearer = config.TwitterToken[0]
 }
 
 func CheckNew() {
