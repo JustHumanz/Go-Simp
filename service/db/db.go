@@ -185,8 +185,6 @@ func CreateDB() error {
 	if err != nil {
 		return err
 	}
-	db.SetMaxIdleConns(30)
-	db.SetMaxOpenConns(50)
 	log.Info("DB ok")
 	db.Close()
 	return nil

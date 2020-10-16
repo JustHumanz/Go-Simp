@@ -124,8 +124,7 @@ func main() {
 func CheckYT() {
 	Data := database.GetGroup()
 	for i := 0; i < len(Data); i++ {
-		Names := database.GetName(Data[i].ID)
-		for _, Name := range Names {
+		for _, Name := range database.GetName(Data[i].ID) {
 			log.WithFields(log.Fields{
 				"Vtube":        Name.EnName,
 				"Youtube ID":   Name.YoutubeID,
