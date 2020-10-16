@@ -3,7 +3,6 @@ package youtube
 import (
 	"regexp"
 	"strings"
-	"sync"
 	"time"
 
 	config "github.com/JustHumanz/Go-simp/config"
@@ -14,7 +13,29 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (PushData NotifStruct) SendNuke(Status string) {
+func (PushData NotifStruct) SendNude() {
+	id, DiscordChannelID := database.ChannelTag(PushData.Member.ID, 2)
+	for i := 0; i < len(DiscordChannelID); i++ {
+		UserTagsList := database.GetUserList(id[i], PushData.Member.ID)
+		if UserTagsList != nil {
+			msg, err := BotSession.ChannelMessageSendEmbed(DiscordChannelID[i], PushData.Embed)
+			if err != nil {
+				log.Error(msg, err)
+			}
+			msg, err = BotSession.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
+			if err != nil {
+				log.Error(msg, err)
+				match, _ := regexp.MatchString("Unknown Channel", err.Error())
+				if match {
+					log.Info("Delete Discord Channel ", DiscordChannelID[i])
+					database.DelChannel(DiscordChannelID[i], PushData.Member.ID)
+				}
+			}
+		}
+	}
+}
+
+func (PushData NotifStruct) GetEmbed(Status string) NotifStruct {
 	YtChannlID := strings.Split(PushData.Member.YoutubeID, "\n")[0]
 	Avatar := PushData.Member.YoutubeAvatar
 	YtChannel := "https://www.youtube.com/channel/" + YtChannlID + "?sub_confirmation=1"
@@ -30,7 +51,6 @@ func (PushData NotifStruct) SendNuke(Status string) {
 
 	var (
 		msg, msg1, msg2, msg3, msg4, msg5 string
-		wg                                sync.WaitGroup
 	)
 	if Status == "upcoming" {
 		log.Info("New upcoming live stream")
@@ -75,8 +95,7 @@ func (PushData NotifStruct) SendNuke(Status string) {
 		msg4 = "Viewers"
 		msg5 = PushData.Data.Viewers
 	}
-
-	Embed := engine.NewEmbed().
+	PushData.Embed = engine.NewEmbed().
 		SetAuthor(VtuberName, Avatar, YtChannel).
 		SetTitle(msg2).
 		SetDescription(PushData.Data.Title).
@@ -89,32 +108,7 @@ func (PushData NotifStruct) SendNuke(Status string) {
 		AddField(msg4, msg5).
 		SetFooter(msg3, config.YoutubeIMG).
 		SetColor(Color).MessageEmbed
-
-	id, DiscordChannelID := database.ChannelTag(PushData.Member.ID, 2)
-	for i := 0; i < len(DiscordChannelID); i++ {
-		UserTagsList := database.GetUserList(id[i], PushData.Member.ID)
-
-		go func(DiscordChannel string, wg *sync.WaitGroup) {
-			wg.Add(1)
-			if UserTagsList != nil {
-				msg, err := BotSession.ChannelMessageSendEmbed(DiscordChannel, Embed)
-				if err != nil {
-					log.Error(msg, err)
-				}
-
-				msg, err = BotSession.ChannelMessageSend(DiscordChannel, "UserTags: "+strings.Join(UserTagsList, " "))
-				if err != nil {
-					log.Error(msg, err)
-					match, _ := regexp.MatchString("Unknown Channel", err.Error())
-					if match {
-						log.Info("Delete Discord Channel ", DiscordChannel)
-						database.DelChannel(DiscordChannel, PushData.Member.ID)
-					}
-				}
-			}
-		}(DiscordChannelID[i], &wg)
-	}
-	wg.Wait()
+	return PushData
 }
 
 func Zawarudo(Region string) *time.Location {

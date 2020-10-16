@@ -22,7 +22,7 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if err != nil {
 				log.Error(err)
 			}
-			embed := NewEmbed().
+			s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 				SetTitle(Data.VTName).
 				SetDescription(Data.Desc).
@@ -34,21 +34,19 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 				AddField("Duration", Data.Length).
 				SetFooter(Data.Msg2, config.BiliBiliIMG).
 				InlineAllFields().
-				SetColor(Color).MessageEmbed
-			s.ChannelMessageSendEmbed(m.ChannelID, embed)
+				SetColor(Color).MessageEmbed)
 		} else {
-			embed := NewEmbed().
+			s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 				SetTitle(Data.VTName).
 				SetDescription(Data.Msg).
-				SetImage(config.WorryIMG).MessageEmbed
-			s.ChannelMessageSendEmbed(m.ChannelID, embed)
+				SetImage(config.WorryIMG).MessageEmbed)
 		}
 	}
 
-	Prefix_2 := "sp_" + Prefix
-	if strings.HasPrefix(m.Content, Prefix_2) {
-		Payload := m.Content[len(Prefix_2):]
+	Prefix2 := "sp_" + Prefix
+	if strings.HasPrefix(m.Content, Prefix2) {
+		Payload := m.Content[len(Prefix2):]
 		if Payload != "" {
 			GroupName := strings.TrimSpace(Payload)
 			FindGroupArry := strings.Split(GroupName, ",")
@@ -86,9 +84,7 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 					Data := database.SpaceGet(VTuberGroup.ID, 0) //database.BilGet(VTuberGroup.ID, 0, "Upcoming")
 					if Data != nil {
 						for ii := 0; ii < len(Data); ii++ {
-							expiresAt := time.Now().In(loc)
-							diff := expiresAt.In(loc).Sub(Data[ii].UploadDate)
-							duration := durafmt.Parse(diff).LimitFirstN(2)
+							diff := time.Now().In(loc).Sub(Data[ii].UploadDate)
 							SendEmbed(Memberst{
 								VTName:     FixName(Data[ii].EnName, Data[ii].JpName),
 								BiliAvatar: Data[ii].Avatar,
@@ -96,7 +92,7 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 								Thumb:      Data[ii].Thumbnail,
 								VideoID:    "https://www.bilibili.com/video/" + Data[ii].VideoID,
 								Msg:        "Video upload ",
-								Msg1:       duration.String() + " Ago",
+								Msg1:       durafmt.Parse(diff).LimitFirstN(2).String() + " Ago",
 								Msg2:       "Viewers now " + strconv.Itoa(Data[ii].Viewers),
 								Msg3:       Data[ii].Type,
 								Length:     Data[ii].Length,
@@ -124,7 +120,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if err != nil {
 				log.Error(err)
 			}
-			embed := NewEmbed().
+			s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 				SetTitle(Data.VTName).
 				SetDescription(Data.Desc).
@@ -133,15 +129,13 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetURL(Data.VideoID).
 				AddField(Data.Msg, Data.Msg1).
 				SetFooter(Data.Msg2).
-				SetColor(Color).MessageEmbed
-			s.ChannelMessageSendEmbed(m.ChannelID, embed)
+				SetColor(Color).MessageEmbed)
 		} else {
-			embed := NewEmbed().
+			s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 				SetTitle(Data.VTName).
 				SetDescription(Data.Msg).
-				SetImage(config.WorryIMG).MessageEmbed
-			s.ChannelMessageSendEmbed(m.ChannelID, embed)
+				SetImage(config.WorryIMG).MessageEmbed)
 		}
 	}
 
@@ -162,14 +156,11 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							DataMember := database.BilGet(0, VTData.ID, "Live")
 							if DataMember != nil {
 								for z := 0; z < len(DataMember); z++ {
-									expiresAt := time.Now().In(loc)
-									diff := expiresAt.In(loc).Sub(DataMember[i].ScheduledStart)
-									duration := durafmt.Parse(diff).LimitFirstN(2)
-
+									diff := time.Now().In(loc).Sub(DataMember[i].ScheduledStart.In(loc))
 									VTData.Desc = DataMember[z].Description
 									VTData.VideoID = "https://live.bilibili.com/" + strconv.Itoa(DataMember[z].LiveRoomID)
 									VTData.Msg = "Start live"
-									VTData.Msg1 = duration.String() + " Ago"
+									VTData.Msg1 = durafmt.Parse(diff).LimitFirstN(2).String() + " Ago"
 									VTData.Msg2 = "Online : " + strconv.Itoa(DataMember[z].Online)
 									SendEmbed(VTData)
 								}
@@ -183,9 +174,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						Data := database.BilGet(VTuberGroup.ID, 0, "Live")
 						if Data != nil {
 							for ii := 0; ii < len(Data); ii++ {
-								expiresAt := time.Now().In(loc)
-								diff := expiresAt.In(loc).Sub(Data[ii].ScheduledStart)
-								duration := durafmt.Parse(diff).LimitFirstN(2)
+								diff := time.Now().In(loc).Sub(Data[ii].ScheduledStart.In(loc))
 								SendEmbed(Memberst{
 									VTName:     FixName(Data[ii].EnName, Data[ii].JpName),
 									BiliAvatar: Data[ii].Avatar,
@@ -193,7 +182,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									Thumb:      Data[ii].Thumbnail,
 									VideoID:    "https://live.bilibili.com/" + strconv.Itoa(Data[ii].LiveRoomID),
 									Msg:        "Start live",
-									Msg1:       duration.String() + " Ago",
+									Msg1:       durafmt.Parse(diff).LimitFirstN(2).String() + " Ago",
 									Msg2:       "Online : " + strconv.Itoa(Data[ii].Online),
 								})
 							}
@@ -215,14 +204,11 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							DataMember := database.BilGet(0, VTData.ID, "Past")
 							if DataMember != nil {
 								for z := 0; z < len(DataMember); z++ {
-									expiresAt := time.Now().In(loc)
-									diff := DataMember[i].ScheduledStart.In(loc).Sub(expiresAt)
-									duration := durafmt.Parse(diff).LimitFirstN(2)
-
+									diff := DataMember[i].ScheduledStart.In(loc).Sub(time.Now().In(loc))
 									VTData.Desc = DataMember[z].Description
 									VTData.VideoID = "https://live.bilibili.com/" + strconv.Itoa(DataMember[z].LiveRoomID)
 									VTData.Msg = "Start live"
-									VTData.Msg1 = duration.String() + " Ago"
+									VTData.Msg1 = durafmt.Parse(diff).LimitFirstN(2).String() + " Ago"
 									VTData.Msg2 = "Online : " + strconv.Itoa(DataMember[z].Online)
 									SendEmbed(VTData)
 								}
@@ -236,9 +222,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						Data := database.BilGet(VTuberGroup.ID, 0, "Past")
 						if Data != nil {
 							for ii := 0; ii < len(Data); ii++ {
-								expiresAt := time.Now().In(loc)
-								diff := expiresAt.In(loc).Sub(Data[ii].ScheduledStart)
-								duration := durafmt.Parse(diff).LimitFirstN(2)
+								diff := time.Now().In(loc).Sub(Data[ii].ScheduledStart.In(loc))
 								SendEmbed(Memberst{
 									VTName:     FixName(Data[ii].EnName, Data[ii].JpName),
 									BiliAvatar: Data[ii].Avatar,
@@ -246,7 +230,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									Thumb:      Data[ii].Thumbnail,
 									VideoID:    "https://live.bilibili.com/" + strconv.Itoa(Data[ii].LiveRoomID),
 									Msg:        "Start live ",
-									Msg1:       duration.String() + " Ago",
+									Msg1:       durafmt.Parse(diff).LimitFirstN(2).String() + " Ago",
 									Msg2:       "Online : " + strconv.Itoa(Data[ii].Online),
 								})
 							}

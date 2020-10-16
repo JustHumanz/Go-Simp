@@ -1,5 +1,9 @@
 Discord = "#Discord token"
-TwitterBearer = "#TwitterBearer"
+TwitterBearer = [
+  "#TwitterBearer",
+  "#TwitterBearer",
+  "#TwitterBearer"
+]
 ImgurClinet = "#ImgurClinet"
 BiliSess = "#BiliSess"
 SauceAPI = "#SauceAPI"

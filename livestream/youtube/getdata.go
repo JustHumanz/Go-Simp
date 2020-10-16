@@ -123,7 +123,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 					DataDB.UpdateYt("live")
 
 					log.Info("Send to notify")
-					PushData.SendNuke("live")
+					PushData.GetEmbed("live").SendNude()
 				} else if !Data.Items[i].LiveDetails.EndTime.IsZero() && DataDB.Status == "upcoming" {
 					log.WithFields(log.Fields{
 						"VideoData ID": VideoID[i],
@@ -136,7 +136,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 					DataDB.UpdateYt("upcoming")
 
 					log.Info("Send to notify")
-					PushData.SendNuke("upcoming")
+					PushData.GetEmbed("upcoming").SendNude()
 				} else if Data.Items[i].Snippet.VideoStatus == "none" && DataDB.Viewers != Data.Items[i].Statistics.ViewCount {
 					log.WithFields(log.Fields{
 						"VideoData ID": VideoID[i],
@@ -160,13 +160,13 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 						DataDB.UpdateYt("upcoming")
 
 						log.Info("Send to notify")
-						PushData.SendNuke("upcoming")
+						PushData.GetEmbed("upcoming").SendNude()
 					}
 					//send to reminder
 					loc := Zawarudo(DataDB.Region)
 					UpcominginMinutes := int(math.Round(PushData.Data.Schedul.In(loc).Sub(time.Now().In(loc)).Minutes()))
 					if UpcominginMinutes > 60 && UpcominginMinutes < 66 || UpcominginMinutes > 30 && UpcominginMinutes < 36 {
-						PushData.SendNuke("reminder")
+						PushData.GetEmbed("reminder").SendNude()
 					}
 				} else {
 					DataDB.UpdateYt(DataDB.Status)
@@ -192,7 +192,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 					}).Info("New Upcoming live schedule")
 
 					log.Info("Send to notify")
-					PushData.SendNuke("upcoming")
+					PushData.GetEmbed("upcoming").SendNude()
 
 				} else if Data.Items[i].Snippet.VideoStatus == "live" {
 					log.WithFields(log.Fields{
@@ -202,7 +202,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 					PushData.Data.InputYt(Name.ID)
 
 					log.Info("Send to notify")
-					PushData.SendNuke("live")
+					PushData.GetEmbed("live").SendNude()
 
 				} else if Data.Items[i].Snippet.VideoStatus == "none" && yttype == "Covering" {
 					PushData.Data.Status = "past"
@@ -212,7 +212,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 						"YtID":       VideoID[i],
 						"MemberName": MemberFixName,
 					}).Info("New MV or Cover")
-					PushData.SendNuke("past")
+					PushData.GetEmbed("past").SendNude()
 
 				} else if !Data.Items[i].Snippet.PublishedAt.IsZero() && Data.Items[i].Snippet.VideoStatus == "none" {
 					PushData.Data.Status = "past"
@@ -224,14 +224,14 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 					if PushData.Data.Schedul.IsZero() {
 						PushData.Data.Schedul = PushData.Data.Published
 					}
-					PushData.SendNuke("past")
+					PushData.GetEmbed("past").SendNude()
 
 				} else {
 					log.WithFields(log.Fields{
 						"YtID":       VideoID[i],
 						"MemberName": MemberFixName,
 					}).Info("Past live stream")
-					PushData.SendNuke("past")
+					PushData.GetEmbed("past").SendNude()
 				}
 			}
 		}

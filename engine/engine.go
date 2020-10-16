@@ -62,7 +62,7 @@ func Start(b *discordgo.Session, m string) {
 	go BotSession.AddHandler(BiliBiliSpace)
 	go BotSession.AddHandler(YoutubeMessage)
 	go BotSession.AddHandler(SubsMessage)
-	go BotSession.AddHandler(Humanz)
+	//go BotSession.AddHandler(Humanz)
 
 	log.Info("Engine module ready")
 }

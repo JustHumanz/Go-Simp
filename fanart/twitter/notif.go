@@ -39,31 +39,34 @@ func (Data PushData) SendNude() error {
 		go func(DiscordChannel string, wg *sync.WaitGroup) {
 			defer wg.Done()
 			Color, _ = engine.GetColor("/tmp/tw", Data.Image)
+			var tags string
 			if UrlTMP != url {
 				if UserTagsList != nil {
-					Embed := engine.NewEmbed().
-						SetAuthor(strings.Title(Data.Group.GroupName), Data.Group.GroupIcon).
-						SetTitle(Data.UserName+"(@"+Data.ScreenName+")").
-						SetURL(url).
-						SetThumbnail(strings.Replace(Data.Avatar, "_normal.jpg", ".jpg", -1)).
-						SetDescription(RemoveTwitterShotlink(Data.Text)).
-						SetImage(Data.Image).
-						AddField("User Tags", strings.Join(UserTagsList, " ")).
-						SetColor(Color).
-						SetFooter(Data.Msg, config.TwitterIMG).MessageEmbed
-					msg, err := BotSession.ChannelMessageSendEmbed(DiscordChannel, Embed)
-					if err != nil {
-						log.Error(msg, err)
-						match, _ := regexp.MatchString("Unknown Channel", err.Error())
-						if match {
-							log.Info("Delete Discord Channel ", DiscordChannel)
-							database.DelChannel(DiscordChannel, Data.Group.MemberID)
-						}
-					}
-					engine.Reacting(map[string]string{
-						"ChannelID": DiscordChannel,
-					})
+					tags = strings.Join(UserTagsList, " ")
+				} else {
+					tags = "_"
 				}
+				msg, err := BotSession.ChannelMessageSendEmbed(DiscordChannel, engine.NewEmbed().
+					SetAuthor(strings.Title(Data.Group.GroupName), Data.Group.GroupIcon).
+					SetTitle(Data.UserName+"(@"+Data.ScreenName+")").
+					SetURL(url).
+					SetThumbnail(strings.Replace(Data.Avatar, "_normal.jpg", ".jpg", -1)).
+					SetDescription(RemoveTwitterShotlink(Data.Text)).
+					SetImage(Data.Image).
+					AddField("User Tags", tags).
+					SetColor(Color).
+					SetFooter(Data.Msg, config.TwitterIMG).MessageEmbed)
+				if err != nil {
+					log.Error(msg, err)
+					match, _ := regexp.MatchString("Unknown Channel", err.Error())
+					if match {
+						log.Info("Delete Discord Channel ", DiscordChannel)
+						database.DelChannel(DiscordChannel, Data.Group.MemberID)
+					}
+				}
+				engine.Reacting(map[string]string{
+					"ChannelID": DiscordChannel,
+				})
 			} else {
 				log.WithFields(log.Fields{
 					"Old URL": UrlTMP,

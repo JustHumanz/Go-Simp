@@ -34,6 +34,7 @@ func (NotifData Notif) PushNotif(Color int) {
 			defer wg.Done()
 
 			msg := ""
+			tags := ""
 			repost, url, err := engine.SaucenaoCheck(strings.Split(Data.Photos, "\n")[0])
 			if err != nil {
 				log.Error(err)
@@ -52,35 +53,36 @@ func (NotifData Notif) PushNotif(Color int) {
 				msg = "_"
 			}
 			if UserTagsList != nil {
-				Embed := engine.NewEmbed().
-					SetAuthor(strings.Title(Group.NameGroup), Group.IconURL).
-					SetTitle(Data.Author).
-					SetURL(Data.URL).
-					SetThumbnail(Data.Avatar).
-					SetDescription(Data.Text).
-					SetImage(NotifData.PhotosImgur).
-					AddField("User Tags", strings.Join(UserTagsList, " ")).
-					AddField("Similar art", msg).
-					SetFooter("1/"+strconv.Itoa(NotifData.PhotosCount)+" photos", config.BiliBiliIMG).
-					InlineAllFields().
-					SetColor(Color).MessageEmbed
-				msg, err := BotSession.ChannelMessageSendEmbed(DiscordChannel, Embed)
-				if err != nil {
-					log.Error(msg, err.Error())
-					match, _ := regexp.MatchString("Unknown Channel", err.Error())
-					if match {
-						log.Info("Delete Discord Channel ", DiscordChannel)
-						database.DelChannel(DiscordChannel, NotifData.MemberID)
-					}
-				}
-				err = engine.Reacting(map[string]string{
-					"ChannelID": DiscordChannel,
-				})
-				if err != nil {
-					log.Error(err)
-				}
+				tags = strings.Join(UserTagsList, " ")
 			} else {
-				//DropTheBom("_", msg)
+				tags = "_"
+			}
+
+			tmp, err := BotSession.ChannelMessageSendEmbed(DiscordChannel, engine.NewEmbed().
+				SetAuthor(strings.Title(Group.NameGroup), Group.IconURL).
+				SetTitle(Data.Author).
+				SetURL(Data.URL).
+				SetThumbnail(Data.Avatar).
+				SetDescription(Data.Text).
+				SetImage(NotifData.PhotosImgur).
+				AddField("User Tags", tags).
+				AddField("Similar art", msg).
+				SetFooter("1/"+strconv.Itoa(NotifData.PhotosCount)+" photos", config.BiliBiliIMG).
+				InlineAllFields().
+				SetColor(Color).MessageEmbed)
+			if err != nil {
+				log.Error(tmp, err.Error())
+				match, _ := regexp.MatchString("Unknown Channel", err.Error())
+				if match {
+					log.Info("Delete Discord Channel ", DiscordChannel)
+					database.DelChannel(DiscordChannel, NotifData.MemberID)
+				}
+			}
+			err = engine.Reacting(map[string]string{
+				"ChannelID": DiscordChannel,
+			})
+			if err != nil {
+				log.Error(err)
 			}
 		}(DiscordChannelID[i], wg)
 	}

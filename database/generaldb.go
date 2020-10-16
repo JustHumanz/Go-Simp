@@ -242,8 +242,7 @@ func (Data UserStruct) Adduser(MemberID int64) error {
 	ChannelID := GetChannelID(Data.Channel_ID, Data.GroupID)
 	tmp := CheckUser(Data.DiscordID, MemberID, ChannelID)
 	if tmp {
-		err := errors.New("Already registered")
-		return err
+		return errors.New("Already registered")
 	} else {
 		stmt, err := DB.Prepare(`INSERT INTO User (DiscordID,DiscordUserName,VtuberMember_id,Channel_id) values(?,?,?,?)`)
 		BruhMoment(err, "", false)

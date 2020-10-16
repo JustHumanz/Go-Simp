@@ -175,7 +175,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
 	if strings.HasPrefix(m.Content, Prefix) {
 		var (
-			counter bool
+			counter   bool
+			Already   []string
+			MemberTag []NameStruct
 		)
 		User := database.UserStruct{
 			DiscordID:       m.Author.ID,
@@ -184,100 +186,119 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 		if strings.HasPrefix(m.Content, Prefix+"tag me") {
 			VtuberName := strings.TrimSpace(strings.Replace(m.Content, Prefix+"tag me", "", -1))
-			Tag := func(NameArry, GroupName string, GroupID, MemberID int64, Group bool) {
-				if database.CheckChannelEnable(m.ChannelID, NameArry, GroupID) {
-					User.GroupID = GroupID
-					var Already []string
-					if Group {
-						for _, Member := range database.GetName(GroupID) {
-							err := User.Adduser(Member.ID)
-							if err != nil {
-								Already = append(Already, "`"+Member.Name+"`")
-							} else {
-								counter = true
-							}
+			if (VtuberName) != "" {
+				tmp := strings.Split(VtuberName, ",")
+				for _, Name := range tmp {
+					Data := FindName(Name)
+					if Data == (NameStruct{}) {
+						VTuberGroup, err := FindGropName(Name)
+						if err != nil {
+							s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid")
+							return
 						}
-						if Already != nil {
-							s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> Already Added "+strings.Join(Already, " ")+" **"+GroupName+"**")
+						if database.CheckChannelEnable(m.ChannelID, Name, VTuberGroup.ID) {
+							User.GroupID = VTuberGroup.ID
+							for _, Member := range database.GetName(VTuberGroup.ID) {
+								err := User.Adduser(Member.ID)
+								if err != nil {
+									Already = append(Already, "`"+Member.Name+"`")
+								} else {
+									counter = true
+								}
+							}
+							if Already != nil {
+								s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> Already Added "+strings.Join(Already, " ")+" **"+VTuberGroup.NameGroup+"**")
+								return
+							}
+						} else {
+							s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+VTuberGroup.NameGroup+"`")
+							return
 						}
 					} else {
-						err := User.Adduser(MemberID)
+						MemberTag = append(MemberTag, Data)
+					}
+				}
+				for i, Member := range MemberTag {
+					if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.GroupID) {
+						User.GroupID = Member.GroupID
+						err := User.Adduser(Member.MemberID)
 						if err != nil {
-							s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> Already Added `"+NameArry+"`")
+							Already = append(Already, "`"+tmp[i]+"`")
 						} else {
 							counter = true
 						}
-					}
-				} else {
-					s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+GroupName+"`")
-				}
-			}
-
-			if (VtuberName) != "" {
-				FindNameArry := strings.Split(VtuberName, ",")
-				for i := 0; i < len(FindNameArry); i++ {
-					Data, err := FindName(FindNameArry[i])
-					if err != nil {
-						VTuberGroup, err := FindGropName(FindNameArry[i])
-						if err != nil {
-							s.ChannelMessageSend(m.ChannelID, "`"+FindNameArry[i]+"` was invalid")
-							return
-						}
-						Tag(FindNameArry[i], VTuberGroup.NameGroup, VTuberGroup.ID, 0, true)
 					} else {
-						Tag(FindNameArry[i], Data.GroupName, Data.GroupID, Data.MemberID, false)
+						s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+Member.GroupName+"`")
+						return
 					}
+				}
+
+				if Already != nil {
+					s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> Already Added "+strings.Join(Already, " "))
+					return
 				}
 				if counter {
 					s.ChannelMessageSend(m.ChannelID, "done")
 				}
+
 			} else {
 				s.ChannelMessageSend(m.ChannelID, "Incomplete `tag me` command")
 			}
 		} else if strings.HasPrefix(m.Content, Prefix+"del tag") {
 			VtuberName := strings.TrimSpace(strings.Replace(m.Content, Prefix+"del tag", "", -1))
-			Del := func(NameArry, GroupName string, GroupID, MemberID int64, Group bool) {
-				if database.CheckChannelEnable(m.ChannelID, NameArry, GroupID) {
-					User.GroupID = GroupID
-					if Group {
-						for _, Mem := range database.GetName(GroupID) {
-							err := User.Deluser(Mem.ID)
-							if err != nil {
-								log.Error(err)
-								s.ChannelMessageSend(m.ChannelID, "`"+Mem.Name+"`,Already removed or This channel not Enable "+GroupName)
-							} else {
-								counter = true
-							}
-						}
-					} else {
-						err := User.Deluser(MemberID)
+			if (VtuberName) != "" {
+				tmp := strings.Split(VtuberName, ",")
+				for _, Name := range tmp {
+					Data := FindName(Name)
+					if Data == (NameStruct{}) {
+						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
-							log.Error(err)
-							s.ChannelMessageSend(m.ChannelID, "`"+NameArry+"`,Already removed or This channel not Enable "+GroupName)
+							s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid")
+							return
+						}
+						if database.CheckChannelEnable(m.ChannelID, Name, VTuberGroup.ID) {
+							User.GroupID = VTuberGroup.ID
+							for _, Member := range database.GetName(VTuberGroup.ID) {
+								err := User.Deluser(Member.ID)
+								if err != nil {
+									Already = append(Already, "`"+Member.Name+"`")
+								} else {
+									counter = true
+								}
+							}
+							if Already != nil {
+								s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> Already Added "+strings.Join(Already, " ")+" **"+VTuberGroup.NameGroup+"**")
+								return
+							}
+						} else {
+							s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+VTuberGroup.NameGroup+"`")
+							return
+						}
+
+					} else {
+						MemberTag = append(MemberTag, Data)
+					}
+				}
+
+				for i, Member := range MemberTag {
+					if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.GroupID) {
+						User.GroupID = Member.GroupID
+						err := User.Deluser(Member.MemberID)
+						if err != nil {
+							Already = append(Already, "`"+tmp[i]+"`")
 						} else {
 							counter = true
 						}
-					}
-				} else {
-					s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+NameArry+"`")
-				}
-			}
-
-			if (VtuberName) != "" {
-				FindNameArry := strings.Split(VtuberName, ",")
-				for i := 0; i < len(FindNameArry); i++ {
-					Data, err := FindName(FindNameArry[i])
-					if err != nil {
-						VTuberGroup, err := FindGropName(FindNameArry[i])
-						if err != nil {
-							s.ChannelMessageSend(m.ChannelID, "`"+FindNameArry[i]+"` was invalid")
-							return
-						}
-						Del(FindNameArry[i], VTuberGroup.NameGroup, VTuberGroup.ID, 0, true)
 					} else {
-						Del(FindNameArry[i], Data.GroupName, Data.GroupID, Data.MemberID, false)
+						s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+Member.GroupName+"`")
+						return
 					}
 				}
+				if Already != nil {
+					s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> Already Removed from your tags "+strings.Join(Already, " "))
+					return
+				}
+
 				if counter {
 					s.ChannelMessageSend(m.ChannelID, "done")
 				}
@@ -497,7 +518,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 					SetThumbnail(m.Author.AvatarURL("128")).
 					AddField("Username", m.Author.Username).
-					AddField("Vtuber Tag", strings.Join(list, ",")).
+					AddField("Vtuber Tags", strings.Join(list, ",")).
 					SetColor(Color).MessageEmbed)
 			} else {
 				s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
@@ -571,7 +592,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 //Find a valid Vtuber name from message handler
-func FindName(MemberName string) (NameStruct, error) {
+func FindName(MemberName string) NameStruct {
 	Data := database.GetGroup()
 	for i := 0; i < len(Data); i++ {
 		Names := database.GetName(Data[i].ID)
@@ -581,11 +602,11 @@ func FindName(MemberName string) (NameStruct, error) {
 					GroupName: Data[i].NameGroup,
 					GroupID:   Data[i].ID,
 					MemberID:  Name.ID,
-				}, nil
+				}
 			}
 		}
 	}
-	return NameStruct{}, errors.New("Name Vtuber not valid")
+	return NameStruct{}
 }
 
 type NameStruct struct {
