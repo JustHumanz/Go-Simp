@@ -343,6 +343,23 @@ func UpdateChannel(ChannelID string, typetag int, VtuberGroupID int64) error {
 	return nil
 }
 
+//Get discord channel id from VtuberGroup
+func (Data GroupName) GetChannelByGroup() []string {
+	var channellist []string
+	rows, err := DB.Query(`SELECT DiscordChannelID FROM Channel WHERE VtuberGroup_id=? group by DiscordChannelID`, Data.ID)
+	BruhMoment(err, "", false)
+
+	defer rows.Close()
+	for rows.Next() {
+		var list string
+		err = rows.Scan(&list)
+		BruhMoment(err, "", false)
+
+		channellist = append(channellist, list)
+	}
+	return channellist
+}
+
 //Check Discord Channel from VtuberGroup
 func ChannelCheck(VtuberGroupID int64, ChannelID string) bool {
 	funcvar := GetFunctionName(ChannelCheck)

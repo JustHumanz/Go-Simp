@@ -518,7 +518,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 					SetThumbnail(m.Author.AvatarURL("128")).
 					AddField("Username", m.Author.Username).
-					AddField("Vtuber Tags", strings.Join(list, ",")).
+					AddField("Vtuber Tag", strings.Join(list, ",")).
 					SetColor(Color).MessageEmbed)
 			} else {
 				s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
