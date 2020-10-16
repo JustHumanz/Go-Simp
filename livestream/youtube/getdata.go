@@ -15,7 +15,6 @@ import (
 
 	"github.com/hako/durafmt"
 
-	config "github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 
@@ -238,15 +237,6 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 	}
 }
 
-func ChangeToken() {
-	tokentmp := config.YtToken
-	for _, token := range tokentmp {
-		if token != yttoken {
-			yttoken = token
-		}
-	}
-}
-
 func YtAPI(VideoID []string) (YtData, error) {
 	funcvar := engine.GetFunctionName(YtAPI)
 	engine.Debugging(funcvar, "In", VideoID)
@@ -261,13 +251,13 @@ func YtAPI(VideoID []string) (YtData, error) {
 	if curlerr != nil {
 		log.Error(curlerr, string(body))
 		oldtoken := yttoken
-		ChangeToken()
+		yttoken = engine.ChangeToken(yttoken)
 		log.WithFields(log.Fields{
 			"Old Token": oldtoken,
 			"New Token": yttoken,
 		}).Warn("Token out of limit,try to change")
-	}
 
+	}
 	err := json.Unmarshal(body, &Data)
 	engine.BruhMoment(err, "", false)
 

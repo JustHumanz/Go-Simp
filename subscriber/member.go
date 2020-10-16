@@ -16,12 +16,14 @@ var (
 	BiliSession string
 	Bot         *discordgo.Session
 	Data        []database.GroupName
+	yttoken     string
 )
 
 func Start(c *cron.Cron) {
 	Bot = engine.BotSession
 	BiliSession = config.BiliBiliSes
 	Data = database.GetGroup()
+	yttoken = config.YtToken[1]
 	if BiliSession == "" {
 		log.Error("BiliBili Session not found")
 		os.Exit(1)
@@ -42,15 +44,23 @@ func SendNude(Embed *discordgo.MessageEmbed, Group database.GroupName) {
 }
 
 type Subs struct {
-	Success bool   `json:"success"`
-	Service string `json:"service"`
-	T       int64  `json:"t"`
-	Data    struct {
-		LvIdentifier string `json:"lv_identifier"`
-		Subscribers  int    `json:"subscribers"`
-		Videos       int    `json:"videos"`
-		Views        int    `json:"views"`
-	} `json:"data"`
+	Kind     string `json:"kind"`
+	Etag     string `json:"etag"`
+	PageInfo struct {
+		ResultsPerPage int `json:"resultsPerPage"`
+	} `json:"pageInfo"`
+	Items []struct {
+		Kind       string `json:"kind"`
+		Etag       string `json:"etag"`
+		ID         string `json:"id"`
+		Statistics struct {
+			ViewCount             string `json:"viewCount"`
+			CommentCount          string `json:"commentCount"`
+			SubscriberCount       string `json:"subscriberCount"`
+			HiddenSubscriberCount bool   `json:"hiddenSubscriberCount"`
+			VideoCount            string `json:"videoCount"`
+		} `json:"statistics"`
+	} `json:"items"`
 }
 
 type BiliBiliStat struct {

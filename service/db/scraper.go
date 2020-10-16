@@ -147,15 +147,20 @@ func (Data Member) YtAvatar() string {
 }
 
 func (Data Member) GetYtSubs() []Subs {
-	var datasubs []Subs
+	var (
+		datasubs []Subs
+		tmp      Subs
+	)
 	for _, Yt := range Data.YtID {
-		var tmp Subs
 		head := []string{"Referer", "https://akshatmittal.com/youtube-realtime/"}
 		body, err := engine.Curl("https://counts.live/api/youtube-subscriber-count/"+Yt+"/live", head)
 		if err != nil {
 			log.Error(err, string(body))
 		}
 		err = json.Unmarshal(body, &tmp)
+		if err != nil {
+			log.Error(err)
+		}
 		datasubs = append(datasubs, tmp)
 	}
 	return datasubs

@@ -101,7 +101,7 @@ type InputTW struct {
 type MemberSubs struct {
 	YtSubs, YtVideos, YtViews         int
 	BiliFollow, BiliVideos, BiliViews int
-	id, TwFollow                      int
+	ID, TwFollow                      int
 	MemberID                          int64
 }
 

@@ -131,7 +131,7 @@ func (Member Name) GetSubsCount() MemberSubs {
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&Data.id, &Data.YtSubs, &Data.YtVideos, &Data.YtViews, &Data.BiliFollow, &Data.BiliVideos, &Data.BiliViews, &Data.TwFollow, &Data.MemberID)
+		err = rows.Scan(&Data.ID, &Data.YtSubs, &Data.YtVideos, &Data.YtViews, &Data.BiliFollow, &Data.BiliVideos, &Data.BiliViews, &Data.TwFollow, &Data.MemberID)
 		BruhMoment(err, "", false)
 	}
 	return Data
@@ -141,13 +141,13 @@ func (Member Name) GetSubsCount() MemberSubs {
 //Update Subscriber data
 func (Data MemberSubs) UpdateSubs(State string) {
 	if State == "yt" {
-		_, err := DB.Exec(`Update Subscriber set Youtube_Subs=?,Youtube_Videos=?,Youtube_Views=? Where id=? `, Data.YtSubs, Data.YtVideos, Data.YtViews, Data.id)
+		_, err := DB.Exec(`Update Subscriber set Youtube_Subs=?,Youtube_Videos=?,Youtube_Views=? Where id=? `, Data.YtSubs, Data.YtVideos, Data.YtViews, Data.ID)
 		BruhMoment(err, "", false)
 	} else if State == "bili" {
-		_, err := DB.Exec(`Update Subscriber set BiliBili_Follows=?,BiliBili_Videos=?,BiliBili_Views=? Where id=? `, Data.BiliFollow, Data.BiliVideos, Data.BiliViews, Data.id)
+		_, err := DB.Exec(`Update Subscriber set BiliBili_Follows=?,BiliBili_Videos=?,BiliBili_Views=? Where id=? `, Data.BiliFollow, Data.BiliVideos, Data.BiliViews, Data.ID)
 		BruhMoment(err, "", false)
 	} else {
-		_, err := DB.Exec(`Update Subscriber set Twitter_Follows=? Where id=? `, Data.TwFollow, Data.id)
+		_, err := DB.Exec(`Update Subscriber set Twitter_Follows=? Where id=? `, Data.TwFollow, Data.ID)
 		BruhMoment(err, "", false)
 	}
 }
@@ -341,23 +341,6 @@ func UpdateChannel(ChannelID string, typetag int, VtuberGroupID int64) error {
 		}
 	}
 	return nil
-}
-
-//Get discord channel id from VtuberGroup
-func (Data GroupName) GetChannelByGroup() []string {
-	var channellist []string
-	rows, err := DB.Query(`SELECT DiscordChannelID FROM Channel WHERE VtuberGroup_id=? group by DiscordChannelID`, Data.ID)
-	BruhMoment(err, "", false)
-
-	defer rows.Close()
-	for rows.Next() {
-		var list string
-		err = rows.Scan(&list)
-		BruhMoment(err, "", false)
-
-		channellist = append(channellist, list)
-	}
-	return channellist
 }
 
 //Check Discord Channel from VtuberGroup

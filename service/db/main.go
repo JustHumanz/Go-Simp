@@ -23,15 +23,16 @@ import (
 )
 
 var (
-	res         Vtuber
-	Limit       int
-	db          *sql.DB
-	YtToken     string
-	member      string
-	Publish     time.Time
-	Roomstatus  string
-	BiliSession string
-	New         []NewVtuber
+	res          Vtuber
+	Limit        int
+	db           *sql.DB
+	YtToken      string
+	member       string
+	Publish      time.Time
+	Roomstatus   string
+	BiliSession  string
+	New          NewVtuber
+	DiscordToken string
 )
 
 type NewVtuber struct {
@@ -56,6 +57,7 @@ func init() {
 	}
 	YtToken = os.Getenv("GTOKEN")
 	BiliSession = os.Getenv("SBILI")
+	DiscordToken = os.Getenv("DISCORD")
 	Limit = 100
 
 	err = CreateDB()
@@ -69,9 +71,9 @@ func main() {
 	ScrapMember := flag.Bool("vtuber", false, "enable this if you want to scrap tweet(fanart) each member")
 	flag.StringVar(&member, "member", "kano", "list of vtuber name (split by space)")
 	flag.Parse()
+	db = DBConn()
 
 	if (*Service) == "bootstrapping" {
-		db = DBConn()
 		AddData(res)
 		go CheckYT()
 		go CheckSchedule()
@@ -92,8 +94,7 @@ func main() {
 		if *ScrapMember {
 			if len(flag.Args()) > 0 {
 				for i := 0; i < len(flag.Args()); i++ {
-					Data, err := engine.FindName(flag.Args()[i])
-					engine.BruhMoment(err, "", true)
+					Data := engine.FindName(flag.Args()[i])
 					Tweet(Data.GroupName, Data.MemberID, Limit)
 				}
 				log.Info("Done")
@@ -324,18 +325,25 @@ func (Data NewVtuber) SendNotif(Bot *discordgo.Session) {
 	Avatar := Data.Member.YtAvatar()
 	Color, err := engine.GetColor("/tmp/notf.gg", Avatar)
 	if err != nil {
-		fmt.Println(err)
+		log.Error(err)
 	}
-	Channels := Data.Group.GetChannelByGroup()
-	for _, Channel := range Channels {
+	for _, Channel := range GetChannelByGroup(Data.Group.ID) {
 		msg, err := Bot.ChannelMessageSendEmbed(Channel, engine.NewEmbed().
 			SetAuthor(Data.Group.NameGroup, Data.Group.IconURL).
 			SetTitle(engine.FixName(Data.Member.ENName, Data.Member.JPName)).
 			SetImage(Avatar).
 			SetThumbnail("https://justhumanz.me/update.png").
 			SetDescription("New Vtuber has been added to list").
+			AddField("Nickname", Data.Member.Name).
+			AddField("Twitter", "@"+Data.Member.TwitterName).
+			InlineAllFields().
+			AddField("Region", Data.Member.Region).
 			SetURL("https://www.youtube.com/channel/"+Data.Member.YtID[0]+"?sub_confirmation=1").
 			SetColor(Color).MessageEmbed)
+		if err != nil {
+			log.Error(msg, err)
+		}
+		msg, err = Bot.ChannelMessageSend(Channel, "New Update!!!! @here")
 		if err != nil {
 			log.Error(msg, err)
 		}

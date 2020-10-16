@@ -92,6 +92,18 @@ func BruhMoment(err error, msg string, exit bool) {
 	}
 }
 
+func ChangeToken(yttoken string) string {
+	tokentmp := config.YtToken
+	newtoken := ""
+	for _, token := range tokentmp {
+		if token != yttoken {
+			newtoken = token
+			return newtoken
+		}
+	}
+	return newtoken
+}
+
 func GetFunctionName(i interface{}) string {
 	return runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
 }

@@ -496,6 +496,22 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Danchou",
+                    "EN_Name":"Shirogane Noel",
+                    "JP_Name":"白銀ノエル",
+                    "Hashtag": {
+                        "Twitter": "#ノエラート",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCdyqAaZDKHXg4Ahi7VENThQ"
+                    ],
+                    "BiliBili_ID": 454733056,
+                    "BiliRoom_ID": 21583736,
+                    "Twitter_Username": "shiroganenoel",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Gura",
                     "EN_Name":"Gawr Gura",
                     "JP_Name":"がうる・ぐら",
@@ -868,6 +884,22 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Aadya_VTuber",
+                    "Region":"EN"
+                },
+                {
+                    "Name":"Noor",
+                    "EN_Name":"Noor",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#noor_art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UC6oW4FXETgEGOFTxWmI2h5Q"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Noor_VTuber",
                     "Region":"EN"
                 }
                 

@@ -16,7 +16,7 @@ func Start(c *cron.Cron) {
 	spacebilibili.Start()
 	c.AddFunc("@every 0h3m0s", spacebilibili.CheckVideo)
 	c.AddFunc("@every 0h5m0s", youtube.CheckSchedule)
-	c.AddFunc("@every 12h0m0s", youtube.CheckPrivate)
+	c.AddFunc("@every 4h0m0s", youtube.CheckPrivate)
 	c.AddFunc("@every 0h6m0s", bilibililive.CheckSchedule)
 	log.Info("Stream module ready")
 }
