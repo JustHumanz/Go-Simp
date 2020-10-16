@@ -442,7 +442,7 @@ func Enable(s *discordgo.Session, m *discordgo.MessageCreate) {
 					s.ChannelMessageSend(m.ChannelID, "already added")
 				}
 			} else {
-				s.ChannelMessageSend(m.ChannelID, "Incomplete update command")
+				s.ChannelMessageSend(m.ChannelID, "Incomplete `update` command")
 			}
 		}
 	}
@@ -561,32 +561,38 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					SetImage(config.NotFound).
 					SetColor(Color).MessageEmbed)
 			}
-		} else if m.Content == Prefix+"vtuber data" {
-			var (
-				tbl   [][]string
-				Data2 []database.Name
-			)
-			Data := database.GetGroup()
-			for i := 0; i < len(Data); i++ {
-				Data2 = database.GetName(Data[i].ID)
-				for ii := 0; ii < len(Data2); ii++ {
-					tmp := [][]string{[]string{Data2[ii].Name, Data[i].NameGroup}}
-					tbl = append(tbl, tmp...)
+		} else if strings.HasPrefix(m.Content, Prefix+"vtuber data") {
+			Groups := strings.Split(strings.TrimSpace(m.Content[len(Prefix+"vtuber data"):]), ",")
+			if Groups[0] != "" {
+				for _, Group := range database.GetGroup() {
+					for _, Grp := range Groups {
+						if Grp == strings.ToLower(Group.NameGroup) {
+							for _, Member := range database.GetName(Group.ID) {
+								table.Append([]string{Member.Name, Member.Region,Group.NameGroup})
+							}
+						}
+					}
 				}
+				table.SetHeader([]string{"Nickname", "Region","Group"})
+				table.SetAutoWrapText(false)
+				table.SetAutoFormatHeaders(true)
+				table.SetCenterSeparator("")
+				table.SetColumnSeparator("")
+				table.SetRowSeparator("")
+				table.SetHeaderLine(false)
+				table.SetBorder(false)
+				table.SetTablePadding("\t") // pad with tabs
+				table.SetNoWhiteSpace(true)
+				table.Render()
+				s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+					SetThumbnail(config.GoSimpIMG).
+					SetDescription("```\r"+tableString.String()+"```").
+					SetColor(Color).
+					SetFooter("use `Nickname` as parameter").MessageEmbed)
+			} else {
+				s.ChannelMessageSend(m.ChannelID, "Incomplete `vtuber data` command")
 			}
-
-			table.SetHeader([]string{"Nickname", "Group"})
-			for _, v := range tbl {
-				table.Append(v)
-			}
-			table.Render()
-			embed := NewEmbed().
-				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-				SetThumbnail(config.GoSimpIMG).
-				SetDescription("```" + tableString.String() + "```").
-				SetColor(Color).
-				SetFooter("use `Nickname` as parameter").MessageEmbed
-			s.ChannelMessageSendEmbed(m.ChannelID, embed)
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"errors"
@@ -102,7 +103,7 @@ func GetGroup() []GroupName {
 func GetName(GroupID int64) []Name {
 	funcvar := GetFunctionName(GetName)
 	Debugging(funcvar, "In", GroupID)
-	rows, err := DB.Query(`SELECT id,VtuberName,VtuberName_EN,VtuberName_JP,Youtube_ID,BiliBili_SpaceID,BiliBili_RoomID,Region,Hashtag,BiliBili_Hashtag,BiliBili_Avatar,Twitter_Username,Youtube_Avatar FROM VtuberMember WHERE VtuberGroup_id=?`, GroupID)
+	rows, err := DB.Query(`SELECT id,VtuberName,VtuberName_EN,VtuberName_JP,Youtube_ID,BiliBili_SpaceID,BiliBili_RoomID,Region,Hashtag,BiliBili_Hashtag,BiliBili_Avatar,Twitter_Username,Youtube_Avatar FROM VtuberMember WHERE VtuberGroup_id=? Order by Region,VtuberGroup_id`, GroupID)
 	BruhMoment(err, "", false)
 	defer rows.Close()
 
@@ -487,6 +488,9 @@ func GetUserList(IdDiscordChannelID int, Member int64) []string {
 
 //Scrapping twitter followers
 func (Data Name) GetTwitterFollow() TwitterUser {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
 	Client := http.Client{
 		Timeout: time.Second * 30, // Timeout after 30 seconds
 	}
@@ -497,7 +501,7 @@ func (Data Name) GetTwitterFollow() TwitterUser {
 	request.Header.Set("cache-control", "no-cache")
 	request.Header.Set("User-Agent", "Mozilla/5.0 (X11; MacOS x86_64; rv:81.0) Gecko/20100101 Firefox/81.0")
 
-	result, err := Client.Do(request)
+	result, err := Client.Do(request.WithContext(ctx))
 	if err != nil {
 		log.Error(err)
 	}

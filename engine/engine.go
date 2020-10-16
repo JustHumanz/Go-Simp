@@ -182,12 +182,12 @@ func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 			request.Header.Set(addheader[0], addheader[1])
 		}
 		response, err := client.Do(request.WithContext(ctx))
-		if err != nil && counter == 3 {
+		if err != nil && counter == 2 {
 			return nil, err
 		}
 
-		if response.StatusCode != http.StatusOK && counter == 3 {
-			return nil, errors.New("Tor get Status code " + strconv.Itoa(response.StatusCode))
+		if response.StatusCode != http.StatusOK && counter == 2 {
+			return nil, errors.New("Tor get Status code " + response.Status)
 		}
 
 		data, err := ioutil.ReadAll(response.Body)

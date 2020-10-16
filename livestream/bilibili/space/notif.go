@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 
@@ -35,7 +36,7 @@ func (Data CheckSctruct) SendNude(Color int) {
 				AddField("Type ", video.VideoType).
 				AddField("Duration ", video.Length).
 				AddField("Viwers ", strconv.Itoa(video.Play)).
-				SetFooter(durafmt.Parse(time.Now().In(loc).Sub(time.Unix(int64(video.Created), 0).In(loc).In(loc))).LimitFirstN(2).String()+" Ago", "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/bilibili.png").
+				SetFooter(durafmt.Parse(time.Now().In(loc).Sub(time.Unix(int64(video.Created), 0).In(loc))).LimitFirstN(2).String()+" Ago", config.BiliBiliIMG).
 				InlineAllFields().
 				SetColor(Color).MessageEmbed
 

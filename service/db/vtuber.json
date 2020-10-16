@@ -15,7 +15,7 @@
                     ],
                     "BiliBili_ID": 386900246,
                     "BiliRoom_ID": 21304638,
-                    "Twitter_Username": "nana_kaguraaa",
+                    "Twitter_ENername": "nana_kaguraaa",
                     "Region":"JP"
                 },
                 {
@@ -31,7 +31,7 @@
                     ],
                     "BiliBili_ID": 2601367,
                     "BiliRoom_ID": 9389401,
-                    "Twitter_Username": "ui_shig",
+                    "Twitter_ENername": "ui_shig",
                     "Region":"JP"
                 },{
                     "Name":"Kotone",
@@ -46,7 +46,7 @@
                     ],
                     "BiliBili_ID": 360221708,
                     "BiliRoom_ID": 13744134,
-                    "Twitter_Username": "kotonegami",
+                    "Twitter_ENername": "kotonegami",
                     "Region":"JP"
                 },{
                     "Name":"Evelyn",
@@ -61,7 +61,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "EvelynVtuber",
+                    "Twitter_ENername": "EvelynVtuber",
                     "Region":"ID"
                 }
             ]
@@ -69,7 +69,7 @@
         "Group":[
         {
             "GroupName": "Hanayori",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/hana.png",
+            "GroupIcon": "https://raw.githubENercontent.com/JENtHumanz/Go-Simp/master/Img/hana.png",
             "Members" : [
                 {
                     "Name":"Kanochi",
@@ -84,7 +84,7 @@
                     ],
                     "BiliBili_ID": 316381099,
                     "BiliRoom_ID": 15152878,
-                    "Twitter_Username": "kano_hanayori",
+                    "Twitter_ENername": "kano_hanayori",
                     "Region":"JP"
                 },
                 {
@@ -100,7 +100,7 @@
                     ],
                     "BiliBili_ID": 441381282,
                     "BiliRoom_ID": 21547895,
-                    "Twitter_Username": "hanamaruhareru",
+                    "Twitter_ENername": "hanamaruhareru",
                     "Region":"JP"
                 },
                 {
@@ -116,7 +116,7 @@
                     ],
                     "BiliBili_ID": 441382432,
                     "BiliRoom_ID": 21547904,
-                    "Twitter_Username": "kohigashihitona",
+                    "Twitter_ENername": "kohigashihitona",
                     "Region":"JP"
                 },
                 {
@@ -132,14 +132,14 @@
                     ],
                     "BiliBili_ID": 441403698,
                     "BiliRoom_ID": 21671418,
-                    "Twitter_Username": "nonomiyanonono",
+                    "Twitter_ENername": "nonomiyanonono",
                     "Region":"JP"
                 }
             ]
         },
         {
             "GroupName": "Hololive",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/holo.png",
+            "GroupIcon": "https://raw.githubENercontent.com/JENtHumanz/Go-Simp/master/Img/holo.png",
             "Members" : [
                 {
                     "Name":"Risu",
@@ -154,7 +154,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "ayunda_risu",
+                    "Twitter_ENername": "ayunda_risu",
                     "Region":"ID"
                 },
                 {
@@ -170,7 +170,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "moonahoshinova",
+                    "Twitter_ENername": "moonahoshinova",
                     "Region":"ID"
                 },
                 {
@@ -186,7 +186,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "airaniiofifteen",
+                    "Twitter_ENername": "airaniiofifteen",
                     "Region":"ID"
                 },
         
@@ -203,7 +203,7 @@
                     ],
                     "BiliBili_ID": 332704117,
                     "BiliRoom_ID": 11588230,
-                    "Twitter_Username": "shirakamifubuki",
+                    "Twitter_ENername": "shirakamifubuki",
                     "Region":"JP"
                 },
         
@@ -220,7 +220,7 @@
                     ],
                     "BiliBili_ID": 412135619,
                     "BiliRoom_ID": 21421141,
-                    "Twitter_Username": "inugamikorone",
+                    "Twitter_ENername": "inugamikorone",
                     "Region":"JP"
                 },
                 {
@@ -236,7 +236,7 @@
                     ],
                     "BiliBili_ID": 336731767,
                     "BiliRoom_ID": 13946381,
-                    "Twitter_Username": "natsuiromatsuri",
+                    "Twitter_ENername": "natsuiromatsuri",
                     "Region":"JP"
                 },
                 {
@@ -252,12 +252,12 @@
                     ],
                     "BiliBili_ID": 375504219,
                     "BiliRoom_ID": 14917277,
-                    "Twitter_Username": "minatoaqua",
+                    "Twitter_ENername": "minatoaqua",
                     "Region":"JP"
                 },
                 {
                     "Name":"Pekora",
-                    "EN_Name":"Usada Pekora",
+                    "EN_Name":"ENada Pekora",
                     "JP_Name":"兎田ぺこら",
                     "Hashtag": {
                         "Twitter": "#ぺこらーと",
@@ -268,12 +268,12 @@
                     ],
                     "BiliBili_ID": 443305053,
                     "BiliRoom_ID": 21560356,
-                    "Twitter_Username": "usadapekora",
+                    "Twitter_ENername": "ENadapekora",
                     "Region":"JP"
                 },
                 {
                     "Name":"Senchou",
-                    "EN_Name":"Houshou Marine",
+                    "EN_Name":"HoENhou Marine",
                     "JP_Name":"宝鐘マリン",
                     "Hashtag": {
                         "Twitter": "#マリンのお宝",
@@ -284,7 +284,7 @@
                     ],
                     "BiliBili_ID": 454955503,
                     "BiliRoom_ID": 21584153,
-                    "Twitter_Username": "houshoumarine",
+                    "Twitter_ENername": "hoENhoumarine",
                     "Region":"JP"
                 },
                 {
@@ -300,7 +300,7 @@
                     ],
                     "BiliBili_ID": 339567211,
                     "BiliRoom_ID": 14275133,
-                    "Twitter_Username": "akaihaato",
+                    "Twitter_ENername": "akaihaato",
                     "Region":"JP"
                 },
                 {
@@ -316,7 +316,7 @@
                     ],
                     "BiliBili_ID": 491474050,
                     "BiliRoom_ID": 21752694,
-                    "Twitter_Username": "tsunomakiwatame",
+                    "Twitter_ENername": "tsunomakiwatame",
                     "Region":"JP"
                 },
                 {
@@ -332,7 +332,7 @@
                     ],
                     "BiliBili_ID": 491474049,
                     "BiliRoom_ID": 21752686,
-                    "Twitter_Username": "kiryucoco",
+                    "Twitter_ENername": "kiryucoco",
                     "Region":"JP"
                 },
                 {
@@ -348,7 +348,7 @@
                     ],
                     "BiliBili_ID": 389858754,
                     "BiliRoom_ID": 21107534,
-                    "Twitter_Username": "yuzukichococh",
+                    "Twitter_ENername": "yuzukichococh",
                     "Region":"JP"
                 },
                 {
@@ -364,7 +364,7 @@
                     ],
                     "BiliBili_ID": 412135222,
                     "BiliRoom_ID": 21420932,
-                    "Twitter_Username": "nekomataokayu",
+                    "Twitter_ENername": "nekomataokayu",
                     "Region":"JP"
                 },
                 {
@@ -380,7 +380,7 @@
                     ],
                     "BiliBili_ID": 389859190,
                     "BiliRoom_ID": 21129632,
-                    "Twitter_Username": "oozorasubaru",
+                    "Twitter_ENername": "oozorasubaru",
                     "Region":"JP"
                 },
                 {
@@ -396,7 +396,7 @@
                     ],
                     "BiliBili_ID": 286179206,
                     "BiliRoom_ID": 8899503,
-                    "Twitter_Username": "tokino_sora",
+                    "Twitter_ENername": "tokino_sora",
                     "Region":"JP"
                 },
                 {
@@ -412,7 +412,7 @@
                     ],
                     "BiliBili_ID": 366690056,
                     "BiliRoom_ID": 21144047,
-                    "Twitter_Username": "sakuramiko35",
+                    "Twitter_ENername": "sakuramiko35",
                     "Region":"JP"
                 },
                 {
@@ -428,7 +428,7 @@
                     ],
                     "BiliBili_ID": 389862071,
                     "BiliRoom_ID": 21133979,
-                    "Twitter_Username": "ookamimio",
+                    "Twitter_ENername": "ookamimio",
                     "Region":"JP"
                 },
                 {
@@ -444,7 +444,7 @@
                     ],
                     "BiliBili_ID": 624252710,
                     "BiliRoom_ID": 22349494,
-                    "Twitter_Username": "shishirobotan",
+                    "Twitter_ENername": "shishirobotan",
                     "Region":"JP"
                 },
                 {
@@ -460,7 +460,7 @@
                     ],
                     "BiliBili_ID": 624252712,
                     "BiliRoom_ID": 22349506,
-                    "Twitter_Username": "omarupolka",
+                    "Twitter_ENername": "omarupolka",
                     "Region":"JP"
                 },
                 {
@@ -476,7 +476,7 @@
                     ],
                     "BiliBili_ID": 624252706,
                     "BiliRoom_ID": 22349508,
-                    "Twitter_Username": "yukihanalamy",
+                    "Twitter_ENername": "yukihanalamy",
                     "Region":"JP"
                 },
                 {
@@ -492,7 +492,7 @@
                     ],
                     "BiliBili_ID": 624252709,
                     "BiliRoom_ID": 22349492,
-                    "Twitter_Username": "momosuzunene",
+                    "Twitter_ENername": "momosuzunene",
                     "Region":"JP"
                 },
                 {
@@ -508,7 +508,7 @@
                     ],
                     "BiliBili_ID": 454733056,
                     "BiliRoom_ID": 21583736,
-                    "Twitter_Username": "shiroganenoel",
+                    "Twitter_ENername": "shiroganenoel",
                     "Region":"JP"
                 },
                 {
@@ -524,8 +524,8 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "gawrgura",
-                    "Region":"US"
+                    "Twitter_ENername": "gawrgura",
+                    "Region":"EN"
                 },
                 {
                     "Name":"Ame",
@@ -540,15 +540,15 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "watsonameliaEN",
-                    "Region":"US"
+                    "Twitter_ENername": "watsonameliaEN",
+                    "Region":"EN"
                 },
                 {
                     "Name":"Calli",
                     "EN_Name":"Mori Calliope",
                     "JP_Name":"森美声/もりかりおぺ",
                     "Hashtag": {
-                        "Twitter": "#callillustT",
+                        "Twitter": "#callillENtT",
                         "BiliBili": ""
                     },
                     "Yt_ID":[
@@ -556,11 +556,11 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "moricalliope",
-                    "Region":"US"
+                    "Twitter_ENername": "moricalliope",
+                    "Region":"EN"
                 },
                 {
-                    "Name":"Kusotori",
+                    "Name":"KENotori",
                     "EN_Name":"Takanashi Kiara",
                     "JP_Name":"小鳥遊キアラ/たかなしきあら",
                     "Hashtag": {
@@ -572,15 +572,31 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "takanashikiara",
-                    "Region":"US"
+                    "Twitter_ENername": "takanashikiara",
+                    "Region":"EN"
+                },
+                {
+                    "Name":"RENhia",
+                    "EN_Name":"Uruha RENhia",
+                    "JP_Name":"潤羽るしあ",
+                    "Hashtag": {
+                        "Twitter": "#絵クロマンサー",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCl_gCybOJRIgOXw6Qb4qJzQ"
+                    ],
+                    "BiliBili_ID": 443300418,
+                    "BiliRoom_ID": 21545232,
+                    "Twitter_ENername": "uruharENhia",
+                    "Region":"JP"
                 }
                 
             ]
             
         },{
             "GroupName": "Nijisanji",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/niji.png",
+            "GroupIcon": "https://raw.githubENercontent.com/JENtHumanz/Go-Simp/master/Img/niji.png",
             "Members" :[
                 {
                     "Name":"Konlulu",
@@ -595,7 +611,7 @@
                     ],
                     "BiliBili_ID": 666726794,
                     "BiliRoom_ID": 22470215,
-                    "Twitter_Username": "lulu_suzuhara",
+                    "Twitter_ENername": "lulu_suzuhara",
                     "Region":"JP"
                 },
                 {
@@ -611,7 +627,7 @@
                     ],
                     "BiliBili_ID": 441666968,
                     "BiliRoom_ID": 21501731,
-                    "Twitter_Username": "debidebiru_sama",
+                    "Twitter_ENername": "debidebiru_sama",
                     "Region":"JP"
                 },
                 {
@@ -627,7 +643,7 @@
                     ],
                     "BiliBili_ID": 434565011,
                     "BiliRoom_ID": 21449083,
-                    "Twitter_Username": "AliceMononobe",
+                    "Twitter_ENername": "AliceMononobe",
                     "Region":"JP"
                 },
                 {
@@ -643,7 +659,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "nekokan_chu",
+                    "Twitter_ENername": "nekokan_chu",
                     "Region":"JP"
                 },
                 {
@@ -659,7 +675,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "Hana_Macchia",
+                    "Twitter_ENername": "Hana_Macchia",
                     "Region":"ID"
                 },
                 {
@@ -675,7 +691,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "MiyuOttavia",
+                    "Twitter_ENername": "MiyuOttavia",
                     "Region":"ID"
                 },
                 {
@@ -691,7 +707,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "ZEA_Cornelia",
+                    "Twitter_ENername": "ZEA_Cornelia",
                     "Region":"ID"
                 },
                 {
@@ -707,7 +723,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "Taka_Radjiman",
+                    "Twitter_ENername": "Taka_Radjiman",
                     "Region":"ID"
                 },
                 {
@@ -723,7 +739,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "RiksaDhirendra",
+                    "Twitter_ENername": "RiksaDhirendra",
                     "Region":"ID"
                 },
                 {
@@ -739,7 +755,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "AmiciaMichella",
+                    "Twitter_ENername": "AmiciaMichella",
                     "Region":"ID"
                 },
                 {
@@ -755,7 +771,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "Rai_Galilei",
+                    "Twitter_ENername": "Rai_Galilei",
                     "Region":"ID"
                 },
                 {
@@ -771,7 +787,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "Azura_Cecillia",
+                    "Twitter_ENername": "Azura_Cecillia",
                     "Region":"ID"
                 },
                 {
@@ -787,7 +803,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "LaylaAlstro2434",
+                    "Twitter_ENername": "LaylaAlstro2434",
                     "Region":"ID"
                 },
                 {
@@ -803,7 +819,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "Nara_Haramaung",
+                    "Twitter_ENername": "Nara_Haramaung",
                     "Region":"ID"
                 },
                 {
@@ -819,7 +835,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "bobon_pranaja",
+                    "Twitter_ENername": "bobon_pranaja",
                     "Region":"ID"
                 },
                 {
@@ -835,7 +851,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "Etna_Crimson",
+                    "Twitter_ENername": "Etna_Crimson",
                     "Region":"ID"
                 },
                 {
@@ -851,7 +867,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "SiskaLeontyne",
+                    "Twitter_ENername": "SiskaLeontyne",
                     "Region":"ID"
                 },
                 {
@@ -867,7 +883,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "YuyaShin2434",
+                    "Twitter_ENername": "YuyaShin2434",
                     "Region":"ID"
                 },
                 {
@@ -883,7 +899,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "Aadya_VTuber",
+                    "Twitter_ENername": "Aadya_VTuber",
                     "Region":"EN"
                 },
                 {
@@ -899,14 +915,14 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "Noor_VTuber",
+                    "Twitter_ENername": "Noor_VTuber",
                     "Region":"EN"
                 }
                 
             ]
         },{
             "GroupName": "Kizuna_AI",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/kizuna.png",
+            "GroupIcon": "https://raw.githubENercontent.com/JENtHumanz/Go-Simp/master/Img/kizuna.png",
             "Members" :[
                 {
                     "Name":"Ai-chan",
@@ -922,13 +938,13 @@
                     ],
                     "BiliBili_ID": 1473830,
                     "BiliRoom_ID": 1485080,
-                    "Twitter_Username": "aichan_nel",
+                    "Twitter_ENername": "aichan_nel",
                     "Region":"JP"
                 }
             ]
         },{
             "GroupName": "ENTUM",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/entum.png",
+            "GroupIcon": "https://raw.githubENercontent.com/JENtHumanz/Go-Simp/master/Img/entum.png",
             "Members" :[
                 {
                     "Name":"hina-chan",
@@ -943,13 +959,13 @@
                     ],
                     "BiliBili_ID": 291296062,
                     "BiliRoom_ID": 9286381,
-                    "Twitter_Username": "nekomiya_hinata",
+                    "Twitter_ENername": "nekomiya_hinata",
                     "Region":"JP"
                 }
             ]
         },{
             "GroupName": "VOMS",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/vox.png",
+            "GroupIcon": "https://raw.githubENercontent.com/JENtHumanz/Go-Simp/master/Img/vox.png",
             "Members" :[
                 {
                     "Name":"Pikamee",
@@ -964,7 +980,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "amanopikamee",
+                    "Twitter_ENername": "amanopikamee",
                     "Region":"JP"
                 },{
                     "Name":"Tomoshika",
@@ -979,7 +995,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "Tomoshika_H",
+                    "Twitter_ENername": "Tomoshika_H",
                     "Region":"JP"
                 },
                 {
@@ -995,14 +1011,14 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "Jitomi_Monoe",
+                    "Twitter_ENername": "Jitomi_Monoe",
                     "Region":"JP"
                 }
             ]
         }
         ,{
             "GroupName": "MAHA5",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/MAHA5.png",
+            "GroupIcon": "https://raw.githubENercontent.com/JENtHumanz/Go-Simp/master/Img/MAHA5.png",
             "Members" :[
                 {
                     "Name":"Alia Adelia",
@@ -1017,7 +1033,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "aliaadelia_v",
+                    "Twitter_ENername": "aliaadelia_v",
                     "Region":"ID"
                 },
                 {
@@ -1033,7 +1049,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "andiadinata_id",
+                    "Twitter_ENername": "andiadinata_id",
                     "Region":"ID"
                 },
                 {
@@ -1049,7 +1065,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "LumiCelestia",
+                    "Twitter_ENername": "LumiCelestia",
                     "Region":"ID"
                 },
                 {
@@ -1065,7 +1081,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "ZenGunawan",
+                    "Twitter_ENername": "ZenGunawan",
                     "Region":"ID"
                 },
                 {
@@ -1081,7 +1097,7 @@
                     ],
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "NiaRedalion",
+                    "Twitter_ENername": "NiaRedalion",
                     "Region":"ID"
                 }
             ]
