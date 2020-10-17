@@ -69,7 +69,7 @@
         "Group":[
         {
             "GroupName": "Hanayori",
-            "GroupIcon": "https://raw.githubENercontent.com/JENtHumanz/Go-Simp/master/Img/hana.png",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/hana.png",
             "Members" : [
                 {
                     "Name":"Kanochi",
@@ -139,7 +139,7 @@
         },
         {
             "GroupName": "Hololive",
-            "GroupIcon": "https://raw.githubENercontent.com/JENtHumanz/Go-Simp/master/Img/holo.png",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/holo.png",
             "Members" : [
                 {
                     "Name":"Risu",
@@ -257,7 +257,7 @@
                 },
                 {
                     "Name":"Pekora",
-                    "EN_Name":"ENada Pekora",
+                    "EN_Name":"Usada Pekora",
                     "JP_Name":"兎田ぺこら",
                     "Hashtag": {
                         "Twitter": "#ぺこらーと",
@@ -268,12 +268,12 @@
                     ],
                     "BiliBili_ID": 443305053,
                     "BiliRoom_ID": 21560356,
-                    "Twitter_Username": "ENadapekora",
+                    "Twitter_Username": "usadapekora",
                     "Region":"JP"
                 },
                 {
                     "Name":"Senchou",
-                    "EN_Name":"HoENhou Marine",
+                    "EN_Name":"Houshou Marine",
                     "JP_Name":"宝鐘マリン",
                     "Hashtag": {
                         "Twitter": "#マリンのお宝",
@@ -284,7 +284,7 @@
                     ],
                     "BiliBili_ID": 454955503,
                     "BiliRoom_ID": 21584153,
-                    "Twitter_Username": "hoENhoumarine",
+                    "Twitter_Username": "houshoumarine",
                     "Region":"JP"
                 },
                 {
@@ -496,22 +496,6 @@
                     "Region":"JP"
                 },
                 {
-                    "Name":"Danchou",
-                    "EN_Name":"Shirogane Noel",
-                    "JP_Name":"白銀ノエル",
-                    "Hashtag": {
-                        "Twitter": "#ノエラート",
-                        "BiliBili": ""
-                    },
-                    "Yt_ID":[
-                        "UCdyqAaZDKHXg4Ahi7VENThQ"
-                    ],
-                    "BiliBili_ID": 454733056,
-                    "BiliRoom_ID": 21583736,
-                    "Twitter_Username": "shiroganenoel",
-                    "Region":"JP"
-                },
-                {
                     "Name":"Gura",
                     "EN_Name":"Gawr Gura",
                     "JP_Name":"がうる・ぐら",
@@ -548,7 +532,7 @@
                     "EN_Name":"Mori Calliope",
                     "JP_Name":"森美声/もりかりおぺ",
                     "Hashtag": {
-                        "Twitter": "#callillENtT",
+                        "Twitter": "#callillustT",
                         "BiliBili": ""
                     },
                     "Yt_ID":[
@@ -560,7 +544,7 @@
                     "Region":"EN"
                 },
                 {
-                    "Name":"KENotori",
+                    "Name":"Kusotori",
                     "EN_Name":"Takanashi Kiara",
                     "JP_Name":"小鳥遊キアラ/たかなしきあら",
                     "Hashtag": {
@@ -590,13 +574,28 @@
                     "BiliRoom_ID": 21545232,
                     "Twitter_Username": "uruharushia",
                     "Region":"JP"
+                },
+                {
+                    "Name":"Kanatan",
+                    "EN_Name":"Amane Kanata",
+                    "JP_Name":"天音かなた",
+                    "Hashtag": {
+                        "Twitter": "#かなたーと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCZlDXzGoo7d44bwdNObFacg"
+                    ],
+                    "BiliBili_ID": 491474048,
+                    "BiliRoom_ID": 21752681,
+                    "Twitter_Username": "amanekanatach",
+                    "Region":"JP"
                 }
-                
             ]
             
         },{
             "GroupName": "Nijisanji",
-            "GroupIcon": "https://raw.githubENercontent.com/JENtHumanz/Go-Simp/master/Img/niji.png",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/niji.png",
             "Members" :[
                 {
                     "Name":"Konlulu",
@@ -901,28 +900,12 @@
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Aadya_VTuber",
                     "Region":"EN"
-                },
-                {
-                    "Name":"Noor",
-                    "EN_Name":"Noor",
-                    "JP_Name":"",
-                    "Hashtag": {
-                        "Twitter": "#noor_art",
-                        "BiliBili": ""
-                    },
-                    "Yt_ID":[
-                        "UC6oW4FXETgEGOFTxWmI2h5Q"
-                    ],
-                    "BiliBili_ID": 0,
-                    "BiliRoom_ID": 0,
-                    "Twitter_Username": "Noor_VTuber",
-                    "Region":"EN"
                 }
                 
             ]
         },{
             "GroupName": "Kizuna_AI",
-            "GroupIcon": "https://raw.githubENercontent.com/JENtHumanz/Go-Simp/master/Img/kizuna.png",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/kizuna.png",
             "Members" :[
                 {
                     "Name":"Ai-chan",
@@ -944,7 +927,7 @@
             ]
         },{
             "GroupName": "ENTUM",
-            "GroupIcon": "https://raw.githubENercontent.com/JENtHumanz/Go-Simp/master/Img/entum.png",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/entum.png",
             "Members" :[
                 {
                     "Name":"hina-chan",
@@ -965,7 +948,7 @@
             ]
         },{
             "GroupName": "VOMS",
-            "GroupIcon": "https://raw.githubENercontent.com/JENtHumanz/Go-Simp/master/Img/vox.png",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/vox.png",
             "Members" :[
                 {
                     "Name":"Pikamee",
@@ -1018,7 +1001,7 @@
         }
         ,{
             "GroupName": "MAHA5",
-            "GroupIcon": "https://raw.githubENercontent.com/JENtHumanz/Go-Simp/master/Img/MAHA5.png",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/MAHA5.png",
             "Members" :[
                 {
                     "Name":"Alia Adelia",

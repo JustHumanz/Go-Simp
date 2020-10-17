@@ -65,7 +65,7 @@ func GetWaiting(VideoID string) (string, error) {
 		return "0", err
 	}
 	waitcount := ""
-	for _, element := range regexp.MustCompile(`(?m)viewCount.*?text.*?([0-9\s]+)\s(waiting)`).FindAllStringSubmatch(reg.ReplaceAllString(string(bit), " "), -1) {
+	for _, element := range regexp.MustCompile(`(?m)videoViewCountRenderer.*?text([0-9\s]+).+(isLive\strue)`).FindAllStringSubmatch(reg.ReplaceAllString(string(bit), " "), -1) {
 		waitcount = strings.Replace(element[1], " ", "", -1)
 	}
 	return waitcount, nil

@@ -72,6 +72,7 @@ func main() {
 	flag.StringVar(&member, "member", "kano", "list of vtuber name (split by space)")
 	flag.Parse()
 	db = DBConn()
+	database.Start(db)
 
 	if (*Service) == "bootstrapping" {
 		AddData(res)
