@@ -1,6 +1,7 @@
 package youtube
 
 import (
+	"os"
 	"regexp"
 	"strings"
 	"sync"
@@ -66,7 +67,12 @@ func GetWaiting(VideoID string) (string, error) {
 	}
 	waitcount := ""
 	for _, element := range regexp.MustCompile(`(?m)videoViewCountRenderer.*?text([0-9\s]+).+(isLive\strue)`).FindAllStringSubmatch(reg.ReplaceAllString(string(bit), " "), -1) {
-		waitcount = strings.Replace(element[1], " ", "", -1)
+		tmp := strings.Replace(element[1], " ", "", -1)
+		if tmp == "" {
+			waitcount = "000"
+		} else {
+			waitcount = tmp
+		}
 	}
 	return waitcount, nil
 }
@@ -79,6 +85,9 @@ func CheckPrivate() {
 
 	Check := func(Youtube database.YtDbData, wg *sync.WaitGroup) {
 		defer wg.Done()
+		if Youtube.Status == "" {
+			os.Exit(1)
+		}
 		var (
 			tor bool
 			err error
@@ -89,6 +98,12 @@ func CheckPrivate() {
 				_, err = engine.CoolerCurl(url, nil)
 			} else {
 				_, err = engine.Curl(url, nil)
+			}
+			if Youtube.Status == "upcoming" && time.Now().Sub(Youtube.Schedul) > Youtube.Schedul.Sub(time.Now()) {
+				log.WithFields(log.Fields{
+					"VideoID": Youtube.VideoID,
+				}).Info("Member only video")
+				Youtube.UpdateYt("past")
 			}
 
 			if err != nil && strings.HasPrefix(err.Error(), "404") && Youtube.Status != "private" {
@@ -126,6 +141,7 @@ func CheckPrivate() {
 				} else {
 					YtData := database.YtGetStatus(0, Member.ID, Status)
 					for j, Y := range YtData {
+						Y.Status = Status
 						wg.Add(1)
 						go Check(Y, &wg)
 						if j == 20 || j == len(YtData)-1 {

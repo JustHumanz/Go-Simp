@@ -177,6 +177,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 		var (
 			counter   bool
 			Already   []string
+			Done      []string
 			MemberTag []NameStruct
 		)
 		User := database.UserStruct{
@@ -203,11 +204,17 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								if err != nil {
 									Already = append(Already, "`"+Member.Name+"`")
 								} else {
+									Done = append(Done, "`"+Member.Name+"`")
 									counter = true
 								}
 							}
-							if Already != nil {
-								s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> Already Added "+strings.Join(Already, " ")+" **"+VTuberGroup.NameGroup+"**")
+							if Already != nil || Done != nil {
+								if Already != nil {
+									s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> Already Added "+strings.Join(Already, " ")+" **"+VTuberGroup.NameGroup+"**")
+								}
+								if Done != nil {
+									s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> Added "+strings.Join(Done, " ")+" **"+VTuberGroup.NameGroup+"**")
+								}
 								return
 							}
 						} else {
@@ -225,6 +232,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						if err != nil {
 							Already = append(Already, "`"+tmp[i]+"`")
 						} else {
+							Done = append(Done, "`"+tmp[i]+"`")
 							counter = true
 						}
 					} else {
@@ -233,10 +241,16 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 
-				if Already != nil {
-					s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> Already Added "+strings.Join(Already, " "))
+				if Already != nil || Done != nil {
+					if Already != nil {
+						s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> Already Added "+strings.Join(Already, " "))
+					}
+					if Done != nil {
+						s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> Added "+strings.Join(Done, " "))
+					}
 					return
 				}
+
 				if counter {
 					s.ChannelMessageSend(m.ChannelID, "done")
 				}
@@ -568,12 +582,12 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					for _, Grp := range Groups {
 						if Grp == strings.ToLower(Group.NameGroup) {
 							for _, Member := range database.GetName(Group.ID) {
-								table.Append([]string{Member.Name, Member.Region,Group.NameGroup})
+								table.Append([]string{Member.Name, Member.Region, Group.NameGroup})
 							}
 						}
 					}
 				}
-				table.SetHeader([]string{"Nickname", "Region","Group"})
+				table.SetHeader([]string{"Nickname", "Region", "Group"})
 				table.SetAutoWrapText(false)
 				table.SetAutoFormatHeaders(true)
 				table.SetCenterSeparator("")

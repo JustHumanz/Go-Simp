@@ -91,7 +91,6 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 
 			_, err := engine.Curl("http://i3.ytimg.com/vi/"+VideoID[i]+"/maxresdefault.jpg", nil)
 			if err != nil {
-				log.Error(err)
 				Thumb = "http://i3.ytimg.com/vi/" + VideoID[i] + "/hqdefault.jpg"
 			} else {
 				Thumb = "http://i3.ytimg.com/vi/" + VideoID[i] + "/maxresdefault.jpg"
@@ -123,7 +122,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 
 					log.Info("Send to notify")
 					PushData.GetEmbed("live").SendNude()
-				} else if !Data.Items[i].LiveDetails.EndTime.IsZero() && DataDB.Status == "upcoming" {
+				} else if !Data.Items[i].LiveDetails.EndTime.IsZero() && DataDB.Status == "upcoming" || DataDB.Status == "upcoming" && Data.Items[i].Snippet.VideoStatus == "none" {
 					log.WithFields(log.Fields{
 						"VideoData ID": VideoID[i],
 						"Status":       "Past",
@@ -235,6 +234,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 			}
 		}
 	}
+
 }
 
 func YtAPI(VideoID []string) (YtData, error) {
