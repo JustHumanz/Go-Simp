@@ -21,15 +21,13 @@ func (PushData NotifStruct) SendNude() {
 			msg, err := BotSession.ChannelMessageSendEmbed(DiscordChannelID[i], PushData.Embed)
 			if err != nil {
 				log.Error(msg, err)
-			}
-			msg, err = BotSession.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
-			if err != nil {
-				log.Error(msg, err)
 				match, _ := regexp.MatchString("Unknown Channel", err.Error())
 				if match {
 					log.Info("Delete Discord Channel ", DiscordChannelID[i])
 					database.DelChannel(DiscordChannelID[i], PushData.Member.ID)
 				}
+			} else {
+				msg, err = BotSession.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
 			}
 		}
 	}
@@ -40,7 +38,7 @@ func (PushData NotifStruct) GetEmbed(Status string) NotifStruct {
 	Avatar := PushData.Member.YoutubeAvatar
 	YtChannel := "https://www.youtube.com/channel/" + YtChannlID + "?sub_confirmation=1"
 	YtURL := "https://www.youtube.com/watch?v=" + PushData.Data.VideoID
-	loc := Zawarudo(PushData.Member.Region)
+	loc := engine.Zawarudo(PushData.Member.Region)
 	expiresAt := time.Now().In(loc)
 	VtuberName := engine.FixName(PushData.Member.EnName, PushData.Member.JpName)
 	GroupIcon := PushData.Group.IconURL
@@ -109,20 +107,4 @@ func (PushData NotifStruct) GetEmbed(Status string) NotifStruct {
 		SetFooter(msg3, config.YoutubeIMG).
 		SetColor(Color).MessageEmbed
 	return PushData
-}
-
-func Zawarudo(Region string) *time.Location {
-	if Region == "ID" {
-		loc, _ := time.LoadLocation("Asia/Jakarta")
-		return loc
-	} else if Region == "JP" {
-		loc, _ := time.LoadLocation("Asia/Tokyo")
-		return loc
-	} else if Region == "CN" {
-		loc, _ := time.LoadLocation("Asia/Shanghai")
-		return loc
-	} else {
-		loc, _ := time.LoadLocation("UTC")
-		return loc
-	}
 }

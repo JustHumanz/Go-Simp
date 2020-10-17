@@ -161,7 +161,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 						PushData.GetEmbed("upcoming").SendNude()
 					}
 					//send to reminder
-					loc := Zawarudo(DataDB.Region)
+					loc := engine.Zawarudo(DataDB.Region)
 					UpcominginMinutes := int(math.Round(PushData.Data.Schedul.In(loc).Sub(time.Now().In(loc)).Minutes()))
 					if UpcominginMinutes > 60 && UpcominginMinutes < 66 || UpcominginMinutes > 30 && UpcominginMinutes < 36 {
 						PushData.GetEmbed("reminder").SendNude()

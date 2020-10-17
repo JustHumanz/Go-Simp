@@ -35,7 +35,9 @@ async function streamquery(Name,Table,Status,Limit){
 
 const GetMemberAll = async result => {    
   try {
-    let data = await knex('VtuberMember').orderBy('VtuberGroup_id')
+    let data = await knex('VtuberMember')
+    .orderBy(['VtuberGroup_id','Region'])    
+
     console.log(data)
     data.forEach(i => {
       delete i.id

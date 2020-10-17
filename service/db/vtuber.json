@@ -883,7 +883,39 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "YuyaShin2434",
-                    "Region":"ID"
+                    "Region":"KR"
+                },
+                {
+                    "Name":"Wiffy",
+                    "EN_Name":"Wiffy",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#WiffyArt",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCzMAP-oh5-pC8j6RlCPf26w"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Wiffy2434",
+                    "Region":"KR"
+                },
+                {
+                    "Name":"Suha Min",
+                    "EN_Name":"Suha",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#suha_art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCUtKkGKef8BYMs3h-3zQm9A"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "SuhaMin2434",
+                    "Region":"KR"
                 },
                 {
                     "Name":"Aadya",
@@ -899,6 +931,38 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Aadya_VTuber",
+                    "Region":"EN"
+                },
+                {
+                    "Name":"Noor",
+                    "EN_Name":"Noor",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#noor_art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UC6oW4FXETgEGOFTxWmI2h5Q"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Noor_VTuber",
+                    "Region":"EN"
+                },
+                {
+                    "Name":"Vihaan",
+                    "EN_Name":"Vihaan",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UC0lik9pHju6ONgkBh7N5wHw"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Vihaan_VTuber",
                     "Region":"EN"
                 }
                 
