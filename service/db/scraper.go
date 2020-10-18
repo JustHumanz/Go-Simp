@@ -128,7 +128,7 @@ func FilterYt(Dat database.Name) {
 }
 
 func (Data Member) YtAvatar() string {
-	if len(Data.YtID[0]) > 10 {
+	if len(Data.YtID) > 0 {
 		resp, err := http.Get("https://www.youtube.com/channel/" + Data.YtID[0] + "/about")
 		engine.BruhMoment(err, "", false)
 
