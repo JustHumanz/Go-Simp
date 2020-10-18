@@ -77,11 +77,26 @@ func main() {
 
 	if (*Service) == "bootstrapping" {
 		AddData(res)
-		if New != nil {
-			for _, NewVtuber := range New {
-				NewVtuber.SendNotif(Bot)
+		go func() {
+			if New != nil {
+				vtname := []string{}
+				for i, NewVtuber := range New {
+					vtname = append(vtname, "`"+NewVtuber.Member.Name+"`")
+					for _, Channel := range GetChannelByGroup(NewVtuber.Group.ID) {
+						msg, err := Bot.ChannelMessageSendEmbed(Channel, NewVtuber.SendNotif())
+						if err != nil {
+							log.Error(msg, err)
+						}
+						if len(New)-1 == i {
+							msg, err = Bot.ChannelMessageSend(Channel, "New Update!!!! @here "+strings.Join(vtname, ","))
+							if err != nil {
+								log.Error(msg, err)
+							}
+						}
+					}
+				}
 			}
-		}
+		}()
 		go CheckYT()
 		go CheckSchedule()
 		go CheckVideoSpace()
@@ -327,31 +342,56 @@ func CheckVideoSpace() {
 	}
 }
 
-func (Data NewVtuber) SendNotif(Bot *discordgo.Session) {
+func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 	Avatar := Data.Member.YtAvatar()
 	Color, err := engine.GetColor("/tmp/notf.gg", Avatar)
 	if err != nil {
 		log.Error(err)
 	}
-	for _, Channel := range GetChannelByGroup(Data.Group.ID) {
-		msg, err := Bot.ChannelMessageSendEmbed(Channel, engine.NewEmbed().
-			SetAuthor(Data.Group.NameGroup, Data.Group.IconURL).
-			SetTitle(engine.FixName(Data.Member.ENName, Data.Member.JPName)).
-			SetImage(Avatar).
-			SetThumbnail("https://justhumanz.me/update.png").
-			SetDescription("New Vtuber has been added to list").
-			AddField("Nickname", Data.Member.Name).
-			AddField("Twitter", "@"+Data.Member.TwitterName).
-			InlineAllFields().
-			AddField("Region", Data.Member.Region).
-			SetURL("https://www.youtube.com/channel/"+Data.Member.YtID[0]+"?sub_confirmation=1").
-			SetColor(Color).MessageEmbed)
-		if err != nil {
-			log.Error(msg, err)
-		}
-		msg, err = Bot.ChannelMessageSend(Channel, "New Update!!!! @here")
-		if err != nil {
-			log.Error(msg, err)
-		}
+	var (
+		Twitterfanart  string
+		Bilibilifanart string
+		Bilibili       string
+		Youtube        string
+	)
+	if Data.Member.YtID != nil {
+		Youtube = "✓"
+	} else {
+		Youtube = "✘"
 	}
+
+	if Data.Member.Hashtag.Twitter != "" {
+		Twitterfanart = "✓"
+	} else {
+		Twitterfanart = "✘"
+	}
+
+	if Data.Member.Hashtag.BiliBili != "" {
+		Bilibilifanart = "✓"
+	} else {
+		Bilibilifanart = "✘"
+	}
+
+	if Data.Member.BiliRoomID != 0 {
+		Bilibili = "✓"
+	} else {
+		Bilibili = "✘"
+	}
+
+	return engine.NewEmbed().
+		SetAuthor(Data.Group.NameGroup, Data.Group.IconURL).
+		SetTitle(engine.FixName(Data.Member.ENName, Data.Member.JPName)).
+		SetImage(Avatar).
+		SetThumbnail("https://justhumanz.me/update.png").
+		SetDescription("New Vtuber has been added to list").
+		AddField("Nickname", Data.Member.Name).
+		AddField("Region", Data.Member.Region).
+		InlineAllFields().
+		AddField("Twitter Fanart", Twitterfanart).
+		AddField("BiliBili Fanart", Bilibilifanart).
+		InlineAllFields().
+		AddField("Youtube Notification", Youtube).
+		AddField("BiliBili Notification", Bilibili).
+		SetURL("https://www.youtube.com/channel/" + Data.Member.YtID[0] + "?sub_confirmation=1").
+		SetColor(Color).MessageEmbed
 }
