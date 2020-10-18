@@ -11,7 +11,6 @@ import (
 
 	"github.com/JustHumanz/Go-simp/database"
 	"github.com/JustHumanz/Go-simp/engine"
-	"github.com/bwmarrin/discordgo"
 	_ "github.com/go-sql-driver/mysql"
 	log "github.com/sirupsen/logrus"
 )
@@ -257,7 +256,6 @@ func AddData(Data Vtuber) {
 	var (
 		wg sync.WaitGroup
 	)
-	Bot, _ := discordgo.New("Bot " + DiscordToken)
 	wg.Add(2)
 	go func() {
 		defer wg.Done()
@@ -307,15 +305,15 @@ func AddData(Data Vtuber) {
 				engine.BruhMoment(err, "", false)
 
 				defer stmt.Close()
-				New = NewVtuber{
+				New = append(New, NewVtuber{
 					Group: database.GroupName{
 						ID:        GroupID,
 						NameGroup: "Independen",
 						IconURL:   "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/independen.png",
 					},
 					Member: Member,
-				}
-				New.SendNotif(Bot)
+				})
+				//New.SendNotif(Bot)
 			} else {
 				log.WithFields(log.Fields{
 					"VtuberGroup": "Independen",
@@ -404,15 +402,15 @@ func AddData(Data Vtuber) {
 
 						defer stmt.Close()
 
-						New = NewVtuber{
+						New = append(New, NewVtuber{
 							Group: database.GroupName{
 								ID:        GroupID,
 								NameGroup: Group.GroupName,
 								IconURL:   Group.GroupIcon,
 							},
 							Member: Member,
-						}
-						New.SendNotif(Bot)
+						})
+						//New.SendNotif(Bot)
 					} else {
 						log.WithFields(log.Fields{
 							"VtuberGroup": Group.GroupName,

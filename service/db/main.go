@@ -31,7 +31,7 @@ var (
 	Publish      time.Time
 	Roomstatus   string
 	BiliSession  string
-	New          NewVtuber
+	New          []NewVtuber
 	DiscordToken string
 )
 
@@ -73,9 +73,15 @@ func main() {
 	flag.Parse()
 	db = DBConn()
 	database.Start(db)
+	Bot, _ := discordgo.New("Bot " + DiscordToken)
 
 	if (*Service) == "bootstrapping" {
 		AddData(res)
+		if New != nil {
+			for _, NewVtuber := range New {
+				NewVtuber.SendNotif(Bot)
+			}
+		}
 		go CheckYT()
 		go CheckSchedule()
 		go CheckVideoSpace()

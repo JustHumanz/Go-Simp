@@ -232,26 +232,6 @@ func (Data Member) GetTwitterFollow() int {
 	return profile.FollowersCount
 }
 
-//yep,i'm trying reduce API cost :3
-func GetAvatar(YtChannel string) string {
-	resp, err := http.Get("https://www.youtube.com/channel/" + YtChannel + "/about")
-	engine.BruhMoment(err, "", false)
-
-	defer resp.Body.Close()
-	bit, err := ioutil.ReadAll(resp.Body)
-	engine.BruhMoment(err, "", false)
-
-	str := string(bit)
-	var avatar string
-	re2 := regexp.MustCompile(`(?ms)avatar.*?(http.*?)"`)
-	submatchall := re2.FindAllStringSubmatch(str, -1)
-	for _, element := range submatchall {
-		avatar = strings.Replace(element[1], "s48", "s800", -1)
-		break
-	}
-	return avatar
-}
-
 type BiliStat struct {
 	Follow BiliFollow
 	Like   LikeView

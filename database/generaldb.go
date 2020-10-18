@@ -394,20 +394,22 @@ func CheckChannelEnable(ChannelID, VtuberName string, GroupID int64) bool {
 }
 
 //Get userinfo(tags) from discord channel
-func UserStatus(UserID, Channel string) []string {
+func UserStatus(UserID, Channel string) [][]string {
 	funcvar := GetFunctionName(UserStatus)
 	Debugging(funcvar, "In", fmt.Sprint(UserID, Channel))
-	var taglist []string
-	rows, err := DB.Query(`SELECT VtuberName FROM User INNER JOIN VtuberMember ON User.VtuberMember_id= VtuberMember.id Inner Join Channel on Channel.id=User.Channel_id WHERE DiscordChannelID=? And DiscordID=?`, Channel, UserID)
+	var (
+		GroupName  string
+		VtuberName string
+		taglist    [][]string
+	)
+	rows, err := DB.Query(`SELECT VtuberGroupName,VtuberName FROM User INNER JOIN VtuberMember ON User.VtuberMember_id=VtuberMember.id Join VtuberGroup ON VtuberGroup.id = VtuberMember.VtuberGroup_id Inner Join Channel on Channel.id=User.Channel_id WHERE DiscordChannelID=? And DiscordID=?`, Channel, UserID)
 	BruhMoment(err, "", false)
 
 	defer rows.Close()
 	for rows.Next() {
-		var list string
-		err = rows.Scan(&list)
+		err = rows.Scan(&GroupName, &VtuberName)
 		BruhMoment(err, "", false)
-
-		taglist = append(taglist, list)
+		taglist = append(taglist, []string{GroupName, VtuberName})
 	}
 	Debugging(funcvar, "Out", taglist)
 	return taglist

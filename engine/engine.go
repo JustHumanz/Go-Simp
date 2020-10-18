@@ -38,6 +38,7 @@ var (
 	GroupData  []database.GroupName
 	GCSDIR     string
 	ImgDomain  string
+	RegList    = make(map[string]string)
 )
 
 //Start module
@@ -52,6 +53,18 @@ func Start(b *discordgo.Session, m string) {
 		debug = false
 	}
 	GroupData = database.GetGroup()
+
+	for _, Group := range GroupData {
+		list := []string{}
+		keys := make(map[string]bool)
+		for _, Member := range database.GetName(Group.ID) {
+			if _, value := keys[Member.Region]; !value {
+				keys[Member.Region] = true
+				list = append(list, Member.Region)
+			}
+		}
+		RegList[Group.NameGroup] = strings.Join(list, ",")
+	}
 
 	go BotSession.AddHandler(Fanart)
 	go BotSession.AddHandler(Tags)
@@ -217,9 +230,8 @@ func FixName(A string, B string) string {
 
 //Find a valid name
 func ValidName(Name string) Memberst {
-	DataGroup := database.GetGroup()
-	for i := 0; i < len(DataGroup); i++ {
-		DataMember := database.GetName(DataGroup[i].ID)
+	for i := 0; i < len(GroupData); i++ {
+		DataMember := database.GetName(GroupData[i].ID)
 		for j := 0; j < len(DataMember); j++ {
 			Name = strings.ToLower(Name)
 			DataMember[j].Name = strings.ToLower(DataMember[j].Name)

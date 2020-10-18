@@ -383,6 +383,9 @@ func Enable(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 				if counter {
 					s.ChannelMessageSend(m.ChannelID, "done")
+					if tagtype == 1 {
+						s.ChannelMessageSend(m.ChannelID, "Remember boys,always respect the artist")
+					}
 				} else {
 					s.ChannelMessageSend(m.ChannelID, "already added")
 				}
@@ -452,6 +455,9 @@ func Enable(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 				if counter {
 					s.ChannelMessageSend(m.ChannelID, "done")
+					if tagtype == 1 {
+						s.ChannelMessageSend(m.ChannelID, "Remember boys,always respect the artist")
+					}
 				} else {
 					s.ChannelMessageSend(m.ChannelID, "already added")
 				}
@@ -526,13 +532,29 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if strings.HasPrefix(m.Content, Prefix) {
 		if m.Content == Prefix+"my tags" {
+			tableString := &strings.Builder{}
+			table := tablewriter.NewWriter(tableString)
 			list := database.UserStatus(m.Author.ID, m.ChannelID)
+
 			if list != nil {
+				table.SetHeader([]string{"Vtuber Group", "Vtuber Name"})
+				table.SetAutoWrapText(false)
+				table.SetAutoMergeCells(true)
+				table.SetAutoFormatHeaders(true)
+				table.SetCenterSeparator("")
+				table.SetColumnSeparator("")
+				table.SetRowSeparator("")
+				table.SetHeaderLine(true)
+				table.SetBorder(false)
+				table.SetTablePadding("\t")
+				table.SetNoWhiteSpace(true)
+				table.AppendBulk(list)
+				table.Render()
+
 				s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 					SetThumbnail(m.Author.AvatarURL("128")).
-					AddField("Username", m.Author.Username).
-					AddField("Vtuber Tag", strings.Join(list, ",")).
+					SetDescription("```"+tableString.String()+"```").
 					SetColor(Color).MessageEmbed)
 			} else {
 				s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
@@ -544,7 +566,6 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 			list, Type := database.ChannelStatus(m.ChannelID)
 			if list != nil {
 				var (
-					tbl     [][]string
 					Typestr string
 				)
 				for i := 0; i < len(list); i++ {
@@ -555,20 +576,17 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					} else {
 						Typestr = "All"
 					}
-					tmp := [][]string{[]string{list[i], Typestr}}
-					tbl = append(tbl, tmp...)
+					table.Append([]string{list[i], Typestr})
 				}
 				table.SetHeader([]string{"Vtuber Group", "Type"})
-				for _, v := range tbl {
-					table.Append(v)
-				}
 				table.Render()
 
 				s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 					SetDescription("```\r"+tableString.String()+"```").
 					SetThumbnail(config.GoSimpIMG).
-					SetColor(Color).MessageEmbed)
+					SetColor(Color).
+					SetFooter("Use `update` command to change type of channel").MessageEmbed)
 			} else {
 				s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 					SetTitle("404 Not found").
@@ -576,13 +594,57 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					SetColor(Color).MessageEmbed)
 			}
 		} else if strings.HasPrefix(m.Content, Prefix+"vtuber data") {
-			Groups := strings.Split(strings.TrimSpace(m.Content[len(Prefix+"vtuber data"):]), ",")
-			if Groups[0] != "" {
-				for _, Group := range database.GetGroup() {
+			Parameter := strings.Split(m.Content, " ")
+			if len(Parameter) > 2 {
+				Groups := strings.Split(Parameter[2], ",")
+				var (
+					GroupsByReg []string
+					NiggList    = make(map[string]string)
+				)
+				if len(Parameter) > 3 {
+					GroupsByReg = strings.Split(Parameter[3], ",")
+					for _, Group := range Groups {
+						var (
+							black []string
+						)
+						for _, Reg := range GroupsByReg {
+							var Counter bool
+							for Key, Val := range RegList {
+								Val = strings.ToLower(Val)
+								Key = strings.ToLower(Key)
+								if Key == Group {
+									for _, Region := range strings.Split(Val, ",") {
+										if Region == Reg {
+											Counter = true
+											break
+										} else {
+											Counter = false
+										}
+									}
+								}
+							}
+							if !Counter {
+								black = append(black, Reg)
+							}
+						}
+						if black != nil {
+							NiggList[Group] = strings.Join(black, ",")
+						}
+					}
+				}
+				for _, Group := range GroupData {
 					for _, Grp := range Groups {
 						if Grp == strings.ToLower(Group.NameGroup) {
 							for _, Member := range database.GetName(Group.ID) {
-								table.Append([]string{Member.Name, Member.Region, Group.NameGroup})
+								if GroupsByReg != nil {
+									for _, Reg := range GroupsByReg {
+										if Reg == strings.ToLower(Member.Region) {
+											table.Append([]string{Member.Name, Member.Region, Group.NameGroup})
+										}
+									}
+								} else {
+									table.Append([]string{Member.Name, Member.Region, Group.NameGroup})
+								}
 							}
 						}
 					}
@@ -595,15 +657,30 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				table.SetRowSeparator("")
 				table.SetHeaderLine(false)
 				table.SetBorder(false)
-				table.SetTablePadding("\t") // pad with tabs
+				table.SetTablePadding("\t")
 				table.SetNoWhiteSpace(true)
 				table.Render()
-				s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
-					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-					SetThumbnail(config.GoSimpIMG).
-					SetDescription("```\r"+tableString.String()+"```").
-					SetColor(Color).
-					SetFooter("use `Nickname` as parameter").MessageEmbed)
+				if len(tableString.String()) > EmbedLimitDescription {
+					s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+						SetThumbnail(config.GoSimpIMG).
+						SetDescription("Data too longgggggg").
+						SetImage(config.Longcatttt).
+						SetColor(Color).MessageEmbed)
+				} else {
+					s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+						SetThumbnail(config.GoSimpIMG).
+						SetDescription("```"+tableString.String()+"```").
+						SetColor(Color).
+						SetFooter("Use `Nickname` as parameter").MessageEmbed)
+				}
+
+				if NiggList != nil {
+					for key, val := range NiggList {
+						s.ChannelMessageSend(m.ChannelID, "`"+strings.Title(key)+"` don't have member in `"+strings.ToUpper(val)+"`")
+					}
+				}
 			} else {
 				s.ChannelMessageSend(m.ChannelID, "Incomplete `vtuber data` command")
 			}
@@ -613,14 +690,13 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 //Find a valid Vtuber name from message handler
 func FindName(MemberName string) NameStruct {
-	Data := database.GetGroup()
-	for i := 0; i < len(Data); i++ {
-		Names := database.GetName(Data[i].ID)
+	for i := 0; i < len(GroupData); i++ {
+		Names := database.GetName(GroupData[i].ID)
 		for _, Name := range Names {
 			if strings.ToLower(Name.Name) == MemberName || strings.ToLower(Name.JpName) == MemberName {
 				return NameStruct{
-					GroupName: Data[i].NameGroup,
-					GroupID:   Data[i].ID,
+					GroupName: GroupData[i].NameGroup,
+					GroupID:   GroupData[i].ID,
 					MemberID:  Name.ID,
 				}
 			}
@@ -639,11 +715,10 @@ type NameStruct struct {
 func FindGropName(GroupName string) (database.GroupName, error) {
 	funcvar := GetFunctionName(FindGropName)
 	Debugging(funcvar, "In", GroupName)
-	Data := database.GetGroup()
-	for i := 0; i < len(Data); i++ {
-		if strings.ToLower(Data[i].NameGroup) == strings.ToLower(GroupName) {
-			Debugging(funcvar, "Out", fmt.Sprint(Data[i].ID, nil))
-			return Data[i], nil
+	for i := 0; i < len(GroupData); i++ {
+		if strings.ToLower(GroupData[i].NameGroup) == strings.ToLower(GroupName) {
+			Debugging(funcvar, "Out", fmt.Sprint(GroupData[i].ID, nil))
+			return GroupData[i], nil
 		}
 	}
 	Debugging(funcvar, "Out", 0)

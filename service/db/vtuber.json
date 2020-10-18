@@ -662,6 +662,71 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Mito-chan",
+                    "EN_Name":"Tsukino Mito",
+                    "JP_Name":"月ノ美兎",
+                    "Hashtag": {
+                        "Twitter": "#みとあーと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCD-miitqNY3nyukJ4Fnf4_A"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "MitoTsukino",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Shizurin",
+                    "EN_Name":"Shizuka Rin",
+                    "JP_Name":"静凛",
+                    "Hashtag": {
+                        "Twitter": "#凛Art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UC6oDys1BGgBsIC3WhG1BovQ"
+                    ],
+                    "BiliBili_ID": 403921378,
+                    "BiliRoom_ID": 21302352,
+                    "Twitter_Username": "ShizuRin23",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Riri",
+                    "EN_Name":"Yuuhi Riri",
+                    "JP_Name":"夕陽リリ",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UC48jH1ul-6HOrcSSfoR02fQ"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Yuuhi_Riri",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Hima-chan",
+                    "EN_Name":"Honma Himawari",
+                    "JP_Name":"本間ひまわり",
+                    "Hashtag": {
+                        "Twitter": "#ひまあーと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UC0g1AE0DOjBYnLhkgoRWN1w"
+                    ],
+                    "BiliBili_ID": 403928672,
+                    "BiliRoom_ID": 21302477,
+                    "Twitter_Username": "honmahimawari",
+                    "Region":"JP"
+                },
+
+                {
                     "Name":"Hanamaki",
                     "EN_Name":"Hana Macchia",
                     "JP_Name":"",
