@@ -623,6 +623,22 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Roboco",
+                    "EN_Name":"Roboco",
+                    "JP_Name":"ロボ子",
+                    "Hashtag": {
+                        "Twitter": "#ロボ子Art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCDqI2jOz0weumE8s7paEk6g"
+                    ],
+                    "BiliBili_ID": 20813493,
+                    "BiliRoom_ID": 4664126,
+                    "Twitter_Username": "robocosan",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Gura",
                     "EN_Name":"Gawr Gura",
                     "JP_Name":"がうる・ぐら",
@@ -730,6 +746,78 @@
                     "BiliBili_ID": 511613155,
                     "BiliRoom_ID": 21908196,
                     "Twitter_Username": "Artia_Hololive",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Civia",
+                    "EN_Name":"Civia",
+                    "JP_Name":"希薇婭",
+                    "Hashtag": {
+                        "Twitter": "#Civiart",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCgNVXGlZIFK96XdEY20sVjg"
+                    ],
+                    "BiliBili_ID": 354411419,
+                    "BiliRoom_ID": 21618138,
+                    "Twitter_Username": "Civia_Hololive",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Yogiri",
+                    "EN_Name":"Yogiri",
+                    "JP_Name":"夜霧",
+                    "Hashtag": {
+                        "Twitter": "#霧夜絵",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[],
+                    "BiliBili_ID": 427061218,
+                    "BiliRoom_ID": 21618129,
+                    "Twitter_Username": "yogiri_hololive",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Kuromomo",
+                    "EN_Name":"Spade Echo",
+                    "JP_Name":"黒桃影",
+                    "Hashtag": {
+                        "Twitter": "#パン桃絵",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[],
+                    "BiliBili_ID": 456368455,
+                    "BiliRoom_ID": 21641569,
+                    "Twitter_Username": "SpadeEcho",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Doris",
+                    "EN_Name":"Doris",
+                    "JP_Name":"ドリス",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[],
+                    "BiliBili_ID": 511613156,
+                    "BiliRoom_ID": 21908209,
+                    "Twitter_Username": "Doris_Hololive",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Rosalyn",
+                    "EN_Name":"Rosalyn",
+                    "JP_Name":"ロサリン",
+                    "Hashtag": {
+                        "Twitter": "#蘑法カード",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[],
+                    "BiliBili_ID": 511613157,
+                    "BiliRoom_ID": 21908222,
+                    "Twitter_Username": "Rosalyn_holoCN",
                     "Region":"CN"
                 }
                 
