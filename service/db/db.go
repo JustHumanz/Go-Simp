@@ -472,7 +472,6 @@ func (Data Member) InputSubs(MemberID int64) {
 	Bili := Data.GetBiliFolow()
 
 	if err != nil || err == sql.ErrNoRows {
-		log.Error(err)
 		stmt, err := db.Prepare("INSERT INTO Subscriber (Youtube_Subs,Youtube_Videos,Youtube_Views,BiliBili_Follows,BiliBili_Videos,BiliBili_Views,Twitter_Follows,VtuberMember_id) values(?,?,?,?,?,?,?,?)")
 		engine.BruhMoment(err, "", false)
 		res, err := stmt.Exec(Subs[0].Data.Subscribers, Subs[0].Data.Videos, Subs[0].Data.Views, Bili.Follow.Data.Follower, Bili.Video, Bili.Like.Data.Archive.View, Data.GetTwitterFollow(), MemberID)

@@ -155,19 +155,26 @@ func (Data Member) GetYtSubs() []Subs {
 		datasubs []Subs
 		tmp      Subs
 	)
-	for _, Yt := range Data.YtID {
-		head := []string{"Referer", "https://akshatmittal.com/youtube-realtime/"}
-		body, err := engine.Curl("https://counts.live/api/youtube-subscriber-count/"+Yt+"/live", head)
-		if err != nil {
-			log.Error(err, string(body))
+	if len(Data.YtID) > 0 {
+		for _, Yt := range Data.YtID {
+			head := []string{"Referer", "https://akshatmittal.com/youtube-realtime/"}
+			body, err := engine.Curl("https://counts.live/api/youtube-subscriber-count/"+Yt+"/live", head)
+			if err != nil {
+				log.Error(err, string(body))
+			}
+			err = json.Unmarshal(body, &tmp)
+			if err != nil {
+				log.Error(err)
+			}
+			datasubs = append(datasubs, tmp)
 		}
-		err = json.Unmarshal(body, &tmp)
-		if err != nil {
-			log.Error(err)
-		}
-		datasubs = append(datasubs, tmp)
+		return datasubs
+	} else {
+		datasubs[0].Data.Subscribers = 0
+		datasubs[0].Data.Videos = 0
+		datasubs[0].Data.Views = 0
+		return datasubs
 	}
-	return datasubs
 }
 
 func (Data Member) GetBiliFolow() BiliStat {
