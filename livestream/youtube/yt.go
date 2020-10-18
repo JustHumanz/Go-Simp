@@ -31,13 +31,15 @@ func CheckSchedule() {
 	for _, Group := range database.GetGroup() {
 		var wg sync.WaitGroup
 		for _, Member := range database.GetName(Group.ID) {
-			wg.Add(1)
-			log.WithFields(log.Fields{
-				"Vtube":        Member.EnName,
-				"Youtube ID":   Member.YoutubeID,
-				"Vtube Region": Member.Region,
-			}).Info("Checking Youtube")
-			go Filter(Member, Group, &wg)
+			if Member.YoutubeID != "" {
+				wg.Add(1)
+				log.WithFields(log.Fields{
+					"Vtube":        Member.EnName,
+					"Youtube ID":   Member.YoutubeID,
+					"Vtube Region": Member.Region,
+				}).Info("Checking Youtube")
+				go Filter(Member, Group, &wg)
+			}
 		}
 		wg.Wait()
 	}

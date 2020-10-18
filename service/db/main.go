@@ -147,12 +147,14 @@ func CheckYT() {
 	Data := database.GetGroup()
 	for i := 0; i < len(Data); i++ {
 		for _, Name := range database.GetName(Data[i].ID) {
-			log.WithFields(log.Fields{
-				"Vtube":        Name.EnName,
-				"Youtube ID":   Name.YoutubeID,
-				"Vtube Region": Name.Region,
-			}).Info("Checking yt")
-			FilterYt(Name)
+			if Name.YoutubeID != "" {
+				log.WithFields(log.Fields{
+					"Vtube":        Name.EnName,
+					"Youtube ID":   Name.YoutubeID,
+					"Vtube Region": Name.Region,
+				}).Info("Checking yt")
+				FilterYt(Name)
+			}
 		}
 	}
 }
