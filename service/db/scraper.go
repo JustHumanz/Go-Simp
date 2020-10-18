@@ -170,6 +170,7 @@ func (Data Member) GetYtSubs() []Subs {
 		}
 		return datasubs
 	} else {
+		datasubs[0] = Subs{}
 		datasubs[0].Data.Subscribers = 0
 		datasubs[0].Data.Videos = 0
 		datasubs[0].Data.Views = 0
