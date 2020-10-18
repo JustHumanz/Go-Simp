@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/signal"
 	"runtime/pprof"
-	"time"
 
 	config "github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
@@ -26,7 +25,6 @@ func main() {
 	}
 	db := conf.CheckSQL()
 
-	time.Sleep(3 * time.Minute)
 	Bot, _ := discordgo.New("Bot " + config.Token)
 
 	err = Bot.Open()
