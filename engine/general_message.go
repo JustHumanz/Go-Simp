@@ -746,7 +746,13 @@ func Reacting(Data map[string]string) error {
 			}
 			break
 		} else if Data["Content"][len(Data["Prefix"]):] == "cleaire" {
-			err := BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, "767764793347014739")
+			err := BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[0])
+			if err != nil {
+				return errors.New(err.Error() + " ChannelID: " + ChannelID)
+				//log.Error(err, ChannelID)
+			}
+
+			err = BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, ":domrime:767764793347014739")
 			if err != nil {
 				return errors.New(err.Error() + " ChannelID: " + ChannelID)
 				//log.Error(err, ChannelID)
