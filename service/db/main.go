@@ -388,12 +388,11 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		SetDescription("New Vtuber has been added to list").
 		AddField("Nickname", Data.Member.Name).
 		AddField("Region", Data.Member.Region).
-		InlineAllFields().
 		AddField("Twitter Fanart", Twitterfanart).
 		AddField("BiliBili Fanart", Bilibilifanart).
-		InlineAllFields().
 		AddField("Youtube Notification", Youtube).
 		AddField("BiliBili Notification", Bilibili).
+		InlineAllFields().
 		SetURL("https://www.youtube.com/channel/" + Data.Member.YtID[0] + "?sub_confirmation=1").
 		SetColor(Color).MessageEmbed
 }

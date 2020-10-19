@@ -292,7 +292,7 @@ func AddData(Data Vtuber) {
 				Add Member
 			*/
 			var tmp int64
-			row := db.QueryRow("SELECT id FROM VtuberMember WHERE Youtube_ID=? ", strings.Join(Member.YtID, "\n"))
+			row := db.QueryRow("SELECT id FROM VtuberMember WHERE VtuberName=? AND (Youtube_ID=? OR  BiliBili_SpaceID=? OR BiliBili_RoomID=?)", Member.Name, strings.Join(Member.YtID, "\n"), Member.BiliBiliID, Member.BiliRoomID)
 			err := row.Scan(&tmp)
 			if err == sql.ErrNoRows {
 				stmt, err := db.Prepare("INSERT INTO VtuberMember (VtuberName,VtuberName_EN,VtuberName_JP,Hashtag,BiliBili_Hashtag,Youtube_ID,Youtube_Avatar,VtuberGroup_id,Region,BiliBili_SpaceID,BiliBili_RoomID,BiliBili_Avatar,Twitter_Username) values(?,?,?,?,?,?,?,?,?,?,?,?,?)")
@@ -388,7 +388,7 @@ func AddData(Data Vtuber) {
 						Add Member
 					*/
 					var tmp int64
-					row := db.QueryRow("SELECT id FROM VtuberMember WHERE Youtube_ID=? ", strings.Join(Member.YtID, "\n"))
+					row := db.QueryRow("SELECT id FROM VtuberMember WHERE VtuberName=? AND (Youtube_ID=? OR  BiliBili_SpaceID=? OR BiliBili_RoomID=?)", Member.Name, strings.Join(Member.YtID, "\n"), Member.BiliBiliID, Member.BiliRoomID)
 					err := row.Scan(&tmp)
 					if err != nil || err == sql.ErrNoRows {
 						stmt, err := db.Prepare("INSERT INTO VtuberMember (VtuberName,VtuberName_EN,VtuberName_JP,Hashtag,BiliBili_Hashtag,Youtube_ID,Youtube_Avatar,VtuberGroup_id,Region,BiliBili_SpaceID,BiliBili_RoomID,BiliBili_Avatar,Twitter_Username) values(?,?,?,?,?,?,?,?,?,?,?,?,?)")
