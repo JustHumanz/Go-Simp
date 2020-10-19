@@ -368,6 +368,12 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 
 	} else {
 		Youtube = "✘"
+		URL = "https://space.bilibili.com/" + strconv.Itoa(Data.Member.BiliBiliID)
+		Avatar = Data.Member.BliBiliFace()
+		Color, err = engine.GetColor("/tmp/notf.gg", Avatar)
+		if err != nil {
+			log.Error(err)
+		}
 	}
 
 	if Data.Member.Hashtag.Twitter != "" {
@@ -384,13 +390,6 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 
 	if Data.Member.BiliRoomID != 0 {
 		Bilibili = "✓"
-		URL = "https://space.bilibili.com" + strconv.Itoa(Data.Member.BiliBiliID)
-		Avatar = Data.Member.BliBiliFace()
-		Color, err = engine.GetColor("/tmp/notf.gg", Avatar)
-		if err != nil {
-			log.Error(err)
-		}
-
 	} else {
 		Bilibili = "✘"
 	}
