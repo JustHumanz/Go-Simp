@@ -87,7 +87,7 @@ func CreatePayload(Group int64) []string {
 		for z, hashtag := range GroupsHashtag {
 			if hashtag.TwitterHashtags != "" {
 				Hashtags = append(Hashtags, hashtag.TwitterHashtags)
-				if z == len(GroupsHashtag)/2 || z == len(GroupsHashtag)-1 {
+				if z == len(GroupsHashtag)/3 || z == len(GroupsHashtag)-1 {
 					params := url.Values{}
 					params.Add("q", strings.Join(Hashtags, " OR ")+" "+"filter:links -filter:replies filter:media -filter:retweets")
 					FinalTags = append(FinalTags, params.Encode())
