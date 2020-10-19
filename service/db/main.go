@@ -345,21 +345,35 @@ func CheckVideoSpace() {
 }
 
 func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
-	Avatar := Data.Member.YtAvatar()
-	Color, err := engine.GetColor("/tmp/notf.gg", Avatar)
-	if err != nil {
-		log.Error(err)
-	}
 	var (
 		Twitterfanart  string
 		Bilibilifanart string
 		Bilibili       string
 		Youtube        string
+		URL            string
+		Color          int
+		Avatar         string
+		err            error
 	)
-	if Data.Member.YtID != nil {
+
+	if len(Data.Member.YtID) > 0 {
 		Youtube = "✓"
+		URL = "https://www.youtube.com/channel/" + Data.Member.YtID[0] + "?sub_confirmation=1"
+
+		Avatar = Data.Member.YtAvatar()
+		Color, err = engine.GetColor("/tmp/notf.gg", Avatar)
+		if err != nil {
+			log.Error(err)
+		}
+
 	} else {
 		Youtube = "✘"
+		URL = "https://space.bilibili.com" + strconv.Itoa(Data.Member.BiliBiliID)
+		Avatar = Data.Member.BliBiliFace()
+		Color, err = engine.GetColor("/tmp/notf.gg", Avatar)
+		if err != nil {
+			log.Error(err)
+		}
 	}
 
 	if Data.Member.Hashtag.Twitter != "" {
@@ -393,6 +407,6 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		AddField("Youtube Notification", Youtube).
 		AddField("BiliBili Notification", Bilibili).
 		InlineAllFields().
-		SetURL("https://www.youtube.com/channel/" + Data.Member.YtID[0] + "?sub_confirmation=1").
+		SetURL(URL).
 		SetColor(Color).MessageEmbed
 }
