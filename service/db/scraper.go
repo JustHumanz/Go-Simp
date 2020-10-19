@@ -157,10 +157,9 @@ func (Data Member) GetYtSubs() []Subs {
 	)
 	if len(Data.YtID) > 0 {
 		for _, Yt := range Data.YtID {
-			head := []string{"Referer", "https://akshatmittal.com/youtube-realtime/"}
-			body, err := engine.Curl("https://counts.live/api/youtube-subscriber-count/"+Yt+"/live", head)
+			body, err := engine.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+Yt+"&key="+YtToken, nil)
 			if err != nil {
-				log.Error(err, string(body))
+				log.Error(err)
 			}
 			err = json.Unmarshal(body, &tmp)
 			if err != nil {
@@ -170,10 +169,12 @@ func (Data Member) GetYtSubs() []Subs {
 		}
 		return datasubs
 	} else {
-		datasubs = append(datasubs, Subs{})
-		datasubs[0].Data.Subscribers = 0
-		datasubs[0].Data.Videos = 0
-		datasubs[0].Data.Views = 0
+		/*
+			datasubs[0].Items[0].Statistics.SubscriberCount = "0"
+			datasubs[0].Items[0].Statistics.VideoCount = "0"
+			datasubs[0].Items[0].Statistics.ViewCount = "0"
+		*/
+		datasubs = append(datasubs, tmp.Default())
 		return datasubs
 	}
 }

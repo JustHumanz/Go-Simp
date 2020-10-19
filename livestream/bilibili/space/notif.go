@@ -4,7 +4,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/JustHumanz/Go-simp/config"
@@ -18,7 +17,6 @@ import (
 func (Data CheckSctruct) SendNude(Color int) {
 	var (
 		BotSession = engine.BotSession
-		wg         = new(sync.WaitGroup)
 	)
 	if Data.VideoList != nil {
 		log.WithFields(log.Fields{
@@ -43,24 +41,23 @@ func (Data CheckSctruct) SendNude(Color int) {
 			ID, DiscordChannelID := database.ChannelTag(Data.MemberID, 2)
 			for i := 0; i < len(DiscordChannelID); i++ {
 				UserTagsList := database.GetUserList(ID[i], Data.MemberID)
-				wg.Add(1)
-				go func(DiscordChannel string, wg *sync.WaitGroup) {
-					defer wg.Done()
-					if UserTagsList != nil {
-						msg, err := BotSession.ChannelMessageSendEmbed(DiscordChannel, Embed)
-						msg, err = BotSession.ChannelMessageSend(DiscordChannel, "UserTags: "+strings.Join(UserTagsList, " "))
+				if UserTagsList != nil {
+					msg, err := BotSession.ChannelMessageSendEmbed(DiscordChannelID[i], Embed)
+					if err != nil {
+						log.Error(msg, err)
+						match, _ := regexp.MatchString("Unknown Channel", err.Error())
+						if match {
+							log.Info("Delete Discord Channel ", DiscordChannelID[i])
+							database.DelChannel(DiscordChannelID[i], Data.MemberID)
+						}
+					} else {
+						msg, err = BotSession.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
 						if err != nil {
 							log.Error(msg, err)
-							match, _ := regexp.MatchString("Unknown Channel", err.Error())
-							if match {
-								log.Info("Delete Discord Channel ", DiscordChannel)
-								database.DelChannel(DiscordChannel, Data.MemberID)
-							}
 						}
 					}
-				}(DiscordChannelID[i], wg)
+				}
 			}
-			wg.Wait()
 		}
 	}
 }

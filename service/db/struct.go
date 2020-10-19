@@ -60,15 +60,38 @@ type Member struct {
 }
 
 type Subs struct {
-	Success bool   `json:"success"`
-	Service string `json:"service"`
-	T       int64  `json:"t"`
-	Data    struct {
-		LvIdentifier string `json:"lv_identifier"`
-		Subscribers  int    `json:"subscribers"`
-		Videos       int    `json:"videos"`
-		Views        int    `json:"views"`
-	} `json:"data"`
+	Kind     string   `json:"kind"`
+	Etag     string   `json:"etag"`
+	PageInfo PageInfo `json:"pageInfo"`
+	Items    []Items  `json:"items"`
+}
+type PageInfo struct {
+	ResultsPerPage int `json:"resultsPerPage"`
+}
+type Statistics struct {
+	ViewCount             string `json:"viewCount"`
+	CommentCount          string `json:"commentCount"`
+	SubscriberCount       string `json:"subscriberCount"`
+	HiddenSubscriberCount bool   `json:"hiddenSubscriberCount"`
+	VideoCount            string `json:"videoCount"`
+}
+type Items struct {
+	Kind       string     `json:"kind"`
+	Etag       string     `json:"etag"`
+	ID         string     `json:"id"`
+	Statistics Statistics `json:"statistics"`
+}
+
+func (Data Subs) Default() Subs {
+	Data.Items = append(Data.Items, Items{
+		Statistics: Statistics{
+			VideoCount:      "0",
+			ViewCount:       "0",
+			SubscriberCount: "0",
+		},
+	})
+
+	return Data
 }
 
 type SpaceVideo struct {

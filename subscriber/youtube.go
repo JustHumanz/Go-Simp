@@ -31,7 +31,7 @@ func CheckYtSubsCount() {
 				if err != nil {
 					log.Error(err, string(body))
 					oldtoken := yttoken
-					yttoken = engine.ChangeToken(yttoken)
+					yttoken = engine.ChangeToken(oldtoken)
 					log.WithFields(log.Fields{
 						"Old Token": oldtoken,
 						"New Token": yttoken,

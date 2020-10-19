@@ -1,6 +1,7 @@
 package bilibili
 
 import (
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -16,11 +17,20 @@ func (Data LiveBili) Tamod(MemberID int64) {
 	id, DiscordChannelID := database.ChannelTag(MemberID, 2)
 	for i, DiscordChannel := range DiscordChannelID {
 		UserTagsList := database.GetUserList(id[i], MemberID)
-		BotSession.ChannelMessageSendEmbed(DiscordChannel, Data.Embed)
-		if UserTagsList != nil {
-			msg, err := BotSession.ChannelMessageSend(DiscordChannel, "UserTags: "+strings.Join(UserTagsList, " "))
-			if err != nil {
-				log.Error(msg, err)
+		msg, err := BotSession.ChannelMessageSendEmbed(DiscordChannel, Data.Embed)
+		if err != nil {
+			log.Error(msg, err)
+			match, _ := regexp.MatchString("Unknown Channel", err.Error())
+			if match {
+				log.Info("Delete Discord Channel ", DiscordChannelID[i])
+				database.DelChannel(DiscordChannelID[i], MemberID)
+			}
+		} else {
+			if UserTagsList != nil {
+				msg, err = BotSession.ChannelMessageSend(DiscordChannel, "UserTags: "+strings.Join(UserTagsList, " "))
+				if err != nil {
+					log.Error(msg, err)
+				}
 			}
 		}
 	}

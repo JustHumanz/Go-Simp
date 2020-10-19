@@ -105,11 +105,10 @@ func BruhMoment(err error, msg string, exit bool) {
 	}
 }
 
-func ChangeToken(yttoken string) string {
-	tokentmp := config.YtToken
+func ChangeToken(oldtoken string) string {
 	newtoken := ""
-	for _, token := range tokentmp {
-		if token != yttoken {
+	for _, token := range config.YtToken {
+		if token != oldtoken {
 			newtoken = token
 			return newtoken
 		}

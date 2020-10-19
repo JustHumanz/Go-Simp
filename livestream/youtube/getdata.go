@@ -3,6 +3,7 @@ package youtube
 import (
 	"encoding/json"
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"math"
@@ -41,7 +42,7 @@ func GetRSS(YtID string) []string {
 	return VideoID
 }
 
-func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
+func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) error {
 	funcvar := engine.GetFunctionName(Filter)
 	engine.Debugging(funcvar, "In", Name)
 	defer wg.Done()
@@ -49,7 +50,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 		VideoID := GetRSS(YoutubeID)
 		Data, err := YtAPI(VideoID)
 		if err != nil {
-			log.Error(err)
+			return err
 		}
 		MemberFixName := engine.FixName(Name.EnName, Name.JpName)
 		for i := 0; i < len(Data.Items); i++ {
@@ -73,7 +74,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 			if Data.Items[i].Snippet.VideoStatus == "upcoming" {
 				Viewers, err = GetWaiting(VideoID[i])
 				if err != nil {
-					log.Error(err)
+					return err
 				}
 			} else if Data.Items[i].LiveDetails.Viewers == "" {
 				Viewers = Data.Items[i].Statistics.ViewCount
@@ -234,7 +235,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) {
 			}
 		}
 	}
-
+	return nil
 }
 
 func YtAPI(VideoID []string) (YtData, error) {
@@ -251,12 +252,12 @@ func YtAPI(VideoID []string) (YtData, error) {
 	if curlerr != nil {
 		log.Error(curlerr, string(body))
 		oldtoken := yttoken
-		yttoken = engine.ChangeToken(yttoken)
+		yttoken = engine.ChangeToken(oldtoken)
 		log.WithFields(log.Fields{
 			"Old Token": oldtoken,
 			"New Token": yttoken,
 		}).Warn("Token out of limit,try to change")
-
+		return YtData{}, errors.New("Token out of limit")
 	}
 	err := json.Unmarshal(body, &Data)
 	engine.BruhMoment(err, "", false)

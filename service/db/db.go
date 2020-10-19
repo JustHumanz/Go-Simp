@@ -458,7 +458,6 @@ func GetChannelByGroup(VtuberGroupID int64) []string {
 		if err != nil {
 			log.Error(err)
 		}
-
 		channellist = append(channellist, list)
 	}
 	return channellist
@@ -471,21 +470,62 @@ func (Data Member) InputSubs(MemberID int64) {
 	Subs := Data.GetYtSubs()
 	Bili := Data.GetBiliFolow()
 
+	ytsubs, _ := strconv.Atoi(Subs[0].Items[0].Statistics.SubscriberCount)
+	ytvideos, _ := strconv.Atoi(Subs[0].Items[0].Statistics.VideoCount)
+	ytviews, _ := strconv.Atoi(Subs[0].Items[0].Statistics.ViewCount)
+	bilifoll := Bili.Follow.Data.Follower
+	bilivideos := Bili.Video
+	biliview := Bili.Like.Data.Archive.View
+	twfollo := Data.GetTwitterFollow()
 	if err != nil || err == sql.ErrNoRows {
 		stmt, err := db.Prepare("INSERT INTO Subscriber (Youtube_Subs,Youtube_Videos,Youtube_Views,BiliBili_Follows,BiliBili_Videos,BiliBili_Views,Twitter_Follows,VtuberMember_id) values(?,?,?,?,?,?,?,?)")
 		engine.BruhMoment(err, "", false)
-		res, err := stmt.Exec(Subs[0].Data.Subscribers, Subs[0].Data.Videos, Subs[0].Data.Views, Bili.Follow.Data.Follower, Bili.Video, Bili.Like.Data.Archive.View, Data.GetTwitterFollow(), MemberID)
+		res, err := stmt.Exec(ytsubs, ytvideos, ytviews, bilifoll, bilivideos, biliview, twfollo, MemberID)
 		engine.BruhMoment(err, "", false)
-
 		_, err = res.LastInsertId()
 		engine.BruhMoment(err, "", false)
 
 		defer stmt.Close()
 	} else {
+		rows, err := db.Query(`SELECT Youtube_Subs,Youtube_Videos,Youtube_Views,BiliBili_Follows,BiliBili_Videos,BiliBili_Views,Twitter_Follows FROM Subscriber WHERE VtuberMember_id=?`, MemberID)
+		engine.BruhMoment(err, "", false)
+		var (
+			ytsubstmp, ytvideostmp, ytviewstmp, bilifolltmp, bilivideostmp, biliviewtmp, twfollotmp int
+		)
+
+		defer rows.Close()
+		for rows.Next() {
+			err = rows.Scan(&ytsubstmp, &ytvideostmp, &ytviewstmp, &bilifolltmp, &bilivideostmp, &biliviewtmp, &twfollotmp)
+			if err != nil {
+				log.Error(err)
+			}
+		}
+
+		if (ytsubs == 0 && ytsubstmp != 0) || (ytsubs == 0 && ytsubstmp == 0) {
+			ytsubs = ytsubstmp
+		}
+		if (ytvideos == 0 && ytvideostmp != 0) || (ytvideos == 0 && ytvideostmp == 0) {
+			ytvideos = ytvideostmp
+		}
+		if (ytviews == 0 && ytviewstmp != 0) || (ytviews == 0 && ytviewstmp == 0) {
+			ytviews = ytviewstmp
+		}
+		if (bilifoll == 0 && bilifolltmp != 0) || (bilifoll == 0 && bilifolltmp == 0) {
+			bilifoll = bilifolltmp
+		}
+		if (bilivideos == 0 && bilivideostmp != 0) || (bilivideos == 0 && bilivideostmp == 0) {
+			bilivideos = bilivideostmp
+		}
+		if (biliview == 0 && biliviewtmp != 0) || (biliview == 0 && biliviewtmp == 0) {
+			biliview = biliviewtmp
+		}
+		if (twfollo == 0 && twfollotmp != 0) || (twfollo == 0 && twfollotmp == 0) {
+			twfollo = twfollotmp
+		}
+
 		Update, err := db.Prepare(`Update Subscriber set Youtube_Subs=?, Youtube_Videos=?, Youtube_Views=?, BiliBili_Follows=?, BiliBili_Videos=?, BiliBili_Views=?, Twitter_Follows=? Where id=?`)
 		engine.BruhMoment(err, "", false)
-		Update.Exec(Subs[0].Data.Subscribers, Subs[0].Data.Videos, Subs[0].Data.Views, Bili.Follow.Data.Follower, Bili.Video, Bili.Like.Data.Archive.View, Data.GetTwitterFollow(), tmp)
-
+		Update.Exec(ytsubs, ytvideos, ytviews, bilifoll, bilivideos, biliview, twfollo, tmp)
 	}
 }
 

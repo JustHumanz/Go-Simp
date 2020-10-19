@@ -69,7 +69,7 @@ type ConfigFile struct {
 //read from config file
 func ReadConfig() (ConfigFile, error) {
 	fmt.Println("Reading config file...")
-	log.SetFormatter(&log.TextFormatter{FullTimestamp: true})
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
 
 	file, err := ioutil.ReadFile("config.toml")
 
@@ -86,7 +86,6 @@ func ReadConfig() (ConfigFile, error) {
 	TwitterToken = config.TwitterBearer
 	ImgurClient = config.ImgurClinet
 	BiliBiliSes = config.BiliSess
-	//NotFound =
 	SauceAPI = config.SauceAPI
 	Logging = os.Getenv("LOG")
 	OwnerDiscordID = os.Getenv("OWNER")
