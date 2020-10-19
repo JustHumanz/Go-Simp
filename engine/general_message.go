@@ -752,7 +752,7 @@ func Reacting(Data map[string]string) error {
 				//log.Error(err, ChannelID)
 			}
 
-			err = BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, ":domrime:767764793347014739")
+			err = BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, ":latom:767764793347014739")
 			if err != nil {
 				return errors.New(err.Error() + " ChannelID: " + ChannelID)
 				//log.Error(err, ChannelID)
