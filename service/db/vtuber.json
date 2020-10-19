@@ -368,6 +368,22 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Kanatan",
+                    "EN_Name":"Amane Kanata",
+                    "JP_Name":"天音かなた",
+                    "Hashtag": {
+                        "Twitter": "#かなたーと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCZlDXzGoo7d44bwdNObFacg"
+                    ],
+                    "BiliBili_ID": 491474048,
+                    "BiliRoom_ID": 21752681,
+                    "Twitter_Username": "amanekanatach",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Subaru",
                     "EN_Name":"Oozora Subaru",
                     "JP_Name":"大空スバル",
@@ -639,6 +655,54 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"AZKi",
+                    "EN_Name":"Virtual Diva AZKi",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#AZKiART",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UC0TXe_LYZ4scaW2XMyi5_kw"
+                    ],
+                    "BiliBili_ID": 389056211,
+                    "BiliRoom_ID": 21267062,
+                    "Twitter_Username": "AZKi_VDiVA",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Eroyama",
+                    "EN_Name":"Kageyama Shien",
+                    "JP_Name":"影山シエン",
+                    "Hashtag": {
+                        "Twitter": "#シ絵ン",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UChSvpZYRPh0FvG4SJGSga3g"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "kageyamashien",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Izu-Izu",
+                    "EN_Name":"Kanade Izuru",
+                    "JP_Name":"奏手イヅル",
+                    "Hashtag": {
+                        "Twitter": "#イヅル描いたぞ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCZgOv3YDEs-ZnZWDYVwJdmA"
+                    ],
+                    "BiliBili_ID": 456232604,
+                    "BiliRoom_ID": 21749477,
+                    "Twitter_Username": "kanadeizuru",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Gura",
                     "EN_Name":"Gawr Gura",
                     "JP_Name":"がうる・ぐら",
@@ -716,22 +780,6 @@
                     "BiliBili_ID": 443300418,
                     "BiliRoom_ID": 21545232,
                     "Twitter_Username": "uruharushia",
-                    "Region":"JP"
-                },
-                {
-                    "Name":"Kanatan",
-                    "EN_Name":"Amane Kanata",
-                    "JP_Name":"天音かなた",
-                    "Hashtag": {
-                        "Twitter": "#かなたーと",
-                        "BiliBili": ""
-                    },
-                    "Yt_ID":[
-                        "UCZlDXzGoo7d44bwdNObFacg"
-                    ],
-                    "BiliBili_ID": 491474048,
-                    "BiliRoom_ID": 21752681,
-                    "Twitter_Username": "amanekanatach",
                     "Region":"JP"
                 },
                 {
@@ -841,6 +889,22 @@
                     "BiliBili_ID": 666726794,
                     "BiliRoom_ID": 22470215,
                     "Twitter_Username": "lulu_suzuhara",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Cleaire",
+                    "EN_Name":"Sister Cleaire",
+                    "JP_Name":"シスタ クレア",
+                    "Hashtag": {
+                        "Twitter": "#描いたよクレアさん",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UC1zFJrfEKvCixhsjNSb1toQ"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "SisterCleaire",
                     "Region":"JP"
                 },
                 {

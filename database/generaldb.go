@@ -142,13 +142,13 @@ func (Member Name) GetSubsCount() MemberSubs {
 //Update Subscriber data
 func (Data MemberSubs) UpdateSubs(State string) {
 	if State == "yt" {
-		_, err := DB.Exec(`Update Subscriber set Youtube_Subs=?,Youtube_Videos=?,Youtube_Views=? Where id=? `, Data.YtSubs, Data.YtVideos, Data.YtViews, Data.ID)
+		_, err := DB.Exec(`Update Subscriber set Youtube_Subscriber=?,Youtube_Videos=?,Youtube_Views=? Where id=? `, Data.YtSubs, Data.YtVideos, Data.YtViews, Data.ID)
 		BruhMoment(err, "", false)
 	} else if State == "bili" {
-		_, err := DB.Exec(`Update Subscriber set BiliBili_Follows=?,BiliBili_Videos=?,BiliBili_Views=? Where id=? `, Data.BiliFollow, Data.BiliVideos, Data.BiliViews, Data.ID)
+		_, err := DB.Exec(`Update Subscriber set BiliBili_Followers=?,BiliBili_Videos=?,BiliBili_Views=? Where id=? `, Data.BiliFollow, Data.BiliVideos, Data.BiliViews, Data.ID)
 		BruhMoment(err, "", false)
 	} else {
-		_, err := DB.Exec(`Update Subscriber set Twitter_Follows=? Where id=? `, Data.TwFollow, Data.ID)
+		_, err := DB.Exec(`Update Subscriber set Twitter_Followers=? Where id=? `, Data.TwFollow, Data.ID)
 		BruhMoment(err, "", false)
 	}
 }

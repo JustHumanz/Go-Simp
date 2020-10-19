@@ -64,7 +64,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 			duration := durafmt.Parse(ParseDuration(Data.Items[i].ContentDetails.Duration))
 			if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|mv|covered|op)", strings.ToLower(Data.Items[i].Snippet.Title)); Cover {
 				yttype = "Covering"
-			} else if Chat, _ := regexp.MatchString("(?m)(free|chat|room)", Data.Items[i].Snippet.Title); Chat {
+			} else if Chat, _ := regexp.MatchString("(?m)(chat|room)", Data.Items[i].Snippet.Title); Chat {
 				yttype = "ChatRoom"
 			} else {
 				yttype = "Streaming"

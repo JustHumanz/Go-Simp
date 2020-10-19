@@ -171,13 +171,13 @@ func CreateDB() error {
 
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS Vtuber.Subscriber (
 		id INT NOT NULL AUTO_INCREMENT,
-		Youtube_Subs INT(11) NULL,
+		Youtube_Subscriber INT(11) NULL,
 		Youtube_Videos INT(11) NULL,
 		Youtube_Views INT(11) NULL,
-		BiliBili_Follows INT(11) NULL,
+		BiliBili_Followers INT(11) NULL,
 		BiliBili_Videos INT(11) NULL,
 		BiliBili_Views INT(11) NULL,
-		Twitter_Follows INT(11) NULL,
+		Twitter_Followers INT(11) NULL,
 		VtuberMember_id int(11) NOT NULL,
 		PRIMARY KEY (id)
 		);`)
@@ -478,7 +478,7 @@ func (Data Member) InputSubs(MemberID int64) {
 	biliview := Bili.Like.Data.Archive.View
 	twfollo := Data.GetTwitterFollow()
 	if err != nil || err == sql.ErrNoRows {
-		stmt, err := db.Prepare("INSERT INTO Subscriber (Youtube_Subs,Youtube_Videos,Youtube_Views,BiliBili_Follows,BiliBili_Videos,BiliBili_Views,Twitter_Follows,VtuberMember_id) values(?,?,?,?,?,?,?,?)")
+		stmt, err := db.Prepare("INSERT INTO Subscriber (Youtube_Subscriber,Youtube_Videos,Youtube_Views,BiliBili_Followers,BiliBili_Videos,BiliBili_Views,Twitter_Followers,VtuberMember_id) values(?,?,?,?,?,?,?,?)")
 		engine.BruhMoment(err, "", false)
 		res, err := stmt.Exec(ytsubs, ytvideos, ytviews, bilifoll, bilivideos, biliview, twfollo, MemberID)
 		engine.BruhMoment(err, "", false)
@@ -487,7 +487,7 @@ func (Data Member) InputSubs(MemberID int64) {
 
 		defer stmt.Close()
 	} else {
-		rows, err := db.Query(`SELECT Youtube_Subs,Youtube_Videos,Youtube_Views,BiliBili_Follows,BiliBili_Videos,BiliBili_Views,Twitter_Follows FROM Subscriber WHERE VtuberMember_id=?`, MemberID)
+		rows, err := db.Query(`SELECT Youtube_Subscriber,Youtube_Videos,Youtube_Views,BiliBili_Followers,BiliBili_Videos,BiliBili_Views,Twitter_Followers FROM Subscriber WHERE VtuberMember_id=?`, MemberID)
 		engine.BruhMoment(err, "", false)
 		var (
 			ytsubstmp, ytvideostmp, ytviewstmp, bilifolltmp, bilivideostmp, biliviewtmp, twfollotmp int
@@ -523,7 +523,7 @@ func (Data Member) InputSubs(MemberID int64) {
 			twfollo = twfollotmp
 		}
 
-		Update, err := db.Prepare(`Update Subscriber set Youtube_Subs=?, Youtube_Videos=?, Youtube_Views=?, BiliBili_Follows=?, BiliBili_Videos=?, BiliBili_Views=?, Twitter_Follows=? Where id=?`)
+		Update, err := db.Prepare(`Update Subscriber set Youtube_Subscriber=?, Youtube_Videos=?, Youtube_Views=?, BiliBili_Followers=?, BiliBili_Videos=?, BiliBili_Views=?, Twitter_Followers=? Where id=?`)
 		engine.BruhMoment(err, "", false)
 		Update.Exec(ytsubs, ytvideos, ytviews, bilifoll, bilivideos, biliview, twfollo, tmp)
 	}
