@@ -69,6 +69,7 @@ func CreatePayload(Group int64) []string {
 		Hashtags      []string
 		FinalTags     []string
 		GroupsHashtag = database.GetHashtag(Group)
+		params        = url.Values{}
 	)
 	if len(GroupsHashtag) < 7 {
 		for _, hashtag := range database.GetHashtag(Group) {
@@ -76,27 +77,25 @@ func CreatePayload(Group int64) []string {
 				Hashtags = append(Hashtags, hashtag.TwitterHashtags)
 			}
 		}
-		params := url.Values{}
 		params.Add("q", strings.Join(Hashtags, " OR ")+" "+"filter:links -filter:replies filter:media -filter:retweets")
-
 		log.WithFields(log.Fields{
 			"Hashtags": strings.Join(Hashtags, " OR "),
 		}).Info("Start Curl new art")
+
 		return []string{params.Encode()}
 	} else {
 		for z, hashtag := range GroupsHashtag {
-			if hashtag.TwitterHashtags != "" {
-				Hashtags = append(Hashtags, hashtag.TwitterHashtags)
-				if z == len(GroupsHashtag)/3 || z == len(GroupsHashtag)-1 {
-					params := url.Values{}
-					params.Add("q", strings.Join(Hashtags, " OR ")+" "+"filter:links -filter:replies filter:media -filter:retweets")
-					FinalTags = append(FinalTags, params.Encode())
-				}
+			Hashtags = append(Hashtags, hashtag.TwitterHashtags)
+			if z == len(GroupsHashtag)/2 || z == len(GroupsHashtag)-1 {
+				log.WithFields(log.Fields{
+					"Hashtags":  strings.Join(Hashtags, " OR "),
+					"GroupName": hashtag.GroupName,
+				}).Info("Start Curl new art")
+				params.Add("q", strings.Join(Hashtags, " OR ")+" "+"filter:links -filter:replies filter:media -filter:retweets")
+				FinalTags = append(FinalTags, params.Encode())
+				Hashtags = nil
 			}
 		}
-		log.WithFields(log.Fields{
-			"Hashtags": strings.Join(Hashtags, " OR "),
-		}).Info("Start Curl new art")
 		return FinalTags
 	}
 }

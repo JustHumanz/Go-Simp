@@ -62,7 +62,7 @@ func Debugging(a, b, c interface{}) {
 func GetHashtag(GroupID int64) []MemberGroupID {
 	funcvar := GetFunctionName(GetHashtag)
 	Debugging(funcvar, "In", GroupID)
-	rows, err := DB.Query(`SELECT VtuberMember.id,VtuberName,VtuberName_JP,VtuberGroup_id,Hashtag,VtuberGroupName,VtuberGroupIcon FROM VtuberMember INNER Join VtuberGroup ON VtuberGroup.id = VtuberMember.VtuberGroup_id WHERE VtuberGroup.id =?`, GroupID)
+	rows, err := DB.Query(`SELECT VtuberMember.id,VtuberName,VtuberName_JP,VtuberGroup_id,Hashtag,VtuberGroupName,VtuberGroupIcon FROM VtuberMember INNER Join VtuberGroup ON VtuberGroup.id = VtuberMember.VtuberGroup_id WHERE Hashtag !="" AND VtuberGroup.id =?`, GroupID)
 	BruhMoment(err, "", false)
 	defer rows.Close()
 
