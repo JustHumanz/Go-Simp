@@ -5,8 +5,7 @@ import (
 	"sync"
 
 	"github.com/JustHumanz/Go-simp/config"
-
-	database "github.com/JustHumanz/Go-simp/database"
+	engine "github.com/JustHumanz/Go-simp/engine"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -21,18 +20,17 @@ func Twitterd(bot *discordgo.Session, dbs *sql.DB) {
 	BotSession = bot
 	db = dbs
 	twbearer = config.TwitterToken[0]
+	//CheckNew()
 }
 
 func CheckNew() {
 	wg := new(sync.WaitGroup)
-	for _, Group := range database.GetGroup() {
+	for _, Group := range engine.GroupData {
 		wg.Add(1)
-		go func(GroupID int64, wg *sync.WaitGroup) {
+		go func(GroupID int64, GroupName string, wg *sync.WaitGroup) {
 			defer wg.Done()
-			//DataTweet := Tweet(Data[i].NameGroup, limit)
-			//IsNewOrNot(DataTweet, Data[i])
-			CurlTwitter(GroupID) //this offical API
-		}(Group.ID, wg)
+			CurlTwitter(CreatePayload(GroupID), GroupID) //this offical API
+		}(Group.ID, Group.NameGroup, wg)
 	}
 	wg.Wait()
 }

@@ -28,7 +28,7 @@ func Start(Bot *discordgo.Session) {
 }
 
 func CheckSchedule() {
-	for _, Group := range database.GetGroup() {
+	for _, Group := range engine.GroupData {
 		var wg sync.WaitGroup
 		for _, Member := range database.GetName(Group.ID) {
 			if Member.YoutubeID != "" {

@@ -32,7 +32,7 @@ func BiliBili(Bot *discordgo.Session) {
 
 //Start Check new fanart
 func CheckNew() {
-	for _, Group := range database.GetGroup() {
+	for _, Group := range engine.GroupData {
 		for _, Member := range database.GetName(Group.ID) {
 			wg.Add(1)
 			go func(Group database.GroupName, Member database.Name, wg *sync.WaitGroup) {
