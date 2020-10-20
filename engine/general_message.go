@@ -610,10 +610,8 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 						for _, Reg := range GroupsByReg {
 							var Counter bool
 							for Key, Val := range RegList {
-								Val = strings.ToLower(Val)
-								Key = strings.ToLower(Key)
-								if Key == Group {
-									for _, Region := range strings.Split(Val, ",") {
+								if strings.ToLower(Key) == Group {
+									for _, Region := range strings.Split(strings.ToLower(Val), ",") {
 										if Region == Reg {
 											Counter = true
 											break
@@ -682,7 +680,12 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 			} else {
-				s.ChannelMessageSend(m.ChannelID, "Incomplete `vtuber data` command")
+				s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+					SetThumbnail(config.GoSimpIMG).
+					SetDescription("List of Vtuber Groups\n```"+strings.Join(GroupsName, "\t")+"```").
+					SetColor(Color).
+					SetFooter("Use Name of group to show vtuber members").MessageEmbed)
 			}
 		}
 	}

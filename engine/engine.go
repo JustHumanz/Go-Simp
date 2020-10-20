@@ -36,6 +36,7 @@ var (
 	db         *sql.DB
 	debug      bool
 	GroupData  []database.GroupName
+	GroupsName []string
 	GCSDIR     string
 	ImgDomain  string
 	RegList    = make(map[string]string)
@@ -55,6 +56,7 @@ func Start(b *discordgo.Session, m string) {
 	GroupData = database.GetGroup()
 
 	for _, Group := range GroupData {
+		GroupsName = append(GroupsName, Group.NameGroup)
 		list := []string{}
 		keys := make(map[string]bool)
 		for _, Member := range database.GetName(Group.ID) {
