@@ -39,6 +39,7 @@ var (
 	GCSDIR     string
 	ImgDomain  string
 	RegList    = make(map[string]string)
+	OutOfLimit []string
 )
 
 //Start module
@@ -107,10 +108,15 @@ func BruhMoment(err error, msg string, exit bool) {
 
 func ChangeToken(oldtoken string) string {
 	newtoken := ""
+	OutOfLimit = append(OutOfLimit, oldtoken)
 	for _, token := range config.YtToken {
 		if token != oldtoken {
-			newtoken = token
-			return newtoken
+			for _, OutToken := range OutOfLimit {
+				if token != OutToken {
+					newtoken = token
+					return newtoken
+				}
+			}
 		}
 	}
 	return newtoken
