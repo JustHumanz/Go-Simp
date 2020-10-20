@@ -25,7 +25,7 @@ func CheckYtSubsCount() {
 		for _, Name := range tmp {
 			Counter++
 			YtSubsDB = append(YtSubsDB, Name.GetSubsCount())
-			ChannelList = append(ChannelList, strings.Split(Name.YoutubeID, "\n")[0])
+			ChannelList = append(ChannelList, Name.YoutubeID)
 			Names = append(Names, Name)
 			if Counter == 24 || Counter == len(tmp)-1 {
 				body, err := engine.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+strings.Join(ChannelList, ",")+"&key="+yttoken, nil)

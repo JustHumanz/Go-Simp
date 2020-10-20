@@ -292,13 +292,13 @@ func AddData(Data Vtuber) {
 				Add Member
 			*/
 			var tmp int64
-			row := db.QueryRow("SELECT id FROM VtuberMember WHERE VtuberName=? AND (Youtube_ID=? OR  BiliBili_SpaceID=? OR BiliBili_RoomID=?)", Member.Name, strings.Join(Member.YtID, "\n"), Member.BiliBiliID, Member.BiliRoomID)
+			row := db.QueryRow("SELECT id FROM VtuberMember WHERE VtuberName=? AND (Youtube_ID=? OR  BiliBili_SpaceID=? OR BiliBili_RoomID=?)", Member.Name, Member.YtID, Member.BiliBiliID, Member.BiliRoomID)
 			err := row.Scan(&tmp)
 			if err == sql.ErrNoRows {
 				stmt, err := db.Prepare("INSERT INTO VtuberMember (VtuberName,VtuberName_EN,VtuberName_JP,Hashtag,BiliBili_Hashtag,Youtube_ID,Youtube_Avatar,VtuberGroup_id,Region,BiliBili_SpaceID,BiliBili_RoomID,BiliBili_Avatar,Twitter_Username) values(?,?,?,?,?,?,?,?,?,?,?,?,?)")
 				engine.BruhMoment(err, "", false)
 
-				res, err := stmt.Exec(Member.Name, Member.ENName, Member.JPName, Member.Hashtag.Twitter, Member.Hashtag.BiliBili, strings.Join(Member.YtID, "\n"), Member.YtAvatar(), GroupID, Member.Region, Member.BiliBiliID, Member.BiliRoomID, Member.BliBiliFace(), Member.TwitterName)
+				res, err := stmt.Exec(Member.Name, Member.ENName, Member.JPName, Member.Hashtag.Twitter, Member.Hashtag.BiliBili, Member.YtID, Member.YtAvatar(), GroupID, Member.Region, Member.BiliBiliID, Member.BiliRoomID, Member.BliBiliFace(), Member.TwitterName)
 				engine.BruhMoment(err, "", false)
 
 				_, err = res.LastInsertId()
@@ -319,7 +319,7 @@ func AddData(Data Vtuber) {
 					"VtuberGroup": "Independen",
 					"Vtuber":      Member.ENName,
 				}).Info("already added...")
-				_, err := db.Exec(`Update VtuberMember set VtuberName=?, VtuberName_EN=?, VtuberName_JP=? ,Hashtag=? ,BiliBili_Hashtag=? ,Region=? ,Youtube_ID=? ,BiliBili_SpaceID=?,BiliBili_RoomID=?, BiliBili_Avatar=? ,Youtube_Avatar=?, Twitter_Username=?  Where id=?`, Member.Name, Member.ENName, Member.JPName, Member.Hashtag.Twitter, Member.Hashtag.BiliBili, Member.Region, strings.Join(Member.YtID, "\n"), Member.BiliBiliID, Member.BiliRoomID, Member.BliBiliFace(), Member.YtAvatar(), Member.TwitterName, tmp)
+				_, err := db.Exec(`Update VtuberMember set VtuberName=?, VtuberName_EN=?, VtuberName_JP=? ,Hashtag=? ,BiliBili_Hashtag=? ,Region=? ,Youtube_ID=? ,BiliBili_SpaceID=?,BiliBili_RoomID=?, BiliBili_Avatar=? ,Youtube_Avatar=?, Twitter_Username=?  Where id=?`, Member.Name, Member.ENName, Member.JPName, Member.Hashtag.Twitter, Member.Hashtag.BiliBili, Member.Region, Member.YtID, Member.BiliBiliID, Member.BiliRoomID, Member.BliBiliFace(), Member.YtAvatar(), Member.TwitterName, tmp)
 				if err != nil {
 					log.Error(err)
 				}
@@ -388,13 +388,13 @@ func AddData(Data Vtuber) {
 						Add Member
 					*/
 					var tmp int64
-					row := db.QueryRow("SELECT id FROM VtuberMember WHERE VtuberName=? AND (Youtube_ID=? OR  BiliBili_SpaceID=? OR BiliBili_RoomID=?)", Member.Name, strings.Join(Member.YtID, "\n"), Member.BiliBiliID, Member.BiliRoomID)
+					row := db.QueryRow("SELECT id FROM VtuberMember WHERE VtuberName=? AND (Youtube_ID=? OR  BiliBili_SpaceID=? OR BiliBili_RoomID=?)", Member.Name, Member.YtID, Member.BiliBiliID, Member.BiliRoomID)
 					err := row.Scan(&tmp)
 					if err != nil || err == sql.ErrNoRows {
 						stmt, err := db.Prepare("INSERT INTO VtuberMember (VtuberName,VtuberName_EN,VtuberName_JP,Hashtag,BiliBili_Hashtag,Youtube_ID,Youtube_Avatar,VtuberGroup_id,Region,BiliBili_SpaceID,BiliBili_RoomID,BiliBili_Avatar,Twitter_Username) values(?,?,?,?,?,?,?,?,?,?,?,?,?)")
 						engine.BruhMoment(err, "", false)
 
-						res, err := stmt.Exec(Member.Name, Member.ENName, Member.JPName, Member.Hashtag.Twitter, Member.Hashtag.BiliBili, strings.Join(Member.YtID, "\n"), Member.YtAvatar(), GroupID, Member.Region, Member.BiliBiliID, Member.BiliRoomID, Member.BliBiliFace(), Member.TwitterName)
+						res, err := stmt.Exec(Member.Name, Member.ENName, Member.JPName, Member.Hashtag.Twitter, Member.Hashtag.BiliBili, Member.YtID, Member.YtAvatar(), GroupID, Member.Region, Member.BiliBiliID, Member.BiliRoomID, Member.BliBiliFace(), Member.TwitterName)
 						engine.BruhMoment(err, "", false)
 
 						_, err = res.LastInsertId()
@@ -416,7 +416,7 @@ func AddData(Data Vtuber) {
 							"VtuberGroup": Group.GroupName,
 							"Vtuber":      Member.ENName,
 						}).Info("already added...")
-						_, err := db.Exec(`Update VtuberMember set VtuberName=?, VtuberName_EN=?, VtuberName_JP=? ,Hashtag=? ,BiliBili_Hashtag=? ,Region=? ,Youtube_ID=? ,BiliBili_SpaceID=?,BiliBili_RoomID=?, BiliBili_Avatar=? ,Youtube_Avatar=?, Twitter_Username=?  Where id=?`, Member.Name, Member.ENName, Member.JPName, Member.Hashtag.Twitter, Member.Hashtag.BiliBili, Member.Region, strings.Join(Member.YtID, "\n"), Member.BiliBiliID, Member.BiliRoomID, Member.BliBiliFace(), Member.YtAvatar(), Member.TwitterName, tmp)
+						_, err := db.Exec(`Update VtuberMember set VtuberName=?, VtuberName_EN=?, VtuberName_JP=? ,Hashtag=? ,BiliBili_Hashtag=? ,Region=? ,Youtube_ID=? ,BiliBili_SpaceID=?,BiliBili_RoomID=?, BiliBili_Avatar=? ,Youtube_Avatar=?, Twitter_Username=?  Where id=?`, Member.Name, Member.ENName, Member.JPName, Member.Hashtag.Twitter, Member.Hashtag.BiliBili, Member.Region, Member.YtID, Member.BiliBiliID, Member.BiliRoomID, Member.BliBiliFace(), Member.YtAvatar(), Member.TwitterName, tmp)
 						if err != nil {
 							log.Error(err)
 						}
@@ -470,9 +470,9 @@ func (Data Member) InputSubs(MemberID int64) {
 	Subs := Data.GetYtSubs()
 	Bili := Data.GetBiliFolow()
 
-	ytsubs, _ := strconv.Atoi(Subs[0].Items[0].Statistics.SubscriberCount)
-	ytvideos, _ := strconv.Atoi(Subs[0].Items[0].Statistics.VideoCount)
-	ytviews, _ := strconv.Atoi(Subs[0].Items[0].Statistics.ViewCount)
+	ytsubs, _ := strconv.Atoi(Subs.Items[0].Statistics.SubscriberCount)
+	ytvideos, _ := strconv.Atoi(Subs.Items[0].Statistics.VideoCount)
+	ytviews, _ := strconv.Atoi(Subs.Items[0].Statistics.ViewCount)
 	bilifoll := Bili.Follow.Data.Follower
 	bilivideos := Bili.Video
 	biliview := Bili.Like.Data.Archive.View

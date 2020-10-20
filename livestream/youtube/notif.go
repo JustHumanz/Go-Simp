@@ -34,9 +34,8 @@ func (PushData NotifStruct) SendNude() {
 }
 
 func (PushData NotifStruct) GetEmbed(Status string) NotifStruct {
-	YtChannlID := strings.Split(PushData.Member.YoutubeID, "\n")[0]
 	Avatar := PushData.Member.YoutubeAvatar
-	YtChannel := "https://www.youtube.com/channel/" + YtChannlID + "?sub_confirmation=1"
+	YtChannel := "https://www.youtube.com/channel/" + PushData.Member.YoutubeID + "?sub_confirmation=1"
 	YtURL := "https://www.youtube.com/watch?v=" + PushData.Data.VideoID
 	loc := engine.Zawarudo(PushData.Member.Region)
 	expiresAt := time.Now().In(loc)

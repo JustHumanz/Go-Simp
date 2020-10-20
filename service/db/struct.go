@@ -52,11 +52,11 @@ type Member struct {
 		Twitter  string `json:"Twitter"`
 		BiliBili string `json:"BiliBili"`
 	} `json:"Hashtag"`
-	YtID        []string `json:"Yt_ID"`
-	BiliBiliID  int      `json:"BiliBili_ID"`
-	BiliRoomID  int      `json:"BiliRoom_ID"`
-	TwitterName string   `json:"Twitter_Username"`
-	Region      string   `json:"Region"`
+	YtID        string `json:"Yt_ID"`
+	BiliBiliID  int    `json:"BiliBili_ID"`
+	BiliRoomID  int    `json:"BiliRoom_ID"`
+	TwitterName string `json:"Twitter_Username"`
+	Region      string `json:"Region"`
 }
 
 type Subs struct {

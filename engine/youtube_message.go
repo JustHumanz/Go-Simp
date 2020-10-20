@@ -98,7 +98,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									Msg1:      duration.String(),
 									Msg2:      Data.Schedul.In(loc).Format(time.RFC822),
 									Msg3:      Data.Viewers + " simps waiting in Room Chat",
-									YtChannel: strings.Split(Data.ChannelID, "\n"),
+									YtChannel: Data.ChannelID,
 								})
 							}
 						} else {
@@ -164,7 +164,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									Msg1:      duration.String() + " Ago",
 									Msg2:      Data.Schedul.In(loc).Format(time.RFC822),
 									Msg3:      Data.Viewers,
-									YtChannel: strings.Split(Data.ChannelID, "\n"),
+									YtChannel: Data.ChannelID,
 								})
 							}
 						} else {
@@ -181,8 +181,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 		} else if strings.ToLower(CommandArray[0]) == Prefix+"last" || strings.ToLower(CommandArray[0]) == Prefix+"past" {
 			if len(CommandArray) > 1 {
-				GroupName := strings.TrimSpace(CommandArray[1])
-				FindGroupArry := strings.Split(GroupName, ",")
+				FindGroupArry := strings.Split(strings.TrimSpace(CommandArray[1]), ",")
 
 				for i := 0; i < len(FindGroupArry); i++ {
 					VTuberGroup, err := FindGropName(FindGroupArry[i])

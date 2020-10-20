@@ -69,67 +69,64 @@ type InputTwitter struct {
 }
 
 func FilterYt(Dat database.Name) {
-	YTChannel := strings.Split(Dat.YoutubeID, "\n")
-	for _, Channel := range YTChannel {
-		VideoID := youtube.GetRSS(Channel)
-		body, err := engine.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,actualEndTime),statistics(viewCount))&id="+strings.Join(VideoID, ",")+"&key="+YtToken, nil)
-		if err != nil {
-			log.Error(err, string(body))
+	VideoID := youtube.GetRSS(Dat.YoutubeID)
+	body, err := engine.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,actualEndTime),statistics(viewCount))&id="+strings.Join(VideoID, ",")+"&key="+YtToken, nil)
+	if err != nil {
+		log.Error(err, string(body))
+	}
+	var (
+		Data    YtData
+		Viewers string
+		yttype  string
+	)
+	jsonErr := json.Unmarshal(body, &Data)
+	if jsonErr != nil {
+		log.Fatal(jsonErr)
+	}
+	for i := 0; i < len(Data.Items); i++ {
+		if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|mv)", Data.Items[i].Snippet.Title); Cover {
+			yttype = "Covering"
+		} else if Chat, _ := regexp.MatchString("(?m)(free|chat|room)", Data.Items[i].Snippet.Title); Chat {
+			yttype = "ChatRoom"
+		} else {
+			yttype = "Streaming"
 		}
-		var (
-			Data    YtData
-			Viewers string
-			yttype  string
-		)
-		jsonErr := json.Unmarshal(body, &Data)
-		if jsonErr != nil {
-			log.Fatal(jsonErr)
-		}
-		for i := 0; i < len(Data.Items); i++ {
-			if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|mv)", Data.Items[i].Snippet.Title); Cover {
-				yttype = "Covering"
-			} else if Chat, _ := regexp.MatchString("(?m)(free|chat|room)", Data.Items[i].Snippet.Title); Chat {
-				yttype = "ChatRoom"
+		if database.CheckVideoID(VideoID[i]) != (database.YtDbData{}) {
+			continue
+		} else {
+			log.Info("New video")
+			//verify
+			if Data.Items[i].LiveDetails.Viewers == "" {
+				Viewers = Data.Items[i].Statistics.ViewCount
 			} else {
-				yttype = "Streaming"
+				Viewers = Data.Items[i].LiveDetails.Viewers
 			}
-			if database.CheckVideoID(VideoID[i]) != (database.YtDbData{}) {
-				continue
-			} else {
-				log.Info("New video")
-				//verify
-				if Data.Items[i].LiveDetails.Viewers == "" {
-					Viewers = Data.Items[i].Statistics.ViewCount
-				} else {
-					Viewers = Data.Items[i].LiveDetails.Viewers
-				}
-				NewData := database.YtDbData{
-					Status:    Data.Items[i].Snippet.VideoStatus,
-					VideoID:   VideoID[i],
-					Title:     Data.Items[i].Snippet.Title,
-					Thumb:     "http://i3.ytimg.com/vi/" + VideoID[i] + "/maxresdefault.jpg",
-					Desc:      Data.Items[i].Snippet.Description,
-					Schedul:   Data.Items[i].LiveDetails.StartTime,
-					Published: Data.Items[i].Snippet.PublishedAt,
-					End:       Data.Items[i].LiveDetails.EndTime,
-					Type:      yttype,
-					Viewers:   Viewers,
-				}
+			NewData := database.YtDbData{
+				Status:    Data.Items[i].Snippet.VideoStatus,
+				VideoID:   VideoID[i],
+				Title:     Data.Items[i].Snippet.Title,
+				Thumb:     "http://i3.ytimg.com/vi/" + VideoID[i] + "/maxresdefault.jpg",
+				Desc:      Data.Items[i].Snippet.Description,
+				Schedul:   Data.Items[i].LiveDetails.StartTime,
+				Published: Data.Items[i].Snippet.PublishedAt,
+				End:       Data.Items[i].LiveDetails.EndTime,
+				Type:      yttype,
+				Viewers:   Viewers,
+			}
 
-				if Data.Items[i].Snippet.VideoStatus != "upcoming" || Data.Items[i].Snippet.VideoStatus != "live" {
-					NewData.Status = "past"
-					NewData.InputYt(Dat.ID)
-				} else {
-					NewData.InputYt(Dat.ID)
-				}
+			if Data.Items[i].Snippet.VideoStatus != "upcoming" || Data.Items[i].Snippet.VideoStatus != "live" {
+				NewData.Status = "past"
+				NewData.InputYt(Dat.ID)
+			} else {
+				NewData.InputYt(Dat.ID)
 			}
 		}
 	}
 }
 
 func (Data Member) YtAvatar() string {
-	if len(Data.YtID) > 0 {
-		resp, err := http.Get("https://www.youtube.com/channel/" + Data.YtID[0] + "/about")
+	if Data.YtID != "" {
+		resp, err := http.Get("https://www.youtube.com/channel/" + Data.YtID + "/about")
 		engine.BruhMoment(err, "", false)
 
 		defer resp.Body.Close()
@@ -150,32 +147,22 @@ func (Data Member) YtAvatar() string {
 	}
 }
 
-func (Data Member) GetYtSubs() []Subs {
+func (Data Member) GetYtSubs() Subs {
 	var (
-		datasubs []Subs
-		tmp      Subs
+		datasubs Subs
 	)
-	if len(Data.YtID) > 0 {
-		for _, Yt := range Data.YtID {
-			body, err := engine.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+Yt+"&key="+YtToken, nil)
-			if err != nil {
-				log.Error(err)
-			}
-			err = json.Unmarshal(body, &tmp)
-			if err != nil {
-				log.Error(err)
-			}
-			datasubs = append(datasubs, tmp)
+	if Data.YtID != "" {
+		body, err := engine.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+Data.YtID+"&key="+YtToken, nil)
+		if err != nil {
+			log.Error(err)
+		}
+		err = json.Unmarshal(body, &datasubs)
+		if err != nil {
+			log.Error(err)
 		}
 		return datasubs
 	} else {
-		/*
-			datasubs[0].Items[0].Statistics.SubscriberCount = "0"
-			datasubs[0].Items[0].Statistics.VideoCount = "0"
-			datasubs[0].Items[0].Statistics.ViewCount = "0"
-		*/
-		datasubs = append(datasubs, tmp.Default())
-		return datasubs
+		return datasubs.Default()
 	}
 }
 

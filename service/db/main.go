@@ -356,9 +356,9 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		err            error
 	)
 
-	if len(Data.Member.YtID) > 0 {
+	if Data.Member.YtID != "" {
 		Youtube = "✓"
-		URL = "https://www.youtube.com/channel/" + Data.Member.YtID[0] + "?sub_confirmation=1"
+		URL = "https://www.youtube.com/channel/" + Data.Member.YtID + "?sub_confirmation=1"
 
 		Avatar = Data.Member.YtAvatar()
 		Color, err = engine.GetColor("/tmp/notf.gg", Avatar)

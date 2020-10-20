@@ -241,7 +241,7 @@ func ValidName(Name string) Memberst {
 				return Memberst{
 					VTName:     FixName(DataMember[j].EnName, DataMember[j].JpName),
 					ID:         DataMember[j].ID,
-					YtChannel:  strings.Split(DataMember[j].YoutubeID, "\n"),
+					YtChannel:  DataMember[j].YoutubeID,
 					SpaceID:    DataMember[j].BiliBiliID,
 					BiliAvatar: DataMember[j].BiliBiliAvatar,
 					YtAvatar:   DataMember[j].YoutubeAvatar,

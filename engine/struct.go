@@ -246,7 +246,7 @@ type Sauce struct {
 
 type Memberst struct {
 	ID         int64
-	YtChannel  []string
+	YtChannel  string
 	SpaceID    int
 	VTName     string
 	Title      string
