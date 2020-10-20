@@ -34,7 +34,6 @@ func main() {
 	}
 	u, err := Bot.User("@me")
 	c := cron.New()
-	c.AddFunc("CRON_TZ=Asia/Jakarta 30 12 * * *", ClearToken)
 	c.Start()
 
 	database.Start(db)
@@ -61,8 +60,4 @@ func main() {
 
 	<-make(chan struct{})
 	return
-}
-
-func ClearToken() {
-	engine.OutOfLimit = nil
 }

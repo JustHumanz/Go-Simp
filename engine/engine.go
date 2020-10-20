@@ -39,7 +39,6 @@ var (
 	GCSDIR     string
 	ImgDomain  string
 	RegList    = make(map[string]string)
-	OutOfLimit []string
 )
 
 //Start module
@@ -106,20 +105,15 @@ func BruhMoment(err error, msg string, exit bool) {
 	}
 }
 
-func ChangeToken(oldtoken string) string {
-	newtoken := ""
-	OutOfLimit = append(OutOfLimit, oldtoken)
-	for _, token := range config.YtToken {
-		if token != oldtoken {
-			for _, OutToken := range OutOfLimit {
-				if token != OutToken {
-					newtoken = token
-					return newtoken
-				}
-			}
+func GetYtToken() string {
+	FreshToken := config.YtToken[0]
+	for _, Token := range config.YtToken {
+		body, err := Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UCfuz6xYbYFGsWWBi3SpJI1w&key="+Token, nil)
+		if err == nil || body != nil {
+			FreshToken = Token
 		}
 	}
-	return newtoken
+	return FreshToken
 }
 
 func GetFunctionName(i interface{}) string {

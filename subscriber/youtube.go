@@ -12,6 +12,7 @@ import (
 )
 
 func CheckYtSubsCount() {
+	yttoken = engine.GetYtToken()
 	for k := 0; k < len(Data); k++ {
 		var (
 			YTstate     Subs
@@ -30,12 +31,7 @@ func CheckYtSubsCount() {
 				body, err := engine.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+strings.Join(ChannelList, ",")+"&key="+yttoken, nil)
 				if err != nil {
 					log.Error(err, string(body))
-					oldtoken := yttoken
-					yttoken = engine.ChangeToken(oldtoken)
-					log.WithFields(log.Fields{
-						"Old Token": oldtoken,
-						"New Token": yttoken,
-					}).Warn("Token out of limit,try to change")
+					return
 				}
 				err = json.Unmarshal(body, &YTstate)
 				if err != nil {

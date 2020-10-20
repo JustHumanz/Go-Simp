@@ -250,18 +250,7 @@ func YtAPI(VideoID []string) (YtData, error) {
 
 	body, curlerr = engine.Curl(urls, nil)
 	if curlerr != nil {
-		log.Error(curlerr, string(body))
-		oldtoken := yttoken
-		yttoken = engine.ChangeToken(oldtoken)
-		log.WithFields(log.Fields{
-			"Old Token": oldtoken,
-			"New Token": yttoken,
-		}).Warn("Token out of limit,try to change")
-		body, curlerr = engine.Curl(urls, nil)
-		if curlerr != nil {
-			log.Error(curlerr, string(body))
-			return YtData{}, errors.New("Token out of limit")
-		}
+		return YtData{}, errors.New("Token out of limit")
 	}
 	err := json.Unmarshal(body, &Data)
 	engine.BruhMoment(err, "", false)

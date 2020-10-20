@@ -7,7 +7,6 @@ import (
 	"sync"
 	"time"
 
-	config "github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 
@@ -22,12 +21,12 @@ var (
 
 func Start(Bot *discordgo.Session) {
 	BotSession = Bot
-	yttoken = config.YtToken[0]
 	log.Info("Youtube module ready")
 	//CheckSchedule()
 }
 
 func CheckSchedule() {
+	yttoken = engine.GetYtToken()
 	for _, Group := range engine.GroupData {
 		var wg sync.WaitGroup
 		for _, Member := range database.GetName(Group.ID) {
