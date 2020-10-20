@@ -3,6 +3,7 @@ package youtube
 import (
 	"encoding/json"
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"math"
@@ -256,9 +257,11 @@ func YtAPI(VideoID []string) (YtData, error) {
 			"Old Token": oldtoken,
 			"New Token": yttoken,
 		}).Warn("Token out of limit,try to change")
-		//return YtData{}, errors.New("Token out of limit")
-
 		body, curlerr = engine.Curl(urls, nil)
+		if curlerr != nil {
+			log.Error(curlerr, string(body))
+			return YtData{}, errors.New("Token out of limit")
+		}
 	}
 	err := json.Unmarshal(body, &Data)
 	engine.BruhMoment(err, "", false)
