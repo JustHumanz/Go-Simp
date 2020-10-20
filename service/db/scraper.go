@@ -181,17 +181,24 @@ func (Data Member) GetYtSubs() []Subs {
 
 func (Data Member) GetBiliFolow() BiliStat {
 	var (
-		wg   sync.WaitGroup
-		stat BiliStat
+		wg      sync.WaitGroup
+		stat    BiliStat
+		body    []byte
+		curlerr error
 	)
 	if Data.BiliRoomID != 0 {
 		wg.Add(3)
 		go func() {
-			body, err := engine.Curl("https://api.bilibili.com/x/relation/stat?vmid="+strconv.Itoa(Data.BiliBiliID), nil)
-			if err != nil {
-				log.Error(err)
+			urls := "https://api.bilibili.com/x/relation/stat?vmid=" + strconv.Itoa(Data.BiliBiliID)
+			body, curlerr = engine.Curl(urls, nil)
+			if curlerr != nil {
+				log.Warn("Trying use tor")
+				body, curlerr = engine.CoolerCurl(urls, nil)
+				if curlerr != nil {
+					log.Error(curlerr)
+				}
 			}
-			err = json.Unmarshal(body, &stat.Follow)
+			err := json.Unmarshal(body, &stat.Follow)
 			if err != nil {
 				log.Error(err)
 			}
@@ -199,11 +206,16 @@ func (Data Member) GetBiliFolow() BiliStat {
 		}()
 
 		go func() {
-			body, err := engine.Curl("https://api.bilibili.com/x/space/upstat?mid="+strconv.Itoa(Data.BiliBiliID), []string{"Cookie", "SESSDATA=" + BiliSession})
-			if err != nil {
-				log.Error(err)
+			urls := "https://api.bilibili.com/x/space/upstat?mid=" + strconv.Itoa(Data.BiliBiliID)
+			body, curlerr = engine.Curl(urls, []string{"Cookie", "SESSDATA=" + BiliSession})
+			if curlerr != nil {
+				log.Warn("Trying use tor")
+				body, curlerr = engine.CoolerCurl(urls, []string{"Cookie", "SESSDATA=" + BiliSession})
+				if curlerr != nil {
+					log.Error(curlerr)
+				}
 			}
-			err = json.Unmarshal(body, &stat.Like)
+			err := json.Unmarshal(body, &stat.Like)
 			if err != nil {
 				log.Error(err)
 			}
@@ -214,12 +226,16 @@ func (Data Member) GetBiliFolow() BiliStat {
 			baseurl := "https://api.bilibili.com/x/space/arc/search?mid=" + strconv.Itoa(Data.BiliBiliID) + "&ps=100"
 			url := []string{baseurl + "&tid=1", baseurl + "&tid=3", baseurl + "&tid=4"}
 			for f := 0; f < len(url); f++ {
-				body, err := engine.Curl(url[f], nil)
-				if err != nil {
-					log.Error(err, string(body))
+				body, curlerr = engine.Curl(url[f], nil)
+				if curlerr != nil {
+					log.Warn("Trying use tor")
+					body, curlerr = engine.CoolerCurl(url[f], nil)
+					if curlerr != nil {
+						log.Error(curlerr)
+					}
 				}
 				var video SpaceVideo
-				err = json.Unmarshal(body, &video)
+				err := json.Unmarshal(body, &video)
 				if err != nil {
 					log.Error(err)
 				}

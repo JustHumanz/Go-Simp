@@ -21,19 +21,17 @@ func CheckBiliFollowCount() {
 				var (
 					wg        sync.WaitGroup
 					bilistate BiliBiliStat
+					body      []byte
+					curlerr   error
 				)
 				wg.Add(3)
 				go func() {
 					var (
-						body    []byte
-						curlerr error
-						urls    = "https://api.bilibili.com/x/relation/stat?vmid=" + strconv.Itoa(Name.BiliBiliID)
+						urls = "https://api.bilibili.com/x/relation/stat?vmid=" + strconv.Itoa(Name.BiliBiliID)
 					)
 					body, curlerr = engine.Curl(urls, nil)
 					if curlerr != nil {
-						log.Error(curlerr, string(body))
-
-						log.Info("Trying use tor")
+						log.Warn("Trying use tor")
 						body, curlerr = engine.CoolerCurl(urls, nil)
 						if curlerr != nil {
 							log.Error(curlerr)
@@ -47,11 +45,16 @@ func CheckBiliFollowCount() {
 				}()
 
 				go func() {
-					body, err := engine.Curl("https://api.bilibili.com/x/space/upstat?mid="+strconv.Itoa(Name.BiliBiliID), []string{"Cookie", "SESSDATA=" + BiliSession})
-					if err != nil {
-						log.Error(err, string(body))
+					urls := "https://api.bilibili.com/x/space/upstat?mid=" + strconv.Itoa(Name.BiliBiliID)
+					body, curlerr = engine.Curl(urls, nil)
+					if curlerr != nil {
+						log.Warn("Trying use tor")
+						body, curlerr = engine.CoolerCurl(urls, []string{"Cookie", "SESSDATA=" + BiliSession})
+						if curlerr != nil {
+							log.Error(curlerr)
+						}
 					}
-					err = json.Unmarshal(body, &bilistate.LikeView)
+					err := json.Unmarshal(body, &bilistate.LikeView)
 					if err != nil {
 						log.Error(err)
 					}
@@ -62,12 +65,16 @@ func CheckBiliFollowCount() {
 					baseurl := "https://api.bilibili.com/x/space/arc/search?mid=" + strconv.Itoa(Name.BiliBiliID) + "&ps=100"
 					url := []string{baseurl + "&tid=1", baseurl + "&tid=3", baseurl + "&tid=4"}
 					for f := 0; f < len(url); f++ {
-						body, err := engine.Curl(url[f], nil)
-						if err != nil {
-							log.Error(err, string(body))
+						body, curlerr = engine.Curl(url[f], nil)
+						if curlerr != nil {
+							log.Warn("Trying use tor")
+							body, curlerr = engine.CoolerCurl(url[f], nil)
+							if curlerr != nil {
+								log.Error(curlerr)
+							}
 						}
 						var video space.SpaceVideo
-						err = json.Unmarshal(body, &video)
+						err := json.Unmarshal(body, &video)
 						if err != nil {
 							log.Error(err)
 						}
