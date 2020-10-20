@@ -671,38 +671,6 @@
                     "Region":"JP"
                 },
                 {
-                    "Name":"Eroyama",
-                    "EN_Name":"Kageyama Shien",
-                    "JP_Name":"影山シエン",
-                    "Hashtag": {
-                        "Twitter": "#シ絵ン",
-                        "BiliBili": ""
-                    },
-                    "Yt_ID":[
-                        "UChSvpZYRPh0FvG4SJGSga3g"
-                    ],
-                    "BiliBili_ID": 0,
-                    "BiliRoom_ID": 0,
-                    "Twitter_Username": "kageyamashien",
-                    "Region":"JP"
-                },
-                {
-                    "Name":"Izu-Izu",
-                    "EN_Name":"Kanade Izuru",
-                    "JP_Name":"奏手イヅル",
-                    "Hashtag": {
-                        "Twitter": "#イヅル描いたぞ",
-                        "BiliBili": ""
-                    },
-                    "Yt_ID":[
-                        "UCZgOv3YDEs-ZnZWDYVwJdmA"
-                    ],
-                    "BiliBili_ID": 456232604,
-                    "BiliRoom_ID": 21749477,
-                    "Twitter_Username": "kanadeizuru",
-                    "Region":"JP"
-                },
-                {
                     "Name":"Gura",
                     "EN_Name":"Gawr Gura",
                     "JP_Name":"がうる・ぐら",
@@ -871,6 +839,155 @@
                 
             ]
             
+        },{
+            "GroupName": "Holostars",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/holostars.png",
+            "Members" :[
+                {
+                    "Name":"Izu-Izu",
+                    "EN_Name":"Kanade Izuru",
+                    "JP_Name":"奏手イヅル",
+                    "Hashtag": {
+                        "Twitter": "#イヅル描いたぞ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCZgOv3YDEs-ZnZWDYVwJdmA"
+                    ],
+                    "BiliBili_ID": 456232604,
+                    "BiliRoom_ID": 21749477,
+                    "Twitter_Username": "kanadeizuru",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Miyabin",
+                    "EN_Name":"Hanasaki Miyabi",
+                    "JP_Name":"花咲みやび",
+                    "Hashtag": {
+                        "Twitter": "#みやびじゅつ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UC6t3-_N8A6ME1JShZHHqOMw"
+                    ],
+                    "BiliBili_ID": 647375262,
+                    "BiliRoom_ID": 22422987,
+                    "Twitter_Username": "miyabihanasaki",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Kiracchi",
+                    "EN_Name":"Kagami Kira",
+                    "JP_Name":"鏡見キラ",
+                    "Hashtag": {
+                        "Twitter": "#キラ絵",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCEzsociuFqVwgZuMaZqaCsg"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "kagamikirach",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Aruran",
+                    "EN_Name":"Arurandeisu",
+                    "JP_Name":"鏡見キラ",
+                    "Hashtag": {
+                        "Twitter": "#アランの画廊",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCKeAhJvy8zgXWbh9duVjIaQ"
+                    ],
+                    "BiliBili_ID": 551114700,
+                    "BiliRoom_ID": 22171183,
+                    "Twitter_Username": "arurandeisu",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Ricchan",
+                    "EN_Name":"Rikka",
+                    "JP_Name":"律可",
+                    "Hashtag": {
+                        "Twitter": "#りつあーと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UC9mf_ZVpouoILRY9NUIaK-w"
+                    ],
+                    "BiliBili_ID": 350631685,
+                    "BiliRoom_ID": 13009645,
+                    "Twitter_Username": "rikkaroid",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Roberu",
+                    "EN_Name":"Yukoku Roberu",
+                    "JP_Name":"夕刻ロベル",
+                    "Hashtag": {
+                        "Twitter": "#描クテル",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCANDOlYTJT7N5jlRC3zfzVA"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "yukokuroberu",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Temma",
+                    "EN_Name":"Kishido Temma",
+                    "JP_Name":"岸堂天真",
+                    "Hashtag": {
+                        "Twitter": "#騎士絵画",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCGNI4MENvnsymYjKiZwv9eg"
+                    ],
+                    "BiliBili_ID": 647375261,
+                    "BiliRoom_ID": 22423010,
+                    "Twitter_Username": "kishidotemma",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Astel",
+                    "EN_Name":"Astel Leda",
+                    "JP_Name":"アステル・レダ",
+                    "Hashtag": {
+                        "Twitter": "#アステル絵ダ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCNVEsYbiZjH5QLmGeSgTSzg"
+                    ],
+                    "BiliBili_ID": 551114698,
+                    "BiliRoom_ID": 22171189,
+                    "Twitter_Username": "astelleda",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Eroga",
+                    "EN_Name":"Aragami Oga",
+                    "JP_Name":"荒咬オウガ",
+                    "Hashtag": {
+                        "Twitter": "#オウ画",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":[
+                        "UCwL7dgTxKo8Y4RFIKWaf8gA"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "aragamioga",
+                    "Region":"JP"
+                }
+            ]
         },{
             "GroupName": "Nijisanji",
             "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/niji.png",
@@ -1421,8 +1538,8 @@
                     "Region":"JP"
                 }
             ]
-        }
-        ,{
+        },
+        {
             "GroupName": "MAHA5",
             "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/MAHA5.png",
             "Members" :[
@@ -1505,6 +1622,92 @@
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "NiaRedalion",
                     "Region":"ID"
+                }
+            ]
+        },
+        {
+            "GroupName": "NoriPro",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/noripro.png",
+            "Members" :[
+                {
+                    "Name":"Tamakin",
+                    "EN_Name":"Inuyama Tamaki",
+                    "JP_Name":"犬山たまき",
+                    "Hashtag": {
+                        "Twitter": "#たまきあーと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": [
+                         "UC8NZiqKx6fsDT3AVcMiVFyA"
+                    ],
+                    "BiliBili_ID": 12362451,
+                    "BiliRoom_ID": 4634167,
+                    "Twitter_Username": "norioo_",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Enomiya",
+                    "EN_Name":"Enomiya Milk",
+                    "JP_Name":"愛宮みるく",
+                    "Hashtag": {
+                        "Twitter": "#みるくあるばむ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": [
+                         "UCJCzy0Fyrm0UhIrGQ7tHpjg"
+                    ],
+                    "BiliBili_ID": 419429042,
+                    "BiliRoom_ID": 22111399,
+                    "Twitter_Username": "Enomiya_MILK",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Shirayuki",
+                    "EN_Name":"Shirayuki Mishiro",
+                    "JP_Name":"白雪みしろ",
+                    "Hashtag": {
+                        "Twitter": "#みしろんあーと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": [
+                         "UCC0i9nECi4Gz7TU63xZwodg"
+                    ],
+                    "BiliBili_ID": 405981431,
+                    "BiliRoom_ID": 21708004,
+                    "Twitter_Username": "mishiro_seiso",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Himesaki",
+                    "EN_Name":"Himesaki Yuzuru",
+                    "JP_Name":"姫咲ゆずる",
+                    "Hashtag": {
+                        "Twitter": "#ゆずるあーと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": [
+                         "UCle1cz6rcyH0a-xoMYwLlAg"
+                    ],
+                    "BiliBili_ID": 493724848,
+                    "BiliRoom_ID": 22534525,
+                    "Twitter_Username": "Himesaki_yuzuru",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Kumakuma",
+                    "EN_Name":"Himesaki Yuzuru",
+                    "JP_Name":"熊谷タクマ",
+                    "Hashtag": {
+                        "Twitter": "#くまくま絵",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": [
+                         "UCCXME7oZmXB2VFHJbz5496A"
+                    ],
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "KUMAgaya_taKUMA",
+                    "Region":"JP"
                 }
             ]
         }

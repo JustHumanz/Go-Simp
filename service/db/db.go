@@ -446,7 +446,7 @@ func AddData(Data Vtuber) {
 //Get discord channel id from VtuberGroup
 func GetChannelByGroup(VtuberGroupID int64) []string {
 	var channellist []string
-	rows, err := db.Query(`SELECT DiscordChannelID FROM Channel WHERE VtuberGroup_id=? group by DiscordChannelID`, VtuberGroupID)
+	rows, err := db.Query(`SELECT DiscordChannelID FROM Channel WHERE VtuberGroup_id=?`, VtuberGroupID)
 	if err != nil {
 		log.Error(err)
 	}
