@@ -215,7 +215,6 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								if Done != nil {
 									s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> Added "+strings.Join(Done, " ")+" **"+VTuberGroup.NameGroup+"**")
 								}
-								return
 							}
 						} else {
 							s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+VTuberGroup.NameGroup+"`")
@@ -224,6 +223,8 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					} else {
 						MemberTag = append(MemberTag, Data)
 					}
+					Already = nil
+					Done = nil
 				}
 				for i, Member := range MemberTag {
 					if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.GroupID) {
@@ -248,7 +249,6 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if Done != nil {
 						s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> Added "+strings.Join(Done, " "))
 					}
-					return
 				}
 
 				if counter {
@@ -281,8 +281,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								}
 							}
 							if Already != nil {
-								s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> Already Added "+strings.Join(Already, " ")+" **"+VTuberGroup.NameGroup+"**")
-								return
+								s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> Already Removed from your tags "+strings.Join(Already, " ")+" **"+VTuberGroup.NameGroup+"**")
 							}
 						} else {
 							s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+VTuberGroup.NameGroup+"`")
@@ -292,6 +291,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					} else {
 						MemberTag = append(MemberTag, Data)
 					}
+					Already = nil
 				}
 
 				for i, Member := range MemberTag {
