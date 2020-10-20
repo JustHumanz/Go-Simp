@@ -738,7 +738,7 @@ func Reacting(Data map[string]string) error {
 		return errors.New(err.Error() + " ChannelID: " + ChannelID)
 	}
 	for l := 0; l < len(EmojiList); l++ {
-		if Data["Content"][len(Data["Prefix"]):] == "kanochi" { //don't change this ("kanochi") *kalau di rubah w tandain lo a*g >:'( *
+		if Data["Content"][len(Data["Prefix"]):] == "kanochi" {
 			err := BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[0])
 			if err != nil {
 				return errors.New(err.Error() + " ChannelID: " + ChannelID)
