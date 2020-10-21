@@ -1,7 +1,6 @@
 package space
 
 import (
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -50,11 +49,6 @@ func (Data CheckSctruct) SendNude() {
 					msg, err := BotSession.ChannelMessageSendEmbed(DiscordChannelID[i], Embed)
 					if err != nil {
 						log.Error(msg, err)
-						match, _ := regexp.MatchString("Unknown Channel", err.Error())
-						if match {
-							log.Info("Delete Discord Channel ", DiscordChannelID[i])
-							database.DelChannel(DiscordChannelID[i], Data.MemberID)
-						}
 					} else {
 						msg, err = BotSession.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
 						if err != nil {
