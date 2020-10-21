@@ -14,11 +14,16 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (Data CheckSctruct) SendNude(Color int) {
+func (Data CheckSctruct) SendNude() {
 	var (
 		BotSession = engine.BotSession
 	)
 	if Data.VideoList != nil {
+		Color, err := engine.GetColor("/tmp/bilispace.tmps", Data.MemberFace)
+		if err != nil {
+			log.Error(err)
+		}
+
 		log.WithFields(log.Fields{
 			"Vtuber": Data.MemberName,
 		}).Info("New video uploaded")
