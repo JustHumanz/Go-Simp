@@ -383,7 +383,7 @@ func Enable(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 				if counter {
 					s.ChannelMessageSend(m.ChannelID, "done")
-					if tagtype == 1 {
+					if tagtype == 1 || tagtype == 3 {
 						s.ChannelMessageSend(m.ChannelID, "Remember boys,always respect the artist")
 					}
 				} else {
@@ -455,7 +455,7 @@ func Enable(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 				if counter {
 					s.ChannelMessageSend(m.ChannelID, "done")
-					if tagtype == 1 {
+					if tagtype == 1 || tagtype == 3 {
 						s.ChannelMessageSend(m.ChannelID, "Remember boys,always respect the artist")
 					}
 				} else {
