@@ -31,10 +31,6 @@ func CheckVideo() {
 						"Vtuber":     Member.EnName,
 						"BiliBiliID": Member.BiliBiliID,
 					}).Info("Check Space")
-					Color, err := engine.GetColor("/tmp/bilispace.tmps", Member.BiliBiliAvatar)
-					if err != nil {
-						log.Error(err)
-					}
 					Data := CheckSctruct{
 						SpaceID:    Member.BiliBiliID,
 						MemberID:   Member.ID,
@@ -43,7 +39,7 @@ func CheckVideo() {
 						MemberFace: Member.BiliBiliAvatar,
 						MemberUrl:  "https://space.bilibili.com/" + strconv.Itoa(Member.BiliBiliID),
 					}
-					Data.Check("10").SendNude(Color)
+					Data.Check("5").SendNude()
 					//time.Sleep(time.Duration(int64(rand.Intn((10-4)+4))) * time.Second)
 
 				}
