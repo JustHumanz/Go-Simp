@@ -133,10 +133,8 @@ func (Data Member) YtAvatar() string {
 		bit, err := ioutil.ReadAll(resp.Body)
 		engine.BruhMoment(err, "", false)
 
-		str := string(bit)
 		var avatar string
-		re2 := regexp.MustCompile(`(?ms)avatar.*?(http.*?)"`)
-		submatchall := re2.FindAllStringSubmatch(str, -1)
+		submatchall := regexp.MustCompile(`(?ms)avatar.*?(http.*?)"`).FindAllStringSubmatch(string(bit), -1)
 		for _, element := range submatchall {
 			avatar = strings.Replace(element[1], "s48", "s800", -1)
 			break

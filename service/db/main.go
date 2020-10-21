@@ -404,8 +404,8 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		AddField("Region", Data.Member.Region).
 		AddField("Twitter Fanart", Twitterfanart).
 		AddField("BiliBili Fanart", Bilibilifanart).
-		AddField("Youtube Notification", Youtube).
-		AddField("BiliBili Notification", Bilibili).
+		AddField("Youtube Notif", Youtube).
+		AddField("BiliBili Notif", Bilibili).
 		InlineAllFields().
 		SetURL(URL).
 		SetColor(Color).MessageEmbed

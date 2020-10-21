@@ -201,7 +201,7 @@ func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 		}
 
 		if response.StatusCode != http.StatusOK && counter == 2 {
-			return nil, errors.New("Tor get Status code " + response.Status)
+			return nil, errors.New("Multi Tor get Error")
 		}
 
 		data, err := ioutil.ReadAll(response.Body)
