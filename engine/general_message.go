@@ -385,6 +385,8 @@ func Enable(s *discordgo.Session, m *discordgo.MessageCreate) {
 					s.ChannelMessageSend(m.ChannelID, "done")
 					if tagtype == 1 || tagtype == 3 {
 						s.ChannelMessageSend(m.ChannelID, "Remember boys,always respect the artist")
+					} else if tagtype == 2 || tagtype == 3 {
+						s.ChannelMessageSend(m.ChannelID, "Every livestream have some rule,follow the rule and don't be asshole")
 					}
 				} else {
 					s.ChannelMessageSend(m.ChannelID, "already added")
@@ -457,6 +459,8 @@ func Enable(s *discordgo.Session, m *discordgo.MessageCreate) {
 					s.ChannelMessageSend(m.ChannelID, "done")
 					if tagtype == 1 || tagtype == 3 {
 						s.ChannelMessageSend(m.ChannelID, "Remember boys,always respect the artist")
+					} else if tagtype == 2 || tagtype == 3 {
+						s.ChannelMessageSend(m.ChannelID, "Every livestream have some rule,follow the rule and don't be asshole")
 					}
 				} else {
 					s.ChannelMessageSend(m.ChannelID, "already added")

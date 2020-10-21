@@ -29,7 +29,8 @@
                     "BiliRoom_ID": 9389401,
                     "Twitter_Username": "ui_shig",
                     "Region":"JP"
-                },{
+                },
+                {
                     "Name":"Kotone",
                     "EN_Name":"Tenjin Kotone",
                     "JP_Name":"天神子兎音",
@@ -42,7 +43,8 @@
                     "BiliRoom_ID": 13744134,
                     "Twitter_Username": "kotonegami",
                     "Region":"JP"
-                },{
+                },
+                {
                     "Name":"Evelyn",
                     "EN_Name":"Evelyn",
                     "JP_Name":"",
@@ -55,6 +57,20 @@
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "EvelynVtuber",
                     "Region":"ID"
+                },
+                {
+                    "Name":"MafuMafu",
+                    "EN_Name":"MafuMafu",
+                    "JP_Name":"まふまふ",
+                    "Hashtag": {
+                        "Twitter": "#まふあーと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UCOTR1tcOAhjgi6YukrPpZxg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "uni_mafumafu",
+                    "Region":"JP"
                 }
             ]
         },
@@ -1074,6 +1090,34 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "ars_almal",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Shiishii",
+                    "EN_Name":"Shiina Yuika",
+                    "JP_Name":"椎名唯華",
+                    "Hashtag": {
+                        "Twitter": "#しいなーと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC_4tXjqecqox5Uc05ncxpxg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "yuika_siina",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Mikoto",
+                    "EN_Name":"Mikoto Rindou",
+                    "JP_Name":"りんどうみこと",
+                    "Hashtag": {
+                        "Twitter": "#尊絵巻",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCPvGypSgfDkVe7JG2KygK7A",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "rindoumikoto",
                     "Region":"JP"
                 },
                 {
