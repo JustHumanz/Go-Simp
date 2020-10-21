@@ -1035,6 +1035,48 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Sara",
+                    "EN_Name":"Hoshikawa Sara",
+                    "JP_Name":"星川サラ",
+                    "Hashtag": {
+                        "Twitter": "#サラ星図",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC9V3Y3_uzU5e-usObb6IE1w",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Sara_Hoshikawa",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Tsumugu",
+                    "EN_Name":"Kataribe Tsumugu",
+                    "JP_Name":"語部紡",
+                    "Hashtag": {
+                        "Twitter": "#い絵ーい",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCufQu4q65z63IgE4cfKs1BQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "KataribeTsumugu",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Malmal",
+                    "EN_Name":"Ars Almal",
+                    "JP_Name":"アルス・アルマル",
+                    "Hashtag": {
+                        "Twitter": "#マル描いてちょんっ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCdpUojq0KWZCN9bxXnZwz5w",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "ars_almal",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Hanamaki",
                     "EN_Name":"Hana Macchia",
                     "JP_Name":"",
@@ -1367,6 +1409,34 @@
                     "Yt_ID": "",
                     "BiliBili_ID": 420249427,
                     "BiliRoom_ID": 21403609,
+                    "Twitter_Username": "",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Hoshimi",
+                    "EN_Name":"Hoshimi",
+                    "JP_Name":"ホシミ",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": "星图测绘"
+                    },
+                    "Yt_ID": "",
+                    "BiliBili_ID": 477342747,
+                    "BiliRoom_ID": 21672022,
+                    "Twitter_Username": "",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Chiharu",
+                    "EN_Name":"Chiharu",
+                    "JP_Name":"チハル",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": "千报屋"
+                    },
+                    "Yt_ID": "",
+                    "BiliBili_ID": 558070433,
+                    "BiliRoom_ID": 22389319,
                     "Twitter_Username": "",
                     "Region":"CN"
                 }
