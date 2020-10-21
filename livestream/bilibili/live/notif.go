@@ -50,7 +50,7 @@ func (Data LiveBili) Crotttt(GroupIcon string) LiveBili {
 			SetURL(BiliBiliURL).
 			AddField("Start live", durafmt.Parse(time.Now().In(loc).Sub(Data.RoomData.ScheduledStart.In(loc))).LimitFirstN(2).String()+" Ago").
 			AddField("Online", Online).
-			SetFooter(Data.RoomData.ScheduledStart.In(loc).String(), config.BiliBiliIMG).
+			SetFooter(Data.RoomData.ScheduledStart.In(loc).Format(time.RFC822), config.BiliBiliIMG).
 			InlineAllFields().
 			SetColor(Color).MessageEmbed
 	}

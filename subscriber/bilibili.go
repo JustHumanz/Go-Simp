@@ -86,13 +86,13 @@ func CheckBiliFollowCount() {
 
 				if Name.BiliBiliID != 0 {
 					if bilistate.Follow.Data.Follower <= 10000 {
-						Avatar := Name.BiliBiliAvatar
-						Color, err := engine.GetColor("/tmp/bili.tmp", Avatar)
-						if err != nil {
-							log.Error(err)
-						}
 						for i := 0; i < 1000001; i += 100000 {
 							if i == bilistate.Follow.Data.Follower && bilistate.Follow.Data.Follower != 0 {
+								Avatar := Name.BiliBiliAvatar
+								Color, err := engine.GetColor("/tmp/bili.tmp", Avatar)
+								if err != nil {
+									log.Error(err)
+								}
 								SendNude(engine.NewEmbed().
 									SetAuthor(Group.NameGroup, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
 									SetTitle(engine.FixName(Name.EnName, Name.JpName)).
@@ -107,13 +107,13 @@ func CheckBiliFollowCount() {
 							}
 						}
 					} else {
-						Avatar := Name.BiliBiliAvatar
-						Color, err := engine.GetColor("/tmp/bili.tmp", Avatar)
-						if err != nil {
-							log.Error(err)
-						}
 						for i := 0; i < 10001; i += 1000 {
 							if i == bilistate.Follow.Data.Follower && bilistate.Follow.Data.Follower != 0 {
+								Avatar := Name.BiliBiliAvatar
+								Color, err := engine.GetColor("/tmp/bili.tmp", Avatar)
+								if err != nil {
+									log.Error(err)
+								}
 								SendNude(engine.NewEmbed().
 									SetAuthor(Group.NameGroup, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
 									SetTitle(engine.FixName(Name.EnName, Name.JpName)).

@@ -1259,6 +1259,34 @@
                     "Region":"KR"
                 },
                 {
+                    "Name":"Ray",
+                    "EN_Name":"Ray Akira",
+                    "JP_Name":"明楽 レイ",
+                    "Hashtag": {
+                        "Twitter": "#Ray_art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC7hffDQLKIEG-_zoAQkMIvg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "RayAkira2434",
+                    "Region":"KR"
+                },
+                {
+                    "Name":"Bora",
+                    "EN_Name":"Bora Nun",
+                    "JP_Name":"ヌン・ボラ",
+                    "Hashtag": {
+                        "Twitter": "#Bora_art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC1ZV7KBscK0EMoJKFu1DnDg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "BoraNun2434",
+                    "Region":"KR"
+                },
+                {
                     "Name":"Aadya",
                     "EN_Name":"Aadya",
                     "JP_Name":"",
@@ -1299,6 +1327,48 @@
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Vihaan_VTuber",
                     "Region":"EN"
+                },
+                {
+                    "Name":"Yukie",
+                    "EN_Name":"Yukie",
+                    "JP_Name":"ユキエ",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": "绘雪"
+                    },
+                    "Yt_ID": "",
+                    "BiliBili_ID": 56748733,
+                    "BiliRoom_ID": 21756924,
+                    "Twitter_Username": "",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Nanami",
+                    "EN_Name":"Nanami",
+                    "JP_Name":"ナナミ",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": "鲨画"
+                    },
+                    "Yt_ID": "",
+                    "BiliBili_ID": 434334701,
+                    "BiliRoom_ID": 21452505,
+                    "Twitter_Username": "NanamiVr",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Ruki",
+                    "EN_Name":"Ruki",
+                    "JP_Name":"ルキ",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": "绮图"
+                    },
+                    "Yt_ID": "",
+                    "BiliBili_ID": 420249427,
+                    "BiliRoom_ID": 21403609,
+                    "Twitter_Username": "",
+                    "Region":"CN"
                 }
                 
             ]
