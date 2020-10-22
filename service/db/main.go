@@ -14,7 +14,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 	bilibili "github.com/JustHumanz/Go-simp/livestream/bilibili/live"
@@ -68,7 +67,6 @@ func init() {
 	if err != nil {
 		log.Error(err)
 	}
-	Bot.AddHandler(Dead)
 }
 
 func main() {
@@ -393,30 +391,4 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		InlineAllFields().
 		SetURL(URL).
 		SetColor(Color).MessageEmbed
-}
-
-func Dead(s *discordgo.Session, m *discordgo.MessageCreate) {
-	General := config.PGeneral
-	Fanart := config.PFanart
-	BiliBili := config.PBilibili
-	Youtube := config.PYoutube
-	m.Content = strings.ToLower(m.Content)
-	Color, err := engine.GetColor("/tmp/discordpp.tmp", m.Author.AvatarURL("128"))
-	if err != nil {
-		log.Error(err)
-	}
-	if m.Content != "" {
-		if strings.HasPrefix(m.Content, General) || strings.HasPrefix(m.Content, Fanart) || strings.HasPrefix(m.Content, BiliBili) || strings.HasPrefix(m.Content, Youtube) {
-			s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-				SetTitle("Still Processing new data").
-				SetDescription("Bot update new Vtubers data XD ,Comeback when i ready to bang you (around 10-20 minutes or more,~~idk i don't fvcking count~~)").
-				SetThumbnail(config.Sleep).
-				SetImage(config.Dead).
-				SetColor(Color).
-				SetFooter("Adios~").MessageEmbed)
-			return
-		}
-		return
-	}
 }

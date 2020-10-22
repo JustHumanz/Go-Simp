@@ -254,13 +254,13 @@ func (Data Member) BliBiliFace() string {
 func AddData(Data Vtuber) {
 
 	var (
-		GroupID        int64
-		GroupName      = "Independen"
-		GroupIcon      = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/independen.png"
-		NewVtuberNames []string
+		GroupIDIndependen        int64
+		GroupName                = "Independen"
+		GroupIcon                = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/independen.png"
+		NewVtuberNamesIndependen []string
 	)
 	row := db.QueryRow("SELECT id FROM VtuberGroup WHERE VtuberGroupName=?", GroupName)
-	err := row.Scan(&GroupID)
+	err := row.Scan(&GroupIDIndependen)
 	if err == sql.ErrNoRows {
 		log.Error(err)
 		stmt, err := db.Prepare("INSERT INTO VtuberGroup (VtuberGroupName,VtuberGroupIcon) values(?,?)")
@@ -269,7 +269,7 @@ func AddData(Data Vtuber) {
 		res, err := stmt.Exec(GroupName, GroupIcon)
 		engine.BruhMoment(err, "", false)
 
-		GroupID, err = res.LastInsertId()
+		GroupIDIndependen, err = res.LastInsertId()
 		engine.BruhMoment(err, "", false)
 
 		defer stmt.Close()
@@ -279,10 +279,10 @@ func AddData(Data Vtuber) {
 		}).Info("Update Vtuber Group Data")
 		Update, err := db.Prepare(`Update VtuberGroup set VtuberGroupName=?, VtuberGroupIcon=? Where id=?`)
 		engine.BruhMoment(err, "", false)
-		Update.Exec(GroupName, GroupIcon, GroupID)
+		Update.Exec(GroupName, GroupIcon, GroupIDIndependen)
 	}
 
-	Channels := GetChannelByGroup(GroupID)
+	Channels := GetChannelByGroup(GroupIDIndependen)
 	wg2 := new(sync.WaitGroup)
 	for _, VtuberMember := range Data.Vtuber.Independen.Members {
 		wg2.Add(1)
@@ -298,7 +298,7 @@ func AddData(Data Vtuber) {
 				stmt, err := db.Prepare("INSERT INTO VtuberMember (VtuberName,VtuberName_EN,VtuberName_JP,Hashtag,BiliBili_Hashtag,Youtube_ID,Youtube_Avatar,VtuberGroup_id,Region,BiliBili_SpaceID,BiliBili_RoomID,BiliBili_Avatar,Twitter_Username) values(?,?,?,?,?,?,?,?,?,?,?,?,?)")
 				engine.BruhMoment(err, "", false)
 
-				res, err := stmt.Exec(VtuberMember.Name, VtuberMember.ENName, VtuberMember.JPName, VtuberMember.Hashtag.Twitter, VtuberMember.Hashtag.BiliBili, VtuberMember.YtID, VtuberMember.YtAvatar(), GroupID, VtuberMember.Region, VtuberMember.BiliBiliID, VtuberMember.BiliRoomID, VtuberMember.BliBiliFace(), VtuberMember.TwitterName)
+				res, err := stmt.Exec(VtuberMember.Name, VtuberMember.ENName, VtuberMember.JPName, VtuberMember.Hashtag.Twitter, VtuberMember.Hashtag.BiliBili, VtuberMember.YtID, VtuberMember.YtAvatar(), GroupIDIndependen, VtuberMember.Region, VtuberMember.BiliBiliID, VtuberMember.BiliRoomID, VtuberMember.BliBiliFace(), VtuberMember.TwitterName)
 				engine.BruhMoment(err, "", false)
 
 				_, err = res.LastInsertId()
@@ -309,7 +309,7 @@ func AddData(Data Vtuber) {
 				for _, Channel := range Channels {
 					msg, err := Bot.ChannelMessageSendEmbed(Channel, NewVtuber{
 						Group: database.GroupName{
-							ID:        GroupID,
+							ID:        GroupIDIndependen,
 							NameGroup: "Independen",
 							IconURL:   "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/independen.png",
 						},
@@ -320,7 +320,7 @@ func AddData(Data Vtuber) {
 					}
 				}
 
-				NewVtuberNames = append(NewVtuberNames, "`"+VtuberMember.Name+"`")
+				NewVtuberNamesIndependen = append(NewVtuberNamesIndependen, "`"+VtuberMember.Name+"`")
 				//New.SendNotif(Bot)
 			} else {
 				log.WithFields(log.Fields{
@@ -350,9 +350,9 @@ func AddData(Data Vtuber) {
 	}
 	wg2.Wait()
 
-	if NewVtuberNames != nil {
-		for _, Channel := range GetChannelByGroup(GroupID) {
-			msg, err := Bot.ChannelMessageSend(Channel, "New Update!!!! @here "+strings.Join(NewVtuberNames, ","))
+	if NewVtuberNamesIndependen != nil {
+		for _, Channel := range GetChannelByGroup(GroupIDIndependen) {
+			msg, err := Bot.ChannelMessageSend(Channel, "New Update!!!! @here "+strings.Join(NewVtuberNamesIndependen, ","))
 			if err != nil {
 				log.Error(msg, err)
 			}
@@ -360,7 +360,10 @@ func AddData(Data Vtuber) {
 	}
 
 	for i := 0; i < len(Data.Vtuber.Group); i++ {
-		NewVtuberNames = nil
+		var (
+			NewVtuberNames []string
+			GroupID        int64
+		)
 		Group := Data.Vtuber.Group[i]
 		/*
 			Add Group
@@ -370,7 +373,6 @@ func AddData(Data Vtuber) {
 			"VtuberGroupIcon": Group.GroupIcon,
 		}).Info("Add Group")
 
-		var GroupID int64
 		row := db.QueryRow("SELECT id FROM VtuberGroup WHERE VtuberGroupName=? ", Group.GroupName)
 		err := row.Scan(&GroupID)
 		if err != nil || err == sql.ErrNoRows {
@@ -422,8 +424,8 @@ func AddData(Data Vtuber) {
 						msg, err := Bot.ChannelMessageSendEmbed(Channel, NewVtuber{
 							Group: database.GroupName{
 								ID:        GroupID,
-								NameGroup: GroupName,
-								IconURL:   GroupIcon,
+								NameGroup: Group.GroupName,
+								IconURL:   Group.GroupIcon,
 							},
 							Member: VtuberMember,
 						}.SendNotif())
