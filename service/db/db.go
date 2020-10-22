@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/JustHumanz/Go-simp/database"
 	"github.com/JustHumanz/Go-simp/engine"
@@ -253,93 +252,112 @@ func (Data Member) BliBiliFace() string {
 }
 
 func AddData(Data Vtuber) {
+
 	var (
-		wg sync.WaitGroup
+		GroupID        int64
+		GroupName      = "Independen"
+		GroupIcon      = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/independen.png"
+		NewVtuberNames []string
 	)
-	wg.Add(2)
-	go func() {
-		defer wg.Done()
+	row := db.QueryRow("SELECT id FROM VtuberGroup WHERE VtuberGroupName=?", GroupName)
+	err := row.Scan(&GroupID)
+	if err == sql.ErrNoRows {
+		log.Error(err)
+		stmt, err := db.Prepare("INSERT INTO VtuberGroup (VtuberGroupName,VtuberGroupIcon) values(?,?)")
+		engine.BruhMoment(err, "", false)
 
-		var (
-			GroupID   int64
-			GroupName = "Independen"
-			GroupIcon = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/independen.png"
-		)
-		row := db.QueryRow("SELECT id FROM VtuberGroup WHERE VtuberGroupName=?", GroupName)
-		err := row.Scan(&GroupID)
-		if err == sql.ErrNoRows {
-			log.Error(err)
-			stmt, err := db.Prepare("INSERT INTO VtuberGroup (VtuberGroupName,VtuberGroupIcon) values(?,?)")
-			engine.BruhMoment(err, "", false)
+		res, err := stmt.Exec(GroupName, GroupIcon)
+		engine.BruhMoment(err, "", false)
 
-			res, err := stmt.Exec(GroupName, GroupIcon)
-			engine.BruhMoment(err, "", false)
+		GroupID, err = res.LastInsertId()
+		engine.BruhMoment(err, "", false)
 
-			GroupID, err = res.LastInsertId()
-			engine.BruhMoment(err, "", false)
+		defer stmt.Close()
+	} else {
+		log.WithFields(log.Fields{
+			"VtuberGroup": GroupName,
+		}).Info("Update Vtuber Group Data")
+		Update, err := db.Prepare(`Update VtuberGroup set VtuberGroupName=?, VtuberGroupIcon=? Where id=?`)
+		engine.BruhMoment(err, "", false)
+		Update.Exec(GroupName, GroupIcon, GroupID)
+	}
 
-			defer stmt.Close()
-		} else {
-			log.WithFields(log.Fields{
-				"VtuberGroup": GroupName,
-			}).Info("Update Vtuber Group Data")
-			Update, err := db.Prepare(`Update VtuberGroup set VtuberGroupName=?, VtuberGroupIcon=? Where id=?`)
-			engine.BruhMoment(err, "", false)
-			Update.Exec(GroupName, GroupIcon, GroupID)
-		}
-		for _, Member := range Data.Vtuber.Independen.Members {
+	Channels := GetChannelByGroup(GroupID)
+	wg2 := new(sync.WaitGroup)
+	for _, VtuberMember := range Data.Vtuber.Independen.Members {
+		wg2.Add(1)
+		go func(VtuberMember Member, wg2 *sync.WaitGroup) {
 			/*
 				Add Member
 			*/
 			var tmp int64
-			row := db.QueryRow("SELECT id FROM VtuberMember WHERE VtuberName=? AND (Youtube_ID=? OR  BiliBili_SpaceID=? OR BiliBili_RoomID=?)", Member.Name, Member.YtID, Member.BiliBiliID, Member.BiliRoomID)
+			defer wg2.Done()
+			row := db.QueryRow("SELECT id FROM VtuberMember WHERE VtuberName=? AND (Youtube_ID=? OR  BiliBili_SpaceID=? OR BiliBili_RoomID=?)", VtuberMember.Name, VtuberMember.YtID, VtuberMember.BiliBiliID, VtuberMember.BiliRoomID)
 			err := row.Scan(&tmp)
 			if err == sql.ErrNoRows {
 				stmt, err := db.Prepare("INSERT INTO VtuberMember (VtuberName,VtuberName_EN,VtuberName_JP,Hashtag,BiliBili_Hashtag,Youtube_ID,Youtube_Avatar,VtuberGroup_id,Region,BiliBili_SpaceID,BiliBili_RoomID,BiliBili_Avatar,Twitter_Username) values(?,?,?,?,?,?,?,?,?,?,?,?,?)")
 				engine.BruhMoment(err, "", false)
 
-				res, err := stmt.Exec(Member.Name, Member.ENName, Member.JPName, Member.Hashtag.Twitter, Member.Hashtag.BiliBili, Member.YtID, Member.YtAvatar(), GroupID, Member.Region, Member.BiliBiliID, Member.BiliRoomID, Member.BliBiliFace(), Member.TwitterName)
+				res, err := stmt.Exec(VtuberMember.Name, VtuberMember.ENName, VtuberMember.JPName, VtuberMember.Hashtag.Twitter, VtuberMember.Hashtag.BiliBili, VtuberMember.YtID, VtuberMember.YtAvatar(), GroupID, VtuberMember.Region, VtuberMember.BiliBiliID, VtuberMember.BiliRoomID, VtuberMember.BliBiliFace(), VtuberMember.TwitterName)
 				engine.BruhMoment(err, "", false)
 
 				_, err = res.LastInsertId()
 				engine.BruhMoment(err, "", false)
 
 				defer stmt.Close()
-				New = append(New, NewVtuber{
-					Group: database.GroupName{
-						ID:        GroupID,
-						NameGroup: "Independen",
-						IconURL:   "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/independen.png",
-					},
-					Member: Member,
-				})
+
+				for _, Channel := range Channels {
+					msg, err := Bot.ChannelMessageSendEmbed(Channel, NewVtuber{
+						Group: database.GroupName{
+							ID:        GroupID,
+							NameGroup: "Independen",
+							IconURL:   "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/independen.png",
+						},
+						Member: VtuberMember,
+					}.SendNotif())
+					if err != nil {
+						log.Error(msg, err)
+					}
+				}
+
+				NewVtuberNames = append(NewVtuberNames, "`"+VtuberMember.Name+"`")
 				//New.SendNotif(Bot)
 			} else {
 				log.WithFields(log.Fields{
 					"VtuberGroup": "Independen",
-					"Vtuber":      Member.ENName,
+					"Vtuber":      VtuberMember.ENName,
 				}).Info("already added...")
-				_, err := db.Exec(`Update VtuberMember set VtuberName=?, VtuberName_EN=?, VtuberName_JP=? ,Hashtag=? ,BiliBili_Hashtag=? ,Region=? ,Youtube_ID=? ,BiliBili_SpaceID=?,BiliBili_RoomID=?, BiliBili_Avatar=? ,Youtube_Avatar=?, Twitter_Username=?  Where id=?`, Member.Name, Member.ENName, Member.JPName, Member.Hashtag.Twitter, Member.Hashtag.BiliBili, Member.Region, Member.YtID, Member.BiliBiliID, Member.BiliRoomID, Member.BliBiliFace(), Member.YtAvatar(), Member.TwitterName, tmp)
+				_, err := db.Exec(`Update VtuberMember set VtuberName=?, VtuberName_EN=?, VtuberName_JP=? ,Hashtag=? ,BiliBili_Hashtag=? ,Region=? ,Youtube_ID=? ,BiliBili_SpaceID=?,BiliBili_RoomID=?, BiliBili_Avatar=? ,Youtube_Avatar=?, Twitter_Username=?  Where id=?`, VtuberMember.Name, VtuberMember.ENName, VtuberMember.JPName, VtuberMember.Hashtag.Twitter, VtuberMember.Hashtag.BiliBili, VtuberMember.Region, VtuberMember.YtID, VtuberMember.BiliBiliID, VtuberMember.BiliRoomID, VtuberMember.BliBiliFace(), VtuberMember.YtAvatar(), VtuberMember.TwitterName, tmp)
 				if err != nil {
 					log.Error(err)
 				}
 				log.WithFields(log.Fields{
 					"VtuberGroup": "Independen",
-					"Vtuber":      Member.ENName,
+					"Vtuber":      VtuberMember.ENName,
 				}).Info("update member")
 			}
 			log.WithFields(log.Fields{
 				"VtuberGroup": "Independen",
-				"Vtuber":      Member.ENName,
+				"Vtuber":      VtuberMember.ENName,
 			}).Info("Add subs info to database")
 
 			/*
 				Add subs info
 			*/
-			Member.InputSubs(tmp)
-			time.Sleep(1 * time.Second)
+			VtuberMember.InputSubs(tmp)
+			//time.Sleep(1 * time.Second)
+		}(VtuberMember, wg2)
+	}
+	wg2.Wait()
+
+	if NewVtuberNames != nil {
+		for _, Channel := range GetChannelByGroup(GroupID) {
+			msg, err := Bot.ChannelMessageSend(Channel, "New Update!!!! @here "+strings.Join(NewVtuberNames, ","))
+			if err != nil {
+				log.Error(msg, err)
+			}
 		}
-	}()
+	}
 
 	go func() {
 		defer wg.Done()
@@ -400,28 +418,29 @@ func AddData(Data Vtuber) {
 
 						defer stmt.Close()
 
-						New = append(New, NewVtuber{
+					for _, Channel := range Channels {
+						msg, err := Bot.ChannelMessageSendEmbed(Channel, NewVtuber{
 							Group: database.GroupName{
 								ID:        GroupID,
-								NameGroup: Group.GroupName,
-								IconURL:   Group.GroupIcon,
+								NameGroup: GroupName,
+								IconURL:   GroupIcon,
 							},
-							Member: Member,
-						})
-						//New.SendNotif(Bot)
-					} else {
-						log.WithFields(log.Fields{
-							"VtuberGroup": Group.GroupName,
-							"Vtuber":      Member.ENName,
-						}).Info("already added...")
-						_, err := db.Exec(`Update VtuberMember set VtuberName=?, VtuberName_EN=?, VtuberName_JP=? ,Hashtag=? ,BiliBili_Hashtag=? ,Region=? ,Youtube_ID=? ,BiliBili_SpaceID=?,BiliBili_RoomID=?, BiliBili_Avatar=? ,Youtube_Avatar=?, Twitter_Username=?  Where id=?`, Member.Name, Member.ENName, Member.JPName, Member.Hashtag.Twitter, Member.Hashtag.BiliBili, Member.Region, Member.YtID, Member.BiliBiliID, Member.BiliRoomID, Member.BliBiliFace(), Member.YtAvatar(), Member.TwitterName, tmp)
+							Member: VtuberMember,
+						}.SendNotif())
 						if err != nil {
-							log.Error(err)
+							log.Error(msg, err)
 						}
-						log.WithFields(log.Fields{
-							"VtuberGroup": Group.GroupName,
-							"Vtuber":      Member.ENName,
-						}).Info("update member")
+					}
+					NewVtuberNames = append(NewVtuberNames, "`"+VtuberMember.Name+"`")
+
+				} else {
+					log.WithFields(log.Fields{
+						"VtuberGroup": Group.GroupName,
+						"Vtuber":      VtuberMember.ENName,
+					}).Info("already added...")
+					_, err := db.Exec(`Update VtuberMember set VtuberName=?, VtuberName_EN=?, VtuberName_JP=? ,Hashtag=? ,BiliBili_Hashtag=? ,Region=? ,Youtube_ID=? ,BiliBili_SpaceID=?,BiliBili_RoomID=?, BiliBili_Avatar=? ,Youtube_Avatar=?, Twitter_Username=?  Where id=?`, VtuberMember.Name, VtuberMember.ENName, VtuberMember.JPName, VtuberMember.Hashtag.Twitter, VtuberMember.Hashtag.BiliBili, VtuberMember.Region, VtuberMember.YtID, VtuberMember.BiliBiliID, VtuberMember.BiliRoomID, VtuberMember.BliBiliFace(), VtuberMember.YtAvatar(), VtuberMember.TwitterName, tmp)
+					if err != nil {
+						log.Error(err)
 					}
 					log.WithFields(log.Fields{
 						"VtuberGroup": Group.GroupName,

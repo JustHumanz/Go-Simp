@@ -383,8 +383,10 @@ func Enable(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 				if counter {
 					s.ChannelMessageSend(m.ChannelID, "done")
-					if tagtype == 1 {
+					if tagtype == 1 || tagtype == 3 {
 						s.ChannelMessageSend(m.ChannelID, "Remember boys,always respect the artist")
+					} else if tagtype == 2 || tagtype == 3 {
+						s.ChannelMessageSend(m.ChannelID, "Every livestream have some rule,follow the rule and don't be asshole")
 					}
 				} else {
 					s.ChannelMessageSend(m.ChannelID, "already added")
@@ -455,8 +457,10 @@ func Enable(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 				if counter {
 					s.ChannelMessageSend(m.ChannelID, "done")
-					if tagtype == 1 {
+					if tagtype == 1 || tagtype == 3 {
 						s.ChannelMessageSend(m.ChannelID, "Remember boys,always respect the artist")
+					} else if tagtype == 2 || tagtype == 3 {
+						s.ChannelMessageSend(m.ChannelID, "Every livestream have some rule,follow the rule and don't be asshole")
 					}
 				} else {
 					s.ChannelMessageSend(m.ChannelID, "already added")
@@ -749,18 +753,32 @@ func Reacting(Data map[string]string) error {
 			}
 			break
 		} else if Data["Content"][len(Data["Prefix"]):] == "cleaire" {
-			err := BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[0])
+			err := BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[l])
+			if err != nil {
+				return errors.New(err.Error() + " ChannelID: " + ChannelID)
+				//log.Error(err, ChannelID)
+			}
+			if l == len(EmojiList)-1 {
+				err = BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, ":latom:767810745860751391")
+				if err != nil {
+					return errors.New(err.Error() + " ChannelID: " + ChannelID)
+					//log.Error(err, ChannelID)
+				}
+			}
+		} else if Data["Content"][len(Data["Prefix"]):] == "senchou" {
+			err := BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[l])
 			if err != nil {
 				return errors.New(err.Error() + " ChannelID: " + ChannelID)
 				//log.Error(err, ChannelID)
 			}
 
-			err = BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, ":latom:767810745860751391")
-			if err != nil {
-				return errors.New(err.Error() + " ChannelID: " + ChannelID)
-				//log.Error(err, ChannelID)
+			if l == len(EmojiList)-1 {
+				err = BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, ":hormny:768700671750176790")
+				if err != nil {
+					return errors.New(err.Error() + " ChannelID: " + ChannelID)
+					//log.Error(err, ChannelID)
+				}
 			}
-			break
 		} else {
 			err := BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[l])
 			if err != nil {

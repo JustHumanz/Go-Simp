@@ -40,6 +40,8 @@ const (
 	WorryIMG    = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/parerunworry.png"
 	GoSimpIMG   = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/go-simp.png"
 	Longcatttt  = "https://cdn.ebaumsworld.com/2020/09/20/013235/86394200/longcat-pic.jpg"
+	Dead        = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/dead.jpg"
+	Sleep       = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/sleep.png"
 )
 
 type ConfigFile struct {

@@ -24,7 +24,7 @@ func (PushData NotifStruct) SendNude() {
 				match, _ := regexp.MatchString("Unknown Channel", err.Error())
 				if match {
 					log.Info("Delete Discord Channel ", DiscordChannelID[i])
-					database.DelChannel(DiscordChannelID[i], PushData.Member.ID)
+					database.DelChannel(DiscordChannelID[i], PushData.Group.ID)
 				}
 			} else {
 				msg, err = BotSession.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))

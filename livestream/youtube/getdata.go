@@ -93,13 +93,6 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 			Starttime = Data.Items[i].Snippet.PublishedAt
 		}
 
-		_, err := engine.Curl("http://i3.ytimg.com/vi/"+VideoID[i]+"/maxresdefault.jpg", nil)
-		if err != nil {
-			Thumb = "http://i3.ytimg.com/vi/" + VideoID[i] + "/hqdefault.jpg"
-		} else {
-			Thumb = "http://i3.ytimg.com/vi/" + VideoID[i] + "/maxresdefault.jpg"
-		}
-
 		PushData = NotifStruct{
 			Group:  Group,
 			Member: Name,
@@ -174,6 +167,13 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 				DataDB.UpdateYt(DataDB.Status)
 			}
 		} else {
+			_, err := engine.Curl("http://i3.ytimg.com/vi/"+VideoID[i]+"/maxresdefault.jpg", nil)
+			if err != nil {
+				Thumb = "http://i3.ytimg.com/vi/" + VideoID[i] + "/hqdefault.jpg"
+			} else {
+				Thumb = "http://i3.ytimg.com/vi/" + VideoID[i] + "/maxresdefault.jpg"
+			}
+
 			//verify
 			PushData.Data = database.YtDbData{
 				Status:    Data.Items[i].Snippet.VideoStatus,

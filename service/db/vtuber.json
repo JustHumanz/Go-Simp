@@ -29,7 +29,8 @@
                     "BiliRoom_ID": 9389401,
                     "Twitter_Username": "ui_shig",
                     "Region":"JP"
-                },{
+                },
+                {
                     "Name":"Kotone",
                     "EN_Name":"Tenjin Kotone",
                     "JP_Name":"天神子兎音",
@@ -42,7 +43,8 @@
                     "BiliRoom_ID": 13744134,
                     "Twitter_Username": "kotonegami",
                     "Region":"JP"
-                },{
+                },
+                {
                     "Name":"Evelyn",
                     "EN_Name":"Evelyn",
                     "JP_Name":"",
@@ -55,6 +57,20 @@
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "EvelynVtuber",
                     "Region":"ID"
+                },
+                {
+                    "Name":"MafuMafu",
+                    "EN_Name":"MafuMafu",
+                    "JP_Name":"まふまふ",
+                    "Hashtag": {
+                        "Twitter": "#まふあーと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UCOTR1tcOAhjgi6YukrPpZxg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "uni_mafumafu",
+                    "Region":"JP"
                 }
             ]
         },
@@ -664,7 +680,7 @@
                     "JP_Name":"アティア",
                     "Hashtag": {
                         "Twitter": "#Art4Tia",
-                        "BiliBili": ""
+                        "BiliBili": "阿媂娅ARTIA"
                     },
                     "Yt_ID": "",
                     "BiliBili_ID": 511613155,
@@ -678,7 +694,7 @@
                     "JP_Name":"希薇婭",
                     "Hashtag": {
                         "Twitter": "#Civiart",
-                        "BiliBili": ""
+                        "BiliBili": "二维马"
                     },
                     "Yt_ID": "UCgNVXGlZIFK96XdEY20sVjg",
                     "BiliBili_ID": 354411419,
@@ -692,7 +708,7 @@
                     "JP_Name":"夜霧",
                     "Hashtag": {
                         "Twitter": "#霧夜絵",
-                        "BiliBili": ""
+                        "BiliBili": "霧夜絵"
                     },
                     "Yt_ID": "",
                     "BiliBili_ID": 427061218,
@@ -706,7 +722,7 @@
                     "JP_Name":"黒桃影",
                     "Hashtag": {
                         "Twitter": "#パン桃絵",
-                        "BiliBili": ""
+                        "BiliBili": "蟠桃绘"
                     },
                     "Yt_ID": "",
                     "BiliBili_ID": 456368455,
@@ -720,7 +736,7 @@
                     "JP_Name":"ドリス",
                     "Hashtag": {
                         "Twitter": "",
-                        "BiliBili": ""
+                        "BiliBili": "摸个鱼"
                     },
                     "Yt_ID": "",
                     "BiliBili_ID": 511613156,
@@ -734,7 +750,7 @@
                     "JP_Name":"ロサリン",
                     "Hashtag": {
                         "Twitter": "#蘑法カード",
-                        "BiliBili": ""
+                        "BiliBili": "蘑法卡"
                     },
                     "Yt_ID": "",
                     "BiliBili_ID": 511613157,
@@ -1035,6 +1051,76 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Sara",
+                    "EN_Name":"Hoshikawa Sara",
+                    "JP_Name":"星川サラ",
+                    "Hashtag": {
+                        "Twitter": "#サラ星図",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC9V3Y3_uzU5e-usObb6IE1w",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Sara_Hoshikawa",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Tsumugu",
+                    "EN_Name":"Kataribe Tsumugu",
+                    "JP_Name":"語部紡",
+                    "Hashtag": {
+                        "Twitter": "#い絵ーい",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCufQu4q65z63IgE4cfKs1BQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "KataribeTsumugu",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Malmal",
+                    "EN_Name":"Ars Almal",
+                    "JP_Name":"アルス・アルマル",
+                    "Hashtag": {
+                        "Twitter": "#マル描いてちょんっ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCdpUojq0KWZCN9bxXnZwz5w",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "ars_almal",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Shiishii",
+                    "EN_Name":"Shiina Yuika",
+                    "JP_Name":"椎名唯華",
+                    "Hashtag": {
+                        "Twitter": "#しいなーと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC_4tXjqecqox5Uc05ncxpxg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "yuika_siina",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Mikoto",
+                    "EN_Name":"Mikoto Rindou",
+                    "JP_Name":"りんどうみこと",
+                    "Hashtag": {
+                        "Twitter": "#尊絵巻",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCPvGypSgfDkVe7JG2KygK7A",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "rindoumikoto",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Hanamaki",
                     "EN_Name":"Hana Macchia",
                     "JP_Name":"",
@@ -1259,6 +1345,34 @@
                     "Region":"KR"
                 },
                 {
+                    "Name":"Ray",
+                    "EN_Name":"Ray Akira",
+                    "JP_Name":"明楽 レイ",
+                    "Hashtag": {
+                        "Twitter": "#Ray_art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC7hffDQLKIEG-_zoAQkMIvg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "RayAkira2434",
+                    "Region":"KR"
+                },
+                {
+                    "Name":"Bora",
+                    "EN_Name":"Bora Nun",
+                    "JP_Name":"ヌン・ボラ",
+                    "Hashtag": {
+                        "Twitter": "#Bora_art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC1ZV7KBscK0EMoJKFu1DnDg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "BoraNun2434",
+                    "Region":"KR"
+                },
+                {
                     "Name":"Aadya",
                     "EN_Name":"Aadya",
                     "JP_Name":"",
@@ -1299,6 +1413,76 @@
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Vihaan_VTuber",
                     "Region":"EN"
+                },
+                {
+                    "Name":"Yukie",
+                    "EN_Name":"Yukie",
+                    "JP_Name":"ユキエ",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": "绘雪"
+                    },
+                    "Yt_ID": "",
+                    "BiliBili_ID": 56748733,
+                    "BiliRoom_ID": 21756924,
+                    "Twitter_Username": "",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Nanami",
+                    "EN_Name":"Nanami",
+                    "JP_Name":"ナナミ",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": "鲨画"
+                    },
+                    "Yt_ID": "",
+                    "BiliBili_ID": 434334701,
+                    "BiliRoom_ID": 21452505,
+                    "Twitter_Username": "NanamiVr",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Ruki",
+                    "EN_Name":"Ruki",
+                    "JP_Name":"ルキ",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": "绮图"
+                    },
+                    "Yt_ID": "",
+                    "BiliBili_ID": 420249427,
+                    "BiliRoom_ID": 21403609,
+                    "Twitter_Username": "",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Hoshimi",
+                    "EN_Name":"Hoshimi",
+                    "JP_Name":"ホシミ",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": "星图测绘"
+                    },
+                    "Yt_ID": "",
+                    "BiliBili_ID": 477342747,
+                    "BiliRoom_ID": 21672022,
+                    "Twitter_Username": "",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Chiharu",
+                    "EN_Name":"Chiharu",
+                    "JP_Name":"チハル",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": "千报屋"
+                    },
+                    "Yt_ID": "",
+                    "BiliBili_ID": 558070433,
+                    "BiliRoom_ID": 22389319,
+                    "Twitter_Username": "",
+                    "Region":"CN"
                 }
                 
             ]

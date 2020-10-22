@@ -1,11 +1,11 @@
 package bilibili
 
 import (
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
 
+	config "github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 
@@ -20,11 +20,6 @@ func (Data LiveBili) Tamod(MemberID int64) {
 		msg, err := BotSession.ChannelMessageSendEmbed(DiscordChannel, Data.Embed)
 		if err != nil {
 			log.Error(msg, err)
-			match, _ := regexp.MatchString("Unknown Channel", err.Error())
-			if match {
-				log.Info("Delete Discord Channel ", DiscordChannelID[i])
-				database.DelChannel(DiscordChannelID[i], MemberID)
-			}
 		} else {
 			if UserTagsList != nil {
 				msg, err = BotSession.ChannelMessageSend(DiscordChannel, "UserTags: "+strings.Join(UserTagsList, " "))
@@ -40,7 +35,6 @@ func (Data LiveBili) Crotttt(GroupIcon string) LiveBili {
 	BiliBiliAccount := "https://space.bilibili.com/" + strconv.Itoa(Data.BiliBiliID)
 	BiliBiliURL := "https://live.bilibili.com/" + strconv.Itoa(Data.RoomData.LiveRoomID)
 	Online := strconv.Itoa(Data.RoomData.Online)
-
 	Color, err := engine.GetColor("/tmp/bilThum", Data.RoomData.Thumbnail)
 	if err != nil {
 		log.Error(err)
@@ -55,7 +49,8 @@ func (Data LiveBili) Crotttt(GroupIcon string) LiveBili {
 			SetImage(Data.RoomData.Thumbnail, "image").
 			SetURL(BiliBiliURL).
 			AddField("Start live", durafmt.Parse(time.Now().In(loc).Sub(Data.RoomData.ScheduledStart.In(loc))).LimitFirstN(2).String()+" Ago").
-			SetFooter("Online", Online).
+			AddField("Online", Online).
+			SetFooter(Data.RoomData.ScheduledStart.In(loc).Format(time.RFC822), config.BiliBiliIMG).
 			InlineAllFields().
 			SetColor(Color).MessageEmbed
 	}

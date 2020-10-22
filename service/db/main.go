@@ -14,6 +14,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 	bilibili "github.com/JustHumanz/Go-simp/livestream/bilibili/live"
@@ -23,16 +24,15 @@ import (
 )
 
 var (
-	res          Vtuber
-	Limit        int
-	db           *sql.DB
-	YtToken      string
-	member       string
-	Publish      time.Time
-	Roomstatus   string
-	BiliSession  string
-	New          []NewVtuber
-	DiscordToken string
+	res         Vtuber
+	Limit       int
+	db          *sql.DB
+	YtToken     string
+	member      string
+	Publish     time.Time
+	Roomstatus  string
+	BiliSession string
+	Bot         *discordgo.Session
 )
 
 type NewVtuber struct {
@@ -57,13 +57,18 @@ func init() {
 	}
 	YtToken = os.Getenv("GTOKEN")
 	BiliSession = os.Getenv("SBILI")
-	DiscordToken = os.Getenv("DISCORD")
 	Limit = 100
-
+	Bot, _ = discordgo.New("Bot " + os.Getenv("DISCORD"))
+	err = Bot.Open()
+	if err != nil {
+		log.Error(err)
+		os.Exit(1)
+	}
 	err = CreateDB()
 	if err != nil {
 		log.Error(err)
 	}
+	Bot.AddHandler(Dead)
 }
 
 func main() {
@@ -73,30 +78,9 @@ func main() {
 	flag.Parse()
 	db = DBConn()
 	database.Start(db)
-	Bot, _ := discordgo.New("Bot " + DiscordToken)
 
 	if (*Service) == "bootstrapping" {
 		AddData(res)
-		go func() {
-			if New != nil {
-				vtname := []string{}
-				for i, NewVtuber := range New {
-					vtname = append(vtname, "`"+NewVtuber.Member.Name+"`")
-					for _, Channel := range GetChannelByGroup(NewVtuber.Group.ID) {
-						msg, err := Bot.ChannelMessageSendEmbed(Channel, NewVtuber.SendNotif())
-						if err != nil {
-							log.Error(msg, err)
-						}
-						if len(New)-1 == i {
-							msg, err = Bot.ChannelMessageSend(Channel, "New Update!!!! @here "+strings.Join(vtname, ","))
-							if err != nil {
-								log.Error(msg, err)
-							}
-						}
-					}
-				}
-			}
-		}()
 		go CheckYT()
 		go CheckSchedule()
 		go CheckVideoSpace()
@@ -409,4 +393,30 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		InlineAllFields().
 		SetURL(URL).
 		SetColor(Color).MessageEmbed
+}
+
+func Dead(s *discordgo.Session, m *discordgo.MessageCreate) {
+	General := config.PGeneral
+	Fanart := config.PFanart
+	BiliBili := config.PBilibili
+	Youtube := config.PYoutube
+	m.Content = strings.ToLower(m.Content)
+	Color, err := engine.GetColor("/tmp/discordpp.tmp", m.Author.AvatarURL("128"))
+	if err != nil {
+		log.Error(err)
+	}
+	if m.Content != "" {
+		if match, _ := regexp.MatchString("("+General+"|"+Fanart+"|"+BiliBili+"|"+Youtube+")", m.Content); match {
+			s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+				SetTitle("Still Processing new data").
+				SetDescription("Bot update new Vtubers data XD ,Comeback when i ready to bang you (around 10-20 minutes or more,~~idk i don't fvcking count~~)").
+				SetThumbnail(config.Sleep).
+				SetImage(config.Dead).
+				SetColor(Color).
+				SetFooter("Adios~").MessageEmbed)
+			return
+		}
+		return
+	}
 }

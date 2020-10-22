@@ -61,7 +61,7 @@ func (Data PushData) SendNude() error {
 					match, _ := regexp.MatchString("Unknown Channel", err.Error())
 					if match {
 						log.Info("Delete Discord Channel ", DiscordChannel)
-						database.DelChannel(DiscordChannel, Data.Group.MemberID)
+						database.DelChannel(DiscordChannel, Data.Group.GroupID)
 					}
 				}
 				engine.Reacting(map[string]string{

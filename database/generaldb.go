@@ -319,9 +319,8 @@ func DelChannel(ChannelID string, VtuberGroupID int64) error {
 	if err != nil {
 		return err
 	}
-
-	stmt.Exec(ChannelID, VtuberGroupID)
 	defer stmt.Close()
+	stmt.Exec(ChannelID, VtuberGroupID)
 	return nil
 
 }

@@ -39,7 +39,7 @@ func CheckVideo() {
 						MemberFace: Member.BiliBiliAvatar,
 						MemberUrl:  "https://space.bilibili.com/" + strconv.Itoa(Member.BiliBiliID),
 					}
-					Data.Check("5").SendNude()
+					Data.Check("10").SendNude()
 					//time.Sleep(time.Duration(int64(rand.Intn((10-4)+4))) * time.Second)
 
 				}

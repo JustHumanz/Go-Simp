@@ -20,6 +20,7 @@ func Start(Bot *discordgo.Session) {
 	loc, _ = time.LoadLocation("Asia/Shanghai")
 	//go BotSession.AddHandler(Message)
 	//go BotSession.AddHandler(Space)
+	//CheckSchedule()
 }
 
 func CheckSchedule() {

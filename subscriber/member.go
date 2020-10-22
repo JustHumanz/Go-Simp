@@ -30,7 +30,7 @@ func Start(c *cron.Cron) {
 	}
 	c.AddFunc("@every 1h0m0s", CheckYtSubsCount)
 	c.AddFunc("@every 0h15m0s", CheckTwFollowCount)
-	c.AddFunc("@every 0h20m0s", CheckBiliFollowCount)
+	c.AddFunc("@every 0h30m0s", CheckBiliFollowCount)
 	log.Info("Subs&Follow Checker module ready")
 }
 
