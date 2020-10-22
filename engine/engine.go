@@ -129,33 +129,33 @@ func Curl(url string, addheader []string) ([]byte, error) {
 
 	var body []byte
 	spaceClient := http.Client{}
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+	request, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("cache-control", "no-cache")
-	req.Header.Set("User-Agent", RandomAgent())
+	request.Header.Set("cache-control", "no-cache")
+	request.Header.Set("User-Agent", RandomAgent())
 	if addheader != nil {
-		req.Header.Set(addheader[0], addheader[1])
+		request.Header.Set(addheader[0], addheader[1])
 	}
 
-	res, err := spaceClient.Do(req.WithContext(ctx))
+	response, err := spaceClient.Do(request.WithContext(ctx))
 	if err != nil {
 		return nil, err
 	}
 
-	if res.StatusCode != http.StatusOK {
+	if response.StatusCode != http.StatusOK {
 		log.WithFields(log.Fields{
-			"Status": res.StatusCode,
-			"Reason": res.Status,
+			"Status": response.StatusCode,
+			"Reason": response.Status,
 			"URL":    url,
 		}).Error("Status code not daijobu")
-		return nil, errors.New(res.Status)
+		return nil, errors.New(response.Status)
 	}
 
-	defer res.Body.Close()
+	defer response.Body.Close()
 
-	body, err = ioutil.ReadAll(res.Body)
+	body, err = ioutil.ReadAll(response.Body)
 	if err != nil {
 		return body, err
 

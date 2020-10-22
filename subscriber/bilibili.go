@@ -14,7 +14,7 @@ import (
 )
 
 func CheckBiliFollowCount() {
-	for _, Group := range Data {
+	for _, Group := range engine.GroupData {
 		Names := database.GetName(Group.ID)
 		for _, Name := range Names {
 			if Name.BiliBiliID != 0 {

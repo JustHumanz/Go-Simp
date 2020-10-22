@@ -397,8 +397,7 @@ func CheckPermission(User, Channel string) bool {
 	Debugging(GetFunctionName(CheckPermission), "In", fmt.Sprint(User, Channel))
 	a, err := BotSession.UserChannelPermissions(User, Channel)
 	BruhMoment(err, "", false)
-	Permission := 16
-	if a&Permission != 0 {
+	if a&config.ChannelPermission != 0 {
 		Debugging(GetFunctionName(CheckPermission), "Out", true)
 		return true
 	} else {

@@ -8,16 +8,17 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/JustHumanz/Go-simp/config"
 	"github.com/JustHumanz/Go-simp/database"
 	"github.com/JustHumanz/Go-simp/engine"
 	_ "github.com/go-sql-driver/mysql"
 	log "github.com/sirupsen/logrus"
 )
 
-func CreateDB() error {
+func CreateDB(Data config.ConfigFile) error {
 	log.Info("Create Database")
 
-	db, err := sql.Open("mysql", os.Getenv("DBUSER")+":"+os.Getenv("DBPASS")+"@tcp("+os.Getenv("DBHOST")+":3306)/")
+	db, err := sql.Open("mysql", Data.SQL.User+":"+Data.SQL.Pass+"@tcp("+Data.SQL.Host+":3306)/")
 	if err != nil {
 		log.Error(err, " Something worng with database,make sure you create Vtuber database first")
 		os.Exit(1)

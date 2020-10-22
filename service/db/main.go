@@ -69,7 +69,7 @@ func init() {
 		log.Error(err)
 		os.Exit(1)
 	}
-	err = CreateDB()
+	err = CreateDB(config)
 	if err != nil {
 		log.Error(err)
 	}
