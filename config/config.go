@@ -69,11 +69,11 @@ type ConfigFile struct {
 }
 
 //read from config file
-func ReadConfig() (ConfigFile, error) {
+func ReadConfig(path string) (ConfigFile, error) {
 	fmt.Println("Reading config file...")
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
 
-	file, err := ioutil.ReadFile("config.toml")
+	file, err := ioutil.ReadFile(path)
 
 	if err != nil {
 		return ConfigFile{}, err

@@ -37,7 +37,7 @@ func (Data TwitterStruct) CheckNew() []Statuses {
 func (Data Statuses) CheckHashTag(Group []database.MemberGroupID, wg *sync.WaitGroup) {
 	defer wg.Done()
 	for _, hashtag := range Data.Entities.Hashtags {
-		westtaiwan, _ := regexp.MatchString("(?m)(freecoco|asacocoleak|cocodidbothingwrong|freecocoandhaachama)", strings.ToLower(hashtag.Text))
+		westtaiwan, _ := regexp.MatchString("(?m)(freecoco|asacocoleak|cocodidbothingwrong|freecocoandhaachama).+", strings.ToLower(hashtag.Text))
 		if !westtaiwan {
 			for i := 0; i < len(Group); i++ {
 				if "#"+hashtag.Text == Group[i].TwitterHashtags && Data.User.FollowersCount > 20 && Data.User.FriendsCount > 30 { //fuck off dummy account

@@ -14,6 +14,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 	bilibili "github.com/JustHumanz/Go-simp/livestream/bilibili/live"
@@ -54,10 +55,15 @@ func init() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	YtToken = os.Getenv("GTOKEN")
-	BiliSession = os.Getenv("SBILI")
+	config, err := config.ReadConfig("../../config.toml")
+	if err != nil {
+		log.Error(err)
+	}
+	YtToken = config.YtToken[0]
+	BiliSession = config.BiliSess
 	Limit = 100
-	Bot, _ = discordgo.New("Bot " + os.Getenv("DISCORD"))
+	Bot, _ = discordgo.New("Bot " + config.Discord)
+	db = config.CheckSQL()
 	err = Bot.Open()
 	if err != nil {
 		log.Error(err)
@@ -67,6 +73,7 @@ func init() {
 	if err != nil {
 		log.Error(err)
 	}
+	Bot.AddHandler(Dead)
 }
 
 func main() {
@@ -74,7 +81,6 @@ func main() {
 	ScrapMember := flag.Bool("vtuber", false, "enable this if you want to scrap tweet(fanart) each member")
 	flag.StringVar(&member, "member", "kano", "list of vtuber name (split by space)")
 	flag.Parse()
-	db = DBConn()
 	database.Start(db)
 
 	if (*Service) == "bootstrapping" {
@@ -391,4 +397,28 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		InlineAllFields().
 		SetURL(URL).
 		SetColor(Color).MessageEmbed
+}
+
+func Dead(s *discordgo.Session, m *discordgo.MessageCreate) {
+	General := config.PGeneral
+	Fanart := config.PFanart
+	BiliBili := config.PBilibili
+	Youtube := config.PYoutube
+	m.Content = strings.ToLower(m.Content)
+	Color, err := engine.GetColor("/tmp/discordpp.tmp", m.Author.AvatarURL("128"))
+	if err != nil {
+		log.Error(err)
+	}
+	if m.Content != "" {
+		if len(regexp.MustCompile("(?m)("+General+"|"+Fanart+"|"+BiliBili+"|"+Youtube+")").FindAllString(m.Content, -1)) > 0 {
+			s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+				SetTitle("Bot update new Vtubers").
+				SetDescription("Still Processing new data,Comeback when i ready to bang you (around 10-20 minutes or more,~~idk i don't fvcking count~~)").
+				SetThumbnail(config.Sleep).
+				SetImage(config.Dead).
+				SetColor(Color).
+				SetFooter("Adios~").MessageEmbed)
+		}
+	}
 }

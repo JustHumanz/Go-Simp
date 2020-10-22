@@ -188,15 +188,6 @@ func CreateDB() error {
 	return nil
 }
 
-func DBConn() *sql.DB {
-	db, err := sql.Open("mysql", os.Getenv("DBUSER")+":"+os.Getenv("DBPASS")+"@tcp("+os.Getenv("DBHOST")+":3306)/Vtuber?parseTime=true")
-	if err != nil {
-		log.Error(err, " Something worng with database,make sure you create Vtuber database first")
-		os.Exit(1)
-	}
-	return db
-}
-
 func GetHashtag(Group string) []database.MemberGroupID {
 	rows, err := db.Query(`SELECT VtuberMember.id,VtuberName,VtuberName_JP,VtuberGroup_id,Hashtag,VtuberGroupName,VtuberGroupIcon FROM VtuberMember INNER Join VtuberGroup ON VtuberGroup.id = VtuberMember.VtuberGroup_id WHERE VtuberGroup.VtuberGroupName =?`, Group)
 	if err != nil {

@@ -45,6 +45,24 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"MafuMafu",
+                    "EN_Name":"MafuMafu",
+                    "JP_Name":"まふまふ",
+                    "Hashtag": {
+                        "Twitter": "#まふあーと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UCOTR1tcOAhjgi6YukrPpZxg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "uni_mafumafu",
+                    "Region":"JP"
+                }
+            ]
+        },
+        "VTuBerflower":{
+            "Members":[
+                {
                     "Name":"Evelyn",
                     "EN_Name":"Evelyn",
                     "JP_Name":"",
@@ -59,18 +77,46 @@
                     "Region":"ID"
                 },
                 {
-                    "Name":"MafuMafu",
-                    "EN_Name":"MafuMafu",
-                    "JP_Name":"まふまふ",
+                    "Name":"Chloe",
+                    "EN_Name":"Chloe Pawapua",
+                    "JP_Name":"",
                     "Hashtag": {
-                        "Twitter": "#まふあーと",
+                        "Twitter": "#PawapuArt ",
                         "BiliBili": ""
                     },
-                    "Yt_ID":  "UCOTR1tcOAhjgi6YukrPpZxg",
+                    "Yt_ID":  "UCrKS2bOUZDXA_R3qhCux7ow",
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
-                    "Twitter_Username": "uni_mafumafu",
-                    "Region":"JP"
+                    "Twitter_Username": "ChloePawapua",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Reynard",
+                    "EN_Name":"Reynard Blanc",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#BlanCanvas ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UCoUFv7APM1XOo4TUaWbRekw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "ReynardBlanc",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Lily",
+                    "EN_Name":"Lily Ifeta",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#GambarLily ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UCXSbl3XQYtx1u4Gvvca7NUA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "LilyIfeta",
+                    "Region":"ID"
                 }
             ]
         },

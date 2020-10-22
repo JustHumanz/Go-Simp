@@ -12,17 +12,26 @@ func YtGetStatus(Group, Member int64, Status string) []YtDbData {
 	funcvar := GetFunctionName(YtGetStatus)
 	Debugging(funcvar, "In", fmt.Sprint(Group, Member, Status))
 	var (
-		rows *sql.Rows
-		err  error
-		Data []YtDbData
-		list YtDbData
+		rows  *sql.Rows
+		err   error
+		Data  []YtDbData
+		list  YtDbData
+		limit int
 	)
+	if Group != 0 {
+		limit = 3
+		if Status == "live" {
+			limit = 5
+		}
+	} else {
+		limit = 2525
+	}
 	if Status == "upcoming" {
-		rows, err = DB.Query(`SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers FROM Youtube Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status='upcoming' AND Type='Streaming' AND ScheduledStart !='' Order by ScheduledStart ASC`, Group, Member)
+		rows, err = DB.Query(`SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers FROM Youtube Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status='upcoming' AND Type='Streaming' AND ScheduledStart !='' Order by ScheduledStart ASC Limit ? `, Group, Member, limit)
 		BruhMoment(err, "", false)
 
 	} else if Status == "live" {
-		rows, err = DB.Query(`SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers FROM Youtube Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status='live'`, Group, Member)
+		rows, err = DB.Query(`SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers FROM Youtube Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status='live' limit ?`, Group, Member, limit)
 		BruhMoment(err, "", false)
 
 	} else if Status == "private" {
