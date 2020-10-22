@@ -256,6 +256,6 @@ Like this but in Japanese
 
 
 ## CONTRIBUTING
-if you can code you can review my sitty code and make it better.if not,help me to add Vtubers Data,you can create a pull request on this [file](https://github.com/JustHumanz/Go-Simp/blob/master/service/db/vtuber.json) or fix my bot command (i know my command bot is `too technical`)  
+if you can code you can review my shitty code and make it better.if not,help me to add Vtubers Data,you can create a pull request on this [file](https://github.com/JustHumanz/Go-Simp/blob/master/service/db/vtuber.json) or fix my bot command (i know my command bot is `too technical`)  
 
 Report bug or suggestion feature
