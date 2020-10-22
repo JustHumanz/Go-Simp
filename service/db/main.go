@@ -406,7 +406,7 @@ func Dead(s *discordgo.Session, m *discordgo.MessageCreate) {
 		log.Error(err)
 	}
 	if m.Content != "" {
-		if match, _ := regexp.MatchString("("+General+"|"+Fanart+"|"+BiliBili+"|"+Youtube+")", m.Content); match {
+		if strings.HasPrefix(m.Content, General) || strings.HasPrefix(m.Content, Fanart) || strings.HasPrefix(m.Content, BiliBili) || strings.HasPrefix(m.Content, Youtube) {
 			s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 				SetTitle("Still Processing new data").
