@@ -753,18 +753,32 @@ func Reacting(Data map[string]string) error {
 			}
 			break
 		} else if Data["Content"][len(Data["Prefix"]):] == "cleaire" {
-			err := BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[0])
+			err := BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[l])
+			if err != nil {
+				return errors.New(err.Error() + " ChannelID: " + ChannelID)
+				//log.Error(err, ChannelID)
+			}
+			if l == len(EmojiList)-1 {
+				err = BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, ":latom:767810745860751391")
+				if err != nil {
+					return errors.New(err.Error() + " ChannelID: " + ChannelID)
+					//log.Error(err, ChannelID)
+				}
+			}
+		} else if Data["Content"][len(Data["Prefix"]):] == "senchou" {
+			err := BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[l])
 			if err != nil {
 				return errors.New(err.Error() + " ChannelID: " + ChannelID)
 				//log.Error(err, ChannelID)
 			}
 
-			err = BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, ":latom:767810745860751391")
-			if err != nil {
-				return errors.New(err.Error() + " ChannelID: " + ChannelID)
-				//log.Error(err, ChannelID)
+			if l == len(EmojiList)-1 {
+				err = BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, ":hormny:768700671750176790")
+				if err != nil {
+					return errors.New(err.Error() + " ChannelID: " + ChannelID)
+					//log.Error(err, ChannelID)
+				}
 			}
-			break
 		} else {
 			err := BotSession.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[l])
 			if err != nil {

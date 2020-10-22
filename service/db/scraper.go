@@ -241,11 +241,15 @@ func (Data Member) GetBiliFolow() BiliStat {
 }
 
 func (Data Member) GetTwitterFollow() int {
-	profile, err := twitterscraper.GetProfile(Data.TwitterName)
-	if err != nil {
-		log.Error(err)
+	if Data.TwitterName != "" {
+		profile, err := twitterscraper.GetProfile(Data.TwitterName)
+		if err != nil {
+			log.Error(err)
+		}
+		return profile.FollowersCount
+	} else {
+		return 0
 	}
-	return profile.FollowersCount
 }
 
 type BiliStat struct {
