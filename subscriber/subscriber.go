@@ -26,7 +26,6 @@ func Start(c *cron.Cron) {
 		log.Error("BiliBili Session not found")
 		os.Exit(1)
 	}
-	CheckYtSubsCount()
 	c.AddFunc("@every 1h0m0s", CheckYtSubsCount)
 	c.AddFunc("@every 0h15m0s", CheckTwFollowCount)
 	c.AddFunc("@every 0h30m0s", CheckBiliFollowCount)
