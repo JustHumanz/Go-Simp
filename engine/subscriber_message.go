@@ -22,8 +22,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if strings.HasPrefix(m.Content, prefix) {
 		if CommandArray[0] == prefix+"subscriber" {
 			for _, Group := range GroupData {
-				Members := database.GetName(Group.ID)
-				for _, Member := range Members {
+				for _, Member := range database.GetName(Group.ID) {
 					if CommandArray[1] == strings.ToLower(Member.Name) {
 						var (
 							embed  *discordgo.MessageEmbed
@@ -39,7 +38,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								Avatar = Member.YoutubeAvatar
 							}
 						}
-						Color, err := GetColor("/tmp/asa3.tmp", m.Author.Avatar)
+						Color, err := GetColor("/tmp/bilia.tmp", m.Author.AvatarURL("128"))
 						if err != nil {
 							log.Error(err)
 						}

@@ -558,15 +558,16 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 			s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 				SetTitle("Help").
-				AddField(Prefix+"Enable [art/live/all] [Vtuber Group]", "This command will declare if [Vtuber Group] enable in this channel\nExample:\n`"+config.PGeneral+"enable hanayori` so other users can use `"+config.PGeneral+"tag me kanochi`").
-				AddField(Prefix+"Update [art/live/all] [Vtuber Group]", "Use this command if you want to change enable state").
+				AddField(Prefix+"Enable {art/live/all} [Vtuber Group]", "This command will declare if [Vtuber Group] enable in this channel\nExample:\n`"+config.PGeneral+"enable hanayori` so other users can use `"+config.PGeneral+"tag me kanochi`").
+				AddField(Prefix+"Update {art/live/all} [Vtuber Group]", "Use this command if you want to change enable state").
 				AddField(Prefix+"Disable [Vtuber Group]", "Just like enable but this disable command :3 ").
 				AddField(config.PFanart+"[Group/Member name]", "Show fanart with randomly with their fanart hashtag\nExample: \n`"+config.PFanart+"Kanochi` or `"+config.PFanart+"hololive`").
 				AddField(Prefix+"Tag me [Group/Member name]", "This command will add you to tags list if any new fanart\nExample: \n`"+config.PFanart+"tag me Kanochi`,then you will get tagged when there is a new fanart of kano").
 				AddField(Prefix+"Del tag [Group/Member name]", "This command will remove you from tags list").
 				AddField(Prefix+"My tags", "Show all lists that you are subscribed").
 				AddField(Prefix+"Channel tags", "Show what is enable in this channel").
-				AddField(Prefix+"Vtuber data", "Show available Vtuber data ").
+				AddField(Prefix+"Vtuber data [Group] [Region]", "Show available Vtuber data ").
+				AddField(Prefix+"Subscriber {Member name}", "Show Vtuber count of subscriber and followers ").
 				AddField(config.PYoutube+"Upcoming [Vtuber Group/Member]", "This command will show all Upcoming live streams on Youtube").
 				AddField(config.PYoutube+"Live [Vtuber Group/Member]", "This command will show all live streams right now on Youtube").
 				AddField(config.PYoutube+"Last [Vtuber Group/Member]", "This command will show all past streams on Youtube [only 5]").
