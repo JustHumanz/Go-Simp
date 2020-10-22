@@ -11,59 +11,167 @@ A simple VTuber bot to serve notification Fanart and Livestream
 
 ### Current notification support
 
+#### Hanayori
+| NICKNAME | REGION | YOUTUBE | BILIBILI |
+|----------|--------|---------|----------|
+| Kanochi  | JP     | ✓       | ✓        |
+| Parerun  | JP     | ✓       | ✓        |
+| Kohi     | JP     | ✓       | ✓        |
+| Nononon  | JP     | ✓       | ✓        |
 
-##### Group
-| Group     | Youtube | Live.BiliBili | Space.BiliBili | Twitter | T.bilibili | 
-|-----------|---------|---------------|----------------|---------|------------|
-| Hanayori  | ✓       | ✓             | ✓              | ✓       |✓           |
-| Hololive  | ✓       | ✓             | ✓              | ✓       |✓           |
-| Nijisanji | ✓       | ✓             | ✓              | ✓       |✓           |
-| Kizuna_AI | ✓       | ✓             |✓               | ✓       |✓           |
-| ENTUM     | ✓       | ✓             |✓               | ✓       |✓           |
+#### Hololive
+|   NICKNAME   | REGION | YOUTUBE | BILIBILI |
+|--------------|--------|---------|----------|
+| Artia        | CN     | ✗       | ✓        |
+| Civia        | CN     | ✓       | ✓        |
+| Yogiri       | CN     | ✗       | ✓        |
+| Kuromomo     | CN     | ✗       | ✓        |
+| Doris        | CN     | ✗       | ✓        |
+| Rosalyn      | CN     | ✗       | ✓        |
+| Gura         | EN     | ✓       | ✗        |
+| Ame          | EN     | ✓       | ✗        |
+| Calli        | EN     | ✓       | ✗        |
+| Kusotori     | EN     | ✓       | ✗        |
+| Risu         | ID     | ✓       | ✗        |
+| Moona        | ID     | ✓       | ✗        |
+| Lofi         | ID     | ✓       | ✗        |
+| Koronen      | JP     | ✓       | ✓        |
+| Matsuri      | JP     | ✓       | ✓        |
+| Aqua         | JP     | ✓       | ✓        |
+| Pekora       | JP     | ✓       | ✓        |
+| Senchou      | JP     | ✓       | ✓        |
+| Haato        | JP     | ✓       | ✓        |
+| Kaichou      | JP     | ✓       | ✓        |
+| Choco-sensei | JP     | ✓       | ✓        |
+| Okayun       | JP     | ✓       | ✓        |
+| Subaru       | JP     | ✓       | ✓        |
+| FBK          | JP     | ✓       | ✓        |
+| Sheep        | JP     | ✓       | ✓        |
+| AZKi         | JP     | ✓       | ✓        |
+| Sora         | JP     | ✓       | ✓        |
+| Miko-chi     | JP     | ✓       | ✓        |
+| Mio          | JP     | ✓       | ✓        |
+| Shishiron    | JP     | ✓       | ✓        |
+| Polka        | JP     | ✓       | ✓        |
+| Lamy         | JP     | ✓       | ✓        |
+| Taoling      | JP     | ✓       | ✓        |
+| Danchou      | JP     | ✓       | ✓        |
+| Rushia       | JP     | ✓       | ✓        |
+| Kanatan      | JP     | ✓       | ✓        |
+| Sui-chan     | JP     | ✓       | ✓        |
+| Merumeru     | JP     | ✓       | ✓        |
+| AkiRose      | JP     | ✓       | ✓        |
+| Ayame        | JP     | ✓       | ✓        |
+| Shion        | JP     | ✓       | ✓        |
+| Luna-tan     | JP     | ✓       | ✓        |
+| Fuu-tan      | JP     | ✓       | ✓        |
+| Towa-sama    | JP     | ✓       | ✓        |
+| Roboco       | JP     | ✓       | ✓        |
 
-##### Member
+#### Nijisanji
+| NICKNAME  | REGION | YOUTUBE | BILIBILI |
+|-----------|--------|---------|----------|
+| Ruki      | CN     | ✗       | ✓        |
+| Yukie     | CN     | ✗       | ✓        |
+| Nanami    | CN     | ✗       | ✓        |
+| Chiharu   | CN     | ✗       | ✓        |
+| Hoshimi   | CN     | ✗       | ✓        |
+| Aadya     | EN     | ✓       | ✗        |
+| Noor      | EN     | ✓       | ✗        |
+| Vihaan    | EN     | ✓       | ✗        |
+| Hanamaki  | ID     | ✓       | ✗        |
+| Miyu      | ID     | ✓       | ✗        |
+| Zea       | ID     | ✓       | ✗        |
+| Takamama  | ID     | ✓       | ✗        |
+| Jukut     | ID     | ✓       | ✗        |
+| Cia       | ID     | ✓       | ✗        |
+| Rai       | ID     | ✓       | ✗        |
+| Zura      | ID     | ✓       | ✗        |
+| Layla     | ID     | ✓       | ✗        |
+| Nara      | ID     | ✓       | ✗        |
+| Bobon     | ID     | ✓       | ✗        |
+| Etna      | ID     | ✓       | ✗        |
+| Siska     | ID     | ✓       | ✗        |
+| Konlulu   | JP     | ✓       | ✓        |
+| Alice     | JP     | ✓       | ✓        |
+| Noraneko  | JP     | ✓       | ✗        |
+| Debiru    | JP     | ✓       | ✓        |
+| Malmal    | JP     | ✓       | ✗        |
+| Sara      | JP     | ✓       | ✗        |
+| Tsumugu   | JP     | ✓       | ✗        |
+| Shiishii  | JP     | ✓       | ✗        |
+| Mikoto    | JP     | ✓       | ✗        |
+| Doge      | JP     | ✓       | ✗        |
+| Mito-chan | JP     | ✓       | ✗        |
+| Shizurin  | JP     | ✓       | ✓        |
+| Riri      | JP     | ✓       | ✗        |
+| Hima-chan | JP     | ✓       | ✓        |
+| Cleaire   | JP     | ✓       | ✗        |
+| Rion      | JP     | ✓       | ✓        |
+| Bora      | KR     | ✓       | ✗        |
+| Ray       | KR     | ✓       | ✗        |
+| Yuya      | KR     | ✓       | ✗        |
+| Wiffy     | KR     | ✓       | ✗        |
+| Suha      | KR     | ✓       | ✗        |
 
-|   NICKNAME   |    FULL NAME     | REGION |   GROUP   |
-|--------------|------------------|--------|-----------|
-| Kanochi      | Kano             | JP     | Hanayori  |
-| Parerun      | Hanamaru Hareru  | JP     | Hanayori  |
-| Kohi         | Kohigashi Hitona | JP     | Hanayori  |
-|~~Nononon~~      | ~~Nonomiya Nonono~~  | ~~JP~~     | ~~Hanayori~~  |
-| Risu         | Ayunda Risu      | ID     | Hololive  |
-| Moona        | Moona Hoshinova  | ID     | Hololive  |
-| Lofi         | Airani Iofifteen | ID     | Hololive  |
-| Buki         | Shirakami Fubuki | JP     | Hololive  |
-| Koronen      | Inugami Korone   | JP     | Hololive  |
-| Matsuri      | Natsuiro Matsuri | JP     | Hololive  |
-| Aqua         | Minato Aqua      | JP     | Hololive  |
-| Pekora       | Usada Pekora     | JP     | Hololive  |
-| Senchou      | Houshou Marine   | JP     | Hololive  |
-| Haato        | Akai Haato       | JP     | Hololive  |
-| Sheep        | Tsunomaki Watame | JP     | Hololive  |
-| Kaichou      | Kiryu Coco       | JP     | Hololive  |
-| Choco-sensei | Yuzuki Choco     | JP     | Hololive  |
-| Konlulu      | Suzuhara Lulu    | JP     | Nijisanji |
-| Hanamaki     | Hana Macchia     | ID     | Nijisanji |
-| Zea          | Zea Cornelia     | ID     | Nijisanji |
-| Miyu         | Miyu Ottavia     | ID     | Nijisanji |
-| Takamama     | Taka Radjiman    | ID     | Nijisanji |
-| Jukut        | Riksa Dhirendra  | ID     | Nijisanji |
-| Cia          | Amicia Michella  | ID     | Nijisanji |
-| Rai          | Rai Galilei      | ID     | Nijisanji |
-| Zura         | Azura Cecillia   | ID     | Nijisanji |
-| Layla        | Layla Alstroemeria | ID   | Nijisanji |
-| Nara         | Nara Haramaung   | ID     | Nijisanji |
-| Bobon        | Bonnivier Pranaja |ID     | Nijisanji |
-| Etna         | Etna Crimson     | ID     | Nijisanji |
-| Siska        | Siska Leontyne   | ID     | Nijisanji |
-| Alice        | Mononobe Alice   | JP     | Nijisanji |
-| Noraneko     | Fumino Tamaki    | JP     | Nijisanji |
-| Debiru       | Debidebi Debiru  | JP     | Nijisanji |
-| Ai-chan      | Kizuna AI        | JP     | Kizuna_AI |
-| hina-chan    | Nekomiya Hinata  | JP     | ENTUM     |
-| Nana         | Kagura Nana      | JP     | Independen|
-| Ui-mama      | Shigure Ui       | JP     | Independen|
-| Kotone       | Tenjin Kotone    | JP     | Independen|
+#### Maha5
+| NICKNAME | REGION | YOUTUBE | BILIBILI |
+|----------|--------|---------|----------|
+| Adelia   | ID     | ✓       | ✗        |
+| Andi     | ID     | ✓       | ✗        |
+| Lumi     | ID     | ✓       | ✗        |
+| Zen      | ID     | ✓       | ✗        |
+| Nia      | ID     | ✓       | ✗        |
+
+#### ENTUM
+| NICKNAME  | REGION | YOUTUBE | BILIBILI |
+|-----------|--------|---------|----------|
+| hina-chan | JP     | ✓       | ✓        |
+
+#### Kizuna_AI
+|NICKNAME | REGION | YOUTUBE | BILIBILI| 
+|---------|--------|---------|---------|
+|Ai-chan  | JP     | ✓       |   ✓     |      
+
+#### VOMS
+| NICKNAME  | REGION | YOUTUBE | BILIBILI |
+|-----------|--------|---------|----------|
+| Pikamee   | JP     | ✓       | ✗        |
+| Tomoshika | JP     | ✓       | ✗        |
+| Monoe     | JP     | ✓       | ✗        |
+
+#### NoriPro
+| NICKNAME  | REGION | YOUTUBE | BILIBILI |
+|-----------|--------|---------|----------|
+| Kumakuma  | JP     | ✓       | ✗        |
+| Tamakin   | JP     | ✓       | ✓        |
+| Enomiya   | JP     | ✓       | ✓        |
+| Shirayuki | JP     | ✓       | ✓        |
+| Himesaki  | JP     | ✓       | ✓        |
+
+#### Holostars
+| NICKNAME | REGION | YOUTUBE | BILIBILI |
+|----------|--------|---------|----------|
+| Izu-Izu  | JP     | ✓       | ✓        |
+| Miyabin  | JP     | ✓       | ✓        |
+| Kiracchi | JP     | ✓       | ✗        |
+| Aruran   | JP     | ✓       | ✓        |
+| Ricchan  | JP     | ✓       | ✓        |
+| Roberu   | JP     | ✓       | ✗        |
+| Temma    | JP     | ✓       | ✓        |
+| Astel    | JP     | ✓       | ✓        |
+| Eroga    | JP     | ✓       | ✗        |
+
+#### Independen
+| NICKNAME | REGION | YOUTUBE | BILIBILI |
+|----------|--------|---------|----------|
+| Evelyn   | ID     | ✓       | ✗        |
+| MafuMafu | JP     | ✓       | ✗        |
+| Nana     | JP     | ✓       | ✓        |
+| Ui-mama  | JP     | ✓       | ✓        |
+| Kotone   | JP     | ✓       | ✓        |
+
+
 ### Command
 ```vtbot>Enable [art/live/all] [Vtuber Group]```
 This command will declare if [Vtuber Group] enable in this channel
@@ -145,3 +253,9 @@ Like this but in Japanese
 ![alt text](https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/New%20Fanart.png "New fanart")   
 
 [Invite link](https://discord.com/oauth2/authorize?client_id=721964514018590802&permissions=449536&scope=bot)
+
+
+## CONTRIBUTING
+if you can code you can review my sitty code and make it better.if not,help me to add Vtubers Data,you can create a pull request on this [file](https://github.com/JustHumanz/Go-Simp/blob/master/service/db/vtuber.json) or fix my bot command (i know my command bot is `too technical`)  
+
+Report bug or suggestion feature
