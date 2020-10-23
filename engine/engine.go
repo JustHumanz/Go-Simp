@@ -167,11 +167,10 @@ func Curl(url string, addheader []string) ([]byte, error) {
 //make a cooler http request *with multitor*
 func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 	var counter int
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-
 	for {
 		counter++
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
 		proxyURL, err := url.Parse("http://multi_tor:16379")
 		if err != nil && counter == 2 {
 			return nil, err
