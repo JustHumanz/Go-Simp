@@ -900,27 +900,34 @@ func (Data Dynamic_svr) GetUserAvatar() string {
 	return Data.Data.Card.Desc.UserProfile.Info.Face
 }
 
+var GuildID string
+
 //Guild join handler
 func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
-	for _, Channel := range g.Guild.Channels {
-		BotPermission, err := s.UserChannelPermissions(BotID, Channel.ID)
-		if err != nil {
-			log.Error(err)
-		}
-		if Channel.Type == 0 && BotPermission&2048 != 0 {
-			s.ChannelMessageSendEmbed(Channel.ID, NewEmbed().
-				SetTitle("Thx for invite me to this server <3 ").
-				SetThumbnail(config.GoSimpIMG).
-				SetImage(H3llcome[rand.Intn(len(H3llcome))]).
-				SetColor(14807034).
-				SetDescription("Type `"+config.PGeneral+"help` to show options").MessageEmbed)
-
-			SendInvite, err := s.UserChannelCreate(config.OwnerDiscordID)
+	if g.Guild.ID != GuildID {
+		for _, Channel := range g.Guild.Channels {
+			BotPermission, err := s.UserChannelPermissions(BotID, Channel.ID)
 			if err != nil {
 				log.Error(err)
 			}
-			s.ChannelMessageSend(SendInvite.ID, g.Guild.Name+" invited me")
-			return
+			if Channel.Type == 0 && BotPermission&2048 != 0 {
+				s.ChannelMessageSendEmbed(Channel.ID, NewEmbed().
+					SetTitle("Thx for invite me to this server <3 ").
+					SetThumbnail(config.GoSimpIMG).
+					SetImage(H3llcome[rand.Intn(len(H3llcome))]).
+					SetColor(14807034).
+					SetDescription("Type `"+config.PGeneral+"help` to show options").MessageEmbed)
+
+				SendInvite, err := s.UserChannelCreate(config.OwnerDiscordID)
+				if err != nil {
+					log.Error(err)
+				}
+				s.ChannelMessageSend(SendInvite.ID, g.Guild.Name+" invited me")
+				return
+			}
 		}
+	} else {
+		log.Info("Guild ID still same")
 	}
+	GuildID = g.Guild.ID
 }
