@@ -1121,6 +1121,20 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Meiji",
+                    "EN_Name":"Warabeda Meiji",
+                    "JP_Name":"童田明治",
+                    "Hashtag": {
+                        "Twitter": "#いめいじー",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCveZ9Ic1VtcXbsyaBgxPMvg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "warabeda_meiji",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Hanamaki",
                     "EN_Name":"Hana Macchia",
                     "JP_Name":"",
