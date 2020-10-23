@@ -28,9 +28,7 @@ services:
   db_migrate:
     image: mainbot
     depends_on:
-      - mysql
-    env_file:
-      - ./.env      
+      - mysql  
     working_dir: /go/src/github.com/JustHumanz/Go-Simp/service/db
     command: go run . -service bootstrapping
     restart: on-failure    

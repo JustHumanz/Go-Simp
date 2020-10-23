@@ -1,14 +1,20 @@
 const model = require("../models/model.js");
 
-exports.memberAll = (_,res) => {
-    console.log(res.params)
-    model.GetMemberAll((err, data) => {
-    if (err)
-    res.status(500).send({
-        message:
-        err.message || "Some error."
-    });
-    else res.send(data);
+exports.memberAll = (req,res) => {
+    model.GetMemberAll(req.query.region,(err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                message: `Not found VtuberName with name ${req.params.name} and region ${req.query.region}`
+                });
+            } else {
+                res.status(500).send({
+                message: "Error retrieving VtuberName with name " + req.params.name
+                });
+            }
+        } else {
+            res.send(data);
+        }
     });
 };
 
@@ -31,12 +37,19 @@ exports.memberName = (req, res) => {
 
 exports.groupAll = (_,res) => {
     model.GetGroupAll((err, data) => {
-        if (err)
-        res.status(500).send({
-            message:
-            err.message || "Some error."
-        });
-        else res.send(data);
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                message: `Not found Vtuber Group with name ${req.params.name}`
+                });
+            } else {
+                res.status(500).send({
+                message: "Error retrieving Vtuber Group with name " + req.params.name
+                });
+            }
+        } else {
+            res.send(data);
+        }
     });
 };
     
@@ -90,16 +103,18 @@ exports.twitterd = (req, res) => {
     }
     model.GetTwitter(req.params.nog.split(","), Limit,(err, data) => {
         if (err) {
-        if (err.kind === "not_found") {
-            res.status(404).send({
-            message: `Not found GetTwitter with name ${req.params.nog}.`
-            });
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                message: `Not found GetTwitter with name ${req.params.nog}.`
+                });
+            } else {
+                res.status(500).send({
+                message: "Error retrieving GetTwitter with name " + req.params.nog
+                });
+            }
         } else {
-            res.status(500).send({
-            message: "Error retrieving GetTwitter with name " + req.params.nog
-            });
-        }
-        } else res.send(data);
+            res.send(data);
+        } 
     });
 };
 

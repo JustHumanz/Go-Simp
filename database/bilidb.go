@@ -67,9 +67,15 @@ func BilGet(GroupID int64, MemberID int64, Status string) []LiveBiliDB {
 
 //Get SpaceBiliBili Data
 func SpaceGet(GroupID int64, MemberID int64) []SpaceBiliDB {
+	var Query string
 	funcvar := GetFunctionName(BilGet)
 	Debugging(funcvar, "In", GroupID)
-	rows, err := DB.Query(`SELECT VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM BiliBili Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) Order by UploadDate DESC limit 3`, GroupID, MemberID)
+	if GroupID != 0 {
+		Query = `SELECT VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM BiliBili Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) Order by UploadDate DESC limit 3`
+	} else {
+		Query = `SELECT VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM BiliBili Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) Order by UploadDate DESC`
+	}
+	rows, err := DB.Query(Query, GroupID, MemberID)
 	BruhMoment(err, "", false)
 
 	defer rows.Close()

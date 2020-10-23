@@ -557,25 +557,24 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 			s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 				SetTitle("Help").
-				AddField(Prefix+"Enable {art/live/all} [Vtuber Group]", "This command will declare if [Vtuber Group] enable in this channel\nExample:\n`"+config.PGeneral+"enable hanayori` so other users can use `"+config.PGeneral+"tag me kanochi`").
+				SetDescription("`[]` => array,support multiple VtuberName/VtuberGroup *separated by commas*\n`{}` => only support single VtuberName/VtuberGroup").
+				AddField(Prefix+"Enable {art/live/all} [Vtuber Group]", "This command will declare if [Vtuber Group] enable in this channel\nExample:\n`"+config.PGeneral+"enable all hanayori,hololive` so other users can use `"+config.PGeneral+"tag me kanochi` or "+"`"+config.PGeneral+"tag me gura`").
 				AddField(Prefix+"Update {art/live/all} [Vtuber Group]", "Use this command if you want to change enable state").
 				AddField(Prefix+"Disable [Vtuber Group]", "Just like enable but this disable command :3 ").
-				AddField(config.PFanart+"[Group/Member name]", "Show fanart with randomly with their fanart hashtag\nExample: \n`"+config.PFanart+"Kanochi` or `"+config.PFanart+"hololive`").
-				AddField(Prefix+"Tag me [Group/Member name]", "This command will add you to tags list if any new fanart\nExample: \n`"+config.PFanart+"tag me Kanochi`,then you will get tagged when there is a new fanart of kano").
+				AddField(config.PFanart+"{Group/Member name}", "Show fanart with randomly with their fanart hashtag\nExample: \n`"+config.PFanart+"Kanochi` or `"+config.PFanart+"hololive`").
+				AddField(Prefix+"Tag me [Group/Member name]", "This command will add you to tags list if any new fanart\nExample: \n`"+config.PGeneral+"tag me Kanochi`,then you will get tagged when there is a new fanart and livestream schedule of kano").
 				AddField(Prefix+"Del tag [Group/Member name]", "This command will remove you from tags list").
 				AddField(Prefix+"My tags", "Show all lists that you are subscribed").
 				AddField(Prefix+"Channel tags", "Show what is enable in this channel").
 				AddField(Prefix+"Vtuber data [Group] [Region]", "Show available Vtuber data ").
 				AddField(Prefix+"Subscriber {Member name}", "Show Vtuber count of subscriber and followers ").
-				AddField(config.PYoutube+"Upcoming [Vtuber Group/Member]", "This command will show all Upcoming live streams on Youtube").
+				AddField(config.PYoutube+"Upcoming [Vtuber Group/Member]", "This command will show Upcoming live streams on Youtube  *only 3 if use Vtuber Group*").
 				AddField(config.PYoutube+"Live [Vtuber Group/Member]", "This command will show all live streams right now on Youtube").
-				AddField(config.PYoutube+"Last [Vtuber Group/Member]", "This command will show all past streams on Youtube [only 5]").
-				AddField(config.PYoutube+"[Upcoming/Live/Last] [Member name]", "This command will show all Vtuber member Upcoming/Live/Past streams on Youtube").
+				AddField(config.PYoutube+"Last [Vtuber Group/Member]", "This command will show past streams on Youtube *only 3 if use Vtuber Group*").
 				AddField("~~"+config.PBilibili+"Upcoming [Vtuber Group/Member]~~", "~~This command will show all Upcoming live streams on BiliBili~~").
 				AddField(config.PBilibili+"Live [Vtuber Group/Member]", "This command will show all live streams right now on BiliBili").
 				AddField(config.PBilibili+"Last [Vtuber Group/Member]", "This command will show all past streams on BiliBili").
-				AddField("sp_"+config.PBilibili+"[Vtuber Group/Member]", "This command will show latest video upload on BiliBili").
-				AddField(config.PBilibili+"[Upcoming/Live/Last] [Member name]", "This command will show all Vtuber member Upcoming/Live/Past streams on BiliBili").
+				AddField("sp_"+config.PBilibili+"[Vtuber Group/Member]", "This command will show latest video on bilibili  *only 3 if use Vtuber Group*").
 				AddField(Prefix+"Help EN", "Well,you using it right now").
 				AddField(Prefix+"Help JP", "Like this but in Japanese").
 				SetThumbnail("https://justhumanz.me/bsd.png").

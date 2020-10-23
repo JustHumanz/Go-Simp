@@ -13,7 +13,6 @@ import (
 )
 
 func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
-	loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
 	Prefix := config.PBilibili
 	m.Content = strings.ToLower(m.Content)
 	SendEmbed := func(Data Memberst) {
@@ -29,8 +28,8 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetImage(Data.Thumb).
 				SetThumbnail(Data.BiliAvatar).
 				SetURL(Data.VideoID).
-				AddField(Data.Msg, Data.Msg1).
 				AddField("Type", Data.Msg3).
+				AddField(Data.Msg, Data.Msg1).
 				AddField("Duration", Data.Length).
 				SetFooter(Data.Msg2, config.BiliBiliIMG).
 				InlineAllFields().
@@ -46,10 +45,10 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	Prefix2 := "sp_" + Prefix
 	if strings.HasPrefix(m.Content, Prefix2) {
+		loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
 		Payload := m.Content[len(Prefix2):]
 		if Payload != "" {
-			GroupName := strings.TrimSpace(Payload)
-			FindGroupArry := strings.Split(GroupName, ",")
+			FindGroupArry := strings.Split(strings.TrimSpace(Payload), ",")
 			for i := 0; i < len(FindGroupArry); i++ {
 				VTuberGroup, err := FindGropName(FindGroupArry[i])
 				if err != nil {
@@ -60,13 +59,12 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 						DataMember := database.SpaceGet(0, VTData.ID) //database.BilGet(0, VTData.ID, "Upcoming")
 						if DataMember != nil {
 							for z := 0; z < len(DataMember); z++ {
-								expiresAt := time.Now().In(loc)
-								diff := expiresAt.In(loc).Sub(DataMember[z].UploadDate)
+								diff := time.Now().In(loc).Sub(DataMember[z].UploadDate)
 								duration := durafmt.Parse(diff).LimitFirstN(2)
 
 								VTData.Desc = DataMember[z].Title
 								VTData.VideoID = "https://www.bilibili.com/video/" + DataMember[z].VideoID
-								VTData.Msg = "Video upload "
+								VTData.Msg = "Video uploaded"
 								VTData.Msg1 = duration.String() + " Ago"
 								VTData.Msg2 = "Viewers now " + strconv.Itoa(DataMember[z].Viewers)
 								VTData.Msg3 = DataMember[z].Type
@@ -143,8 +141,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 		CommandArray := strings.Split(m.Content, " ")
 		if len(CommandArray) > 1 {
 			CommandArray[0] = strings.ToLower(CommandArray[0])
-			GroupName := strings.TrimSpace(CommandArray[1])
-			FindGroupArry := strings.Split(GroupName, ",")
+			FindGroupArry := strings.Split(strings.TrimSpace(CommandArray[1]), ",")
 			if CommandArray[0] == Prefix+"live" {
 				for i := 0; i < len(FindGroupArry); i++ {
 					VTuberGroup, err := FindGropName(FindGroupArry[i])

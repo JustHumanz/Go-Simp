@@ -173,17 +173,20 @@ A simple VTuber bot to serve notification Fanart and Livestream
 
 
 ### Command
-```vtbot>Enable [art/live/all] [Vtuber Group]```
-This command will declare if [Vtuber Group] enable in this channel
-Example: `vtbot>enable hanayori` so other users can use `vtbot>tag me kanochi`  
+`[]` => array,support multiple VtuberName/VtuberGroup *separated by commas*  
+`{}` => only support single VtuberName/VtuberGroup  
 
-```vtbot>Update [art/live/all] [Vtuber Group]```
+```vtbot>Enable {art/live/all} [Vtuber Group]```
+This command will declare if [Vtuber Group] enable in this channel
+Example: `vtbot>enable all hanayori,hololive` so other users can use `vtbot>tag me kanochi` or `vtbot>tag me fbk`
+
+```vtbot>Update {art/live/all} [Vtuber Group]```
 Use this command if you want to change enable state  
 
 ```vtbot>Disable [Vtuber Group]```
 Just like enable but this disable command :3  
 
-```art>[Group/Member nickname]```  
+```art>{Group/Member nickname}```  
 Show fanart with randomly with their fanart hashtag  
 Example: `art>Kanochi` or `art>hololive`  
 
@@ -200,35 +203,32 @@ Shows all lists that you are subscribed
 ```vtbot>Channel tags```  
 Shows what is enable in this channel    
 
-```vtbot>Vtuber data```  
+```vtbot>Vtuber data [Group/Member] [Region]```  
 Shows available Vtuber data  
 
+```vtbot>Subscriber {Member} ```  
+Shows Vtuber Subscriber data(twitter,bilibili,youtube)
+
 ```yt>Upcoming [Vtuber Group/Member]```  
-This command will show all Upcoming live streams on Youtube  
+This command will show Upcoming live streams on Youtube  *only 3 if use Vtuber Group*
 
 ```yt>Live [Vtuber Group/Member]```  
 This command will show all live streams right now on Youtube  
 
 ```yt>Last [Vtuber Group/Member]```  
-This command will show all past streams on Youtube [only 5]  
-
-```yt>[Upcoming/Live/Last] [Member name]```  
-This command will show all Vtuber member Upcoming/Live/Past streams on Youtube  
+This command will show past streams on Youtube *only 3 if use Vtuber Group*
 
 ~~```bl>Upcoming [Vtuber Group]```  
-This command will show all Upcoming live streams on BiliBili~~  
+This command will show Upcoming live streams on BiliBili~~  
 
 ```bl>Live [Vtuber Group/Member]```  
 This command will show all live streams right now on BiliBili  
 
 ```bl>Last [Vtuber Group/Member]```  
-This command will show all past streams on BiliBili [only 5]  
-
-```bl>[Upcoming/Live/Last] [Member name]```  
-This command will show all Vtuber member Upcoming/Live/Past streams on BiliBili  
+This command will show past streams on BiliBili
 
 ```sp_bl>[Group/Member name]```  
-This command will show latest video on bilibili  
+This command will show latest video on bilibili  *only 3 if use Vtuber Group*
 
 ```vtbot>Help EN```  
 Well,you using it right now  
@@ -236,7 +236,7 @@ Well,you using it right now
 ```vtbot>Help JP```  
 Like this but in Japanese  
 
-**Notifications(both fanart or livestream) will not be sent if there no one user tagged**  
+**Notifications for livestream will not be sent if there no one user tagged**  
 
 ### Notification&Command 
 #### New Upcoming live stream
@@ -258,4 +258,4 @@ Like this but in Japanese
 ## CONTRIBUTING
 if you can code you can review my shitty code and make it better.if not,help me to add Vtubers Data,you can create a pull request on this [file](https://github.com/JustHumanz/Go-Simp/blob/master/service/db/vtuber.json) or fix my bot command (i know my command bot is `too technical`)  
 
-Report bug or suggestion feature
+Report bug or suggestion feature and suggestion for emoji  

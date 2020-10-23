@@ -51,7 +51,6 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 	if err != nil {
 		return err
 	}
-	MemberFixName := engine.FixName(Name.EnName, Name.JpName)
 	for i := 0; i < len(Data.Items); i++ {
 		var (
 			yttype    string
@@ -61,7 +60,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 			Thumb     string
 		)
 		duration := durafmt.Parse(ParseDuration(Data.Items[i].ContentDetails.Duration))
-		if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|mv|covered|op)", strings.ToLower(Data.Items[i].Snippet.Title)); Cover {
+		if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|mv|covered|op|ed)", strings.ToLower(Data.Items[i].Snippet.Title)); Cover {
 			yttype = "Covering"
 		} else if Chat, _ := regexp.MatchString("(?m)(chat|room)", Data.Items[i].Snippet.Title); Chat {
 			yttype = "ChatRoom"
@@ -71,7 +70,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 		DataDB := database.CheckVideoID(VideoID[i])
 
 		if Data.Items[i].Snippet.VideoStatus == "upcoming" {
-			if DataDB.Viewers != "404" {
+			if DataDB.Viewers != "???" {
 				Viewers, err = GetWaiting(VideoID[i])
 				if err != nil {
 					return err
@@ -167,6 +166,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 				DataDB.UpdateYt(DataDB.Status)
 			}
 		} else {
+			MemberFixName := engine.FixName(Name.EnName, Name.JpName)
 			_, err := engine.Curl("http://i3.ytimg.com/vi/"+VideoID[i]+"/maxresdefault.jpg", nil)
 			if err != nil {
 				Thumb = "http://i3.ytimg.com/vi/" + VideoID[i] + "/hqdefault.jpg"
