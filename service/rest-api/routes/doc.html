@@ -871,7 +871,7 @@
     "Region" : {
       "type" : "string"
     },
-    "Youtube_Subs" : {
+    "Youtube_Subscriber" : {
       "type" : "integer",
       "format" : "int32"
     },
@@ -883,7 +883,7 @@
       "type" : "integer",
       "format" : "int32"
     },
-    "BiliBili_Follows" : {
+    "BiliBili_Followers" : {
       "type" : "integer",
       "format" : "int32"
     },
@@ -895,7 +895,7 @@
       "type" : "integer",
       "format" : "int32"
     },
-    "Twitter_Follows" : {
+    "Twitter_Followers" : {
       "type" : "integer",
       "format" : "int32"
     }
@@ -1082,8 +1082,8 @@
                     <li data-group="Member" data-name="getmemberalldata" class="">
                       <a href="#api-Member-getmemberalldata">getmemberalldata</a>
                     </li>
-                    <li data-group="Member" data-name="getvtuberbyname" class="">
-                      <a href="#api-Member-getvtuberbyname">getvtuberbyname</a>
+                    <li data-group="Member" data-name="getvtuberbynmae" class="">
+                      <a href="#api-Member-getvtuberbynmae">getvtuberbynmae</a>
                     </li>
                   <li class="nav-header" data-group="Spacebilibili"><a href="#api-Spacebilibili">API Methods - Spacebilibili</a></li>
                     <li data-group="Spacebilibili" data-name="getspacebilibili" class="">
@@ -2347,10 +2347,10 @@ except ApiException as e:
                         </article>
                       </div>
                       <hr>
-                    <div id="api-Member-getvtuberbyname">
-                      <article id="api-Member-getvtuberbyname-0" data-group="User" data-name="getvtuberbyname" data-version="0">
+                    <div id="api-Member-getvtuberbynmae">
+                      <article id="api-Member-getvtuberbynmae-0" data-group="User" data-name="getvtuberbynmae" data-version="0">
                         <div class="pull-left">
-                          <h1>getvtuberbyname</h1>
+                          <h1>getvtuberbynmae</h1>
                           <p>Get Vtuber data by name</p>
                         </div>
                         <div class="pull-right"></div>
@@ -2364,26 +2364,26 @@ except ApiException as e:
                           <h3>Usage and SDK Samples</h3>
                         </p>
                         <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Member-getvtuberbyname-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Member-getvtuberbyname-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Member-getvtuberbyname-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Member-getvtuberbyname-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Member-getvtuberbyname-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Member-getvtuberbyname-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Member-getvtuberbyname-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Member-getvtuberbyname-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Member-getvtuberbyname-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Member-getvtuberbyname-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Member-getvtuberbyname-0-python">Python</a></li>
+                          <li class="active"><a href="#examples-Member-getvtuberbynmae-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Member-getvtuberbynmae-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Member-getvtuberbynmae-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Member-getvtuberbynmae-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Member-getvtuberbynmae-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Member-getvtuberbynmae-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Member-getvtuberbynmae-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Member-getvtuberbynmae-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Member-getvtuberbynmae-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Member-getvtuberbynmae-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Member-getvtuberbynmae-0-python">Python</a></li>
                         </ul>
 
                         <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Member-getvtuberbyname-0-curl">
+                          <div class="tab-pane active" id="examples-Member-getvtuberbynmae-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/xml,application/json"\
 "https://api.human-z.tech/vtbot/member/{name}"</code></pre>
                           </div>
-                          <div class="tab-pane" id="examples-Member-getvtuberbyname-0-java">
+                          <div class="tab-pane" id="examples-Member-getvtuberbynmae-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
 import io.swagger.client.auth.*;
 import io.swagger.client.model.*;
@@ -2399,17 +2399,17 @@ public class MemberApiExample {
         MemberApi apiInstance = new MemberApi();
         String name = name_example; // String | Nickname of Vtuber
         try {
-            Member result = apiInstance.getvtuberbyname(name);
+            Member result = apiInstance.getvtuberbynmae(name);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling MemberApi#getvtuberbyname");
+            System.err.println("Exception when calling MemberApi#getvtuberbynmae");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-Member-getvtuberbyname-0-android">
+                          <div class="tab-pane" id="examples-Member-getvtuberbynmae-0-android">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.MemberApi;
 
 public class MemberApiExample {
@@ -2418,26 +2418,26 @@ public class MemberApiExample {
         MemberApi apiInstance = new MemberApi();
         String name = name_example; // String | Nickname of Vtuber
         try {
-            Member result = apiInstance.getvtuberbyname(name);
+            Member result = apiInstance.getvtuberbynmae(name);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling MemberApi#getvtuberbyname");
+            System.err.println("Exception when calling MemberApi#getvtuberbynmae");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
   <!--
-  <div class="tab-pane" id="examples-Member-getvtuberbyname-0-groovy">
+  <div class="tab-pane" id="examples-Member-getvtuberbynmae-0-groovy">
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
-                            <div class="tab-pane" id="examples-Member-getvtuberbyname-0-objc">
+                            <div class="tab-pane" id="examples-Member-getvtuberbynmae-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">String *name = name_example; // Nickname of Vtuber
 
 MemberApi *apiInstance = [[MemberApi alloc] init];
 
 // Get Vtuber data by name
-[apiInstance getvtuberbynameWith:name
+[apiInstance getvtuberbynmaeWith:name
               completionHandler: ^(Member output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
@@ -2449,7 +2449,7 @@ MemberApi *apiInstance = [[MemberApi alloc] init];
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Member-getvtuberbyname-0-javascript">
+                            <div class="tab-pane" id="examples-Member-getvtuberbynmae-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var VTbotOpenApi = require('v_tbot_open_api');
 
 var api = new VTbotOpenApi.MemberApi()
@@ -2462,14 +2462,14 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.getvtuberbyname(name, callback);
+api.getvtuberbynmae(name, callback);
 </code></pre>
                             </div>
 
-                            <!--<div class="tab-pane" id="examples-Member-getvtuberbyname-0-angular">
+                            <!--<div class="tab-pane" id="examples-Member-getvtuberbynmae-0-angular">
               <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
             </div>-->
-                            <div class="tab-pane" id="examples-Member-getvtuberbyname-0-csharp">
+                            <div class="tab-pane" id="examples-Member-getvtuberbynmae-0-csharp">
                               <pre class="prettyprint"><code class="language-cs">using System;
 using System.Diagnostics;
 using IO.Swagger.Api;
@@ -2478,7 +2478,7 @@ using IO.Swagger.Model;
 
 namespace Example
 {
-    public class getvtuberbynameExample
+    public class getvtuberbynmaeExample
     {
         public void main()
         {
@@ -2489,12 +2489,12 @@ namespace Example
             try
             {
                 // Get Vtuber data by name
-                Member result = apiInstance.getvtuberbyname(name);
+                Member result = apiInstance.getvtuberbynmae(name);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
             {
-                Debug.Print("Exception when calling MemberApi.getvtuberbyname: " + e.Message );
+                Debug.Print("Exception when calling MemberApi.getvtuberbynmae: " + e.Message );
             }
         }
     }
@@ -2502,7 +2502,7 @@ namespace Example
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Member-getvtuberbyname-0-php">
+                            <div class="tab-pane" id="examples-Member-getvtuberbynmae-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
@@ -2510,15 +2510,15 @@ $api_instance = new Swagger\Client\ApiMemberApi();
 $name = name_example; // String | Nickname of Vtuber
 
 try {
-    $result = $api_instance->getvtuberbyname($name);
+    $result = $api_instance->getvtuberbynmae($name);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling MemberApi->getvtuberbyname: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling MemberApi->getvtuberbynmae: ', $e->getMessage(), PHP_EOL;
 }
 ?></code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Member-getvtuberbyname-0-perl">
+                            <div class="tab-pane" id="examples-Member-getvtuberbynmae-0-perl">
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::MemberApi;
@@ -2527,15 +2527,15 @@ my $api_instance = WWW::SwaggerClient::MemberApi->new();
 my $name = name_example; # String | Nickname of Vtuber
 
 eval { 
-    my $result = $api_instance->getvtuberbyname(name => $name);
+    my $result = $api_instance->getvtuberbynmae(name => $name);
     print Dumper($result);
 };
 if ($@) {
-    warn "Exception when calling MemberApi->getvtuberbyname: $@\n";
+    warn "Exception when calling MemberApi->getvtuberbynmae: $@\n";
 }</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Member-getvtuberbyname-0-python">
+                            <div class="tab-pane" id="examples-Member-getvtuberbynmae-0-python">
                               <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
 import time
 import swagger_client
@@ -2548,10 +2548,10 @@ name = name_example # String | Nickname of Vtuber
 
 try: 
     # Get Vtuber data by name
-    api_response = api_instance.getvtuberbyname(name)
+    api_response = api_instance.getvtuberbynmae(name)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling MemberApi->getvtuberbyname: %s\n" % e)</code></pre>
+    print("Exception when calling MemberApi->getvtuberbynmae: %s\n" % e)</code></pre>
                             </div>
                           </div>
 
@@ -2567,7 +2567,7 @@ except ApiException as e:
                                   <td>
                                   
                                   
-                                      <div id="d2e199_getvtuberbyname_name">
+                                      <div id="d2e199_getvtuberbynmae_name">
                                           <div class="json-schema-view">
                                               <div class="primitive">
                                                   <span class="type">
@@ -2596,14 +2596,14 @@ except ApiException as e:
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-getvtuberbyname-200-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-getvtuberbynmae-200-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-getvtuberbyname-200-schema">
-                                  <div id='responses-getvtuberbyname-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-getvtuberbynmae-200-schema">
+                                  <div id='responses-getvtuberbynmae-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
@@ -2634,14 +2634,14 @@ except ApiException as e:
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-getvtuberbyname-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-getvtuberbyname-200-schema-200');
+                                        $('#responses-getvtuberbynmae-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-getvtuberbynmae-200-schema-200');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-getvtuberbyname-200-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-getvtuberbynmae-200-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 

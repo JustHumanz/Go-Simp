@@ -1,28 +1,21 @@
 package bilibili
 
 import (
-	"bytes"
 	"encoding/json"
-	"io/ioutil"
-	"mime/multipart"
-	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 )
 
 var (
 	BotSession *discordgo.Session
-	wg         sync.WaitGroup
 )
 
 //Start Bilibili module
@@ -33,6 +26,7 @@ func BiliBili(Bot *discordgo.Session) {
 //Start Check new fanart
 func CheckNew() {
 	for _, Group := range engine.GroupData {
+		wg := new(sync.WaitGroup)
 		for _, Member := range database.GetName(Group.ID) {
 			wg.Add(1)
 			go func(Group database.GroupName, Member database.Name, wg *sync.WaitGroup) {
@@ -88,7 +82,6 @@ func CheckNew() {
 									}
 									if link != "" {
 										log.WithFields(log.Fields{
-
 											"Vtuber": Member.EnName,
 											"Img":    link,
 										}).Info("New Fanart")
@@ -127,76 +120,78 @@ func CheckNew() {
 					}
 					//time.Sleep(time.Duration(int64(rand.Intn((7-1)+1))) * time.Second)
 				}
-			}(Group, Member, &wg)
+			}(Group, Member, wg)
 		}
+		wg.Wait()
 	}
-	wg.Wait()
 }
 
 //Mirorring fanart to imgur *sometime discord fail to load image because bilibili CDN(prob)*
 func (Data SubTbili) Mirroring() (string, int, error) {
 	link := Data.Item.Pictures[0].ImgSrc
-	buf := &bytes.Buffer{}
-	writer := multipart.NewWriter(buf)
-	err := writer.WriteField("image", link)
-	err = writer.WriteField("title", Data.Item.Title)
-	err = writer.WriteField("name", Data.User.Name)
-	err = writer.Close()
-	if err != nil {
-		log.Error(err)
-	}
-
+	/*
+		buf := &bytes.Buffer{}
+		writer := multipart.NewWriter(buf)
+		err := writer.WriteField("image", link)
+		err = writer.WriteField("title", Data.Item.Title)
+		err = writer.WriteField("name", Data.User.Name)
+		err = writer.Close()
+		if err != nil {
+			log.Error(err)
+		}
+	*/
 	color, err := engine.GetColor("/tmp/bilibili", link)
 	if err != nil {
 		log.Error(err)
 	}
+	/*
+		req, err := http.NewRequest("POST", "https://api.imgur.com/3/image", buf)
+		if err != nil {
+			return "", 0, err
+		}
 
-	req, err := http.NewRequest("POST", "https://api.imgur.com/3/image", buf)
-	if err != nil {
-		return "", 0, err
-	}
+		req.Header.Set("Authorization", "Client-ID "+config.ImgurClient)
+		req.Header.Set("User-Agent", "Mozilla/5.0 (Votre) AppleWebKit/601.2 (KHTML, like Gecko)")
+		req.Header.Set("Content-Type", writer.FormDataContentType())
 
-	req.Header.Set("Authorization", "Client-ID "+config.ImgurClient)
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Votre) AppleWebKit/601.2 (KHTML, like Gecko)")
-	req.Header.Set("Content-Type", writer.FormDataContentType())
+		htt := http.Client{Timeout: time.Second * 20}
+		res, err := htt.Do(req)
+		if err != nil {
+			log.Error(err)
+			log.Info("bypass it")
+			return link, color, nil
+		}
 
-	htt := http.Client{Timeout: time.Second * 20}
-	res, err := htt.Do(req)
-	if err != nil {
-		log.Error(err)
-		log.Info("bypass it")
-		return link, color, nil
-	}
+		defer res.Body.Close()
 
-	defer res.Body.Close()
+		b, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			log.Error(err)
+			log.Info("bypass it")
+			return link, color, nil
+		}
 
-	b, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		log.Error(err)
-		log.Info("bypass it")
-		return link, color, nil
-	}
+		if err != nil || res.StatusCode != 200 {
+			log.Error(err, res.Status, string(b))
+			log.Info("bypass it")
+			return link, color, nil
+		}
 
-	if err != nil || res.StatusCode != 200 {
-		log.Error(err, res.Status, string(b))
-		log.Info("bypass it")
-		return link, color, nil
-	}
+		var tmp Imgur
+		err = json.Unmarshal(b, &tmp)
+		if err != nil {
+			log.Error(err)
+			return "", 0, err
+		}
 
-	var tmp Imgur
-	err = json.Unmarshal(b, &tmp)
-	if err != nil {
-		log.Error(err)
-		return "", 0, err
-	}
+		color, err = engine.GetColor("/tmp/bilibili", tmp.Data.Link)
+		if err != nil {
+			log.Error(err, " ", link)
+			return "", 0, err
+		}
 
-	color, err = engine.GetColor("/tmp/bilibili", tmp.Data.Link)
-	if err != nil {
-		log.Error(err, " ", link)
-		return "", 0, err
-	}
-
-	return tmp.Data.Link, color, nil
+	*/
+	return link, color, nil
 }
 
 type Imgur struct {

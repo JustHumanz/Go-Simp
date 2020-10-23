@@ -54,7 +54,7 @@ func GetWaiting(VideoID string) (string, error) {
 	if curlerr != nil || bit == nil {
 		bit, curlerr = engine.CoolerCurl(urls, nil)
 		if curlerr != nil {
-			return "404", curlerr
+			return "???", curlerr
 		} else {
 			log.WithFields(log.Fields{
 				"Request": VideoID,
@@ -64,9 +64,9 @@ func GetWaiting(VideoID string) (string, error) {
 	}
 	reg, err := regexp.Compile("[^a-zA-Z0-9]+")
 	if err != nil {
-		return "404", err
+		return "???", err
 	}
-	waitcount := "404" /*well you know what i mean, right? rfc7231 page 59 */
+	waitcount := "???"
 	for _, element := range regexp.MustCompile(`(?m)videoViewCountRenderer.*?text([0-9\s]+).+(isLive\strue)`).FindAllStringSubmatch(reg.ReplaceAllString(string(bit), " "), -1) {
 		tmp := strings.Replace(element[1], " ", "", -1)
 		if tmp != "" {

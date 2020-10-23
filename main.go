@@ -18,7 +18,7 @@ import (
 )
 
 func main() {
-	conf, err := config.ReadConfig()
+	conf, err := config.ReadConfig("config.toml")
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)

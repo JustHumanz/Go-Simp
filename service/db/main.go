@@ -55,16 +55,21 @@ func init() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	YtToken = os.Getenv("GTOKEN")
-	BiliSession = os.Getenv("SBILI")
+	config, err := config.ReadConfig("../../config.toml")
+	if err != nil {
+		log.Error(err)
+	}
+	YtToken = config.YtToken[0]
+	BiliSession = config.BiliSess
 	Limit = 100
-	Bot, _ = discordgo.New("Bot " + os.Getenv("DISCORD"))
+	Bot, _ = discordgo.New("Bot " + config.Discord)
+	db = config.CheckSQL()
 	err = Bot.Open()
 	if err != nil {
 		log.Error(err)
 		os.Exit(1)
 	}
-	err = CreateDB()
+	err = CreateDB(config)
 	if err != nil {
 		log.Error(err)
 	}
@@ -76,7 +81,6 @@ func main() {
 	ScrapMember := flag.Bool("vtuber", false, "enable this if you want to scrap tweet(fanart) each member")
 	flag.StringVar(&member, "member", "kano", "list of vtuber name (split by space)")
 	flag.Parse()
-	db = DBConn()
 	database.Start(db)
 
 	if (*Service) == "bootstrapping" {
@@ -406,17 +410,15 @@ func Dead(s *discordgo.Session, m *discordgo.MessageCreate) {
 		log.Error(err)
 	}
 	if m.Content != "" {
-		if match, _ := regexp.MatchString("("+General+"|"+Fanart+"|"+BiliBili+"|"+Youtube+")", m.Content); match {
+		if len(regexp.MustCompile("(?m)("+General+"|"+Fanart+"|"+BiliBili+"|"+Youtube+")").FindAllString(m.Content, -1)) > 0 {
 			s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-				SetTitle("Still Processing new data").
-				SetDescription("Bot update new Vtubers data XD ,Comeback when i ready to bang you (around 10-20 minutes or more,~~idk i don't fvcking count~~)").
+				SetTitle("Bot update new Vtubers").
+				SetDescription("Still Processing new data,Comeback when i ready to bang you (around 10-20 minutes or more,~~idk i don't fvcking count~~)").
 				SetThumbnail(config.Sleep).
 				SetImage(config.Dead).
 				SetColor(Color).
 				SetFooter("Adios~").MessageEmbed)
-			return
 		}
-		return
 	}
 }

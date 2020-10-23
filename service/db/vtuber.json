@@ -45,20 +45,6 @@
                     "Region":"JP"
                 },
                 {
-                    "Name":"Evelyn",
-                    "EN_Name":"Evelyn",
-                    "JP_Name":"",
-                    "Hashtag": {
-                        "Twitter": "#PienEpelPaint",
-                        "BiliBili": ""
-                    },
-                    "Yt_ID":  "UCMxxFFeuhFQ30quuePTym0A",
-                    "BiliBili_ID": 0,
-                    "BiliRoom_ID": 0,
-                    "Twitter_Username": "EvelynVtuber",
-                    "Region":"ID"
-                },
-                {
                     "Name":"MafuMafu",
                     "EN_Name":"MafuMafu",
                     "JP_Name":"まふまふ",
@@ -613,8 +599,8 @@
                         "BiliBili": ""
                     },
                     "Yt_ID": "UCoSrY_IQQVpmIRZ9Xf-y93g",
-                    "BiliBili_ID": 0,
-                    "BiliRoom_ID": 0,
+                    "BiliBili_ID": 674600648,
+                    "BiliRoom_ID": 22503372,
                     "Twitter_Username": "gawrgura",
                     "Region":"EN"
                 },
@@ -627,8 +613,8 @@
                         "BiliBili": ""
                     },
                     "Yt_ID": "UCyl1z3jo3XHR1riLFKG5UAg",
-                    "BiliBili_ID": 0,
-                    "BiliRoom_ID": 0,
+                    "BiliBili_ID": 674600649,
+                    "BiliRoom_ID": 22503378,
                     "Twitter_Username": "watsonameliaEN",
                     "Region":"EN"
                 },
@@ -641,8 +627,8 @@
                         "BiliBili": ""
                     },
                     "Yt_ID": "UCL_qhgtOy0dy1Agp8vkySQg",
-                    "BiliBili_ID": 0,
-                    "BiliRoom_ID": 0,
+                    "BiliBili_ID": 674600645,
+                    "BiliRoom_ID": 22503360,
                     "Twitter_Username": "moricalliope",
                     "Region":"EN"
                 },
@@ -655,9 +641,23 @@
                         "BiliBili": ""
                     },
                     "Yt_ID": "UCHsx4Hqa-1ORjQTh9TYDhww",
-                    "BiliBili_ID": 0,
-                    "BiliRoom_ID": 0,
+                    "BiliBili_ID": 674600646,
+                    "BiliRoom_ID": 22503364,
                     "Twitter_Username": "takanashikiara",
+                    "Region":"EN"
+                },
+                {
+                    "Name":"Ina",
+                    "EN_Name":"Ninomae Ina'nis",
+                    "JP_Name":"一伊那尓栖/にのまえいなにす",
+                    "Hashtag": {
+                        "Twitter": "#inART",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCMwGHR0BTZuLsmjY_NT5Pwg",
+                    "BiliBili_ID": 674600647,
+                    "BiliRoom_ID": 22503367,
+                    "Twitter_Username": "ninomaeinanis",
                     "Region":"EN"
                 },
                 {
@@ -1503,6 +1503,20 @@
                     "BiliRoom_ID": 1485080,
                     "Twitter_Username": "aichan_nel",
                     "Region":"JP"
+                },
+                {
+                    "Name":"Love-chan",
+                    "EN_Name":"Love-chan",
+                    "JP_Name":"Loveちゃん",
+                    "Hashtag": {
+                        "Twitter": "#らぶりえ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UCYm8zALd2uHqyy6C1tb4_zA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "lovechan_lp",
+                    "Region":"JP"
                 }
             ]
         },{
@@ -1522,9 +1536,85 @@
                     "BiliRoom_ID": 9286381,
                     "Twitter_Username": "nekomiya_hinata",
                     "Region":"JP"
+                },
+                {
+                    "Name":"Mirai",
+                    "EN_Name":"Mirai Akari",
+                    "JP_Name":"ミライアカリ",
+                    "Hashtag": {
+                        "Twitter": "#アカリギャラリー",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UCMYtONm441rBogWK_xPH9HA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "miraiakari_prj",
+                    "Region":"JP"
                 }
             ]
         },{
+            "GroupName": "VTuBerflower",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/independen.png",
+            "Members" :[
+                {
+                    "Name":"Evelyn",
+                    "EN_Name":"Evelyn",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#PienEpelPaint",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCMxxFFeuhFQ30quuePTym0A",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "EvelynVtuber",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Chloe",
+                    "EN_Name":"Chloe Pawapua",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#PawapuArt ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UCrKS2bOUZDXA_R3qhCux7ow",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "ChloePawapua",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Reynard",
+                    "EN_Name":"Reynard Blanc",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#BlanCanvas ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UCoUFv7APM1XOo4TUaWbRekw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "ReynardBlanc",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Lily",
+                    "EN_Name":"Lily Ifeta",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#GambarLily ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UCXSbl3XQYtx1u4Gvvca7NUA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "LilyIfeta",
+                    "Region":"ID"
+                }
+            ]
+        }
+        ,{
             "GroupName": "VOMS",
             "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/vox.png",
             "Members" :[

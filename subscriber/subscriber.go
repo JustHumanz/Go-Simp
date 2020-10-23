@@ -15,20 +15,18 @@ import (
 var (
 	BiliSession string
 	Bot         *discordgo.Session
-	Data        []database.GroupName
 	yttoken     string
 )
 
 func Start(c *cron.Cron) {
 	Bot = engine.BotSession
 	BiliSession = config.BiliBiliSes
-	Data = database.GetGroup()
 	yttoken = config.YtToken[1]
 	if BiliSession == "" {
 		log.Error("BiliBili Session not found")
 		os.Exit(1)
 	}
-	c.AddFunc("@every 1h0m0s", CheckYtSubsCount)
+	c.AddFunc("@every 0h30m0s", CheckYtSubsCount)
 	c.AddFunc("@every 0h15m0s", CheckTwFollowCount)
 	c.AddFunc("@every 0h30m0s", CheckBiliFollowCount)
 	log.Info("Subs&Follow Checker module ready")

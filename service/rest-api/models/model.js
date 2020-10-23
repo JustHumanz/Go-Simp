@@ -33,17 +33,26 @@ async function streamquery(Name,Table,Status,Limit){
 }
 
 
-const GetMemberAll = async result => {    
+const GetMemberAll = async (Reg,result) => {    
   try {
-    let data = await knex('VtuberMember')
-    .orderBy(['VtuberGroup_id','Region'])    
-
-    console.log(data)
-    data.forEach(i => {
-      delete i.id
-      delete i.VtuberGroup_id
-    });
-    result(null,data)
+    let data
+    if(Reg != null) {
+      data = await knex('VtuberMember')
+      .where('Region',Reg)
+      .orderBy(['VtuberGroup_id','Region'])        
+    } else {
+      data = await knex('VtuberMember')
+      .orderBy(['VtuberGroup_id','Region'])    
+    }
+    if (data.length){
+      data.forEach(i => {
+        delete i.id
+        delete i.VtuberGroup_id
+      });
+      result(null,data)
+    } else {
+      result({ kind: "not_found" }, null);
+    }
   } catch (error) {
     console.log(error)      
     result({kind:"Error kntl"},null)
@@ -57,7 +66,7 @@ const GetMemberName = async (Name, result) => {
       .orWhereIn('VtuberName',Name)
       .orWhereIn('VtuberName_JP',Name)
       .orderBy('VtuberGroup_id')
-    if (data != null){
+    if (data.length){
       data.forEach(i => {
         delete i.id
         delete i.VtuberGroup_id
@@ -76,8 +85,7 @@ const GetMemberName = async (Name, result) => {
 const GetGroupAll = async result => {    
   try {
     let data = await knex('VtuberGroup')
-    console.log(data)
-    if (data != null){
+    if (data.length){
       data.forEach(i => {
         delete i.id
       });
@@ -96,7 +104,7 @@ const GetGroupAll = async result => {
 const GetGroupName = async (Name, result) => {
   try {
     let data = await knex('VtuberGroup').whereIn('VtuberGroupName',Name)
-    if (data != null){
+    if (data.length){
       data.forEach(i => {
         delete i.id
       });
@@ -125,7 +133,7 @@ const GetTwitter = async (Name, Limit,result) => {
   }).orWhereIn('VtuberGroup.VtuberGroupName',Name)
   .orderBy("Twitter.id",'desc')
   .limit(Limit)
-    if (data != null){
+    if (data.length){
       data.forEach(i => {
         delete i.id
         delete i.VtuberMember_id
@@ -158,8 +166,7 @@ const GetTBilibili = async (Name, Limit,result) => {
   .orderBy("TBiliBili.id",'desc')
   .limit(Limit)
 
-    if (data != null){
-      console.log(data)
+    if (data.length){
       data.forEach(i => {
         delete i.id
         delete i.VtuberMember_id
@@ -181,9 +188,7 @@ const GetYtLivestream = async (Name, Status, Limit,result) => {
   console.log(Name, Status, Limit)
   try {
     data = await streamquery(Name,'Youtube',Status,Limit)
-    console.log(data)
-    if (data != null){
-      console.log(data)
+    if (data.length){
       data.forEach(i => {
         delete i.id
         delete i.VtuberGroup_id
@@ -205,10 +210,9 @@ const GetYtLivestream = async (Name, Status, Limit,result) => {
 
 
 const GetLiveBilibili = async (Name, Status, Limit,result) => {
-  console.log(Name, Status, Limit)
   try {
     data = await streamquery(Name,'LiveBiliBili',Status,Limit)
-    if (data != null){
+    if (data.length){
       console.log(data)
       data.forEach(i => {
         delete i.id
@@ -229,7 +233,6 @@ const GetLiveBilibili = async (Name, Status, Limit,result) => {
 
 
 const GetSpaceBiliBili = async (Name, Limit,result) => {
-  console.log(Name, Limit)
   try {
     let data = await knex.select('VtuberMember.VtuberName','VtuberMember.VtuberName_EN',
     'VtuberMember.VtuberName_JP','VtuberGroup.VtuberGroupName',
@@ -245,7 +248,7 @@ const GetSpaceBiliBili = async (Name, Limit,result) => {
   })
   .orderBy('UploadDate',"desc")
   .limit(Limit)
-  if(data != null){
+  if(data.length){
     data.forEach(i => {
       delete i.id
       delete i.VtuberGroup_id
@@ -279,7 +282,8 @@ const Getsubscriber = async (Name, result) => {
     .orWhereIn('VtuberMember.VtuberName_JP',Name)
     .orWhereIn('VtuberGroup.VtuberGroupName',Name)
   })
-  if (data != null) {
+  .orderBy('Region')
+  if (data.length) {
     data.forEach(i => {
       delete i.id
       delete i.VtuberGroup_id

@@ -13,9 +13,8 @@ import (
 
 var (
 	// Public variables
-	Token   string
-	YtToken []string
-	//helmp me to pick emoji
+	Token          string
+	YtToken        []string
 	EmojiFanart    []string
 	EmojiStream    []string
 	PFanart        string
@@ -33,15 +32,16 @@ var (
 )
 
 const (
-	NotFound    = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/404.jpg"
-	YoutubeIMG  = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/youtube.png"
-	BiliBiliIMG = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/bilibili.png"
-	TwitterIMG  = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/twitter.png"
-	WorryIMG    = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/parerunworry.png"
-	GoSimpIMG   = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/go-simp.png"
-	Longcatttt  = "https://cdn.ebaumsworld.com/2020/09/20/013235/86394200/longcat-pic.jpg"
-	Dead        = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/dead.jpg"
-	Sleep       = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/sleep.png"
+	NotFound          = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/404.jpg"
+	YoutubeIMG        = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/youtube.png"
+	BiliBiliIMG       = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/bilibili.png"
+	TwitterIMG        = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/twitter.png"
+	WorryIMG          = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/parerunworry.png"
+	GoSimpIMG         = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/go-simp.png"
+	Longcatttt        = "https://cdn.ebaumsworld.com/2020/09/20/013235/86394200/longcat-pic.jpg"
+	Dead              = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/dead.jpg"
+	Sleep             = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/sleep.png"
+	ChannelPermission = 16
 )
 
 type ConfigFile struct {
@@ -69,11 +69,11 @@ type ConfigFile struct {
 }
 
 //read from config file
-func ReadConfig() (ConfigFile, error) {
+func ReadConfig(path string) (ConfigFile, error) {
 	fmt.Println("Reading config file...")
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
 
-	file, err := ioutil.ReadFile("config.toml")
+	file, err := ioutil.ReadFile(path)
 
 	if err != nil {
 		return ConfigFile{}, err

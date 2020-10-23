@@ -12,26 +12,30 @@ func YtGetStatus(Group, Member int64, Status string) []YtDbData {
 	funcvar := GetFunctionName(YtGetStatus)
 	Debugging(funcvar, "In", fmt.Sprint(Group, Member, Status))
 	var (
-		rows *sql.Rows
-		err  error
-		Data []YtDbData
-		list YtDbData
+		rows  *sql.Rows
+		err   error
+		Data  []YtDbData
+		list  YtDbData
+		limit int
+		query string
 	)
-	if Status == "upcoming" {
-		rows, err = DB.Query(`SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers FROM Youtube Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status='upcoming' AND Type='Streaming' AND ScheduledStart !='' Order by ScheduledStart ASC`, Group, Member)
-		BruhMoment(err, "", false)
-
-	} else if Status == "live" {
-		rows, err = DB.Query(`SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers FROM Youtube Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status='live'`, Group, Member)
-		BruhMoment(err, "", false)
-
-	} else if Status == "private" {
-		rows, err = DB.Query(`SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers FROM Youtube Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status='private'`, Group, Member)
-		BruhMoment(err, "", false)
+	if Group != 0 && Status != "live" {
+		limit = 3
 	} else {
-		rows, err = DB.Query(`SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers FROM Youtube Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status='past' AND Type='Streaming' AND EndStream !='' order by EndStream DESC limit 3`, Group, Member)
-		BruhMoment(err, "", false)
+		limit = 2525
 	}
+	if Status == "upcoming" {
+		query = `SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers FROM Youtube Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status='upcoming' AND Type='Streaming' AND ScheduledStart !='' Order by ScheduledStart ASC Limit ? `
+	} else if Status == "live" {
+		query = `SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers FROM Youtube Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status='live' Limit ?`
+	} else if Status == "private" {
+		query = `SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers FROM Youtube Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status='private' Limit ?`
+	} else {
+		query = `SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers FROM Youtube Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status='past' AND Type='Streaming' AND EndStream !='' order by EndStream DESC Limit ?`
+	}
+
+	rows, err = DB.Query(query, Group, Member, limit)
+	BruhMoment(err, "", false)
 	defer rows.Close()
 
 	for rows.Next() {
