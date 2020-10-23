@@ -145,6 +145,8 @@ func Curl(url string, addheader []string) ([]byte, error) {
 		return nil, err
 	}
 
+	defer response.Body.Close()
+
 	if response.StatusCode != http.StatusOK {
 		log.WithFields(log.Fields{
 			"Status": response.StatusCode,
@@ -153,8 +155,6 @@ func Curl(url string, addheader []string) ([]byte, error) {
 		}).Error("Status code not daijobu")
 		return nil, errors.New(response.Status)
 	}
-
-	defer response.Body.Close()
 
 	body, err = ioutil.ReadAll(response.Body)
 	if err != nil {
@@ -167,7 +167,7 @@ func Curl(url string, addheader []string) ([]byte, error) {
 
 //make a cooler http request *with multitor*
 func CoolerCurl(urls string, addheader []string) ([]byte, error) {
-	var counter int
+	counter := 0
 	for {
 		counter++
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
@@ -199,6 +199,7 @@ func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 		if err != nil && counter == 2 {
 			return nil, err
 		}
+		defer response.Body.Close()
 
 		if response.StatusCode != http.StatusOK && counter == 2 {
 			return nil, errors.New("Multi Tor get Error")
@@ -208,7 +209,10 @@ func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 		if err != nil && counter == 2 {
 			return nil, err
 		}
-		return data, nil
+
+		if data != nil {
+			return data, nil
+		}
 	}
 
 }
