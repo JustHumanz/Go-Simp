@@ -133,7 +133,7 @@ func CheckPrivate() {
 
 	log.Info("Start Check Private video")
 	for _, Status := range []string{"upcoming", "past", "live", "private"} {
-		for _, Group := range database.GetGroup() {
+		for _, Group := range engine.GroupData {
 			for i, Member := range database.GetName(Group.ID) {
 				if i == 50 {
 					break

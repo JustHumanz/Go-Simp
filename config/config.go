@@ -42,6 +42,11 @@ const (
 	Dead              = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/dead.jpg"
 	Sleep             = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/sleep.png"
 	ChannelPermission = 16
+	Bonjour           = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/bonjour.png"
+	Howdy             = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/howdy.png"
+	Guten             = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/guten.png"
+	Koni              = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/koni.png"
+	Selamat           = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/selamat.jpg"
 )
 
 type ConfigFile struct {
@@ -50,6 +55,7 @@ type ConfigFile struct {
 	ImgurClinet   string   `toml:"ImgurClinet"`
 	BiliSess      string   `toml:"BiliSess"`
 	SauceAPI      string   `toml:"SauceAPI"`
+	OwnerID       string   `toml:"OwnerID"`
 	SQL           struct {
 		User string `toml:"User"`
 		Pass string `toml:"Pass"`
@@ -90,7 +96,8 @@ func ReadConfig(path string) (ConfigFile, error) {
 	BiliBiliSes = config.BiliSess
 	SauceAPI = config.SauceAPI
 	Logging = os.Getenv("LOG")
-	OwnerDiscordID = os.Getenv("OWNER")
+
+	OwnerDiscordID = config.OwnerID
 
 	Token = config.Discord
 	YtToken = config.YtToken

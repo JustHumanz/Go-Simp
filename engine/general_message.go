@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"regexp"
 	"strings"
@@ -605,25 +606,23 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	tableString := &strings.Builder{}
 	table := tablewriter.NewWriter(tableString)
+	table.SetAutoWrapText(false)
+	table.SetAutoMergeCells(true)
+	table.SetAutoFormatHeaders(true)
+	table.SetCenterSeparator("")
+	table.SetColumnSeparator("")
+	table.SetRowSeparator("")
+	table.SetHeaderLine(true)
+	table.SetBorder(false)
+	table.SetTablePadding("\t")
+	table.SetNoWhiteSpace(true)
 
 	if strings.HasPrefix(m.Content, Prefix) {
 		if m.Content == Prefix+"my tags" {
-			tableString := &strings.Builder{}
-			table := tablewriter.NewWriter(tableString)
 			list := database.UserStatus(m.Author.ID, m.ChannelID)
 
 			if list != nil {
 				table.SetHeader([]string{"Vtuber Group", "Vtuber Name"})
-				table.SetAutoWrapText(false)
-				table.SetAutoMergeCells(true)
-				table.SetAutoFormatHeaders(true)
-				table.SetCenterSeparator("")
-				table.SetColumnSeparator("")
-				table.SetRowSeparator("")
-				table.SetHeaderLine(true)
-				table.SetBorder(false)
-				table.SetTablePadding("\t")
-				table.SetNoWhiteSpace(true)
 				table.AppendBulk(list)
 				table.Render()
 
@@ -659,7 +658,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 				s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
-					SetDescription("```\r"+tableString.String()+"```").
+					SetDescription(tableString.String()).
 					SetThumbnail(config.GoSimpIMG).
 					SetColor(Color).
 					SetFooter("Use `update` command to change type of channel").MessageEmbed)
@@ -739,15 +738,6 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 					}
 				}
-				table.SetAutoWrapText(false)
-				table.SetAutoFormatHeaders(true)
-				table.SetCenterSeparator("")
-				table.SetColumnSeparator("")
-				table.SetRowSeparator("")
-				table.SetHeaderLine(true)
-				table.SetBorder(false)
-				table.SetTablePadding("\t")
-				table.SetNoWhiteSpace(true)
 				table.Render()
 				if len(tableString.String()) > EmbedLimitDescription {
 					s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
@@ -911,20 +901,26 @@ func (Data Dynamic_svr) GetUserAvatar() string {
 }
 
 //Guild join handler
-/*
 func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 	for _, Channel := range g.Guild.Channels {
-		fmt.Println(Channel.Name
-			BotPermission, err := s.UserChannelPermissions(BotID, Channel.ID)
+		BotPermission, err := s.UserChannelPermissions(BotID, Channel.ID)
+		if err != nil {
+			log.Error(err)
+		}
+		if Channel.Type == 0 && BotPermission&2048 != 0 {
+			s.ChannelMessageSendEmbed(Channel.ID, NewEmbed().
+				SetTitle("Thx for invite me to this server <3 ").
+				SetThumbnail(config.GoSimpIMG).
+				SetImage(H3llcome[rand.Intn(len(H3llcome))]).
+				SetColor(14807034).
+				SetDescription("Type `"+config.PGeneral+"help` to show options").MessageEmbed)
+
+			SendInvite, err := s.UserChannelCreate(config.OwnerDiscordID)
 			if err != nil {
 				log.Error(err)
 			}
-			if Channel.Type == 0 && BotPermission&2048 != 0 {
-				s.ChannelMessageSend(Channel.ID, "Thx for invite me to this channel <3 ")
-				s.ChannelMessageSend(Channel.ID, "Type `"+config.PGeneral+"help` to show options")
-				return
-			}
+			s.ChannelMessageSend(SendInvite.ID, g.Guild.Name+" invited me")
+			return
+		}
 	}
 }
-
-*/

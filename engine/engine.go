@@ -40,11 +40,11 @@ var (
 	GCSDIR     string
 	ImgDomain  string
 	RegList    = make(map[string]string)
+	H3llcome   = []string{config.Bonjour, config.Howdy, config.Guten, config.Koni, config.Selamat}
 )
 
 //Start module
 func Start(b *discordgo.Session, m string) {
-	log.SetFormatter(&log.TextFormatter{FullTimestamp: true})
 	BotSession = b
 	db = database.DB
 	BotID = m
@@ -77,6 +77,7 @@ func Start(b *discordgo.Session, m string) {
 	go BotSession.AddHandler(BiliBiliSpace)
 	go BotSession.AddHandler(YoutubeMessage)
 	go BotSession.AddHandler(SubsMessage)
+	BotSession.AddHandler(GuildJoin)
 	//go BotSession.AddHandler(Humanz)
 
 	log.Info("Engine module ready")
