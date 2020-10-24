@@ -37,7 +37,6 @@ var (
 	debug      bool
 	GroupData  []database.GroupName
 	GroupsName []string
-	GCSDIR     string
 	ImgDomain  string
 	RegList    = make(map[string]string)
 	H3llcome   = []string{config.Bonjour, config.Howdy, config.Guten, config.Koni, config.Selamat}
@@ -111,8 +110,8 @@ func BruhMoment(err error, msg string, exit bool) {
 func GetYtToken() string {
 	FreshToken := config.YtToken[0]
 	for _, Token := range config.YtToken {
-		body, err := Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UCfuz6xYbYFGsWWBi3SpJI1w&key="+Token, nil)
-		if err == nil || body != nil {
+		_, err := Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UCfuz6xYbYFGsWWBi3SpJI1w&key="+Token, nil)
+		if err == nil {
 			FreshToken = Token
 		}
 	}

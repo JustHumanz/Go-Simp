@@ -124,6 +124,138 @@
             ]
         },
         {
+            "GroupName": "774",
+            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/774.png",
+            "Members" : [
+                {
+                    "Name":"Patra",
+                    "EN_Name":"Suou Patra",
+                    "JP_Name":"周防パトラ",
+                    "Hashtag": {
+                        "Twitter": "#パトラのアトリエ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UCeLzT-7b2PBcunJplmWtoDg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Patra_HNST",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Charlotte",
+                    "EN_Name":"Shimamura Charlotte",
+                    "JP_Name":"島村シャルロット",
+                    "Hashtag": {
+                        "Twitter": "#シャルピクチャ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCYTz3uIgwVY3ZU-IQJS8r3A",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Charlotte_HNST",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Mary",
+                    "EN_Name":"Saionji Mary",
+                    "JP_Name":"西園寺メアリ",
+                    "Hashtag": {
+                        "Twitter": "#メアリのメモリー",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCwePpiw1ocZRSNSkpKvVISw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Mary_HNST",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Mico",
+                    "EN_Name":"Sekishiro Mico",
+                    "JP_Name":"堰代ミコ",
+                    "Hashtag": {
+                        "Twitter": "#ミコのえほん",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCDh2bWI5EDu7PavqwICkVpA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Mico_HNST",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Ichika",
+                    "EN_Name":"Souya Ichika",
+                    "JP_Name":"宗谷 いちか",
+                    "Hashtag": {
+                        "Twitter": "#いちかあるばむ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC2kyQhzGOB-JPgcQX9OMgEw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Ichika_Souya",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Rantarou",
+                    "EN_Name":"Hinokuma Ran",
+                    "JP_Name":"日ノ隈らん",
+                    "Hashtag": {
+                        "Twitter": "#らんあーと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCRvpMpzAXBRKJQuk-8-Sdvg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Ran_Hinokuma",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Kuku",
+                    "EN_Name":"Kazami Kuku",
+                    "JP_Name":"風見くく",
+                    "Hashtag": {
+                        "Twitter": "#絵やんくっく",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCXp7sNC0F_qkjickvlYkg-Q",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Kuku_Kazami",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Yunohara",
+                    "EN_Name":"Yunohara Izumi",
+                    "JP_Name":"柚原いづみ",
+                    "Hashtag": {
+                        "Twitter": "#かぴそ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCW8WKciBixmaqaGqrlTITRQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Izumi_Yunohara",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Shiromiya",
+                    "EN_Name":"Shiromiya Mimi",
+                    "JP_Name":"白宮みみ",
+                    "Hashtag": {
+                        "Twitter": "#みみ描き",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCtzCQnCT9E4o6U3mHHSHbQQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "shiromiya_mimi",
+                    "Region":"JP"
+                }
+            ]
+        },
+        {
             "GroupName": "Hololive",
             "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/holo.png",
             "Members" : [
