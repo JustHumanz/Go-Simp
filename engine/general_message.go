@@ -415,6 +415,10 @@ func Enable(s *discordgo.Session, m *discordgo.MessageCreate) {
 		var (
 			counter bool
 			tagtype int
+			already []string
+			done    []string
+			msg1    = "Remember boys,always respect the author,**do not save the fanart without permission from the author**"
+			msg2    = "Every livestream have some **rule**,follow the **rule** and don't be asshole"
 		)
 		CommandArray := strings.Split(m.Content, " ")
 		if CommandArray[0] == Prefix+"enable" {
@@ -436,6 +440,7 @@ func Enable(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 					if CheckPermission(m.Author.ID, m.ChannelID) {
 						if database.ChannelCheck(VTuberGroup.ID, m.ChannelID) {
+							already = append(already, "`"+VTuberGroup.NameGroup+"`")
 							counter = false
 						} else {
 							err := database.AddChannel(m.ChannelID, tagtype, VTuberGroup.ID)
@@ -443,6 +448,7 @@ func Enable(s *discordgo.Session, m *discordgo.MessageCreate) {
 								log.Error(err)
 								s.ChannelMessageSend(m.ChannelID, "Something error XD")
 							}
+							done = append(done, "`"+VTuberGroup.NameGroup+"`")
 							counter = true
 						}
 					} else {
@@ -451,16 +457,16 @@ func Enable(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 				if counter {
-					s.ChannelMessageSend(m.ChannelID, "done")
+					s.ChannelMessageSend(m.ChannelID, "done,@here <@"+m.Author.ID+"> is enable "+strings.Join(done, ",")+" on this channel")
 					if tagtype == 1 {
-						s.ChannelMessageSend(m.ChannelID, "Remember boys,always respect the author,**do not save the fanart without permission from the author**\n@here")
+						s.ChannelMessageSend(m.ChannelID, msg1+"\n@here")
 					} else if tagtype == 2 {
-						s.ChannelMessageSend(m.ChannelID, "Every livestream have some **rule**,follow the **rule** and don't be asshole\n@here")
+						s.ChannelMessageSend(m.ChannelID, msg2+"\n@here")
 					} else {
-						s.ChannelMessageSend(m.ChannelID, "Remember boys,always respect the author,**do not save the fanart without permission from the author** and Every livestream have some **rule**,follow the **rule** and don't be asshole\n@here")
+						s.ChannelMessageSend(m.ChannelID, msg1+"\n"+msg2+"\n@here")
 					}
 				} else {
-					s.ChannelMessageSend(m.ChannelID, "already added")
+					s.ChannelMessageSend(m.ChannelID, strings.Join(already, ",")+", already added")
 				}
 			} else {
 				s.ChannelMessageSend(m.ChannelID, "Incomplete enable command")
@@ -482,8 +488,10 @@ func Enable(s *discordgo.Session, m *discordgo.MessageCreate) {
 								s.ChannelMessageSend(m.ChannelID, "Something error XD")
 								return
 							}
+							done = append(done, "`"+VTuberGroup.NameGroup+"`")
 							counter = true
 						} else {
+							already = append(already, "`"+VTuberGroup.NameGroup+"`")
 							counter = false
 						}
 					} else {
@@ -492,9 +500,9 @@ func Enable(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 				if counter {
-					s.ChannelMessageSend(m.ChannelID, "done")
+					s.ChannelMessageSend(m.ChannelID, "done,@here <@"+m.Author.ID+"> is disable "+strings.Join(done, ",")+" from this channel")
 				} else {
-					s.ChannelMessageSend(m.ChannelID, "already removed")
+					s.ChannelMessageSend(m.ChannelID, strings.Join(already, ",")+", already removed or never enable on this channel")
 				}
 			}
 		} else if CommandArray[0] == Prefix+"update" {
@@ -515,11 +523,18 @@ func Enable(s *discordgo.Session, m *discordgo.MessageCreate) {
 						return
 					}
 					if CheckPermission(m.Author.ID, m.ChannelID) {
-						err := database.UpdateChannel(m.ChannelID, tagtype, VTuberGroup.ID)
-						if err != nil {
-							counter = false
+						if database.ChannelCheck(VTuberGroup.ID, m.ChannelID) {
+							err := database.UpdateChannel(m.ChannelID, tagtype, VTuberGroup.ID)
+							if err != nil {
+								already = append(already, "`"+VTuberGroup.NameGroup+"`")
+								counter = false
+							} else {
+								done = append(done, "`"+VTuberGroup.NameGroup+"`")
+								counter = true
+							}
 						} else {
-							counter = true
+							s.ChannelMessageSend(m.ChannelID, "this channel not enable `"+VTuberGroup.NameGroup+"`")
+							return
 						}
 					} else {
 						s.ChannelMessageSend(m.ChannelID, "You don't have permission to enable/disable/update")
@@ -527,17 +542,18 @@ func Enable(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 				if counter {
-					s.ChannelMessageSend(m.ChannelID, "done")
+					s.ChannelMessageSend(m.ChannelID, "done,<@"+m.Author.ID+"> update channel state "+strings.Join(done, ","))
 					if tagtype == 1 {
-						s.ChannelMessageSend(m.ChannelID, "Remember boys,always respect the author,**do not save the fanart without permission from the author**\n@here")
+						s.ChannelMessageSend(m.ChannelID, msg1+"\n@here")
 					} else if tagtype == 2 {
-						s.ChannelMessageSend(m.ChannelID, "Every livestream have some **rule**,follow the **rule** and don't be asshole\n@here")
+						s.ChannelMessageSend(m.ChannelID, msg2+"\n@here")
 					} else {
-						s.ChannelMessageSend(m.ChannelID, "Remember boys,always respect the author,**do not save the fanart without permission from the author** and Every livestream have some **rule**,follow the **rule** and don't be asshole\n@here")
+						s.ChannelMessageSend(m.ChannelID, msg1+"\n"+msg2+"\n@here")
 					}
 				} else {
-					s.ChannelMessageSend(m.ChannelID, "already added")
+					s.ChannelMessageSend(m.ChannelID, strings.Join(already, ",")+" Same type")
 				}
+
 			} else {
 				s.ChannelMessageSend(m.ChannelID, "Incomplete `update` command")
 			}
@@ -607,7 +623,6 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 	tableString := &strings.Builder{}
 	table := tablewriter.NewWriter(tableString)
 	table.SetAutoWrapText(false)
-	table.SetAutoMergeCells(true)
 	table.SetAutoFormatHeaders(true)
 	table.SetCenterSeparator("")
 	table.SetColumnSeparator("")
@@ -653,12 +668,12 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 					table.Append([]string{list[i], Typestr})
 				}
-				table.SetHeader([]string{"Vtuber Group", "Type"})
+				table.SetHeader([]string{"Group", "Type"})
 				table.Render()
 
 				s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
-					SetDescription(tableString.String()).
+					SetDescription("```"+tableString.String()+"```").
 					SetThumbnail(config.GoSimpIMG).
 					SetColor(Color).
 					SetFooter("Use `update` command to change type of channel").MessageEmbed)

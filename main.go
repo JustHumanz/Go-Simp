@@ -26,7 +26,6 @@ func main() {
 	db := conf.CheckSQL()
 
 	Bot, _ := discordgo.New("Bot " + config.Token)
-
 	err = Bot.Open()
 	if err != nil {
 		log.Error(err)

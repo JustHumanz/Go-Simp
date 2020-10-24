@@ -325,7 +325,7 @@ func DelChannel(ChannelID string, VtuberGroupID int64) error {
 
 }
 
-//delete discord channel type from `update` command
+//update discord channel type from `update` command
 func UpdateChannel(ChannelID string, typetag int, VtuberGroupID int64) error {
 	if ChannelCheck(VtuberGroupID, ChannelID) {
 		var tmp int

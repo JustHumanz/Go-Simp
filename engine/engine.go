@@ -221,9 +221,7 @@ func FixName(A string, B string) string {
 	funcvar := GetFunctionName(FixName)
 	Debugging(funcvar, "In", fmt.Sprint(A, B))
 	if A != "" && B != "" {
-		P := []string{A, B}
-		VName := strings.Join(P, "/")
-		return strings.Title(VName)
+		return strings.Title(strings.Join([]string{A, B}, "/"))
 
 	} else if B != "" {
 		return strings.Title(B)
@@ -261,9 +259,8 @@ func RanString() string {
 	chars := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
 		"abcdefghijklmnopqrstuvwxyz" +
 		"0123456789")
-	length := 3
 	var b strings.Builder
-	for i := 0; i < length; i++ {
+	for i := 0; i < 3; i++ {
 		b.WriteRune(chars[rand.Intn(len(chars))])
 	}
 	return b.String()
@@ -311,45 +308,37 @@ func SaucenaoCheck(url string) (bool, []string, error) {
 
 //Get color from image
 func GetColor(filepath, url string) (int, error) {
-	if url == "" {
-		return 0, errors.New("Url nill")
-	}
-	ex := url[len(url)-4:]
+	def := 16770790
 
-	if ex == ".gif" {
-		return 16770790, nil
+	if url[len(url)-4:] == ".gif" {
+		return def, nil
 	}
 	match, err := regexp.MatchString("http", url)
 	if err != nil {
-		log.Error(err)
-		return 0, nil
+		return def, err
 	}
 
 	if match {
 		filepath = filepath + RanString()
 		out, err := os.Create(filepath)
 		if err != nil {
-			log.Error(err)
-			return 0, err
+			return def, err
 		}
 
 		defer out.Close()
 		resp, err := http.Get(url)
 		if err != nil {
-			log.Error(err)
-			return 0, err
+			return def, err
 		}
 
 		defer resp.Body.Close()
 
 		if resp.StatusCode != http.StatusOK {
-			log.Error("Server Error")
-			return 0, nil
+			return def, errors.New("Server Error,status get " + resp.Status)
 		}
 		_, err = io.Copy(out, resp.Body)
 		if err != nil {
-			log.Error(err)
-			return 0, err
+			return def, err
 		}
 
 	} else {
@@ -357,15 +346,13 @@ func GetColor(filepath, url string) (int, error) {
 	}
 	f, err := os.Open(filepath)
 	if err != nil {
-		log.Error(err)
-		return 0, err
+		return def, err
 	}
 
 	defer f.Close()
 	img, _, err := image.Decode(f)
 	if err != nil {
-		log.Error(err)
-		return 0, err
+		return def, err
 	}
 
 	Hex := dominantcolor.Hex(dominantcolor.Find(img))
@@ -373,14 +360,12 @@ func GetColor(filepath, url string) (int, error) {
 	Hex = strings.ToLower(Hex)
 	Fix, err := strconv.ParseInt(Hex, 0, 64)
 	if err != nil {
-		log.Error(err)
-		return 0, err
+		return def, err
 	}
 
 	err = os.Remove(filepath)
 	if err != nil {
-		log.Error(err)
-		return 0, err
+		return def, err
 	}
 
 	return int(Fix), nil

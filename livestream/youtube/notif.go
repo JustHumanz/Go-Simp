@@ -84,7 +84,6 @@ func (PushData NotifStruct) GetEmbed(Status string) NotifStruct {
 		msg4 = "Viewers"
 		msg5 = PushData.Data.Viewers
 	} else if Status == "past" {
-		log.Info("Suddenly upload new video")
 		msg = "Upload"
 		msg1 = durafmt.Parse(expiresAt.Sub(PushData.Data.Schedul.In(loc))).LimitFirstN(2).String() + " Ago"
 		msg2 = "Uploaded new video"
