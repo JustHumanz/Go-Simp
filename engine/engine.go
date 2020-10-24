@@ -172,7 +172,7 @@ func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 		proxyURL, err := url.Parse("http://multi_tor:16379")
-		if err != nil && counter == 2 {
+		if err != nil || counter == 2 {
 			return nil, err
 		}
 
@@ -186,7 +186,7 @@ func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 		}
 
 		request, err := http.NewRequest("GET", urls, nil)
-		if err != nil && counter == 2 {
+		if err != nil || counter == 2 {
 			return nil, err
 		}
 		request.Header.Set("cache-control", "no-cache")
@@ -195,7 +195,7 @@ func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 			request.Header.Set(addheader[0], addheader[1])
 		}
 		response, err := client.Do(request.WithContext(ctx))
-		if err != nil && counter == 2 {
+		if err != nil || counter == 2 {
 			return nil, err
 		}
 		defer response.Body.Close()
@@ -205,7 +205,7 @@ func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 		}
 
 		data, err := ioutil.ReadAll(response.Body)
-		if err != nil && counter == 2 {
+		if err != nil || counter == 2 {
 			return nil, err
 		}
 

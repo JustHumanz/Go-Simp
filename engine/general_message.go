@@ -922,6 +922,7 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 				if err != nil {
 					log.Error(err)
 				}
+				//send server name to my discord (just server name)
 				s.ChannelMessageSend(SendInvite.ID, g.Guild.Name+" invited me")
 				return
 			}
