@@ -138,7 +138,7 @@ func CheckPrivate() {
 				if i == 50 {
 					break
 				} else {
-					YtData := database.YtGetStatus(0, Member.ID, Status)
+					YtData := database.YtGetStatus(0, Member.ID, Status, "")
 					for j, Y := range YtData {
 						Y.Status = Status
 						wg.Add(1)

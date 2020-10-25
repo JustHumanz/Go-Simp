@@ -1,22 +1,31 @@
 package database
 
 import (
+	"database/sql"
+
 	log "github.com/sirupsen/logrus"
 )
 
 //Get Youtube data from status
-func YtGetStatus(Group, Member int64, Status string) []YtDbData {
+func YtGetStatus(Group, Member int64, Status, Region string) []YtDbData {
 	var (
 		Data  []YtDbData
 		list  YtDbData
+		rows  *sql.Rows
 		limit int
+		err   error
 	)
-	if Group != 0 && Status != "live" {
+	if (Group != 0 && Status != "live") || (Member != 0 && Status == "past") {
 		limit = 3
 	} else {
 		limit = 2525
 	}
-	rows, err := DB.Query(`call GetYt(?,?,?,?)`, Member, Group, limit, Status)
+	if Region == "" {
+		rows, err = DB.Query(`call GetYt(?,?,?,?)`, Member, Group, limit, Status)
+	} else {
+		rows, err = DB.Query(`call GetYtByReg(?,?,?)`, Group, Status, Region)
+	}
+
 	defer rows.Close()
 
 	for rows.Next() {
