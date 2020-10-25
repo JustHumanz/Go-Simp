@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
-	"sync"
 
 	config "github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
@@ -27,7 +26,6 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 		Group       bool
 		Pic         = config.NotFound
 		Msg         string
-		wg          sync.WaitGroup
 		embed       *discordgo.MessageEmbed
 		DynamicData Dynamic_svr
 	)
@@ -90,68 +88,55 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 			return true
 		}
-		for i := 0; i < len(GroupData); i++ {
-			Data2 := database.GetName(GroupData[i].ID)
-			GroupData[i].NameGroup = strings.ToLower(GroupData[i].NameGroup)
-			wg.Add(2)
-
-			go func() {
-				for ii := 0; ii < len(Data2); ii++ {
-					Data2[ii].Name = strings.ToLower(Data2[ii].Name)
-					if m.Content == Prefix+Data2[ii].Name || m.Content == Prefix+Data2[ii].JpName {
-						DataFix := Data2[ii].GetMemberURL()
-						if DataFix.Videos != "" {
-							Msg = "Video type,check original post"
-						} else if DataFix.Photos != nil {
-							Pic = DataFix.Photos[0]
-							Color, err = GetColor("/tmp/mem.tmp", DataFix.Photos[0])
-							if err != nil {
-								log.Error(err)
-							}
-						} else {
-							Msg = "Video type,check original post"
-						}
-						Member = SendNude(FixName(Data2[ii].EnName, Data2[ii].JpName),
-							DataFix.Author, RemovePic(DataFix.Text),
-							DataFix.PermanentURL,
-							Pic, Msg, Color,
-							DataFix.State, DataFix.Dynamic_id)
-						break
-					} else {
-						Member = false
+		for _, GroupData := range GroupData {
+			if m.Content == strings.ToLower(Prefix+GroupData.NameGroup) {
+				DataFix := database.GetFanart(GroupData.ID, 0)
+				if DataFix.Videos != "" {
+					Msg = "Video type,check original post"
+					Pic = config.NotFound
+				} else if len(DataFix.Photos) > 0 {
+					Pic = DataFix.Photos[0]
+					Color, err = GetColor("/tmp/mem.tmp", DataFix.Photos[0])
+					if err != nil {
+						log.Error(err)
 					}
+				} else {
+					Msg = "Video type,check original post"
+					Pic = config.NotFound
 				}
-				wg.Done()
-			}()
-			go func() {
-				if m.Content == Prefix+GroupData[i].NameGroup {
-					DataFix := GroupData[i].GetGroupURL()
+				Group = SendNude(FixName(DataFix.EnName, DataFix.JpName),
+					DataFix.Author, RemovePic(DataFix.Text),
+					DataFix.PermanentURL,
+					Pic, Msg, Color,
+					DataFix.State, DataFix.Dynamic_id)
+				break
+			}
+			for _, MemberData := range database.GetName(GroupData.ID) {
+				if m.Content == strings.ToLower(Prefix+MemberData.Name) || m.Content == strings.ToLower(Prefix+MemberData.JpName) {
+					DataFix := database.GetFanart(0, MemberData.ID)
 					if DataFix.Videos != "" {
-						Pic = DataFix.Videos
 						Msg = "Video type,check original post"
-					} else if DataFix.Photos != nil {
+						Pic = config.NotFound
+					} else if len(DataFix.Photos) > 0 {
 						Pic = DataFix.Photos[0]
 						Color, err = GetColor("/tmp/mem.tmp", DataFix.Photos[0])
 						if err != nil {
 							log.Error(err)
 						}
+					} else {
+						Msg = "Video type,check original post"
 					}
-
-					Group = SendNude(FixName(DataFix.EnName, DataFix.JpName),
+					Member = SendNude(FixName(MemberData.EnName, MemberData.JpName),
 						DataFix.Author, RemovePic(DataFix.Text),
 						DataFix.PermanentURL,
 						Pic, Msg, Color,
 						DataFix.State, DataFix.Dynamic_id)
-				} else {
-					Group = false
+					break
 				}
-				wg.Done()
-			}()
-			wg.Wait()
-
-			if Member || Group {
-				return
 			}
+		}
+		if Member || Group {
+			return
 		}
 		if !Group && !Member {
 			s.ChannelMessageSend(m.ChannelID, "`"+m.Content[len(Prefix):]+"` was invalid name")

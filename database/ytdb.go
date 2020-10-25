@@ -1,41 +1,22 @@
 package database
 
 import (
-	"database/sql"
-	"fmt"
-
 	log "github.com/sirupsen/logrus"
 )
 
 //Get Youtube data from status
 func YtGetStatus(Group, Member int64, Status string) []YtDbData {
-	funcvar := GetFunctionName(YtGetStatus)
-	Debugging(funcvar, "In", fmt.Sprint(Group, Member, Status))
 	var (
-		rows  *sql.Rows
-		err   error
 		Data  []YtDbData
 		list  YtDbData
 		limit int
-		query string
 	)
 	if Group != 0 && Status != "live" {
 		limit = 3
 	} else {
 		limit = 2525
 	}
-	if Status == "upcoming" {
-		query = `SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers FROM Youtube Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status='upcoming' AND Type='Streaming' AND ScheduledStart !='' Order by ScheduledStart ASC Limit ? `
-	} else if Status == "live" {
-		query = `SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers FROM Youtube Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status='live' Limit ?`
-	} else if Status == "private" {
-		query = `SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers FROM Youtube Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status='private' Limit ?`
-	} else {
-		query = `SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers FROM Youtube Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status='past' AND Type='Streaming' AND EndStream !='' order by EndStream DESC Limit ?`
-	}
-
-	rows, err = DB.Query(query, Group, Member, limit)
-	BruhMoment(err, "", false)
+	rows, err := DB.Query(`call GetYt(?,?,?,?)`, Member, Group, limit, Status)
 	defer rows.Close()
 
 	for rows.Next() {
@@ -45,7 +26,6 @@ func YtGetStatus(Group, Member int64, Status string) []YtDbData {
 		}
 		Data = append(Data, list)
 	}
-	Debugging(funcvar, "Out", Data)
 	return Data
 
 }
@@ -66,10 +46,8 @@ func (Data YtDbData) InputYt(MemberID int64) {
 
 //Check new video or not
 func CheckVideoID(VideoID string) YtDbData {
-	funcvar := GetFunctionName(CheckVideoID)
-	Debugging(funcvar, "In", VideoID)
 	var Data YtDbData
-	rows, err := DB.Query(`SELECT id,VideoID,Type,Status,Title,Thumbnails,Description,PublishedAt,ScheduledStart,EndStream,Viewers FROM Vtuber.Youtube Where VideoID=?`, VideoID)
+	rows, err := DB.Query(`Call YtCheck(?)`, VideoID)
 	BruhMoment(err, "", false)
 	defer rows.Close()
 
