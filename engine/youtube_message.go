@@ -17,16 +17,12 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 		Region    string
 		Prefix    = config.PYoutube
 		SendEmbed = func(Data Memberst) {
-			Color, err := GetColor("/tmp/yt2.tmp", m.Author.AvatarURL("80"))
+
+			Color, err := GetColor("/tmp/yt2.tmp", Data.Thumb)
 			if err != nil {
 				log.Error(err)
 			}
-			if Data.Thumb != "" {
-				Color, err = GetColor("/tmp/yt2.tmp", Data.Thumb)
-				if err != nil {
-					log.Error(err)
-				}
-			}
+
 			if Data.VideoID != "" {
 				s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
