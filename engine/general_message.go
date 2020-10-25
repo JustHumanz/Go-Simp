@@ -579,7 +579,7 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 				AddField("sp_"+config.PBilibili+"[Vtuber Group/Member]", "This command will show latest video on bilibili  *only 3 if use Vtuber Group*").
 				AddField(Prefix+"Help EN", "Well,you using it right now").
 				AddField(Prefix+"Help JP", "Like this but in Japanese").
-				SetThumbnail("https://justhumanz.me/bsd.png").
+				SetThumbnail(config.BSD).
 				SetFooter("Only user with permission \"Manage Channel or higher\" can Enable/Disable/Update Vtuber Group").
 				SetColor(Color).MessageEmbed)
 			return
