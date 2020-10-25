@@ -39,7 +39,7 @@ var (
 	GroupsName []string
 	ImgDomain  string
 	RegList    = make(map[string]string)
-	H3llcome   = []string{config.Bonjour, config.Howdy, config.Guten, config.Koni, config.Selamat}
+	H3llcome   = []string{config.Bonjour, config.Howdy, config.Guten, config.Koni, config.Selamat, config.Assalamu}
 )
 
 //Start module
