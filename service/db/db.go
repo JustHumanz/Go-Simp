@@ -184,23 +184,6 @@ func CreateDB(Data config.ConfigFile) error {
 
 	log.Info("Create stored-procedure")
 
-	log.Info("Create YtCheck")
-	_, err = db.Exec(`DROP PROCEDURE IF EXISTS YtCheck;`)
-	if err != nil {
-		return err
-	}
-	_, err = db.Exec(`CREATE PROCEDURE YtCheck
-		(
-			VideoID varchar(24)
-		)
-		BEGIN
-			SELECT id,VideoID,Type,Status,Title,Thumbnails,Description,PublishedAt,ScheduledStart,EndStream,Viewers 
-			FROM Vtuber.Youtube 
-			Where VideoID=VideoID;
-		END`)
-	if err != nil {
-		return err
-	}
 	log.Info("Create GetYt")
 	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetYt;`)
 	if err != nil {
