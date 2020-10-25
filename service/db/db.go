@@ -227,6 +227,45 @@ func CreateDB(Data config.ConfigFile) error {
 	if err != nil {
 		return err
 	}
+
+	log.Info("Create GetYtByReg")
+	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetYtByReg;`)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(`CREATE PROCEDURE GetYtByReg
+		(
+			grpid int,
+			sts varchar(11),
+			reg varchar(2)
+		)
+		BEGIN
+		IF sts = 'upcoming' THEN
+			SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,
+			Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers 
+			FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
+			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
+			Where VtuberGroup.id=grpid AND Status='upcoming' AND Region=reg Order by ScheduledStart ASC Limit 3;
+
+		ELSEIF sts = 'live' OR sts = 'private' THEN 
+			SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,
+			Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers 
+			FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
+			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
+			Where VtuberGroup.id=grpid AND Status=sts AND Region=reg Limit 3;
+		ELSE 
+			SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,
+			Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers 
+			FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
+			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
+			Where VtuberGroup.id=grpid AND Status='past' AND Region=reg AND EndStream !='' order by EndStream DESC Limit 3;
+			
+		end if;	
+		END`)
+	if err != nil {
+		return err
+	}
+
 	log.Info("Create GetVtuberName")
 	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetVtuberName;`)
 	if err != nil {
