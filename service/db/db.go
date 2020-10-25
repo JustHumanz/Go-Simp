@@ -296,23 +296,6 @@ func CreateDB(Data config.ConfigFile) error {
 		return err
 	}
 
-	log.Info("Create CheckSpaceBiliBili")
-	_, err = db.Exec(`DROP PROCEDURE IF EXISTS CheckSpaceBiliBili;`)
-	if err != nil {
-		return err
-	}
-	_, err = db.Exec(`CREATE PROCEDURE CheckSpaceBiliBili
-		(
-			VidID varchar(64),
-			MemberID int
-		)
-		BEGIN
-			SELECT id FROM Vtuber.BiliBili WHERE VideoID=VidID AND VtuberMember_id=MemberID;
-		END`)
-	if err != nil {
-		return err
-	}
-
 	log.Info("Create GetArt")
 	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetArt;`)
 	if err != nil {

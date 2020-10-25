@@ -45,9 +45,9 @@ func (Data YtDbData) InputYt(MemberID int64) {
 }
 
 //Check new video or not
-func CheckVideoID(VideoID string) YtDbData {
+func (Member Name) CheckYtVideo(VideoID string) YtDbData {
 	var Data YtDbData
-	rows, err := DB.Query(`SELECT id,VideoID,Type,Status,Title,Thumbnails,Description,PublishedAt,ScheduledStart,EndStream,Viewers FROM Vtuber.Youtube Where VideoID=?;`, VideoID)
+	rows, err := DB.Query(`SELECT id,VideoID,Type,Status,Title,Thumbnails,Description,PublishedAt,ScheduledStart,EndStream,Viewers FROM Vtuber.Youtube Where VideoID=? AND VtuberMember_id=?`, VideoID, Member.ID)
 	BruhMoment(err, "", false)
 	defer rows.Close()
 

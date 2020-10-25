@@ -67,8 +67,8 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 		} else {
 			yttype = "Streaming"
 		}
-		DataDB := database.CheckVideoID(VideoID[i])
 
+		DataDB := Name.CheckYtVideo(VideoID[i])
 		if Data.Items[i].Snippet.VideoStatus == "upcoming" {
 			Viewers, err = GetWaiting(VideoID[i])
 		} else if Data.Items[i].LiveDetails.Viewers == "" {

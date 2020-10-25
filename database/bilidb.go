@@ -99,7 +99,7 @@ func InputSpaceVideo(Data InputBiliBili) {
 //Check New video from SpaceBiliBili
 func (Data InputBiliBili) CheckVideo() (bool, int) {
 	var tmp int
-	row := DB.QueryRow("call CheckSpaceBiliBili(?,?)", Data.VideoID, Data.MemberID)
+	row := DB.QueryRow("SELECT id FROM Vtuber.BiliBili WHERE VideoID=? AND VtuberMember_id=?;", Data.VideoID, Data.MemberID)
 	err := row.Scan(&tmp)
 	if err != nil || err == sql.ErrNoRows {
 		log.Error(err)
