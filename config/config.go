@@ -40,6 +40,7 @@ const (
 	GoSimpIMG         = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/go-simp.png"
 	Longcatttt        = "https://cdn.ebaumsworld.com/2020/09/20/013235/86394200/longcat-pic.jpg"
 	Dead              = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/dead.jpg"
+	BSD               = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/bsd.png"
 	Sleep             = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/sleep.png"
 	ChannelPermission = 16
 	Bonjour           = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/bonjour.png"
@@ -47,6 +48,7 @@ const (
 	Guten             = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/guten.png"
 	Koni              = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/koni.png"
 	Selamat           = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/selamat.jpg"
+	Assalamu          = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Assalamu.jpg"
 )
 
 type ConfigFile struct {

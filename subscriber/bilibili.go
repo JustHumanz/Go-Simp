@@ -84,52 +84,54 @@ func CheckBiliFollowCount() {
 				}()
 				wg.Wait()
 
+				BiliFollowDB := Name.GetSubsCount()
 				if Name.BiliBiliID != 0 {
-					if bilistate.Follow.Data.Follower <= 10000 {
-						for i := 0; i < 1000001; i += 100000 {
-							if i == bilistate.Follow.Data.Follower && bilistate.Follow.Data.Follower != 0 {
-								Avatar := Name.BiliBiliAvatar
-								Color, err := engine.GetColor("/tmp/bili.tmp", Avatar)
-								if err != nil {
-									log.Error(err)
+					if BiliFollowDB.BiliFollow != bilistate.Follow.Data.Follower {
+						if bilistate.Follow.Data.Follower <= 10000 {
+							for i := 0; i < 1000001; i += 100000 {
+								if i == bilistate.Follow.Data.Follower && bilistate.Follow.Data.Follower != 0 {
+									Avatar := Name.BiliBiliAvatar
+									Color, err := engine.GetColor("/tmp/bili.tmp", Avatar)
+									if err != nil {
+										log.Error(err)
+									}
+									SendNude(engine.NewEmbed().
+										SetAuthor(Group.NameGroup, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
+										SetTitle(engine.FixName(Name.EnName, Name.JpName)).
+										SetThumbnail(config.BiliBiliIMG).
+										SetDescription("Congratulation for "+strconv.Itoa(i)+" followers").
+										SetImage(Avatar).
+										AddField("Views", strconv.Itoa(bilistate.LikeView.Data.Archive.View)).
+										AddField("Videos", strconv.Itoa(bilistate.Videos)).
+										SetURL("https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
+										InlineAllFields().
+										SetColor(Color).MessageEmbed, Group)
 								}
-								SendNude(engine.NewEmbed().
-									SetAuthor(Group.NameGroup, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
-									SetTitle(engine.FixName(Name.EnName, Name.JpName)).
-									SetThumbnail(config.BiliBiliIMG).
-									SetDescription("Congratulation for "+strconv.Itoa(i)+" followers").
-									SetImage(Avatar).
-									AddField("Views", strconv.Itoa(bilistate.LikeView.Data.Archive.View)).
-									AddField("Videos", strconv.Itoa(bilistate.Videos)).
-									SetURL("https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
-									InlineAllFields().
-									SetColor(Color).MessageEmbed, Group)
 							}
-						}
-					} else {
-						for i := 0; i < 10001; i += 1000 {
-							if i == bilistate.Follow.Data.Follower && bilistate.Follow.Data.Follower != 0 {
-								Avatar := Name.BiliBiliAvatar
-								Color, err := engine.GetColor("/tmp/bili.tmp", Avatar)
-								if err != nil {
-									log.Error(err)
+						} else {
+							for i := 0; i < 10001; i += 1000 {
+								if i == bilistate.Follow.Data.Follower && bilistate.Follow.Data.Follower != 0 {
+									Avatar := Name.BiliBiliAvatar
+									Color, err := engine.GetColor("/tmp/bili.tmp", Avatar)
+									if err != nil {
+										log.Error(err)
+									}
+									SendNude(engine.NewEmbed().
+										SetAuthor(Group.NameGroup, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
+										SetTitle(engine.FixName(Name.EnName, Name.JpName)).
+										SetThumbnail(config.BiliBiliIMG).
+										SetDescription("Congratulation for "+strconv.Itoa(i)+" followers").
+										SetImage(Avatar).
+										AddField("Views", strconv.Itoa(bilistate.LikeView.Data.Archive.View)).
+										AddField("Videos", strconv.Itoa(bilistate.Videos)).
+										SetURL("https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
+										InlineAllFields().
+										SetColor(Color).MessageEmbed, Group)
 								}
-								SendNude(engine.NewEmbed().
-									SetAuthor(Group.NameGroup, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
-									SetTitle(engine.FixName(Name.EnName, Name.JpName)).
-									SetThumbnail(config.BiliBiliIMG).
-									SetDescription("Congratulation for "+strconv.Itoa(i)+" followers").
-									SetImage(Avatar).
-									AddField("Views", strconv.Itoa(bilistate.LikeView.Data.Archive.View)).
-									AddField("Videos", strconv.Itoa(bilistate.Videos)).
-									SetURL("https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
-									InlineAllFields().
-									SetColor(Color).MessageEmbed, Group)
 							}
 						}
 					}
 				}
-				BiliFollowDB := Name.GetSubsCount()
 				log.WithFields(log.Fields{
 					"Past BiliBili Follower":    BiliFollowDB.BiliFollow,
 					"Current BiliBili Follower": bilistate.Follow.Data.Follower,

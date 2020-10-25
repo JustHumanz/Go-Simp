@@ -181,6 +181,181 @@ func CreateDB(Data config.ConfigFile) error {
 		VtuberMember_id int(11) NOT NULL,
 		PRIMARY KEY (id)
 		);`)
+
+	log.Info("Create stored-procedure")
+
+	log.Info("Create YtCheck")
+	_, err = db.Exec(`DROP PROCEDURE IF EXISTS YtCheck;`)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(`CREATE PROCEDURE YtCheck
+		(
+			VideoID varchar(24)
+		)
+		BEGIN
+			SELECT id,VideoID,Type,Status,Title,Thumbnails,Description,PublishedAt,ScheduledStart,EndStream,Viewers 
+			FROM Vtuber.Youtube 
+			Where VideoID=VideoID;
+		END`)
+	if err != nil {
+		return err
+	}
+	log.Info("Create GetYt")
+	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetYt;`)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(`CREATE PROCEDURE GetYt
+		(
+			memid int,
+			grpid int,
+			lmt int,
+			sts varchar(11)
+		)
+		BEGIN
+		IF sts = 'upcoming' THEN
+			SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,
+			Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers 
+			FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
+			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
+			Where (VtuberGroup.id=grpid or VtuberMember.id=memid) 
+			AND Status='upcoming' 
+			Order by ScheduledStart ASC Limit lmt;
+		ELSEIF sts = 'live' OR sts = 'private' THEN 
+			SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,
+			Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers 
+			FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
+			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
+			Where (VtuberGroup.id=grpid or VtuberMember.id=memid) 
+			AND Status=sts
+			Limit lmt;
+		ELSE 
+			SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,
+			Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers 
+			FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
+			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
+			Where (VtuberGroup.id=grpid or VtuberMember.id=memid) 
+			AND Status='past'
+			AND EndStream !='' order by EndStream DESC Limit lmt;
+			
+		end if;	
+		END`)
+	if err != nil {
+		return err
+	}
+	log.Info("Create GetVtuberName")
+	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetVtuberName;`)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(`CREATE PROCEDURE GetVtuberName
+		(
+			GroupID int
+		)
+		BEGIN
+			SELECT id,VtuberName,VtuberName_EN,VtuberName_JP,Youtube_ID,BiliBili_SpaceID,BiliBili_RoomID,
+			Region,Hashtag,BiliBili_Hashtag,BiliBili_Avatar,Twitter_Username,Youtube_Avatar 
+			FROM Vtuber.VtuberMember WHERE VtuberGroup_id=GroupID 
+			Order by Region,VtuberGroup_id;
+		END`)
+	if err != nil {
+		return err
+	}
+	log.Info("Create GetLiveBiliBili")
+	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetLiveBiliBili;`)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(`CREATE PROCEDURE GetLiveBiliBili
+		(
+			GroupID int,
+			MemberID int,
+			Sts varchar(11)
+		)
+		BEGIN
+			SELECT RoomID,Status,Title,Thumbnails,Description,ScheduledStart,Viewers,VtuberName_EN,
+			VtuberName_JP,BiliBili_Avatar FROM Vtuber.LiveBiliBili 
+			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
+			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where 
+			(VtuberGroup.id=GroupID or VtuberMember.id=MemberID) 
+			AND Status=Sts Order by ScheduledStart ASC;
+		END`)
+	if err != nil {
+		return err
+	}
+
+	log.Info("Create GetSpaceBiliBili")
+	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetSpaceBiliBili;`)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(`CREATE PROCEDURE GetSpaceBiliBili
+		(
+			GroupID int,
+			MemberID int
+		)
+		BEGIN
+		IF GroupID > 0 THEN
+			SELECT VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM Vtuber.BiliBili 
+			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
+			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
+			Where (VtuberGroup.id=GroupID or VtuberMember.id=MemberID) Order by UploadDate DESC limit 3;
+		Else 
+			SELECT VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM Vtuber.BiliBili 
+			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
+			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
+			Where (VtuberGroup.id=GroupID or VtuberMember.id=MemberID) Order by UploadDate DESC;		
+
+		end if;						
+		END`)
+	if err != nil {
+		return err
+	}
+
+	log.Info("Create CheckSpaceBiliBili")
+	_, err = db.Exec(`DROP PROCEDURE IF EXISTS CheckSpaceBiliBili;`)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(`CREATE PROCEDURE CheckSpaceBiliBili
+		(
+			VidID varchar(64),
+			MemberID int
+		)
+		BEGIN
+			SELECT id FROM Vtuber.BiliBili WHERE VideoID=VidID AND VtuberMember_id=MemberID;
+		END`)
+	if err != nil {
+		return err
+	}
+
+	log.Info("Create GetArt")
+	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetArt;`)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(`CREATE PROCEDURE GetArt
+		(
+			GroupID int,
+			MemberID int,
+			State varchar(11)
+		)
+		BEGIN
+		IF State = 'twitter' THEN
+			SELECT VtuberName_EN,VtuberName_JP,PermanentURL,Author,Photos,Videos,Text FROM Vtuber.Twitter 
+			Inner Join Vtuber.VtuberMember on VtuberMember.id = Twitter.VtuberMember_id 
+			Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id 
+			where (VtuberGroup.id=GroupID OR VtuberMember.id=MemberID)  ORDER by RAND() LIMIT 1;
+		else
+			SELECT VtuberName_EN,VtuberName_JP,PermanentURL,Author,Photos,Videos,Text FROM Vtuber.TBiliBili  
+			Inner Join Vtuber.VtuberMember on VtuberMember.id = TBiliBili.VtuberMember_id 
+			Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id 
+			where (VtuberGroup.id=GroupID OR VtuberMember.id=MemberID)  ORDER by RAND() LIMIT 1;
+			
+		end if;
+		END`)
+
 	if err != nil {
 		return err
 	}

@@ -43,9 +43,7 @@ func GetTBiliBili(dynamic_id string) bool {
 
 //Get LiveBiliBili by Status (live,past)
 func BilGet(GroupID int64, MemberID int64, Status string) []LiveBiliDB {
-	funcvar := GetFunctionName(BilGet)
-	Debugging(funcvar, "In", GroupID)
-	rows, err := DB.Query(`SELECT RoomID,Status,Title,Thumbnails,Description,ScheduledStart,Viewers,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM LiveBiliBili Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status=? Order by ScheduledStart ASC`, GroupID, MemberID, Status)
+	rows, err := DB.Query(`call GetLiveBiliBili(?,?,?)`, GroupID, MemberID, Status)
 	BruhMoment(err, "", false)
 
 	defer rows.Close()
@@ -61,21 +59,12 @@ func BilGet(GroupID int64, MemberID int64, Status string) []LiveBiliDB {
 		}
 		Data = append(Data, list)
 	}
-	Debugging(funcvar, "Out", Data)
 	return Data
 }
 
 //Get SpaceBiliBili Data
 func SpaceGet(GroupID int64, MemberID int64) []SpaceBiliDB {
-	var Query string
-	funcvar := GetFunctionName(BilGet)
-	Debugging(funcvar, "In", GroupID)
-	if GroupID != 0 {
-		Query = `SELECT VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM BiliBili Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) Order by UploadDate DESC limit 3`
-	} else {
-		Query = `SELECT VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM BiliBili Inner join VtuberMember on VtuberMember.id=VtuberMember_id Inner join VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) Order by UploadDate DESC`
-	}
-	rows, err := DB.Query(Query, GroupID, MemberID)
+	rows, err := DB.Query(`Call GetSpaceBiliBili(?,?)`, GroupID, MemberID)
 	BruhMoment(err, "", false)
 
 	defer rows.Close()
@@ -91,15 +80,11 @@ func SpaceGet(GroupID int64, MemberID int64) []SpaceBiliDB {
 		}
 		Data = append(Data, list)
 	}
-	Debugging(funcvar, "Out", Data)
 	return Data
 }
 
 //Input data to SpaceBiliBili
 func InputSpaceVideo(Data InputBiliBili) {
-	funcvar := GetFunctionName(InputSpaceVideo)
-	Debugging(funcvar, "In", Data)
-
 	stmt, err := DB.Prepare(`INSERT INTO BiliBili (VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberMember_id) values(?,?,?,?,?,?,?,?,?)`)
 	BruhMoment(err, "", false)
 	defer stmt.Close()
@@ -114,7 +99,7 @@ func InputSpaceVideo(Data InputBiliBili) {
 //Check New video from SpaceBiliBili
 func (Data InputBiliBili) CheckVideo() (bool, int) {
 	var tmp int
-	row := DB.QueryRow("SELECT id FROM BiliBili WHERE VideoID=? AND VtuberMember_id=?", Data.VideoID, Data.MemberID)
+	row := DB.QueryRow("call CheckSpaceBiliBili(?,?)", Data.VideoID, Data.MemberID)
 	err := row.Scan(&tmp)
 	if err != nil || err == sql.ErrNoRows {
 		log.Error(err)
