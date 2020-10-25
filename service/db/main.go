@@ -72,6 +72,7 @@ func init() {
 	err = CreateDB(config)
 	if err != nil {
 		log.Error(err)
+		os.Exit(1)
 	}
 	Bot.AddHandler(Dead)
 }

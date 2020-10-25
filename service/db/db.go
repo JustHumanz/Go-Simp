@@ -182,8 +182,14 @@ func CreateDB(Data config.ConfigFile) error {
 		PRIMARY KEY (id)
 		);`)
 
-	log.Info("Create stored procedure")
-	_, err = db.Exec(`CREATE PROCEDURE IF NOT EXISTS YtCheck
+	log.Info("Create stored-procedure")
+
+	log.Info("Create YtCheck")
+	_, err = db.Exec(`DROP PROCEDURE IF EXISTS YtCheck;`)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(`CREATE PROCEDURE YtCheck
 		(
 			VideoID varchar(24)
 		)
@@ -192,8 +198,15 @@ func CreateDB(Data config.ConfigFile) error {
 			FROM Vtuber.Youtube 
 			Where VideoID=VideoID;
 		END`)
-
-	_, err = db.Exec(`CREATE PROCEDURE IF NOT EXISTS GetYt
+	if err != nil {
+		return err
+	}
+	log.Info("Create GetYt")
+	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetYt;`)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(`CREATE PROCEDURE GetYt
 		(
 			memid int,
 			grpid int,
@@ -228,8 +241,15 @@ func CreateDB(Data config.ConfigFile) error {
 			
 		end if;	
 		END`)
-
-	_, err = db.Exec(`CREATE PROCEDURE IF NOT EXISTS GetVtuberName
+	if err != nil {
+		return err
+	}
+	log.Info("Create GetVtuberName")
+	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetVtuberName;`)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(`CREATE PROCEDURE GetVtuberName
 		(
 			GroupID int
 		)
@@ -239,8 +259,15 @@ func CreateDB(Data config.ConfigFile) error {
 			FROM Vtuber.VtuberMember WHERE VtuberGroup_id=GroupID 
 			Order by Region,VtuberGroup_id;
 		END`)
-
-	_, err = db.Exec(`CREATE PROCEDURE IF NOT EXISTS GetLiveBiliBili
+	if err != nil {
+		return err
+	}
+	log.Info("Create GetLiveBiliBili")
+	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetLiveBiliBili;`)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(`CREATE PROCEDURE GetLiveBiliBili
 		(
 			GroupID int,
 			MemberID int,
@@ -252,10 +279,18 @@ func CreateDB(Data config.ConfigFile) error {
 			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
 			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where 
 			(VtuberGroup.id=GroupID or VtuberMember.id=MemberID) 
-			AND Status=Sts Order by ScheduledStart ASC
+			AND Status=Sts Order by ScheduledStart ASC;
 		END`)
+	if err != nil {
+		return err
+	}
 
-	_, err = db.Exec(`CREATE PROCEDURE IF NOT EXISTS GetSpaceBiliBili
+	log.Info("Create GetSpaceBiliBili")
+	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetSpaceBiliBili;`)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(`CREATE PROCEDURE GetSpaceBiliBili
 		(
 			GroupID int,
 			MemberID int
@@ -265,26 +300,42 @@ func CreateDB(Data config.ConfigFile) error {
 			SELECT VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM Vtuber.BiliBili 
 			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
 			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-			Where (VtuberGroup.id=GroupID or VtuberMember.id=MemberID) Order by UploadDate DESC limit 3
+			Where (VtuberGroup.id=GroupID or VtuberMember.id=MemberID) Order by UploadDate DESC limit 3;
 		Else 
 			SELECT VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM Vtuber.BiliBili 
 			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
 			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-			Where (VtuberGroup.id=GroupID or VtuberMember.id=MemberID) Order by UploadDate DESC		
+			Where (VtuberGroup.id=GroupID or VtuberMember.id=MemberID) Order by UploadDate DESC;		
 
 		end if;						
 		END`)
+	if err != nil {
+		return err
+	}
 
-	_, err = db.Exec(`CREATE PROCEDURE IF NOT EXISTS CheckSpaceBiliBili
+	log.Info("Create CheckSpaceBiliBili")
+	_, err = db.Exec(`DROP PROCEDURE IF EXISTS CheckSpaceBiliBili;`)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(`CREATE PROCEDURE CheckSpaceBiliBili
 		(
-			VidID varchar(11),
+			VidID varchar(64),
 			MemberID int
 		)
 		BEGIN
-			SELECT id FROM BiliBili WHERE VideoID=VidID AND VtuberMember_id=MemberID
+			SELECT id FROM Vtuber.BiliBili WHERE VideoID=VidID AND VtuberMember_id=MemberID;
 		END`)
+	if err != nil {
+		return err
+	}
 
-	_, err = db.Exec(`CREATE PROCEDURE IF NOT EXISTS GetArt
+	log.Info("Create GetArt")
+	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetArt;`)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(`CREATE PROCEDURE GetArt
 		(
 			GroupID int,
 			MemberID int,

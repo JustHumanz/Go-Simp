@@ -252,6 +252,118 @@
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "shiromiya_mimi",
                     "Region":"JP"
+                },
+                {
+                    "Name":"Uge",
+                    "EN_Name":"And Uge",
+                    "JP_Name":"杏戸ゆげ",
+                    "Hashtag": {
+                        "Twitter": "#ゆげいじゅつ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC3EhsuKdEkI99TWZwZgWutg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Uge_And",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Kanon",
+                    "EN_Name":"Kanade Kanon",
+                    "JP_Name":"花奏かのん",
+                    "Hashtag": {
+                        "Twitter": "#かなでかのんアート",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCmqrvfLMws-GLGHQcB5dasg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "_kanade_kanon",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Anko",
+                    "EN_Name":"Anko Kisaki",
+                    "JP_Name":"季咲あんこ",
+                    "Hashtag": {
+                        "Twitter": "#ふわふわあんこ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UChXm-xAYPfygrbyLo2yCASQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Anko_Kisaki",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Komori",
+                    "EN_Name":"Komori Met",
+                    "JP_Name":"小森めと",
+                    "Hashtag": {
+                        "Twitter": "#引き小森画",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCzUNASdzI4PV5SlqtYwAkKQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Met_Komori",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Wat",
+                    "EN_Name":"Wat Huma",
+                    "JP_Name":"​不磨わっと",
+                    "Hashtag": {
+                        "Twitter": "#絵レキバン",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCV4EoK6BVNl7wxuxpUvvSWA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Wat_Huma",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Shishio",
+                    "EN_Name":"Shishio Chris",
+                    "JP_Name":"獅子王クリス",
+                    "Hashtag": {
+                        "Twitter": "#くりすちゃんArt",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC--A2dwZW7-M2kID0N6_lfA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "ChrisShishio",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Rene",
+                    "EN_Name":"Ryugasaki Rene",
+                    "JP_Name":"龍ヶ崎リン",
+                    "Hashtag": {
+                        "Twitter": "#RART",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC2hc-00y-MSR6eYA4eQ4tjQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Rene_Ryugasaki",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Anna",
+                    "EN_Name":"Kojo Anna",
+                    "JP_Name":"虎城アンナ",
+                    "Hashtag": {
+                        "Twitter": "#アンナート",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCvPPBoTOor5gm8zSlE2tg4w",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Rene_Ryugasaki",
+                    "Region":"JP"
                 }
             ]
         },
