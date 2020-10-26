@@ -897,11 +897,31 @@ func (Data Dynamic_svr) GetUserAvatar() string {
 	return Data.Data.Card.Desc.UserProfile.Info.Face
 }
 
-var GuildID string
-
 //Guild join handler
 func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
-	if g.Guild.ID != GuildID {
+	if g.Unavailable {
+		log.Info("joined unavailable guild", g.Guild.ID)
+		return
+	}
+	sqlite := OpenLiteDB(PathLiteDB)
+	timejoin, err := g.Guild.JoinedAt.Parse()
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	DataGuild := Guild{
+		ID:   g.Guild.ID,
+		Name: g.Guild.Name,
+		Join: timejoin,
+	}
+	Info := DataGuild.CheckGuild(sqlite)
+	if Info == "New" {
+		err := DataGuild.InputGuild(sqlite)
+		if err != nil {
+			log.Error(err)
+		}
+	}
+	if Info == "New" || Info == "Rejoin" {
 		for _, Channel := range g.Guild.Channels {
 			BotPermission, err := s.UserChannelPermissions(BotID, Channel.ID)
 			if err != nil {
@@ -924,8 +944,6 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 				return
 			}
 		}
-	} else {
-		log.Info("Guild ID still same")
 	}
-	GuildID = g.Guild.ID
+	KillSqlite(sqlite)
 }
