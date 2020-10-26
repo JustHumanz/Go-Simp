@@ -10,9 +10,10 @@ import (
 )
 
 type Guild struct {
-	ID   string
-	Name string
-	Join time.Time
+	ID     string
+	Name   string
+	Join   time.Time
+	Dbconn *sql.DB
 }
 
 func CreateLite(path string) {
@@ -38,32 +39,32 @@ func OpenLiteDB(path string) *sql.DB {
 	return dblite
 }
 
-func (Data Guild) CheckGuild(dblite *sql.DB) string {
+func (Data Guild) CheckGuild() int {
 	var (
 		id int
 	)
-	err := dblite.QueryRow(`SELECT id FROM GuildList WHERE GuildID=? `, Data.ID).Scan(&id)
+	err := Data.Dbconn.QueryRow(`SELECT id FROM GuildList WHERE GuildID=? `, Data.ID).Scan(&id)
 	if err == sql.ErrNoRows {
-		return "New"
+		return 0
 	} else {
-		if dblite.QueryRow(`SELECT id FROM GuildList WHERE JoinDate=? `, Data.Join).Scan(&id) == sql.ErrNoRows {
-			stmt, err := dblite.Prepare("UPDATE GuildList set JoinDate=? where id=?")
-			if err != nil {
-				log.Error(err)
-			}
-			_, err = stmt.Exec(Data.Join, id)
-			if err != nil {
-				log.Error(err)
-			}
-			return "Rejoin"
-		} else {
-			return ""
-		}
+		return id
 	}
 }
 
-func (Data Guild) InputGuild(dblite *sql.DB) error {
-	stmt, err := dblite.Prepare("INSERT INTO GuildList(GuildName, GuildID,JoinDate) values(?,?,?)")
+func (Data Guild) UpdateJoin(id int) error {
+	stmt, err := Data.Dbconn.Prepare("UPDATE GuildList set JoinDate=? where id=?")
+	if err != nil {
+		log.Error(err)
+	}
+	_, err = stmt.Exec(Data.Join, id)
+	if err != nil {
+		log.Error(err)
+	}
+	return nil
+}
+
+func (Data Guild) InputGuild() error {
+	stmt, err := Data.Dbconn.Prepare("INSERT INTO GuildList(GuildName, GuildID,JoinDate) values(?,?,?)")
 	if err != nil {
 		return err
 	}

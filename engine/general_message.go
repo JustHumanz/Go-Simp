@@ -910,22 +910,19 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 		return
 	}
 	DataGuild := Guild{
-		ID:   g.Guild.ID,
-		Name: g.Guild.Name,
-		Join: timejoin,
+		ID:     g.Guild.ID,
+		Name:   g.Guild.Name,
+		Join:   timejoin,
+		Dbconn: sqlite,
 	}
-	Info := DataGuild.CheckGuild(sqlite)
-	if Info == "New" {
-		err := DataGuild.InputGuild(sqlite)
-		if err != nil {
-			log.Error(err)
-		}
-	}
-	if Info == "New" || Info == "Rejoin" {
+	Info := DataGuild.CheckGuild()
+
+	if Info == 0 || Info != 0 {
 		for _, Channel := range g.Guild.Channels {
 			BotPermission, err := s.UserChannelPermissions(BotID, Channel.ID)
 			if err != nil {
 				log.Error(err)
+				return
 			}
 			if Channel.Type == 0 && BotPermission&2048 != 0 {
 				s.ChannelMessageSendEmbed(Channel.ID, NewEmbed().
@@ -939,8 +936,22 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 				if err != nil {
 					log.Error(err)
 				}
-				//send server name to my discord (just server name)
-				s.ChannelMessageSend(SendInvite.ID, g.Guild.Name+" invited me")
+				//send server name to my discord
+				if Info != 0 {
+					s.ChannelMessageSend(SendInvite.ID, g.Guild.Name+" reinvite me")
+					err := DataGuild.UpdateJoin(Info)
+					if err != nil {
+						log.Error(err)
+						return
+					}
+				} else {
+					err := DataGuild.InputGuild()
+					if err != nil {
+						log.Error(err)
+						return
+					}
+					s.ChannelMessageSend(SendInvite.ID, g.Guild.Name+" invited me")
+				}
 				return
 			}
 		}
