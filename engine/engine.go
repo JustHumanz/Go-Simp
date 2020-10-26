@@ -37,9 +37,9 @@ var (
 	debug      bool
 	GroupData  []database.GroupName
 	GroupsName []string
-	ImgDomain  string
 	RegList    = make(map[string]string)
 	H3llcome   = []string{config.Bonjour, config.Howdy, config.Guten, config.Koni, config.Selamat, config.Assalamu}
+	PathLiteDB = "./engine/guild.db"
 )
 
 //Start module
@@ -47,6 +47,7 @@ func Start(b *discordgo.Session, m string) {
 	BotSession = b
 	db = database.DB
 	BotID = m
+	CreateLite(PathLiteDB)
 	if strings.ToLower(config.Logging) == "debug" {
 		debug = true
 	} else {

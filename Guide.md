@@ -17,6 +17,6 @@ on this guide i'm create a `hololive_fanart` to send all hololive fanart to this
 ![alt text](https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Guide/channel4.png "new")
 
 ## VTbot tag me command
-if you want tagged when there new art or Livestream schedule you can use `tag me` command,you can tag use vtuber name or vtuber group
-`Tag me (Vtuber name or Group name)`
+if you want tagged when there new art or Livestream schedule you can use `tag me` command,you can tag use vtuber name or vtuber group  
+`Tag me (Vtuber name or Group name)`  
 ![alt text](https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Guide/channel5.png "new")
