@@ -3,10 +3,7 @@ package engine
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
-	"io/ioutil"
 	"math/rand"
-	"net/http"
 	"regexp"
 	"strings"
 
@@ -389,14 +386,11 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 //Check user permission
 func CheckPermission(User, Channel string) bool {
-	Debugging(GetFunctionName(CheckPermission), "In", fmt.Sprint(User, Channel))
 	a, err := BotSession.UserChannelPermissions(User, Channel)
 	BruhMoment(err, "", false)
 	if a&config.ChannelPermission != 0 {
-		Debugging(GetFunctionName(CheckPermission), "Out", true)
 		return true
 	} else {
-		Debugging(GetFunctionName(CheckPermission), "Out", false)
 		return false
 	}
 }
@@ -579,9 +573,9 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 				AddField(Prefix+"Channel tags", "Show what is enable in this channel").
 				AddField(Prefix+"Vtuber data [Group] [Region]", "Show available Vtuber data ").
 				AddField(Prefix+"Subscriber {Member name}", "Show Vtuber count of subscriber and followers ").
-				AddField(config.PYoutube+"Upcoming [Vtuber Group/Member]", "This command will show Upcoming live streams on Youtube  *only 3 if use Vtuber Group*").
-				AddField(config.PYoutube+"Live [Vtuber Group/Member]", "This command will show all live streams right now on Youtube").
-				AddField(config.PYoutube+"Last [Vtuber Group/Member]", "This command will show past streams on Youtube *only 3 if use Vtuber Group*").
+				AddField(config.PYoutube+"Upcoming [Vtuber Group/Member] {Region}", "This command will show Upcoming live streams on Youtube  *only 3 if use Vtuber Group*").
+				AddField(config.PYoutube+"Live [Vtuber Group/Member] {Region}", "This command will show all live streams right now on Youtube").
+				AddField(config.PYoutube+"Last [Vtuber Group/Member] {Region}", "This command will show past streams on Youtube *only 3 if use Vtuber Group*").
 				AddField("~~"+config.PBilibili+"Upcoming [Vtuber Group/Member]~~", "~~This command will show all Upcoming live streams on BiliBili~~").
 				AddField(config.PBilibili+"Live [Vtuber Group/Member]", "This command will show all live streams right now on BiliBili").
 				AddField(config.PBilibili+"Last [Vtuber Group/Member]", "This command will show all past streams on BiliBili").
@@ -793,15 +787,11 @@ type NameStruct struct {
 
 //Find a valid Vtuber Group from message handler
 func FindGropName(GroupName string) (database.GroupName, error) {
-	funcvar := GetFunctionName(FindGropName)
-	Debugging(funcvar, "In", GroupName)
 	for i := 0; i < len(GroupData); i++ {
 		if strings.ToLower(GroupData[i].NameGroup) == strings.ToLower(GroupName) {
-			Debugging(funcvar, "Out", fmt.Sprint(GroupData[i].ID, nil))
 			return GroupData[i], nil
 		}
 	}
-	Debugging(funcvar, "Out", 0)
 	return database.GroupName{}, errors.New(GroupName + " Name Vtuber not valid")
 }
 
@@ -866,17 +856,7 @@ func Reacting(Data map[string]string) error {
 
 //Get twitter avatar
 func GetUserAvatar(username string) string {
-	funcvar := GetFunctionName(GetUserAvatar)
-	Debugging(funcvar, "In", username)
-
-	t := regexp.MustCompile("[[:^ascii:]]").ReplaceAllLiteralString(username, "")
-	resp, err := http.Get("https://mobile.twitter.com/" + t)
-	if err != nil {
-		log.Error(err)
-	}
-
-	defer resp.Body.Close()
-	bit, err := ioutil.ReadAll(resp.Body)
+	bit, err := Curl("https://mobile.twitter.com/"+regexp.MustCompile("[[:^ascii:]]").ReplaceAllLiteralString(username, ""), nil)
 	BruhMoment(err, "", false)
 
 	var avatar string
@@ -888,7 +868,6 @@ func GetUserAvatar(username string) string {
 			avatar = strings.Replace(element[1], "normal.jpg", "400x400.jpg", -1)
 		}
 	}
-	Debugging(funcvar, "In", avatar)
 	return avatar
 }
 
@@ -943,7 +922,6 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 					return
 				}
 				s.ChannelMessageSend(SendInvite.ID, g.Guild.Name+" invited me")
-
 				return
 			}
 		}

@@ -51,7 +51,7 @@ func CheckYtSubsCount() {
 									SetThumbnail(config.YoutubeIMG).
 									SetDescription("Congratulation for "+SubsCount+" subscriber").
 									SetImage(Name2.YoutubeAvatar).
-									AddField("Views", Item.Statistics.ViewCount).
+									AddField("Viewers", Item.Statistics.ViewCount).
 									AddField("Videos", Item.Statistics.VideoCount).
 									InlineAllFields().
 									SetURL("https://www.youtube.com/channel/"+Name2.YoutubeID+"?sub_confirmation=1").

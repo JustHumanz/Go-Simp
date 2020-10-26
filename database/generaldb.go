@@ -108,7 +108,6 @@ func (Member Name) GetSubsCount() MemberSubs {
 		BruhMoment(err, "", false)
 	}
 	return Data
-
 }
 
 //Update Subscriber data

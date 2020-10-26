@@ -19,6 +19,7 @@ func (PushData NotifStruct) SendNude() {
 		UserTagsList := database.GetUserList(id[i], PushData.Member.ID)
 		if UserTagsList != nil {
 			msg, err := BotSession.ChannelMessageSendEmbed(DiscordChannelID[i], PushData.Embed)
+			msg, err = BotSession.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
 			if err != nil {
 				log.Error(msg, err)
 				match, _ := regexp.MatchString("Unknown Channel", err.Error())
@@ -26,11 +27,10 @@ func (PushData NotifStruct) SendNude() {
 					log.Info("Delete Discord Channel ", DiscordChannelID[i])
 					database.DelChannel(DiscordChannelID[i], PushData.Group.ID)
 				}
-			} else {
-				msg, err = BotSession.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
 			}
 		}
 	}
+
 }
 
 func (PushData NotifStruct) GetEmbed(Status string) NotifStruct {

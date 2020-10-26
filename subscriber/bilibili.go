@@ -101,7 +101,7 @@ func CheckBiliFollowCount() {
 										SetThumbnail(config.BiliBiliIMG).
 										SetDescription("Congratulation for "+strconv.Itoa(i)+" followers").
 										SetImage(Avatar).
-										AddField("Views", strconv.Itoa(bilistate.LikeView.Data.Archive.View)).
+										AddField("Viewers", strconv.Itoa(bilistate.LikeView.Data.Archive.View)).
 										AddField("Videos", strconv.Itoa(bilistate.Videos)).
 										SetURL("https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
 										InlineAllFields().

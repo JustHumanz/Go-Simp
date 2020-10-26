@@ -209,13 +209,13 @@ Shows available Vtuber data
 ```vtbot>Subscriber {Member} ```  
 Shows Vtuber Subscriber data(twitter,bilibili,youtube)
 
-```yt>Upcoming [Vtuber Group/Member]```  
+```yt>Upcoming [Vtuber Group/Member] {Region}```  
 This command will show Upcoming live streams on Youtube  *only 3 if use Vtuber Group*
 
-```yt>Live [Vtuber Group/Member]```  
+```yt>Live [Vtuber Group/Member] {Region}```  
 This command will show all live streams right now on Youtube  
 
-```yt>Last [Vtuber Group/Member]```  
+```yt>Last [Vtuber Group/Member] {Region}```  
 This command will show past streams on Youtube *only 3 if use Vtuber Group*
 
 ~~```bl>Upcoming [Vtuber Group]```  

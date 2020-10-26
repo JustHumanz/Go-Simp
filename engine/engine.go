@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"image"
 	_ "image/jpeg"
 	_ "image/png"
@@ -16,9 +15,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"reflect"
 	"regexp"
-	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -82,20 +79,6 @@ func Start(b *discordgo.Session, m string) {
 
 	log.Info("Engine module ready")
 }
-func Debugging(a, b, c interface{}) {
-	if debug {
-		f, err := os.OpenFile("debug.log", os.O_WRONLY|os.O_CREATE, 0755)
-		if err != nil {
-			fmt.Println(err)
-		}
-		log.SetOutput(f)
-		log.WithFields(log.Fields{
-			"Func":   a,
-			"Status": b,
-			"Value":  c,
-		}).Debug(c)
-	}
-}
 
 //Bruh moment
 func BruhMoment(err error, msg string, exit bool) {
@@ -117,10 +100,6 @@ func GetYtToken() string {
 		}
 	}
 	return FreshToken
-}
-
-func GetFunctionName(i interface{}) string {
-	return runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
 }
 
 //make a http request
@@ -219,11 +198,8 @@ func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 
 //change to Title format
 func FixName(A string, B string) string {
-	funcvar := GetFunctionName(FixName)
-	Debugging(funcvar, "In", fmt.Sprint(A, B))
 	if A != "" && B != "" {
 		return strings.Title(strings.Join([]string{A, B}, "/"))
-
 	} else if B != "" {
 		return strings.Title(B)
 	} else {

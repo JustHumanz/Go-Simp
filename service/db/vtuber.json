@@ -57,6 +57,104 @@
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "uni_mafumafu",
                     "Region":"JP"
+                },
+                {
+                    "Name":"Artia",
+                    "EN_Name":"Artia",
+                    "JP_Name":"アティア",
+                    "Hashtag": {
+                        "Twitter": "#Art4Tia",
+                        "BiliBili": "阿媂娅ARTIA"
+                    },
+                    "Yt_ID": "",
+                    "BiliBili_ID": 511613155,
+                    "BiliRoom_ID": 21908196,
+                    "Twitter_Username": "Artia_OW",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Civia",
+                    "EN_Name":"Civia",
+                    "JP_Name":"希薇婭",
+                    "Hashtag": {
+                        "Twitter": "#Civiart",
+                        "BiliBili": "二维马"
+                    },
+                    "Yt_ID": "UCgNVXGlZIFK96XdEY20sVjg",
+                    "BiliBili_ID": 354411419,
+                    "BiliRoom_ID": 21618138,
+                    "Twitter_Username": "_Civia",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Yogiri",
+                    "EN_Name":"Yogiri",
+                    "JP_Name":"夜霧",
+                    "Hashtag": {
+                        "Twitter": "#霧夜絵",
+                        "BiliBili": "霧夜絵"
+                    },
+                    "Yt_ID": "",
+                    "BiliBili_ID": 427061218,
+                    "BiliRoom_ID": 21618129,
+                    "Twitter_Username": "_YOGiRi_owo",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Kuromomo",
+                    "EN_Name":"Spade Echo",
+                    "JP_Name":"黒桃影",
+                    "Hashtag": {
+                        "Twitter": "#パン桃絵",
+                        "BiliBili": "蟠桃绘"
+                    },
+                    "Yt_ID": "",
+                    "BiliBili_ID": 456368455,
+                    "BiliRoom_ID": 21641569,
+                    "Twitter_Username": "SpadeEcho",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Doris",
+                    "EN_Name":"Doris",
+                    "JP_Name":"ドリス",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": "摸个鱼"
+                    },
+                    "Yt_ID": "",
+                    "BiliBili_ID": 511613156,
+                    "BiliRoom_ID": 21908209,
+                    "Twitter_Username": "Doris_Hololive",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Rosalyn",
+                    "EN_Name":"Rosalyn",
+                    "JP_Name":"ロサリン",
+                    "Hashtag": {
+                        "Twitter": "#蘑法カード",
+                        "BiliBili": "蘑法卡"
+                    },
+                    "Yt_ID": "",
+                    "BiliBili_ID": 511613157,
+                    "BiliRoom_ID": 21908222,
+                    "Twitter_Username": "Rosalyn_holoCN",
+                    "Region":"CN"
+                },
+                {
+                    "Name":"Kanna",
+                    "EN_Name":"Kanna Tamachi",
+                    "JP_Name":"かんな",
+                    "Hashtag": {
+                        "Twitter": "#Artamachi",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UChEe0jSUdb2ox9wQFYkByEQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "kannatamachi",
+                    "Region":"ID"
                 }
             ]
         },
@@ -917,90 +1015,6 @@
                     "BiliRoom_ID": 21545232,
                     "Twitter_Username": "uruharushia",
                     "Region":"JP"
-                },
-                {
-                    "Name":"Artia",
-                    "EN_Name":"Artia",
-                    "JP_Name":"アティア",
-                    "Hashtag": {
-                        "Twitter": "#Art4Tia",
-                        "BiliBili": "阿媂娅ARTIA"
-                    },
-                    "Yt_ID": "",
-                    "BiliBili_ID": 511613155,
-                    "BiliRoom_ID": 21908196,
-                    "Twitter_Username": "Artia_Hololive",
-                    "Region":"CN"
-                },
-                {
-                    "Name":"Civia",
-                    "EN_Name":"Civia",
-                    "JP_Name":"希薇婭",
-                    "Hashtag": {
-                        "Twitter": "#Civiart",
-                        "BiliBili": "二维马"
-                    },
-                    "Yt_ID": "UCgNVXGlZIFK96XdEY20sVjg",
-                    "BiliBili_ID": 354411419,
-                    "BiliRoom_ID": 21618138,
-                    "Twitter_Username": "Civia_Hololive",
-                    "Region":"CN"
-                },
-                {
-                    "Name":"Yogiri",
-                    "EN_Name":"Yogiri",
-                    "JP_Name":"夜霧",
-                    "Hashtag": {
-                        "Twitter": "#霧夜絵",
-                        "BiliBili": "霧夜絵"
-                    },
-                    "Yt_ID": "",
-                    "BiliBili_ID": 427061218,
-                    "BiliRoom_ID": 21618129,
-                    "Twitter_Username": "yogiri_hololive",
-                    "Region":"CN"
-                },
-                {
-                    "Name":"Kuromomo",
-                    "EN_Name":"Spade Echo",
-                    "JP_Name":"黒桃影",
-                    "Hashtag": {
-                        "Twitter": "#パン桃絵",
-                        "BiliBili": "蟠桃绘"
-                    },
-                    "Yt_ID": "",
-                    "BiliBili_ID": 456368455,
-                    "BiliRoom_ID": 21641569,
-                    "Twitter_Username": "SpadeEcho",
-                    "Region":"CN"
-                },
-                {
-                    "Name":"Doris",
-                    "EN_Name":"Doris",
-                    "JP_Name":"ドリス",
-                    "Hashtag": {
-                        "Twitter": "",
-                        "BiliBili": "摸个鱼"
-                    },
-                    "Yt_ID": "",
-                    "BiliBili_ID": 511613156,
-                    "BiliRoom_ID": 21908209,
-                    "Twitter_Username": "Doris_Hololive",
-                    "Region":"CN"
-                },
-                {
-                    "Name":"Rosalyn",
-                    "EN_Name":"Rosalyn",
-                    "JP_Name":"ロサリン",
-                    "Hashtag": {
-                        "Twitter": "#蘑法カード",
-                        "BiliBili": "蘑法卡"
-                    },
-                    "Yt_ID": "",
-                    "BiliBili_ID": 511613157,
-                    "BiliRoom_ID": 21908222,
-                    "Twitter_Username": "Rosalyn_holoCN",
-                    "Region":"CN"
                 }
                 
             ]
