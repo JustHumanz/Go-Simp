@@ -49,6 +49,7 @@ const (
 	Koni              = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/koni.png"
 	Selamat           = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/selamat.jpg"
 	Assalamu          = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Assalamu.jpg"
+	Approaching       = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/approaching.jpg"
 )
 
 type ConfigFile struct {

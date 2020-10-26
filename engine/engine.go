@@ -38,7 +38,7 @@ var (
 	GroupData  []database.GroupName
 	GroupsName []string
 	RegList    = make(map[string]string)
-	H3llcome   = []string{config.Bonjour, config.Howdy, config.Guten, config.Koni, config.Selamat, config.Assalamu}
+	H3llcome   = []string{config.Bonjour, config.Howdy, config.Guten, config.Koni, config.Selamat, config.Assalamu, config.Approaching}
 	PathLiteDB = "./engine/guild.db"
 )
 
