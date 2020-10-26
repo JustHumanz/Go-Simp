@@ -916,8 +916,12 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 		Dbconn: sqlite,
 	}
 	Info := DataGuild.CheckGuild()
+	SendInvite, err := s.UserChannelCreate(config.OwnerDiscordID)
+	if err != nil {
+		log.Error(err)
+	}
 
-	if Info == 0 || Info != 0 {
+	if Info == 0 {
 		for _, Channel := range g.Guild.Channels {
 			BotPermission, err := s.UserChannelPermissions(BotID, Channel.ID)
 			if err != nil {
@@ -932,28 +936,23 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 					SetColor(14807034).
 					SetDescription("Type `"+config.PGeneral+"help` to show options").MessageEmbed)
 
-				SendInvite, err := s.UserChannelCreate(config.OwnerDiscordID)
+				//send server name to my discord
+				err := DataGuild.InputGuild()
 				if err != nil {
 					log.Error(err)
+					return
 				}
-				//send server name to my discord
-				if Info != 0 {
-					s.ChannelMessageSend(SendInvite.ID, g.Guild.Name+" reinvite me")
-					err := DataGuild.UpdateJoin(Info)
-					if err != nil {
-						log.Error(err)
-						return
-					}
-				} else {
-					err := DataGuild.InputGuild()
-					if err != nil {
-						log.Error(err)
-						return
-					}
-					s.ChannelMessageSend(SendInvite.ID, g.Guild.Name+" invited me")
-				}
+				s.ChannelMessageSend(SendInvite.ID, g.Guild.Name+" invited me")
+
 				return
 			}
+		}
+	} else {
+		s.ChannelMessageSend(SendInvite.ID, g.Guild.Name+" reinvite me")
+		err := DataGuild.UpdateJoin(Info)
+		if err != nil {
+			log.Error(err)
+			return
 		}
 	}
 	KillSqlite(sqlite)
