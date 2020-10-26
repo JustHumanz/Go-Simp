@@ -70,7 +70,14 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 
 		DataDB := Name.CheckYtVideo(VideoID[i])
 		if Data.Items[i].Snippet.VideoStatus == "upcoming" {
-			Viewers, err = GetWaiting(VideoID[i])
+			if DataDB.Viewers != Ytwaiting {
+				Viewers = DataDB.Viewers
+			} else {
+				Viewers, err = GetWaiting(VideoID[i])
+				if err != nil {
+					log.Error(err)
+				}
+			}
 		} else if Data.Items[i].LiveDetails.Viewers == "" {
 			Viewers = Data.Items[i].Statistics.ViewCount
 		} else {

@@ -17,6 +17,7 @@ import (
 var (
 	BotSession *discordgo.Session
 	yttoken    string
+	Ytwaiting  = "???"
 )
 
 func Start(Bot *discordgo.Session) {
@@ -54,7 +55,7 @@ func GetWaiting(VideoID string) (string, error) {
 	if curlerr != nil || bit == nil {
 		bit, curlerr = engine.CoolerCurl(urls, nil)
 		if curlerr != nil {
-			return "???", curlerr
+			return Ytwaiting, curlerr
 		} else {
 			log.WithFields(log.Fields{
 				"Request": VideoID,
@@ -64,16 +65,15 @@ func GetWaiting(VideoID string) (string, error) {
 	}
 	reg, err := regexp.Compile("[^a-zA-Z0-9]+")
 	if err != nil {
-		return "???", err
+		return Ytwaiting, err
 	}
-	waitcount := "???"
 	for _, element := range regexp.MustCompile(`(?m)videoViewCountRenderer.*?text([0-9\s]+).+(isLive\strue)`).FindAllStringSubmatch(reg.ReplaceAllString(string(bit), " "), -1) {
 		tmp := strings.Replace(element[1], " ", "", -1)
 		if tmp != "" {
-			waitcount = tmp
+			Ytwaiting = tmp
 		}
 	}
-	return waitcount, nil
+	return Ytwaiting, nil
 }
 
 func CheckPrivate() {
