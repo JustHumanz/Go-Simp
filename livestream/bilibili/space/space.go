@@ -1,10 +1,12 @@
 package space
 
 import (
+	"math/rand"
 	"strconv"
 	"sync"
 	"time"
 
+	"github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 	log "github.com/sirupsen/logrus"
@@ -16,6 +18,7 @@ var (
 
 func Start() {
 	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
+	//CheckVideo()
 }
 
 func CheckVideo() {
@@ -31,7 +34,7 @@ func CheckVideo() {
 						"Vtuber":     Member.EnName,
 						"BiliBiliID": Member.BiliBiliID,
 					}).Info("Check Space")
-					Data := CheckSctruct{
+					Data := &CheckSctruct{
 						SpaceID:    Member.BiliBiliID,
 						MemberID:   Member.ID,
 						GroupIcon:  Group.IconURL,
@@ -44,6 +47,7 @@ func CheckVideo() {
 
 				}
 			}(Group, Member, wg)
+			time.Sleep(time.Duration(rand.Intn(config.RandomSleep)) * time.Millisecond)
 		}
 	}
 	wg.Wait()

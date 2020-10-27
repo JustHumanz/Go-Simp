@@ -36,7 +36,7 @@ func (Data TwitterStruct) CheckNew() []Statuses {
 //filter hashtag post
 func (Data Statuses) CheckHashTag(Group []database.MemberGroupID, wg *sync.WaitGroup) {
 	defer wg.Done()
-	rgx := "(?m)(freecoco|asacocoleak|cocodidbothingwrong|antihololive|freecocoandhaachama|Lv[0-9]|taiwan).+"
+	rgx := "(?m)(freecoco|asacocoleak|cocodidbothingwrong|antihololive|freecocoandhaachama|Lv[0-9]|taiwan|kson).+"
 	tiananmen, _ := regexp.MatchString(rgx, Data.Text)
 
 	for _, hashtag := range Data.Entities.Hashtags {

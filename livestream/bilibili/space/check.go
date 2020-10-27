@@ -13,7 +13,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (Space CheckSctruct) Check(limit string) CheckSctruct {
+func (Space *CheckSctruct) Check(limit string) *CheckSctruct {
 	var (
 		Videotype string
 		PushVideo SpaceVideo
@@ -56,7 +56,7 @@ func (Space CheckSctruct) Check(limit string) CheckSctruct {
 			MemberID: Space.MemberID,
 		}
 		if new, id := Data.CheckVideo(); new {
-			database.InputSpaceVideo(Data)
+			Data.InputSpaceVideo()
 			video.Pic = "https:" + video.Pic
 			video.VideoType = Videotype
 			NewVideo = append(NewVideo, video)

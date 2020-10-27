@@ -7,7 +7,7 @@ import (
 )
 
 //get RoomData from LiveBiliBili
-func GetRoomData(MemberID int64, RoomID int) LiveBiliDB {
+func GetRoomData(MemberID int64, RoomID int) *LiveBiliDB {
 	rows, err := DB.Query(`SELECT id,RoomID,Status,Title,Thumbnails,Description,ScheduledStart,Published,Viewers FROM LiveBiliBili Where VtuberMember_id=? AND RoomID=? order by ScheduledStart ASC`, MemberID, RoomID)
 	BruhMoment(err, "", false)
 
@@ -20,12 +20,22 @@ func GetRoomData(MemberID int64, RoomID int) LiveBiliDB {
 		err = rows.Scan(&Data.ID, &Data.LiveRoomID, &Data.Status, &Data.Title, &Data.Thumbnail, &Data.Description, &Data.ScheduledStart, &Data.PublishedAt, &Data.Online)
 		BruhMoment(err, "", false)
 	}
+	return &Data
+}
+
+func (Data *LiveBiliDB) UpStatus(new string) *LiveBiliDB {
+	Data.Status = new
+	return Data
+}
+
+func (Data *LiveBiliDB) UpOnline(new int) *LiveBiliDB {
+	Data.Online = new
 	return Data
 }
 
 //Update LiveBiliBili Data
-func (Data LiveBiliDB) UpdateLiveBili(MemberID int64) {
-	_, err := DB.Exec(`Update LiveBiliBili set Status=? , Title=? ,Thumbnails=?, Description=?, Published=?, ScheduledStart=?, Viewers=? Where RoomID=? AND VtuberMember_id=?`, Data.Status, Data.Title, Data.Thumbnail, Data.Description, Data.PublishedAt, Data.ScheduledStart, Data.Online, Data.LiveRoomID, MemberID)
+func (Data *LiveBiliDB) UpdateLiveBili(MemberID int64) {
+	_, err := DB.Exec(`Update LiveBiliBili set Status=? , Title=? ,Thumbnails=?, Description=?, Published=?, ScheduledStart=?, Viewers=? Where id=? AND VtuberMember_id=?`, Data.Status, Data.Title, Data.Thumbnail, Data.Description, Data.PublishedAt, Data.ScheduledStart, Data.Online, Data.ID, MemberID)
 	BruhMoment(err, "", false)
 }
 
@@ -84,7 +94,7 @@ func SpaceGet(GroupID int64, MemberID int64) []SpaceBiliDB {
 }
 
 //Input data to SpaceBiliBili
-func InputSpaceVideo(Data InputBiliBili) {
+func (Data InputBiliBili) InputSpaceVideo() {
 	stmt, err := DB.Prepare(`INSERT INTO BiliBili (VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberMember_id) values(?,?,?,?,?,?,?,?,?)`)
 	BruhMoment(err, "", false)
 	defer stmt.Close()

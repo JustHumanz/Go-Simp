@@ -1,9 +1,11 @@
 package bilibili
 
 import (
+	"math/rand"
 	"sync"
 	"time"
 
+	config "github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 	"github.com/bwmarrin/discordgo"
@@ -34,6 +36,7 @@ func CheckSchedule() {
 				if Member.BiliBiliID != 0 {
 					var (
 						ScheduledStart time.Time
+						Data           LiveBili
 					)
 					DataDB := database.GetRoomData(Member.ID, Member.BiliRoomID)
 					Status := GetRoomStatus(Member.BiliRoomID)
@@ -50,23 +53,13 @@ func CheckSchedule() {
 							"Vtuber": engine.FixName(Member.EnName, Member.JpName),
 							"Start":  ScheduledStart,
 						}).Info("Start live right now")
-						Data := LiveBili{
-							RoomData: database.LiveBiliDB{
-								LiveRoomID:     Member.BiliRoomID,
-								Status:         "Live",
-								Title:          Status.Data.RoomInfo.Title,
-								Thumbnail:      Status.Data.RoomInfo.Cover,
-								Description:    Status.Data.NewsInfo.Content,
-								PublishedAt:    time.Time{},
-								ScheduledStart: ScheduledStart,
-								Online:         Status.Data.RoomInfo.Online,
-							},
-							Face:       Status.Data.AnchorInfo.BaseInfo.Face,
-							VtuberName: engine.FixName(Member.EnName, Member.JpName),
-							BiliBiliID: Member.BiliBiliID,
-						}
-						Data.RoomData.UpdateLiveBili(Member.ID)
-						Data.Crotttt(Group.IconURL).Tamod(Member.ID)
+						Data.AddData(*DataDB.UpStatus("Live")).
+							AddMember(Member).
+							Crotttt(Group.IconURL).
+							Tamod()
+
+						//Data.RoomData.UpdateLiveBili(Member.ID)
+						//Data.Crotttt().Tamod(Member.ID)
 
 					} else if !Status.CheckScheduleLive() && DataDB.Status == "Live" {
 						//prob past
@@ -75,20 +68,21 @@ func CheckSchedule() {
 							"Vtuber": engine.FixName(Member.EnName, Member.JpName),
 							"Start":  ScheduledStart,
 						}).Info("Past live stream")
-						DataDB.Status = "Past"
-						DataDB.UpdateLiveBili(Member.ID)
+						DataDB.UpStatus("Past").
+							UpdateLiveBili(Member.ID)
 					} else {
 						//update online
 						log.WithFields(log.Fields{
 							"Group":  Group.NameGroup,
 							"Vtuber": engine.FixName(Member.EnName, Member.JpName),
 						}).Info("Update LiveBiliBili")
-						DataDB.Online = Status.Data.RoomInfo.Online
-						DataDB.UpdateLiveBili(Member.ID)
+						DataDB.UpOnline(Status.Data.RoomInfo.Online).
+							UpdateLiveBili(Member.ID)
 					}
 				}
 				//time.Sleep(time.Duration(int64(rand.Intn((20-8)+8))) * time.Second)
 			}(Group, Member, wg)
+			time.Sleep(time.Duration(rand.Intn(config.RandomSleep)) * time.Millisecond)
 		}
 	}
 	wg.Wait()

@@ -142,7 +142,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if len(CommandArray) > 1 {
 			CommandArray[0] = strings.ToLower(CommandArray[0])
 			FindGroupArry := strings.Split(strings.TrimSpace(CommandArray[1]), ",")
-			if CommandArray[0] == Prefix+"live" {
+			if CommandArray[0] == Prefix+Live {
 				for i := 0; i < len(FindGroupArry); i++ {
 					VTuberGroup, err := FindGropName(FindGroupArry[i])
 					if err != nil {
@@ -190,7 +190,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 					}
 				}
-			} else if CommandArray[0] == Prefix+"past" || CommandArray[0] == Prefix+"last" {
+			} else if CommandArray[0] == Prefix+Past || CommandArray[0] == Prefix+"last" {
 				for i := 0; i < len(FindGroupArry); i++ {
 					VTuberGroup, err := FindGropName(FindGroupArry[i])
 					if err != nil {

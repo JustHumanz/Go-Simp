@@ -840,9 +840,17 @@ type RoomID2 struct {
 }
 
 type LiveBili struct {
-	RoomData   database.LiveBiliDB
-	Face       string
-	VtuberName string
-	BiliBiliID int
-	Embed      *discordgo.MessageEmbed
+	RoomData database.LiveBiliDB
+	Member   database.Name
+	Embed    *discordgo.MessageEmbed
+}
+
+func (Data *LiveBili) AddData(new database.LiveBiliDB) *LiveBili {
+	Data.RoomData = new
+	return Data
+}
+
+func (Data *LiveBili) AddMember(new database.Name) *LiveBili {
+	Data.Member = new
+	return Data
 }

@@ -1,12 +1,13 @@
 package youtube
 
 import (
-	"os"
+	"math/rand"
 	"regexp"
 	"strings"
 	"sync"
 	"time"
 
+	config "github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 
@@ -39,6 +40,7 @@ func CheckSchedule() {
 					"Vtube Region": Member.Region,
 				}).Info("Checking Youtube")
 				go Filter(Member, Group, &wg)
+				time.Sleep(time.Duration(rand.Intn(config.RandomSleep)) * time.Millisecond)
 			}
 		}
 		wg.Wait()
@@ -84,9 +86,7 @@ func CheckPrivate() {
 
 	Check := func(Youtube database.YtDbData, wg *sync.WaitGroup) {
 		defer wg.Done()
-		if Youtube.Status == "" {
-			os.Exit(1)
-		}
+
 		var (
 			tor bool
 			err error
@@ -99,6 +99,11 @@ func CheckPrivate() {
 				_, err = engine.Curl(url, nil)
 			}
 			if Youtube.Status == "upcoming" && time.Now().Sub(Youtube.Schedul) > Youtube.Schedul.Sub(time.Now()) {
+				log.WithFields(log.Fields{
+					"VideoID": Youtube.VideoID,
+				}).Info("Member only video")
+				Youtube.UpdateYt("past")
+			} else if Youtube.Status == "live" && Youtube.Schedul.Minute() > time.Now().Add(2).Minute() {
 				log.WithFields(log.Fields{
 					"VideoID": Youtube.VideoID,
 				}).Info("Member only video")

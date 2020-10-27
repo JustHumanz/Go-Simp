@@ -50,6 +50,7 @@ const (
 	Selamat           = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/selamat.jpg"
 	Assalamu          = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Assalamu.jpg"
 	Approaching       = "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/approaching.jpg"
+	RandomSleep       = 404
 )
 
 type ConfigFile struct {

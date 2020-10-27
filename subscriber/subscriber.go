@@ -38,6 +38,10 @@ func SendNude(Embed *discordgo.MessageEmbed, Group database.GroupName) {
 		if err != nil {
 			log.Error(msg, err)
 		}
+		msg, err = Bot.ChannelMessageSend(Channel, "@here")
+		if err != nil {
+			log.Error(msg, err)
+		}
 	}
 }
 

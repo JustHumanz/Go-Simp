@@ -27,6 +27,23 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const (
+	Enable       = "enable"
+	Disable      = "disable"
+	Update       = "update"
+	TagMe        = "tag me"
+	DelTag       = "del tag"
+	MyTags       = "my tags"
+	TagRoles     = "tag roles"
+	RoleTags     = "roles tags"
+	ChannelState = "channel state"
+	VtuberData   = "vtuber data"
+	Subscriber   = "subscriber"
+	Upcoming     = "upcoming"
+	Past         = "past"
+	Live         = "live"
+)
+
 var (
 	BotID      string
 	BotSession *discordgo.Session
@@ -65,17 +82,17 @@ func Start(b *discordgo.Session, m string) {
 		RegList[Group.NameGroup] = strings.Join(list, ",")
 	}
 
+	BotSession.AddHandler(GuildJoin)
+
 	go BotSession.AddHandler(Fanart)
 	go BotSession.AddHandler(Tags)
-	go BotSession.AddHandler(Enable)
+	go BotSession.AddHandler(EnableState)
 	go BotSession.AddHandler(Status)
 	go BotSession.AddHandler(Help)
 	go BotSession.AddHandler(BiliBiliMessage)
 	go BotSession.AddHandler(BiliBiliSpace)
 	go BotSession.AddHandler(YoutubeMessage)
 	go BotSession.AddHandler(SubsMessage)
-	BotSession.AddHandler(GuildJoin)
-	//go BotSession.AddHandler(Humanz)
 
 	log.Info("Engine module ready")
 }
@@ -152,7 +169,7 @@ func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 		proxyURL, err := url.Parse("http://multi_tor:16379")
-		if err != nil || counter == 2 {
+		if err != nil || counter == 3 {
 			return nil, err
 		}
 
@@ -166,7 +183,7 @@ func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 		}
 
 		request, err := http.NewRequest("GET", urls, nil)
-		if err != nil || counter == 2 {
+		if err != nil || counter == 3 {
 			return nil, err
 		}
 		request.Header.Set("cache-control", "no-cache")
@@ -175,25 +192,26 @@ func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 			request.Header.Set(addheader[0], addheader[1])
 		}
 		response, err := client.Do(request.WithContext(ctx))
-		if err != nil || counter == 2 {
+		if err != nil || counter == 3 {
 			return nil, err
 		}
 		defer response.Body.Close()
 
-		if response.StatusCode != http.StatusOK && counter == 2 {
+		if response.StatusCode != http.StatusOK && counter == 3 {
 			return nil, errors.New("Multi Tor get Error")
 		}
 
 		data, err := ioutil.ReadAll(response.Body)
-		if err != nil || counter == 2 {
+		if err != nil || counter == 3 {
 			return nil, err
 		}
 
 		if data != nil {
 			return data, nil
+		} else {
+			continue
 		}
 	}
-
 }
 
 //change to Title format
@@ -287,6 +305,9 @@ func SaucenaoCheck(url string) (bool, []string, error) {
 func GetColor(filepath, url string) (int, error) {
 	def := 16770790
 
+	if url == "" {
+		return def, errors.New("urls nill ")
+	}
 	if url[len(url)-4:] == ".gif" {
 		return def, nil
 	}

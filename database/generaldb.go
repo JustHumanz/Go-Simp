@@ -97,7 +97,7 @@ func gacha() bool {
 }
 
 //Get subs,follow,view,like data from Subscriber
-func (Member Name) GetSubsCount() MemberSubs {
+func (Member Name) GetSubsCount() *MemberSubs {
 	var Data MemberSubs
 	rows, err := DB.Query(`SELECT * FROM Subscriber WHERE VtuberMember_id=?`, Member.ID)
 	BruhMoment(err, "", false)
@@ -107,11 +107,49 @@ func (Member Name) GetSubsCount() MemberSubs {
 		err = rows.Scan(&Data.ID, &Data.YtSubs, &Data.YtVideos, &Data.YtViews, &Data.BiliFollow, &Data.BiliVideos, &Data.BiliViews, &Data.TwFollow, &Data.MemberID)
 		BruhMoment(err, "", false)
 	}
-	return Data
+	return &Data
+}
+
+//update bilibili state
+func (Member *MemberSubs) UpBiliFollow(new int) *MemberSubs {
+	Member.BiliFollow = new
+	return Member
+}
+
+func (Member *MemberSubs) UpBiliVideo(new int) *MemberSubs {
+	Member.BiliVideos = new
+	return Member
+}
+
+func (Member *MemberSubs) UpBiliViews(new int) *MemberSubs {
+	Member.BiliViews = new
+	return Member
+}
+
+//update youtube state
+func (Member *MemberSubs) UpYtSubs(new int) *MemberSubs {
+	Member.YtSubs = new
+	return Member
+}
+
+func (Member *MemberSubs) UpYtVideo(new int) *MemberSubs {
+	Member.YtVideos = new
+	return Member
+}
+
+func (Member *MemberSubs) UpYtViews(new int) *MemberSubs {
+	Member.YtViews = new
+	return Member
+}
+
+//update twitter state
+func (Member *MemberSubs) UptwFollow(new int) *MemberSubs {
+	Member.TwFollow = new
+	return Member
 }
 
 //Update Subscriber data
-func (Data MemberSubs) UpdateSubs(State string) {
+func (Data *MemberSubs) UpdateSubs(State string) {
 	if State == "yt" {
 		_, err := DB.Exec(`Update Subscriber set Youtube_Subscriber=?,Youtube_Videos=?,Youtube_Views=? Where id=? `, Data.YtSubs, Data.YtVideos, Data.YtViews, Data.ID)
 		BruhMoment(err, "", false)
@@ -190,10 +228,10 @@ func (Data UserStruct) Adduser(MemberID int64) error {
 	if tmp {
 		return errors.New("Already registered")
 	} else {
-		stmt, err := DB.Prepare(`INSERT INTO User (DiscordID,DiscordUserName,VtuberMember_id,Channel_id) values(?,?,?,?)`)
+		stmt, err := DB.Prepare(`INSERT INTO User (DiscordID,DiscordUserName,Human,VtuberMember_id,Channel_id) values(?,?,?,?,?)`)
 		BruhMoment(err, "", false)
 		defer stmt.Close()
-		res, err := stmt.Exec(Data.DiscordID, Data.DiscordUserName, MemberID, ChannelID)
+		res, err := stmt.Exec(Data.DiscordID, Data.DiscordUserName, Data.Human, MemberID, ChannelID)
 		BruhMoment(err, "", false)
 
 		_, err = res.LastInsertId()
@@ -391,17 +429,24 @@ func ChannelTag(MemberID int64, typetag int) ([]int, []string) {
 }
 
 //get tags
-func GetUserList(IdDiscordChannelID int, Member int64) []string {
-	var UserTagsList []string
-	rows, err := DB.Query(`SELECT DiscordID From User WHERE Channel_id=? And VtuberMember_id =?`, IdDiscordChannelID, Member)
+func GetUserList(ChannelIDDiscord int, Member int64) []string {
+	var (
+		UserTagsList  []string
+		DiscordUserID string
+		Type          bool
+	)
+	rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id =?`, ChannelIDDiscord, Member)
 	BruhMoment(err, "", false)
 	defer rows.Close()
 
 	for rows.Next() {
-		var tmp string
-		err = rows.Scan(&tmp)
+		err = rows.Scan(&DiscordUserID, &Type)
 		BruhMoment(err, "", false)
-		UserTagsList = append(UserTagsList, "<@"+tmp+">")
+		if Type {
+			UserTagsList = append(UserTagsList, "<@"+DiscordUserID+">")
+		} else {
+			UserTagsList = append(UserTagsList, "<@&"+DiscordUserID+">")
+		}
 	}
 	return UserTagsList
 }

@@ -40,21 +40,28 @@ func YtGetStatus(Group, Member int64, Status, Region string) []YtDbData {
 }
 
 //Input youtube new video
-func (Data YtDbData) InputYt(MemberID int64) {
+func (Data YtDbData) InputYt(MemberID int64) error {
 	stmt, err := DB.Prepare(`INSERT INTO Youtube (VideoID,Type,Status,Title,Thumbnails,Description,PublishedAt,ScheduledStart,EndStream,Viewers,Length,VtuberMember_id) values(?,?,?,?,?,?,?,?,?,?,?,?)`)
-	BruhMoment(err, "", false)
+	if err != nil {
+		return err
+	}
 	defer stmt.Close()
 
 	res, err := stmt.Exec(Data.VideoID, Data.Type, Data.Status, Data.Title, Data.Thumb, Data.Desc, Data.Published, Data.Schedul, Data.End, Data.Viewers, Data.Length, MemberID)
-	BruhMoment(err, "", false)
+	if err != nil {
+		return err
+	}
 
 	_, err = res.LastInsertId()
-	BruhMoment(err, "", false)
+	if err != nil {
+		return err
+	}
 
+	return nil
 }
 
 //Check new video or not
-func (Member Name) CheckYtVideo(VideoID string) YtDbData {
+func (Member Name) CheckYtVideo(VideoID string) *YtDbData {
 	var Data YtDbData
 	rows, err := DB.Query(`SELECT id,VideoID,Type,Status,Title,Thumbnails,Description,PublishedAt,ScheduledStart,EndStream,Viewers FROM Vtuber.Youtube Where VideoID=? AND VtuberMember_id=?`, VideoID, Member.ID)
 	BruhMoment(err, "", false)
@@ -65,9 +72,9 @@ func (Member Name) CheckYtVideo(VideoID string) YtDbData {
 		BruhMoment(err, "", false)
 	}
 	if Data.ID == 0 {
-		return YtDbData{}
+		return nil
 	} else {
-		return Data
+		return &Data
 	}
 }
 

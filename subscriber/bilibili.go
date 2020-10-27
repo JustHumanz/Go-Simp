@@ -137,11 +137,11 @@ func CheckBiliFollowCount() {
 					"Current BiliBili Follower": bilistate.Follow.Data.Follower,
 					"Vtuber":                    Name.EnName,
 				}).Info("Update BiliBili Follower")
-				BiliFollowDB.BiliFollow = bilistate.Follow.Data.Follower
-				BiliFollowDB.BiliVideos = bilistate.Videos
-				BiliFollowDB.BiliViews = bilistate.LikeView.Data.Archive.View
+				BiliFollowDB.UpBiliFollow(bilistate.Follow.Data.Follower).
+					UpBiliVideo(bilistate.Videos).
+					UpBiliViews(bilistate.LikeView.Data.Archive.View).
+					UpdateSubs("bili")
 
-				BiliFollowDB.UpdateSubs("bili")
 				time.Sleep(500 * time.Millisecond)
 			}
 		}

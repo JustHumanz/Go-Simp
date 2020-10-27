@@ -75,6 +75,6 @@ func (Data Guild) InputGuild() error {
 	return nil
 }
 
-func KillSqlite(sql *sql.DB) {
+func KillSqlConn(sql *sql.DB) {
 	sql.Close()
 }
