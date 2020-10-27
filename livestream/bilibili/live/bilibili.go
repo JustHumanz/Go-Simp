@@ -1,6 +1,7 @@
 package bilibili
 
 import (
+	"math/rand"
 	"sync"
 	"time"
 
@@ -80,6 +81,7 @@ func CheckSchedule() {
 				}
 				//time.Sleep(time.Duration(int64(rand.Intn((20-8)+8))) * time.Second)
 			}(Group, Member, wg)
+			time.Sleep(time.Duration(rand.Intn(10)) * time.Millisecond)
 		}
 	}
 	wg.Wait()

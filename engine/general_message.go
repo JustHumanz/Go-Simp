@@ -141,17 +141,6 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 }
 
-//Get Guild name *Owner only*
-func Humanz(s *discordgo.Session, m *discordgo.MessageCreate) {
-	if m.Author.ID == config.OwnerDiscordID {
-		if m.Content == "!>list" {
-			for _, Guild := range s.State.Guilds {
-				s.ChannelMessageSend(m.ChannelID, Guild.Name)
-			}
-		}
-	}
-}
-
 //Tags command message handler
 func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 	Prefix := config.PGeneral

@@ -1,6 +1,7 @@
 package space
 
 import (
+	"math/rand"
 	"strconv"
 	"sync"
 	"time"
@@ -45,6 +46,7 @@ func CheckVideo() {
 
 				}
 			}(Group, Member, wg)
+			time.Sleep(time.Duration(rand.Intn(10)) * time.Millisecond)
 		}
 	}
 	wg.Wait()

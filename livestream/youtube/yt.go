@@ -1,6 +1,7 @@
 package youtube
 
 import (
+	"math/rand"
 	"regexp"
 	"strings"
 	"sync"
@@ -38,6 +39,7 @@ func CheckSchedule() {
 					"Vtube Region": Member.Region,
 				}).Info("Checking Youtube")
 				go Filter(Member, Group, &wg)
+				time.Sleep(time.Duration(rand.Intn(10)) * time.Millisecond)
 			}
 		}
 		wg.Wait()

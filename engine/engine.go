@@ -65,6 +65,8 @@ func Start(b *discordgo.Session, m string) {
 		RegList[Group.NameGroup] = strings.Join(list, ",")
 	}
 
+	BotSession.AddHandler(GuildJoin)
+
 	go BotSession.AddHandler(Fanart)
 	go BotSession.AddHandler(Tags)
 	go BotSession.AddHandler(Enable)
@@ -74,8 +76,6 @@ func Start(b *discordgo.Session, m string) {
 	go BotSession.AddHandler(BiliBiliSpace)
 	go BotSession.AddHandler(YoutubeMessage)
 	go BotSession.AddHandler(SubsMessage)
-	BotSession.AddHandler(GuildJoin)
-	//go BotSession.AddHandler(Humanz)
 
 	log.Info("Engine module ready")
 }
