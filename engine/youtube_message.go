@@ -52,7 +52,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 		} else {
 			Region = ""
 		}
-		if strings.ToLower(CommandArray[0]) == Prefix+"upcoming" || strings.ToLower(CommandArray[0]) == Prefix+"up" {
+		if strings.ToLower(CommandArray[0]) == Prefix+Upcoming || strings.ToLower(CommandArray[0]) == Prefix+"up" {
 			if len(CommandArray) > 1 {
 				for _, GroupNameQuery := range strings.Split(strings.TrimSpace(CommandArray[1]), ",") {
 					VTuberGroup, err := FindGropName(GroupNameQuery)
@@ -125,7 +125,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 			} else {
 				s.ChannelMessageSend(m.ChannelID, "Incomplete Upcoming command")
 			}
-		} else if strings.ToLower(CommandArray[0]) == Prefix+"live" {
+		} else if strings.ToLower(CommandArray[0]) == Prefix+Live {
 			if len(CommandArray) > 1 {
 				FindGroupArry := strings.Split(strings.TrimSpace(CommandArray[1]), ",")
 				for i := 0; i < len(FindGroupArry); i++ {
@@ -203,7 +203,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 				s.ChannelMessageSend(m.ChannelID, "Incomplete Live command")
 				return
 			}
-		} else if strings.ToLower(CommandArray[0]) == Prefix+"last" || strings.ToLower(CommandArray[0]) == Prefix+"past" {
+		} else if strings.ToLower(CommandArray[0]) == Prefix+"last" || strings.ToLower(CommandArray[0]) == Prefix+Past {
 			if len(CommandArray) > 1 {
 				FindGroupArry := strings.Split(strings.TrimSpace(CommandArray[1]), ",")
 
@@ -325,9 +325,6 @@ func CheckReg(GroupName, Reg string) bool {
 			for _, Region := range strings.Split(strings.ToLower(Val), ",") {
 				if Region == Reg {
 					return true
-					break
-				} else {
-					return false
 				}
 			}
 		}

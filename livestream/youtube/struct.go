@@ -136,9 +136,12 @@ func (Data *NotifStruct) UpdateYtDB() {
 	Data.YtData.UpdateYt(Data.YtData.Status)
 }
 
-func (Data *NotifStruct) SendtoDB() *NotifStruct {
-	Data.YtData.InputYt(Data.Member.ID)
-	return Data
+func (Data *NotifStruct) SendtoDB() error {
+	err := Data.YtData.InputYt(Data.Member.ID)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (Data *NotifStruct) UpYtView(new string) *NotifStruct {

@@ -59,7 +59,7 @@ func init() {
 	if err != nil {
 		log.Error(err)
 	}
-	YtToken = config.YtToken[0]
+	YtToken = config.YtToken[len(config.YtToken)-1]
 	BiliSession = config.BiliSess
 	Limit = 100
 	Bot, _ = discordgo.New("Bot " + config.Discord)
@@ -97,7 +97,7 @@ func main() {
 				Tweet(res.Vtuber.Group[i].GroupName, 0, Limit)
 			}
 		}()
-		time.Sleep(5 * time.Minute)
+		time.Sleep(3 * time.Minute)
 		log.Info("Done")
 		os.Exit(0)
 	} else if (*Service) == "twitter_scrap" {
@@ -317,7 +317,7 @@ func CheckVideoSpace() {
 					} else {
 						videotype = "Streaming"
 					}
-					database.InputSpaceVideo(database.InputBiliBili{
+					tmp := database.InputBiliBili{
 						VideoID:  video.Bvid,
 						Type:     videotype,
 						Title:    video.Title,
@@ -326,7 +326,8 @@ func CheckVideoSpace() {
 						Update:   time.Unix(int64(video.Created), 0).In(loc),
 						Viewers:  video.Play,
 						MemberID: Name[k].ID,
-					})
+					}
+					tmp.InputSpaceVideo()
 				}
 			}
 		}

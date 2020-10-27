@@ -94,7 +94,7 @@ func SpaceGet(GroupID int64, MemberID int64) []SpaceBiliDB {
 }
 
 //Input data to SpaceBiliBili
-func InputSpaceVideo(Data InputBiliBili) {
+func (Data InputBiliBili) InputSpaceVideo() {
 	stmt, err := DB.Prepare(`INSERT INTO BiliBili (VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberMember_id) values(?,?,?,?,?,?,?,?,?)`)
 	BruhMoment(err, "", false)
 	defer stmt.Close()

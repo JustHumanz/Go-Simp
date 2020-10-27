@@ -5,6 +5,7 @@ import (
 	"sync"
 	"time"
 
+	config "github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 	"github.com/bwmarrin/discordgo"
@@ -81,7 +82,7 @@ func CheckSchedule() {
 				}
 				//time.Sleep(time.Duration(int64(rand.Intn((20-8)+8))) * time.Second)
 			}(Group, Member, wg)
-			time.Sleep(time.Duration(rand.Intn(10)) * time.Millisecond)
+			time.Sleep(time.Duration(rand.Intn(config.RandomSleep)) * time.Millisecond)
 		}
 	}
 	wg.Wait()

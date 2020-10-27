@@ -4,10 +4,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
-	"fmt"
-	"io/ioutil"
 	"math"
-	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
@@ -51,7 +48,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 		var (
 			yttype    string
 			Viewers   string
-			Starttime time.Time
+			Starttime = time.Now()
 			Thumb     string
 		)
 		duration := durafmt.Parse(ParseDuration(Data.Items[i].ContentDetails.Duration))
@@ -115,7 +112,8 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 					"Status":       "Live",
 				}).Info("Update video status from " + YoutubeData.YtData.Status + " to live")
 				log.Info("Send to notify")
-				YoutubeData.ChangeYtStatus("live").SendtoDB().SendNude()
+				YoutubeData.ChangeYtStatus("live").SendtoDB()
+				YoutubeData.SendNude()
 
 			} else if !Data.Items[i].LiveDetails.EndTime.IsZero() && YoutubeData.YtData.Status == "upcoming" || YoutubeData.YtData.Status == "upcoming" && Data.Items[i].Snippet.VideoStatus == "none" {
 				log.WithFields(log.Fields{
@@ -127,7 +125,11 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 			} else if Data.Items[i].Snippet.VideoStatus == "upcoming" && YoutubeData.YtData.Status == "past" {
 				log.Info("maybe yt error or human error")
 				log.Info("Send to notify")
-				YoutubeData.ChangeYtStatus("upcoming").SendtoDB().SendNude()
+				err := YoutubeData.ChangeYtStatus("upcoming").SendtoDB()
+				if err != nil {
+					log.Error(err)
+				}
+				YoutubeData.SendNude()
 
 			} else if Data.Items[i].Snippet.VideoStatus == "none" && YoutubeData.YtData.Viewers != Data.Items[i].Statistics.ViewCount {
 				log.WithFields(log.Fields{
@@ -194,7 +196,11 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 					"Message":    "Send to notify",
 				}).Info("New Upcoming live schedule")
 
-				YoutubeData.ChangeYtStatus("upcoming").SendtoDB().SendNude()
+				err := YoutubeData.ChangeYtStatus("upcoming").SendtoDB()
+				if err != nil {
+					log.Error(err)
+				}
+				YoutubeData.SendNude()
 
 			} else if Data.Items[i].Snippet.VideoStatus == "live" {
 				log.WithFields(log.Fields{
@@ -202,7 +208,11 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 					"MemberName": MemberFixName,
 					"Message":    "Send to notify",
 				}).Info("New live stream right now")
-				YoutubeData.ChangeYtStatus("live").SendtoDB().SendNude()
+				err := YoutubeData.ChangeYtStatus("live").SendtoDB()
+				if err != nil {
+					log.Error(err)
+				}
+				YoutubeData.SendNude()
 
 			} else if Data.Items[i].Snippet.VideoStatus == "none" && yttype == "Covering" {
 				log.WithFields(log.Fields{
@@ -210,7 +220,11 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 					"MemberName": MemberFixName,
 				}).Info("New MV or Cover")
 
-				YoutubeData.ChangeYtStatus("past").SendtoDB().SendNude()
+				err := YoutubeData.ChangeYtStatus("past").SendtoDB()
+				if err != nil {
+					log.Error(err)
+				}
+				YoutubeData.SendNude()
 
 			} else if !Data.Items[i].Snippet.PublishedAt.IsZero() && Data.Items[i].Snippet.VideoStatus == "none" {
 				log.WithFields(log.Fields{
@@ -220,7 +234,11 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 				if YoutubeData.YtData.Schedul.IsZero() {
 					YoutubeData.UpYtSchedul(YoutubeData.YtData.Published)
 				}
-				YoutubeData.ChangeYtStatus("past").SendtoDB().SendNude()
+				err := YoutubeData.ChangeYtStatus("past").SendtoDB()
+				if err != nil {
+					log.Error(err)
+				}
+				YoutubeData.SendNude()
 
 			} else {
 				log.WithFields(log.Fields{
@@ -250,22 +268,6 @@ func YtAPI(VideoID []string) (YtData, error) {
 	engine.BruhMoment(err, "", false)
 
 	return Data, nil
-}
-
-func getXML(url string) ([]byte, error) {
-	resp, err := http.Get(url)
-	engine.BruhMoment(err, "", false)
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("Status error: %v", resp.StatusCode)
-	}
-
-	data, err := ioutil.ReadAll(resp.Body)
-	engine.BruhMoment(err, "", false)
-
-	return data, nil
 }
 
 func ParseDuration(str string) time.Duration {

@@ -20,7 +20,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
 	CommandArray := strings.Split(m.Content, " ")
 	if strings.HasPrefix(m.Content, prefix) {
-		if CommandArray[0] == prefix+"subscriber" {
+		if CommandArray[0] == prefix+Subscriber {
 			MemberArry := strings.Split(CommandArray[1], ",")
 			for _, Group := range GroupData {
 				for _, Mem := range MemberArry {
