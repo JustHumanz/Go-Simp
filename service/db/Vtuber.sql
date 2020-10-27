@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS `User` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `DiscordID` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `DiscordUserName` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Human` TINYINT DEFAULT 1,
   `VtuberMember_id` int(11) NOT NULL,
   `Channel_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)

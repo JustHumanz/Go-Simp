@@ -73,6 +73,7 @@ type YtDbData struct {
 type UserStruct struct {
 	DiscordID, DiscordUserName, Channel_ID string
 	GroupID                                int64
+	Human                                  bool
 }
 
 type LiveBiliDB struct {

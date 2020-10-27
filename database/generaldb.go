@@ -228,10 +228,10 @@ func (Data UserStruct) Adduser(MemberID int64) error {
 	if tmp {
 		return errors.New("Already registered")
 	} else {
-		stmt, err := DB.Prepare(`INSERT INTO User (DiscordID,DiscordUserName,VtuberMember_id,Channel_id) values(?,?,?,?)`)
+		stmt, err := DB.Prepare(`INSERT INTO User (DiscordID,DiscordUserName,Human,VtuberMember_id,Channel_id) values(?,?,?,?,?)`)
 		BruhMoment(err, "", false)
 		defer stmt.Close()
-		res, err := stmt.Exec(Data.DiscordID, Data.DiscordUserName, MemberID, ChannelID)
+		res, err := stmt.Exec(Data.DiscordID, Data.DiscordUserName, Data.Human, MemberID, ChannelID)
 		BruhMoment(err, "", false)
 
 		_, err = res.LastInsertId()
@@ -429,17 +429,24 @@ func ChannelTag(MemberID int64, typetag int) ([]int, []string) {
 }
 
 //get tags
-func GetUserList(IdDiscordChannelID int, Member int64) []string {
-	var UserTagsList []string
-	rows, err := DB.Query(`SELECT DiscordID From User WHERE Channel_id=? And VtuberMember_id =?`, IdDiscordChannelID, Member)
+func GetUserList(ChannelIDDiscord int, Member int64) []string {
+	var (
+		UserTagsList  []string
+		DiscordUserID string
+		Type          bool
+	)
+	rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id =?`, ChannelIDDiscord, Member)
 	BruhMoment(err, "", false)
 	defer rows.Close()
 
 	for rows.Next() {
-		var tmp string
-		err = rows.Scan(&tmp)
+		err = rows.Scan(&DiscordUserID, &Type)
 		BruhMoment(err, "", false)
-		UserTagsList = append(UserTagsList, "<@"+tmp+">")
+		if Type {
+			UserTagsList = append(UserTagsList, "<@"+DiscordUserID+">")
+		} else {
+			UserTagsList = append(UserTagsList, "<@&"+DiscordUserID+">")
+		}
 	}
 	return UserTagsList
 }

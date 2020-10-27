@@ -97,8 +97,8 @@ func main() {
 				Tweet(res.Vtuber.Group[i].GroupName, 0, Limit)
 			}
 		}()
-		time.Sleep(3 * time.Minute)
 		log.Info("Done")
+		time.Sleep(1 * time.Minute)
 		os.Exit(0)
 	} else if (*Service) == "twitter_scrap" {
 		Limit = 10000000

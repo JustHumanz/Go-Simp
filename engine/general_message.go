@@ -156,6 +156,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 			DiscordID:       m.Author.ID,
 			DiscordUserName: m.Author.Username,
 			Channel_ID:      m.ChannelID,
+			Human:           true,
 		}
 		Color, err := GetColor("/tmp/discordpp.tmp", m.Author.AvatarURL("128"))
 		if err != nil {
@@ -399,6 +400,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													DiscordUserName: Role.Name,
 													Channel_ID:      m.ChannelID,
 													GroupID:         VTuberGroup.ID,
+													Human:           false,
 												}
 												err := User.Adduser(Member.ID)
 												if err != nil {
@@ -1108,5 +1110,5 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 			return
 		}
 	}
-	KillSqlite(sqlite)
+	KillSqlConn(sqlite)
 }

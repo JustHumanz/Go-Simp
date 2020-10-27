@@ -3,6 +3,7 @@ package subscriber
 import (
 	"math/rand"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/JustHumanz/Go-simp/config"
@@ -18,7 +19,7 @@ func CheckTwFollowCount() {
 				Twitter := Name.GetTwitterFollow()
 				TwFollowDB := Name.GetSubsCount()
 				SendNotif := func(SubsCount, Tweets string) {
-					Avatar := engine.GetUserAvatar(Name.TwitterName)
+					Avatar := strings.Replace(Twitter.ProfileImageURLHTTPS, "_normal.jpg", ".jpg", -1)
 					Color, err := engine.GetColor("/tmp/bili.tmp", Avatar)
 					if err != nil {
 						log.Error(err)
