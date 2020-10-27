@@ -325,9 +325,6 @@ func CheckReg(GroupName, Reg string) bool {
 			for _, Region := range strings.Split(strings.ToLower(Val), ",") {
 				if Region == Reg {
 					return true
-					break
-				} else {
-					return false
 				}
 			}
 		}

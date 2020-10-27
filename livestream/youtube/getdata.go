@@ -23,8 +23,6 @@ import (
 )
 
 func GetRSS(YtID string) []string {
-	funcvar := engine.GetFunctionName(GetRSS)
-	engine.Debugging(funcvar, "In", YtID)
 	var DataXml YtXML
 
 	Data, err := engine.Curl("https://www.youtube.com/feeds/videos.xml?channel_id="+YtID+"&q=searchterms", nil)
@@ -38,13 +36,10 @@ func GetRSS(YtID string) []string {
 	for i := 0; i < len(DataXml.Entry); i++ {
 		VideoID = append(VideoID, DataXml.Entry[i].VideoId)
 	}
-	engine.Debugging(funcvar, "Out", VideoID)
 	return VideoID
 }
 
 func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) error {
-	funcvar := engine.GetFunctionName(Filter)
-	engine.Debugging(funcvar, "In", Name)
 	defer wg.Done()
 	VideoID := GetRSS(Name.YoutubeID)
 	Data, err := YtAPI(VideoID)
@@ -241,8 +236,6 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 }
 
 func YtAPI(VideoID []string) (YtData, error) {
-	funcvar := engine.GetFunctionName(YtAPI)
-	engine.Debugging(funcvar, "In", VideoID)
 	var (
 		Data    YtData
 		body    []byte
@@ -257,13 +250,10 @@ func YtAPI(VideoID []string) (YtData, error) {
 	err := json.Unmarshal(body, &Data)
 	engine.BruhMoment(err, "", false)
 
-	engine.Debugging(funcvar, "Out", fmt.Sprint(Data, nil))
 	return Data, nil
 }
 
 func getXML(url string) ([]byte, error) {
-	funcvar := engine.GetFunctionName(getXML)
-	engine.Debugging(funcvar, "In", url)
 	resp, err := http.Get(url)
 	engine.BruhMoment(err, "", false)
 
@@ -276,7 +266,6 @@ func getXML(url string) ([]byte, error) {
 	data, err := ioutil.ReadAll(resp.Body)
 	engine.BruhMoment(err, "", false)
 
-	engine.Debugging(funcvar, "Out", fmt.Sprint(data, nil))
 	return data, nil
 }
 

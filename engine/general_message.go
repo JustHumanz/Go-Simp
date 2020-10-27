@@ -737,12 +737,14 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 						SetDescription("Data too longgggggg").
 						SetImage(config.Longcatttt).
 						SetColor(Color).MessageEmbed)
+				} else if len(tableString.String()) > 1500 {
+					s.ChannelMessageSend(m.ChannelID, "```"+tableString.String()+"```")
 				} else {
 					s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 						SetDescription("```"+tableString.String()+"```").
 						SetColor(Color).
-						SetFooter("Use `Nickname` as parameter").MessageEmbed)
+						SetFooter("Use \"Nickname\" as parameter").MessageEmbed)
 				}
 
 				if NiggList != nil {
