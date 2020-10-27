@@ -571,7 +571,7 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 				AddField(Prefix+"Del tag [Group/Member name]", "This command will remove you from tags list").
 				AddField(Prefix+"My tags", "Show all lists that you are subscribed").
 				AddField(Prefix+"Channel tags", "Show what is enable in this channel").
-				AddField(Prefix+"Vtuber data [Group] [Region]", "Show available Vtuber data ").
+				AddField(Prefix+"Vtuber data [Group] {Region}", "Show available Vtuber data ").
 				AddField(Prefix+"Subscriber {Member name}", "Show Vtuber count of subscriber and followers ").
 				AddField(config.PYoutube+"Upcoming [Vtuber Group/Member] {Region}", "This command will show Upcoming live streams on Youtube  *only 3 if use Vtuber Group*").
 				AddField(config.PYoutube+"Live [Vtuber Group/Member] {Region}", "This command will show all live streams right now on Youtube").
