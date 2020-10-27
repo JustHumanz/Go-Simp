@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -54,7 +55,7 @@ func (Data YtDbData) InputYt(MemberID int64) {
 }
 
 //Check new video or not
-func (Member Name) CheckYtVideo(VideoID string) YtDbData {
+func (Member Name) CheckYtVideo(VideoID string) *YtDbData {
 	var Data YtDbData
 	rows, err := DB.Query(`SELECT id,VideoID,Type,Status,Title,Thumbnails,Description,PublishedAt,ScheduledStart,EndStream,Viewers FROM Vtuber.Youtube Where VideoID=? AND VtuberMember_id=?`, VideoID, Member.ID)
 	BruhMoment(err, "", false)
@@ -65,10 +66,25 @@ func (Member Name) CheckYtVideo(VideoID string) YtDbData {
 		BruhMoment(err, "", false)
 	}
 	if Data.ID == 0 {
-		return YtDbData{}
+		return nil
 	} else {
-		return Data
+		return &Data
 	}
+}
+
+func (Data *YtDbData) UpView(new string) *YtDbData {
+	Data.Viewers = new
+	return Data
+}
+
+func (Data *YtDbData) UpEnd(new time.Time) *YtDbData {
+	Data.End = new
+	return Data
+}
+
+func (Data *YtDbData) UpLength(new string) *YtDbData {
+	Data.Length = new
+	return Data
 }
 
 //Update youtube data

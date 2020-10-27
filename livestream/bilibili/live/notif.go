@@ -13,7 +13,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (Data LiveBili) Tamod(MemberID int64) {
+//push to discord channel
+func (Data *LiveBili) Tamod() {
+	MemberID := Data.Member.ID
 	id, DiscordChannelID := database.ChannelTag(MemberID, 2)
 	for i, DiscordChannel := range DiscordChannelID {
 		UserTagsList := database.GetUserList(id[i], MemberID)
@@ -31,8 +33,9 @@ func (Data LiveBili) Tamod(MemberID int64) {
 	}
 }
 
-func (Data LiveBili) Crotttt(GroupIcon string) LiveBili {
-	BiliBiliAccount := "https://space.bilibili.com/" + strconv.Itoa(Data.BiliBiliID)
+//make a embed
+func (Data *LiveBili) Crotttt(GroupIcon string) *LiveBili {
+	BiliBiliAccount := "https://space.bilibili.com/" + strconv.Itoa(Data.Member.BiliBiliID)
 	BiliBiliURL := "https://live.bilibili.com/" + strconv.Itoa(Data.RoomData.LiveRoomID)
 	Online := strconv.Itoa(Data.RoomData.Online)
 	Color, err := engine.GetColor("/tmp/bilThum", Data.RoomData.Thumbnail)
@@ -42,7 +45,7 @@ func (Data LiveBili) Crotttt(GroupIcon string) LiveBili {
 
 	if Data.RoomData.Status == "Live" {
 		Data.Embed = engine.NewEmbed().
-			SetAuthor(Data.VtuberName, Data.Face, BiliBiliAccount).
+			SetAuthor(engine.FixName(Data.Member.EnName, Data.Member.JpName), Data.Member.BiliBiliAvatar, BiliBiliAccount).
 			SetTitle("Live right now").
 			SetThumbnail(GroupIcon).
 			SetDescription(Data.RoomData.Description).

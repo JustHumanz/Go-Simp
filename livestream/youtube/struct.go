@@ -119,8 +119,13 @@ type YtData struct {
 }
 
 type NotifStruct struct {
-	Data   database.YtDbData
+	Data   *database.YtDbData
 	Member database.Name
 	Group  database.GroupName
 	Embed  *discordgo.MessageEmbed
+}
+
+func (Data NotifStruct) AddData(new *database.YtDbData) NotifStruct {
+	Data.Data = new
+	return Data
 }

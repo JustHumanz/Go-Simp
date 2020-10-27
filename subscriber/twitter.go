@@ -65,8 +65,8 @@ func CheckTwFollowCount() {
 				"Vtuber":                   Name.EnName,
 			}).Info("Update Twitter Follower")
 
-			TwFollowDB.TwFollow = Twitter.FollowersCount
-			TwFollowDB.UpdateSubs("tw")
+			TwFollowDB.UptwFollow(Twitter.FollowersCount).
+				UpdateSubs("tw")
 			time.Sleep(1 * time.Second)
 		}
 	}

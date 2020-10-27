@@ -97,10 +97,10 @@ func CheckYtSubsCount() {
 								if err != nil {
 									log.Error(err)
 								}
-								YtSubsDB.YtSubs = YTSubscriberCount
-								YtSubsDB.YtVideos = VideoCount
-								YtSubsDB.YtViews = ViewCount
-								YtSubsDB.UpdateSubs("yt")
+								YtSubsDB.UpYtSubs(YTSubscriberCount).
+									UpYtVideo(VideoCount).
+									UpYtViews(ViewCount).
+									UpdateSubs("yt")
 							}
 						}
 					}

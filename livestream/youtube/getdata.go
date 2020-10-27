@@ -23,8 +23,6 @@ import (
 )
 
 func GetRSS(YtID string) []string {
-	funcvar := engine.GetFunctionName(GetRSS)
-	engine.Debugging(funcvar, "In", YtID)
 	var DataXml YtXML
 
 	Data, err := engine.Curl("https://www.youtube.com/feeds/videos.xml?channel_id="+YtID+"&q=searchterms", nil)
@@ -38,13 +36,10 @@ func GetRSS(YtID string) []string {
 	for i := 0; i < len(DataXml.Entry); i++ {
 		VideoID = append(VideoID, DataXml.Entry[i].VideoId)
 	}
-	engine.Debugging(funcvar, "Out", VideoID)
 	return VideoID
 }
 
 func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) error {
-	funcvar := engine.GetFunctionName(Filter)
-	engine.Debugging(funcvar, "In", Name)
 	defer wg.Done()
 	VideoID := GetRSS(Name.YoutubeID)
 	Data, err := YtAPI(VideoID)
@@ -96,13 +91,13 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 			Group:  Group,
 			Member: Name,
 		}
-		if DataDB != (database.YtDbData{}) {
-			DataDB.Viewers = Viewers
-			DataDB.End = Data.Items[i].LiveDetails.EndTime
-			DataDB.Length = duration.String()
+		if DataDB != nil {
+			DataDB.UpView(Viewers).
+				UpEnd(Data.Items[i].LiveDetails.EndTime).
+				UpLength(duration.String())
 
-			PushData.Data = DataDB
-			PushData.Data.VideoID = VideoID[i]
+			PushData.AddData(DataDB)
+
 			if Data.Items[i].Snippet.VideoStatus == "none" && DataDB.Status == "live" {
 				log.WithFields(log.Fields{
 					"VideoData ID": VideoID[i],
@@ -175,7 +170,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 			}
 
 			//verify
-			PushData.Data = database.YtDbData{
+			PushData.AddData(&database.YtDbData{
 				Status:    Data.Items[i].Snippet.VideoStatus,
 				VideoID:   VideoID[i],
 				Title:     Data.Items[i].Snippet.Title,
@@ -185,7 +180,8 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 				Published: Data.Items[i].Snippet.PublishedAt,
 				Type:      yttype,
 				Viewers:   Viewers,
-			}
+			})
+
 			if Data.Items[i].Snippet.VideoStatus == "upcoming" {
 				PushData.Data.InputYt(Name.ID)
 				log.WithFields(log.Fields{
@@ -241,8 +237,6 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 }
 
 func YtAPI(VideoID []string) (YtData, error) {
-	funcvar := engine.GetFunctionName(YtAPI)
-	engine.Debugging(funcvar, "In", VideoID)
 	var (
 		Data    YtData
 		body    []byte
@@ -257,13 +251,10 @@ func YtAPI(VideoID []string) (YtData, error) {
 	err := json.Unmarshal(body, &Data)
 	engine.BruhMoment(err, "", false)
 
-	engine.Debugging(funcvar, "Out", fmt.Sprint(Data, nil))
 	return Data, nil
 }
 
 func getXML(url string) ([]byte, error) {
-	funcvar := engine.GetFunctionName(getXML)
-	engine.Debugging(funcvar, "In", url)
 	resp, err := http.Get(url)
 	engine.BruhMoment(err, "", false)
 
@@ -276,7 +267,6 @@ func getXML(url string) ([]byte, error) {
 	data, err := ioutil.ReadAll(resp.Body)
 	engine.BruhMoment(err, "", false)
 
-	engine.Debugging(funcvar, "Out", fmt.Sprint(data, nil))
 	return data, nil
 }
 
