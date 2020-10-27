@@ -5,8 +5,6 @@ import (
 	"time"
 
 	"github.com/JustHumanz/Go-simp/database"
-
-	"github.com/bwmarrin/discordgo"
 )
 
 type YtXML struct {
@@ -119,13 +117,46 @@ type YtData struct {
 }
 
 type NotifStruct struct {
-	Data   *database.YtDbData
+	YtData *database.YtDbData
 	Member database.Name
 	Group  database.GroupName
-	Embed  *discordgo.MessageEmbed
 }
 
-func (Data NotifStruct) AddData(new *database.YtDbData) NotifStruct {
-	Data.Data = new
+func (Data *NotifStruct) AddData(new *database.YtDbData) *NotifStruct {
+	Data.YtData = new
+	return Data
+}
+
+func (Data *NotifStruct) ChangeYtStatus(new string) *NotifStruct {
+	Data.YtData.Status = new
+	return Data
+}
+
+func (Data *NotifStruct) UpdateYtDB() {
+	Data.YtData.UpdateYt(Data.YtData.Status)
+}
+
+func (Data *NotifStruct) SendtoDB() *NotifStruct {
+	Data.YtData.InputYt(Data.Member.ID)
+	return Data
+}
+
+func (Data *NotifStruct) UpYtView(new string) *NotifStruct {
+	Data.YtData.Viewers = new
+	return Data
+}
+
+func (Data *NotifStruct) UpYtEnd(new time.Time) *NotifStruct {
+	Data.YtData.End = new
+	return Data
+}
+
+func (Data *NotifStruct) UpYtLen(new string) *NotifStruct {
+	Data.YtData.Length = new
+	return Data
+}
+
+func (Data *NotifStruct) UpYtSchedul(new time.Time) *NotifStruct {
+	Data.YtData.Schedul = new
 	return Data
 }

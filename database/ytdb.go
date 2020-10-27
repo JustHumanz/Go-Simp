@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"time"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -70,21 +69,6 @@ func (Member Name) CheckYtVideo(VideoID string) *YtDbData {
 	} else {
 		return &Data
 	}
-}
-
-func (Data *YtDbData) UpView(new string) *YtDbData {
-	Data.Viewers = new
-	return Data
-}
-
-func (Data *YtDbData) UpEnd(new time.Time) *YtDbData {
-	Data.End = new
-	return Data
-}
-
-func (Data *YtDbData) UpLength(new string) *YtDbData {
-	Data.Length = new
-	return Data
 }
 
 //Update youtube data

@@ -269,7 +269,7 @@ func CheckSchedule() {
 					//prob past
 					Data["Status"] = "Past"
 					LiveBiliBili(Data)
-				} else if DataDB == (database.LiveBiliDB{}) {
+				} else if DataDB == nil {
 					Data["Status"] = "Unknown"
 					LiveBiliBili(Data)
 				}

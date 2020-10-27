@@ -91,7 +91,7 @@ func FilterYt(Dat database.Name) {
 		} else {
 			yttype = "Streaming"
 		}
-		if Dat.CheckYtVideo(VideoID[i]) != (database.YtDbData{}) {
+		if Dat.CheckYtVideo(VideoID[i]) != nil {
 			continue
 		} else {
 			log.Info("New video")

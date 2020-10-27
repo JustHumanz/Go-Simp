@@ -16,6 +16,7 @@ var (
 
 func Start() {
 	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
+	//CheckVideo()
 }
 
 func CheckVideo() {

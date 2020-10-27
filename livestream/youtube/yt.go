@@ -1,7 +1,6 @@
 package youtube
 
 import (
-	"os"
 	"regexp"
 	"strings"
 	"sync"
@@ -84,9 +83,7 @@ func CheckPrivate() {
 
 	Check := func(Youtube database.YtDbData, wg *sync.WaitGroup) {
 		defer wg.Done()
-		if Youtube.Status == "" {
-			os.Exit(1)
-		}
+
 		var (
 			tor bool
 			err error
@@ -99,6 +96,11 @@ func CheckPrivate() {
 				_, err = engine.Curl(url, nil)
 			}
 			if Youtube.Status == "upcoming" && time.Now().Sub(Youtube.Schedul) > Youtube.Schedul.Sub(time.Now()) {
+				log.WithFields(log.Fields{
+					"VideoID": Youtube.VideoID,
+				}).Info("Member only video")
+				Youtube.UpdateYt("past")
+			} else if Youtube.Status == "live" && Youtube.Schedul.Minute() > time.Now().Add(2).Minute() {
 				log.WithFields(log.Fields{
 					"VideoID": Youtube.VideoID,
 				}).Info("Member only video")
