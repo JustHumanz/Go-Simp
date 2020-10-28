@@ -47,9 +47,7 @@ func (Data Statuses) CheckHashTag(Group []database.MemberGroupID, wg *sync.WaitG
 			for i := 0; i < len(Group); i++ {
 				//just temporary rule
 				if Group[i].EnName == "Kiryu Coco" {
-					if Data.User.FollowersCount > 70 && Data.User.FriendsCount > 100 && Data.User.FavouritesCount > 100 && Data.User.StatusesCount > 100 && len(Data.Entities.Hashtags) < 4 {
-						continue
-					} else {
+					if Data.User.FollowersCount < 70 && Data.User.FriendsCount < 100 && Data.User.FavouritesCount < 100 && Data.User.StatusesCount < 100 && len(Data.Entities.Hashtags) > 4 {
 						//fuck off dummy account
 						log.WithFields(log.Fields{
 							"Hashtags":   Group[i].TwitterHashtags,
@@ -59,9 +57,7 @@ func (Data Statuses) CheckHashTag(Group []database.MemberGroupID, wg *sync.WaitG
 						return
 					}
 				} else if Group[i].GroupName == "Hololive" {
-					if Data.User.FollowersCount > 25 && Data.User.FriendsCount > 70 && Data.User.FavouritesCount > 100 && Data.User.StatusesCount > 100 {
-						continue
-					} else {
+					if Data.User.FollowersCount < 25 && Data.User.FriendsCount < 30 && Data.User.StatusesCount < 100 {
 						//fuck off dummy account
 						log.WithFields(log.Fields{
 							"Hashtags":   Group[i].TwitterHashtags,
