@@ -73,12 +73,12 @@ A simple VTuber bot to serve notification Fanart and Livestream
 #####  ~~Hololive CN~~
 | NICKNAME     | REGION | YOUTUBE | BILIBILI |
 |--------------|--------|---------|----------|
-| ~~Artia~~   | ~~CN~~| ~~✗~~ | ~~✓~~        |
-| ~~Civia~~   | ~~CN~~| ~~✓~~ | ~~✓~~        |
-| ~~Yogiri~~  | ~~CN~~| ~~✗~~ | ~~✓~~        |
-| ~~Kuromomo~~| ~~CN~~| ~~✗~~ | ~~✓~~        |
-| ~~Doris~~   | ~~CN~~| ~~✗~~ | ~~✓~~        |
-| ~~Rosalyn~~ | ~~CN~~| ~~✗~~ | ~~✓~~        |
+| ~~Artia~~    | ~~CN~~ | ~~✗~~   | ~~✓~~    |
+| ~~Civia~~    | ~~CN~~ | ~~✓~~   | ~~✓~~    |
+| ~~Yogiri~~   | ~~CN~~ | ~~✗~~   | ~~✓~~    |
+| ~~Kuromomo~~ | ~~CN~~ | ~~✗~~   | ~~✓~~    |
+| ~~Doris~~    | ~~CN~~ | ~~✗~~   | ~~✓~~    |
+| ~~Rosalyn~~  | ~~CN~~ | ~~✗~~   | ~~✓~~    |
 
 ### Nijisanji
 | NICKNAME  | REGION | YOUTUBE | BILIBILI |
@@ -314,20 +314,32 @@ Like this but in Japanese
 **Notifications for livestream will not be sent if there no one user tagged**  
 
 ### Notification&Command 
-#### New Upcoming live stream
-![alt text](https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/New%20Upcoming.png "New Upcoming live stream")   
+
+#### New Upcoming live stream  
+<p align="center">
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/New%20Upcoming.png" alt="New Upcoming live stream"/>
+</p>
+
 
 #### Reminder  
-```Reminder every 1 hours and 30 minutes before stream start```  
-![alt text](https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Reminder.png "Reminder")  
+<p align="center">
+Reminder every 1 hours and 30 minutes before livestream start
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Reminder.png" alt="Reminder"/>
+</p>
+
 
 ##### Upcoming command
-![alt text](https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Youtube%20Upcoming.png "Upcoming command")  
+<p align="center">
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Youtube%20Upcoming.png" alt="Upcoming command"/>
+</p>
+
 
 ##### New Fanart
-![alt text](https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/New%20Fanart.png "New fanart")   
+<p align="center">
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/New%20Fanart.png" alt="New fanart"/>
+</p>
 
-[Invite link](https://discord.com/oauth2/authorize?client_id=721964514018590802&permissions=449536&scope=bot)
+[Invite link](https://top.gg/bot/721964514018590802)
 
 
 ## CONTRIBUTING
