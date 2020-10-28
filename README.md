@@ -197,10 +197,14 @@ Example: `art>tag me Kanochi`,then you will get tagged when there is a new fanar
 ```vtbot>Del tag [Group/Member nickname]```  
 This command will remove you from tags list  
 
+```vtbot>tag roles [roles] [Group/Member nickname]```  
+Same like `tag me` command,but this will tag a roles  *every role separated by space* 
+Example" `tag roles @kanochi-simps hanayori`
+
 ```vtbot>My tags```  
 Shows all lists that you are subscribed  
 
-```vtbot>Channel tags```  
+```vtbot>Channel state```  
 Shows what is enable in this channel    
 
 ```vtbot>Vtuber data [Group/Member] [Region]```  
@@ -258,4 +262,4 @@ Like this but in Japanese
 ## CONTRIBUTING
 if you can code you can review my shitty code and make it better.if not,help me to add Vtubers Data,you can create a pull request on this [file](https://github.com/JustHumanz/Go-Simp/blob/master/service/db/vtuber.json) or fix my bot command (i know my command bot is `too technical`)  
 
-Report bug or suggestion feature and suggestion for emoji  
+Very open for Report bug or suggestion feature and emoji 
