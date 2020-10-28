@@ -192,20 +192,20 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 									s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 										SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 										SetDescription("You Already Added\n"+strings.Join(Already, " ")+" from your tag list").
-										AddField("GroupName", "**"+VTuberGroup.NameGroup+"**").
+										AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
 										SetImage(VTuberGroup.IconURL).
 										SetThumbnail(config.GoSimpIMG).
-										SetFooter("Use \""+config.PGeneral+"my tags\" to show you tags list").
+										SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
 										SetColor(Color).MessageEmbed)
 								}
 								if Done != nil {
 									s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 										SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 										SetDescription("You Add\n"+strings.Join(Done, " ")+" to your tag list").
-										AddField("GroupName", "**"+VTuberGroup.NameGroup+"**").
+										AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
 										SetImage(VTuberGroup.IconURL).
 										SetThumbnail(config.GoSimpIMG).
-										SetFooter("Use \""+config.PGeneral+"my tags\" to show you tags list").
+										SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
 										SetColor(Color).MessageEmbed)
 								}
 							}
@@ -245,7 +245,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 							SetDescription("You Already Added\n"+strings.Join(Already, " ")+" from your list").
 							SetThumbnail(config.GoSimpIMG).
-							SetFooter("Use \""+config.PGeneral+"my tags\" to show you tags list").
+							SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
 							SetColor(Color).MessageEmbed)
 
 					}
@@ -254,13 +254,13 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 							SetDescription("You Add\n"+strings.Join(Done, " ")+" to your list").
 							SetThumbnail(config.GoSimpIMG).
-							SetFooter("Use \""+config.PGeneral+"my tags\" to show you tags list").
+							SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
 							SetColor(Color).MessageEmbed)
 					}
 				}
 
 			} else {
-				s.ChannelMessageSend(m.ChannelID, "Incomplete `tag me` command")
+				s.ChannelMessageSend(m.ChannelID, "Incomplete `"+TagMe+"` command")
 			}
 		} else if strings.HasPrefix(m.Content, Prefix+DelTag) {
 			Already = nil
@@ -291,19 +291,20 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetDescription("Already Removed from your tags or You never tag them\n"+strings.Join(Already, " ")).
-									AddField("GroupName", "**"+VTuberGroup.NameGroup+"**").
+									AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
 									SetImage(VTuberGroup.IconURL).
 									SetThumbnail(config.GoSimpIMG).
-									SetFooter("Use \""+config.PGeneral+"my tags\" to show you tags list").
+									SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
 									SetColor(Color).MessageEmbed)
 								return
 							} else if Done != nil {
 								s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetDescription("You remove "+strings.Join(Done, " ")+" from your tag list").
+									AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
 									SetThumbnail(config.GoSimpIMG).
 									SetImage(VTuberGroup.IconURL).
-									SetFooter("Use \""+config.PGeneral+"my tags\" to show you tags list").
+									SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
 									SetColor(Color).MessageEmbed)
 								return
 							}
@@ -313,7 +314,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								SetDescription("look like this channel not enable `"+VTuberGroup.NameGroup+"`").
 								SetImage(VTuberGroup.IconURL).
 								SetThumbnail(config.GoSimpIMG).
-								SetFooter("Use \""+config.PGeneral+"my tags\" to show you tags list").
+								SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
 								SetColor(Color).MessageEmbed)
 							return
 						}
@@ -348,7 +349,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 						SetDescription("Already Removed from your tags or You never tag them\n"+strings.Join(Already, " ")).
 						SetThumbnail(config.GoSimpIMG).
-						SetFooter("Use \""+config.PGeneral+"my tags\" to show you tags list").
+						SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
 						SetColor(Color).MessageEmbed)
 					return
 				}
@@ -359,12 +360,12 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 						SetDescription("You remove "+strings.Join(Done, " ")+" from your tag list").
 						SetThumbnail(config.GoSimpIMG).
-						SetFooter("Use \""+config.PGeneral+"my tags\" to show you tags list").
+						SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
 						SetColor(Color).MessageEmbed)
 					return
 				}
 			} else {
-				s.ChannelMessageSend(m.ChannelID, "Incomplete del tag command")
+				s.ChannelMessageSend(m.ChannelID, "Incomplete `"+DelTag+"` command")
 			}
 		} else if strings.HasPrefix(m.Content, Prefix+TagRoles) {
 			if CheckPermission(m.Author.ID, m.ChannelID) {
@@ -415,10 +416,10 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 														SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 														SetDescription(Role.Mention()+" Already Added\n"+strings.Join(Already, " ")).
-														AddField("GroupName", "**"+VTuberGroup.NameGroup+"**").
+														AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
 														SetImage(VTuberGroup.IconURL).
 														SetThumbnail(config.GoSimpIMG).
-														SetFooter("Use \""+config.PGeneral+"role tags\" to role tags list").
+														SetFooter("Use \""+config.PGeneral+RolesTags+"\" to role tags list").
 														SetColor(Color).MessageEmbed)
 													Already = nil
 												}
@@ -426,10 +427,10 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 														SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 														SetDescription(Role.Mention()+"Add\n"+strings.Join(Done, " ")).
-														AddField("GroupName", "**"+VTuberGroup.NameGroup+"**").
+														AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
 														SetImage(VTuberGroup.IconURL).
 														SetThumbnail(config.GoSimpIMG).
-														SetFooter("Use \""+config.PGeneral+"role tags\" to show role tags list").
+														SetFooter("Use \""+config.PGeneral+RolesTags+"\" to show role tags list").
 														SetColor(Color).MessageEmbed)
 													Done = nil
 												}
@@ -472,7 +473,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 													SetDescription(Role.Mention()+" Already Added\n"+strings.Join(Already, " ")).
 													SetThumbnail(config.GoSimpIMG).
-													SetFooter("Use \""+config.PGeneral+"role tags\" to show role tags list").
+													SetFooter("Use \""+config.PGeneral+RolesTags+"\" to show role tags list").
 													SetColor(Color).MessageEmbed)
 												Already = nil
 											}
@@ -481,7 +482,146 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 													SetDescription(Role.Mention()+" Add\n"+strings.Join(Done, " ")).
 													SetThumbnail(config.GoSimpIMG).
-													SetFooter("Use \""+config.PGeneral+"role tags\" to show you tags list").
+													SetFooter("Use \""+config.PGeneral+RolesTags+"\" to show you tags list").
+													SetColor(Color).MessageEmbed)
+												Done = nil
+											}
+										}
+									}
+								}
+							}
+
+						} else {
+							s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+								SetDescription("look like this channel not enable `"+Member.GroupName+"`").
+								SetThumbnail(config.GoSimpIMG).
+								SetColor(Color).MessageEmbed)
+							return
+						}
+					}
+				} else {
+					s.ChannelMessageSend(m.ChannelID, "Incomplete `tag role` command")
+				}
+			} else {
+				s.ChannelMessageSend(m.ChannelID, "You don't have enough permission to use this command")
+			}
+		} else if strings.HasPrefix(m.Content, Prefix+DelRoles) {
+			if CheckPermission(m.Author.ID, m.ChannelID) {
+				Already = nil
+				Done = nil
+				VtuberName := strings.Split(strings.TrimSpace(strings.Replace(m.Content, Prefix+TagRoles, "", -1)), " ")
+
+				guild, err := s.Guild(m.GuildID)
+				if err != nil {
+					log.Error(err)
+				}
+
+				if len(VtuberName[len(VtuberName)-1:]) > 0 {
+					tmp := strings.Split(VtuberName[len(VtuberName)-1:][0], ",")
+
+					for _, Name := range tmp {
+						Data := FindName(Name)
+						if Data.GroupID == 0 {
+							VTuberGroup, err := FindGropName(Name)
+							if err != nil {
+								log.Error(err)
+								s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid")
+								return
+							}
+
+							if database.CheckChannelEnable(m.ChannelID, Name, VTuberGroup.ID) {
+								for _, Role := range guild.Roles {
+									for _, UserRole := range VtuberName {
+										if UserRole == Role.Mention() {
+											for _, Member := range database.GetName(VTuberGroup.ID) {
+												User := database.UserStruct{
+													DiscordID:       Role.ID,
+													DiscordUserName: Role.Name,
+													Channel_ID:      m.ChannelID,
+													GroupID:         VTuberGroup.ID,
+													Human:           false,
+												}
+												err := User.Deluser(Member.ID)
+												if err != nil {
+													Already = append(Already, "`"+Member.Name+"`")
+												} else {
+													Done = append(Done, "`"+Member.Name+"`")
+													counter = true
+												}
+											}
+											if Already != nil || Done != nil {
+												if Already != nil {
+													s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+														SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+														SetDescription(Role.Mention()+" Already Removed from tags list or "+Role.Mention()+" never add them \n"+strings.Join(Already, " ")).
+														AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
+														SetImage(VTuberGroup.IconURL).
+														SetThumbnail(config.GoSimpIMG).
+														SetFooter("Use \""+config.PGeneral+RolesTags+"\" to role tags list").
+														SetColor(Color).MessageEmbed)
+													Already = nil
+												}
+												if Done != nil {
+													s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+														SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+														SetDescription(Role.Mention()+" Remove\n"+strings.Join(Done, " ")+"\n from tag list").
+														AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
+														SetImage(VTuberGroup.IconURL).
+														SetThumbnail(config.GoSimpIMG).
+														SetFooter("Use \""+config.PGeneral+RolesTags+"\" to show role tags list").
+														SetColor(Color).MessageEmbed)
+													Done = nil
+												}
+											}
+										}
+									}
+								}
+							} else {
+								s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+VTuberGroup.NameGroup+"`")
+								return
+							}
+						} else {
+							MemberTag = append(MemberTag, Data)
+						}
+						Already = nil
+						Done = nil
+					}
+					for i, Member := range MemberTag {
+						if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.GroupID) {
+							for _, Role := range guild.Roles {
+								for _, UserRole := range VtuberName {
+									if UserRole == Role.Mention() {
+										User := database.UserStruct{
+											DiscordID:       Role.ID,
+											DiscordUserName: Role.Name,
+											Channel_ID:      m.ChannelID,
+											GroupID:         Member.GroupID,
+										}
+										err := User.Adduser(Member.MemberID)
+										if err != nil {
+											Already = append(Already, "`"+tmp[i]+"`")
+										} else {
+											Done = append(Done, "`"+tmp[i]+"`")
+											counter = true
+										}
+
+										if Already != nil || Done != nil {
+											if Already != nil {
+												s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+													SetDescription(Role.Mention()+" Already Removed from tags list or "+Role.Mention()+" never add them \n"+strings.Join(Already, " ")).
+													SetThumbnail(config.GoSimpIMG).
+													SetFooter("Use \""+config.PGeneral+RolesTags+"\" to show role tags list").
+													SetColor(Color).MessageEmbed)
+												Already = nil
+											}
+											if Done != nil {
+												s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+													SetDescription(Role.Mention()+" Remove\n"+strings.Join(Done, " ")+"\n from tag list").
+													SetThumbnail(config.GoSimpIMG).
+													SetFooter("Use \""+config.PGeneral+RolesTags+"\" to show you tags list").
 													SetColor(Color).MessageEmbed)
 												Done = nil
 											}
@@ -704,7 +844,6 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 				AddField("~~"+config.PBilibili+Upcoming+" [Vtuber Group/Member]~~", "~~This command will show all Upcoming live streams on BiliBili~~").
 				AddField(config.PBilibili+Live+" [Vtuber Group/Member]", "This command will show all live streams right now on BiliBili").
 				AddField(config.PBilibili+Past+" [Vtuber Group/Member]", "This command will show all past streams on BiliBili").
-
 				AddField("sp_"+config.PBilibili+"[Vtuber Group/Member]", "This command will show latest video on bilibili  *only 3 if use Vtuber Group*").
 				AddField(Prefix+"Help EN", "Well,you using it right now").
 				AddField(Prefix+"Help JP", "Like this but in Japanese").
@@ -747,13 +886,13 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 	table.SetNoWhiteSpace(true)
 
 	if strings.HasPrefix(m.Content, Prefix) {
-		if strings.HasPrefix(m.Content, Prefix+RoleTags) {
+		if strings.HasPrefix(m.Content, Prefix+RolesTags) {
 			guild, err := s.Guild(m.GuildID)
 			if err != nil {
 				log.Error(err)
 			}
 
-			for _, UserRoles := range strings.Split(strings.TrimSpace(strings.Replace(m.Content, Prefix+RoleTags, "", -1)), " ") {
+			for _, UserRoles := range strings.Split(strings.TrimSpace(strings.Replace(m.Content, Prefix+RolesTags, "", -1)), " ") {
 				for _, Role := range guild.Roles {
 					if UserRoles == Role.Mention() {
 						list := database.UserStatus(Role.ID, m.ChannelID)

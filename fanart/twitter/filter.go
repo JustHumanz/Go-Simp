@@ -43,14 +43,23 @@ func (Data Statuses) CheckHashTag(Group []database.MemberGroupID, wg *sync.WaitG
 		westtaiwan, _ := regexp.MatchString(rgx, hashtag.Text)
 		if !westtaiwan && !tiananmen {
 			for i := 0; i < len(Group); i++ {
+				//just temporary rule
 				if Group[i].EnName == "Kiryu Coco" {
-					if Data.User.FollowersCount > 70 && Data.User.FriendsCount > 100 && Data.User.FavouritesCount > 100 && Data.User.StatusesCount > 100 {
+					if Data.User.FollowersCount > 70 && Data.User.FriendsCount > 100 && Data.User.FavouritesCount > 100 && Data.User.StatusesCount > 100 && len(Data.Entities.Hashtags) < 4 {
+						continue
+					} else {
+						log.Info("Fvck off dummy account") //fuck off dummy account
+						return
+					}
+				} else if Group[i].GroupName == "Hololive" {
+					if Data.User.FollowersCount > 25 && Data.User.FriendsCount > 70 && Data.User.FavouritesCount > 100 && Data.User.StatusesCount > 100 {
 						continue
 					} else {
 						log.Info("Fvck off dummy account") //fuck off dummy account
 						return
 					}
 				}
+
 				if "#"+hashtag.Text == Group[i].TwitterHashtags {
 					//new
 					log.WithFields(log.Fields{

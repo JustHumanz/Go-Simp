@@ -186,20 +186,26 @@ Use this command if you want to change enable state
 ```vtbot>Disable [Vtuber Group]```
 Just like enable but this disable command :3  
 
-```art>{Group/Member nickname}```  
+```art>{Group/Member}```  
 Show fanart with randomly with their fanart hashtag  
 Example: `art>Kanochi` or `art>hololive`  
 
-```vtbot>Tag me [Group/Member nickname]```  
+```vtbot>Tag me [Group/Member]```  
 This command will add you to tags list if any new fanart  
 Example: `art>tag me Kanochi`,then you will get tagged when there is a new fanart of kano  
 
-```vtbot>Del tag [Group/Member nickname]```  
+```vtbot>Del tag [Group/Member]```  
 This command will remove you from tags list  
 
-```vtbot>tag roles [roles] [Group/Member nickname]```  
+```vtbot>Tag roles [roles] [Group/Member]```  
 Same like `tag me` command,but this will tag a roles  *every role separated by space* 
-Example" `tag roles @kanochi-simps hanayori`
+Example" `tag roles @kanochi-simps hanayori` or `tag roles @fbk-simps @hololive-simps fbk`  
+
+```vtbot>Roles tags [roles]```  
+Show all lists that roles are subscribed
+
+```vtbot>Del roles [roles]```  
+Remove roles are subscribed from tags list  
 
 ```vtbot>My tags```  
 Shows all lists that you are subscribed  
@@ -231,7 +237,7 @@ This command will show all live streams right now on BiliBili
 ```bl>Last [Vtuber Group/Member]```  
 This command will show past streams on BiliBili
 
-```sp_bl>[Group/Member name]```  
+```sp_bl>[Group/Member]```  
 This command will show latest video on bilibili  *only 3 if use Vtuber Group*
 
 ```vtbot>Help EN```  
