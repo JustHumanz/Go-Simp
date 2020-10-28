@@ -36,7 +36,7 @@ func (Data TwitterStruct) CheckNew() []Statuses {
 //filter hashtag post
 func (Data Statuses) CheckHashTag(Group []database.MemberGroupID, wg *sync.WaitGroup) {
 	defer wg.Done()
-	rgx := "(?m)(.+free|leak|wrong|antihololive|Asacoco|haachama|Lv[0-9]|taiwan|kson.+)"
+	rgx := "(?m)(.+free|leak|wrong|antihololive|asacoco|haachama|Lv[0-9]|Lv.+|taiwan|kson.+)"
 	tiananmen, _ := regexp.MatchString(rgx, Data.Text)
 
 	for _, hashtag := range Data.Entities.Hashtags {
@@ -44,7 +44,7 @@ func (Data Statuses) CheckHashTag(Group []database.MemberGroupID, wg *sync.WaitG
 		if !westtaiwan && !tiananmen {
 			for i := 0; i < len(Group); i++ {
 				//just temporary rule
-				if Group[i].EnName == "Kiryu Coco" {
+				if Group[i].JpName == "桐生ココ" {
 					if Data.User.FollowersCount < 70 && Data.User.FriendsCount < 100 && Data.User.FavouritesCount < 100 && Data.User.StatusesCount < 100 && len(Data.Entities.Hashtags) > 4 {
 						//fuck off dummy account
 						log.WithFields(log.Fields{
@@ -52,10 +52,9 @@ func (Data Statuses) CheckHashTag(Group []database.MemberGroupID, wg *sync.WaitG
 							"MemberName": Group[i].EnName,
 							"URL":        "https://twitter.com/" + Data.User.ScreenName + "/status/" + Data.IDStr,
 						}).Info("dummy account(prob)")
-						return
 					}
+					return
 				} else if Group[i].GroupName == "Hololive" {
-
 					if Data.User.FollowersCount < 25 && Data.User.FriendsCount < 30 && Data.User.StatusesCount < 100 && len(Data.Entities.Hashtags) > 4 {
 						//fuck off dummy account
 						log.WithFields(log.Fields{
