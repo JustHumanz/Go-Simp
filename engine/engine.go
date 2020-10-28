@@ -46,7 +46,7 @@ const (
 )
 
 var (
-	BotID      string
+	BotID      *discordgo.User
 	BotSession *discordgo.Session
 	db         *sql.DB
 	debug      bool
@@ -55,10 +55,11 @@ var (
 	RegList    = make(map[string]string)
 	H3llcome   = []string{config.Bonjour, config.Howdy, config.Guten, config.Koni, config.Selamat, config.Assalamu, config.Approaching}
 	PathLiteDB = "./engine/guild.db"
+	GuildList  []string
 )
 
 //Start module
-func Start(b *discordgo.Session, m string) {
+func Start(b *discordgo.Session, m *discordgo.User) {
 	BotSession = b
 	db = database.DB
 	BotID = m
@@ -70,6 +71,9 @@ func Start(b *discordgo.Session, m string) {
 	}
 	GroupData = database.GetGroup()
 
+	for _, GuildID := range b.State.Guilds {
+		GuildList = append(GuildList, GuildID.ID)
+	}
 	for _, Group := range GroupData {
 		GroupsName = append(GroupsName, Group.NameGroup)
 		list := []string{}

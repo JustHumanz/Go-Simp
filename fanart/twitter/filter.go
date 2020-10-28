@@ -33,12 +33,10 @@ func (Data TwitterStruct) CheckNew() []Statuses {
 	return tmp
 }
 
-var covid []string
-
 //filter hashtag post
 func (Data Statuses) CheckHashTag(Group []database.MemberGroupID, wg *sync.WaitGroup) {
 	defer wg.Done()
-	rgx := "(?m)(.+freecoco|leak|cocodidbothingwrong|antihololive|freecocoandhaachama|Lv[0-9]|taiwan|kson.+)"
+	rgx := "(?m)(.+free|leak|wrong|antihololive|Asacoco|haachama|Lv[0-9]|taiwan|kson.+)"
 	tiananmen, _ := regexp.MatchString(rgx, Data.Text)
 
 	for _, hashtag := range Data.Entities.Hashtags {
@@ -57,7 +55,8 @@ func (Data Statuses) CheckHashTag(Group []database.MemberGroupID, wg *sync.WaitG
 						return
 					}
 				} else if Group[i].GroupName == "Hololive" {
-					if Data.User.FollowersCount < 25 && Data.User.FriendsCount < 30 && Data.User.StatusesCount < 100 {
+
+					if Data.User.FollowersCount < 25 && Data.User.FriendsCount < 30 && Data.User.StatusesCount < 100 && len(Data.Entities.Hashtags) > 4 {
 						//fuck off dummy account
 						log.WithFields(log.Fields{
 							"Hashtags":   Group[i].TwitterHashtags,
