@@ -33,6 +33,8 @@ func (Data TwitterStruct) CheckNew() []Statuses {
 	return tmp
 }
 
+var covid []string
+
 //filter hashtag post
 func (Data Statuses) CheckHashTag(Group []database.MemberGroupID, wg *sync.WaitGroup) {
 	defer wg.Done()
@@ -48,14 +50,24 @@ func (Data Statuses) CheckHashTag(Group []database.MemberGroupID, wg *sync.WaitG
 					if Data.User.FollowersCount > 70 && Data.User.FriendsCount > 100 && Data.User.FavouritesCount > 100 && Data.User.StatusesCount > 100 && len(Data.Entities.Hashtags) < 4 {
 						continue
 					} else {
-						log.Info("Fvck off dummy account") //fuck off dummy account
+						//fuck off dummy account
+						log.WithFields(log.Fields{
+							"Hashtags":   Group[i].TwitterHashtags,
+							"MemberName": Group[i].EnName,
+							"URL":        "https://twitter.com/" + Data.User.ScreenName + "/status/" + Data.IDStr,
+						}).Info("dummy account(prob)")
 						return
 					}
 				} else if Group[i].GroupName == "Hololive" {
 					if Data.User.FollowersCount > 25 && Data.User.FriendsCount > 70 && Data.User.FavouritesCount > 100 && Data.User.StatusesCount > 100 {
 						continue
 					} else {
-						log.Info("Fvck off dummy account") //fuck off dummy account
+						//fuck off dummy account
+						log.WithFields(log.Fields{
+							"Hashtags":   Group[i].TwitterHashtags,
+							"MemberName": Group[i].EnName,
+							"URL":        "https://twitter.com/" + Data.User.ScreenName + "/status/" + Data.IDStr,
+						}).Info("dummy account(prob)")
 						return
 					}
 				}

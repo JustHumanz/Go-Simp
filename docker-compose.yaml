@@ -25,7 +25,7 @@ services:
     command: go run .
     restart: on-failure
     volumes:
-    - bot_vol:/go/src/github.com/JustHumanz/Go-Simp/engine/guild.db
+    - bot_vol
 
   db_migrate:
     image: mainbot
