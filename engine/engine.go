@@ -46,7 +46,7 @@ const (
 )
 
 var (
-	BotID      string
+	BotID      *discordgo.User
 	BotSession *discordgo.Session
 	db         *sql.DB
 	debug      bool
@@ -58,7 +58,7 @@ var (
 )
 
 //Start module
-func Start(b *discordgo.Session, m string) {
+func Start(b *discordgo.Session, m *discordgo.User) {
 	BotSession = b
 	db = database.DB
 	BotID = m

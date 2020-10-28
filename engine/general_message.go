@@ -1221,7 +1221,7 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 
 	if Info == 0 {
 		for _, Channel := range g.Guild.Channels {
-			BotPermission, err := s.UserChannelPermissions(BotID, Channel.ID)
+			BotPermission, err := s.UserChannelPermissions(BotID.ID, Channel.ID)
 			if err != nil {
 				log.Error(err)
 				return

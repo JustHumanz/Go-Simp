@@ -36,7 +36,7 @@ func main() {
 	c.Start()
 
 	database.Start(db)
-	engine.Start(Bot, u.ID)
+	engine.Start(Bot, u)
 	fanart.Start(c)
 	stream.Start(c)
 	subscriber.Start(c)
