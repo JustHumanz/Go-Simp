@@ -55,14 +55,14 @@ A simple VTuber bot to serve notification Fanart and Livestream
 | Towa-sama    | JP     | ✓       | ✓        |
 | Roboco       | JP     | ✓       | ✓        |
 
-#### Hololive ID
+##### Hololive ID
 | NICKNAME     | REGION | YOUTUBE | BILIBILI |
 |--------------|--------|---------|----------|
 | Risu         | ID     | ✓       | ✗        |
 | Moona        | ID     | ✓       | ✗        |
 | Lofi         | ID     | ✓       | ✗        |
 
-#### Hololive EN
+##### Hololive EN
 | NICKNAME     | REGION | YOUTUBE | BILIBILI |
 |--------------|--------|---------|----------|
 | Gura         | EN     | ✓       | ✗        |
@@ -70,7 +70,7 @@ A simple VTuber bot to serve notification Fanart and Livestream
 | Calli        | EN     | ✓       | ✗        |
 | Kusotori     | EN     | ✓       | ✗        |
 
-####  ~~Hololive CN~~
+#####  ~~Hololive CN~~
 | NICKNAME     | REGION | YOUTUBE | BILIBILI |
 |--------------|--------|---------|----------|
 | ~~Artia~~   | ~~CN~~| ~~✗~~ | ~~✓~~        |
@@ -100,7 +100,7 @@ A simple VTuber bot to serve notification Fanart and Livestream
 | Cleaire   | JP     | ✓       | ✗        |
 | Rion      | JP     | ✓       | ✓        |
 
-#### Nijisanji ID
+##### Nijisanji ID
 | NICKNAME  | REGION | YOUTUBE | BILIBILI |
 |-----------|--------|---------|----------|
 | Hanamaki  | ID     | ✓       | ✗        |
@@ -117,7 +117,7 @@ A simple VTuber bot to serve notification Fanart and Livestream
 | Etna      | ID     | ✓       | ✗        |
 | Siska     | ID     | ✓       | ✗        |
 
-#### Nijisanji CN
+##### Nijisanji CN
 | NICKNAME  | REGION | YOUTUBE | BILIBILI |
 |-----------|--------|---------|----------|
 | Ruki      | CN     | ✗       | ✓        |
@@ -126,14 +126,14 @@ A simple VTuber bot to serve notification Fanart and Livestream
 | Chiharu   | CN     | ✗       | ✓        |
 | Hoshimi   | CN     | ✗       | ✓        |
 
-#### Nijisanji EN
+##### Nijisanji EN
 | NICKNAME  | REGION | YOUTUBE | BILIBILI |
 |-----------|--------|---------|----------|
 | Aadya     | EN     | ✓       | ✗        |
 | Noor      | EN     | ✓       | ✗        |
 | Vihaan    | EN     | ✓       | ✗        |
 
-#### Nijisanji KR
+##### Nijisanji KR
 | NICKNAME  | REGION | YOUTUBE | BILIBILI |
 |-----------|--------|---------|----------|
 | Bora      | KR     | ✓       | ✗        |
