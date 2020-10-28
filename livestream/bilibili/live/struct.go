@@ -850,6 +850,10 @@ func (Data *LiveBili) AddData(new database.LiveBiliDB) *LiveBili {
 	return Data
 }
 
+func (Data *LiveBili) UpdateData() {
+	Data.RoomData.UpdateLiveBili(Data.Member.ID)
+}
+
 func (Data *LiveBili) AddMember(new database.Name) *LiveBili {
 	Data.Member = new
 	return Data

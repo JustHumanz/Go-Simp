@@ -57,6 +57,7 @@ func CheckSchedule() {
 							AddMember(Member).
 							Crotttt(Group.IconURL).
 							Tamod()
+						Data.UpdateData()
 
 						//Data.RoomData.UpdateLiveBili(Member.ID)
 						//Data.Crotttt().Tamod(Member.ID)
