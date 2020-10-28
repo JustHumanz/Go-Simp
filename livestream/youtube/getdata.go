@@ -112,7 +112,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 					"Status":       "Live",
 				}).Info("Update video status from " + YoutubeData.YtData.Status + " to live")
 				log.Info("Send to notify")
-				YoutubeData.ChangeYtStatus("live").SendtoDB()
+				YoutubeData.ChangeYtStatus("live").UpdateYtDB()
 				YoutubeData.SendNude()
 
 			} else if !Data.Items[i].LiveDetails.EndTime.IsZero() && YoutubeData.YtData.Status == "upcoming" || YoutubeData.YtData.Status == "upcoming" && Data.Items[i].Snippet.VideoStatus == "none" {
@@ -120,15 +120,13 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 					"VideoData ID": VideoID[i],
 					"Status":       "Past",
 				}).Info("Update video status from " + Data.Items[i].Snippet.VideoStatus + " to past,probably member only")
-				YoutubeData.YtData.UpdateYt("past")
+				YoutubeData.ChangeYtStatus("past").UpdateYtDB()
 
 			} else if Data.Items[i].Snippet.VideoStatus == "upcoming" && YoutubeData.YtData.Status == "past" {
 				log.Info("maybe yt error or human error")
 				log.Info("Send to notify")
-				err := YoutubeData.ChangeYtStatus("upcoming").SendtoDB()
-				if err != nil {
-					log.Error(err)
-				}
+				YoutubeData.ChangeYtStatus("upcoming").UpdateYtDB()
+
 				YoutubeData.SendNude()
 
 			} else if Data.Items[i].Snippet.VideoStatus == "none" && YoutubeData.YtData.Viewers != Data.Items[i].Statistics.ViewCount {
@@ -269,7 +267,6 @@ func YtAPI(VideoID []string) (YtData, error) {
 
 	return Data, nil
 }
-
 
 func ParseDuration(str string) time.Duration {
 	durationRegex := regexp.MustCompile(`P(?P<years>\d+Y)?(?P<months>\d+M)?(?P<days>\d+D)?T?(?P<hours>\d+H)?(?P<minutes>\d+M)?(?P<seconds>\d+S)?`)
