@@ -629,7 +629,6 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 									}
 								}
 							}
-
 						} else {
 							s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).

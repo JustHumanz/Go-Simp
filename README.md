@@ -9,9 +9,9 @@
 A simple VTuber bot to serve notification Fanart and Livestream  
 
 
-### Current notification support
+## Current notification support
 
-#### Hanayori
+### Hanayori
 | NICKNAME | REGION | YOUTUBE | BILIBILI |
 |----------|--------|---------|----------|
 | Kanochi  | JP     | ✓       | ✓        |
@@ -19,22 +19,9 @@ A simple VTuber bot to serve notification Fanart and Livestream
 | Kohi     | JP     | ✓       | ✓        |
 | Nononon  | JP     | ✓       | ✓        |
 
-#### Hololive
-|   NICKNAME   | REGION | YOUTUBE | BILIBILI |
+### Hololive
+| NICKNAME     | REGION | YOUTUBE | BILIBILI |
 |--------------|--------|---------|----------|
-| Artia        | CN     | ✗       | ✓        |
-| Civia        | CN     | ✓       | ✓        |
-| Yogiri       | CN     | ✗       | ✓        |
-| Kuromomo     | CN     | ✗       | ✓        |
-| Doris        | CN     | ✗       | ✓        |
-| Rosalyn      | CN     | ✗       | ✓        |
-| Gura         | EN     | ✓       | ✗        |
-| Ame          | EN     | ✓       | ✗        |
-| Calli        | EN     | ✓       | ✗        |
-| Kusotori     | EN     | ✓       | ✗        |
-| Risu         | ID     | ✓       | ✗        |
-| Moona        | ID     | ✓       | ✗        |
-| Lofi         | ID     | ✓       | ✗        |
 | Koronen      | JP     | ✓       | ✓        |
 | Matsuri      | JP     | ✓       | ✓        |
 | Aqua         | JP     | ✓       | ✓        |
@@ -68,30 +55,34 @@ A simple VTuber bot to serve notification Fanart and Livestream
 | Towa-sama    | JP     | ✓       | ✓        |
 | Roboco       | JP     | ✓       | ✓        |
 
-#### Nijisanji
+#### Hololive ID
+| NICKNAME     | REGION | YOUTUBE | BILIBILI |
+|--------------|--------|---------|----------|
+| Risu         | ID     | ✓       | ✗        |
+| Moona        | ID     | ✓       | ✗        |
+| Lofi         | ID     | ✓       | ✗        |
+
+#### Hololive EN
+| NICKNAME     | REGION | YOUTUBE | BILIBILI |
+|--------------|--------|---------|----------|
+| Gura         | EN     | ✓       | ✗        |
+| Ame          | EN     | ✓       | ✗        |
+| Calli        | EN     | ✓       | ✗        |
+| Kusotori     | EN     | ✓       | ✗        |
+
+####  ~~Hololive CN~~
+| NICKNAME     | REGION | YOUTUBE | BILIBILI |
+|--------------|--------|---------|----------|
+| ~~Artia~~   | ~~CN~~| ~~✗~~ | ~~✓~~        |
+| ~~Civia~~   | ~~CN~~| ~~✓~~ | ~~✓~~        |
+| ~~Yogiri~~  | ~~CN~~| ~~✗~~ | ~~✓~~        |
+| ~~Kuromomo~~| ~~CN~~| ~~✗~~ | ~~✓~~        |
+| ~~Doris~~   | ~~CN~~| ~~✗~~ | ~~✓~~        |
+| ~~Rosalyn~~ | ~~CN~~| ~~✗~~ | ~~✓~~        |
+
+### Nijisanji
 | NICKNAME  | REGION | YOUTUBE | BILIBILI |
 |-----------|--------|---------|----------|
-| Ruki      | CN     | ✗       | ✓        |
-| Yukie     | CN     | ✗       | ✓        |
-| Nanami    | CN     | ✗       | ✓        |
-| Chiharu   | CN     | ✗       | ✓        |
-| Hoshimi   | CN     | ✗       | ✓        |
-| Aadya     | EN     | ✓       | ✗        |
-| Noor      | EN     | ✓       | ✗        |
-| Vihaan    | EN     | ✓       | ✗        |
-| Hanamaki  | ID     | ✓       | ✗        |
-| Miyu      | ID     | ✓       | ✗        |
-| Zea       | ID     | ✓       | ✗        |
-| Takamama  | ID     | ✓       | ✗        |
-| Jukut     | ID     | ✓       | ✗        |
-| Cia       | ID     | ✓       | ✗        |
-| Rai       | ID     | ✓       | ✗        |
-| Zura      | ID     | ✓       | ✗        |
-| Layla     | ID     | ✓       | ✗        |
-| Nara      | ID     | ✓       | ✗        |
-| Bobon     | ID     | ✓       | ✗        |
-| Etna      | ID     | ✓       | ✗        |
-| Siska     | ID     | ✓       | ✗        |
 | Konlulu   | JP     | ✓       | ✓        |
 | Alice     | JP     | ✓       | ✓        |
 | Noraneko  | JP     | ✓       | ✗        |
@@ -108,13 +99,50 @@ A simple VTuber bot to serve notification Fanart and Livestream
 | Hima-chan | JP     | ✓       | ✓        |
 | Cleaire   | JP     | ✓       | ✗        |
 | Rion      | JP     | ✓       | ✓        |
+
+#### Nijisanji ID
+| NICKNAME  | REGION | YOUTUBE | BILIBILI |
+|-----------|--------|---------|----------|
+| Hanamaki  | ID     | ✓       | ✗        |
+| Miyu      | ID     | ✓       | ✗        |
+| Zea       | ID     | ✓       | ✗        |
+| Takamama  | ID     | ✓       | ✗        |
+| Jukut     | ID     | ✓       | ✗        |
+| Cia       | ID     | ✓       | ✗        |
+| Rai       | ID     | ✓       | ✗        |
+| Zura      | ID     | ✓       | ✗        |
+| Layla     | ID     | ✓       | ✗        |
+| Nara      | ID     | ✓       | ✗        |
+| Bobon     | ID     | ✓       | ✗        |
+| Etna      | ID     | ✓       | ✗        |
+| Siska     | ID     | ✓       | ✗        |
+
+#### Nijisanji CN
+| NICKNAME  | REGION | YOUTUBE | BILIBILI |
+|-----------|--------|---------|----------|
+| Ruki      | CN     | ✗       | ✓        |
+| Yukie     | CN     | ✗       | ✓        |
+| Nanami    | CN     | ✗       | ✓        |
+| Chiharu   | CN     | ✗       | ✓        |
+| Hoshimi   | CN     | ✗       | ✓        |
+
+#### Nijisanji EN
+| NICKNAME  | REGION | YOUTUBE | BILIBILI |
+|-----------|--------|---------|----------|
+| Aadya     | EN     | ✓       | ✗        |
+| Noor      | EN     | ✓       | ✗        |
+| Vihaan    | EN     | ✓       | ✗        |
+
+#### Nijisanji KR
+| NICKNAME  | REGION | YOUTUBE | BILIBILI |
+|-----------|--------|---------|----------|
 | Bora      | KR     | ✓       | ✗        |
 | Ray       | KR     | ✓       | ✗        |
 | Yuya      | KR     | ✓       | ✗        |
 | Wiffy     | KR     | ✓       | ✗        |
 | Suha      | KR     | ✓       | ✗        |
 
-#### Maha5
+### Maha5
 | NICKNAME | REGION | YOUTUBE | BILIBILI |
 |----------|--------|---------|----------|
 | Adelia   | ID     | ✓       | ✗        |
@@ -123,24 +151,26 @@ A simple VTuber bot to serve notification Fanart and Livestream
 | Zen      | ID     | ✓       | ✗        |
 | Nia      | ID     | ✓       | ✗        |
 
-#### ENTUM
+### ENTUM
 | NICKNAME  | REGION | YOUTUBE | BILIBILI |
 |-----------|--------|---------|----------|
-| hina-chan | JP     | ✓       | ✓        |
+| Hina-chan | JP     | ✓       | ✓        |
+| Mirai     | JP     |  ✓      |    ✗     |
 
-#### Kizuna_AI
+### Kizuna_AI
 |NICKNAME | REGION | YOUTUBE | BILIBILI| 
 |---------|--------|---------|---------|
 |Ai-chan  | JP     | ✓       |   ✓     |      
+|Love-chan | JP    | ✓       | ✗       |
 
-#### VOMS
+### VOMS
 | NICKNAME  | REGION | YOUTUBE | BILIBILI |
 |-----------|--------|---------|----------|
 | Pikamee   | JP     | ✓       | ✗        |
 | Tomoshika | JP     | ✓       | ✗        |
 | Monoe     | JP     | ✓       | ✗        |
 
-#### NoriPro
+### NoriPro
 | NICKNAME  | REGION | YOUTUBE | BILIBILI |
 |-----------|--------|---------|----------|
 | Kumakuma  | JP     | ✓       | ✗        |
@@ -149,7 +179,7 @@ A simple VTuber bot to serve notification Fanart and Livestream
 | Shirayuki | JP     | ✓       | ✓        |
 | Himesaki  | JP     | ✓       | ✓        |
 
-#### Holostars
+### Holostars
 | NICKNAME | REGION | YOUTUBE | BILIBILI |
 |----------|--------|---------|----------|
 | Izu-Izu  | JP     | ✓       | ✓        |
@@ -162,15 +192,50 @@ A simple VTuber bot to serve notification Fanart and Livestream
 | Astel    | JP     | ✓       | ✓        |
 | Eroga    | JP     | ✓       | ✗        |
 
+### 774.INC
+| NICKNAME  | REGION | YOUTUBE | BILIBILI |
+|-----------|--------|---------|----------|
+| Patra     | JP     | ✓       | ✗        |
+| Ichika    | JP     | ✓       | ✗        |
+| Shiromiya | JP     | ✓       | ✗        |
+| Charlotte | JP     | ✓       | ✗        |
+| Kuku      | JP     | ✓       | ✗        |
+| Yunohara  | JP     | ✓       | ✗        |
+| Mary      | JP     | ✓       | ✗        |
+| Rantarou  | JP     | ✓       | ✗        |
+| Mico      | JP     | ✓       | ✗        |
+| Rene      | JP     | ✓       | ✗        |
+| Anna      | JP     | ✓       | ✗        |
+| Kanon     | JP     | ✓       | ✗        |
+| Uge       | JP     | ✓       | ✗        |
+| Anko      | JP     | ✓       | ✗        |
+| Shishio   | JP     | ✓       | ✗        |
+| Wat       | JP     | ✓       | ✗        |
+| Komori    | JP     | ✓       | ✗        |
+
+
 #### Independen
 | NICKNAME | REGION | YOUTUBE | BILIBILI |
 |----------|--------|---------|----------|
-| Evelyn   | ID     | ✓       | ✗        |
+| Kanna    | ID     | ✓       | ✗        |
 | MafuMafu | JP     | ✓       | ✗        |
 | Nana     | JP     | ✓       | ✓        |
 | Ui-mama  | JP     | ✓       | ✓        |
 | Kotone   | JP     | ✓       | ✓        |
+| Artia    | CN     | ✗       | ✓        |
+| Civia    | CN     | ✓       | ✓        |
+| Yogiri   | CN     | ✗       | ✓        |
+| Kuromomo | CN     | ✗       | ✓        |
+| Doris    | CN     | ✗       | ✓        |
+| Rosalyn  | CN     | ✗       | ✓        |
 
+### VTuBerflower
+| NICKNAME | REGION | YOUTUBE | BILIBILI |
+|----------|--------|---------|----------|
+| Evelyn   |   ID   |     ✓   |       ✗  |         
+| Reynard  |   ID   |     ✓   |       ✗  |         
+| Chloe    |   ID   |     ✓   |       ✗  |         
+| Lily     |   ID   |     ✓   |       ✗  |         
 
 ### Command
 `[]` => array,support multiple VtuberName/VtuberGroup *separated by commas*  
