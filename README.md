@@ -263,8 +263,8 @@ Example: `art>tag me Kanochi`,then you will get tagged when there is a new fanar
 This command will remove you from tags list  
 
 ```vtbot>Tag roles [roles] [Group/Member]```  
-Same like `tag me` command,but this will tag a roles  *every role separated by space* 
-Example" `tag roles @kanochi-simps hanayori` or `tag roles @fbk-simps @hololive-simps fbk`  
+Same like `tag me` command,but this will tag a roles  *every role separated by space*   
+Example: `tag roles @kanochi-simps hanayori` or `tag roles @fbk-simps @hololive-simps fbk`  
 
 ```vtbot>Roles tags [roles]```  
 Show all lists that roles are subscribed
