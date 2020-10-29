@@ -40,6 +40,8 @@ func CheckSchedule() {
 					)
 					DataDB := database.GetRoomData(Member.ID, Member.BiliRoomID)
 					Status := GetRoomStatus(Member.BiliRoomID)
+
+					Data.AddData(DataDB)
 					if Status.CheckScheduleLive() && DataDB.Status != "Live" {
 						//Live
 						if Status.Data.RoomInfo.LiveStartTime != 0 {
@@ -53,14 +55,15 @@ func CheckSchedule() {
 							"Vtuber": engine.FixName(Member.EnName, Member.JpName),
 							"Start":  ScheduledStart,
 						}).Info("Start live right now")
-						Data.AddData(*DataDB.UpStatus("Live")).
+
+						Data.SetStatus("Live").
+							UpdateSchdule(ScheduledStart).
+							UpdateOnline(Status.Data.RoomInfo.Online).
 							AddMember(Member).
 							Crotttt(Group.IconURL).
 							Tamod()
-						Data.UpdateData()
 
-						//Data.RoomData.UpdateLiveBili(Member.ID)
-						//Data.Crotttt().Tamod(Member.ID)
+						Data.RoomData.UpdateLiveBili(Member.ID)
 
 					} else if !Status.CheckScheduleLive() && DataDB.Status == "Live" {
 						//prob past
@@ -69,16 +72,19 @@ func CheckSchedule() {
 							"Vtuber": engine.FixName(Member.EnName, Member.JpName),
 							"Start":  ScheduledStart,
 						}).Info("Past live stream")
-						DataDB.UpStatus("Past").
-							UpdateLiveBili(Member.ID)
+						Data.SetStatus("Past").
+							UpdateOnline(Status.Data.RoomInfo.Online)
+
+						Data.RoomData.UpdateLiveBili(Member.ID)
 					} else {
 						//update online
 						log.WithFields(log.Fields{
 							"Group":  Group.NameGroup,
 							"Vtuber": engine.FixName(Member.EnName, Member.JpName),
 						}).Info("Update LiveBiliBili")
-						DataDB.UpOnline(Status.Data.RoomInfo.Online).
-							UpdateLiveBili(Member.ID)
+
+						Data.UpdateOnline(Status.Data.RoomInfo.Online)
+						Data.RoomData.UpdateLiveBili(Member.ID)
 					}
 				}
 				//time.Sleep(time.Duration(int64(rand.Intn((20-8)+8))) * time.Second)

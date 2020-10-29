@@ -14,92 +14,82 @@ import (
 
 func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 	Prefix := config.PBilibili
+	loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
 	m.Content = strings.ToLower(m.Content)
-	SendEmbed := func(Data Memberst) {
-		if Data.VideoID != "" {
-			Color, err := GetColor("/tmp/bil1.tmp", Data.Thumb)
-			if err != nil {
-				log.Error(err)
-			}
-			s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
-				SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
-				SetTitle(Data.VTName).
-				SetDescription(Data.Desc).
-				SetImage(Data.Thumb).
-				SetThumbnail(Data.BiliAvatar).
-				SetURL(Data.VideoID).
-				AddField("Type", Data.Msg3).
-				AddField(Data.Msg, Data.Msg1).
-				AddField("Duration", Data.Length).
-				SetFooter(Data.Msg2, config.BiliBiliIMG).
-				InlineAllFields().
-				SetColor(Color).MessageEmbed)
-		} else {
-			s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
-				SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
-				SetTitle(Data.VTName).
-				SetDescription(Data.Msg).
-				SetImage(config.WorryIMG).MessageEmbed)
-		}
-	}
-
 	Prefix2 := "sp_" + Prefix
 	if strings.HasPrefix(m.Content, Prefix2) {
-		loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
 		Payload := m.Content[len(Prefix2):]
 		if Payload != "" {
-			FindGroupArry := strings.Split(strings.TrimSpace(Payload), ",")
-			for i := 0; i < len(FindGroupArry); i++ {
-				VTuberGroup, err := FindGropName(FindGroupArry[i])
+			for _, FindGroupArry := range strings.Split(strings.TrimSpace(Payload), ",") {
+				VTuberGroup, err := FindGropName(FindGroupArry)
 				if err != nil {
-					VTData := ValidName(FindGroupArry[i])
+					VTData := ValidName(FindGroupArry)
 					if VTData.ID == 0 {
-						s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry[i]+"`,Name of Vtuber Group was not found")
+						s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group was not found")
 					} else {
-						DataMember := database.SpaceGet(0, VTData.ID) //database.BilGet(0, VTData.ID, "Upcoming")
-						if DataMember != nil {
-							for z := 0; z < len(DataMember); z++ {
-								diff := time.Now().In(loc).Sub(DataMember[z].UploadDate)
-								duration := durafmt.Parse(diff).LimitFirstN(2)
+						for _, DataMember := range database.SpaceGet(0, VTData.ID) {
+							if DataMember.VideoID != "" {
+								diff := time.Now().In(loc).Sub(DataMember.UploadDate.In(loc))
+								Color, err := GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
+								if err != nil {
+									log.Error(err)
+								}
+								s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+									SetTitle(FixName(DataMember.EnName, DataMember.JpName)).
+									SetDescription(DataMember.Title).
+									SetImage(DataMember.Thumbnail).
+									SetThumbnail(DataMember.Avatar).
+									SetURL("https://www.bilibili.com/video/"+DataMember.VideoID).
+									AddField("Type", DataMember.Type).
+									AddField("Video uploaded", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
+									AddField("Duration", DataMember.Length).
+									AddField("Viewers now", strconv.Itoa(DataMember.Viewers)).
+									SetFooter(DataMember.UploadDate.In(loc).Format(time.RFC822), config.BiliBiliIMG).
+									InlineAllFields().
+									SetColor(Color).MessageEmbed)
 
-								VTData.Desc = DataMember[z].Title
-								VTData.VideoID = "https://www.bilibili.com/video/" + DataMember[z].VideoID
-								VTData.Msg = "Video uploaded"
-								VTData.Msg1 = duration.String() + " Ago"
-								VTData.Msg2 = "Viewers now " + strconv.Itoa(DataMember[z].Viewers)
-								VTData.Msg3 = DataMember[z].Type
-								VTData.Length = DataMember[z].Length
-								SendEmbed(VTData)
+							} else {
+								s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+									SetDescription("It looks like `"+VTData.VTName+"` doesn't have a video in space.bilibili").
+									SetImage(config.WorryIMG).MessageEmbed)
+								return
 							}
-						} else {
-							SendEmbed(Memberst{
-								Msg: "It looks like `" + VTData.VTName + "` doesn't have a schedule livestream for now",
-							})
 						}
 					}
 					break
 				} else {
-					Data := database.SpaceGet(VTuberGroup.ID, 0) //database.BilGet(VTuberGroup.ID, 0, "Upcoming")
-					if Data != nil {
-						for ii := 0; ii < len(Data); ii++ {
-							diff := time.Now().In(loc).Sub(Data[ii].UploadDate)
-							SendEmbed(Memberst{
-								VTName:     FixName(Data[ii].EnName, Data[ii].JpName),
-								BiliAvatar: Data[ii].Avatar,
-								Desc:       Data[ii].Title,
-								Thumb:      Data[ii].Thumbnail,
-								VideoID:    "https://www.bilibili.com/video/" + Data[ii].VideoID,
-								Msg:        "Video upload ",
-								Msg1:       durafmt.Parse(diff).LimitFirstN(2).String() + " Ago",
-								Msg2:       "Viewers now " + strconv.Itoa(Data[ii].Viewers),
-								Msg3:       Data[ii].Type,
-								Length:     Data[ii].Length,
-							})
+					for _, DataMember := range database.SpaceGet(VTuberGroup.ID, 0) {
+						if DataMember.VideoID != "" {
+							diff := time.Now().In(loc).Sub(DataMember.UploadDate.In(loc))
+							Color, err := GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
+							if err != nil {
+								log.Error(err)
+							}
+
+							s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+								SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+								SetTitle(FixName(DataMember.EnName, DataMember.JpName)).
+								SetDescription(DataMember.Title).
+								SetImage(DataMember.Thumbnail).
+								SetThumbnail(DataMember.Avatar).
+								SetURL("https://www.bilibili.com/video/"+DataMember.VideoID).
+								AddField("Type", DataMember.Type).
+								AddField("Video uploaded", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
+								AddField("Duration", DataMember.Length).
+								AddField("Viewers now", strconv.Itoa(DataMember.Viewers)).
+								SetFooter(DataMember.UploadDate.In(loc).Format(time.RFC822), config.BiliBiliIMG).
+								InlineAllFields().
+								SetColor(Color).MessageEmbed)
+
+						} else {
+							s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+								SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+								SetDescription("It looks like `"+VTuberGroup.NameGroup+"` doesn't have a video in space.bilibili").
+								SetImage(config.WorryIMG).MessageEmbed)
+							return
 						}
-					} else {
-						SendEmbed(Memberst{
-							Msg: "It looks like `" + VTuberGroup.NameGroup + "` doesn't have a schedule livestream for now",
-						})
 					}
 				}
 			}
@@ -112,129 +102,127 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 	Prefix := config.PBilibili
 	loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
 	m.Content = strings.ToLower(m.Content)
-	SendEmbed := func(Data Memberst) {
-		if Data.VideoID != "" {
-			Color, err := GetColor("/tmp/bil1.tmp", Data.Thumb)
-			if err != nil {
-				log.Error(err)
-			}
-			s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
-				SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
-				SetTitle(Data.VTName).
-				SetDescription(Data.Desc).
-				SetImage(Data.Thumb).
-				SetThumbnail(Data.BiliAvatar).
-				SetURL(Data.VideoID).
-				AddField(Data.Msg, Data.Msg1).
-				SetFooter(Data.Msg2).
-				SetColor(Color).MessageEmbed)
-		} else {
-			s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
-				SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
-				SetTitle(Data.VTName).
-				SetDescription(Data.Msg).
-				SetImage(config.WorryIMG).MessageEmbed)
-		}
-	}
-
 	if strings.HasPrefix(m.Content, Prefix) {
 		CommandArray := strings.Split(m.Content, " ")
 		if len(CommandArray) > 1 {
-			CommandArray[0] = strings.ToLower(CommandArray[0])
-			FindGroupArry := strings.Split(strings.TrimSpace(CommandArray[1]), ",")
+			Payload := strings.Split(strings.TrimSpace(CommandArray[1]), ",")
 			if CommandArray[0] == Prefix+Live {
-				for i := 0; i < len(FindGroupArry); i++ {
-					VTuberGroup, err := FindGropName(FindGroupArry[i])
+				for _, FindGroupArry := range Payload {
+					VTuberGroup, err := FindGropName(FindGroupArry)
 					if err != nil {
-						VTData := ValidName(FindGroupArry[i])
+						VTData := ValidName(FindGroupArry)
 						if VTData.ID == 0 {
-							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry[i]+"`,Name of Vtuber Group was not found")
+							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group was not found")
 						} else {
-							DataMember := database.BilGet(0, VTData.ID, "Live")
-							if DataMember != nil {
-								for z := 0; z < len(DataMember); z++ {
-									diff := time.Now().In(loc).Sub(DataMember[i].ScheduledStart.In(loc))
-									VTData.Desc = DataMember[z].Description
-									VTData.VideoID = "https://live.bilibili.com/" + strconv.Itoa(DataMember[z].LiveRoomID)
-									VTData.Msg = "Start live"
-									VTData.Msg1 = durafmt.Parse(diff).LimitFirstN(2).String() + " Ago"
-									VTData.Msg2 = "Online : " + strconv.Itoa(DataMember[z].Online)
-									SendEmbed(VTData)
+							for _, DataMember := range database.BilGet(0, VTData.ID, "Live") {
+								if DataMember.Online != 0 {
+									diff := time.Now().In(loc).Sub(DataMember.ScheduledStart.In(loc))
+									Color, err := GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
+									if err != nil {
+										log.Error(err)
+									}
+									s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+										SetTitle(VTData.VTName).
+										SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+										SetDescription(DataMember.Description).
+										SetURL("https://live.bilibili.com/"+strconv.Itoa(DataMember.LiveRoomID)).
+										AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
+										AddField("Online", strconv.Itoa(DataMember.Online)).
+										SetColor(Color).
+										SetFooter(DataMember.ScheduledStart.In(loc).Format(time.RFC822)).MessageEmbed)
+								} else {
+									s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+										SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+										SetDescription("It looks like `"+VTData.VTName+"` doesn't have a livestream right now").
+										SetImage(config.WorryIMG).MessageEmbed)
 								}
-							} else {
-								SendEmbed(Memberst{
-									Msg: "It looks like `" + VTData.VTName + "` doesn't have a livestream right now",
-								})
 							}
 						}
 					} else {
-						Data := database.BilGet(VTuberGroup.ID, 0, "Live")
-						if Data != nil {
-							for ii := 0; ii < len(Data); ii++ {
-								diff := time.Now().In(loc).Sub(Data[ii].ScheduledStart.In(loc))
-								SendEmbed(Memberst{
-									VTName:     FixName(Data[ii].EnName, Data[ii].JpName),
-									BiliAvatar: Data[ii].Avatar,
-									Desc:       Data[ii].Description,
-									Thumb:      Data[ii].Thumbnail,
-									VideoID:    "https://live.bilibili.com/" + strconv.Itoa(Data[ii].LiveRoomID),
-									Msg:        "Start live",
-									Msg1:       durafmt.Parse(diff).LimitFirstN(2).String() + " Ago",
-									Msg2:       "Online : " + strconv.Itoa(Data[ii].Online),
-								})
+						for _, DataGroup := range database.BilGet(VTuberGroup.ID, 0, "Live") {
+							if DataGroup.Online != 0 {
+								diff := time.Now().In(loc).Sub(DataGroup.ScheduledStart.In(loc))
+								Color, err := GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
+								if err != nil {
+									log.Error(err)
+								}
+								s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+									SetTitle(FixName(DataGroup.EnName, DataGroup.JpName)).
+									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+									SetDescription(DataGroup.Description).
+									SetURL("https://live.bilibili.com/"+strconv.Itoa(DataGroup.LiveRoomID)).
+									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
+									AddField("Online", strconv.Itoa(DataGroup.Online)).
+									SetColor(Color).
+									SetFooter(DataGroup.ScheduledStart.In(loc).Format(time.RFC822)).MessageEmbed)
+							} else {
+								s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+									SetDescription("It looks like `"+VTuberGroup.NameGroup+"` doesn't have a livestream right now").
+									SetImage(config.WorryIMG).MessageEmbed)
 							}
-						} else {
-							SendEmbed(Memberst{
-								Msg: "It looks like `" + VTuberGroup.NameGroup + "` doesn't have a livestream right now",
-							})
 						}
 					}
 				}
+
 			} else if CommandArray[0] == Prefix+Past || CommandArray[0] == Prefix+"last" {
-				for i := 0; i < len(FindGroupArry); i++ {
-					VTuberGroup, err := FindGropName(FindGroupArry[i])
+				for _, FindGroupArry := range Payload {
+					VTuberGroup, err := FindGropName(FindGroupArry)
 					if err != nil {
-						VTData := ValidName(FindGroupArry[i])
+						VTData := ValidName(FindGroupArry)
 						if VTData.ID == 0 {
-							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry[i]+"`,Name of Vtuber Group was not found")
+							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group was not found")
 						} else {
-							DataMember := database.BilGet(0, VTData.ID, "Past")
-							if DataMember != nil {
-								for z := 0; z < len(DataMember); z++ {
-									diff := DataMember[i].ScheduledStart.In(loc).Sub(time.Now().In(loc))
-									VTData.Desc = DataMember[z].Description
-									VTData.VideoID = "https://live.bilibili.com/" + strconv.Itoa(DataMember[z].LiveRoomID)
-									VTData.Msg = "Start live"
-									VTData.Msg1 = durafmt.Parse(diff).LimitFirstN(2).String() + " Ago"
-									VTData.Msg2 = "Online : " + strconv.Itoa(DataMember[z].Online)
-									SendEmbed(VTData)
+							for _, DataMember := range database.BilGet(0, VTData.ID, "Past") {
+								if DataMember.Online != 0 {
+									diff := DataMember.ScheduledStart.In(loc).Sub(time.Now().In(loc))
+									Color, err := GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
+									if err != nil {
+										log.Error(err)
+									}
+									s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+										SetTitle(FixName(DataMember.EnName, DataMember.JpName)).
+										SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+										SetDescription(DataMember.Description).
+										SetURL("https://live.bilibili.com/"+strconv.Itoa(DataMember.LiveRoomID)).
+										AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
+										AddField("Online", strconv.Itoa(DataMember.Online)).
+										SetColor(Color).
+										SetFooter(DataMember.ScheduledStart.In(loc).Format(time.RFC822)).MessageEmbed)
+
+								} else {
+									s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+										SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+										SetDescription("It looks like `"+VTData.VTName+"` doesn't have a Past livestream right now").
+										SetImage(config.WorryIMG).MessageEmbed)
 								}
-							} else {
-								SendEmbed(Memberst{
-									Msg: "It looks like `" + VTData.VTName + "` doesn't have a Past livestream right now",
-								})
 							}
 						}
 					} else {
-						Data := database.BilGet(VTuberGroup.ID, 0, "Past")
-						if Data != nil {
-							for ii := 0; ii < len(Data); ii++ {
-								diff := time.Now().In(loc).Sub(Data[ii].ScheduledStart.In(loc))
-								SendEmbed(Memberst{
-									VTName:     FixName(Data[ii].EnName, Data[ii].JpName),
-									BiliAvatar: Data[ii].Avatar,
-									Desc:       Data[ii].Description,
-									Thumb:      Data[ii].Thumbnail,
-									VideoID:    "https://live.bilibili.com/" + strconv.Itoa(Data[ii].LiveRoomID),
-									Msg:        "Start live ",
-									Msg1:       durafmt.Parse(diff).LimitFirstN(2).String() + " Ago",
-									Msg2:       "Online : " + strconv.Itoa(Data[ii].Online),
-								})
+						for _, LiveBili := range database.BilGet(VTuberGroup.ID, 0, "Past") {
+							if LiveBili.Online != 0 {
+								diff := time.Now().In(loc).Sub(LiveBili.ScheduledStart.In(loc))
+
+								Color, err := GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
+								if err != nil {
+									log.Error(err)
+								}
+								s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+									SetTitle(FixName(LiveBili.EnName, LiveBili.JpName)).
+									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+									SetDescription(LiveBili.Description).
+									SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveBili.LiveRoomID)).
+									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
+									AddField("Online", strconv.Itoa(LiveBili.Online)).
+									SetColor(Color).
+									SetFooter(LiveBili.ScheduledStart.In(loc).Format(time.RFC822)).MessageEmbed)
+
+							} else {
+								s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+									SetDescription("Internal Error XD").
+									SetImage(config.WorryIMG).MessageEmbed)
 							}
-						} else {
-							SendEmbed(Memberst{
-								Msg: "It looks like `" + VTuberGroup.NameGroup + "` doesn't have a Past livestream right now",
-							})
 						}
 					}
 				}

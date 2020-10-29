@@ -23,16 +23,6 @@ func GetRoomData(MemberID int64, RoomID int) *LiveBiliDB {
 	return &Data
 }
 
-func (Data *LiveBiliDB) UpStatus(new string) *LiveBiliDB {
-	Data.Status = new
-	return Data
-}
-
-func (Data *LiveBiliDB) UpOnline(new int) *LiveBiliDB {
-	Data.Online = new
-	return Data
-}
-
 //Update LiveBiliBili Data
 func (Data *LiveBiliDB) UpdateLiveBili(MemberID int64) {
 	_, err := DB.Exec(`Update LiveBiliBili set Status=? , Title=? ,Thumbnails=?, Description=?, Published=?, ScheduledStart=?, Viewers=? Where id=? AND VtuberMember_id=?`, Data.Status, Data.Title, Data.Thumbnail, Data.Description, Data.PublishedAt, Data.ScheduledStart, Data.Online, Data.ID, MemberID)

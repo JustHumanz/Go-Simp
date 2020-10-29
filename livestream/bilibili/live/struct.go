@@ -840,18 +840,29 @@ type RoomID2 struct {
 }
 
 type LiveBili struct {
-	RoomData database.LiveBiliDB
+	RoomData *database.LiveBiliDB
 	Member   database.Name
 	Embed    *discordgo.MessageEmbed
 }
 
-func (Data *LiveBili) AddData(new database.LiveBiliDB) *LiveBili {
+func (Data *LiveBili) AddData(new *database.LiveBiliDB) *LiveBili {
 	Data.RoomData = new
 	return Data
 }
 
-func (Data *LiveBili) UpdateData() {
-	Data.RoomData.UpdateLiveBili(Data.Member.ID)
+func (Data *LiveBili) UpdateSchdule(new time.Time) *LiveBili {
+	Data.RoomData.ScheduledStart = new
+	return Data
+}
+
+func (Data *LiveBili) SetStatus(new string) *LiveBili {
+	Data.RoomData.Status = new
+	return Data
+}
+
+func (Data *LiveBili) UpdateOnline(new int) *LiveBili {
+	Data.RoomData.Online = new
+	return Data
 }
 
 func (Data *LiveBili) AddMember(new database.Name) *LiveBili {
