@@ -27,8 +27,8 @@ func Start(Bot *discordgo.Session) {
 
 func CheckSchedule() {
 	log.Info("Start check Schedule")
-	wg := new(sync.WaitGroup)
 	for _, Group := range engine.GroupData {
+		wg := new(sync.WaitGroup)
 		for _, Member := range database.GetName(Group.ID) {
 			wg.Add(1)
 			go func(Group database.GroupName, Member database.Name, wg *sync.WaitGroup) {
@@ -39,7 +39,10 @@ func CheckSchedule() {
 						Data           LiveBili
 					)
 					DataDB := database.GetRoomData(Member.ID, Member.BiliRoomID)
-					Status := GetRoomStatus(Member.BiliRoomID)
+					Status, err := GetRoomStatus(Member.BiliRoomID)
+					if err != nil {
+						log.Error(err)
+					}
 
 					Data.AddData(DataDB)
 					if Status.CheckScheduleLive() && DataDB.Status != "Live" {
@@ -91,6 +94,6 @@ func CheckSchedule() {
 			}(Group, Member, wg)
 			time.Sleep(time.Duration(rand.Intn(config.RandomSleep)) * time.Millisecond)
 		}
+		wg.Wait()
 	}
-	wg.Wait()
 }

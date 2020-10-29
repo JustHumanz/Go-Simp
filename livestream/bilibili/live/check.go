@@ -8,7 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func GetRoomStatus(RoomID int) getInfoByRoom {
+func GetRoomStatus(RoomID int) (getInfoByRoom, error) {
 	var (
 		body    []byte
 		curlerr error
@@ -19,28 +19,16 @@ func GetRoomStatus(RoomID int) getInfoByRoom {
 	if curlerr != nil {
 		body, curlerr = engine.CoolerCurl(url, nil)
 		if curlerr != nil {
-			log.Error(curlerr)
+			return getInfoByRoom{}, curlerr
 		} else {
 			log.Info("Successfully use tor")
 		}
 	}
-	jsonErr := json.Unmarshal(body, &tmp)
-	if jsonErr != nil {
-		log.Fatal(jsonErr)
+	err := json.Unmarshal(body, &tmp)
+	if err != nil {
+		return getInfoByRoom{}, err
 	}
-	return tmp
-}
-
-func (Data RoomID2) GetRoomStatus() getInfoByRoom {
-	return GetRoomStatus(Data.Data.Roomid)
-}
-
-func (Data NewSchedule) CheckNewScheduleStatus() bool {
-	if Data.DurationUp > Data.DurationPast {
-		return true
-	} else {
-		return false
-	}
+	return tmp, nil
 }
 
 func (Data getInfoByRoom) CheckScheduleLive() bool {
