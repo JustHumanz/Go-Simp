@@ -12,92 +12,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
-	Prefix := config.PBilibili
-	loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
-	m.Content = strings.ToLower(m.Content)
-	Prefix2 := "sp_" + Prefix
-	if strings.HasPrefix(m.Content, Prefix2) {
-		Payload := m.Content[len(Prefix2):]
-		if Payload != "" {
-			for _, FindGroupArry := range strings.Split(strings.TrimSpace(Payload), ",") {
-				VTuberGroup, err := FindGropName(FindGroupArry)
-				if err != nil {
-					VTData := ValidName(FindGroupArry)
-					if VTData.ID == 0 {
-						s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group was not found")
-					} else {
-						for _, DataMember := range database.SpaceGet(0, VTData.ID) {
-							if DataMember.VideoID != "" {
-								diff := time.Now().In(loc).Sub(DataMember.UploadDate.In(loc))
-								Color, err := GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
-								if err != nil {
-									log.Error(err)
-								}
-								s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
-									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
-									SetTitle(FixName(DataMember.EnName, DataMember.JpName)).
-									SetDescription(DataMember.Title).
-									SetImage(DataMember.Thumbnail).
-									SetThumbnail(DataMember.Avatar).
-									SetURL("https://www.bilibili.com/video/"+DataMember.VideoID).
-									AddField("Type", DataMember.Type).
-									AddField("Video uploaded", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-									AddField("Duration", DataMember.Length).
-									AddField("Viewers now", strconv.Itoa(DataMember.Viewers)).
-									SetFooter(DataMember.UploadDate.In(loc).Format(time.RFC822), config.BiliBiliIMG).
-									InlineAllFields().
-									SetColor(Color).MessageEmbed)
-
-							} else {
-								s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
-									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
-									SetDescription("It looks like `"+VTData.VTName+"` doesn't have a video in space.bilibili").
-									SetImage(config.WorryIMG).MessageEmbed)
-								return
-							}
-						}
-					}
-					break
-				} else {
-					for _, DataMember := range database.SpaceGet(VTuberGroup.ID, 0) {
-						if DataMember.VideoID != "" {
-							diff := time.Now().In(loc).Sub(DataMember.UploadDate.In(loc))
-							Color, err := GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
-							if err != nil {
-								log.Error(err)
-							}
-
-							s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
-								SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
-								SetTitle(FixName(DataMember.EnName, DataMember.JpName)).
-								SetDescription(DataMember.Title).
-								SetImage(DataMember.Thumbnail).
-								SetThumbnail(DataMember.Avatar).
-								SetURL("https://www.bilibili.com/video/"+DataMember.VideoID).
-								AddField("Type", DataMember.Type).
-								AddField("Video uploaded", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-								AddField("Duration", DataMember.Length).
-								AddField("Viewers now", strconv.Itoa(DataMember.Viewers)).
-								SetFooter(DataMember.UploadDate.In(loc).Format(time.RFC822), config.BiliBiliIMG).
-								InlineAllFields().
-								SetColor(Color).MessageEmbed)
-
-						} else {
-							s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
-								SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
-								SetDescription("It looks like `"+VTuberGroup.NameGroup+"` doesn't have a video in space.bilibili").
-								SetImage(config.WorryIMG).MessageEmbed)
-							return
-						}
-					}
-				}
-			}
-		}
-	}
-
-}
-
 func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 	Prefix := config.PBilibili
 	loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
@@ -231,4 +145,90 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 			s.ChannelMessageSend(m.ChannelID, "Incomplete command")
 		}
 	}
+}
+
+func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
+	Prefix := config.PBilibili
+	loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
+	m.Content = strings.ToLower(m.Content)
+	Prefix2 := "sp_" + Prefix
+	if strings.HasPrefix(m.Content, Prefix2) {
+		Payload := m.Content[len(Prefix2):]
+		if Payload != "" {
+			for _, FindGroupArry := range strings.Split(strings.TrimSpace(Payload), ",") {
+				VTuberGroup, err := FindGropName(FindGroupArry)
+				if err != nil {
+					VTData := ValidName(FindGroupArry)
+					if VTData.ID == 0 {
+						s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group was not found")
+					} else {
+						for _, DataMember := range database.SpaceGet(0, VTData.ID) {
+							if DataMember.VideoID != "" {
+								diff := time.Now().In(loc).Sub(DataMember.UploadDate.In(loc))
+								Color, err := GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
+								if err != nil {
+									log.Error(err)
+								}
+								s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+									SetTitle(FixName(DataMember.EnName, DataMember.JpName)).
+									SetDescription(DataMember.Title).
+									SetImage(DataMember.Thumbnail).
+									SetThumbnail(DataMember.Avatar).
+									SetURL("https://www.bilibili.com/video/"+DataMember.VideoID).
+									AddField("Type", DataMember.Type).
+									AddField("Video uploaded", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
+									AddField("Duration", DataMember.Length).
+									AddField("Viewers now", strconv.Itoa(DataMember.Viewers)).
+									SetFooter(DataMember.UploadDate.In(loc).Format(time.RFC822), config.BiliBiliIMG).
+									InlineAllFields().
+									SetColor(Color).MessageEmbed)
+
+							} else {
+								s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+									SetDescription("It looks like `"+VTData.VTName+"` doesn't have a video in space.bilibili").
+									SetImage(config.WorryIMG).MessageEmbed)
+								return
+							}
+						}
+					}
+					break
+				} else {
+					for _, DataMember := range database.SpaceGet(VTuberGroup.ID, 0) {
+						if DataMember.VideoID != "" {
+							diff := time.Now().In(loc).Sub(DataMember.UploadDate.In(loc))
+							Color, err := GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
+							if err != nil {
+								log.Error(err)
+							}
+
+							s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+								SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+								SetTitle(FixName(DataMember.EnName, DataMember.JpName)).
+								SetDescription(DataMember.Title).
+								SetImage(DataMember.Thumbnail).
+								SetThumbnail(DataMember.Avatar).
+								SetURL("https://www.bilibili.com/video/"+DataMember.VideoID).
+								AddField("Type", DataMember.Type).
+								AddField("Video uploaded", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
+								AddField("Duration", DataMember.Length).
+								AddField("Viewers now", strconv.Itoa(DataMember.Viewers)).
+								SetFooter(DataMember.UploadDate.In(loc).Format(time.RFC822), config.BiliBiliIMG).
+								InlineAllFields().
+								SetColor(Color).MessageEmbed)
+
+						} else {
+							s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+								SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+								SetDescription("It looks like `"+VTuberGroup.NameGroup+"` doesn't have a video in space.bilibili").
+								SetImage(config.WorryIMG).MessageEmbed)
+							return
+						}
+					}
+				}
+			}
+		}
+	}
+
 }

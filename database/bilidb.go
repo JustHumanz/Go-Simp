@@ -43,8 +43,18 @@ func GetTBiliBili(dynamic_id string) bool {
 
 //Get LiveBiliBili by Status (live,past)
 func BilGet(GroupID int64, MemberID int64, Status string) []LiveBiliDB {
-	rows, err := DB.Query(`call GetLiveBiliBili(?,?,?)`, GroupID, MemberID, Status)
-	BruhMoment(err, "", false)
+	var (
+		rows *sql.Rows
+		err  error
+	)
+
+	if GroupID > 0 {
+		rows, err = DB.Query(`call GetLiveBiliBili(?,?,?,?)`, GroupID, MemberID, Status, 3)
+		BruhMoment(err, "", false)
+	} else {
+		rows, err = DB.Query(`call GetLiveBiliBili(?,?,?,?)`, GroupID, MemberID, Status, 2525)
+		BruhMoment(err, "", false)
+	}
 
 	defer rows.Close()
 

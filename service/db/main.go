@@ -241,7 +241,10 @@ func CheckSchedule() {
 					ScheduledStart time.Time
 				)
 				DataDB := database.GetRoomData(Name[k].ID, Name[k].BiliRoomID)
-				Status := bilibili.GetRoomStatus(Name[k].BiliRoomID)
+				Status, err := bilibili.GetRoomStatus(Name[k].BiliRoomID)
+				if err != nil {
+					log.Error(err)
+				}
 				loc, _ := time.LoadLocation("Asia/Shanghai")
 				if Status.Data.RoomInfo.LiveStartTime != 0 {
 					ScheduledStart = time.Unix(int64(Status.Data.RoomInfo.LiveStartTime), 0).In(loc)
