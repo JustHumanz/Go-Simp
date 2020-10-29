@@ -88,7 +88,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group was not found")
 						} else {
 							for _, DataMember := range database.BilGet(0, VTData.ID, "Past") {
-								if DataMember.Online != 0 {
+								if DataMember.LiveRoomID != 0 {
 									diff := DataMember.ScheduledStart.In(loc).Sub(time.Now().In(loc))
 									Color, err := GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
 									if err != nil {
@@ -114,29 +114,30 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 					} else {
 						for _, LiveBili := range database.BilGet(VTuberGroup.ID, 0, "Past") {
-							if LiveBili.Online != 0 {
-								diff := time.Now().In(loc).Sub(LiveBili.ScheduledStart.In(loc))
+							/*
+								if LiveBili.Online != 0 {
 
-								Color, err := GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
-								if err != nil {
-									log.Error(err)
+								} else {
+									s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+										SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+										SetDescription("Internal Error XD").
+										SetImage(config.WorryIMG).MessageEmbed)
 								}
-								s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
-									SetTitle(FixName(LiveBili.EnName, LiveBili.JpName)).
-									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-									SetDescription(LiveBili.Description).
-									SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveBili.LiveRoomID)).
-									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-									AddField("Online", strconv.Itoa(LiveBili.Online)).
-									SetColor(Color).
-									SetFooter(LiveBili.ScheduledStart.In(loc).Format(time.RFC822)).MessageEmbed)
-
-							} else {
-								s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
-									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
-									SetDescription("Internal Error XD").
-									SetImage(config.WorryIMG).MessageEmbed)
+							*/
+							diff := time.Now().In(loc).Sub(LiveBili.ScheduledStart.In(loc))
+							Color, err := GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
+							if err != nil {
+								log.Error(err)
 							}
+							s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+								SetTitle(FixName(LiveBili.EnName, LiveBili.JpName)).
+								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+								SetDescription(LiveBili.Description).
+								SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveBili.LiveRoomID)).
+								AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
+								AddField("Online", strconv.Itoa(LiveBili.Online)).
+								SetColor(Color).
+								SetFooter(LiveBili.ScheduledStart.In(loc).Format(time.RFC822)).MessageEmbed)
 						}
 					}
 				}
