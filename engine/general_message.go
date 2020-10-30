@@ -834,7 +834,7 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 				AddField(config.PFanart+"{Group/Member name}", "Show fanart with randomly with their fanart hashtag\nExample: \n`"+config.PFanart+"Kanochi` or `"+config.PFanart+"hololive`").
 				AddField(Prefix+TagMe+" [Group/Member name]", "This command will add you to tags list if any new fanart and livestream schedule\nExample: \n`"+config.PGeneral+TagMe+" Kanochi`,then you will get tagged when there is a new fanart and livestream schedule of kano").
 				AddField(Prefix+DelTag+" [Group/Member name]", "This command will remove you from tags list").
-				AddField(Prefix+MyTags, "Show all lists that you are subscribed").
+				AddField(Prefix+MyTags, "Show all lists that you are subscribed on this channel").
 				AddField(Prefix+ChannelState, "Show what is enable in this channel").
 				AddField(Prefix+VtuberData+" [Group] [Region]", "Show available Vtuber data ").
 				AddField(Prefix+Subscriber+" {Member name}", "Show Vtuber count of subscriber and followers ").
