@@ -6,7 +6,7 @@
 ----
 
 ## Introduction
-A simple VTuber bot to serve notification Fanart and Livestream  
+A simple VTuber bot to serve notification Fanart(Twitter,Bilibili) and Livestream(Youtube,Bilibili)  
 
 
 ## Current notification support
