@@ -11,7 +11,7 @@ A simple VTuber bot to serve notification Fanart and Livestream
 
 ## Current notification support
 
-### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/hana.png" alt="Hanayori">&nbsp; Hanayori 
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/hana.png" alt="Hanayori"> Hanayori 
 | Nickname | FullName                      |Region | Youtube | Bilibili |Twitter |
 |----------|-------------------------------|-------|---------|----------|--------|
 | Kanochi  | Kano<br>鹿乃                   |JP     | ✓       | ✓        | ✓ |
