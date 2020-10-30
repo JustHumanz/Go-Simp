@@ -272,7 +272,7 @@ EOL
 | Lily     |Lily Ifeta   |   ID   |     ✓   |       ✗  |     ✓   |         
 
 
-### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/MAHA5" alt="Maha5.png"> Maha5
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/MAHA5.png" alt="Maha5"> Maha5
 -----------------------------------------------
 
 | Nickname |FullName    |  Region | Youtube | Bilibili | Twitter |
