@@ -40,6 +40,8 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 										SetTitle(VTData.VTName).
 										SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 										SetDescription(DataMember.Description).
+										SetThumbnail(DataMember.Avatar).
+										SetImage(DataMember.Thumbnail).
 										SetURL("https://live.bilibili.com/"+strconv.Itoa(DataMember.LiveRoomID)).
 										AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
 										AddField("Online", strconv.Itoa(DataMember.Online)).
@@ -66,6 +68,8 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetTitle(FixName(DataGroup.EnName, DataGroup.JpName)).
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetDescription(DataGroup.Description).
+									SetThumbnail(DataGroup.Avatar).
+									SetImage(DataGroup.Thumbnail).
 									SetURL("https://live.bilibili.com/"+strconv.Itoa(DataGroup.LiveRoomID)).
 									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
 									AddField("Online", strconv.Itoa(DataGroup.Online)).
@@ -101,6 +105,8 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 										SetTitle(FixName(DataMember.EnName, DataMember.JpName)).
 										SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 										SetDescription(DataMember.Description).
+										SetThumbnail(DataMember.Avatar).
+										SetImage(DataMember.Thumbnail).
 										SetURL("https://live.bilibili.com/"+strconv.Itoa(DataMember.LiveRoomID)).
 										AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
 										AddField("Online", strconv.Itoa(DataMember.Online)).
@@ -125,6 +131,8 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								SetTitle(FixName(LiveBili.EnName, LiveBili.JpName)).
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 								SetDescription(LiveBili.Description).
+								SetThumbnail(LiveBili.Avatar).
+								SetImage(LiveBili.Thumbnail).
 								SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveBili.LiveRoomID)).
 								AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
 								AddField("Online", strconv.Itoa(LiveBili.Online)).

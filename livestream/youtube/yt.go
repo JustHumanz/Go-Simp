@@ -40,7 +40,7 @@ func CheckSchedule() {
 					"Vtube Region": Member.Region,
 				}).Info("Checking Youtube")
 				go Filter(Member, Group, &wg)
-				time.Sleep(time.Duration(rand.Intn(config.RandomSleep)) * time.Millisecond)
+				time.Sleep(time.Duration(rand.Intn(config.RandomSleep-5)+5) * time.Millisecond)
 			}
 		}
 		wg.Wait()
