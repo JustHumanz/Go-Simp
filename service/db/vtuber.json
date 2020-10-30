@@ -584,6 +584,20 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Danchou",
+                    "EN_Name":"Shirogane Noel",
+                    "JP_Name":"白銀ノエル",
+                    "Hashtag": {
+                        "Twitter": "#ノエラート",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCdyqAaZDKHXg4Ahi7VENThQ",
+                    "BiliBili_ID": 454733056,
+                    "BiliRoom_ID": 21583736,
+                    "Twitter_Username": "shiroganenoel",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Senchou",
                     "EN_Name":"Houshou Marine",
                     "JP_Name":"宝鐘マリン",
@@ -1068,7 +1082,7 @@
                 {
                     "Name":"Aruran",
                     "EN_Name":"Arurandeisu",
-                    "JP_Name":"鏡見キラ",
+                    "JP_Name":"アルランディス",
                     "Hashtag": {
                         "Twitter": "#アランの画廊",
                         "BiliBili": ""
@@ -1395,7 +1409,7 @@
                 {
                     "Name":"Hanamaki",
                     "EN_Name":"Hana Macchia",
-                    "JP_Name":"",
+                    "JP_Name":"ハナ・マキア",
                     "Hashtag": {
                         "Twitter": "#hanamaki_art",
                         "BiliBili": ""
@@ -1409,7 +1423,7 @@
                 {
                     "Name":"Miyu",
                     "EN_Name":"Miyu Ottavia",
-                    "JP_Name":"",
+                    "JP_Name":"ミユ・オッタヴィア",
                     "Hashtag": {
                         "Twitter": "#miyu_ottaviart",
                         "BiliBili": ""
@@ -1423,7 +1437,7 @@
                 {
                     "Name":"Zea",
                     "EN_Name":"Zea Cornelia",
-                    "JP_Name":"",
+                    "JP_Name":"ゼア・コルネリア",
                     "Hashtag": {
                         "Twitter": "#ZEA_art",
                         "BiliBili": ""
@@ -1437,7 +1451,7 @@
                 {
                     "Name":"Takamama",
                     "EN_Name":"Taka Radjiman",
-                    "JP_Name":"",
+                    "JP_Name":"タカ・ラジマン",
                     "Hashtag": {
                         "Twitter": "#Taka_Radjimart",
                         "BiliBili": ""
@@ -1451,7 +1465,7 @@
                 {
                     "Name":"Jukut",
                     "EN_Name":"Riksa Dhirendra",
-                    "JP_Name":"",
+                    "JP_Name":"リクサ・ディレンドラ",
                     "Hashtag": {
                         "Twitter": "#riks_art",
                         "BiliBili": ""
@@ -1465,7 +1479,7 @@
                 {
                     "Name":"Cia",
                     "EN_Name":"Amicia Michella",
-                    "JP_Name":"",
+                    "JP_Name":"アミシア・ミシェラ",
                     "Hashtag": {
                         "Twitter": "#Amicia_MichellArt",
                         "BiliBili": ""
@@ -1479,7 +1493,7 @@
                 {
                     "Name":"Rai",
                     "EN_Name":"Rai Galilei",
-                    "JP_Name":"",
+                    "JP_Name":"ライ・ガリレイ",
                     "Hashtag": {
                         "Twitter": "#Rai_Art",
                         "BiliBili": ""
@@ -1493,7 +1507,7 @@
                 {
                     "Name":"Zura",
                     "EN_Name":"Azura Cecillia",
-                    "JP_Name":"",
+                    "JP_Name":"アズラ・セシリア",
                     "Hashtag": {
                         "Twitter": "#Azura_Art",
                         "BiliBili": ""
@@ -1507,7 +1521,7 @@
                 {
                     "Name":"Layla",
                     "EN_Name":"Layla Alstroemeria",
-                    "JP_Name":"",
+                    "JP_Name":"ライラ・アルストロエメリア",
                     "Hashtag": {
                         "Twitter": "#Layl_art",
                         "BiliBili": ""
@@ -1521,7 +1535,7 @@
                 {
                     "Name":"Nara",
                     "EN_Name":"Nara Haramaung",
-                    "JP_Name":"",
+                    "JP_Name":"ナラ・ハラマウン",
                     "Hashtag": {
                         "Twitter": "#Maunggambart",
                         "BiliBili": ""
@@ -1535,7 +1549,7 @@
                 {
                     "Name":"Bobon",
                     "EN_Name":"Bonnivier Pranaja",
-                    "JP_Name":"",
+                    "JP_Name":"ボンニフィエール・プラナジャ",
                     "Hashtag": {
                         "Twitter": "#bonnivierart",
                         "BiliBili": ""
@@ -1549,7 +1563,7 @@
                 {
                     "Name":"Etna",
                     "EN_Name":"Etna Crimson",
-                    "JP_Name":"",
+                    "JP_Name":"エトナ・クリムソン",
                     "Hashtag": {
                         "Twitter": "#Etna_Art",
                         "BiliBili": ""
@@ -1563,7 +1577,7 @@
                 {
                     "Name":"Siska",
                     "EN_Name":"Siska Leontyne",
-                    "JP_Name":"",
+                    "JP_Name":"シスカ・レオンタイン",
                     "Hashtag": {
                         "Twitter": "#Siska_art",
                         "BiliBili": ""
@@ -1577,7 +1591,7 @@
                 {
                     "Name":"Yuya",
                     "EN_Name":"Shin Yuya",
-                    "JP_Name":"",
+                    "JP_Name":"シン・ユヤ",
                     "Hashtag": {
                         "Twitter": "#yuyamuyart",
                         "BiliBili": ""
@@ -1591,7 +1605,7 @@
                 {
                     "Name":"Wiffy",
                     "EN_Name":"Wiffy",
-                    "JP_Name":"",
+                    "JP_Name":"ウィフィ",
                     "Hashtag": {
                         "Twitter": "#WiffyArt",
                         "BiliBili": ""
@@ -1605,7 +1619,7 @@
                 {
                     "Name":"Suha",
                     "EN_Name":"Suha Min",
-                    "JP_Name":"",
+                    "JP_Name":"ミン・スゥーハ",
                     "Hashtag": {
                         "Twitter": "#suha_art",
                         "BiliBili": ""
@@ -1647,7 +1661,7 @@
                 {
                     "Name":"Aadya",
                     "EN_Name":"Aadya",
-                    "JP_Name":"",
+                    "JP_Name":"アディア",
                     "Hashtag": {
                         "Twitter": "#Aadyart",
                         "BiliBili": ""
@@ -1661,7 +1675,7 @@
                 {
                     "Name":"Noor",
                     "EN_Name":"Noor",
-                    "JP_Name":"",
+                    "JP_Name":"ヌール",
                     "Hashtag": {
                         "Twitter": "#noor_art",
                         "BiliBili": ""
@@ -1675,7 +1689,7 @@
                 {
                     "Name":"Vihaan",
                     "EN_Name":"Vihaan",
-                    "JP_Name":"",
+                    "JP_Name":"ビハン",
                     "Hashtag": {
                         "Twitter": "",
                         "BiliBili": ""
