@@ -17,7 +17,7 @@ A simple VTuber bot to serve notification Fanart and Livestream
 | Kanochi  | Kano<br>鹿乃                   |JP     | ✓       | ✓        | ✓ |
 | Parerun  | Hanamaru Hareru<br>花丸はれる   |JP     | ✓       | ✓        |✓ |
 | Kohi     | Kohigashi Hitona<br>小東ひとな  |JP     | ✓       | ✓        | ✓ |
-| Nononon  | Nonomiya Nonono<br>野々宮ののの  |JP     | ✓       | ✓        | ✓ |
+| ~~Nononon~~  | ~~Nonomiya Nonono<br>野々宮ののの~~  |JP     | ✓       | ✓        | ✓ |
 
 
 -----------------------------------------------
