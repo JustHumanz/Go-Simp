@@ -59,7 +59,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						VTData := ValidName(GroupNameQuery)
 						if VTData.ID == 0 {
-							s.ChannelMessageSend(m.ChannelID, "`"+GroupNameQuery+"`,Name of Vtuber Group was not found")
+							s.ChannelMessageSend(m.ChannelID, "`"+GroupNameQuery+"`,Name of Vtuber Group or Vtuber Name was not found")
 						} else {
 							DataMember := database.YtGetStatus(0, VTData.ID, "upcoming", "")
 							if DataMember != nil {
@@ -133,7 +133,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						VTData := ValidName(FindGroupArry[i])
 						if VTData.ID == 0 {
-							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry[i]+"`,Name of Vtuber Group was not found")
+							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry[i]+"`,Name of Vtuber Group or Vtuber Name was not found")
 						} else {
 							DataMember := database.YtGetStatus(0, VTData.ID, "live", "")
 							if DataMember != nil {
@@ -212,7 +212,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						VTData := ValidName(FindGroupArry[i])
 						if VTData.ID == 0 {
-							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry[i]+"`,Name of Vtuber Group was not found")
+							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry[i]+"`,Name of Vtuber Group or Vtuber Name was not found")
 						} else {
 							DataMember := database.YtGetStatus(0, VTData.ID, "past", "")
 							if DataMember != nil {

@@ -18,17 +18,17 @@ func gacha() bool {
 func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 	prefix := config.PGeneral
 	m.Content = strings.ToLower(m.Content)
-	CommandArray := strings.Split(m.Content, " ")
 	if strings.HasPrefix(m.Content, prefix) {
+		CommandArray := strings.Split(m.Content, " ")
 		if CommandArray[0] == prefix+Subscriber {
-			MemberArry := strings.Split(CommandArray[1], ",")
 			for _, Group := range GroupData {
-				for _, Mem := range MemberArry {
+				for _, Mem := range strings.Split(CommandArray[1], ",") {
 					for _, Member := range database.GetName(Group.ID) {
 						if Mem == strings.ToLower(Member.Name) {
 							var (
 								embed  *discordgo.MessageEmbed
 								Avatar string
+								Url    = "https://www.youtube.com/channel/" + Member.YoutubeID + "?sub_confirmation=1"
 							)
 							SubsData := Member.GetSubsCount()
 							if gacha() {
@@ -36,6 +36,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							} else {
 								if Member.BiliRoomID != 0 {
 									Avatar = Member.BiliBiliAvatar
+									Url = "https://space.bilibili.com/" + strconv.Itoa(Member.BiliBiliID)
 								} else {
 									Avatar = Member.YoutubeAvatar
 								}
@@ -46,9 +47,10 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 							if SubsData.BiliFollow != 0 {
 								embed = NewEmbed().
-									SetAuthor(m.Author.Username, m.Author.AvatarURL("80"), "https://www.youtube.com/channel/"+Member.YoutubeID+"?sub_confirmation=1").
+									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 									SetTitle(FixName(Member.EnName, Member.JpName)).
 									SetImage(Avatar).
+									SetURL(Url).
 									AddField("Youtube subscriber", strconv.Itoa(SubsData.YtSubs)).
 									AddField("Youtube views", strconv.Itoa(SubsData.YtViews)).
 									AddField("Youtube videos", strconv.Itoa(SubsData.YtVideos)).
@@ -60,7 +62,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetColor(Color).MessageEmbed
 							} else {
 								embed = NewEmbed().
-									SetAuthor(m.Author.Username, m.Author.AvatarURL("80"), "https://www.youtube.com/channel/"+Member.YoutubeID+"?sub_confirmation=1").
+									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 									SetTitle(FixName(Member.EnName, Member.JpName)).
 									SetImage(Avatar).
 									AddField("Youtube subscriber", strconv.Itoa(SubsData.YtSubs)).

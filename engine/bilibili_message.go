@@ -26,7 +26,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						VTData := ValidName(FindGroupArry)
 						if VTData.ID == 0 {
-							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group was not found")
+							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 						} else {
 							DataMembers := database.BilGet(0, VTData.ID, "Live")
 							if len(DataMembers) > 0 {
@@ -91,7 +91,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						VTData := ValidName(FindGroupArry)
 						if VTData.ID == 0 {
-							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group was not found")
+							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 						} else {
 							DataMembers := database.BilGet(0, VTData.ID, "Past")
 							if len(DataMembers) > 0 {
@@ -161,10 +161,11 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 				if err != nil {
 					VTData := ValidName(FindGroupArry)
 					if VTData.ID == 0 {
-						s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group was not found")
+						s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 					} else {
-						for _, DataMember := range database.SpaceGet(0, VTData.ID) {
-							if DataMember.VideoID != "" {
+						DataMembers := database.SpaceGet(0, VTData.ID)
+						if len(DataMembers) > 0 {
+							for _, DataMember := range DataMembers {
 								diff := time.Now().In(loc).Sub(DataMember.UploadDate.In(loc))
 								Color, err := GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
 								if err != nil {
@@ -184,20 +185,20 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetFooter(DataMember.UploadDate.In(loc).Format(time.RFC822), config.BiliBiliIMG).
 									InlineAllFields().
 									SetColor(Color).MessageEmbed)
-
-							} else {
-								s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
-									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
-									SetDescription("It looks like `"+VTData.VTName+"` doesn't have a video in space.bilibili").
-									SetImage(config.WorryIMG).MessageEmbed)
-								return
 							}
+						} else {
+							s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+								SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+								SetDescription("It looks like `"+VTData.VTName+"` doesn't have a video in space.bilibili").
+								SetImage(config.WorryIMG).MessageEmbed)
+							return
 						}
 					}
 					break
 				} else {
-					for _, DataMember := range database.SpaceGet(VTuberGroup.ID, 0) {
-						if DataMember.VideoID != "" {
+					DataMembers := database.SpaceGet(VTuberGroup.ID, 0)
+					if len(DataMembers) > 0 {
+						for _, DataMember := range DataMembers {
 							diff := time.Now().In(loc).Sub(DataMember.UploadDate.In(loc))
 							Color, err := GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
 							if err != nil {
@@ -219,13 +220,13 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 								InlineAllFields().
 								SetColor(Color).MessageEmbed)
 
-						} else {
-							s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
-								SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
-								SetDescription("It looks like `"+VTuberGroup.NameGroup+"` doesn't have a video in space.bilibili").
-								SetImage(config.WorryIMG).MessageEmbed)
-							return
 						}
+					} else {
+						s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
+							SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+							SetDescription("It looks like `"+VTuberGroup.NameGroup+"` doesn't have a video in space.bilibili").
+							SetImage(config.WorryIMG).MessageEmbed)
+						return
 					}
 				}
 			}

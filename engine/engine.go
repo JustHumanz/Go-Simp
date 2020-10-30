@@ -222,11 +222,11 @@ func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 //change to Title format
 func FixName(A string, B string) string {
 	if A != "" && B != "" {
-		return strings.Title(strings.Join([]string{A, B}, "/"))
+		return "【" + strings.Title(strings.Join([]string{A, B}, "/")) + "】"
 	} else if B != "" {
-		return strings.Title(B)
+		return "【" + strings.Title(B) + "】"
 	} else {
-		return strings.Title(A)
+		return "【" + strings.Title(A) + "】"
 	}
 }
 

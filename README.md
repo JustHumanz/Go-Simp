@@ -326,7 +326,7 @@ This command will show Upcoming live streams on Youtube  *only 3 if use Vtuber G
 ```yt>Live [Vtuber Group/Member] {Region}```  
 This command will show all live streams right now on Youtube  
 
-```yt>Last [Vtuber Group/Member] {Region}```  
+```yt>Past [Vtuber Group/Member] {Region}```  
 This command will show past streams on Youtube *only 3 if use Vtuber Group*
 
 ~~```bl>Upcoming [Vtuber Group]```  
@@ -335,7 +335,7 @@ This command will show Upcoming live streams on Bilibili~~
 ```bl>Live [Vtuber Group/Member]```  
 This command will show all live streams right now on Bilibili  
 
-```bl>Last [Vtuber Group/Member]```  
+```bl>Past [Vtuber Group/Member]```  
 This command will show past streams on Bilibili
 
 ```sp_bl>[Group/Member]```  
@@ -375,8 +375,8 @@ Shows all lists that roles are subscribed
 
 
 #### Reminder  
-<p align="center">
 Reminder every 1 hours and 30 minutes before livestream start
+<p align="center">
   <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Reminder.png" alt="Reminder"/>
 </p>
 
