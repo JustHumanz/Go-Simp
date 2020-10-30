@@ -400,6 +400,12 @@ Reminder every 1 hours and 30 minutes before livestream start
 
 [Invite link](https://top.gg/bot/721964514018590802)
 
+## TODO
+- Vtuber collaboration detection
+- Make a form for add New Vtuber
+- Move to microservice
+
+
 
 ## CONTRIBUTING
 if you can code you can review my shitty code and make it better.if not,help me to add Vtubers Data,you can create a pull request on this [file](https://github.com/JustHumanz/Go-Simp/blob/master/service/db/vtuber.json) or fix my bot command (i know my command bot is `too technical`)  
