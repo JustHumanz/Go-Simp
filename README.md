@@ -10,10 +10,7 @@ A simple VTuber bot to serve notification Fanart and Livestream
 
 
 ## Current notification support
-
-
-
-## <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/hana.png" alt="Hanayori"> Hanayori 
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/hana.png" alt="Hanayori"> Hanayori 
 ----------------------------------------------------------
 | Nickname | FullName                      |Region | Youtube | Bilibili |Twitter |
 |----------|-------------------------------|-------|---------|----------|--------|
@@ -23,7 +20,7 @@ A simple VTuber bot to serve notification Fanart and Livestream
 | ~~Nononon~~  | ~~Nonomiya Nonono<br>野々宮ののの~~  |JP     | ✓       | ✓        | ✓ |
 
 
-## <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/holo.png" alt="Hololive"> Hololive
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/holo.png" alt="Hololive"> Hololive
 -----------------------------------------------
 
 | Nickname     |FullName                       |Region | Youtube | Bilibili |Twitter |
@@ -88,7 +85,7 @@ A simple VTuber bot to serve notification Fanart and Livestream
 EOL
 
 
-## <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/niji.png" alt="Nijisanji"> Nijisanji
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/niji.png" alt="Nijisanji"> Nijisanji
 -----------------------------------------------
 
 
@@ -155,7 +152,7 @@ EOL
 
 
 
-## <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/entum.png" alt="ENTUM"> ENTUM
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/entum.png" alt="ENTUM"> ENTUM
 -----------------------------------------------
 
 
@@ -166,7 +163,7 @@ EOL
 
 
 
-## <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/kizuna.png" alt="Kizuna_AI"> Kizuna_AI
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/kizuna.png" alt="Kizuna_AI"> Kizuna_AI
 -----------------------------------------------
 
 |Nickname | FullName              |Region | Youtube | Bilibili| Twitter|
@@ -177,7 +174,7 @@ EOL
 
 
 
-## <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/vox.png" alt="VOMS"> VOMS
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/vox.png" alt="VOMS"> VOMS
 -----------------------------------------------
 
 
@@ -189,7 +186,7 @@ EOL
 
 
 
-## <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/noripro.png" alt="NoriPro"> NoriPro
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/noripro.png" alt="NoriPro"> NoriPro
 -----------------------------------------------
 
 
@@ -203,7 +200,7 @@ EOL
 
 
 
-## <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/holostars.png" alt="Holostars"> Holostars
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/holostars.png" alt="Holostars"> Holostars
 -----------------------------------------------
 
 
@@ -221,7 +218,7 @@ EOL
 
 
 
-## <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/774.png" alt="774.INC"> 774.INC
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/774.png" alt="774.INC"> 774.INC
 -----------------------------------------------
 
 | Nickname  | FullName                            | Region | Youtube | Bilibili | Twitter |
@@ -246,7 +243,7 @@ EOL
 
 
 
-## Independen
+#### Independen
 -----------------------------------------------
 
 | Nickname |FullName                  | Region | Youtube | Bilibili | Twitter|
@@ -264,7 +261,7 @@ EOL
 | Rosalyn  |Rosalyn<br>ロサリン         | CN     | ✗       | ✓        |✓       |
 
 
-## VTuBerflower
+### VTuBerflower
 -----------------------------------------------
 
 | Nickname |FullName     | Region | Youtube | Bilibili | Twitter |
@@ -275,7 +272,7 @@ EOL
 | Lily     |Lily Ifeta   |   ID   |     ✓   |       ✗  |     ✓   |         
 
 
-## <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/MAHA5" alt="Maha5"> Maha5
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/MAHA5" alt="Maha5"> Maha5
 -----------------------------------------------
 
 | Nickname |FullName    |  Region | Youtube | Bilibili | Twitter |
