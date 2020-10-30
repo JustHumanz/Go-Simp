@@ -24,8 +24,6 @@ services:
       - multi_tor
     command: go run .
     restart: on-failure
-    volumes:
-    - bot_vol
 
   db_migrate:
     image: mainbot
@@ -53,6 +51,3 @@ services:
     ports:
       - "1107:2525"
     restart: on-failure
-
-volumes:
-  bot_vol:    
