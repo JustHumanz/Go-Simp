@@ -67,7 +67,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									loc := Zawarudo(Member.Region)
 									duration := durafmt.Parse(Member.Schedul.In(loc).Sub(time.Now().In(loc))).LimitFirstN(2)
 									SendEmbed(Memberst{
-										VTName:  "【" + VTData.VTName + "】",
+										VTName:  VTData.VTName,
 										Desc:    Member.Title,
 										Thumb:   Member.Thumb,
 										VideoID: Member.VideoID,
@@ -103,7 +103,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								loc := Zawarudo(Data.Region)
 								duration := durafmt.Parse(Data.Schedul.In(loc).Sub(time.Now().In(loc))).LimitFirstN(2)
 								SendEmbed(Memberst{
-									VTName:    "【" + FixName(Data.NameEN, Data.NameJP) + "】",
+									VTName:    FixName(Data.NameEN, Data.NameJP),
 									Desc:      Data.Title,
 									Thumb:     Data.Thumb,
 									VideoID:   Data.VideoID,
@@ -144,7 +144,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									duration := durafmt.Parse(diff).LimitFirstN(2)
 
 									SendEmbed(Memberst{
-										VTName:  "【" + VTData.VTName + "】",
+										VTName:  VTData.VTName,
 										Desc:    Member.Title,
 										Thumb:   Member.Thumb,
 										VideoID: Member.VideoID,
@@ -180,7 +180,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								diff := time.Now().In(loc).Sub(Data.Schedul.In(loc))
 								duration := durafmt.Parse(diff).LimitFirstN(2)
 								SendEmbed(Memberst{
-									VTName:    "【" + FixName(Data.NameEN, Data.NameJP) + "】",
+									VTName:    FixName(Data.NameEN, Data.NameJP),
 									Desc:      Data.Title,
 									Thumb:     Data.Thumb,
 									VideoID:   Data.VideoID,
@@ -228,7 +228,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									durationlive := durafmt.Parse(diff2).LimitFirstN(2)
 									s.ChannelMessageSendEmbed(m.ChannelID, NewEmbed().
 										SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
-										SetTitle("【"+VTData.VTName+"】").
+										SetTitle(VTData.VTName).
 										SetDescription(DataMember[z].Title).
 										SetImage(DataMember[z].Thumb).
 										SetThumbnail(VTData.YtAvatar).
