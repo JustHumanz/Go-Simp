@@ -294,7 +294,8 @@ func CreateDB(Data config.ConfigFile) error {
 		(
 			GroupID int,
 			MemberID int,
-			Sts varchar(11)
+			Sts varchar(11),
+			lmt int
 		)
 		BEGIN
 			SELECT RoomID,Status,Title,Thumbnails,Description,ScheduledStart,Viewers,VtuberName_EN,
@@ -302,7 +303,7 @@ func CreateDB(Data config.ConfigFile) error {
 			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
 			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where 
 			(VtuberGroup.id=GroupID or VtuberMember.id=MemberID) 
-			AND Status=Sts Order by ScheduledStart ASC;
+			AND Status=Sts Order by ScheduledStart ASC Limit lmt;
 		END`)
 	if err != nil {
 		return err
