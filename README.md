@@ -10,8 +10,8 @@ A simple VTuber bot to serve notification Fanart and Livestream
 
 
 ## Current notification support
-
 ### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/hana.png" alt="Hanayori"> Hanayori 
+----------------------------------------------------------
 | Nickname | FullName                      |Region | Youtube | Bilibili |Twitter |
 |----------|-------------------------------|-------|---------|----------|--------|
 | Kanochi  | Kano<br>鹿乃                   |JP     | ✓       | ✓        | ✓ |
@@ -20,44 +20,43 @@ A simple VTuber bot to serve notification Fanart and Livestream
 | ~~Nononon~~  | ~~Nonomiya Nonono<br>野々宮ののの~~  |JP     | ✓       | ✓        | ✓ |
 
 
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/holo.png" alt="Hololive"> Hololive
 -----------------------------------------------
 
-
-### Hololive
-| Nickname     |FullName|                       Region | Youtube | Bilibili |Twitter |
-|--------------|--------|---------------------------------|----------|--------|------|
-| Koronen      |Inugami Korone<br>戌神ころね      |JP     | ✓       | ✓        |✓|
-| Matsuri      |Natsuiro Matsuri<br>夏色まつり    |JP     | ✓       | ✓        |✓|
-| Aqua         |Minato Aqua<br>湊あくあ           |JP     | ✓       | ✓        |✓|
-| Pekora       |Usada Pekora<br>兎田ぺこら        |JP     | ✓       | ✓        |✓|
-| Senchou      |Houshou Marine<br>宝鐘マリン      |JP     | ✓       | ✓        |✓|
-| Haato        |Akai Haato<br>赤井はあと          |JP     | ✓       | ✓        |✓|
-| Kaichou      |Kiryu Coco<br>桐生ココ            |JP     | ✓       | ✓        |✓|
-| Choco-sensei |Yuzuki Choco<br>癒月ちょこ        | JP     | ✓       | ✓        |✓|
-| Okayun       |Nekomata Okayu<br>猫又おかゆ      | JP     | ✓       | ✓        |✓|
-| Subaru       |Oozora Subaru<br>大空スバル       | JP     | ✓       | ✓        |✓|
-| FBK          |Shirakami Fubuki<br>白上フブキ    | JP     | ✓       | ✓        |✓|
-| Sheep        |Tsunomaki Watame<br>角巻わため    | JP     | ✓       | ✓        |✓|
-| AZKi         |Virtual Diva AZKi               | JP     | ✓       | ✓        |✓|
-| Sora         |Tokino Sora<br>ときのそら         | JP     | ✓       | ✓        |✓|
-| Miko-chi     |Sakura Miko<br>さくらみこ         | JP     | ✓       | ✓        |✓|
-| Mio          |Ookami Mio<br>大神ミオ           | JP     | ✓       | ✓        |✓|
-| Shishiron    |Shishiro Botan<br>獅白ぼたん     | JP     | ✓       | ✓        |✓|
-| Polka        |Omaru Polka<br>尾丸ポルカ       | JP     | ✓       | ✓        |✓|
-| Lamy         |Yukihana Lamy<br>雪花ラミィ     | JP     | ✓       | ✓        |✓|
-| Taoling      |Momosuzu Nene<br>桃鈴ねね       | JP     | ✓       | ✓        |✓|
-| Danchou      |Shirogane Noel<br>白銀ノエル    | JP     | ✓       | ✓        |✓|
-| Rushia       |Uruha Rushia<br>潤羽るしあ      | JP     | ✓       | ✓        |✓|
-| Kanatan      |Amane Kanata<br>天音かなた      | JP     | ✓       | ✓        |✓|
-| Sui-chan     |Hoshimachi Suisei<br>星街すいせい| JP     | ✓       | ✓        |✓|
-| Merumeru     |Yozora Mel<br>夜空メル          | JP     | ✓       | ✓        |✓|
-| AkiRose      |Aki Rosenthal<br>アキ・ローゼンタール| JP     | ✓       | ✓        |✓|
-| Ayame        |Nakiri Ayame<br>百鬼あやめ      | JP     | ✓       | ✓        |✓|
-| Shion        |Murasaki Shion<br>紫咲シオン     | JP     | ✓       | ✓        |✓|
-| Luna-tan     |Himemori Luna<br>姫森ルーナ     |JP     | ✓       | ✓        |✓|
-| Fuu-tan      |Shiranui Flare<br>不知火フレア   | JP     | ✓       | ✓        |✓|
-| Towa-sama    |Tokoyami Towa<br>常闇トワ       | JP     | ✓       | ✓        |✓|
-| Roboco       |Roboco<br>ロボ子                | JP     | ✓       | ✓        |✓|
+| Nickname     |FullName                       |Region | Youtube | Bilibili |Twitter |
+|--------------|-------------------------------|-------|---------|----------|--------|
+| Koronen      |Inugami Korone<br>戌神ころね      |JP     | ✓       | ✓        |✓  |
+| Matsuri      |Natsuiro Matsuri<br>夏色まつり    |JP     | ✓       | ✓        |✓  |
+| Aqua         |Minato Aqua<br>湊あくあ           |JP     | ✓       | ✓        |✓  |
+| Pekora       |Usada Pekora<br>兎田ぺこら        |JP     | ✓       | ✓        |✓  |
+| Senchou      |Houshou Marine<br>宝鐘マリン      |JP     | ✓       | ✓        |✓  |
+| Haato        |Akai Haato<br>赤井はあと          |JP     | ✓       | ✓        |✓  |
+| Kaichou      |Kiryu Coco<br>桐生ココ            |JP     | ✓       | ✓        |✓  |
+| Choco-sensei |Yuzuki Choco<br>癒月ちょこ        | JP     | ✓       | ✓        |✓ |
+| Okayun       |Nekomata Okayu<br>猫又おかゆ      | JP     | ✓       | ✓        |✓ |
+| Subaru       |Oozora Subaru<br>大空スバル       | JP     | ✓       | ✓        |✓ |
+| FBK          |Shirakami Fubuki<br>白上フブキ    | JP     | ✓       | ✓        |✓ |
+| Sheep        |Tsunomaki Watame<br>角巻わため    | JP     | ✓       | ✓        |✓ |
+| AZKi         |Virtual Diva AZKi               | JP     | ✓       | ✓        |✓ |
+| Sora         |Tokino Sora<br>ときのそら         | JP     | ✓       | ✓        |✓ |
+| Miko-chi     |Sakura Miko<br>さくらみこ         | JP     | ✓       | ✓        |✓ |
+| Mio          |Ookami Mio<br>大神ミオ           | JP     | ✓       | ✓        |✓  |
+| Shishiron    |Shishiro Botan<br>獅白ぼたん     | JP     | ✓       | ✓        |✓  |
+| Polka        |Omaru Polka<br>尾丸ポルカ       | JP     | ✓       | ✓        |✓ |
+| Lamy         |Yukihana Lamy<br>雪花ラミィ     | JP     | ✓       | ✓        |✓ |
+| Taoling      |Momosuzu Nene<br>桃鈴ねね       | JP     | ✓       | ✓        |✓ |
+| Danchou      |Shirogane Noel<br>白銀ノエル    | JP     | ✓       | ✓        |✓ |
+| Rushia       |Uruha Rushia<br>潤羽るしあ      | JP     | ✓       | ✓        |✓ |
+| Kanatan      |Amane Kanata<br>天音かなた      | JP     | ✓       | ✓        |✓ |
+| Sui-chan     |Hoshimachi Suisei<br>星街すいせい| JP     | ✓       | ✓        |✓  |
+| Merumeru     |Yozora Mel<br>夜空メル          | JP     | ✓       | ✓        |✓ |
+| AkiRose      |Aki Rosenthal<br>アキ・ローゼンタール| JP     | ✓       | ✓     |✓ |
+| Ayame        |Nakiri Ayame<br>百鬼あやめ      | JP     | ✓       | ✓        |✓ |
+| Shion        |Murasaki Shion<br>紫咲シオン     | JP     | ✓       | ✓        |✓  |
+| Luna-tan     |Himemori Luna<br>姫森ルーナ     |JP     | ✓       | ✓        |✓  |
+| Fuu-tan      |Shiranui Flare<br>不知火フレア   | JP     | ✓       | ✓        |✓  |
+| Towa-sama    |Tokoyami Towa<br>常闇トワ       | JP     | ✓       | ✓        |✓ |
+| Roboco       |Roboco<br>ロボ子                | JP     | ✓       | ✓        |✓ |  
 
 ##### Hololive ID
 | Nickname     | FullName                           | Region | Youtube | Bilibili | Twitter|
@@ -82,12 +81,14 @@ A simple VTuber bot to serve notification Fanart and Livestream
 | ~~Yogiri~~   | ~~CN~~ | ~~✗~~   | ~~✓~~    |
 | ~~Kuromomo~~ | ~~CN~~ | ~~✗~~   | ~~✓~~    |
 | ~~Doris~~    | ~~CN~~ | ~~✗~~   | ~~✓~~    |
-| ~~Rosalyn~~  | ~~CN~~ | ~~✗~~   | ~~✓~~    |
+| ~~Rosalyn~~  | ~~CN~~ | ~~✗~~   | ~~✓~~    |  
 EOL
 
+
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/niji.png" alt="Nijisanji"> Nijisanji
 -----------------------------------------------
 
-### Nijisanji
+
 | Nickname  | FullName                        |Region | Youtube | Bilibili | Twitter |
 |-----------|--------------------------------|---------|---------|---------|---------|
 | Konlulu   |Suzuhara Lulu<br>鈴原るる          | JP     | ✓       | ✓        | ✓  |
@@ -150,16 +151,21 @@ EOL
 | Suha      |Suha Min<br>ミン・スゥーハ| KR     | ✓       | ✗        |  ✓  |
 
 
+
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/entum.png" alt="ENTUM"> ENTUM
 -----------------------------------------------
-### ENTUM
+
+
 | Nickname  | Region | Youtube | Bilibili |
 |-----------|--------|---------|----------|
 | Hina-chan | JP     | ✓       | ✓        |
 | Mirai     | JP     |  ✓      |    ✗     |
 
+
+
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/kizuna.png" alt="Kizuna_AI"> Kizuna_AI
 -----------------------------------------------
 
-### Kizuna_AI
 |Nickname | FullName              |Region | Youtube | Bilibili| Twitter|
 |---------|-----------------------|-------|---------|---------|--------|
 |Ai-chan  |Kizuna AI<br>キズナアイ  | JP     | ✓       |   ✓    |  ✓     |    
@@ -167,9 +173,11 @@ EOL
 
 
 
+
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/vox.png" alt="VOMS"> VOMS
 -----------------------------------------------
 
-### VOMS
+
 | Nickname  |FullName                       | Region | Youtube | Bilibili | Twitter |
 |-----------|-------------------------------|--------|---------|----------|---------|
 | Pikamee   |Amano Pikamee<br>天野ピカミィ    | JP     | ✓       | ✗        |   ✓     |
@@ -177,9 +185,11 @@ EOL
 | Monoe     |Jitomi Monoe<br>磁富モノエ       | JP     | ✓       | ✗        |   ✓     |
 
 
+
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/noripro.png" alt="NoriPro"> NoriPro
 -----------------------------------------------
 
-### NoriPro
+
 | Nickname  |FullName                       | Region | Youtube | Bilibili | Twitter |
 |-----------|-------------------------------|--------|---------|----------|---------|
 | Kumakuma  |Himesaki Yuzuru<br>熊谷タクマ    | JP     | ✓       | ✗        |   ✓    |
@@ -189,10 +199,11 @@ EOL
 | Himesaki  |Himesaki Yuzuru<br>姫咲ゆずる    | JP     | ✓       | ✓        |   ✓    |
 
 
+
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/holostars.png" alt="Holostars"> Holostars
 -----------------------------------------------
 
 
-### Holostars
 | Nickname | FullName                   | Region | Youtube | Bilibili | Twitter |
 |----------|----------------------------|---------|--------|----------|---------|
 | Izu-Izu  |Kanade Izuru<br>奏手イヅル    | JP     | ✓       | ✓        |✓       |
@@ -206,10 +217,10 @@ EOL
 | Eroga    |Aragami Oga<br>荒咬オウガ     | JP     | ✓       | ✗        |✓       |
 
 
+
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/774.png" alt="774.INC"> 774.INC
 -----------------------------------------------
 
-
-### 774.INC
 | Nickname  | FullName                            | Region | Youtube | Bilibili | Twitter |
 |-----------|-------------------------------------|---------|--------|----------|---------|
 | Patra     |Suou Patra<br>周防パトラ               | JP     | ✓       | ✗        |✓       |
@@ -231,10 +242,10 @@ EOL
 | Komori    |Komori Met<br>小森めと                   | JP     | ✓       | ✗        |✓       |
 
 
------------------------------------------------
-
 
 #### Independen
+-----------------------------------------------
+
 | Nickname |FullName                  | Region | Youtube | Bilibili | Twitter|
 |----------|--------------------------|--------|---------|----------|--------|
 | Kanna    |Kanna Tamachi<br>かんな    | ID     | ✓       | ✗        |✓       |
@@ -250,9 +261,9 @@ EOL
 | Rosalyn  |Rosalyn<br>ロサリン         | CN     | ✗       | ✓        |✓       |
 
 
+### VTuBerflower
 -----------------------------------------------
 
-### VTuBerflower
 | Nickname |FullName     | Region | Youtube | Bilibili | Twitter |
 |----------|-------------|--------|---------|----------|---------|
 | Evelyn   |Evelyn       |   ID   |     ✓   |       ✗  |     ✓   |         
@@ -260,9 +271,10 @@ EOL
 | Chloe    |Chloe Pawapua|   ID   |     ✓   |       ✗  |     ✓   |         
 | Lily     |Lily Ifeta   |   ID   |     ✓   |       ✗  |     ✓   |         
 
+
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/MAHA5" alt="Maha5"> Maha5
 -----------------------------------------------
 
-### Maha5
 | Nickname |FullName    |  Region | Youtube | Bilibili | Twitter |
 |----------|------------|---------|---------|----------|---------|
 | Adelia   |Alia Adelia | ID      | ✓       | ✗        |  ✓      |
