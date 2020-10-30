@@ -349,6 +349,7 @@ Remove roles are subscribed from tags list
 
 ```vtbot>roles tags```  
 Shows all lists that roles are subscribed  
+
 ----
 
 **Notifications for livestream will not be sent if there no one user tagged**  
