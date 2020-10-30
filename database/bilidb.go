@@ -48,7 +48,7 @@ func BilGet(GroupID int64, MemberID int64, Status string) []LiveBiliDB {
 		err  error
 	)
 
-	if GroupID > 0 {
+	if GroupID > 0 && Status != "Live" {
 		rows, err = DB.Query(`call GetLiveBiliBili(?,?,?,?)`, GroupID, MemberID, Status, 3)
 		BruhMoment(err, "", false)
 	} else {
