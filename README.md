@@ -296,23 +296,6 @@ Example: `art>tag me Kanochi`,then you will get tagged when there is a new fanar
 ```vtbot>Del tag [Group/Member]```  
 This command will remove you from tags list  
 
-### Still testing
-----
-```vtbot>Tag roles [roles] [Group/Member]```
-Same like `tag me` command,but this will tag a roles  *every role separated by space*   
-Example: `tag roles @kanochi-simps hanayori` or `tag roles @fbk-simps @hololive-simps fbk`  
-
-```vtbot>Roles tags [roles]```  
-Show all lists that roles are subscribed
-
-```vtbot>Del roles [roles]```  
-Remove roles are subscribed from tags list  
-
-```vtbot>roles tags```  
-Shows all lists that roles are subscribed  
-
-----
-
 ```vtbot>My tags```  
 Shows all lists that you are subscribed  
 
@@ -352,6 +335,22 @@ Well,you using it right now
 ```vtbot>Help JP```  
 Like this but in Japanese  
 
+### Still testing
+----
+```vtbot>Tag roles [roles] [Group/Member]```
+Same like `tag me` command,but this will tag a roles  *every role separated by space*   
+Example: `tag roles @kanochi-simps hanayori` or `tag roles @fbk-simps @hololive-simps fbk`  
+
+```vtbot>Roles tags [roles]```  
+Show all lists that roles are subscribed
+
+```vtbot>Del roles [roles]```  
+Remove roles are subscribed from tags list  
+
+```vtbot>roles tags```  
+Shows all lists that roles are subscribed  
+----
+
 **Notifications for livestream will not be sent if there no one user tagged**  
 
 ### Notification&Command 
@@ -378,6 +377,12 @@ Reminder every 1 hours and 30 minutes before livestream start
 ##### New Fanart
 <p align="center">
   <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/New%20Fanart.png" alt="New fanart"/>
+</p>
+
+
+##### Subscriber count
+<p align="center">
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Subscount.png" alt="Subscriber count"/>
 </p>
 
 [Invite link](https://top.gg/bot/721964514018590802)
