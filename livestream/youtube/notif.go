@@ -28,36 +28,41 @@ func (PushData *NotifStruct) SendNude() {
 	}
 
 	var (
+		timestart                         time.Time
 		msg, msg1, msg2, msg3, msg4, msg5 string
 	)
+
+	if PushData.YtData.Schedul.IsZero() {
+		timestart = time.Now().In(loc)
+	} else {
+		timestart = PushData.YtData.Schedul.In(loc)
+	}
+
 	if Status == "upcoming" {
-		log.Info("New upcoming live stream")
 		msg = "Start live in"
-		msg1 = durafmt.Parse(PushData.YtData.Schedul.In(loc).Sub(expiresAt)).LimitFirstN(2).String()
+		msg1 = durafmt.Parse(timestart.Sub(expiresAt)).LimitFirstN(2).String()
 		msg2 = "New upcoming live stream"
-		msg3 = PushData.YtData.Schedul.In(loc).Format(time.RFC822)
+		msg3 = timestart.Format(time.RFC822)
 		msg4 = "Waiting"
 		msg5 = PushData.YtData.Viewers + " Simps in Room Chat"
 
 	} else if Status == "reminder" {
 		msg = "Start live in"
-		msg1 = durafmt.Parse(PushData.YtData.Schedul.In(loc).Sub(expiresAt)).LimitFirstN(2).String()
+		msg1 = durafmt.Parse(timestart.Sub(expiresAt)).LimitFirstN(2).String()
 		msg2 = "Reminder"
-		msg3 = PushData.YtData.Schedul.In(loc).Format(time.RFC822)
+		msg3 = timestart.Format(time.RFC822)
 		msg4 = "Waiting"
 		msg5 = PushData.YtData.Viewers + " Simps in Room Chat"
 
 	} else if Status == "live" {
-		log.Info("New live stream")
 		msg = "Start live"
-		msg1 = durafmt.Parse(expiresAt.Sub(PushData.YtData.Schedul.In(loc))).LimitFirstN(2).String() + " Ago"
+		msg1 = durafmt.Parse(expiresAt.Sub(timestart)).LimitFirstN(2).String() + " Ago"
 		msg2 = "Live right now"
-		msg3 = PushData.YtData.Schedul.In(loc).Format(time.RFC822)
+		msg3 = timestart.Format(time.RFC822)
 		msg4 = "Viewers"
 		msg5 = PushData.YtData.Viewers
 
 	} else if Status == "past" && PushData.YtData.Type == "Covering" {
-		log.Info("New cover has uploaded")
 		msg = "Upload"
 		msg1 = durafmt.Parse(expiresAt.Sub(PushData.YtData.Schedul.In(loc))).LimitFirstN(2).String() + " Ago"
 		msg2 = "Uploaded new video"
@@ -66,9 +71,9 @@ func (PushData *NotifStruct) SendNude() {
 		msg5 = PushData.YtData.Viewers
 	} else if Status == "past" {
 		msg = "Upload"
-		msg1 = durafmt.Parse(expiresAt.Sub(PushData.YtData.Schedul.In(loc))).LimitFirstN(2).String() + " Ago"
+		msg1 = durafmt.Parse(expiresAt.Sub(timestart)).LimitFirstN(2).String() + " Ago"
 		msg2 = "Uploaded new video"
-		msg3 = PushData.YtData.Schedul.In(loc).Format(time.RFC822)
+		msg3 = timestart.Format(time.RFC822)
 		msg4 = "Viewers"
 		msg5 = PushData.YtData.Viewers
 	}

@@ -46,10 +46,9 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 
 	for i := 0; i < len(Data.Items); i++ {
 		var (
-			yttype    string
-			Viewers   string
-			Starttime = time.Now()
-			Thumb     string
+			yttype  string
+			Viewers string
+			Thumb   string
 		)
 		duration := durafmt.Parse(ParseDuration(Data.Items[i].ContentDetails.Duration))
 		if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|mv|covered)", strings.ToLower(Data.Items[i].Snippet.Title)); Cover {
@@ -83,14 +82,6 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 			Viewers = Data.Items[i].Statistics.ViewCount
 		} else {
 			Viewers = Data.Items[i].LiveDetails.Viewers
-		}
-
-		if Data.Items[i].LiveDetails.StartTime.IsZero() {
-			Starttime = Data.Items[i].LiveDetails.ActualStartTime
-		} else if !Data.Items[i].LiveDetails.StartTime.IsZero() {
-			Starttime = Data.Items[i].LiveDetails.StartTime
-		} else {
-			Starttime = Data.Items[i].Snippet.PublishedAt
 		}
 
 		if YoutubeData.YtData != nil {
@@ -181,7 +172,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 				Title:     Data.Items[i].Snippet.Title,
 				Thumb:     Thumb,
 				Desc:      Data.Items[i].Snippet.Description,
-				Schedul:   Starttime,
+				Schedul:   Data.Items[i].LiveDetails.StartTime,
 				Published: Data.Items[i].Snippet.PublishedAt,
 				Type:      yttype,
 				Viewers:   Viewers,

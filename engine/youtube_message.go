@@ -151,7 +151,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 										Msg:     "Start live in",
 										Msg1:    duration.String() + " Ago",
 										Msg2:    Member.Schedul.In(loc).Format(time.RFC822),
-										Msg3:    Member.Viewers,
+										Msg3:    Member.Viewers + " Simps",
 									})
 								}
 							} else {
@@ -187,7 +187,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									Msg:       "Start in",
 									Msg1:      duration.String() + " Ago",
 									Msg2:      Data.Schedul.In(loc).Format(time.RFC822),
-									Msg3:      Data.Viewers,
+									Msg3:      Data.Viewers + " Simps",
 									YtChannel: Data.ChannelID,
 								})
 							}
