@@ -176,6 +176,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 				Published: Data.Items[i].Snippet.PublishedAt,
 				Type:      yttype,
 				Viewers:   Viewers,
+				Length:    Data.Items[i].ContentDetails.Duration,
 			})
 
 			if Data.Items[i].Snippet.VideoStatus == "upcoming" {

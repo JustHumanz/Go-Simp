@@ -1,10 +1,8 @@
 package subscriber
 
 import (
-	"math/rand"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/JustHumanz/Go-simp/config"
 	"github.com/JustHumanz/Go-simp/database"
@@ -70,7 +68,6 @@ func CheckTwFollowCount() {
 
 				TwFollowDB.UptwFollow(Twitter.FollowersCount).
 					UpdateSubs("tw")
-				time.Sleep(time.Duration(rand.Intn(config.RandomSleep)) * time.Millisecond)
 			}
 		}
 	}
