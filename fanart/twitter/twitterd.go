@@ -1,27 +1,15 @@
 package twitter
 
 import (
-	"database/sql"
 	"sync"
 
 	"github.com/JustHumanz/Go-simp/config"
 	engine "github.com/JustHumanz/Go-simp/engine"
-
-	"github.com/bwmarrin/discordgo"
 )
 
 var (
-	BotSession *discordgo.Session
-	db         *sql.DB
-	twbearer   string
-)
-
-func Twitterd(bot *discordgo.Session, dbs *sql.DB) {
-	BotSession = bot
-	db = dbs
 	twbearer = config.TwitterToken[0]
-	//CheckNew()
-}
+)
 
 func CheckNew() {
 	wg := new(sync.WaitGroup)

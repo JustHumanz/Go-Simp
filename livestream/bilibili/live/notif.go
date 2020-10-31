@@ -20,11 +20,11 @@ func (Data *LiveBili) Tamod() {
 	for i, DiscordChannel := range DiscordChannelID {
 		UserTagsList := database.GetUserList(id[i], MemberID)
 		if UserTagsList != nil {
-			msg, err := BotSession.ChannelMessageSendEmbed(DiscordChannel, Data.Embed)
+			msg, err := engine.BotSession.ChannelMessageSendEmbed(DiscordChannel, Data.Embed)
 			if err != nil {
 				log.Error(msg, err)
 			}
-			msg, err = BotSession.ChannelMessageSend(DiscordChannel, "UserTags: "+strings.Join(UserTagsList, " "))
+			msg, err = engine.BotSession.ChannelMessageSend(DiscordChannel, "UserTags: "+strings.Join(UserTagsList, " "))
 			if err != nil {
 				log.Error(msg, err)
 			}

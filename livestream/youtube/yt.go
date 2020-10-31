@@ -11,21 +11,13 @@ import (
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 
-	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
 )
 
 var (
-	BotSession *discordgo.Session
-	yttoken    string
-	Ytwaiting  = "???"
+	yttoken   string
+	Ytwaiting = "???"
 )
-
-func Start(Bot *discordgo.Session) {
-	BotSession = Bot
-	log.Info("Youtube module ready")
-	//CheckSchedule()
-}
 
 func CheckSchedule() {
 	yttoken = engine.GetYtToken()

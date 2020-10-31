@@ -27,6 +27,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+//Prefix command
 const (
 	Enable       = "enable"
 	Disable      = "disable"
@@ -45,6 +46,7 @@ const (
 	Live         = "live"
 )
 
+//Public variable
 var (
 	BotID      *discordgo.User
 	BotSession *discordgo.Session
@@ -88,21 +90,20 @@ func Start(b *discordgo.Session, m *discordgo.User) {
 	}
 
 	BotSession.AddHandler(GuildJoin)
-
-	go BotSession.AddHandler(Fanart)
-	go BotSession.AddHandler(Tags)
-	go BotSession.AddHandler(EnableState)
-	go BotSession.AddHandler(Status)
-	go BotSession.AddHandler(Help)
-	go BotSession.AddHandler(BiliBiliMessage)
-	go BotSession.AddHandler(BiliBiliSpace)
-	go BotSession.AddHandler(YoutubeMessage)
-	go BotSession.AddHandler(SubsMessage)
+	BotSession.AddHandler(Fanart)
+	BotSession.AddHandler(Tags)
+	BotSession.AddHandler(EnableState)
+	BotSession.AddHandler(Status)
+	BotSession.AddHandler(Help)
+	BotSession.AddHandler(BiliBiliMessage)
+	BotSession.AddHandler(BiliBiliSpace)
+	BotSession.AddHandler(YoutubeMessage)
+	BotSession.AddHandler(SubsMessage)
 
 	log.Info("Engine module ready")
 }
 
-//Bruh moment
+//BruhMoment Error hanlder
 func BruhMoment(err error, msg string, exit bool) {
 	if err != nil {
 		log.Info(msg)
@@ -113,6 +114,7 @@ func BruhMoment(err error, msg string, exit bool) {
 	}
 }
 
+//GetYtToken Get a valid token
 func GetYtToken() string {
 	FreshToken := config.YtToken[0]
 	for _, Token := range config.YtToken {
@@ -124,7 +126,7 @@ func GetYtToken() string {
 	return FreshToken
 }
 
-//make a http request
+//Curl make a http request
 func Curl(url string, addheader []string) ([]byte, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -166,7 +168,7 @@ func Curl(url string, addheader []string) ([]byte, error) {
 	return body, nil
 }
 
-//make a cooler http request *with multitor*
+//CoolerCurl make a cooler http request *with multitor*
 func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 	counter := 0
 	for {
@@ -213,13 +215,11 @@ func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 
 		if data != nil {
 			return data, nil
-		} else {
-			continue
 		}
 	}
 }
 
-//change to Title format
+//FixName change to Title format
 func FixName(A string, B string) string {
 	if A != "" && B != "" {
 		return "【" + strings.Title(strings.Join([]string{A, B}, "/")) + "】"
@@ -230,7 +230,7 @@ func FixName(A string, B string) string {
 	}
 }
 
-//Find a valid name
+//ValidName Find a valid name from user input
 func ValidName(Name string) Memberst {
 	for i := 0; i < len(GroupData); i++ {
 		DataMember := database.GetName(GroupData[i].ID)
@@ -253,7 +253,7 @@ func ValidName(Name string) Memberst {
 	return Memberst{}
 }
 
-//Random string for tmp file
+//RanString Random string for tmp file
 func RanString() string {
 	rand.Seed(time.Now().UnixNano())
 	chars := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
@@ -266,7 +266,7 @@ func RanString() string {
 	return b.String()
 }
 
-//Check image from bilibili to saucenao *cuz to many reupload on bilibili*
+//SaucenaoCheck Check image from bilibili to saucenao *cuz to many reupload on bilibili*
 func SaucenaoCheck(url string) (bool, []string, error) {
 	var (
 		data    Sauce
@@ -299,14 +299,12 @@ func SaucenaoCheck(url string) (bool, []string, error) {
 		}
 		if simi > 8 {
 			return true, res.Data.ExtUrls, nil
-		} else {
-			return false, res.Data.ExtUrls, nil
 		}
 	}
 	return false, nil, nil
 }
 
-//Get color from image
+//GetColor Get color from image
 func GetColor(filepath, url string) (int, error) {
 	def := 16770790
 
@@ -374,7 +372,7 @@ func GetColor(filepath, url string) (int, error) {
 	return int(Fix), nil
 }
 
-//Create random useragent for bypass some IDS
+//RandomAgent Create random useragent for bypass some IDS
 func RandomAgent() string {
 	Agent := []string{"Windows / Firefox 77 [Desktop]: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0",
 		"Linux / Firefox 77 [Desktop]: Mozilla/5.0 (X11; Linux x86_64; rv:77.0) Gecko/20100101 Firefox/77.0",

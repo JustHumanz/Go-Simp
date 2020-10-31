@@ -11,8 +11,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// Public variables
 var (
-	// Public variables
 	Token          string
 	YtToken        []string
 	EmojiFanart    []string
@@ -27,8 +27,7 @@ var (
 	SauceAPI       string
 	Logging        string
 	OwnerDiscordID string
-	// Private variables
-	config ConfigFile
+	config         ConfigFile
 )
 
 const (

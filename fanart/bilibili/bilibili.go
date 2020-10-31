@@ -7,21 +7,11 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
 
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 )
-
-var (
-	BotSession *discordgo.Session
-)
-
-//Start Bilibili module
-func BiliBili(Bot *discordgo.Session) {
-	BotSession = Bot
-}
 
 //Start Check new fanart
 func CheckNew() {

@@ -14,12 +14,10 @@ import (
 
 var (
 	BiliSession string
-	Bot         *discordgo.Session
 	yttoken     string
 )
 
 func Start(c *cron.Cron) {
-	Bot = engine.BotSession
 	BiliSession = config.BiliBiliSes
 	yttoken = config.YtToken[1]
 	if BiliSession == "" {
@@ -34,14 +32,16 @@ func Start(c *cron.Cron) {
 
 func SendNude(Embed *discordgo.MessageEmbed, Group database.GroupName) {
 	for _, Channel := range Group.GetChannelByGroup() {
-		msg, err := Bot.ChannelMessageSendEmbed(Channel, Embed)
+		msg, err := engine.BotSession.ChannelMessageSendEmbed(Channel, Embed)
 		if err != nil {
 			log.Error(msg, err)
 		}
-		msg, err = Bot.ChannelMessageSend(Channel, "@here")
-		if err != nil {
-			log.Error(msg, err)
-		}
+		/*
+			msg, err = engine.BotSession.ChannelMessageSend(Channel, "@here")
+			if err != nil {
+				log.Error(msg, err)
+			}
+		*/
 	}
 }
 

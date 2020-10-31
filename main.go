@@ -32,6 +32,10 @@ func main() {
 		os.Exit(1)
 	}
 	u, err := Bot.User("@me")
+	if err != nil {
+		log.Error(err)
+		os.Exit(1)
+	}
 	c := cron.New()
 	c.Start()
 

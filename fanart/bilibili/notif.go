@@ -53,7 +53,7 @@ func (NotifData Notif) PushNotif(Color int) {
 			tags = "_"
 		}
 
-		tmp, err := BotSession.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
+		tmp, err := engine.BotSession.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
 			SetAuthor(strings.Title(Group.NameGroup), Group.IconURL).
 			SetTitle(Data.Author).
 			SetURL(Data.URL).

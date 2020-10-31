@@ -19,12 +19,12 @@ func (Data TwitterStruct) CheckNew() []Statuses {
 		var (
 			id int
 		)
-		err := db.QueryRow(`SELECT id FROM Twitter WHERE TweetID=? `, TwData.IDStr).Scan(&id)
+		err := database.DB.QueryRow(`SELECT id FROM Twitter WHERE TweetID=? `, TwData.IDStr).Scan(&id)
 		if err == sql.ErrNoRows {
 			tmp = append(tmp, TwData)
 		} else {
 			//update
-			_, err := db.Exec(`Update Twitter set Likes=? Where id=? `, TwData.FavoriteCount, id)
+			_, err := database.DB.Exec(`Update Twitter set Likes=? Where id=? `, TwData.FavoriteCount, id)
 			if err != nil {
 				log.Error(err)
 			}

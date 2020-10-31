@@ -19,8 +19,12 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+//Get RSS from Channel
 func GetRSS(YtID string) []string {
-	var DataXml YtXML
+	var (
+		DataXml YtXML
+		VideoID []string
+	)
 
 	Data, err := engine.Curl("https://www.youtube.com/feeds/videos.xml?channel_id="+YtID+"&q=searchterms", nil)
 	if err != nil {
@@ -29,13 +33,13 @@ func GetRSS(YtID string) []string {
 
 	xml.Unmarshal(Data, &DataXml)
 
-	var VideoID []string
 	for i := 0; i < len(DataXml.Entry); i++ {
 		VideoID = append(VideoID, DataXml.Entry[i].VideoId)
 	}
 	return VideoID
 }
 
+//filter Youtube rss
 func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) error {
 	VideoID := GetRSS(Name.YoutubeID)
 	Data, err := YtAPI(VideoID)
@@ -68,14 +72,14 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 			if YoutubeData.YtData == nil {
 				Viewers, err = GetWaiting(VideoID[i])
 				if err != nil {
-					log.Error(err)
+					return err
 				}
 			} else if YoutubeData.YtData.Viewers != Ytwaiting {
 				Viewers = YoutubeData.YtData.Viewers
 			} else {
 				Viewers, err = GetWaiting(VideoID[i])
 				if err != nil {
-					log.Error(err)
+					return err
 				}
 			}
 		} else if Data.Items[i].LiveDetails.Viewers == "" {
@@ -188,7 +192,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 
 				err := YoutubeData.ChangeYtStatus("upcoming").SendtoDB()
 				if err != nil {
-					log.Error(err)
+					return err
 				}
 				YoutubeData.SendNude()
 
@@ -198,9 +202,10 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 					"MemberName": MemberFixName,
 					"Message":    "Send to notify",
 				}).Info("New live stream right now")
+
 				err := YoutubeData.ChangeYtStatus("live").SendtoDB()
 				if err != nil {
-					log.Error(err)
+					return err
 				}
 				YoutubeData.SendNude()
 
@@ -212,7 +217,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 
 				err := YoutubeData.ChangeYtStatus("past").SendtoDB()
 				if err != nil {
-					log.Error(err)
+					return err
 				}
 				YoutubeData.SendNude()
 
@@ -226,7 +231,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 				}
 				err := YoutubeData.ChangeYtStatus("past").SendtoDB()
 				if err != nil {
-					log.Error(err)
+					return err
 				}
 				YoutubeData.SendNude()
 
@@ -242,6 +247,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 	return nil
 }
 
+//Get data from youtube api
 func YtAPI(VideoID []string) (YtData, error) {
 	var (
 		Data    YtData
@@ -260,6 +266,7 @@ func YtAPI(VideoID []string) (YtData, error) {
 	return Data, nil
 }
 
+//Parse video duration
 func ParseDuration(str string) time.Duration {
 	durationRegex := regexp.MustCompile(`P(?P<years>\d+Y)?(?P<months>\d+M)?(?P<days>\d+D)?T?(?P<hours>\d+H)?(?P<minutes>\d+M)?(?P<seconds>\d+S)?`)
 	matches := durationRegex.FindStringSubmatch(str)

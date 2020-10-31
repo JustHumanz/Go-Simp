@@ -46,7 +46,7 @@ func (Data PushData) SendNude() error {
 				} else {
 					tags = "_"
 				}
-				msg, err := BotSession.ChannelMessageSendEmbed(DiscordChannel, engine.NewEmbed().
+				msg, err := engine.BotSession.ChannelMessageSendEmbed(DiscordChannel, engine.NewEmbed().
 					SetAuthor(strings.Title(Data.Group.GroupName), Data.Group.GroupIcon).
 					SetTitle(Data.UserName+"(@"+Data.ScreenName+")").
 					SetURL(url).

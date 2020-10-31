@@ -12,6 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+//BiliBiliMessage message handler
 func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 	Prefix := config.PBilibili
 	loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
@@ -148,6 +149,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 }
 
+//BiliBiliSpace message hadler
 func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 	Prefix := config.PBilibili
 	loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/

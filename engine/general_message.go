@@ -648,18 +648,17 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 }
 
-//Check user permission
+//CheckPermission Check user permission
 func CheckPermission(User, Channel string) bool {
 	a, err := BotSession.UserChannelPermissions(User, Channel)
 	BruhMoment(err, "", false)
 	if a&config.ChannelPermission != 0 {
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
-//Enable command message handler
+//EnableState Enable command message handler
 func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
 	Prefix := config.PGeneral
@@ -813,7 +812,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 }
 
-//helmp command message handler
+//Help helmp command message handler
 func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
 	Prefix := config.PGeneral

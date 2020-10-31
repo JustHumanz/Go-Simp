@@ -8,24 +8,15 @@ import (
 	config "github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
-	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
 )
 
 var (
-	loc        *time.Location
-	BotSession *discordgo.Session
+	loc *time.Location
 )
 
-func Start(Bot *discordgo.Session) {
-	BotSession = Bot
-	loc, _ = time.LoadLocation("Asia/Shanghai")
-	//go BotSession.AddHandler(Message)
-	//go BotSession.AddHandler(Space)
-	//CheckSchedule()
-}
-
 func CheckSchedule() {
+	loc, _ = time.LoadLocation("Asia/Shanghai")
 	log.Info("Start check Schedule")
 	for _, Group := range engine.GroupData {
 		wg := new(sync.WaitGroup)

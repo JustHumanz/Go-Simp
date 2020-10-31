@@ -16,12 +16,8 @@ var (
 	loc *time.Location
 )
 
-func Start() {
-	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
-	//CheckVideo()
-}
-
 func CheckVideo() {
+	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
 	wg := new(sync.WaitGroup)
 	for _, Group := range engine.GroupData {
 		for _, Member := range database.GetName(Group.ID) {
