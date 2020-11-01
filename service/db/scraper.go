@@ -10,10 +10,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/JustHumanz/Go-simp/engine"
-	"github.com/JustHumanz/Go-simp/livestream/youtube"
-
-	"github.com/JustHumanz/Go-simp/database"
+	"github.com/JustHumanz/Go-simp/pkg/backend/livestream/youtube"
+	"github.com/JustHumanz/Go-simp/tools/database"
+	"github.com/JustHumanz/Go-simp/tools/engine"
 
 	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
@@ -33,7 +32,7 @@ func Tweet(Group string, NameID int64, Limit int) {
 		a = append(a, tmp)
 	} else {
 		for _, hashtag := range GetHashtag(Group) {
-			if hashtag.TwitterHashtags != "" {
+			if hashtag.TwitterHashtags != "" && hashtag.JpName == "桐生ココ" {
 				a = append(a, hashtag.TwitterHashtags)
 			}
 		}
@@ -68,8 +67,9 @@ type InputTwitter struct {
 	MemberID    int64
 }
 
-func FilterYt(Dat database.Name) {
+func FilterYt(Dat database.Name, wg *sync.WaitGroup) {
 	VideoID := youtube.GetRSS(Dat.YoutubeID)
+	defer wg.Done()
 	body, err := engine.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,actualEndTime),statistics(viewCount))&id="+strings.Join(VideoID, ",")+"&key="+YtToken, nil)
 	if err != nil {
 		log.Error(err, string(body))
@@ -79,9 +79,9 @@ func FilterYt(Dat database.Name) {
 		Viewers string
 		yttype  string
 	)
-	jsonErr := json.Unmarshal(body, &Data)
-	if jsonErr != nil {
-		log.Fatal(jsonErr)
+	err = json.Unmarshal(body, &Data)
+	if err != nil {
+		log.Error(err)
 	}
 	for i := 0; i < len(Data.Items); i++ {
 		if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|mv)", Data.Items[i].Snippet.Title); Cover {

@@ -9,29 +9,58 @@ services:
       MYSQL_USER: vtuber
       MYSQL_PASSWORD: kano2525
     restart: on-failure
+    command: mysqld --sql_mode=""
 
   multi_tor:
     image: evait/multitor
     environment: 
     - TOR_INSTANCES=20
 
-  mainbot:
+  build_mainbot:
     build: .
     image: mainbot
-    depends_on:
-      - mysql
-      - db_migrate
-      - multi_tor
-    command: go run .
-    restart: on-failure
 
   db_migrate:
     image: mainbot
     depends_on:
       - mysql  
-    working_dir: /go/src/github.com/JustHumanz/Go-Simp/service/db
-    command: go run . -service bootstrapping
+      - build_mainbot
+    working_dir: /app/Go-Simp/service/db
+    command: go run .
     restart: on-failure    
+
+  backend:
+    image: mainbot
+    depends_on:
+      - mysql
+      - db_migrate
+      - multi_tor
+      - build_mainbot
+    working_dir: /app/Go-Simp/pkg/backend
+    command: go run .
+    restart: on-failure
+
+  frontend:
+    image: mainbot
+    depends_on:
+      - mysql
+      - db_migrate
+      - multi_tor
+      - build_mainbot
+    working_dir: /app/Go-Simp/pkg/frontend
+    command: go run .
+    restart: on-failure
+
+  guild:
+    image: mainbot
+    depends_on:
+      - mysql
+      - db_migrate
+      - multi_tor
+      - build_mainbot
+    working_dir: /app/Go-Simp/pkg/guild
+    command: go run .
+    restart: on-failure
 
   yotube-scrap:
     build: service/yt-scrap
