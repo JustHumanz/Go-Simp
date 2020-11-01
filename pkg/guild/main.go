@@ -1,13 +1,64 @@
-package engine
+package main
 
 import (
 	"database/sql"
+	"fmt"
 	"os"
+	"os/signal"
+	"runtime/pprof"
 	"time"
 
+	config "github.com/JustHumanz/Go-simp/tools/config"
+	"github.com/bwmarrin/discordgo"
 	_ "github.com/mattn/go-sqlite3"
 	log "github.com/sirupsen/logrus"
 )
+
+var (
+	H3llcome   = []string{config.Bonjour, config.Howdy, config.Guten, config.Koni, config.Selamat, config.Assalamu, config.Approaching}
+	GuildList  []string
+	PathLiteDB = "./guild.db"
+	BotID      *discordgo.User
+)
+
+func main() {
+	_, err := config.ReadConfig("../../config.toml")
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+
+	Bot, _ := discordgo.New("Bot " + config.Token)
+	err = Bot.Open()
+	if err != nil {
+		log.Error(err)
+		os.Exit(1)
+	}
+	BotID, err = Bot.User("@me")
+	if err != nil {
+		log.Error(err)
+		os.Exit(1)
+	}
+
+	for _, GuildID := range Bot.State.Guilds {
+		GuildList = append(GuildList, GuildID.ID)
+	}
+
+	Bot.AddHandler(GuildJoin)
+	log.Info("Guild handler ready.......")
+
+	chain := make(chan os.Signal, 0)
+	signal.Notify(chain, os.Interrupt)
+	go func() {
+		for sig := range chain {
+			log.Warn("captured ", sig, ", stopping profiler and exiting..")
+			pprof.StopCPUProfile()
+			os.Exit(0)
+		}
+	}()
+	<-make(chan struct{})
+	return
+}
 
 type Guild struct {
 	ID     string

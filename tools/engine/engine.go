@@ -19,7 +19,7 @@ import (
 	"strings"
 	"time"
 
-	config "github.com/JustHumanz/Go-simp/config"
+	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	"github.com/bwmarrin/discordgo"
 	"github.com/cenkalti/dominantcolor"
@@ -34,7 +34,6 @@ var (
 	GroupData  []database.GroupName
 	GroupsName []string
 	RegList    = make(map[string]string)
-	//H3llcome   = []string{config.Bonjour, config.Howdy, config.Guten, config.Koni, config.Selamat, config.Assalamu, config.Approaching}
 	//PathLiteDB = "./engine/guild.db"
 	//GuildList  []string
 )

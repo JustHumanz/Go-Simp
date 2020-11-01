@@ -1,6 +1,10 @@
 version: "3.7"
 
 services:
+  build: .
+  image: mainbot
+
+  
   mysql:
     image: mysql:5.7
     environment:
@@ -16,16 +20,12 @@ services:
     environment: 
     - TOR_INSTANCES=20
 
-  build_mainbot:
-    build: .
-    image: mainbot
-
   db_migrate:
     image: mainbot
     depends_on:
       - mysql  
       - build_mainbot
-    working_dir: /go/src/github.com/JustHumanz/Go-Simp/service/db
+    working_dir: /app/Go-Simp/service/db
     command: go run .
     restart: on-failure    
 
@@ -36,7 +36,7 @@ services:
       - db_migrate
       - multi_tor
       - build_mainbot
-    working_dir: /go/src/github.com/JustHumanz/Go-Simp/pkg/backend
+    working_dir: /app/Go-Simp/pkg/backend
     command: go run .
     restart: on-failure
 
@@ -47,7 +47,18 @@ services:
       - db_migrate
       - multi_tor
       - build_mainbot
-    working_dir: /go/src/github.com/JustHumanz/Go-Simp/pkg/frontend
+    working_dir: /app/Go-Simp/pkg/frontend
+    command: go run .
+    restart: on-failure
+
+  guild:
+    image: mainbot
+    depends_on:
+      - mysql
+      - db_migrate
+      - multi_tor
+      - build_mainbot
+    working_dir: /app/Go-Simp/pkg/guild
     command: go run .
     restart: on-failure
 

@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	config "github.com/JustHumanz/Go-simp/config"
-	//cronjob "github.com/JustHumanz/Go-simp/tools/cronjob"
+	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"

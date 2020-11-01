@@ -7,7 +7,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/JustHumanz/Go-simp/config"
+	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	log "github.com/sirupsen/logrus"
 )

@@ -1,4 +1,4 @@
-package discord_handler
+package discordhandler
 
 type Dynamic_svr struct {
 	Code    int    `json:"code"`

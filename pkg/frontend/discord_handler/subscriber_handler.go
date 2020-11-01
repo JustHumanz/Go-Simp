@@ -1,11 +1,11 @@
-package discord_handler
+package discordhandler
 
 import (
 	"math/rand"
 	"strconv"
 	"strings"
 
-	config "github.com/JustHumanz/Go-simp/config"
+	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"
@@ -29,7 +29,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							var (
 								embed  *discordgo.MessageEmbed
 								Avatar string
-								Url    = "https://www.youtube.com/channel/" + Member.YoutubeID + "?sub_confirmation=1"
+								URL    = "https://www.youtube.com/channel/" + Member.YoutubeID + "?sub_confirmation=1"
 							)
 							SubsData := Member.GetSubsCount()
 							if gacha() {
@@ -37,7 +37,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							} else {
 								if Member.BiliRoomID != 0 {
 									Avatar = Member.BiliBiliAvatar
-									Url = "https://space.bilibili.com/" + strconv.Itoa(Member.BiliBiliID)
+									URL = "https://space.bilibili.com/" + strconv.Itoa(Member.BiliBiliID)
 								} else {
 									Avatar = Member.YoutubeAvatar
 								}
@@ -51,7 +51,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 									SetTitle(engine.FixName(Member.EnName, Member.JpName)).
 									SetImage(Avatar).
-									SetURL(Url).
+									SetURL(URL).
 									AddField("Youtube subscriber", strconv.Itoa(SubsData.YtSubs)).
 									AddField("Youtube views", strconv.Itoa(SubsData.YtViews)).
 									AddField("Youtube videos", strconv.Itoa(SubsData.YtVideos)).

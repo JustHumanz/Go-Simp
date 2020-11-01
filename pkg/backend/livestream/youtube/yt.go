@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	config "github.com/JustHumanz/Go-simp/config"
+	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 
@@ -32,7 +32,7 @@ func CheckSchedule() {
 					"Vtube Region": Member.Region,
 				}).Info("Checking Youtube")
 				go Filter(Member, Group, &wg)
-				time.Sleep(time.Duration(rand.Intn(config.RandomSleep-5)+5) * time.Millisecond)
+				time.Sleep(time.Duration(rand.Intn(config.RandomSleep-400)+400) * time.Millisecond)
 			}
 		}
 		wg.Wait()

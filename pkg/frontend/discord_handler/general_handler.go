@@ -1,4 +1,4 @@
-package discord_handler
+package discordhandler
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"strings"
 
-	config "github.com/JustHumanz/Go-simp/config"
+	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"
@@ -838,6 +838,9 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 				AddField(Prefix+TagMe+" [Group/Member name]", "This command will add you to tags list if any new fanart and livestream schedule\nExample: \n`"+config.PGeneral+TagMe+" Kanochi`,then you will get tagged when there is a new fanart and livestream schedule of kano").
 				AddField(Prefix+DelTag+" [Group/Member name]", "This command will remove you from tags list").
 				AddField(Prefix+MyTags, "Show all lists that you are subscribed on this channel").
+				AddField(Prefix+TagRoles+" [Roles name]", "Same like `tag me` but this will tag roles").
+				AddField(Prefix+DelRoles+" [Roles name]", "Remove roles from tags list").
+				AddField(Prefix+RolesTags+" [Roles name]", "Show all tags list that roles subscribed on this channel").
 				AddField(Prefix+ChannelState, "Show what is enable in this channel").
 				AddField(Prefix+VtuberData+" [Group] [Region]", "Show available Vtuber data ").
 				AddField(Prefix+Subscriber+" {Member name}", "Show Vtuber count of subscriber and followers ").
@@ -851,7 +854,7 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 				AddField(Prefix+"Help EN", "Well,you using it right now").
 				AddField(Prefix+"Help JP", "Like this but in Japanese").
 				SetThumbnail(config.BSD).
-				SetFooter("Only user with permission \"Manage Channel or higher\" can Enable/Disable/Update Vtuber Group").
+				SetFooter("Only user with permission \"Manage Channel or Higher\" can Enable/Disable/Update Vtuber Group").
 				SetColor(Color).MessageEmbed)
 			return
 		} else if m.Content == Prefix+"help jp" { //i'm just joking lol
@@ -871,24 +874,24 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
 	Prefix := config.PGeneral
-	Color, err := engine.GetColor("/tmp/discordpp", m.Author.AvatarURL("128"))
-	if err != nil {
-		log.Error(err)
-	}
-
-	tableString := &strings.Builder{}
-	table := tablewriter.NewWriter(tableString)
-	table.SetAutoWrapText(false)
-	table.SetAutoFormatHeaders(true)
-	table.SetCenterSeparator("")
-	table.SetColumnSeparator("")
-	table.SetRowSeparator("")
-	table.SetHeaderLine(true)
-	table.SetBorder(false)
-	table.SetTablePadding("\t")
-	table.SetNoWhiteSpace(true)
 
 	if strings.HasPrefix(m.Content, Prefix) {
+		Color, err := engine.GetColor("/tmp/discordpp", m.Author.AvatarURL("128"))
+		if err != nil {
+			log.Error(err)
+		}
+
+		tableString := &strings.Builder{}
+		table := tablewriter.NewWriter(tableString)
+		table.SetAutoWrapText(false)
+		table.SetAutoFormatHeaders(true)
+		table.SetCenterSeparator("")
+		table.SetColumnSeparator("")
+		table.SetRowSeparator("")
+		table.SetHeaderLine(true)
+		table.SetBorder(false)
+		table.SetTablePadding("\t")
+		table.SetNoWhiteSpace(true)
 		if strings.HasPrefix(m.Content, Prefix+RolesTags) {
 			guild, err := s.Guild(m.GuildID)
 			if err != nil {
@@ -1063,13 +1066,13 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 			} else {
-				Url := "https://github.com/JustHumanz/Go-Simp#current-notification-support"
+				URL := "https://github.com/JustHumanz/Go-Simp#current-notification-support"
 				s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 					SetThumbnail(config.GoSimpIMG).
 					SetTitle("List of Vtuber Groups").
-					SetURL(Url).
-					SetDescription("```"+strings.Join(engine.GroupsName, "\t")+"```For more detail see at "+Url).
+					SetURL(URL).
+					SetDescription("```"+strings.Join(engine.GroupsName, "\t")+"```For more detail see at "+URL).
 					SetColor(Color).
 					SetFooter("Use Name of group to show vtuber members").MessageEmbed)
 			}
@@ -1146,81 +1149,3 @@ func GetUserAvatar(username string) string {
 func (Data Dynamic_svr) GetUserAvatar() string {
 	return Data.Data.Card.Desc.UserProfile.Info.Face
 }
-
-/*
-//Guild join handler
-func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
-	if g.Unavailable {
-		log.Info("joined unavailable guild", g.Guild.ID)
-		return
-	}
-	New := false
-	for _, Guild := range GuildList {
-		if Guild != g.ID {
-			New = true
-		}
-	}
-	if New {
-		log.WithFields(log.Fields{
-			"Member": g.Guild.MemberCount,
-			"Owner":  g.Guild.OwnerID,
-			"Reg":    g.Guild.Region,
-		}).Info(g.Guild.Name, " join the battle")
-
-		GuildList = append(GuildList, g.Guild.ID)
-		sqlite := OpenLiteDB(PathLiteDB)
-		timejoin, err := g.Guild.JoinedAt.Parse()
-		if err != nil {
-			log.Error(err)
-			return
-		}
-		DataGuild := Guild{
-			ID:     g.Guild.ID,
-			Name:   g.Guild.Name,
-			Join:   timejoin,
-			Dbconn: sqlite,
-		}
-		Info := DataGuild.CheckGuild()
-		SendInvite, err := s.UserChannelCreate(config.OwnerDiscordID)
-		if err != nil {
-			log.Error(err)
-		}
-
-		if Info == 0 {
-			for _, Channel := range g.Guild.Channels {
-				BotPermission, err := s.UserChannelPermissions(BotID.ID, Channel.ID)
-				if err != nil {
-					log.Error(err)
-					return
-				}
-				if Channel.Type == 0 && BotPermission&2048 != 0 {
-					s.ChannelMessageSendEmbed(Channel.ID, engine.NewEmbed().
-						SetTitle("Thx for invite me to this server <3 ").
-						SetThumbnail(config.GoSimpIMG).
-						SetImage(H3llcome[rand.Intn(len(H3llcome))]).
-						SetColor(14807034).
-						SetDescription("Type `"+config.PGeneral+"help` to show options").MessageEmbed)
-
-					//send server name to my discord
-					err := DataGuild.InputGuild()
-					if err != nil {
-						log.Error(err)
-						return
-					}
-					s.ChannelMessageSend(SendInvite.ID, g.Guild.Name+" invited me")
-					return
-				}
-			}
-		} else {
-			s.ChannelMessageSend(SendInvite.ID, g.Guild.Name+" reinvite me")
-			err := DataGuild.UpdateJoin(Info)
-			if err != nil {
-				log.Error(err)
-				return
-			}
-		}
-		KillSqlConn(sqlite)
-	}
-}
-
-*/

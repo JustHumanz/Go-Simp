@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/JustHumanz/Go-simp/config"
 	"github.com/JustHumanz/Go-simp/pkg/backend/livestream/bilibili/space"
+	config "github.com/JustHumanz/Go-simp/tools/config"
 	"github.com/JustHumanz/Go-simp/tools/database"
 	"github.com/JustHumanz/Go-simp/tools/engine"
 	log "github.com/sirupsen/logrus"

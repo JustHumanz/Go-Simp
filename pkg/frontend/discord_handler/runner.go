@@ -1,11 +1,11 @@
-package discord_handler
+package discordhandler
 
 import (
 	"fmt"
 	"os"
 	"strings"
 
-	config "github.com/JustHumanz/Go-simp/config"
+	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"

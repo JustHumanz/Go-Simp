@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/JustHumanz/Go-simp/config"
+	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	log "github.com/sirupsen/logrus"

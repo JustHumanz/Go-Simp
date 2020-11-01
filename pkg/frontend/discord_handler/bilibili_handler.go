@@ -1,11 +1,11 @@
-package discord_handler
+package discordhandler
 
 import (
 	"strconv"
 	"strings"
 	"time"
 
-	config "github.com/JustHumanz/Go-simp/config"
+	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"
@@ -235,5 +235,4 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 		}
 	}
-
 }
