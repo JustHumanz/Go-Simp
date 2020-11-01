@@ -12,3 +12,4 @@ docker-compose-prod.yaml
 vendor
 *.toml
 *.db
+dockerfile-devel
