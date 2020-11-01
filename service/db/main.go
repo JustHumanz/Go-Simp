@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
@@ -15,20 +14,20 @@ import (
 	"time"
 
 	"github.com/JustHumanz/Go-simp/config"
-	database "github.com/JustHumanz/Go-simp/database"
-	engine "github.com/JustHumanz/Go-simp/engine"
-	bilibili "github.com/JustHumanz/Go-simp/livestream/bilibili/live"
-	youtube "github.com/JustHumanz/Go-simp/livestream/youtube"
+	database "github.com/JustHumanz/Go-simp/tools/database"
+	engine "github.com/JustHumanz/Go-simp/tools/engine"
+
+	bilibili "github.com/JustHumanz/Go-simp/pkg/backend/livestream/bilibili/live"
+	"github.com/JustHumanz/Go-simp/pkg/backend/livestream/youtube"
 	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
 )
 
 var (
-	res         Vtuber
+	JsonData    Vtuber
 	Limit       int
 	db          *sql.DB
 	YtToken     string
-	member      string
 	Publish     time.Time
 	Roomstatus  string
 	BiliSession string
@@ -50,7 +49,7 @@ func init() {
 	}
 
 	fmt.Println(string(file))
-	err = json.Unmarshal(file, &res)
+	err = json.Unmarshal(file, &JsonData)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -78,60 +77,63 @@ func init() {
 }
 
 func main() {
-	Service := flag.String("service", "bootstrapping", "select service mode[bootstrapping/twitter_scrap]")
-	ScrapMember := flag.Bool("vtuber", false, "enable this if you want to scrap tweet(fanart) each member")
-	flag.StringVar(&member, "member", "kano", "list of vtuber name (split by space)")
-	flag.Parse()
 	database.Start(db)
 
-	if (*Service) == "bootstrapping" {
-		AddData(res)
-		go CheckYT()
-		go CheckSchedule()
-		go CheckVideoSpace()
-		go CheckTBili()
-		go youtube.CheckPrivate()
-		/*
-			go func() {
-				go Tweet("Independen", 0, Limit)
-				for i := 0; i < len(res.Vtuber.Group); i++ {
-					Tweet(res.Vtuber.Group[i].GroupName, 0, Limit)
+	AddData(JsonData)
+	go CheckYT()
+	go CheckSchedule()
+	go CheckVideoSpace()
+	go CheckTBili()
+	go youtube.CheckPrivate()
+	go func() {
+		go Tweet("Independen", 0, Limit)
+		for i := 0; i < len(JsonData.Vtuber.Group); i++ {
+			Tweet(JsonData.Vtuber.Group[i].GroupName, 0, Limit)
+		}
+	}()
+	log.Info("Done")
+	time.Sleep(6 * time.Minute)
+	os.Exit(0)
+	/*
+		if (*Service) == "bootstrapping" {
+			AddData(JsonData)
+			go CheckYT()
+			go CheckSchedule()
+			go CheckVideoSpace()
+			go CheckTBili()
+			go youtube.CheckPrivate()
+			os.Exit(0)
+		} else if (*Service) == "twitter_scrap" {
+			Limit = 10000000
+			if *ScrapMember {
+				if len(flag.Args()) > 0 {
+					for i := 0; i < len(flag.Args()); i++ {
+						Data := engine.FindName(flag.Args()[i])
+						Tweet(Data.GroupName, Data.MemberID, Limit)
+					}
+					log.Info("Done")
+					os.Exit(0)
+				} else {
+					log.Error("No Vtuber Name found")
+					os.Exit(1)
 				}
-			}()
-		*/
-		log.Info("Done")
-		time.Sleep(6 * time.Minute)
-		os.Exit(0)
-	} else if (*Service) == "twitter_scrap" {
-		Limit = 10000000
-		if *ScrapMember {
-			if len(flag.Args()) > 0 {
-				for i := 0; i < len(flag.Args()); i++ {
-					Data := engine.FindName(flag.Args()[i])
-					Tweet(Data.GroupName, Data.MemberID, Limit)
+			} else {
+				for i := 0; i < len(JsonData.Vtuber.Group); i++ {
+					Tweet(JsonData.Vtuber.Group[i].GroupName, 0, Limit)
 				}
 				log.Info("Done")
 				os.Exit(0)
-			} else {
-				log.Error("No Vtuber Name found")
-				os.Exit(1)
 			}
 		} else {
-			for i := 0; i < len(res.Vtuber.Group); i++ {
-				Tweet(res.Vtuber.Group[i].GroupName, 0, Limit)
-			}
+			AddData(JsonData)
+			//for _, NewData := range New {
+			//	NewData.SendNotif(Bot)
+			// }
+			//Tweet("Independen", 0, Limit)
 			log.Info("Done")
 			os.Exit(0)
 		}
-	} else {
-		AddData(res)
-		//for _, NewData := range New {
-		//	NewData.SendNotif(Bot)
-		// }
-		//Tweet("Independen", 0, Limit)
-		log.Info("Done")
-		os.Exit(0)
-	}
+	*/
 }
 
 func CheckYT() {
@@ -229,7 +231,7 @@ func CheckTBili() {
 }
 
 func CheckSchedule() {
-	log.Info("Start check Schedule")
+	log.Info("Start check BiliBili room")
 	Group := database.GetGroup()
 	for z := 0; z < len(Group); z++ {
 		Name := database.GetName(Group[z].ID)

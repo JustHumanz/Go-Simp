@@ -9,8 +9,8 @@ import (
 	"sync"
 
 	"github.com/JustHumanz/Go-simp/config"
-	"github.com/JustHumanz/Go-simp/database"
-	"github.com/JustHumanz/Go-simp/engine"
+	"github.com/JustHumanz/Go-simp/tools/database"
+	"github.com/JustHumanz/Go-simp/tools/engine"
 	_ "github.com/go-sql-driver/mysql"
 	log "github.com/sirupsen/logrus"
 )

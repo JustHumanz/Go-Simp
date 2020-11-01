@@ -15,23 +15,40 @@ services:
     environment: 
     - TOR_INSTANCES=20
 
-  mainbot:
+  buildimg:
     build: .
     image: mainbot
-    depends_on:
-      - mysql
-      - db_migrate
-      - multi_tor
-    command: go run .
-    restart: on-failure
 
   db_migrate:
     image: mainbot
     depends_on:
       - mysql  
+      - buildimg
     working_dir: /go/src/github.com/JustHumanz/Go-Simp/service/db
-    command: go run . -service bootstrapping
+    command: go run .
     restart: on-failure    
+
+  backend:
+    image: mainbot
+    depends_on:
+      - mysql
+      - db_migrate
+      - multi_tor
+      - buildimg
+    working_dir: /go/src/github.com/JustHumanz/Go-Simp/pkg/backend
+    command: go run .
+    restart: on-failure
+
+  frontend:
+    image: mainbot
+    depends_on:
+      - mysql
+      - db_migrate
+      - multi_tor
+      - buildimg
+    working_dir: /go/src/github.com/JustHumanz/Go-Simp/pkg/frontend
+    command: go run .
+    restart: on-failure
 
   yotube-scrap:
     build: service/yt-scrap
