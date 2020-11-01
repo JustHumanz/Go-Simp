@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/JustHumanz/Go-simp/config"
+	"github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 

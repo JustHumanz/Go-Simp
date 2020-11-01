@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/JustHumanz/Go-simp/config"
+	"github.com/JustHumanz/Go-simp/tools/config"
 	"github.com/JustHumanz/Go-simp/tools/database"
 	"github.com/JustHumanz/Go-simp/tools/engine"
 	_ "github.com/go-sql-driver/mysql"
