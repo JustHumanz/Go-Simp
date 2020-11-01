@@ -5,7 +5,7 @@ RUN export CGO_ENABLED=1
 RUN mkdir /app
 WORKDIR /app
 RUN go get ./...
-RUN git clone https://github.com/JustHumanz/Go-Simp
+RUN git clone --branch devel https://github.com/JustHumanz/Go-Simp
 COPY config.toml /app/Go-Simp
 
 #CMD ["go","run","."]

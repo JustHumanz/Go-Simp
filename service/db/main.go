@@ -11,6 +11,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/JustHumanz/Go-simp/tools/config"
@@ -139,16 +140,22 @@ func main() {
 func CheckYT() {
 	Data := database.GetGroup()
 	for i := 0; i < len(Data); i++ {
+		var wg sync.WaitGroup
 		for _, Name := range database.GetName(Data[i].ID) {
-			if Name.YoutubeID != "" {
-				log.WithFields(log.Fields{
-					"Vtube":        Name.EnName,
-					"Youtube ID":   Name.YoutubeID,
-					"Vtube Region": Name.Region,
-				}).Info("Checking yt")
-				FilterYt(Name)
-			}
+			wg.Add(1)
+			go func() {
+				if Name.YoutubeID != "" {
+					log.WithFields(log.Fields{
+						"Vtube":        Name.EnName,
+						"Youtube ID":   Name.YoutubeID,
+						"Vtube Region": Name.Region,
+					}).Info("Checking yt")
+					FilterYt(Name, &wg)
+				}
+
+			}()
 		}
+		wg.Wait()
 	}
 }
 

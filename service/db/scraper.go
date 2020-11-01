@@ -11,9 +11,8 @@ import (
 	"sync"
 
 	"github.com/JustHumanz/Go-simp/pkg/backend/livestream/youtube"
-	"github.com/JustHumanz/Go-simp/tools/engine"
-
 	"github.com/JustHumanz/Go-simp/tools/database"
+	"github.com/JustHumanz/Go-simp/tools/engine"
 
 	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
@@ -68,8 +67,9 @@ type InputTwitter struct {
 	MemberID    int64
 }
 
-func FilterYt(Dat database.Name) {
+func FilterYt(Dat database.Name, wg *sync.WaitGroup) {
 	VideoID := youtube.GetRSS(Dat.YoutubeID)
+	defer wg.Done()
 	body, err := engine.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,actualEndTime),statistics(viewCount))&id="+strings.Join(VideoID, ",")+"&key="+YtToken, nil)
 	if err != nil {
 		log.Error(err, string(body))
