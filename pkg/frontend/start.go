@@ -5,12 +5,12 @@ import (
 	"os/signal"
 	"runtime/pprof"
 
-	"github.com/JustHumanz/Go-simp/pkg/frontend/discord_handler"
+	discordhandler "github.com/JustHumanz/Go-simp/pkg/frontend/discord_handler"
 	log "github.com/sirupsen/logrus"
 )
 
 func main() {
-	discord_handler.StartInit("../../config.toml")
+	discordhandler.StartInit("../../config.toml")
 	log.Info("Frontend ready.......")
 
 	chain := make(chan os.Signal, 0)
