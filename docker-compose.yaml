@@ -9,13 +9,14 @@ services:
       MYSQL_USER: vtuber
       MYSQL_PASSWORD: kano2525
     restart: on-failure
+    command: mysqld --sql_mode=""
 
   multi_tor:
     image: evait/multitor
     environment: 
     - TOR_INSTANCES=20
 
-  buildimg:
+  build_mainbot:
     build: .
     image: mainbot
 
@@ -23,7 +24,7 @@ services:
     image: mainbot
     depends_on:
       - mysql  
-      - buildimg
+      - build_mainbot
     working_dir: /go/src/github.com/JustHumanz/Go-Simp/service/db
     command: go run .
     restart: on-failure    
@@ -34,7 +35,7 @@ services:
       - mysql
       - db_migrate
       - multi_tor
-      - buildimg
+      - build_mainbot
     working_dir: /go/src/github.com/JustHumanz/Go-Simp/pkg/backend
     command: go run .
     restart: on-failure
@@ -45,7 +46,7 @@ services:
       - mysql
       - db_migrate
       - multi_tor
-      - buildimg
+      - build_mainbot
     working_dir: /go/src/github.com/JustHumanz/Go-Simp/pkg/frontend
     command: go run .
     restart: on-failure
