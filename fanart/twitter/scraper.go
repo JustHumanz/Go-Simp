@@ -6,24 +6,11 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/JustHumanz/Go-simp/config"
+	config "github.com/JustHumanz/Go-simp/config"
 	database "github.com/JustHumanz/Go-simp/database"
 	engine "github.com/JustHumanz/Go-simp/engine"
 	log "github.com/sirupsen/logrus"
 )
-
-func Changebearer() {
-	twbearerold := twbearer
-	for _, Token := range config.TwitterToken {
-		if Token != twbearer {
-			twbearer = Token
-		}
-	}
-	log.WithFields(log.Fields{
-		"Old": twbearerold,
-		"New": twbearer,
-	}).Info("Change Twitter bearer")
-}
 
 func CurlTwitter(TwitterPayloads []string, Group int64) {
 	var (
@@ -35,11 +22,10 @@ func CurlTwitter(TwitterPayloads []string, Group int64) {
 			err  error
 		)
 		url := "https://api.twitter.com/1.1/search/tweets.json?" + Payload
-		body, err = engine.Curl(url, []string{"Authorization", "Bearer " + twbearer})
+		body, err = engine.Curl(url, []string{"Authorization", "Bearer " + config.TwitterToken[0]})
 		if err != nil {
 			if strings.HasPrefix(err.Error(), "401 Unauthorized") {
-				Changebearer()
-				body, err = engine.CoolerCurl(url, []string{"Authorization", "Bearer " + twbearer})
+				body, err = engine.CoolerCurl(url, []string{"Authorization", "Bearer " + config.TwitterToken[0]})
 				if err != nil {
 					log.Error(err, string(body))
 					return

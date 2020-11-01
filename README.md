@@ -302,14 +302,27 @@ Show fanart with randomly with their fanart hashtag
 Example: `art>Kanochi` or `art>hololive`  
 
 ```vtbot>Tag me [Group/Member]```  
-This command will add you to tags list if any new fanart  
-Example: `art>tag me Kanochi`,then you will get tagged when there is a new fanart of kano  
+This command will add you to tags lists if any new fanart or livestream  
+Example: `art>tag me Kanochi`,then you will tagged when there is a new fanart or livestream of kano  
 
 ```vtbot>Del tag [Group/Member]```  
 This command will remove you from tags list  
 
 ```vtbot>My tags```  
 Shows all lists that you are subscribed  
+
+```vtbot>Tag roles [roles] [Group/Member]```
+Same like `tag me` command,but this will tag roles  *every role separated by space*   
+Example: `tag roles @kanochi-simps hanayori` or `tag roles @fbk-simps @hololive-simps fbk`  
+
+```vtbot>Roles tags [roles]```  
+Show lists that roles are subscribed
+
+```vtbot>Del roles [roles]```  
+Remove roles are subscribed from tags list  
+
+```vtbot>Roles tags```  
+Shows all lists that roles are subscribed  
 
 ```vtbot>Channel state```  
 Shows what is enable in this channel    
@@ -346,23 +359,6 @@ Well,you using it right now
 
 ```vtbot>Help JP```  
 Like this but in Japanese  
-
-### Still testing
-----
-```vtbot>Tag roles [roles] [Group/Member]```
-Same like `tag me` command,but this will tag a roles  *every role separated by space*   
-Example: `tag roles @kanochi-simps hanayori` or `tag roles @fbk-simps @hololive-simps fbk`  
-
-```vtbot>Roles tags [roles]```  
-Show all lists that roles are subscribed
-
-```vtbot>Del roles [roles]```  
-Remove roles are subscribed from tags list  
-
-```vtbot>roles tags```  
-Shows all lists that roles are subscribed  
-
-----
 
 **Notifications for livestream will not be sent if there no one user tagged**  
 

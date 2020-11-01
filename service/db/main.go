@@ -91,14 +91,16 @@ func main() {
 		go CheckVideoSpace()
 		go CheckTBili()
 		go youtube.CheckPrivate()
-		go func() {
-			go Tweet("Independen", 0, Limit)
-			for i := 0; i < len(res.Vtuber.Group); i++ {
-				Tweet(res.Vtuber.Group[i].GroupName, 0, Limit)
-			}
-		}()
+		/*
+			go func() {
+				go Tweet("Independen", 0, Limit)
+				for i := 0; i < len(res.Vtuber.Group); i++ {
+					Tweet(res.Vtuber.Group[i].GroupName, 0, Limit)
+				}
+			}()
+		*/
 		log.Info("Done")
-		time.Sleep(1 * time.Minute)
+		time.Sleep(6 * time.Minute)
 		os.Exit(0)
 	} else if (*Service) == "twitter_scrap" {
 		Limit = 10000000

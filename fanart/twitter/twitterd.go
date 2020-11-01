@@ -3,12 +3,7 @@ package twitter
 import (
 	"sync"
 
-	"github.com/JustHumanz/Go-simp/config"
 	engine "github.com/JustHumanz/Go-simp/engine"
-)
-
-var (
-	twbearer = config.TwitterToken[0]
 )
 
 func CheckNew() {
