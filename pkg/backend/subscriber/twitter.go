@@ -31,7 +31,7 @@ func CheckTwFollowCount() {
 						AddField("Tweets Count", Tweets).
 						InlineAllFields().
 						SetURL("https://twitter.com/"+Name.TwitterName).
-						SetColor(Color).MessageEmbed, Group)
+						SetColor(Color).MessageEmbed, Group, Name.ID)
 				}
 				if Twitter.FollowersCount != TwFollowDB.TwFollow {
 					if Twitter.FollowersCount >= 1000000 {

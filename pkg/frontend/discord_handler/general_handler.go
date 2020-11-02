@@ -28,10 +28,6 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 	)
 
 	if strings.HasPrefix(m.Content, Prefix) {
-		Color, err := engine.GetColor("/tmp/mem.tmp", m.Author.AvatarURL("80"))
-		if err != nil {
-			log.Error(err)
-		}
 		SendNude := func(Title, Author, Text, URL, Pic, Msg string, Color int, State, Dynamic string) bool {
 			Msg = Msg + " *sometimes image not showing,because image oversize*"
 			if State == "TBiliBili" {
@@ -89,6 +85,11 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 		for _, GroupData := range engine.GroupData {
 			if m.Content == strings.ToLower(Prefix+GroupData.NameGroup) {
+				Color, err := engine.GetColor("/tmp/mem.tmp", m.Author.AvatarURL("80"))
+				if err != nil {
+					log.Error(err)
+				}
+
 				DataFix := database.GetFanart(GroupData.ID, 0)
 				if DataFix.Videos != "" {
 					Msg = "Video type,check original post"
@@ -100,8 +101,12 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 						log.Error(err)
 					}
 				} else {
-					Msg = "Video type,check original post"
+					Msg = "Original post was deleted"
 					Pic = config.NotFound
+
+					log.WithFields(log.Fields{
+						"PermanentURL": DataFix.PermanentURL,
+					}).Warn("Original post was deleted")
 				}
 				Group = SendNude(engine.FixName(DataFix.EnName, DataFix.JpName),
 					DataFix.Author, RemovePic(DataFix.Text),
@@ -112,6 +117,11 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 			for _, MemberData := range database.GetName(GroupData.ID) {
 				if m.Content == strings.ToLower(Prefix+MemberData.Name) || m.Content == strings.ToLower(Prefix+MemberData.JpName) {
+					Color, err := engine.GetColor("/tmp/mem.tmp", m.Author.AvatarURL("80"))
+					if err != nil {
+						log.Error(err)
+					}
+
 					DataFix := database.GetFanart(0, MemberData.ID)
 					if DataFix.Videos != "" {
 						Msg = "Video type,check original post"
@@ -123,7 +133,11 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 							log.Error(err)
 						}
 					} else {
-						Msg = "Video type,check original post"
+						Msg = "Original post was deleted"
+
+						log.WithFields(log.Fields{
+							"PermanentURL": DataFix.PermanentURL,
+						}).Warn("Original post was deleted")
 					}
 					Member = SendNude(engine.FixName(MemberData.EnName, MemberData.JpName),
 						DataFix.Author, RemovePic(DataFix.Text),
@@ -820,11 +834,11 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
 	Prefix := config.PGeneral
-	Color, err := engine.GetColor("/tmp/discordpp.tmp", m.Author.AvatarURL("128"))
-	if err != nil {
-		log.Error(err)
-	}
 	if strings.HasPrefix(m.Content, Prefix) {
+		Color, err := engine.GetColor("/tmp/discordpp.tmp", m.Author.AvatarURL("128"))
+		if err != nil {
+			log.Error(err)
+		}
 		if m.Content == Prefix+"help en" || m.Content == Prefix+"help" {
 			s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).

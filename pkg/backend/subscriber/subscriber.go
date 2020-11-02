@@ -1,6 +1,8 @@
 package subscriber
 
 import (
+	"strings"
+
 	"github.com/bwmarrin/discordgo"
 
 	runner "github.com/JustHumanz/Go-simp/pkg/backend/runner"
@@ -8,19 +10,21 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func SendNude(Embed *discordgo.MessageEmbed, Group database.GroupName) {
+func SendNude(Embed *discordgo.MessageEmbed, Group database.GroupName, MemberID int64) {
 	Bot := runner.Bot
-	for _, Channel := range Group.GetChannelByGroup() {
+	ChannelID, DiscordChannelID := Group.GetChannelByGroup()
+	for i, Channel := range DiscordChannelID {
+		UserTagsList := database.GetUserList(ChannelID[i], MemberID)
 		msg, err := Bot.ChannelMessageSendEmbed(Channel, Embed)
 		if err != nil {
 			log.Error(msg, err)
 		}
-		/*
-			msg, err = engine.BotSession.ChannelMessageSend(Channel, "@here")
+		if UserTagsList != nil {
+			msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
 			if err != nil {
 				log.Error(msg, err)
 			}
-		*/
+		}
 	}
 }
 

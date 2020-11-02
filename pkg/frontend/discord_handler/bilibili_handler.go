@@ -152,12 +152,11 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 //BiliBiliSpace message hadler
 func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
-	Prefix := config.PBilibili
 	loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
 	m.Content = strings.ToLower(m.Content)
-	Prefix2 := "sp_" + Prefix
-	if strings.HasPrefix(m.Content, Prefix2) {
-		Payload := m.Content[len(Prefix2):]
+	Prefix := "sp_" + config.PBilibili
+	if strings.HasPrefix(m.Content, Prefix) {
+		Payload := m.Content[len(Prefix):]
 		if Payload != "" {
 			for _, FindGroupArry := range strings.Split(strings.TrimSpace(Payload), ",") {
 				VTuberGroup, err := FindGropName(FindGroupArry)

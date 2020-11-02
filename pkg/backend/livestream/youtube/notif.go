@@ -45,7 +45,7 @@ func (PushData *NotifStruct) SendNude() {
 	if Status == "upcoming" {
 		MsgEmbend = engine.NewEmbed().
 			SetAuthor(VtuberName, Avatar, YtChannel).
-			SetTitle("New upcoming live stream").
+			SetTitle("New upcoming Livestream").
 			SetDescription(PushData.YtData.Title).
 			SetImage(PushData.YtData.Thumb).
 			SetThumbnail(GroupIcon).
@@ -60,7 +60,7 @@ func (PushData *NotifStruct) SendNude() {
 	} else if Status == "reminder" {
 		MsgEmbend = engine.NewEmbed().
 			SetAuthor(VtuberName, Avatar, YtChannel).
-			SetTitle("Reminder").
+			SetTitle("Don't forget watch "+VtuberName+" in "+durafmt.Parse(timestart.Sub(expiresAt)).LimitFirstN(1).String()).
 			SetDescription(PushData.YtData.Title).
 			SetImage(PushData.YtData.Thumb).
 			SetThumbnail(GroupIcon).
@@ -90,7 +90,7 @@ func (PushData *NotifStruct) SendNude() {
 	} else if Status == "past" && PushData.YtData.Type == "Covering" {
 		MsgEmbend = engine.NewEmbed().
 			SetAuthor(VtuberName, Avatar, YtChannel).
-			SetTitle("Uploaded new video").
+			SetTitle("Uploaded a new video").
 			SetDescription(PushData.YtData.Title).
 			SetImage(PushData.YtData.Thumb).
 			SetThumbnail(GroupIcon).
@@ -105,7 +105,7 @@ func (PushData *NotifStruct) SendNude() {
 	} else if Status == "past" {
 		MsgEmbend = engine.NewEmbed().
 			SetAuthor(VtuberName, Avatar, YtChannel).
-			SetTitle("Uploaded new video").
+			SetTitle("Uploaded a new video").
 			SetDescription(PushData.YtData.Title).
 			SetImage(PushData.YtData.Thumb).
 			SetThumbnail(GroupIcon).

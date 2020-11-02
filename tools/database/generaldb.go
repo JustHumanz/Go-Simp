@@ -320,21 +320,25 @@ func UpdateChannel(ChannelID string, typetag int, VtuberGroupID int64) error {
 	return nil
 }
 
-//Get discord channel id from VtuberGroup
-func (Data GroupName) GetChannelByGroup() []string {
-	var channellist []string
-	rows, err := DB.Query(`SELECT DiscordChannelID FROM Channel WHERE VtuberGroup_id=? group by DiscordChannelID`, Data.ID)
+//Get DiscordChannelID from VtuberGroup
+func (Data GroupName) GetChannelByGroup() ([]int, []string) {
+	var (
+		channellist []string
+		idlist      []int
+		list        string
+		id          int
+	)
+	rows, err := DB.Query(`SELECT id,DiscordChannelID FROM Channel WHERE VtuberGroup_id=? group by DiscordChannelID`, Data.ID)
 	BruhMoment(err, "", false)
 
 	defer rows.Close()
 	for rows.Next() {
-		var list string
-		err = rows.Scan(&list)
+		err = rows.Scan(&id, &list)
 		BruhMoment(err, "", false)
-
 		channellist = append(channellist, list)
+		idlist = append(idlist, id)
 	}
-	return channellist
+	return idlist, channellist
 }
 
 //Check Discord Channel from VtuberGroup

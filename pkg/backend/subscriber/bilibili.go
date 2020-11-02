@@ -105,7 +105,7 @@ func CheckBiliFollowCount() {
 										AddField("Videos", strconv.Itoa(bilistate.Videos)).
 										SetURL("https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
 										InlineAllFields().
-										SetColor(Color).MessageEmbed, Group)
+										SetColor(Color).MessageEmbed, Group, Name.ID)
 								}
 							}
 						} else {
@@ -126,7 +126,7 @@ func CheckBiliFollowCount() {
 										AddField("Videos", strconv.Itoa(bilistate.Videos)).
 										SetURL("https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
 										InlineAllFields().
-										SetColor(Color).MessageEmbed, Group)
+										SetColor(Color).MessageEmbed, Group, Name.ID)
 								}
 							}
 						}

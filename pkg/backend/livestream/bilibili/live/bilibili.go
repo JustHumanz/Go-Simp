@@ -33,6 +33,7 @@ func CheckSchedule() {
 					Status, err := GetRoomStatus(Member.BiliRoomID)
 					if err != nil {
 						log.Error(err)
+						return
 					}
 
 					Data.AddData(DataDB)
