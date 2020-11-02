@@ -400,9 +400,10 @@ Reminder every 30 minutes before livestream start
 [Invite link](https://top.gg/bot/721964514018590802)
 
 ## TODO
+- Add customize reminder
 - Vtuber collaboration detection
 - Make a form for add New Vtuber
-- Move to microservice
+- ~~Move to microservice~~ Done
 
 
 
