@@ -11,13 +11,13 @@ A simple VTuber bot to serve notification Fanart(Twitter,Bilibili) and Livestrea
 
 ## Current notification support
 ### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/hana.png" alt="Hanayori"> Hanayori 
-----------------------------------------------------------
+----------------------------------------------------------------------------------
 | Nickname | FullName                      |Region | Youtube | Bilibili |Twitter |
 |----------|-------------------------------|-------|---------|----------|--------|
-| Kanochi  | Kano<br>鹿乃                   |JP     | ✓       | ✓        | ✓ |
-| Parerun  | Hanamaru Hareru<br>花丸はれる   |JP     | ✓       | ✓        |✓ |
-| Kohi     | Kohigashi Hitona<br>小東ひとな  |JP     | ✓       | ✓        | ✓ |
-| ~~Nononon~~  | ~~Nonomiya Nonono<br>野々宮ののの~~  |JP     | ✓       | ✓        | ✓ |
+| <a href="https://www.youtube.com/channel/UCfuz6xYbYFGsWWBi3SpJI1w?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzAVDCuGx3VTX7LFoaNmF4BXeLpUOMhp5kz73m6=s800-c-k-c0x00ffffff-no-rj" alt="Hanayori"></a><br>Kanochi  | Kano<br>鹿乃                   |JP     | ✓       | ✓        | ✓      |
+| <a href="https://www.youtube.com/channel/UCyIcOCH-VWaRKH9IkR8hz7Q?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzl0o4K_BDaAHWiMv-NJsgnBfxHCXYNyf8Qay2i=s800-c-k-c0x00ffffff-no-rj" alt="Hanayori"></a><br>Parerun  | Hanamaru Hareru<br>花丸はれる   |JP     | ✓       | ✓        |✓       |
+| <a href="https://www.youtube.com/channel/UCV2m2UifDGr3ebjSnDv5rUA?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJyNRHAYuoJILHUzCkKidPa63UDakRNOthKo4gvd=s800-c-k-c0x00ffffff-no-rj" alt="Hanayori"></a><br>Kohi     | Kohigashi Hitona<br>小東ひとな  |JP     | ✓       | ✓        | ✓        |
+| <a href="https://www.youtube.com/channel/UCiexEBp7-D46FXUtQ-BpgWg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJz-kzVg0UVf-LSqNk52OObcI_NqbXRzkbiq1EeV=s800-c-k-c0x00ffffff-no-rj" alt="Hanayori"></a><br> ~~Nononon~~  | ~~Nonomiya Nonono<br>野々宮ののの~~  |JP     | ✓       | ✓     | ✓ |
 
 
 ### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/holo.png" alt="Hololive"> Hololive
@@ -25,24 +25,24 @@ A simple VTuber bot to serve notification Fanart(Twitter,Bilibili) and Livestrea
 
 | Nickname     |FullName                       |Region | Youtube | Bilibili |Twitter |
 |--------------|-------------------------------|-------|---------|----------|--------|
-| Koronen      |Inugami Korone<br>戌神ころね      |JP     | ✓       | ✓        |✓  |
-| Matsuri      |Natsuiro Matsuri<br>夏色まつり    |JP     | ✓       | ✓        |✓  |
-| Aqua         |Minato Aqua<br>湊あくあ           |JP     | ✓       | ✓        |✓  |
-| Pekora       |Usada Pekora<br>兎田ぺこら        |JP     | ✓       | ✓        |✓  |
-| Senchou      |Houshou Marine<br>宝鐘マリン      |JP     | ✓       | ✓        |✓  |
-| Haato        |Akai Haato<br>赤井はあと          |JP     | ✓       | ✓        |✓  |
-| Kaichou      |Kiryu Coco<br>桐生ココ            |JP     | ✓       | ✓        |✓  |
-| Choco-sensei |Yuzuki Choco<br>癒月ちょこ        | JP     | ✓       | ✓        |✓ |
-| Okayun       |Nekomata Okayu<br>猫又おかゆ      | JP     | ✓       | ✓        |✓ |
-| Subaru       |Oozora Subaru<br>大空スバル       | JP     | ✓       | ✓        |✓ |
-| FBK          |Shirakami Fubuki<br>白上フブキ    | JP     | ✓       | ✓        |✓ |
-| Sheep        |Tsunomaki Watame<br>角巻わため    | JP     | ✓       | ✓        |✓ |
-| AZKi         |Virtual Diva AZKi               | JP     | ✓       | ✓        |✓ |
-| Sora         |Tokino Sora<br>ときのそら         | JP     | ✓       | ✓        |✓ |
-| Miko-chi     |Sakura Miko<br>さくらみこ         | JP     | ✓       | ✓        |✓ |
-| Mio          |Ookami Mio<br>大神ミオ           | JP     | ✓       | ✓        |✓  |
-| Shishiron    |Shishiro Botan<br>獅白ぼたん     | JP     | ✓       | ✓        |✓  |
-| Polka        |Omaru Polka<br>尾丸ポルカ       | JP     | ✓       | ✓        |✓ |
+| <a href="https://www.youtube.com/channel/UChAnqc_AY5_I3Px5dig3X1Q?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJyvWtmcbmGiE0e1m316wI0MJN6-hGWxjhGZeCWhFA=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Koronen      |Inugami Korone<br>戌神ころね      |JP     | ✓       | ✓        |✓  |
+| <a href="https://www.youtube.com/channel/UCQ0UDLQCjY0rmuxCDE38FGg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJw8RXWyEofFZFI5EwEb7lXDq3Cm6l0SThQxT9XG=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Matsuri      |Natsuiro Matsuri<br>夏色まつり    |JP     | ✓       | ✓        |✓  |
+| <a href="https://www.youtube.com/channel/UC1opHUrw8rvnsadT-iGp7Cg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJxXeCPuSGxq-_NfKX4WSpCf7FtnOkPNzHd2s9Sh9g=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Aqua         |Minato Aqua<br>湊あくあ           |JP     | ✓       | ✓        |✓  |
+| <a href="https://www.youtube.com/channel/UC1DCedRgGHBdm81E1llLhOQ?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJwFs1D2-rT1XPz-fvlO5ZdnkKhPU-Uu6GDwNDn_FA=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Pekora       |Usada Pekora<br>兎田ぺこら        |JP     | ✓       | ✓        |✓  |
+| <a href="https://www.youtube.com/channel/UCCzUftO8KOVkV4wQG1vkUvg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJwAAoZPNqrR0udm1KMznPYUUTbW-sERt_LZU-af=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Senchou      |Houshou Marine<br>宝鐘マリン      |JP     | ✓       | ✓        |✓  |
+| <a href="https://www.youtube.com/channel/UC1CfXB_kRs3C-zaeTG3oGyg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJw3IoOJZlLAn_Eyy0r6gJHR3vt64XHfuXCailaCPw=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Haato        |Akai Haato<br>赤井はあと          |JP     | ✓       | ✓        |✓  |
+| <a href="https://www.youtube.com/channel/UCS9uQI-jC3DE0L4IpXyvr6w?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJz_YJU2_OXLiMyWNFnGaC-LpYTs_06G22ozGVfw=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Kaichou      |Kiryu Coco<br>桐生ココ            |JP     | ✓       | ✓        |✓  |
+| <a href="https://www.youtube.com/channel/UC1suqwovbL1kzsoaZgFZLKg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJyy9e7DUSSfuWdROtr9oJxho6jVqSDhGdsRESDU=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Choco-sensei |Yuzuki Choco<br>癒月ちょこ        | JP     | ✓       | ✓        |✓ |
+| <a href="https://www.youtube.com/channel/UCvaTdHTWBGv3MKj3KVqJVCw?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJxiB3oU3X4_wTHHAay43njgJgzw-2qKPeYIjDH2=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Okayun       |Nekomata Okayu<br>猫又おかゆ      | JP     | ✓       | ✓        |✓ |
+| <a href="https://www.youtube.com/channel/UCvzGlP9oQwU--Y0r9id_jnA?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJx_CMc_Ne4b93d6Hr3nMSqLbijvq6UxzPO8apsk=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Subaru       |Oozora Subaru<br>大空スバル       | JP     | ✓       | ✓        |✓ |
+| <a href="https://www.youtube.com/channel/UCdn5BQ06XqgXoAxIhbqw5Rg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJztvRXzNX8UtsaUZfLLBh32VBBwNPcvy_TklUjnWA=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>FBK          |Shirakami Fubuki<br>白上フブキ    | JP     | ✓       | ✓        |✓ |
+| <a href="https://www.youtube.com/channel/UCqm3BQLlJfvkTsX_hvm0UmA?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzqZYR2ukuLZqCDgdsg9eid13borfDPzVBwTIDc=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Sheep        |Tsunomaki Watame<br>角巻わため    | JP     | ✓       | ✓        |✓ |
+| <a href="https://www.youtube.com/channel/UC0TXe_LYZ4scaW2XMyi5_kw?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJz2wM8qDGZZDt9Uedg6AEznFZPi85WPgtkjP6-n=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>AZKi         |Virtual Diva AZKi               | JP     | ✓       | ✓        |✓ |
+| <a href="https://www.youtube.com/channel/UCp6993wxpyDPHUpavwDFqgg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJxvfkV0UikqTA-yx4opKjGB36TXtUG9jLX1PO1FOQ=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Sora         |Tokino Sora<br>ときのそら         | JP     | ✓       | ✓        |✓ |
+| <a href="https://www.youtube.com/channel/UC-hM6YJuNYVAmUWxeIr9FeA?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJyKGBusDmf7stiwXDVORLo21xtnBj2YUHrPd-CxYA=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Miko-chi     |Sakura Miko<br>さくらみこ         | JP     | ✓       | ✓        |✓ |
+| <a href="https://www.youtube.com/channel/UCp-5t9SrOQwXMU7iIjQfARg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzFpyPB7LFGFq5DIX2x7pvIblA9Ksz99TrDYvOa5w=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Mio          |Ookami Mio<br>大神ミオ           | JP     | ✓       | ✓        |✓  |
+| <a href="https://www.youtube.com/channel/UCUKD-uaobj9jiqB-VXt71mA?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzO_bOBHuKPycvddNd88hozl2OjaNC-uR7lOAXa=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Shishiron    |Shishiro Botan<br>獅白ぼたん     | JP     | ✓       | ✓        |✓  |
+| <a href="https://www.youtube.com/channel/UCK9V2B22uJYu3N7eR_BT9QA?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzMPMCRzpyIsPyp8cOdA2FUwkBotqe6Dh0CmKgA=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Polka        |Omaru Polka<br>尾丸ポルカ       | JP     | ✓       | ✓        |✓ |
 | Lamy         |Yukihana Lamy<br>雪花ラミィ     | JP     | ✓       | ✓        |✓ |
 | Taoling      |Momosuzu Nene<br>桃鈴ねね       | JP     | ✓       | ✓        |✓ |
 | Danchou      |Shirogane Noel<br>白銀ノエル    | JP     | ✓       | ✓        |✓ |
