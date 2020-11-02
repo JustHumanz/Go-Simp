@@ -128,18 +128,18 @@ EOL
 ##### Nijisanji CN
 | Nickname  | FullName       |Region | Youtube | Bilibili |Twitter|
 |-----------|----------------|-------|---------|----------|-------|
-| Ruki      |Ruki<br>ルキ     |CN     | ✗       | ✓        |    ✗  |
-| Yukie     |Yukie<br>ユキエ  | CN     | ✗       | ✓       |  ✗    |
-| Nanami    |Nanami<br>ナナミ | CN     | ✗       | ✓       |  ✗    |
-| Chiharu   |Chiharu<br>チハル| CN     | ✗       | ✓       |  ✗    |
-| Hoshimi   |Hoshimi<br>ホシミ| CN     | ✗       | ✓       |  ✗    |
+| <a href="https://space.bilibili.com/420249427"><img align="left" width="50" height="50" src="https://i0.hdslb.com/bfs/face/deb1f9bbe53736273a9eed5d446dfd0fc1477aa4.jpg" alt="Nijisanji"></a><br>Ruki      |Ruki<br>ルキ     |CN     | ✗       | ✓        |    ✗  |
+| <a href="https://space.bilibili.com/56748733"><img align="left" width="50" height="50" src="https://i2.hdslb.com/bfs/face/9986967bc22dd9c7d3448486aaf697886e6312b1.jpg" alt="Nijisanji"></a><br>Yukie     |Yukie<br>ユキエ  | CN     | ✗       | ✓       |  ✗    |
+| <a href="https://space.bilibili.com/434334701"><img align="left" width="50" height="50" src="https://i2.hdslb.com/bfs/face/82fa76f862e7f6cb96063536750d4de0bef663e1.jpg" alt="Nijisanji"></a><br>Nanami    |Nanami<br>ナナミ | CN     | ✗       | ✓       |  ✗    |
+| <a href="https://space.bilibili.com/558070433"><img align="left" width="50" height="50" src="https://i1.hdslb.com/bfs/face/7125df9422509a955f0146246f26e6d171cf1f06.jpg" alt="Nijisanji"></a><br>Chiharu   |Chiharu<br>チハル| CN     | ✗       | ✓       |  ✗    |
+| <a href="https://space.bilibili.com/477342747"><img align="left" width="50" height="50" src="https://i1.hdslb.com/bfs/face/25eeb3d5a7599c7702c4102c9c0486c5cb46f3d9.jpg" alt="Nijisanji"></a><br>Hoshimi   |Hoshimi<br>ホシミ| CN     | ✗       | ✓       |  ✗    |
 
 ##### Nijisanji EN
 | Nickname  | FullName       |Region | Youtube | Bilibili |Twitter|
 |-----------|----------------|-------|---------|----------|-------|
-| Aadya     |Aadya<br>アディア | EN     | ✓       | ✗        | ✓   |
-| Noor      |Noor<br>ヌール    | EN     | ✓       | ✗        |  ✓  |
-| Vihaan    |Vihaan<br>ビハン   | EN     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UC_aB_-PHLFHiP61djM0oOiQ?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJws8OalqL6zQkPCVPBfZo5ZgVNZf3Z75jVMljFV=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Aadya     |Aadya<br>アディア | EN     | ✓       | ✗        | ✓   |
+| <a href="https://www.youtube.com/channel/UC6oW4FXETgEGOFTxWmI2h5Q?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJxb_qpHZ7IxFR3ZRgET9cG3HSwb1RRhJLcRd5oP=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Noor      |Noor<br>ヌール    | EN     | ✓       | ✗        |  ✓  |
+| <a href="https://www.youtube.com/channel/UC0lik9pHju6ONgkBh7N5wHw?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJyU6jPZjQmFoOwhIzv7nO3yRc69vvlTrOrvlzlY=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Vihaan    |Vihaan<br>ビハン   | EN     | ✓       | ✗        | ✓  |
 
 ##### Nijisanji KR
 | Nickname  |FullName|               Region   | Youtube | Bilibili |Twitter|
