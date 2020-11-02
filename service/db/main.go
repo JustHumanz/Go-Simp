@@ -143,7 +143,7 @@ func CheckYT() {
 		var wg sync.WaitGroup
 		for _, Name := range database.GetName(Data[i].ID) {
 			wg.Add(1)
-			go func() {
+			go func(Name database.Name) {
 				if Name.YoutubeID != "" {
 					log.WithFields(log.Fields{
 						"Vtube":        Name.EnName,
@@ -153,7 +153,7 @@ func CheckYT() {
 					FilterYt(Name, &wg)
 				}
 
-			}()
+			}(Name)
 		}
 		wg.Wait()
 	}
