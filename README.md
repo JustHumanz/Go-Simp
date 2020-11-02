@@ -374,7 +374,7 @@ Like this but in Japanese
 
 
 #### Reminder  
-Reminder every 1 hours and 30 minutes before livestream start
+Reminder every 30 minutes before livestream start
 <p align="center">
   <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Reminder.png" alt="Reminder"/>
 </p>
