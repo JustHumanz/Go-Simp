@@ -9,7 +9,7 @@ module.exports = app => {
     //example /member (string)
 
     // Select a single vtuber with vtubername[VtuberName/VtuberName_EN/VtuberName_JP]
-    app.get("/member/:name", Controller.memberName); 
+    app.get("/member/:nog", Controller.memberName); 
     //example /member/kanochi (array,separated with commas)
 
     // Select all vtubergroup

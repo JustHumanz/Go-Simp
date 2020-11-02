@@ -19,15 +19,15 @@ exports.memberAll = (req,res) => {
 };
 
 exports.memberName = (req, res) => {
-    model.GetMemberName(req.params.name.split(","), (err, data) => {
+    model.GetMemberName(req.params.nog.split(","), (err, data) => {
     if (err) {
     if (err.kind === "not_found") {
         res.status(404).send({
-        message: `Not found VtuberName with name ${req.params.name}.`
+        message: `Not found VtuberName with name ${req.params.nog}.`
         });
     } else {
         res.status(500).send({
-        message: "Error retrieving VtuberName with name " + req.params.name
+        message: "Error retrieving VtuberName with name " + req.params.nog
         });
     }
     } else res.send(data);

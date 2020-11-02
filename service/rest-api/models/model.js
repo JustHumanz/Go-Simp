@@ -62,10 +62,13 @@ const GetMemberAll = async (Reg,result) => {
 
 const GetMemberName = async (Name, result) => {
   try {
-    let data = await knex('VtuberMember').whereIn('VtuberName_EN',Name)
-      .orWhereIn('VtuberName',Name)
-      .orWhereIn('VtuberName_JP',Name)
-      .orderBy('VtuberGroup_id')
+     let data = await knex('VtuberMember')
+     .innerJoin('VtuberGroup','VtuberMember.VtuberGroup_id','VtuberGroup.id')
+     .where(function() {
+       this.orWhereIn('VtuberMember.VtuberName', Name)
+       .orWhereIn('VtuberMember.VtuberName_EN',Name)
+     }).orWhereIn('VtuberGroup.VtuberGroupName',Name)
+   
     if (data.length){
       data.forEach(i => {
         delete i.id
