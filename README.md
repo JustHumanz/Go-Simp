@@ -283,7 +283,7 @@ EOL
 
 | Nickname |FullName    |  Region | Youtube | Bilibili | Twitter |
 |----------|------------|---------|---------|----------|---------|
-| <a href="https://www.youtube.com/channel/UCzc8GwjUvecxpjhGtuewYOQ?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJxCVOiWZUhaUV00YlE_CWKGOTy3CJXJRMOz93kN=s800-c-k-c0x00ffffff-no-rj" alt="Maha5"></a><br>Adelia   |Alia Adelia | ID      | ✓       | ✗        |  ✓      |
+| <a href="https://www.youtube.com/channel/UCK4t1P3Aqqe6NDyRS92Opcg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJxT38CNIz5TGueep7JGQ0oX9NUmcy2r9RR2Iurr=s800-c-k-c0x00ffffff-no-rj" alt="Maha5"></a><br>Adelia   |Alia Adelia | ID      | ✓       | ✗        |  ✓      |
 | <a href="https://www.youtube.com/channel/UC9QnAjC7mT4ggHuedr1_kqQ?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJwN9Kr12u_rI39Cp6YrBA0U0P3N2U_KNU2q6t2H=s800-c-k-c0x00ffffff-no-rj" alt="Maha5"></a><br>Andi     |Andi Adinata| ID      | ✓       | ✗        |  ✓      |
 | <a href="https://www.youtube.com/channel/UCge_6FJHyeOCxRtWCmaVTAQ?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzs4X7IOlQazLfm5jQm2nGtkmNWy3BkbldeOZ3b=s800-c-k-c0x00ffffff-no-rj" alt="Maha5"></a><br>Lumi     |Lumi Celestia| ID     | ✓       | ✗        |  ✓      |
 | <a href="https://www.youtube.com/channel/UCUummegUoc-w7EDdk8Ps7BQ?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJyRc_4nHj2EQK2Pxyf_8YTIdepkI4x_FBbTbM9A=s800-c-k-c0x00ffffff-no-rj" alt="Maha5"></a><br>Zen      |Zen Gunawan | ID      | ✓       | ✗        |  ✓      |
