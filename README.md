@@ -321,9 +321,6 @@ Show lists that roles are subscribed
 ```vtbot>Del roles [roles]```  
 Remove roles are subscribed from tags list  
 
-```vtbot>Roles tags```  
-Shows all lists that roles are subscribed  
-
 ```vtbot>Channel state```  
 Shows what is enable in this channel    
 
