@@ -111,19 +111,19 @@ EOL
 ##### Nijisanji ID
 | Nickname  |FullName                                   |Region | Youtube | Bilibili |Twitter|
 |-----------|------------------------------------------|-------|---------|----------|-------|
-| Hanamaki  |Hana Macchia<br>ハナ・マキア                  | ID     | ✓       | ✗        | ✓  |
-| Miyu      |Miyu Ottavia<br>ミユ・オッタヴィア             | ID     | ✓       | ✗        | ✓  |
-| Zea       |Zea Cornelia<br>ゼア・コルネリア               | ID     | ✓       | ✗        | ✓  |
-| Takamama  |Taka Radjiman<br>タカ・ラジマン                | ID     | ✓       | ✗        | ✓  |
-| Jukut     |Riksa Dhirendra<br>リクサ・ディレンドラ          | ID     | ✓       | ✗        | ✓  |
-| Cia       |Amicia Michella<br>アミシア・ミシェラ            | ID     | ✓       | ✗        | ✓  |
-| Rai       |Rai Galilei<br>ライ・ガリレイ                    | ID     | ✓       | ✗        | ✓  |
-| Zura      |Azura Cecillia<br>アズラ・セシリア               | ID     | ✓       | ✗        | ✓  |
-| Layla     |Layla Alstroemeria<br>ライラ・アルストロエメリア   | ID     | ✓       | ✗        | ✓ |
-| Nara      |Nara Haramaung<br>ナラ・ハラマウン               | ID     | ✓       | ✗        | ✓  |
-| Bobon     |Bonnivier Pranaja<br>ボンニフィエール・プラナジャ  | ID     | ✓       | ✗        | ✓  |
-| Etna      |Etna Crimson<br>エトナ・クリムソン               | ID     | ✓       | ✗        | ✓  |
-| Siska     |Siska Leontyne <br>シスカ・レオンタイン          | ID     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UCpJtk0myFr5WnyfsmnInP-w?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzD4glW-T1rPfR-yA56czEGP_NNJp6DnNGWzI-M=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Hanamaki  |Hana Macchia<br>ハナ・マキア                  | ID     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UCOmjciHZ8Au3iKMElKXCF_g?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzUlFmDKfWqcxDhfL1kH_zE1kqmytEYzZAtIOqe=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Miyu     |Miyu Ottavia<br>ミユ・オッタヴィア             | ID     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UCA3WE2WRSpoIvtnoVGq4VAw?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJyzExmchg086C_qTRvwn2pd_0HV29uwQw-IqCFcaQ=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Zea       |Zea Cornelia<br>ゼア・コルネリア               | ID     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UCZ5dNZsqBjBzbBl0l_IdmXg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJwidj95-aR13Cn2MHBytiH3yeYHgEWmuvoEvHLE=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Takamama  |Taka Radjiman<br>タカ・ラジマン                | ID     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UCkL9OLKjIQbKk2CztbpOCFg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJyxrfmAtYJMi4cNql56WQoKHJAWhK5TyLBmPxYg=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Jukut     |Riksa Dhirendra<br>リクサ・ディレンドラ          | ID     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UCrR7JxkbeLY82e8gsj_I0pQ?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzVTgf_UaTYTtMk_vyigqMXA_Urvo8ZvnypYY4T=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Cia       |Amicia Michella<br>アミシア・ミシェラ            | ID     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UC8Snw5i4eOJXEQqURAK17hQ?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJxtMbWQWNy2ayDuYsEeDnQr5sIFekwdePiAFB0w=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Rai       |Rai Galilei<br>ライ・ガリレイ                    | ID     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UCk5r533QVMgJUdWwqegH2TA?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJwcCc1bumr-3CMmUigLkhlKjn-ko_YfuAn-MzXl=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Zura      |Azura Cecillia<br>アズラ・セシリア               | ID     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UCyRkQSuhJILuGOuXk10voPg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzY3Lm1fbgeS39GXIF80LdoRJygV0wobkIBiRLL=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Layla     |Layla Alstroemeria<br>ライラ・アルストロエメリア   | ID     | ✓       | ✗        | ✓ |
+| <a href="https://www.youtube.com/channel/UCoWH3sDpeXG1aXmOxveX4KA?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJycTMUe83iv90g2JbeFd5OMLDGgAuS6dKb76xyZ=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Nara      |Nara Haramaung<br>ナラ・ハラマウン               | ID     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UCHjeZylSgXDSnor8wUnwU_g?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJxfSQtrI4uScYOfykpxPF6eSqbMpM0hfy3I1Kj7=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Bobon     |Bonnivier Pranaja<br>ボンニフィエール・プラナジャ  | ID     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UCjFu-9GHnabzSFRAYm1B9Dw?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJwpueA6Y9qluKki-_0q8RputmfzrfvHAv69_XOv=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Etna      |Etna Crimson<br>エトナ・クリムソン               | ID     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UC5qSx7KzdRwbsO1QmJc4d-w?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJyH_S2RKapvbbKLEFAapQ6bR5BbMuMcdZx9FE-O=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Siska     |Siska Leontyne <br>シスカ・レオンタイン          | ID     | ✓       | ✗        | ✓  |
 
 ##### Nijisanji CN
 | Nickname  | FullName       |Region | Youtube | Bilibili |Twitter|
