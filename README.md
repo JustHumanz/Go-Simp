@@ -61,17 +61,17 @@ A simple VTuber bot to serve notification Fanart(Twitter,Bilibili) and Livestrea
 ##### Hololive ID
 | Nickname     | FullName                           | Region | Youtube | Bilibili | Twitter|
 |--------------|------------------------------------|---------|--------|----------|--------|
-| Risu         |Ayunda Risu<br>アユンダ・リス          | ID     | ✓       | ✗        | ✓     |
-| Moona        |Moona Hoshinova<br>ムーナ・ホシノヴァ   | ID     | ✓       | ✗        | ✓     |
-| Lofi         |Airani Iofifteen<br>アイラニ・イオフィフティーン| ID     | ✓       | ✗   |✓     |
+| <a href="https://www.youtube.com/channel/UCOyYb1c43VlX9rc_lT6NKQw?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJyldV6NOqYTpHeQ6pFYDkCiqgBVCjYPFGLTgzCu=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Risu         |Ayunda Risu<br>アユンダ・リス          | ID     | ✓       | ✗        | ✓     |
+| <a href="https://www.youtube.com/channel/UCP0BspO_AMEe3aQqqpo89Dg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJz0VbMygCxDQdJwB5LNRSdcXgyGegDBA6pyxs3EJQ=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Moona        |Moona Hoshinova<br>ムーナ・ホシノヴァ   | ID     | ✓       | ✗        | ✓     |
+| <a href="https://www.youtube.com/channel/UCAoy6rzhSf4ydcYjJw3WoVg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJx28lrJ1bpfUSNv3cakn59hdqx7YOGpnvJJ9Tof=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Lofi         |Airani Iofifteen<br>アイラニ・イオフィフティーン| ID     | ✓       | ✗   |✓     |
 
 ##### Hololive EN
 | Nickname     |FullName                    | Region | Youtube | Bilibili |Twitter |
 |--------------|----------------------------|---------|---------|---------|--------|
-| Gura         |Gawr Gura<br>がうる・ぐら     | EN      | ✓       | ✗        | ✓ |
-| Ame          |Watson Amelia<br>ワトソン・アメリア| EN     | ✓       | ✗        | ✓ |
-| Calli        |Mori Calliope<br>森美声/もりかりおぺ| EN     | ✓       | ✗        |✓   |
-| Kusotori     |Takanashi Kiara<br>小鳥遊キアラ/たかなしきあら| EN     | ✓       | ✗        | ✓ |
+| <a href="https://www.youtube.com/channel/UCoSrY_IQQVpmIRZ9Xf-y93g?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJwyNfLKBDLZoKA3c7u_vPOKbQitz4fcDwi7Iqhi=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Gura         |Gawr Gura<br>がうる・ぐら     | EN      | ✓       | ✗        | ✓ |
+| <a href="https://www.youtube.com/channel/UCyl1z3jo3XHR1riLFKG5UAg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJy4N7OLrI5euxdzCX_OiS6hDbHUSqqIJoWK_170=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Ame          |Watson Amelia<br>ワトソン・アメリア| EN     | ✓       | ✗        | ✓ |
+| <a href="https://www.youtube.com/channel/UCL_qhgtOy0dy1Agp8vkySQg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJwBT0RCEyLDyqdqy4m-Ig5U7axjMnl6neaWHhFa=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Calli        |Mori Calliope<br>森美声/もりかりおぺ| EN     | ✓       | ✗        |✓   |
+| <a href="https://www.youtube.com/channel/UCHsx4Hqa-1ORjQTh9TYDhww?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJz1t3Qobm0uF0QZs4iNYnfQ4PT0iiq4cUs8mTrt=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Kusotori     |Takanashi Kiara<br>小鳥遊キアラ/たかなしきあら| EN     | ✓       | ✗        | ✓ |
 
 #####  ~~Hololive CN~~
 | Nickname     | Region | Youtube | Bilibili |
@@ -91,22 +91,22 @@ EOL
 
 | Nickname  | FullName                        |Region | Youtube | Bilibili | Twitter |
 |-----------|--------------------------------|---------|---------|---------|---------|
-| Konlulu   |Suzuhara Lulu<br>鈴原るる          | JP     | ✓       | ✓        | ✓  |
-| Alice     |Mononobe Alice<br>物述有栖         | JP     | ✓       | ✓        | ✓  |
-| Noraneko  |Fumino Tamaki<br>文野環            | JP     | ✓       | ✗        | ✓  |
-| Debiru    |Debidebi Debiru<br>でびでび・でびる  | JP     | ✓       | ✓        | ✓  |
-| Malmal    |Ars Almal<br>アルス・アルマル        | JP     | ✓       | ✗        | ✓ |
-| Sara      |Hoshikawa Sara<br>星川サラ         | JP     | ✓       | ✗        | ✓  |
-| Tsumugu   |Kataribe Tsumugu<br>語部紡         | JP     | ✓       | ✗        | ✓  |
-| Shiishii  |Shiina Yuika<br>椎名唯華           | JP     | ✓       | ✗        | ✓  |
-| Mikoto    |Mikoto Rindou<br>りんどうみこと     | JP     | ✓       | ✗        | ✓   |
-| Doge      |Kuroi Shiba<br>黒井しば            | JP     | ✓       | ✗        | ✓  |
-| Mito-chan |Tsukino Mito<br>月ノ美兎           | JP     | ✓       | ✗        | ✓  |
-| Shizurin  |Shizuka Rin<br>静凛                | JP     | ✓       | ✓        | ✓  |
-| Riri      |Yuuhi Riri<br>夕陽リリ             | JP     | ✓       | ✗        | ✓  |
-| Hima-chan |Honma Himawari<br>本間ひまわり     | JP     | ✓       | ✓        | ✓  |
-| Cleaire   |Sister Cleaire<br>シスタ クレア      | JP     | ✓       | ✗        | ✓  |
-| Rion      |Takamiya Rion<br>鷹宮リオン        | JP     | ✓       | ✓        |   ✓  |
+| <a href="https://www.youtube.com/channel/UCt0clH12Xk1-Ej5PXKGfdPA?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJwCAz6iHqDmbg6r1qHDhZbRqo1Paw8N0Wp7PGAI=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Konlulu   |Suzuhara Lulu<br>鈴原るる          | JP     | ✓       | ✓        | ✓  |
+| <a href="https://www.youtube.com/channel/UC_a1ZYZ8ZTXpjg9xUY9sj8w?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJwOlinsLww_3SSI1NgExhGyfYaAak6xkKL0N3lM=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Alice     |Mononobe Alice<br>物述有栖         | JP     | ✓       | ✓        | ✓  |
+| <a href="https://www.youtube.com/channel/UCBiqkFJljoxAj10SoP2w2Cg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJy1M6jwTNUbi0bjokJFYkGFI7qwUfbZPOvE9jW8=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Noraneko  |Fumino Tamaki<br>文野環            | JP     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UCjlmCrq4TP1I4xguOtJ-31w?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJxANfqBD_ToddsIqeTwWwU5DbGtiBemckOB3Osf=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Debiru    |Debidebi Debiru<br>でびでび・でびる  | JP     | ✓       | ✓        | ✓  |
+| <a href="https://www.youtube.com/channel/UCdpUojq0KWZCN9bxXnZwz5w?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJw-4Tv8XZHSLCXE1ZZ3-hguXTwxsNlirKhAzKx-=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Malmal    |Ars Almal<br>アルス・アルマル        | JP     | ✓       | ✗        | ✓ |
+| <a href="https://www.youtube.com/channel/UC9V3Y3_uzU5e-usObb6IE1w?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJxOxMEuv5zM-t6GCi8n84HzaHJ_bUagSFLpSN2z=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Sara      |Hoshikawa Sara<br>星川サラ         | JP     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UCufQu4q65z63IgE4cfKs1BQ?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJyswdAqd_QSSXQAgPTNYC5rlS_QRpHTcFAq7vegkQ=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Tsumugu   |Kataribe Tsumugu<br>語部紡         | JP     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UC_4tXjqecqox5Uc05ncxpxg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJxuBgoaTYEsEtk_ydDJlKPNLCwID4AQ5C9oGrYV=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Shiishii  |Shiina Yuika<br>椎名唯華           | JP     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UCPvGypSgfDkVe7JG2KygK7A?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJxWuVy-BIgr9mjrngx1cCgSE35w2eU8FpH_cKGJ=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Mikoto    |Mikoto Rindou<br>りんどうみこと     | JP     | ✓       | ✗        | ✓   |
+| <a href="https://www.youtube.com/channel/UCmeyo5pRj_6PXG-CsGUuWWg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJwiOdXY5EBW5UjOnkngayu2G4IpB9BBROJCVCF9=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Doge      |Kuroi Shiba<br>黒井しば            | JP     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UCD-miitqNY3nyukJ4Fnf4_A?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzloNyJgJauawF6NcFTYc9U0uG00gwCyK40vlBEtg=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Mito-chan |Tsukino Mito<br>月ノ美兎           | JP     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UC6oDys1BGgBsIC3WhG1BovQ?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzx6b79exsGqBy-1Oof_27mYBVNsKDzpHxj3kznrw=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Shizurin  |Shizuka Rin<br>静凛                | JP     | ✓       | ✓        | ✓  |
+| <a href="https://www.youtube.com/channel/UC48jH1ul-6HOrcSSfoR02fQ?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJxzMiZDOJ8UDpxRg98t6GbDZOuGJQMz74IcESiz=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Riri      |Yuuhi Riri<br>夕陽リリ             | JP     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UC0g1AE0DOjBYnLhkgoRWN1w?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzvU_4zKgbREbRBPzGjq3xZ3KaKBdN1IWSUJi-q=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Hima-chan |Honma Himawari<br>本間ひまわり     | JP     | ✓       | ✓        | ✓  |
+| <a href="https://www.youtube.com/channel/UC1zFJrfEKvCixhsjNSb1toQ?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJxBZFKjuz2EvXj5ewwjFN9DudWuMMWvyfYWu3ZciQ=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Cleaire   |Sister Cleaire<br>シスタ クレア      | JP     | ✓       | ✗        | ✓  |
+| <a href="https://www.youtube.com/channel/UCV5ZZlLjk5MKGg3L0n0vbzw?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJxpBPvANSbruT65gnx3V6WeKIqXVnKOJPDV_sKq=s800-c-k-c0x00ffffff-no-rj" alt="Nijisanji"></a><br>Rion      |Takamiya Rion<br>鷹宮リオン        | JP     | ✓       | ✓        |   ✓  |
 
 ##### Nijisanji ID
 | Nickname  |FullName                                   |Region | Youtube | Bilibili |Twitter|
