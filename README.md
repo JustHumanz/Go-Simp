@@ -43,20 +43,20 @@ A simple VTuber bot to serve notification Fanart(Twitter,Bilibili) and Livestrea
 | <a href="https://www.youtube.com/channel/UCp-5t9SrOQwXMU7iIjQfARg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzFpyPB7LFGFq5DIX2x7pvIblA9Ksz99TrDYvOa5w=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Mio          |Ookami Mio<br>大神ミオ           | JP     | ✓       | ✓        |✓  |
 | <a href="https://www.youtube.com/channel/UCUKD-uaobj9jiqB-VXt71mA?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzO_bOBHuKPycvddNd88hozl2OjaNC-uR7lOAXa=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Shishiron    |Shishiro Botan<br>獅白ぼたん     | JP     | ✓       | ✓        |✓  |
 | <a href="https://www.youtube.com/channel/UCK9V2B22uJYu3N7eR_BT9QA?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzMPMCRzpyIsPyp8cOdA2FUwkBotqe6Dh0CmKgA=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Polka        |Omaru Polka<br>尾丸ポルカ       | JP     | ✓       | ✓        |✓ |
-| Lamy         |Yukihana Lamy<br>雪花ラミィ     | JP     | ✓       | ✓        |✓ |
-| Taoling      |Momosuzu Nene<br>桃鈴ねね       | JP     | ✓       | ✓        |✓ |
-| Danchou      |Shirogane Noel<br>白銀ノエル    | JP     | ✓       | ✓        |✓ |
-| Rushia       |Uruha Rushia<br>潤羽るしあ      | JP     | ✓       | ✓        |✓ |
-| Kanatan      |Amane Kanata<br>天音かなた      | JP     | ✓       | ✓        |✓ |
-| Sui-chan     |Hoshimachi Suisei<br>星街すいせい| JP     | ✓       | ✓        |✓  |
-| Merumeru     |Yozora Mel<br>夜空メル          | JP     | ✓       | ✓        |✓ |
-| AkiRose      |Aki Rosenthal<br>アキ・ローゼンタール| JP     | ✓       | ✓     |✓ |
-| Ayame        |Nakiri Ayame<br>百鬼あやめ      | JP     | ✓       | ✓        |✓ |
-| Shion        |Murasaki Shion<br>紫咲シオン     | JP     | ✓       | ✓        |✓  |
-| Luna-tan     |Himemori Luna<br>姫森ルーナ     |JP     | ✓       | ✓        |✓  |
-| Fuu-tan      |Shiranui Flare<br>不知火フレア   | JP     | ✓       | ✓        |✓  |
-| Towa-sama    |Tokoyami Towa<br>常闇トワ       | JP     | ✓       | ✓        |✓ |
-| Roboco       |Roboco<br>ロボ子                | JP     | ✓       | ✓        |✓ |  
+| <a href="https://www.youtube.com/channel/UCFKOVgVbGmX65RxO3EtH3iw?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzPYUSxysPc7CWjvXdT3CjFYKJtmC9ak1CP9Z3f=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Lamy         |Yukihana Lamy<br>雪花ラミィ     | JP     | ✓       | ✓        |✓ |
+| <a href="https://www.youtube.com/channel/UCAWSyEs_Io8MtpY3m-zqILA?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJyy0MDi5ux-dNieMyjSCs4xBUQWHOfkPfsz5Xrw=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Taoling      |Momosuzu Nene<br>桃鈴ねね       | JP     | ✓       | ✓        |✓ |
+| <a href="https://www.youtube.com/channel/UCdyqAaZDKHXg4Ahi7VENThQ?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJyflKVfVjZg11sLPRv8BrLT-8ltdeRcTyKTWlXV=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Danchou      |Shirogane Noel<br>白銀ノエル    | JP     | ✓       | ✓        |✓ |
+| <a href="https://www.youtube.com/channel/UCl_gCybOJRIgOXw6Qb4qJzQ?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJwi-Xs0ChOThMuUzFsl3cNZYgdP12Witb0cNSf9=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Rushia       |Uruha Rushia<br>潤羽るしあ      | JP     | ✓       | ✓        |✓ |
+| <a href="https://www.youtube.com/channel/UCZlDXzGoo7d44bwdNObFacg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJwu4OylyCnOP8gGbO8hINCbwCfPzhBY5JrS0htm=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Kanatan      |Amane Kanata<br>天音かなた      | JP     | ✓       | ✓        |✓ |
+| <a href="https://www.youtube.com/channel/UC5CwaMl1eIgY8h02uZw7u8A?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzbRjSTNu3QQ7pia2yR5oVTcds7MpmeA3a1xE-h=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Sui-chan     |Hoshimachi Suisei<br>星街すいせい| JP     | ✓       | ✓        |✓  |
+| <a href="https://www.youtube.com/channel/UCD8HOxPs4Xvsm8H0ZxXGiBw?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJxGYXGi2fgjHoYCSuqLzsh6p-CrlNvRTRFmZmK_=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Merumeru     |Yozora Mel<br>夜空メル          | JP     | ✓       | ✓        |✓ |
+| <a href="https://www.youtube.com/channel/UCFTLzh12_nrtzqBPsTCqenA?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJz-Y3lEysu2wkT7AdTaPU77l938jwf2p2r8hi7e=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>AkiRose      |Aki Rosenthal<br>アキ・ローゼンタール| JP     | ✓       | ✓     |✓ |
+| <a href="https://www.youtube.com/channel/UC7fk0CB07ly8oSl0aqKkqFg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJybvEUdsgDTZasoeAgVPHwDcWzmfLdngzWFcLx7=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Ayame        |Nakiri Ayame<br>百鬼あやめ      | JP     | ✓       | ✓        |✓ |
+| <a href="https://www.youtube.com/channel/UCXTpFs_3PqI41qX2d9tL2Rw?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJx2dQl8H1TG2HBy9bMCMP-nHxOVXALwAJz8MFS_rA=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Shion        |Murasaki Shion<br>紫咲シオン     | JP     | ✓       | ✓        |✓  |
+| <a href="https://www.youtube.com/channel/UCa9Y57gfeY0Zro_noHRVrnw?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzKYMVgjGOC0-yLuJs8TidP_YB3Yks6VmDI0pgo=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Luna-tan     |Himemori Luna<br>姫森ルーナ     |JP     | ✓       | ✓        |✓  |
+| <a href="https://www.youtube.com/channel/UCvInZx9h3jC2JzsIzoOebWg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJwGmRMcFMvE1JW3v152HnrXfMQxbI_Dw92KH0-CpA=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Fuu-tan      |Shiranui Flare<br>不知火フレア   | JP     | ✓       | ✓        |✓  |
+| <a href="https://www.youtube.com/channel/UC1uv2Oq6kNxgATlCiez59hw?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJwvh1krTC77V1xFYngwDN4W7x96yl4WBxV5cOaA=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Towa-sama    |Tokoyami Towa<br>常闇トワ       | JP     | ✓       | ✓        |✓ |
+| <a href="https://www.youtube.com/channel/UCDqI2jOz0weumE8s7paEk6g?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJwaRkjEGAJYsolluzMRIgGvapzUY06q87q4yGJJ_Q=s800-c-k-c0x00ffffff-no-rj" alt="Hololive"></a><br>Roboco       |Roboco<br>ロボ子                | JP     | ✓       | ✓        |✓ |  
 
 ##### Hololive ID
 | Nickname     | FullName                           | Region | Youtube | Bilibili | Twitter|
