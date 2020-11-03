@@ -1,35 +1,31 @@
 package runner
 
 import (
-	"fmt"
-	"os"
-
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"
-	log "github.com/sirupsen/logrus"
 )
 
 var (
 	Bot *discordgo.Session
 )
 
-func StartInit(path string) {
+func StartInit(path string) error {
 	conf, err := config.ReadConfig(path)
 	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
+		return err
 	}
 
 	Bot, _ = discordgo.New("Bot " + config.Token)
 	err = Bot.Open()
 	if err != nil {
-		log.Error(err)
-		os.Exit(1)
+		return err
 	}
 
 	database.Start(conf.CheckSQL())
 	engine.Start()
+
+	return nil
 	//cronjob.InitCron()
 }

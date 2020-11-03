@@ -1,15 +1,12 @@
 package discordhandler
 
 import (
-	"fmt"
-	"os"
 	"strings"
 
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"
-	log "github.com/sirupsen/logrus"
 )
 
 //Prefix command
@@ -31,25 +28,22 @@ const (
 	Live         = "live"
 )
 
-func StartInit(path string) {
+func StartInit(path string) error {
 	conf, err := config.ReadConfig(path)
 	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
+		return err
 	}
 	db := conf.CheckSQL()
 
 	Bot, _ := discordgo.New("Bot " + config.Token)
 	err = Bot.Open()
 	if err != nil {
-		log.Error(err)
-		os.Exit(1)
+		return err
 	}
 
 	database.Start(db)
 	engine.Start()
 
-	//Bot.AddHandler(GuildJoin)
 	Bot.AddHandler(Fanart)
 	Bot.AddHandler(Tags)
 	Bot.AddHandler(EnableState)
@@ -59,6 +53,8 @@ func StartInit(path string) {
 	Bot.AddHandler(BiliBiliSpace)
 	Bot.AddHandler(YoutubeMessage)
 	Bot.AddHandler(SubsMessage)
+
+	return nil
 }
 
 //ValidName Find a valid name from user input

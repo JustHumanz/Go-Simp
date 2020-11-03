@@ -10,8 +10,10 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const configfile = "../../config.toml"
+
 func main() {
-	runner.StartInit("../../config.toml")
+	runner.StartInit(configfile)
 	cronjob.InitCron()
 	log.Info("Backend ready.......")
 
