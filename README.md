@@ -7,6 +7,7 @@
 
 ## Introduction
 A simple VTuber bot to serve notification Fanart(Twitter,Bilibili) and Livestream(Youtube,Bilibili)  
+for setup see at [Guide](https://github.com/JustHumanz/Go-Simp/blob/master/Guide.md)
 
 
 ## Current notification support

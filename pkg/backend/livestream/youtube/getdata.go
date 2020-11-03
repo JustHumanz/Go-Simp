@@ -53,7 +53,6 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 			Viewers string
 			Thumb   string
 		)
-		duration := durafmt.Parse(ParseDuration(Data.Items[i].ContentDetails.Duration))
 
 		YoutubeData := &NotifStruct{
 			YtData: Name.CheckYtVideo(VideoID[i]),
@@ -85,7 +84,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 			YoutubeData.
 				UpYtView(Viewers).
 				UpYtEnd(Data.Items[i].LiveDetails.EndTime).
-				UpYtLen(duration.String())
+				UpYtLen(durafmt.Parse(ParseDuration(Data.Items[i].ContentDetails.Duration)).String())
 
 			if Data.Items[i].Snippet.VideoStatus == "none" && YoutubeData.YtData.Status == "live" {
 				log.WithFields(log.Fields{
@@ -162,7 +161,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 			}
 
 			yttype := engine.YtFindType(Data.Items[i].Snippet.Title)
-			if yttype == "Streaming" && Data.Items[i].ContentDetails.Duration != "" {
+			if yttype == "Streaming" && Data.Items[i].ContentDetails.Duration != "P0D" {
 				yttype = "Regular video"
 			}
 			//verify
