@@ -47,7 +47,7 @@ func CheckSchedule() {
 
 						log.WithFields(log.Fields{
 							"Group":  Group.NameGroup,
-							"Vtuber": engine.FixName(Member.EnName, Member.JpName),
+							"Vtuber": Member.EnName,
 							"Start":  ScheduledStart,
 						}).Info("Start live right now")
 
@@ -64,7 +64,7 @@ func CheckSchedule() {
 						//prob past
 						log.WithFields(log.Fields{
 							"Group":  Group.NameGroup,
-							"Vtuber": engine.FixName(Member.EnName, Member.JpName),
+							"Vtuber": Member.EnName,
 							"Start":  ScheduledStart,
 						}).Info("Past live stream")
 						Data.SetStatus("Past").
@@ -75,7 +75,7 @@ func CheckSchedule() {
 						//update online
 						log.WithFields(log.Fields{
 							"Group":  Group.NameGroup,
-							"Vtuber": engine.FixName(Member.EnName, Member.JpName),
+							"Vtuber": Member.EnName,
 						}).Info("Update LiveBiliBili")
 
 						Data.UpdateOnline(Status.Data.RoomInfo.Online)

@@ -122,7 +122,6 @@ func (PushData *NotifStruct) SendNude() {
 		UserTagsList := database.GetUserList(id[i], PushData.Member.ID)
 		if UserTagsList != nil {
 			msg, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], MsgEmbend)
-			msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
 			if err != nil {
 				log.Error(msg, err)
 				match, _ := regexp.MatchString("Unknown Channel", err.Error())
@@ -131,6 +130,7 @@ func (PushData *NotifStruct) SendNude() {
 					database.DelChannel(DiscordChannelID[i], PushData.Group.ID)
 				}
 			}
+			msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
 		}
 	}
 }

@@ -20,7 +20,6 @@ func (Data CheckSctruct) SendNude() {
 		if err != nil {
 			log.Error(err)
 		}
-
 		log.WithFields(log.Fields{
 			"Vtuber": Data.MemberName,
 		}).Info("New video uploaded")

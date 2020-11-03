@@ -161,7 +161,6 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 				YoutubeData.YtData.UpdateYt(YoutubeData.YtData.Status)
 			}
 		} else {
-			MemberFixName := Name.EnName + " " + Name.JpName
 			_, err := engine.Curl("http://i3.ytimg.com/vi/"+VideoID[i]+"/maxresdefault.jpg", nil)
 			if err != nil {
 				Thumb = "http://i3.ytimg.com/vi/" + VideoID[i] + "/hqdefault.jpg"
@@ -186,7 +185,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 			if Data.Items[i].Snippet.VideoStatus == "upcoming" {
 				log.WithFields(log.Fields{
 					"YtID":       VideoID[i],
-					"MemberName": MemberFixName,
+					"MemberName": Name.EnName,
 					"Message":    "Send to notify",
 				}).Info("New Upcoming live schedule")
 
@@ -199,7 +198,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 			} else if Data.Items[i].Snippet.VideoStatus == "live" {
 				log.WithFields(log.Fields{
 					"YtID":       VideoID[i],
-					"MemberName": MemberFixName,
+					"MemberName": Name.EnName,
 					"Message":    "Send to notify",
 				}).Info("New live stream right now")
 
@@ -212,7 +211,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 			} else if Data.Items[i].Snippet.VideoStatus == "none" && yttype == "Covering" {
 				log.WithFields(log.Fields{
 					"YtID":       VideoID[i],
-					"MemberName": MemberFixName,
+					"MemberName": Name.EnName,
 				}).Info("New MV or Cover")
 
 				err := YoutubeData.ChangeYtStatus("past").SendtoDB()
@@ -224,7 +223,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 			} else if !Data.Items[i].Snippet.PublishedAt.IsZero() && Data.Items[i].Snippet.VideoStatus == "none" {
 				log.WithFields(log.Fields{
 					"YtID":       VideoID[i],
-					"MemberName": MemberFixName,
+					"MemberName": Name.EnName,
 				}).Info("Suddenly upload new video")
 				if YoutubeData.YtData.Schedul.IsZero() {
 					YoutubeData.UpYtSchedul(YoutubeData.YtData.Published)
@@ -238,7 +237,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 			} else {
 				log.WithFields(log.Fields{
 					"YtID":       VideoID[i],
-					"MemberName": MemberFixName,
+					"MemberName": Name.EnName,
 				}).Info("Past live stream")
 				YoutubeData.ChangeYtStatus("past").SendNude()
 			}
