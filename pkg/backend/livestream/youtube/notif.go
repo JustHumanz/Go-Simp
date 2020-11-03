@@ -60,7 +60,7 @@ func (PushData *NotifStruct) SendNude() {
 	} else if Status == "reminder" {
 		MsgEmbend = engine.NewEmbed().
 			SetAuthor(VtuberName, Avatar, YtChannel).
-			SetTitle("Watch "+PushData.Member.EnName+" in "+durafmt.Parse(timestart.Sub(expiresAt)).LimitFirstN(1).String()).
+			SetTitle(PushData.Member.EnName+" Live in "+durafmt.Parse(timestart.Sub(expiresAt)).LimitFirstN(1).String()).
 			SetDescription(PushData.YtData.Title).
 			SetImage(PushData.YtData.Thumb).
 			SetThumbnail(GroupIcon).

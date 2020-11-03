@@ -162,6 +162,9 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 			}
 
 			yttype := engine.YtFindType(Data.Items[i].Snippet.Title)
+			if yttype == "Streaming" && Data.Items[i].ContentDetails.Duration != "" {
+				yttype = "Regular video"
+			}
 			//verify
 			YoutubeData.AddData(&database.YtDbData{
 				Status:    Data.Items[i].Snippet.VideoStatus,
