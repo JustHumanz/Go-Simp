@@ -154,7 +154,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 				//send to reminder
 				loc := engine.Zawarudo(YoutubeData.YtData.Region)
 				UpcominginMinutes := int(math.Round(YoutubeData.YtData.Schedul.In(loc).Sub(time.Now().In(loc)).Minutes()))
-				if UpcominginMinutes > 60 && UpcominginMinutes < 66 {
+				if UpcominginMinutes > 30 && UpcominginMinutes < 36 {
 					YoutubeData.ChangeYtStatus("reminder").SendNude()
 				}
 			} else {
