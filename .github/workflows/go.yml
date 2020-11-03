@@ -38,6 +38,7 @@ jobs:
       run: go build -v .
 
     - name: Test-Backend
+      working-directory: ./pkg/backend
       run: go test -v .
       
   build-Frontend:
@@ -71,4 +72,5 @@ jobs:
         run: go build -v .
 
       - name: Test-Frontend
+        working-directory: ./pkg/frontend
         run: go test -v .      
