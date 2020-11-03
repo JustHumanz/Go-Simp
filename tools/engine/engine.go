@@ -390,3 +390,17 @@ func Zawarudo(Region string) *time.Location {
 		return loc
 	}
 }
+
+func YtFindType(title string) string {
+	yttype := ""
+	if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|mv|covered)", title); Cover {
+		yttype = "Covering"
+	} else if Chat, _ := regexp.MatchString("(?m)(chat|room)", title); Chat {
+		yttype = "ChatRoom"
+	} else if Singing, _ := regexp.MatchString("(?m)(sing|歌枠)", title); Singing {
+		yttype = "Singing"
+	} else {
+		yttype = "Streaming"
+	}
+	return yttype
+}

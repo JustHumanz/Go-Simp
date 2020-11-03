@@ -50,18 +50,11 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 
 	for i := 0; i < len(Data.Items); i++ {
 		var (
-			yttype  string
 			Viewers string
 			Thumb   string
 		)
 		duration := durafmt.Parse(ParseDuration(Data.Items[i].ContentDetails.Duration))
-		if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|mv|covered)", strings.ToLower(Data.Items[i].Snippet.Title)); Cover {
-			yttype = "Covering"
-		} else if Chat, _ := regexp.MatchString("(?m)(chat|room)", Data.Items[i].Snippet.Title); Chat {
-			yttype = "ChatRoom"
-		} else {
-			yttype = "Streaming"
-		}
+
 		YoutubeData := &NotifStruct{
 			YtData: Name.CheckYtVideo(VideoID[i]),
 			Group:  Group,
@@ -168,6 +161,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 				Thumb = "http://i3.ytimg.com/vi/" + VideoID[i] + "/maxresdefault.jpg"
 			}
 
+			yttype := engine.YtFindType(Data.Items[i].Snippet.Title)
 			//verify
 			YoutubeData.AddData(&database.YtDbData{
 				Status:    Data.Items[i].Snippet.VideoStatus,

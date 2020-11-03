@@ -28,14 +28,15 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 				s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 					SetTitle(Data.VTName).
-					SetDescription(Data.Desc).
+					SetDescription(Data.Title).
 					SetImage(Data.Thumb).
 					SetThumbnail(Data.YtAvatar).
 					SetURL("https://www.youtube.com/watch?v="+Data.VideoID).
 					AddField(Data.Msg, Data.Msg1).
 					AddField("Viewers", Data.Msg3).
-					SetFooter(Data.Msg2, config.YoutubeIMG).
 					InlineAllFields().
+					AddField("Type", engine.YtFindType(Data.Title)).
+					SetFooter(Data.Msg2, config.YoutubeIMG).
 					SetColor(Color).MessageEmbed)
 			} else {
 				s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
@@ -69,7 +70,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									duration := durafmt.Parse(Member.Schedul.In(loc).Sub(time.Now().In(loc))).LimitFirstN(2)
 									SendEmbed(Memberst{
 										VTName:  VTData.VTName,
-										Desc:    Member.Title,
+										Title:   Member.Title,
 										Thumb:   Member.Thumb,
 										VideoID: Member.VideoID,
 										Msg:     "Start live in",
@@ -105,7 +106,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								duration := durafmt.Parse(Data.Schedul.In(loc).Sub(time.Now().In(loc))).LimitFirstN(2)
 								SendEmbed(Memberst{
 									VTName:    engine.FixName(Data.NameEN, Data.NameJP),
-									Desc:      Data.Title,
+									Title:     Data.Title,
 									Thumb:     Data.Thumb,
 									VideoID:   Data.VideoID,
 									Msg:       "Start in",
@@ -146,7 +147,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 									SendEmbed(Memberst{
 										VTName:  VTData.VTName,
-										Desc:    Member.Title,
+										Title:   Member.Title,
 										Thumb:   Member.Thumb,
 										VideoID: Member.VideoID,
 										Msg:     "Start live in",
@@ -182,7 +183,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								duration := durafmt.Parse(diff).LimitFirstN(2)
 								SendEmbed(Memberst{
 									VTName:    engine.FixName(Data.NameEN, Data.NameJP),
-									Desc:      Data.Title,
+									Title:     Data.Title,
 									Thumb:     Data.Thumb,
 									VideoID:   Data.VideoID,
 									Msg:       "Start in",
