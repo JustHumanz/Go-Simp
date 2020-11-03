@@ -161,7 +161,7 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 				YoutubeData.YtData.UpdateYt(YoutubeData.YtData.Status)
 			}
 		} else {
-			MemberFixName := engine.FixName(Name.EnName, Name.JpName)
+			MemberFixName := Name.EnName + " " + Name.JpName
 			_, err := engine.Curl("http://i3.ytimg.com/vi/"+VideoID[i]+"/maxresdefault.jpg", nil)
 			if err != nil {
 				Thumb = "http://i3.ytimg.com/vi/" + VideoID[i] + "/hqdefault.jpg"
