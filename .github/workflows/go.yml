@@ -1,4 +1,4 @@
-name: Go
+name: Go-Simp
 
 on:
   push:
@@ -7,7 +7,6 @@ on:
     branches: [ master ]
 
 jobs:
-
   build-backend:
     name: Backend
     runs-on: ubuntu-latest
@@ -28,8 +27,8 @@ jobs:
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
             dep ensure
         fi
+        
     - name: Get dummy config file
-    - name: wget
       uses: wei/wget@v1
       with:
         args: -O config.toml https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/config.toml.template        
@@ -61,6 +60,11 @@ jobs:
               curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
               dep ensure
           fi
+
+      - name: Get dummy config file
+        uses: wei/wget@v1
+        with:
+          args: -O config.toml https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/config.toml.template        
 
       - name: Build-Frontend
         working-directory: ./pkg/frontend
