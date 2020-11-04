@@ -331,19 +331,21 @@ Remove roles are subscribed from tags list
 ```vtbot>Channel state```  
 Shows what is enable in this channel    
 
-```vtbot>Vtuber data [Group/Member] [Region]```  
+```vtbot>Vtuber data [Group/Member] -Region {region}```  
 Shows available Vtuber data  
+Example:
+`vtbot>vtuber data nijisanji` or `vtbot>vtuber data nijisanji,hololive -Region id,en`  
 
 ```vtbot>Subscriber {Member} ```  
 Shows Vtuber Subscriber data(twitter,Bilibili,Youtube)
 
-```yt>Upcoming [Vtuber Group/Member] {Region}```  
+```yt>Upcoming [Vtuber Group/Member] -Region {region}```  
 This command will show Upcoming live streams on Youtube  *only 3 if use Vtuber Group*
 
-```yt>Live [Vtuber Group/Member] {Region}```  
+```yt>Live [Vtuber Group/Member] -Region {region}```  
 This command will show all live streams right now on Youtube  
 
-```yt>Past [Vtuber Group/Member] {Region}```  
+```yt>Past [Vtuber Group/Member] -Region {region}```  
 This command will show past streams on Youtube *only 3 if use Vtuber Group*
 
 ~~```bl>Upcoming [Vtuber Group]```  

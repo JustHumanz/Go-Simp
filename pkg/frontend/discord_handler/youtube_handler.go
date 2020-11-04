@@ -49,11 +49,12 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 	)
 	if strings.HasPrefix(m.Content, Prefix) {
 		CommandArray := strings.Split(m.Content, " ")
-		if len(CommandArray) > 2 {
-			Region = strings.ToLower(CommandArray[2])
+		if len(CommandArray) > 3 && CommandArray[2] == "-region" {
+			Region = strings.ToLower(CommandArray[3])
 		} else {
 			Region = ""
 		}
+
 		if strings.ToLower(CommandArray[0]) == Prefix+Upcoming || strings.ToLower(CommandArray[0]) == Prefix+"up" {
 			if len(CommandArray) > 1 {
 				for _, GroupNameQuery := range strings.Split(strings.TrimSpace(CommandArray[1]), ",") {
@@ -69,14 +70,15 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									loc := engine.Zawarudo(Member.Region)
 									duration := durafmt.Parse(Member.Schedul.In(loc).Sub(time.Now().In(loc))).LimitFirstN(2)
 									SendEmbed(Memberst{
-										VTName:  VTData.VTName,
-										Title:   Member.Title,
-										Thumb:   Member.Thumb,
-										VideoID: Member.VideoID,
-										Msg:     "Start live in",
-										Msg1:    duration.String(),
-										Msg2:    Member.Schedul.In(loc).Format(time.RFC822),
-										Msg3:    Member.Viewers + " simps waiting in Room Chat",
+										VTName:   VTData.VTName,
+										Title:    Member.Title,
+										Thumb:    Member.Thumb,
+										VideoID:  Member.VideoID,
+										YtAvatar: Member.YoutubeAvatar,
+										Msg:      "Start live in",
+										Msg1:     duration.String(),
+										Msg2:     Member.Schedul.In(loc).Format(time.RFC822),
+										Msg3:     Member.Viewers + " simps waiting in Room Chat",
 									})
 								}
 
@@ -109,6 +111,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									Title:     Data.Title,
 									Thumb:     Data.Thumb,
 									VideoID:   Data.VideoID,
+									YtAvatar:  Data.YoutubeAvatar,
 									Msg:       "Start in",
 									Msg1:      duration.String(),
 									Msg2:      Data.Schedul.In(loc).Format(time.RFC822),
@@ -146,14 +149,15 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									duration := durafmt.Parse(diff).LimitFirstN(2)
 
 									SendEmbed(Memberst{
-										VTName:  VTData.VTName,
-										Title:   Member.Title,
-										Thumb:   Member.Thumb,
-										VideoID: Member.VideoID,
-										Msg:     "Start live in",
-										Msg1:    duration.String() + " Ago",
-										Msg2:    Member.Schedul.In(loc).Format(time.RFC822),
-										Msg3:    Member.Viewers + " Simps",
+										VTName:   VTData.VTName,
+										Title:    Member.Title,
+										Thumb:    Member.Thumb,
+										VideoID:  Member.VideoID,
+										YtAvatar: Member.YoutubeAvatar,
+										Msg:      "Start live in",
+										Msg1:     duration.String() + " Ago",
+										Msg2:     Member.Schedul.In(loc).Format(time.RFC822),
+										Msg3:     Member.Viewers + " Simps",
 									})
 								}
 							} else {
@@ -186,6 +190,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									Title:     Data.Title,
 									Thumb:     Data.Thumb,
 									VideoID:   Data.VideoID,
+									YtAvatar:  Data.YoutubeAvatar,
 									Msg:       "Start in",
 									Msg1:      duration.String() + " Ago",
 									Msg2:      Data.Schedul.In(loc).Format(time.RFC822),

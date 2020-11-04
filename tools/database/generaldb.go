@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -228,10 +229,10 @@ func (Data UserStruct) Adduser(MemberID int64) error {
 	if tmp {
 		return errors.New("Already registered")
 	} else {
-		stmt, err := DB.Prepare(`INSERT INTO User (DiscordID,DiscordUserName,Human,VtuberMember_id,Channel_id) values(?,?,?,?,?)`)
+		stmt, err := DB.Prepare(`INSERT INTO User (DiscordID,DiscordUserName,Human,Reminder,VtuberMember_id,Channel_id) values(?,?,?,?,?,?)`)
 		BruhMoment(err, "", false)
 		defer stmt.Close()
-		res, err := stmt.Exec(Data.DiscordID, Data.DiscordUserName, Data.Human, MemberID, ChannelID)
+		res, err := stmt.Exec(Data.DiscordID, Data.DiscordUserName, Data.Human, Data.Reminder, MemberID, ChannelID)
 		BruhMoment(err, "", false)
 
 		_, err = res.LastInsertId()
@@ -239,6 +240,21 @@ func (Data UserStruct) Adduser(MemberID int64) error {
 
 		return nil
 	}
+}
+
+func (Data UserStruct) UpdateReminder(MemberID int64) error {
+	ChannelID := GetChannelID(Data.Channel_ID, Data.GroupID)
+
+	stmt, err := DB.Prepare(`Update User set Reminder=? where DiscordID=? And VtuberMember_id=? And Channel_id=?`)
+	BruhMoment(err, "", false)
+	defer stmt.Close()
+	res, err := stmt.Exec(Data.Reminder, Data.DiscordID, MemberID, ChannelID)
+	BruhMoment(err, "", false)
+
+	_, err = res.LastInsertId()
+	BruhMoment(err, "", false)
+
+	return nil
 }
 
 //Delete user from `del` command
@@ -370,16 +386,25 @@ func UserStatus(UserID, Channel string) [][]string {
 	var (
 		GroupName  string
 		VtuberName string
+		Reminder   string
 		taglist    [][]string
 	)
-	rows, err := DB.Query(`SELECT VtuberGroupName,VtuberName FROM User INNER JOIN VtuberMember ON User.VtuberMember_id=VtuberMember.id Join VtuberGroup ON VtuberGroup.id = VtuberMember.VtuberGroup_id Inner Join Channel on Channel.id=User.Channel_id WHERE DiscordChannelID=? And DiscordID=?`, Channel, UserID)
+	rows, err := DB.Query(`SELECT VtuberGroupName,VtuberName,User.Reminder FROM User INNER JOIN VtuberMember ON User.VtuberMember_id=VtuberMember.id Join VtuberGroup ON VtuberGroup.id = VtuberMember.VtuberGroup_id Inner Join Channel on Channel.id=User.Channel_id WHERE DiscordChannelID=? And DiscordID=?`, Channel, UserID)
 	BruhMoment(err, "", false)
 
 	defer rows.Close()
 	for rows.Next() {
-		err = rows.Scan(&GroupName, &VtuberName)
+		tmpReminder := 0
+		err = rows.Scan(&GroupName, &VtuberName, &tmpReminder)
 		BruhMoment(err, "", false)
-		taglist = append(taglist, []string{GroupName, VtuberName})
+
+		if tmpReminder == 0 {
+			Reminder = "None"
+		} else {
+			Reminder = strconv.Itoa(tmpReminder) + " Minutes"
+		}
+
+		taglist = append(taglist, []string{GroupName, VtuberName, Reminder})
 	}
 	return taglist
 }
@@ -440,6 +465,29 @@ func GetUserList(ChannelIDDiscord int, Member int64) []string {
 		Type          bool
 	)
 	rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id =?`, ChannelIDDiscord, Member)
+	BruhMoment(err, "", false)
+	defer rows.Close()
+
+	for rows.Next() {
+		err = rows.Scan(&DiscordUserID, &Type)
+		BruhMoment(err, "", false)
+		if Type {
+			UserTagsList = append(UserTagsList, "<@"+DiscordUserID+">")
+		} else {
+			UserTagsList = append(UserTagsList, "<@&"+DiscordUserID+">")
+		}
+	}
+	return UserTagsList
+}
+
+//get Reminder tags
+func GetUserReminderList(ChannelIDDiscord int, Member int64, Reminder int) []string {
+	var (
+		UserTagsList  []string
+		DiscordUserID string
+		Type          bool
+	)
+	rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id=? And Reminder=?`, ChannelIDDiscord, Member, Reminder)
 	BruhMoment(err, "", false)
 	defer rows.Close()
 

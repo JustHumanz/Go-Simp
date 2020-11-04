@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
-	"math"
 	"regexp"
 	"strconv"
 	"strings"
@@ -144,11 +143,8 @@ func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) er
 					YoutubeData.UpdateYtDB()
 				}
 				//send to reminder
-				loc := engine.Zawarudo(YoutubeData.YtData.Region)
-				UpcominginMinutes := int(math.Round(YoutubeData.YtData.Schedul.In(loc).Sub(time.Now().In(loc)).Minutes()))
-				if UpcominginMinutes > 30 && UpcominginMinutes < 36 {
-					YoutubeData.ChangeYtStatus("reminder").SendNude()
-				}
+				YoutubeData.ChangeYtStatus("reminder").SendNude()
+
 			} else {
 				YoutubeData.YtData.UpdateYt(YoutubeData.YtData.Status)
 			}

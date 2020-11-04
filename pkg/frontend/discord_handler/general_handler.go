@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"regexp"
+	"strconv"
 	"strings"
 
 	config "github.com/JustHumanz/Go-simp/tools/config"
@@ -163,16 +164,17 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
 	if strings.HasPrefix(m.Content, Prefix) {
 		var (
-			counter   bool
-			Already   []string
-			Done      []string
-			MemberTag []NameStruct
+			Already     []string
+			Done        []string
+			MemberTag   []NameStruct
+			ReminderInt = 0
 		)
-		User := database.UserStruct{
+		User := &database.UserStruct{
 			DiscordID:       m.Author.ID,
 			DiscordUserName: m.Author.Username,
 			Channel_ID:      m.ChannelID,
 			Human:           true,
+			Reminder:        ReminderInt,
 		}
 		Color, err := engine.GetColor("/tmp/discordpp.tmp", m.Author.AvatarURL("128"))
 		if err != nil {
@@ -181,7 +183,41 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if strings.HasPrefix(m.Content, Prefix+TagMe) {
 			Already = nil
 			Done = nil
-			VtuberName := strings.TrimSpace(strings.Replace(m.Content, Prefix+TagMe, "", -1))
+			UserInput := strings.Replace(m.Content, Prefix+TagMe, "", -1)
+			var (
+				VtuberName   string
+				ReminderUser int
+				re           = regexp.MustCompile(`(?m)-setreminder\s[1-9].`)
+			)
+
+			if len(re.FindAllString(UserInput, -1)) > 0 {
+				tmpvar := re.FindAllString(UserInput, -1)[0]
+				if tmpvar[len(tmpvar)-2:] != "" {
+					tmpvar2 := tmpvar[len(tmpvar)-2:]
+					tmpvar3, err := strconv.Atoi(tmpvar2[:len(tmpvar2)-1] + "6")
+					if err != nil {
+						log.Error(err)
+					} else {
+						ReminderUser = tmpvar3
+					}
+				} else {
+					tmpvar2, err := strconv.Atoi(tmpvar + "6")
+					if err != nil {
+						log.Error(err)
+					} else {
+						ReminderUser = tmpvar2
+					}
+				}
+
+				if ReminderUser > 67 {
+					s.ChannelMessageSend(m.ChannelID, "Can't set Reminder over than 60 Minutes")
+					return
+				}
+				VtuberName = strings.TrimSpace(strings.Replace(UserInput, tmpvar, "", -1))
+
+			} else {
+				VtuberName = strings.TrimSpace(strings.Replace(UserInput, "-setreminder", "", -1))
+			}
 			if VtuberName != "" {
 				tmp := strings.Split(VtuberName, ",")
 				for _, Name := range tmp {
@@ -189,18 +225,19 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if Data.GroupID == 0 {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
-							s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid")
+							s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `vtuber data` command to see vtubers name or see at my github https://github.com/JustHumanz/Go-Simp")
 							return
 						}
 						if database.CheckChannelEnable(m.ChannelID, Name, VTuberGroup.ID) {
-							User.GroupID = VTuberGroup.ID
+							User.SetGroupID(VTuberGroup.ID).
+								SetReminder(ReminderUser)
+
 							for _, Member := range database.GetName(VTuberGroup.ID) {
 								err := User.Adduser(Member.ID)
 								if err != nil {
 									Already = append(Already, "`"+Member.Name+"`")
 								} else {
 									Done = append(Done, "`"+Member.Name+"`")
-									counter = true
 								}
 							}
 							if Already != nil || Done != nil {
@@ -237,13 +274,14 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 				for i, Member := range MemberTag {
 					if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.GroupID) {
-						User.GroupID = Member.GroupID
+						User.SetGroupID(Member.GroupID).
+							SetReminder(ReminderUser)
+
 						err := User.Adduser(Member.MemberID)
 						if err != nil {
 							Already = append(Already, "`"+tmp[i]+"`")
 						} else {
 							Done = append(Done, "`"+tmp[i]+"`")
-							counter = true
 						}
 					} else {
 						s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
@@ -278,6 +316,103 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 			} else {
 				s.ChannelMessageSend(m.ChannelID, "Incomplete `"+TagMe+"` command")
 			}
+		} else if strings.HasPrefix(m.Content, Prefix+SetReminder) {
+			var (
+				ReminderUser int
+				UserInput    = strings.Replace(m.Content, Prefix+SetReminder, "", -1)
+				FindInt      = strings.Split(UserInput, " ")
+			)
+
+			if UserInput != "" {
+				if len(FindInt) > 2 {
+					tmpvar := FindInt[2]
+					if lenstr, _ := regexp.MatchString("^[0-9]{2}[:.,-]?$", tmpvar); lenstr {
+						tmpvar3, err := strconv.Atoi(tmpvar[:len(tmpvar)-1] + "6")
+						if err != nil {
+							log.Error(err)
+						}
+						ReminderUser = tmpvar3
+						if ReminderUser > 67 {
+							s.ChannelMessageSend(m.ChannelID, "Can't set Reminder over than 60 Minutes")
+							return
+						}
+
+					} else {
+						//Invaild
+						s.ChannelMessageSend(m.ChannelID, "Invaild number")
+						return
+					}
+				} else {
+					s.ChannelMessageSend(m.ChannelID, "Number not found")
+					return
+				}
+
+				tmp := strings.Split(FindInt[1], ",")
+				for _, Name := range tmp {
+					Data := FindName(Name)
+					if Data.GroupID == 0 {
+						VTuberGroup, err := FindGropName(Name)
+						if err != nil {
+							s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `vtuber data` command to see vtubers name or see at my github https://github.com/JustHumanz/Go-Simp")
+							return
+						}
+						if database.CheckChannelEnable(m.ChannelID, Name, VTuberGroup.ID) {
+							User.SetGroupID(VTuberGroup.ID).
+								SetReminder(ReminderUser)
+							for _, Member := range database.GetName(VTuberGroup.ID) {
+								err := User.UpdateReminder(Member.ID)
+								if err != nil {
+									log.Error(err)
+								}
+								Done = append(Done, "`"+Member.Name+"`")
+							}
+							if Done != nil {
+								s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+									SetDescription("You Update reminder time\n"+strings.Join(Done, " ")+" to your list").
+									SetThumbnail(config.GoSimpIMG).
+									SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
+									SetColor(Color).MessageEmbed)
+							}
+							Done = nil
+						} else {
+							s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+VTuberGroup.NameGroup+"`")
+							return
+						}
+					} else {
+						MemberTag = append(MemberTag, Data)
+					}
+				}
+				for i, Member := range MemberTag {
+					if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.GroupID) {
+						User.SetGroupID(Member.GroupID).
+							SetReminder(ReminderUser)
+						err := User.UpdateReminder(Member.MemberID)
+						if err != nil {
+							log.Error(err)
+						}
+						Done = append(Done, "`"+tmp[i]+"`")
+					} else {
+						s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+							SetDescription("look like this channel not enable `"+Member.GroupName+"`").
+							SetThumbnail(config.GoSimpIMG).
+							SetColor(Color).MessageEmbed)
+						return
+					}
+				}
+				if Done != nil {
+					s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+						SetDescription("You Update reminder time\n"+strings.Join(Done, " ")+" to your list").
+						SetThumbnail(config.GoSimpIMG).
+						SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
+						SetColor(Color).MessageEmbed)
+				}
+			} else {
+				s.ChannelMessageSend(m.ChannelID, "Incomplete `"+SetReminder+"` command")
+				return
+			}
 		} else if strings.HasPrefix(m.Content, Prefix+DelTag) {
 			Already = nil
 			Done = nil
@@ -289,18 +424,17 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if Data == (NameStruct{}) {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
-							s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid")
+							s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `vtuber data` command to see vtubers name or see at my github https://github.com/JustHumanz/Go-Simp")
 							return
 						}
 						if database.CheckChannelEnable(m.ChannelID, Name, VTuberGroup.ID) {
-							User.GroupID = VTuberGroup.ID
+							User.SetGroupID(VTuberGroup.ID)
 							for _, Member := range database.GetName(VTuberGroup.ID) {
 								err := User.Deluser(Member.ID)
 								if err != nil {
 									Already = append(Already, "`"+Member.Name+"`")
 								} else {
 									Done = append(Done, "`"+Member.Name+"`")
-									counter = true
 								}
 							}
 							if Already != nil {
@@ -312,7 +446,6 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetThumbnail(config.GoSimpIMG).
 									SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
 									SetColor(Color).MessageEmbed)
-								return
 							} else if Done != nil {
 								s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
@@ -322,7 +455,6 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetImage(VTuberGroup.IconURL).
 									SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
 									SetColor(Color).MessageEmbed)
-								return
 							}
 						} else {
 							s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
@@ -349,7 +481,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							Already = append(Already, "`"+tmp[i]+"`")
 						} else {
 							Done = append(Done, "`"+tmp[i]+"`")
-							counter = true
+
 						}
 					} else {
 						s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
@@ -360,25 +492,26 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						return
 					}
 				}
-				if Already != nil {
-					s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-						SetDescription("Already Removed from your tags or You never tag them\n"+strings.Join(Already, " ")).
-						SetThumbnail(config.GoSimpIMG).
-						SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
-						SetColor(Color).MessageEmbed)
-					return
-				}
 
-				if counter {
-					//return
-					s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-						SetDescription("You remove "+strings.Join(Done, " ")+" from your tag list").
-						SetThumbnail(config.GoSimpIMG).
-						SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
-						SetColor(Color).MessageEmbed)
-					return
+				if Already != nil || Done != nil {
+					if Already != nil {
+						s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+							SetDescription("Already Removed from your tags or You never tag them\n"+strings.Join(Already, " ")).
+							SetThumbnail(config.GoSimpIMG).
+							SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
+							SetColor(Color).MessageEmbed)
+					}
+
+					if Done != nil {
+						//return
+						s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+							SetDescription("You remove "+strings.Join(Done, " ")+" from your tag list").
+							SetThumbnail(config.GoSimpIMG).
+							SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
+							SetColor(Color).MessageEmbed)
+					}
 				}
 			} else {
 				s.ChannelMessageSend(m.ChannelID, "Incomplete `"+DelTag+"` command")
@@ -403,7 +536,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)
-								s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid")
+								s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `vtuber data` command to see vtubers name or see at my github https://github.com/JustHumanz/Go-Simp")
 								return
 							}
 
@@ -424,7 +557,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													Already = append(Already, "`"+Member.Name+"`")
 												} else {
 													Done = append(Done, "`"+Member.Name+"`")
-													counter = true
+
 												}
 											}
 											if Already != nil || Done != nil {
@@ -480,7 +613,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 											Already = append(Already, "`"+tmp[i]+"`")
 										} else {
 											Done = append(Done, "`"+tmp[i]+"`")
-											counter = true
+
 										}
 
 										if Already != nil || Done != nil {
@@ -542,7 +675,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)
-								s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid")
+								s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `vtuber data` command to see vtubers name or see at my github https://github.com/JustHumanz/Go-Simp")
 								return
 							}
 
@@ -563,7 +696,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													Already = append(Already, "`"+Member.Name+"`")
 												} else {
 													Done = append(Done, "`"+Member.Name+"`")
-													counter = true
+
 												}
 											}
 											if Already != nil || Done != nil {
@@ -619,7 +752,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 											Already = append(Already, "`"+tmp[i]+"`")
 										} else {
 											Done = append(Done, "`"+tmp[i]+"`")
-											counter = true
+
 										}
 
 										if Already != nil || Done != nil {
@@ -658,7 +791,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					s.ChannelMessageSend(m.ChannelID, "Incomplete `tag role` command")
 				}
 			} else {
-				s.ChannelMessageSend(m.ChannelID, "You don't have enough permission to use this command")
+				s.ChannelMessageSend(m.ChannelID, "You don't have enough permission to use this command,Only user with permission `Manage Channel or Higher` can use this command ")
 			}
 		}
 	}
@@ -718,7 +851,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 								s.ChannelMessageSend(m.ChannelID, "Something error XD")
 							}
 							done = append(done, "`"+VTuberGroup.NameGroup+"`")
-							counter = true
+
 						}
 					} else {
 						s.ChannelMessageSend(m.ChannelID, "You don't have permission to enable/disable/update")
@@ -758,7 +891,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 								return
 							}
 							done = append(done, "`"+VTuberGroup.NameGroup+"`")
-							counter = true
+
 						} else {
 							already = append(already, "`"+VTuberGroup.NameGroup+"`")
 							counter = false
@@ -799,7 +932,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 								counter = false
 							} else {
 								done = append(done, "`"+VTuberGroup.NameGroup+"`")
-								counter = true
+
 							}
 						} else {
 							s.ChannelMessageSend(m.ChannelID, "this channel not enable `"+VTuberGroup.NameGroup+"`")
@@ -856,11 +989,11 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 				AddField(Prefix+DelRoles+" [Roles name]", "Remove roles from tags list").
 				AddField(Prefix+RolesTags+" [Roles name]", "Show all tags list that roles subscribed on this channel").
 				AddField(Prefix+ChannelState, "Show what is enable in this channel").
-				AddField(Prefix+VtuberData+" [Group] [Region]", "Show available Vtuber data ").
+				AddField(Prefix+VtuberData+" [Group] -Region {region}", "Show available Vtuber data ").
 				AddField(Prefix+Subscriber+" {Member name}", "Show Vtuber count of subscriber and followers ").
-				AddField(config.PYoutube+Upcoming+" [Vtuber Group/Member] {Region}", "This command will show Upcoming live streams on Youtube (*only 3 if use Group name*)").
-				AddField(config.PYoutube+Live+" [Vtuber Group/Member] {Region}", "This command will show all live streams right now on Youtube").
-				AddField(config.PYoutube+Past+" [Vtuber Group/Member] {Region}", "This command will show past streams on Youtube (*only 3 if use Group name*)").
+				AddField(config.PYoutube+Upcoming+" [Vtuber Group/Member] -Region {region}", "This command will show Upcoming live streams on Youtube (*only 3 if use Group name*)").
+				AddField(config.PYoutube+Live+" [Vtuber Group/Member] -Region {region}", "This command will show all live streams right now on Youtube").
+				AddField(config.PYoutube+Past+" [Vtuber Group/Member] -Region {region}", "This command will show past streams on Youtube (*only 3 if use Group name*)").
 				AddField("~~"+config.PBilibili+Upcoming+" [Vtuber Group/Member]~~", "~~This command will show all Upcoming live streams on BiliBili~~").
 				AddField(config.PBilibili+Live+" [Vtuber Group/Member]", "This command will show all live streams right now on BiliBili (*only 3 if use Group name*)").
 				AddField(config.PBilibili+Past+" [Vtuber Group/Member]", "This command will show all past streams on BiliBili").
@@ -952,7 +1085,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 			list := database.UserStatus(m.Author.ID, m.ChannelID)
 
 			if list != nil {
-				table.SetHeader([]string{"Vtuber Group", "Vtuber Name"})
+				table.SetHeader([]string{"Vtuber Group", "Vtuber Name", "Reminder"})
 				table.AppendBulk(list)
 				table.Render()
 
@@ -999,16 +1132,29 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					SetColor(Color).MessageEmbed)
 			}
 		} else if strings.HasPrefix(m.Content, Prefix+VtuberData) {
-			Parameter := strings.Split(m.Content, " ")
-			if len(Parameter) > 2 {
-				Groups := strings.Split(Parameter[2], ",")
+			var (
+				re        = regexp.MustCompile(`(?m)-region\s.+`)
+				tmpvar    = re.FindAllString(m.Content, -1)
+				UserInput = strings.Replace(m.Content, Prefix+VtuberData, "", -1)
+				RegInput  []string
+			)
+
+			if len(tmpvar) > 0 {
+				vartmp2 := strings.TrimSpace(strings.Replace(tmpvar[0], "-region", "", -1))
+				RegInput = strings.Split(vartmp2, ",")
+
+				UserInput = strings.Replace(UserInput, tmpvar[0], "", -1)
+			} else {
+				UserInput = strings.Replace(UserInput, "-region", "", -1)
+			}
+			GroupInput := strings.Split(strings.TrimSpace(UserInput), ",")
+			if len(GroupInput) > 0 {
 				var (
-					GroupsByReg []string
+					GroupsByReg = RegInput
 					NiggList    = make(map[string]string)
 				)
-				if len(Parameter) > 3 {
-					GroupsByReg = strings.Split(Parameter[3], ",")
-					for _, Group := range Groups {
+				if len(RegInput) > 0 {
+					for _, Group := range GroupInput {
 						var (
 							black []string
 						)
@@ -1024,7 +1170,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 				for _, Group := range engine.GroupData {
-					for _, Grp := range Groups {
+					for _, Grp := range GroupInput {
 						if Grp == strings.ToLower(Group.NameGroup) {
 							for _, Member := range database.GetName(Group.ID) {
 								yt := ""
