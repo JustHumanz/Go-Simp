@@ -310,13 +310,20 @@ Example: `art>Kanochi` or `art>hololive`
 
 ```vtbot>Tag me [Group/Member]```  
 This command will add you to tag lists if any new fanart or livestream started   
-Example: `art>tag me Kanochi`,then you will tagged when there is a new fanart or livestream of kano  
+Example: `vtbot>tag me Kanochi`,then you will tagged when there is a new fanart or livestream of kano  
+
+in other case if you want to remind before livestream started you can add `-setreminder {Minutes}` in `tag me`  
+Example: `vtbot>tag me hanayori -setreminder 30` so bot will remind you 30 Minutes before livestream started  
 
 ```vtbot>Del tag [Group/Member]```  
 This command will remove you from tags list  
 
 ```vtbot>My tags```  
 Shows all lists that you are subscribed  
+
+```vtbot>Set reminder```  
+Update or Set your reminder time  
+Example: `vtbot>Set reminder hololive 20`
 
 ```vtbot>Tag roles [roles] [Group/Member]```
 Same like `tag me` command,but this will tag roles  *every role separated by space*   
