@@ -815,7 +815,6 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 	Prefix := config.PGeneral
 	if strings.HasPrefix(m.Content, Prefix) {
 		var (
-			counter bool
 			tagtype int
 			already []string
 			done    []string
@@ -843,7 +842,6 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if CheckPermission(m.Author.ID, m.ChannelID, s) {
 						if database.ChannelCheck(VTuberGroup.ID, m.ChannelID) {
 							already = append(already, "`"+VTuberGroup.NameGroup+"`")
-							counter = false
 						} else {
 							err := database.AddChannel(m.ChannelID, tagtype, VTuberGroup.ID)
 							if err != nil {
@@ -858,7 +856,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 						return
 					}
 				}
-				if counter {
+				if done != nil {
 					s.ChannelMessageSend(m.ChannelID, "done,@here <@"+m.Author.ID+"> is enable "+strings.Join(done, ",")+" on this channel")
 					if tagtype == 1 {
 						s.ChannelMessageSend(m.ChannelID, msg1+"\n@here")
@@ -894,14 +892,13 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 						} else {
 							already = append(already, "`"+VTuberGroup.NameGroup+"`")
-							counter = false
 						}
 					} else {
 						s.ChannelMessageSend(m.ChannelID, "You don't have permission to enable/disable/update")
 						return
 					}
 				}
-				if counter {
+				if done != nil {
 					s.ChannelMessageSend(m.ChannelID, "done,@here <@"+m.Author.ID+"> is disable "+strings.Join(done, ",")+" from this channel")
 				} else {
 					s.ChannelMessageSend(m.ChannelID, strings.Join(already, ",")+", already removed or never enable on this channel")
@@ -929,7 +926,6 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 							err := database.UpdateChannel(m.ChannelID, tagtype, VTuberGroup.ID)
 							if err != nil {
 								already = append(already, "`"+VTuberGroup.NameGroup+"`")
-								counter = false
 							} else {
 								done = append(done, "`"+VTuberGroup.NameGroup+"`")
 
@@ -943,7 +939,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 						return
 					}
 				}
-				if counter {
+				if done != nil {
 					s.ChannelMessageSend(m.ChannelID, "done,<@"+m.Author.ID+"> update channel state "+strings.Join(done, ","))
 					if tagtype == 1 {
 						s.ChannelMessageSend(m.ChannelID, msg1+"\n@here")
