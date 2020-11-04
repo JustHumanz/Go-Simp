@@ -309,7 +309,7 @@ Show fanart with randomly with their fanart hashtag
 Example: `art>Kanochi` or `art>hololive`  
 
 ```vtbot>Tag me [Group/Member]```  
-This command will add you to tags lists if any new fanart or livestream  
+This command will add you to tag lists if any new fanart or livestream started   
 Example: `art>tag me Kanochi`,then you will tagged when there is a new fanart or livestream of kano  
 
 ```vtbot>Del tag [Group/Member]```  
