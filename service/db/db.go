@@ -44,6 +44,7 @@ func CreateDB(Data config.ConfigFile) error {
 		id int(11) NOT NULL AUTO_INCREMENT,
 		DiscordID varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 		DiscordUserName varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+		Reminder INT(2) DEFAULT 0,
 		Human TINYINT DEFAULT 1,
 		VtuberMember_id int(11) NOT NULL,
 		Channel_id int(11) NOT NULL,
