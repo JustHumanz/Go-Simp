@@ -1214,6 +1214,14 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 						SetColor(Color).MessageEmbed)
 				} else if len(tableString.String()) > 1500 {
 					s.ChannelMessageSend(m.ChannelID, "```"+tableString.String()+"```")
+				} else if tableString.String() == "" {
+					s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+						SetThumbnail(config.GoSimpIMG).
+						SetURL("https://github.com/JustHumanz/Go-Simp#command").
+						SetDescription("Invalid command,see command at my github\nhttps://github.com/JustHumanz/Go-Simp#command").
+						SetColor(Color).MessageEmbed)
+					return
 				} else {
 					s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
