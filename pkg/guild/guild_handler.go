@@ -60,7 +60,7 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 						SetThumbnail(config.GoSimpIMG).
 						SetImage(H3llcome[rand.Intn(len(H3llcome))]).
 						SetColor(14807034).
-						SetDescription("For setup me you can watch in https://github.com/JustHumanz/Go-Simp/blob/master/Guide.md ").MessageEmbed)
+						SetDescription("For setup me,you can watch in https://github.com/JustHumanz/Go-Simp/blob/master/Guide.md ").MessageEmbed)
 
 					//send server name to my discord
 					err := DataGuild.InputGuild()
