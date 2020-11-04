@@ -3,4 +3,9 @@
 
 ### Setup Guide basic  
 
-[![https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/go-simp.png](http://img.youtube.com/vi/kZ2JDGMSuOk/0.jpg)](http://www.youtube.com/watch?v=qUK9_2XrAKM "Vtbot setup guide")
+#### Use `tag roles` command
+[![Guide](https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/go-simp.png)](https://vimeo.com/475330914 "Vtbot setup guide")
+
+
+#### Use `tag me` command
+[![Guide](https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/go-simp.png)](https://vimeo.com/474534235 "Vtbot setup guide")
