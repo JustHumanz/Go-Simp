@@ -73,7 +73,38 @@ type YtDbData struct {
 type UserStruct struct {
 	DiscordID, DiscordUserName, Channel_ID string
 	GroupID                                int64
+	Reminder                               int
 	Human                                  bool
+}
+
+func (Data *UserStruct) SetDiscordID(new string) *UserStruct {
+	Data.DiscordID = new
+	return Data
+}
+
+func (Data *UserStruct) SetDiscordUserName(new string) *UserStruct {
+	Data.DiscordUserName = new
+	return Data
+}
+
+func (Data *UserStruct) SetDiscordChannelID(new string) *UserStruct {
+	Data.Channel_ID = new
+	return Data
+}
+
+func (Data *UserStruct) SetGroupID(new int64) *UserStruct {
+	Data.GroupID = new
+	return Data
+}
+
+func (Data *UserStruct) SetHuman(new bool) *UserStruct {
+	Data.Human = new
+	return Data
+}
+
+func (Data *UserStruct) SetReminder(new int) *UserStruct {
+	Data.Reminder = new
+	return Data
 }
 
 type LiveBiliDB struct {

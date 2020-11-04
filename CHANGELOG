@@ -1,3 +1,5 @@
+- Add customize reminder
+- Fix `Del me` command
 - Add usertag when Vtuber get milestone
 - Change reminder from 1H and 30M to 30M
 - Rename command from `channel tags` to `channel state`

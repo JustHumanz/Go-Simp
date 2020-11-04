@@ -1,6 +1,7 @@
 package youtube
 
 import (
+	"math"
 	"regexp"
 	"strings"
 	"time"
@@ -26,10 +27,6 @@ func (PushData *NotifStruct) SendNude() {
 	expiresAt := time.Now().In(loc)
 	VtuberName := engine.FixName(PushData.Member.EnName, PushData.Member.JpName)
 	GroupIcon := PushData.Group.IconURL
-	Color, err := engine.GetColor("/tmp/yt.tmp", Avatar)
-	if err != nil {
-		log.Error(err)
-	}
 
 	var (
 		timestart time.Time
@@ -43,6 +40,10 @@ func (PushData *NotifStruct) SendNude() {
 	}
 
 	if Status == "upcoming" {
+		Color, err := engine.GetColor("/tmp/yt.tmp", Avatar)
+		if err != nil {
+			log.Error(err)
+		}
 		MsgEmbend = engine.NewEmbed().
 			SetAuthor(VtuberName, Avatar, YtChannel).
 			SetTitle("New upcoming Livestream").
@@ -57,22 +58,11 @@ func (PushData *NotifStruct) SendNude() {
 			SetFooter(timestart.Format(time.RFC822), config.YoutubeIMG).
 			SetColor(Color).MessageEmbed
 
-	} else if Status == "reminder" {
-		MsgEmbend = engine.NewEmbed().
-			SetAuthor(VtuberName, Avatar, YtChannel).
-			SetTitle(PushData.Member.EnName+" Live in "+durafmt.Parse(timestart.Sub(expiresAt)).LimitFirstN(1).String()).
-			SetDescription(PushData.YtData.Title).
-			SetImage(PushData.YtData.Thumb).
-			SetThumbnail(GroupIcon).
-			SetURL(YtURL).
-			AddField("Type ", PushData.YtData.Type).
-			AddField("Start live in", durafmt.Parse(timestart.Sub(expiresAt)).LimitFirstN(2).String()).
-			InlineAllFields().
-			AddField("Waiting", PushData.YtData.Viewers+" Simps in Room Chat").
-			SetFooter(timestart.Format(time.RFC822), config.YoutubeIMG).
-			SetColor(Color).MessageEmbed
-
 	} else if Status == "live" {
+		Color, err := engine.GetColor("/tmp/yt.tmp", Avatar)
+		if err != nil {
+			log.Error(err)
+		}
 		MsgEmbend = engine.NewEmbed().
 			SetAuthor(VtuberName, Avatar, YtChannel).
 			SetTitle("Live right now").
@@ -88,6 +78,10 @@ func (PushData *NotifStruct) SendNude() {
 			SetColor(Color).MessageEmbed
 
 	} else if Status == "past" && PushData.YtData.Type == "Covering" {
+		Color, err := engine.GetColor("/tmp/yt.tmp", Avatar)
+		if err != nil {
+			log.Error(err)
+		}
 		MsgEmbend = engine.NewEmbed().
 			SetAuthor(VtuberName, Avatar, YtChannel).
 			SetTitle("Uploaded a new video").
@@ -103,6 +97,10 @@ func (PushData *NotifStruct) SendNude() {
 			SetFooter(PushData.YtData.Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 			SetColor(Color).MessageEmbed
 	} else if Status == "past" {
+		Color, err := engine.GetColor("/tmp/yt.tmp", Avatar)
+		if err != nil {
+			log.Error(err)
+		}
 		MsgEmbend = engine.NewEmbed().
 			SetAuthor(VtuberName, Avatar, YtChannel).
 			SetTitle("Uploaded a new video").
@@ -117,6 +115,51 @@ func (PushData *NotifStruct) SendNude() {
 			SetFooter(timestart.Format(time.RFC822), config.YoutubeIMG).
 			SetColor(Color).MessageEmbed
 	}
+
+	if Status == "reminder" {
+		Color, err := engine.GetColor("/tmp/yt.tmp", Avatar)
+		if err != nil {
+			log.Error(err)
+		}
+		id, DiscordChannelID := database.ChannelTag(PushData.Member.ID, 2)
+		loc := engine.Zawarudo(PushData.YtData.Region)
+		UpcominginMinutes := int(math.Round(PushData.YtData.Schedul.In(loc).Sub(time.Now().In(loc)).Minutes()))
+		for i := 0; i < len(DiscordChannelID); i++ {
+			k := 0
+			for ii := 0; ii < 70; ii += 10 {
+				k = ii + 6
+				if UpcominginMinutes > ii && UpcominginMinutes < k {
+					UserTagsList := database.GetUserReminderList(id[i], PushData.Member.ID, k)
+					if UserTagsList != nil {
+						msg, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
+							SetAuthor(VtuberName, Avatar, YtChannel).
+							SetTitle(PushData.Member.EnName+" Live in "+durafmt.Parse(timestart.Sub(expiresAt)).LimitFirstN(1).String()).
+							SetDescription(PushData.YtData.Title).
+							SetImage(PushData.YtData.Thumb).
+							SetThumbnail(GroupIcon).
+							SetURL(YtURL).
+							AddField("Type ", PushData.YtData.Type).
+							AddField("Start live in", durafmt.Parse(timestart.Sub(expiresAt)).LimitFirstN(2).String()).
+							InlineAllFields().
+							AddField("Waiting", PushData.YtData.Viewers+" Simps in Room Chat").
+							SetFooter(timestart.Format(time.RFC822), config.YoutubeIMG).
+							SetColor(Color).MessageEmbed)
+						if err != nil {
+							log.Error(msg, err)
+							match, _ := regexp.MatchString("Unknown Channel", err.Error())
+							if match {
+								log.Info("Delete Discord Channel ", DiscordChannelID[i])
+								database.DelChannel(DiscordChannelID[i], PushData.Group.ID)
+							}
+						}
+						msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
+					}
+				}
+			}
+		}
+		return
+	}
+
 	id, DiscordChannelID := database.ChannelTag(PushData.Member.ID, 2)
 	for i := 0; i < len(DiscordChannelID); i++ {
 		UserTagsList := database.GetUserList(id[i], PushData.Member.ID)

@@ -15,6 +15,7 @@ const (
 	Disable      = "disable"
 	Update       = "update"
 	TagMe        = "tag me"
+	SetReminder  = "set reminder"
 	DelTag       = "del tag"
 	MyTags       = "my tags"
 	TagRoles     = "tag roles"
