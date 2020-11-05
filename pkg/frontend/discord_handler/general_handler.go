@@ -972,8 +972,8 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 			s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 				SetTitle("Help").
-				SetURL("https://github.com/JustHumanz/Go-Simp#command").
-				SetDescription("See at my github repository\nhttps://github.com/JustHumanz/Go-Simp#command").
+				SetURL(config.CommandURL).
+				SetDescription("See at my github repository\n"+config.CommandURL).
 				/*
 					AddField(Prefix+Enable+" {art/live/all} [Vtuber Group]", "This command will declare if [Vtuber Group] enable in this channel\nExample:\n`"+config.PGeneral+Enable+" all hanayori,hololive` so other users can use `"+config.PGeneral+TagMe+" kanochi` or "+"`"+config.PGeneral+TagMe+" gura`").
 					AddField(Prefix+Update+" {art/live/all} [Vtuber Group]", "Use this command if you want to change enable state").
@@ -1205,7 +1205,8 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 						SetThumbnail(config.GoSimpIMG).
-						SetDescription("Data too longgggggg").
+						SetURL(config.VtubersData).
+						SetDescription("Data too longgggggg\nsee Vtubers Data at my github\n"+config.VtubersData).
 						SetImage(config.Longcatttt).
 						SetColor(Color).MessageEmbed)
 				} else if len(tableString.String()) > 1500 {
@@ -1214,8 +1215,8 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 						SetThumbnail(config.GoSimpIMG).
-						SetURL("https://github.com/JustHumanz/Go-Simp#command").
-						SetDescription("Invalid command,see command at my github\nhttps://github.com/JustHumanz/Go-Simp#command").
+						SetURL(config.CommandURL).
+						SetDescription("Invalid command,see command at my github\n"+config.CommandURL).
 						SetColor(Color).MessageEmbed)
 					return
 				} else {
