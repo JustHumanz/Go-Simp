@@ -31,7 +31,7 @@ func CheckSchedule() {
 					"Youtube ID":   Member.YoutubeID,
 					"Vtube Region": Member.Region,
 				}).Info("Checking Youtube")
-				go Filter(Member, Group, &wg)
+				go StartCheckYT(Member, Group, &wg)
 				time.Sleep(time.Duration(rand.Intn(config.RandomSleep-400)+400) * time.Millisecond)
 			}
 		}
@@ -80,11 +80,11 @@ func CheckPrivate() {
 		defer wg.Done()
 
 		var (
-			tor bool
-			err error
+			tor = false
 			url = "https://i3.ytimg.com/vi/" + Youtube.VideoID + "/hqdefault.jpg"
 		)
 		for {
+			var err error
 			if tor {
 				_, err = engine.CoolerCurl(url, nil)
 			} else {

@@ -38,8 +38,8 @@ func GetRSS(YtID string) []string {
 	return VideoID
 }
 
-//filter Youtube rss and API
-func Filter(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) error {
+//StartCheckYT Youtube rss and API
+func StartCheckYT(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) error {
 	VideoID := GetRSS(Name.YoutubeID)
 	Data, err := YtAPI(VideoID)
 	if err != nil {
