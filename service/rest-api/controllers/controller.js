@@ -1,6 +1,6 @@
 const model = require("../models/model.js");
 
-exports.memberAll = (req,res) => {
+exports.MemberAll = (req,res) => {
     model.GetMemberAll(req.query.region,(err, data) => {
         if (err) {
             if (err.kind === "not_found") {
@@ -18,8 +18,14 @@ exports.memberAll = (req,res) => {
     });
 };
 
-exports.memberName = (req, res) => {
-    model.GetMemberName(req.params.nog.split(","), (err, data) => {
+exports.MemberName = (req, res) => {
+    let region = null
+    if (req.query.region != null){
+        region = req.query.region.split(",")
+    } else {
+        region = null
+    }
+    model.GetMemberName(req.params.nog.split(","),region, (err, data) => {
     if (err) {
     if (err.kind === "not_found") {
         res.status(404).send({
@@ -35,7 +41,7 @@ exports.memberName = (req, res) => {
 };
   
 
-exports.groupAll = (_,res) => {
+exports.GroupAll = (_,res) => {
     model.GetGroupAll((err, data) => {
         if (err) {
             if (err.kind === "not_found") {
@@ -53,7 +59,7 @@ exports.groupAll = (_,res) => {
     });
 };
     
-exports.groupName = (req, res) => {
+exports.GroupName = (req, res) => {
     model.GetGroupName(req.params.group.split(","), (err, data) => {
         if (err) {
         if (err.kind === "not_found") {
@@ -70,7 +76,7 @@ exports.groupName = (req, res) => {
 };
 
 
-exports.ytlivestream = (req, res) => {
+exports.YtliveStream = (req, res) => {
     const Limit =  req.query.limit || 30
     if (Limit >= 100 ){
         res.status(401).send({
@@ -93,7 +99,7 @@ exports.ytlivestream = (req, res) => {
     });
 };
 
-exports.twitterd = (req, res) => {
+exports.Twitterd = (req, res) => {
     const Limit =  req.query.limit || 30
     if (Limit >= 300 ){
         res.status(401).send({
@@ -118,7 +124,7 @@ exports.twitterd = (req, res) => {
     });
 };
 
-exports.tBilibili = (req, res) => {
+exports.Tbilibili = (req, res) => {
     const Limit =  req.query.limit || 30
     if (Limit >= 300 ){
         res.status(401).send({
@@ -142,7 +148,7 @@ exports.tBilibili = (req, res) => {
 };
 
 
-exports.liveBilibili = (req, res) => {
+exports.LiveBilibili = (req, res) => {
     const Limit =  req.query.limit || 10
     if (Limit >= 30 ){
         res.status(401).send({
@@ -165,7 +171,7 @@ exports.liveBilibili = (req, res) => {
     });
 };
 
-exports.spaceBilibili = (req, res) => {
+exports.SpaceBilibili = (req, res) => {
     const Limit =  req.query.limit || 30
     if (Limit >= 60 ){
         res.status(401).send({
@@ -189,7 +195,7 @@ exports.spaceBilibili = (req, res) => {
 };
 
 
-exports.subscriber = (req, res) => {
+exports.Subscriber = (req, res) => {
     model.Getsubscriber(req.params.nog.split(","),(err, data) => {
         if (err) {
         if (err.kind === "not_found") {

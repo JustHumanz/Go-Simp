@@ -1,3 +1,4 @@
+const { whereIn } = require("../config/db.js");
 const knex = require("../config/db.js");
 
 
@@ -60,15 +61,30 @@ const GetMemberAll = async (Reg,result) => {
 };
 
 
-const GetMemberName = async (Name, result) => {
+const GetMemberName = async (Name,Region, result) => {
   try {
-     let data = await knex('VtuberMember')
-     .innerJoin('VtuberGroup','VtuberMember.VtuberGroup_id','VtuberGroup.id')
-     .where(function() {
-       this.orWhereIn('VtuberMember.VtuberName', Name)
-       .orWhereIn('VtuberMember.VtuberName_EN',Name)
-     }).orWhereIn('VtuberGroup.VtuberGroupName',Name)
-   
+    let data
+    if (Region != null) {
+      data = await knex('VtuberMember')
+      .innerJoin('VtuberGroup','VtuberMember.VtuberGroup_id','VtuberGroup.id')
+      .where(function() {
+        this.orWhereIn('VtuberMember.VtuberName', Name)
+        .orWhereIn('VtuberMember.VtuberName_EN',Name)
+      }).orWhereIn('VtuberGroup.VtuberGroupName',Name)
+      .andWhere(function(){
+        this.whereIn("Region",Region)
+      })
+
+    } else{
+      data = await knex('VtuberMember')
+      .innerJoin('VtuberGroup','VtuberMember.VtuberGroup_id','VtuberGroup.id')
+      .where(function() {
+        this.orWhereIn('VtuberMember.VtuberName', Name)
+        .orWhereIn('VtuberMember.VtuberName_EN',Name)
+      }).orWhereIn('VtuberGroup.VtuberGroupName',Name)
+      .orderBy("Region","desc")
+    }
+
     if (data.length){
       data.forEach(i => {
         delete i.id
