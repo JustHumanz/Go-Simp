@@ -1,7 +1,6 @@
 const model = require("../models/model.js");
 
 exports.MemberAll = (req,res) => {
-    req = req.toLowerCase()
     model.GetMemberAll(req.query.region,(err, data) => {
         if (err) {
             if (err.kind === "not_found") {
@@ -20,7 +19,6 @@ exports.MemberAll = (req,res) => {
 };
 
 exports.MemberName = (req, res) => {
-    req = req.toLowerCase()
     let region = null
     if (req.query.region != null){
         region = req.query.region.split(",")
@@ -62,7 +60,6 @@ exports.GroupAll = (_,res) => {
 };
     
 exports.GroupName = (req, res) => {
-    req = req.toLowerCase()
     model.GetGroupName(req.params.group.split(","), (err, data) => {
         if (err) {
         if (err.kind === "not_found") {
@@ -80,7 +77,6 @@ exports.GroupName = (req, res) => {
 
 
 exports.YtliveStream = (req, res) => {
-    req = req.toLowerCase()
     const Limit =  req.query.limit || 30
     if (Limit >= 100 ){
         res.status(401).send({
@@ -104,7 +100,6 @@ exports.YtliveStream = (req, res) => {
 };
 
 exports.Twitterd = (req, res) => {
-    req = req.toLowerCase()
     const Limit =  req.query.limit || 30
     if (Limit >= 300 ){
         res.status(401).send({
@@ -130,7 +125,6 @@ exports.Twitterd = (req, res) => {
 };
 
 exports.Tbilibili = (req, res) => {
-    req = req.toLowerCase()
     const Limit =  req.query.limit || 30
     if (Limit >= 300 ){
         res.status(401).send({
@@ -155,7 +149,6 @@ exports.Tbilibili = (req, res) => {
 
 
 exports.LiveBilibili = (req, res) => {
-    req = req.toLowerCase()
     const Limit =  req.query.limit || 10
     if (Limit >= 30 ){
         res.status(401).send({
@@ -179,7 +172,6 @@ exports.LiveBilibili = (req, res) => {
 };
 
 exports.SpaceBilibili = (req, res) => {
-    req = req.toLowerCase()
     const Limit =  req.query.limit || 30
     if (Limit >= 60 ){
         res.status(401).send({
@@ -204,7 +196,6 @@ exports.SpaceBilibili = (req, res) => {
 
 
 exports.Subscriber = (req, res) => {
-    req = req.toLowerCase()
     model.Getsubscriber(req.params.nog.split(","),(err, data) => {
         if (err) {
         if (err.kind === "not_found") {
