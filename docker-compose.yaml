@@ -89,5 +89,5 @@ services:
     depends_on:
     - rest_api
     ports:
-    - "1107:8000"
+    - "1337:8000"
     restart: on-failure    
