@@ -32,8 +32,23 @@ def go_simps_group(request, GroupName):
             Region.append(Member['Region'])
         Members[i]["Youtube_Avatar"] = Members[i]["Youtube_Avatar"].replace("s800","s100")    
 
-    Payload = {'Members':Members,'Region':Region}
+    Payload = {'Members':Members,'Region':Region,'Path':'/Group/'+GroupName}
     return render(request, 'group.html',Payload)
+
+def go_simps_memebrs(request):
+    Members = Vtubers.GetMembers("")
+    Region = []
+    i = 0
+    for Member in Members:
+        if Member['Region'] not in Region:
+            Region.append(Member['Region'])
+        Members[i]["Youtube_Avatar"] = Members[i]["Youtube_Avatar"].replace("s800","s100")    
+
+    Payload = {'Members':Members,'Region':Region,'Path':'/Vtubers/'}
+    return render(request, 'group.html',Payload)
+
+def go_simps_command(request):
+    return render(request,'exec.html')
 
 def go_simps_member(request,MemberName):
     Member = Vtubers.GetMembers(MemberName)
