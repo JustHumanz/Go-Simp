@@ -91,12 +91,10 @@
       </div>
       {% elif Member.0.Youtube_ID and not Member.0.BiliBili_RoomID %}
         <a href="https://www.youtube.com/channel/{{Member.0.Youtube_ID}}?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
-          <img class="w-20 rounded mx-auto" src="{{Member.0.Youtube_Avatar}}" alt="Youtube">
-        </a>
+          <img class="w-20 rounded mx-auto" src="{{Member.0.Youtube_Avatar}}" alt="Youtube"></a>
       {% elif Member.0.BiliBili_RoomID and not Member.0.Youtube_ID %} 
         <a href="http://space.bilibili.com/{{Member.0.BiliBili_SpaceID}}" target="_blank" rel="noopener noreferrer">
-          <img class="w-20 rounded mx-auto" src="{{Member.0.BiliBili_Avatar}}" alt="BiliBili">
-        </a>
+          <img class="w-20 rounded mx-auto" src="{{Member.0.BiliBili_Avatar}}" alt="BiliBili"></a>
       {% endif %}
       <div class="container">
         <div class="row">
