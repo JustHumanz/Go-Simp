@@ -2,7 +2,6 @@ testing/
 *.log
 config.json
 token.json
-index.html
 endpoint
 __pycache__
 *.env
