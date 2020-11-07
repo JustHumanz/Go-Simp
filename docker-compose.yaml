@@ -80,3 +80,14 @@ services:
     ports:
       - "1107:2525"
     restart: on-failure
+
+  go_simp_web:
+    build: service/Go-Simp-Web
+    image: go-simp-web
+    env_file:
+      - ./.env    
+    depends_on:
+    - rest_api
+    ports:
+    - "1107:8000"
+    restart: on-failure    
