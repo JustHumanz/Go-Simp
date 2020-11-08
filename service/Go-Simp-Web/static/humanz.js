@@ -45,6 +45,8 @@ function Del(elem) {
                 '_blank'
               );
               return
+            } else if (url == "#") {
+              return
             }
 
         history.pushState({
