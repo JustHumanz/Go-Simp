@@ -34,16 +34,16 @@ function Del(elem) {
   });
 
   $('.MemberInfo').link(function(){
-    var MemberName = $(this).attr("data_group");
-    var urls = "/Group/"+MemberName
+    MemberName = $(this).attr("data_group");
+    var urls = "/Member/"+MemberName
     $.ajax(
     {
         type:"GET",
-        url: "/Member/"+MemberName,
+        url: urls,
         success: function(response){
           //$("body").html(response);
           document.title = response.pageTitle;
-          window.history.pushState({"body":response.body,"pageTitle":response.pageTitle},"", url);
+          window.history.pushState({"body":response.body,"pageTitle":response.pageTitle},"", urls);
         },
     })
   });
