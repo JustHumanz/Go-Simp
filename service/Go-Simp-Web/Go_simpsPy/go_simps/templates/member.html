@@ -97,11 +97,10 @@
         <a href="http://space.bilibili.com/{{Member.0.BiliBili_SpaceID}}" target="_blank" rel="noopener noreferrer">
           <img class="w-20 rounded mx-auto" src="{{Member.0.BiliBili_Avatar}}" alt="BiliBili"></a>
       {% endif %}
-      <div class="container">
+      <div class="container mb-5">
         <div class="row">
            <br/>
            <div class="col text-center">
-              <h2>Vtuber Info</h2>
               Nickname: {{Member.0.VtuberName}}<br>
               Fullname: {{Member.0.VtuberName_EN}}/{{Member.0.VtuberName_JP}}<br>
               Region: {{Member.0.Region}}<br>
@@ -111,21 +110,21 @@
            <div class="col-xs-6 col-sm-4 col-md-4 mt-4">
               <div class="counter">
                  <i class="fa fa-youtube-play fa-yt fa-2x"></i>
-                 <h2 class="timer count-title count-number" data-to="{{Subs.0.Youtube_Subscriber}}" data-speed="1500"></h2>
+                 <h2 class="timer count-title count-number prg-count" data-count="{{Subs.0.Youtube_Subscriber}}">0</h2>
                  <p class="count-text ">Subscriber</p>
               </div>
            </div>
            <div class="col-xs-6 col-sm-4 col-md-4 mt-4">
               <div class="counter">
                  <i class="fa fa-twitter fa-tw fa-2x"></i>
-                 <h2 class="timer count-title count-number" data-to="{{Subs.0.Twitter_Followers}}" data-speed="1500"></h2>
+                 <h2 class="timer count-title count-number prg-count" data-count="{{Subs.0.Twitter_Followers}}">0</h2>
                  <p class="count-text ">Twitter followers</p>
               </div>
            </div>
            <div class="col-xs-6 col-sm-4 col-md-4 mt-4">
               <div class="counter">
                 <svg class="icon" style="width: 2em; height: 2em;vertical-align: middle;fill: #23aee5;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="517"><path d="M777.514667 131.669333a53.333333 53.333333 0 0 1 0 75.434667L728.746667 255.829333h49.92A160 160 0 0 1 938.666667 415.872v320a160 160 0 0 1-160 160H245.333333A160 160 0 0 1 85.333333 735.872v-320a160 160 0 0 1 160-160h49.749334L246.4 207.146667a53.333333 53.333333 0 1 1 75.392-75.434667l113.152 113.152c3.370667 3.370667 6.186667 7.04 8.448 10.965333h137.088c2.261333-3.925333 5.12-7.68 8.490667-11.008l113.109333-113.152a53.333333 53.333333 0 0 1 75.434667 0z m1.152 231.253334H245.333333a53.333333 53.333333 0 0 0-53.205333 49.365333l-0.128 4.010667v320c0 28.117333 21.76 51.157333 49.365333 53.162666l3.968 0.170667h533.333334a53.333333 53.333333 0 0 0 53.205333-49.365333l0.128-3.968v-320c0-29.44-23.893333-53.333333-53.333333-53.333334z m-426.666667 106.666666c29.44 0 53.333333 23.893333 53.333333 53.333334v53.333333a53.333333 53.333333 0 1 1-106.666666 0v-53.333333c0-29.44 23.893333-53.333333 53.333333-53.333334z m320 0c29.44 0 53.333333 23.893333 53.333333 53.333334v53.333333a53.333333 53.333333 0 1 1-106.666666 0v-53.333333c0-29.44 23.893333-53.333333 53.333333-53.333334z" p-id="518"></path></svg>
-                 <h2 class="timer count-title count-number" data-to="{{Subs.0.BiliBili_Followers}}" data-speed="1500"></h2>
+                 <h2 class="timer count-title count-number prg-count" data-count="{{Subs.0.BiliBili_Followers}}">0</h2>
                  <p class="count-text ">BiliBili followers</p>
               </div>
            </div>
@@ -135,6 +134,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://raw.githack.com/JustHumanz/Go-Simp/devel/service/Go-Simp-Web/static/humanz.js"></script>
+    <!-- <script type="text/javascript" src="https://raw.githack.com/JustHumanz/Go-Simp/devel/service/Go-Simp-Web/static/humanz.js"></script> -->
+    <script type="text/javascript" src="http://localhost:8081/humanz.js"></script>
   </body>
 </html>

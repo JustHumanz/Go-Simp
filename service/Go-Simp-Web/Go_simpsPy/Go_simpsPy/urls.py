@@ -25,6 +25,6 @@ urlpatterns = [
     path('Vtubers/',views.go_simps_members,name="Members"),
     path('Exec/',views.go_simps_command,name="Command"),
     path('Support/<Type>/',views.go_simps_support,name="Support"),
-    path('Add',views.go_simps_add,name="Add"),
+    path('Add/',views.go_simps_add,name="Add"),
     path('admin/', admin.site.urls),
 ]

@@ -1,4 +1,5 @@
 # Create your views here.
+from django.http import HttpResponse
 from django.shortcuts import render
 import requests,asyncio
 
@@ -65,7 +66,13 @@ def go_simps_command(request):
     return render(request,'exec.html')
 
 def go_simps_add(request):
-    return render(request,'add.html')
+    if request.method == "POST":
+        print(request.POST["EN_Name"])
+        return HttpResponse("Still Dev~")
+    else:
+        Vtubers = GetVtubers("")
+        Payload = {'Groups':Vtubers.GetGroups()}
+        return render(request,'add.html',Payload)
 
 def go_simps_member(request,MemberName):
     Vtubers = GetVtubers(MemberName)

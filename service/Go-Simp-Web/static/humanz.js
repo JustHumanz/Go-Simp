@@ -20,7 +20,7 @@ function Del(elem) {
   $(function () {
     var load = function (url) {
         $.get(url).done(function (data) {
-            $("#body").html(data);
+            $("html").html(data);
         })
     };
 
@@ -31,129 +31,119 @@ function Del(elem) {
             url = $this.attr("href"),
             title = $this.text();
 
+            if (/(.*youtube.+)/.test(url)) {
+              console.log("Youtube");
+              window.open(
+                url,
+                '_blank'
+              );
+              return
+            } else if (/(.*space\.bilibili.+)/.test(url)) {
+              console.log("Bilibili");
+              window.open(
+                url,
+                '_blank'
+              );
+              return
+            }
+
         history.pushState({
             url: url,
             title: title
         }, title, url);
 
         document.title = title;
-
-        load(url);
+        load(url, function(response){
+          $("html").html(response);
+        });
     });
 
     $(window).on('popstate', function (e) {
         var state = e.originalEvent.state;
         if (state !== null) {
             document.title = state.title;
-            load(state.url);
+            load(state.url, function(response){
+              $("html").html(response);
+            });
         } else {
             document.title = 'Go-Simp';
-            $("#body").empty();
+            if (state == null) {
+              load("/", function(response){
+                $("html").html(response);
+              });
+            } else {
+              load(state.url, function(response){
+                $("html").html(response);
+              });
+            }
         }
     });
 });
 
-  (function ($) {
-    $.fn.countTo = function (options) {
-      options = options || {};
-      
-      return $(this).each(function () {
-        // set options for current element
-        var settings = $.extend({}, $.fn.countTo.defaults, {
-          from:            $(this).data('from'),
-          to:              $(this).data('to'),
-          speed:           $(this).data('speed'),
-          refreshInterval: $(this).data('refresh-interval'),
-          decimals:        $(this).data('decimals')
-        }, options);
-        
-        // how many times to update the value, and how much to increment the value on each update
-        var loops = Math.ceil(settings.speed / settings.refreshInterval),
-          increment = (settings.to - settings.from) / loops;
-        
-        // references & variables that will change with each update
-        var self = this,
-          $self = $(this),
-          loopCount = 0,
-          value = settings.from,
-          data = $self.data('countTo') || {};
-        
-        $self.data('countTo', data);
-        
-        // if an existing interval can be found, clear it first
-        if (data.interval) {
-          clearInterval(data.interval);
-        }
-        data.interval = setInterval(updateTimer, settings.refreshInterval);
-        
-        // initialize the element with the starting value
-        render(value);
-        
-        function updateTimer() {
-          value += increment;
-          loopCount++;
-          
-          render(value);
-          
-          if (typeof(settings.onUpdate) == 'function') {
-            settings.onUpdate.call(self, value);
-          }
-          
-          if (loopCount >= loops) {
-            // remove the interval
-            $self.removeData('countTo');
-            clearInterval(data.interval);
-            value = settings.to;
-            
-            if (typeof(settings.onComplete) == 'function') {
-              settings.onComplete.call(self, value);
-            }
-          }
-        }
-        
-        function render(value) {
-          var formattedValue = settings.formatter.call(self, value, settings);
-          $self.html(formattedValue);
+
+! function(a) {
+  a.fn.isOnScreen = function(b) {
+      var c = this.outerHeight(),
+          d = this.outerWidth();
+      if (!d || !c) return !1;
+      var e = a(window),
+          f = {
+              top: e.scrollTop(),
+              left: e.scrollLeft()
+          };
+      f.right = f.left + e.width(), f.bottom = f.top + e.height();
+      var g = this.offset();
+      g.right = g.left + d, g.bottom = g.top + c;
+      var h = {
+          top: f.bottom - g.top,
+          left: f.right - g.left,
+          bottom: g.bottom - f.top,
+          right: g.right - f.left
+      };
+      return "function" == typeof b ? b.call(this, h) : h.top > 0 && h.left > 0 && h.right > 0 && h.bottom > 0
+  }
+}(jQuery);
+
+$(document).ready(function() {
+  checkDisplay();
+
+$(window).on('resize scroll', function() {
+  checkDisplay();
+});
+});
+
+function checkDisplay(){
+$('.prg-count').each(function() {
+    var $this = $(this);
+    if ($this.isOnScreen()) {
+      var countTo = $this.attr('data-count');
+      $({
+        countNum: $this.text()
+      }).animate({
+        countNum: countTo
+      }, {
+        duration: 8000,
+        easing: 'linear',
+        step: function() {
+          $this.text(Math.floor(this.countNum));
+        },
+        complete: function() {
+          $this.text(this.countNum);
+          //alert('finished');
         }
       });
-    };
-    
-    $.fn.countTo.defaults = {
-      from: 0,               // the number the element should start at
-      to: 0,                 // the number the element should end at
-      speed: 1000,           // how long it should take to count between the target numbers
-      refreshInterval: 100,  // how often the element should be updated
-      decimals: 0,           // the number of decimal places to show
-      formatter: formatter,  // handler for formatting the value before rendering
-      onUpdate: null,        // callback method for every time the element is updated
-      onComplete: null       // callback method for when the element finishes updating
-    };
-    
-    function formatter(value, settings) {
-      return value.toFixed(settings.decimals);
-    }
-  }(jQuery));
-  
-  jQuery(function ($) {
-    // custom formatting example
-    $('.count-number').data('countToOptions', {
-    formatter: function (value, options) {
-      return value.toFixed(options.decimals).replace(/\B(?=(?:\d{3})+(?!\d))/g, ',');
-    }
-    });
-    
-    // start all the timers
-    $('.timer').each(count);  
-    
-    function count(options) {
-    var $this = $(this);
-    options = $.extend({}, options || {}, $this.data('countToOptions') || {});
-    $this.countTo(options);
     }
   });
+}
 
-
-  /*
+function IsEmpty() {
+  if (document.forms['form'].Nickname.value === "" || document.forms['form'].Region.value === "") {
+    alert("Nickname or Region empty");
+    return false;
+  }
+  return true;
+}
+/*
 
   $('.GetMembers').on("click",function(){
     GroupName = $(this).attr("data_group");
