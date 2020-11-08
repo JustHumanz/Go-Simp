@@ -27,6 +27,8 @@ function Del(elem) {
         url: "/Group/"+GroupName,
         success: function(response){
           $("body").html(response);
+          document.title = response.pageTitle;
+          window.history.pushState({"html":response.html,"pageTitle":response.pageTitle},"", url);
         },
     })
   });
@@ -40,6 +42,8 @@ function Del(elem) {
         url: "/Member/"+MemberName,
         success: function(response){
           $("body").html(response);
+          document.title = response.pageTitle;
+          window.history.pushState({"html":response.html,"pageTitle":response.pageTitle},"", url);
         },
     })
   });
