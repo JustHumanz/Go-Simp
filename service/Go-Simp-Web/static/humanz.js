@@ -18,7 +18,7 @@ function Del(elem) {
   }
 
 
-  $('.GetMembers').link(function(){
+  $('.GetMembers').on("click",function(){
     var GroupName = $(this).attr("data_group");
     var urls = "/Group/"+GroupName
     $.ajax(
@@ -33,7 +33,7 @@ function Del(elem) {
     })
   });
 
-  $('.MemberInfo').link(function(){
+  $('.MemberInfo').on("click",function(){
     MemberName = $(this).attr("data_group");
     var urls = "/Member/"+MemberName
     $.ajax(
@@ -48,7 +48,7 @@ function Del(elem) {
     })
   });
 
-  $('.navbar-brand').link(function(){
+  $('.navbar-brand').on("click",function(){
     $.ajax(
     {
         type:"GET",
