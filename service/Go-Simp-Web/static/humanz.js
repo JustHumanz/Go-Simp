@@ -17,51 +17,41 @@ function Del(elem) {
     }
   }
 
+  $(function () {
+    var load = function (url) {
+        $.get(url).done(function (data) {
+            $("#body").html(data);
+        })
+    };
 
-  $('.GetMembers').on("click",function(){
-    GroupName = $(this).attr("data_group");
-    var urls = "/Group/"+GroupName
-    $.ajax(
-    {
-        type:"GET",
-        url: urls,
-        success: function(response){
-          //$("body").html(response);
-          document.title = response.pageTitle;
-          window.history.pushState({"body":response.body,"pageTitle":response.pageTitle},"", urls);
-        },
-    })
-  });
+    $(document).on('click', 'a', function (e) {
+        e.preventDefault();
 
-  $('.MemberInfo').on("click",function(){
-    MemberName = $(this).attr("data_group");
-    var urls = "/Member/"+MemberName
-    $.ajax(
-    {
-        type:"GET",
-        url: urls,
-        success: function(response){
-          //$("body").html(response);
-          document.title = response.pageTitle;
-          window.history.pushState({"body":response.body,"pageTitle":response.pageTitle},"", urls);
-        },
-    })
-  });
+        var $this = $(this),
+            url = $this.attr("data_group"),
+            title = $this.text();
 
-  $('.navbar-brand').on("click",function(){
-    $.ajax(
-    {
-        type:"GET",
-        url: "/",
-        success: function(response){
-          //$("body").html(response);
-          document.title = response.pageTitle;
-          window.history.pushState({"body":response.body,"pageTitle":response.pageTitle},"", "/");
-        },
-    })
-  });
+        history.pushState({
+            url: url,
+            title: title
+        }, title, url);
 
+        document.title = title;
 
+        load(url);
+    });
+
+    $(window).on('popstate', function (e) {
+        var state = e.originalEvent.state;
+        if (state !== null) {
+            document.title = state.title;
+            load(state.url);
+        } else {
+            document.title = 'Go-Simp';
+            $("#body").empty();
+        }
+    });
+});
 
   (function ($) {
     $.fn.countTo = function (options) {
@@ -161,3 +151,51 @@ function Del(elem) {
     $this.countTo(options);
     }
   });
+
+
+  /*
+
+  $('.GetMembers').on("click",function(){
+    GroupName = $(this).attr("data_group");
+    var urls = "/Group/"+GroupName
+    $.ajax(
+    {
+        type:"GET",
+        url: urls,
+        success: function(response){
+          document.title = response.pageTitle;
+          window.history.pushState({"html":response.html,"pageTitle":response.pageTitle},"Go-Simp", urls);
+          $("body").html(response);
+        },
+    })
+  });
+
+  $('.MemberInfo').on("click",function(){
+    MemberName = $(this).attr("data_group");
+    var urls = "/Member/"+MemberName
+    $.ajax(
+    {
+        type:"GET",
+        url: urls,
+        success: function(response){
+          document.title = response.pageTitle;
+          window.history.pushState({"body":response.body,"pageTitle":response.pageTitle},MemberName, urls);
+          $("body").html(response);
+        },
+    })
+  });
+
+  $('.navbar-brand').on("click",function(){
+    $.ajax(
+    {
+        type:"GET",
+        url: "/",
+        success: function(response){
+          document.title = response.pageTitle;
+          window.history.pushState({"body":response.body,"pageTitle":response.pageTitle},"Go-Simp", "/");
+          $("body").html(response);
+        },
+    })
+  });
+
+*/
