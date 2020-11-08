@@ -19,7 +19,7 @@ function Del(elem) {
 
 
   $('.GetMembers').on("click",function(){
-    var GroupName = $(this).attr("data_group");
+    GroupName = $(this).attr("data_group");
     var urls = "/Group/"+GroupName
     $.ajax(
     {
