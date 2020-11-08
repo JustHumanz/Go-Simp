@@ -28,7 +28,7 @@ function Del(elem) {
         success: function(response){
           $("body").html(response);
           document.title = response.pageTitle;
-          window.history.pushState({"html":response.html,"pageTitle":response.pageTitle},"", url);
+          window.history.pushState({"body":response.body,"pageTitle":response.pageTitle},"", url);
         },
     })
   });
@@ -43,7 +43,7 @@ function Del(elem) {
         success: function(response){
           $("body").html(response);
           document.title = response.pageTitle;
-          window.history.pushState({"html":response.html,"pageTitle":response.pageTitle},"", url);
+          window.history.pushState({"body":response.body,"pageTitle":response.pageTitle},"", url);
         },
     })
   });
@@ -55,6 +55,8 @@ function Del(elem) {
         url: "/",
         success: function(response){
           $("body").html(response);
+          document.title = response.pageTitle;
+          window.history.pushState({"body":response.body,"pageTitle":response.pageTitle},"", url);
         },
     })
   });
