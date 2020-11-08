@@ -26,7 +26,7 @@ function Del(elem) {
         type:"GET",
         url: "/Group/"+GroupName,
         success: function(response){
-          $("body").html(response);
+          //$("body").html(response);
           document.title = response.pageTitle;
           window.history.pushState({"body":response.body,"pageTitle":response.pageTitle},"", url);
         },
@@ -41,7 +41,7 @@ function Del(elem) {
         type:"GET",
         url: "/Member/"+MemberName,
         success: function(response){
-          $("body").html(response);
+          //$("body").html(response);
           document.title = response.pageTitle;
           window.history.pushState({"body":response.body,"pageTitle":response.pageTitle},"", url);
         },
@@ -54,7 +54,7 @@ function Del(elem) {
         type:"GET",
         url: "/",
         success: function(response){
-          $("body").html(response);
+          //$("body").html(response);
           document.title = response.pageTitle;
           window.history.pushState({"body":response.body,"pageTitle":response.pageTitle},"", url);
         },
