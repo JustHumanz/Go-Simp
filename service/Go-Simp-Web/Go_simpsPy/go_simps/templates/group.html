@@ -18,15 +18,15 @@
       }
       </style>
           <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <img src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/go-simp.png" alt="Go-Simp" width="25" height="25">
-            <a class="navbar-brand" href="/">Go-Simp</a>
+            <a class="navbar-brand" href="/"><img src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/go-simp.png" alt="Go-Simp" width="25" height="25">
+            Go-Simp</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                  <a class="nav-link" href="/Vtubers/">Vtubers
+                  <a class="nav-link" href="/Vtubers/">Vtubers</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="/Exec/">Bot Command</a>
@@ -46,10 +46,10 @@
           </nav>
   </head>
   <body>
-    <div class="d-flex flex-row-reverse">
+    <div class="d-flex flex-row-reverse  pt-2 pr-4">
       <div class="btn-group btn-group-toggle" data-toggle="buttons">
       {% for Reg in Region %}
-        <label class="btn btn-secondary active mt-2">
+        <label class="btn btn-secondary active">
           <input type="checkbox" onclick="Del(this)" id="disable-{{Reg}}" name="options" data-id="{{Reg}}"> {{Reg}}
         </label>
       {% endfor %}

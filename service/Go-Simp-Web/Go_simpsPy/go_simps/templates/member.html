@@ -46,21 +46,21 @@
     }
     </style>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <img src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/go-simp.png" alt="Go-Simp" width="25" height="25">
-      <a class="navbar-brand" href="/">Go-Simp</a>
+      <a class="navbar-brand" href="/"><img src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/go-simp.png" alt="Go-Simp" width="25" height="25">
+      Go-Simp</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="/Vtubers/">Vtubers
+            <a class="nav-link" href="/Vtubers/">Vtubers</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/Exec/">Bot Command</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle"  id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Support Dev
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -80,27 +80,27 @@
         <div class="carousel-inner">
           <div class="carousel-item active">
             <a href="https://www.youtube.com/channel/{{Member.0.Youtube_ID}}?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
-              <img class="w-20 rounded mx-auto" src="{{Member.0.Youtube_Avatar}}" alt="Youtube">
+              <img class="w-20 rounded mx-auto" width="200" height="200" src="{{Member.0.Youtube_Avatar}}" alt="Youtube">
             </a>
           </div>
           <div class="carousel-item">
             <a href="http://space.bilibili.com/{{Member.0.BiliBili_SpaceID}}" target="_blank" rel="noopener noreferrer">
-              <img class="w-20 rounded mx-auto" src="{{Member.0.BiliBili_Avatar}}" alt="BiliBili">
+              <img class="w-20 rounded mx-auto" width="200" height="200" src="{{Member.0.BiliBili_Avatar}}" alt="BiliBili">
             </a>
           </div>
         </div>
       </div>
       {% elif Member.0.Youtube_ID and not Member.0.BiliBili_RoomID %}
         <a href="https://www.youtube.com/channel/{{Member.0.Youtube_ID}}?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
-          <img class="w-20 rounded mx-auto" src="{{Member.0.Youtube_Avatar}}" alt="Youtube"></a>
+          <img class="w-20 rounded mx-auto" width="200" height="200" src="{{Member.0.Youtube_Avatar}}" alt="Youtube"></a>
       {% elif Member.0.BiliBili_RoomID and not Member.0.Youtube_ID %} 
         <a href="http://space.bilibili.com/{{Member.0.BiliBili_SpaceID}}" target="_blank" rel="noopener noreferrer">
-          <img class="w-20 rounded mx-auto" src="{{Member.0.BiliBili_Avatar}}" alt="BiliBili"></a>
+          <img class="w-20 rounded mx-auto" width="200" height="200" src="{{Member.0.BiliBili_Avatar}}" alt="BiliBili"></a>
       {% endif %}
       <div class="container mb-5">
         <div class="row">
            <br/>
-           <div class="col text-center">
+           <div class="col text-center pt-2">
               Nickname: {{Member.0.VtuberName}}<br>
               Fullname: {{Member.0.VtuberName_EN}}/{{Member.0.VtuberName_JP}}<br>
               Region: {{Member.0.Region}}<br>

@@ -63,11 +63,12 @@ def go_simps_members(request):
     return render(request, 'group.html',Payload)
 
 def go_simps_command(request):
-    return render(request,'exec.html')
+    #return render(request,'exec.html')
+    return HttpResponse("Still Dev~")
 
 def go_simps_add(request):
     if request.method == "POST":
-        print(request.POST["EN_Name"])
+        print(request.POST)
         return HttpResponse("Still Dev~")
     else:
         Vtubers = GetVtubers("")
