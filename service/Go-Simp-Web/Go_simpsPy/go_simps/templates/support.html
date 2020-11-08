@@ -37,14 +37,8 @@
     </nav>
   </head>
   <body>
-    <div class="text-center">
-      {% for Group in Groups %}
-        <figure class="figure p-2">
-          <a class="GetMembers" href="#" data_group="{{Group.VtuberGroupName}}">
-            <img src={{Group.VtuberGroupIcon}} class="figure-img img-fluid img-thumbnail" alt="" width="200" height="200">
-            <figcaption class="figure-caption">{{Group.VtuberGroupName}}</figcaption></a>
-        </figure>
-      {% endfor %}
+    <div class="text-center mt-5">
+      <img src="{{Data}}" alt="Image">
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>

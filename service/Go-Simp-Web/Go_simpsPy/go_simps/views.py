@@ -5,55 +5,85 @@ import requests,asyncio
 
 
 class GetVtubers:
+    def __init__(self, InputData):
+        self.InputData = InputData
+        self.Members = ""
+
     def GetGroups(self):
         response = requests.get('https://api.human-z.tech/vtbot/group')
         return response.json()
 
-    def GetMembers(self,GroupName):
-        response = requests.get('https://api.human-z.tech/vtbot/member/'+GroupName)        
+    def GetMembers(self):
+        response = requests.get('https://api.human-z.tech/vtbot/member/'+self.InputData)        
+        self.Members = response.json()  
         return response.json()  
 
-    def GetSubs(self,MemberName):
-        SubsInfo = requests.get('https://api.human-z.tech/vtbot/subscriber/'+MemberName)    
+    def GetSubs(self):
+        SubsInfo = requests.get('https://api.human-z.tech/vtbot/subscriber/'+self.InputData)    
         return SubsInfo.json()
 
-Vtubers = GetVtubers()
+    def GetRegList(self):
+        Region = []
+
+        for Member in self.Members:
+            if Member['Region'] not in Region:
+                Region.append(Member['Region'])
+        return Region    
+
+    def ResizeImg(self,size):
+        Members = self.Members
+
+        for i in range(len(Members)):
+            Members[i]["Youtube_Avatar"] = Members[i]["Youtube_Avatar"].replace("s800",size)    
+
+        return Members   
+
 
 def go_simps_index(request):
+    Vtubers = GetVtubers("")
     Payload = {'Groups':Vtubers.GetGroups()}
     return render(request, 'index.html', Payload)
 
 def go_simps_group(request, GroupName):
-    Members = Vtubers.GetMembers(GroupName)
-    Region = []
-    i = 0
-    for Member in Members:
-        if Member['Region'] not in Region:
-            Region.append(Member['Region'])
-        Members[i]["Youtube_Avatar"] = Members[i]["Youtube_Avatar"].replace("s800","s100")    
+    Vtubers = GetVtubers(GroupName)
+    Members = Vtubers.GetMembers()
+    Region = Vtubers.GetRegList
 
-    Payload = {'Members':Members,'Region':Region,'Path':'/Group/'+GroupName}
+    Payload = {'Members':Members,'Region':Region,'Add':False}
     return render(request, 'group.html',Payload)
 
-def go_simps_memebrs(request):
-    Members = Vtubers.GetMembers("")
-    Region = []
-    i = 0
-    for Member in Members:
-        if Member['Region'] not in Region:
-            Region.append(Member['Region'])
-        Members[i]["Youtube_Avatar"] = Members[i]["Youtube_Avatar"].replace("s800","s100")    
+def go_simps_members(request):
+    Vtubers = GetVtubers("")
+    Members = Vtubers.GetMembers()
+    Region = Vtubers.GetRegList()
+    Members = Vtubers.ResizeImg("s100")
 
-    Payload = {'Members':Members,'Region':Region,'Path':'/Vtubers/'}
+    Payload = {'Members':Members,'Region':Region,'Add':True}
     return render(request, 'group.html',Payload)
 
 def go_simps_command(request):
     return render(request,'exec.html')
 
+def go_simps_add(request):
+    return render(request,'add.html')
+
 def go_simps_member(request,MemberName):
-    Member = Vtubers.GetMembers(MemberName)
-    Member[0]["Youtube_Avatar"] = Member[0]["Youtube_Avatar"].replace("s800","s200")    
-    Subs = Vtubers.GetSubs(MemberName)
+    Vtubers = GetVtubers(MemberName)
+    Member = Vtubers.GetMembers()
+    Subs = Vtubers.GetSubs()
+    Member = Vtubers.ResizeImg("s300")
 
     Payload = {'Member': Member,'Subs': Subs}
     return render(request, 'member.html',Payload)
+
+
+def go_simps_support(request,Type):
+    Payload = ""
+    if Type == "hug":
+        Payload = 'https://i.ibb.co/rMt2Cqz/hug2.gif'
+    elif Type == "airforceone":
+        Payload = "https://img-comment-fun.9cache.com/media/a2NgKoZ/azaXgVx4_700w_0.jpg"
+    else:
+        Payload = "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/404.jpg"    
+
+    return render(request, 'support.html',{'Data': Payload})

@@ -22,7 +22,9 @@ urlpatterns = [
     path('', views.go_simps_index, name="index"),
     path('Group/<GroupName>/',views.go_simps_group,name="Group"),
     path('Member/<MemberName>/',views.go_simps_member,name="Member"),
-    path('Vtubers/',views.go_simps_memebrs,name="Members"),
+    path('Vtubers/',views.go_simps_members,name="Members"),
     path('Exec/',views.go_simps_command,name="Command"),
+    path('Support/<Type>/',views.go_simps_support,name="Support"),
+    path('Add',views.go_simps_add,name="Add"),
     path('admin/', admin.site.urls),
 ]
