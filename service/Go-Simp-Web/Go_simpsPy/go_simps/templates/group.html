@@ -57,7 +57,7 @@
     </div>
     <div class="text-center">
       {% for Member in Members %}
-      <a class="MemberInfo" href="#" data_group="{{Member.VtuberName}}">
+      <a class="MemberInfo" href="Member/{{Member.VtuberName}}">
         <figure class="figure p-1" name="{{Member.Region}}" id="{{Member.VtuberName}}">
           <img src={{Member.Youtube_Avatar}} class="zoom figure-img img-fluid img-thumbnail" alt="" width="75" height="75">
           <figcaption class="figure-caption">{{Member.VtuberName}}</figcaption></figure></a>

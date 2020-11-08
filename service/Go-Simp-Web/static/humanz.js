@@ -28,7 +28,7 @@ function Del(elem) {
         e.preventDefault();
 
         var $this = $(this),
-            url = $this.attr("data_group"),
+            url = $this.attr("href"),
             title = $this.text();
 
         history.pushState({
