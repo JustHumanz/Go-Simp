@@ -18,24 +18,24 @@ function Del(elem) {
   }
 
 
-  $('.GetMembers').click(function(){
-    var GroupName;
-    GroupName = $(this).attr("data_group");
+  $('.GetMembers').link(function(){
+    var GroupName = $(this).attr("data_group");
+    var urls = "/Group/"+GroupName
     $.ajax(
     {
         type:"GET",
-        url: "/Group/"+GroupName,
+        url: urls,
         success: function(response){
           //$("body").html(response);
           document.title = response.pageTitle;
-          window.history.pushState({"body":response.body,"pageTitle":response.pageTitle},"", url);
+          window.history.pushState({"body":response.body,"pageTitle":response.pageTitle},"", urls);
         },
     })
   });
 
-  $('.MemberInfo').click(function(){
-    MemberName = $(this).attr("data_group");
-    console.log(MemberName)
+  $('.MemberInfo').link(function(){
+    var MemberName = $(this).attr("data_group");
+    var urls = "/Group/"+MemberName
     $.ajax(
     {
         type:"GET",
@@ -48,7 +48,7 @@ function Del(elem) {
     })
   });
 
-  $('.navbar-brand').click(function(){
+  $('.navbar-brand').link(function(){
     $.ajax(
     {
         type:"GET",
@@ -56,7 +56,7 @@ function Del(elem) {
         success: function(response){
           //$("body").html(response);
           document.title = response.pageTitle;
-          window.history.pushState({"body":response.body,"pageTitle":response.pageTitle},"", url);
+          window.history.pushState({"body":response.body,"pageTitle":response.pageTitle},"", "/");
         },
     })
   });
