@@ -19,8 +19,8 @@ function Del(elem) {
 
 $(function () {
   var load = function (url) {
+      $("html").html(data);
       $.get(url).done(function (data) {
-          $("html").html(data);
           $(document).ready(function() {
             if ($('h2.counter').length) {
               $('.counter').each(function() {
