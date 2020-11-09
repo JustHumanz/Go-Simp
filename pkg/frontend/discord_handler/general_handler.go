@@ -568,7 +568,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 														AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
 														SetImage(VTuberGroup.IconURL).
 														SetThumbnail(config.GoSimpIMG).
-														SetFooter("Use \""+config.PGeneral+RolesTags+"\" to role tags list").
+														SetFooter("Use \""+config.PGeneral+RolesTags+Role.Mention()+"\" to role tags list").
 														SetColor(Color).MessageEmbed)
 													Already = nil
 												}
@@ -579,7 +579,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 														AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
 														SetImage(VTuberGroup.IconURL).
 														SetThumbnail(config.GoSimpIMG).
-														SetFooter("Use \""+config.PGeneral+RolesTags+"\" to show role tags list").
+														SetFooter("Use \""+config.PGeneral+RolesTags+Role.Mention()+"\" to show role tags list").
 														SetColor(Color).MessageEmbed)
 													Done = nil
 												}
@@ -613,7 +613,6 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 											Already = append(Already, "`"+tmp[i]+"`")
 										} else {
 											Done = append(Done, "`"+tmp[i]+"`")
-
 										}
 
 										if Already != nil || Done != nil {
@@ -707,7 +706,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 														AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
 														SetImage(VTuberGroup.IconURL).
 														SetThumbnail(config.GoSimpIMG).
-														SetFooter("Use \""+config.PGeneral+RolesTags+"\" to role tags list").
+														SetFooter("Use \""+config.PGeneral+RolesTags+Role.Mention()+"\" to role tags list").
 														SetColor(Color).MessageEmbed)
 													Already = nil
 												}
@@ -718,7 +717,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 														AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
 														SetImage(VTuberGroup.IconURL).
 														SetThumbnail(config.GoSimpIMG).
-														SetFooter("Use \""+config.PGeneral+RolesTags+"\" to show role tags list").
+														SetFooter("Use \""+config.PGeneral+RolesTags+Role.Mention()+"\" to show role tags list").
 														SetColor(Color).MessageEmbed)
 													Done = nil
 												}
@@ -746,8 +745,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 											DiscordUserName: Role.Name,
 											Channel_ID:      m.ChannelID,
 											GroupID:         Member.GroupID,
+											Human:           false,
 										}
-										err := User.Adduser(Member.MemberID)
+										err := User.Deluser(Member.MemberID)
 										if err != nil {
 											Already = append(Already, "`"+tmp[i]+"`")
 										} else {
@@ -761,7 +761,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 													SetDescription(Role.Mention()+" Already Removed from tags list or "+Role.Mention()+" never add them \n"+strings.Join(Already, " ")).
 													SetThumbnail(config.GoSimpIMG).
-													SetFooter("Use \""+config.PGeneral+RolesTags+"\" to show role tags list").
+													SetFooter("Use \""+config.PGeneral+RolesTags+Role.Mention()+"\" to show role tags list").
 													SetColor(Color).MessageEmbed)
 												Already = nil
 											}
@@ -770,7 +770,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 													SetDescription(Role.Mention()+" Remove\n"+strings.Join(Done, " ")+"\n from tag list").
 													SetThumbnail(config.GoSimpIMG).
-													SetFooter("Use \""+config.PGeneral+RolesTags+"\" to show you tags list").
+													SetFooter("Use \""+config.PGeneral+RolesTags+Role.Mention()+"\" to show you tags list").
 													SetColor(Color).MessageEmbed)
 												Done = nil
 											}

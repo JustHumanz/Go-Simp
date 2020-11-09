@@ -20,7 +20,7 @@ function Del(elem) {
 $(function () {
   var load = function (url) {
       $.get(url).done(function (data) {
-          $("body").html(data);
+          $("html").html(data);
           $(document).ready(function() {
             if ($('h2.counter').length) {
               $('.counter').each(function() {
@@ -53,7 +53,9 @@ $(function () {
           url = $this.attr("href"),
           title = $this.text();
 
-          if (/(.*youtube.+)/.test(url)) {
+          if (url == "#") {
+            return
+          } else if (/(.*youtube.+)/.test(url)) {
             console.log("Youtube");
             window.open(
               url,
@@ -67,8 +69,6 @@ $(function () {
               '_blank'
             );
             return
-          } else if (url == "#") {
-            return
           }
 
       history.pushState({
@@ -78,7 +78,7 @@ $(function () {
       
       document.title = title;
       load(url, function(response){
-        $("body").html(response);
+        $("html").html(response);
       });
   });
 
@@ -87,17 +87,17 @@ $(function () {
       if (state !== null) {
           document.title = state.title;
           load(state.url, function(response){
-            $("body").html(response);
+            $("html").html(response);
           });
       } else {
           document.title = 'Go-Simp';
           if (state == null) {
             load("/", function(response){
-              $("body").html(response);
+              $("html").html(response);
             });
           } else {
             load(state.url, function(response){
-              $("body").html(response);
+              $("html").html(response);
             });
           }
       }

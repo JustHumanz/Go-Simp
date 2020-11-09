@@ -64,8 +64,8 @@ def go_simps_members(request):
     return render(request, 'group.html',Payload)
 
 def go_simps_command(request):
-    #return render(request,'exec.html')
-    return HttpResponse("Still Dev~")
+    return render(request,'exec.html')
+    #return HttpResponse("Still Dev~")
 
 def go_simps_add(request):
     if request.method == "POST":
