@@ -51,10 +51,12 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 		CommandArray := strings.Split(m.Content, " ")
 		if len(CommandArray) > 3 && CommandArray[2] == "-region" {
 			Region = strings.ToLower(CommandArray[3])
+			if len(Region) > 2 {
+				s.ChannelMessageSend(m.ChannelID, "Only support 1 Region,ignoring `"+Region[2:]+"`")
+			}
 		} else {
 			Region = ""
 		}
-
 		if strings.ToLower(CommandArray[0]) == Prefix+Upcoming || strings.ToLower(CommandArray[0]) == Prefix+"up" {
 			if len(CommandArray) > 1 {
 				for _, GroupNameQuery := range strings.Split(strings.TrimSpace(CommandArray[1]), ",") {
@@ -95,11 +97,8 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 						if CheckReg(VTuberGroup.NameGroup, Region) {
 							GroupData = database.YtGetStatus(VTuberGroup.ID, 0, "upcoming", Region)
-							if GroupData == nil {
-								GroupData = database.YtGetStatus(VTuberGroup.ID, 0, "upcoming", Region)
-							}
 						} else {
-							GroupData = database.YtGetStatus(VTuberGroup.ID, 0, "upcoming", Region)
+							GroupData = database.YtGetStatus(VTuberGroup.ID, 0, "upcoming", "")
 						}
 
 						if GroupData != nil {
@@ -173,11 +172,8 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 						if CheckReg(VTuberGroup.NameGroup, Region) {
 							GroupData = database.YtGetStatus(VTuberGroup.ID, 0, "live", Region)
-							if GroupData == nil {
-								GroupData = database.YtGetStatus(VTuberGroup.ID, 0, "live", Region)
-							}
 						} else {
-							GroupData = database.YtGetStatus(VTuberGroup.ID, 0, "live", Region)
+							GroupData = database.YtGetStatus(VTuberGroup.ID, 0, "live", "")
 						}
 
 						if GroupData != nil {
@@ -261,11 +257,8 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 						if CheckReg(VTuberGroup.NameGroup, Region) {
 							Data = database.YtGetStatus(VTuberGroup.ID, 0, "past", Region)
-							if Data == nil {
-								Data = database.YtGetStatus(VTuberGroup.ID, 0, "past", Region)
-							}
 						} else {
-							Data = database.YtGetStatus(VTuberGroup.ID, 0, "past", Region)
+							Data = database.YtGetStatus(VTuberGroup.ID, 0, "past", "")
 						}
 
 						if Data != nil {

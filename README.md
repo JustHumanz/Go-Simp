@@ -313,6 +313,8 @@ Example: `vtbot>Disable nijisanji`
 ```vtbot>Channel state```  
 Shows what is enable on this channel    
 
+**Only user with permission "Manage Channel or Higher" can use Enable and Disable command**
+
 ---------------------------------------------------------------------------------------------------------------------
 
 ```vtbot>Tag roles [roles] [Group/Member]```
@@ -322,8 +324,11 @@ Example: `vtbot>tag roles @kanochi-simps hanayori` or `vtbot>tag roles @fbk-simp
 ```vtbot>Roles info [roles]```  
 Show all roles info
 
-```vtbot>Del roles [roles]```  
+```vtbot>Del roles [roles] [Group/Member]```   
+Example: `vtbot>Del roles @kanochi-simps kanochi` or `vtbot>Del roles @hololive-simps fbk`
 Remove roles from tag list  
+
+**Only user with permission "Manage Channel or Higher" can use Tag and Del roles**
 
 ----------------------------------------------------------------------------------------------------------------------
 
@@ -350,23 +355,23 @@ Example: `vtbot>Set reminder hololive 20`
 Show fanart with randomly with their fanart hashtag  
 Example: `art>Kanochi` or `art>hololive`  
 
-```vtbot>Vtuber data [Group/Member] -Region [region]```  
+```vtbot>Vtuber data [Group/Member] -region {region}```  
 Shows available Vtuber data  
-Example: `vtbot>vtuber data nijisanji` or `vtbot>vtuber data nijisanji,hololive -Region id,en`  
+Example: `vtbot>vtuber data nijisanji` or `vtbot>vtuber data nijisanji,hololive -region id`  
 
 ```vtbot>Subscriber {Member} ```  
 Shows Vtuber Subscriber data(twitter,Bilibili,Youtube)
 Example: `vtbot>Subscriber sora`
 
-```yt>Upcoming [Vtuber Group/Member] -Region [region]```  
+```yt>Upcoming [Vtuber Group/Member] -region {region}```  
 This command will show Upcoming live streams on Youtube (*only 3 if use Vtuber Group*)  
-Example: `vtbot>Upcoming nijisanji,hololive`  
-with Region: `vtbot>Upcoming nijisanji,hololive -Region id,en`  
+Example: `yt>Upcoming nijisanji,hololive`  
+with Region: `yt>Upcoming nijisanji,hololive -region en`  
 
-```yt>Live [Vtuber Group/Member] -Region [region]```  
+```yt>Live [Vtuber Group/Member] -region {region}```  
 Show all livestreams right now on Youtube  
 
-```yt>Past [Vtuber Group/Member] -Region {region}```  
+```yt>Past [Vtuber Group/Member] -region {region}```  
 Show past streams on Youtube (*only 3 if use Vtuber Group*)  
 
 ~~```bl>Upcoming [Vtuber Group]```  
