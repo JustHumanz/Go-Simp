@@ -304,13 +304,11 @@ Example: `vtbot>enable live noripro,hanayori`
 
 ```vtbot>Update {art/live/all} [Vtuber Group]```
 Use this command if you want to change enable state  
-Example:  
-`vtbot>Update all Hanayori` so now bot will send fanart notificaion and livestream notificaion
+Example: `vtbot>Update all Hanayori` so now bot will send fanart notificaion and livestream notificaion
 
 ```vtbot>Disable [Vtuber Group]```
 Just like enable but this disable command :3  
-Example:  
-`vtbot>Disable nijisanji`  
+Example: `vtbot>Disable nijisanji`  
 
 ```vtbot>Channel state```  
 Shows what is enable in this channel    
@@ -354,20 +352,16 @@ Example: `vtbot>Set reminder hololive 20`
 
 ```vtbot>Vtuber data [Group/Member] -Region [region]```  
 Shows available Vtuber data  
-Example:
-`vtbot>vtuber data nijisanji` or `vtbot>vtuber data nijisanji,hololive -Region id,en`  
+Example: `vtbot>vtuber data nijisanji` or `vtbot>vtuber data nijisanji,hololive -Region id,en`  
 
 ```vtbot>Subscriber {Member} ```  
 Shows Vtuber Subscriber data(twitter,Bilibili,Youtube)
-Example:  
-`vtbot>Subscriber sora`
+Example: `vtbot>Subscriber sora`
 
 ```yt>Upcoming [Vtuber Group/Member] -Region [region]```  
 This command will show Upcoming live streams on Youtube (*only 3 if use Vtuber Group*)  
-Example:  
-`vtbot>Upcoming nijisanji,hololive`  
-with Region  
-`vtbot>Upcoming nijisanji,hololive -Region id,en`  
+Example: `vtbot>Upcoming nijisanji,hololive`  
+with Region: `vtbot>Upcoming nijisanji,hololive -Region id,en`  
 
 ```yt>Live [Vtuber Group/Member] -Region [region]```  
 Show all livestreams right now on Youtube  
