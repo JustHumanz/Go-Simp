@@ -314,9 +314,6 @@ Example:
 
 ```vtbot>Channel state```  
 Shows what is enable in this channel    
-
-
-**Remember,after use Enable,Update or Disable always recheck channel state**
 ---------------------------------------------------------------------------------------------------------------------
 
 ```vtbot>Tag roles [roles] [Group/Member]```
@@ -328,9 +325,6 @@ Show all roles info
 
 ```vtbot>Del roles [roles]```  
 Remove roles from tag list  
-
-
-**Remember,after use Tag roles or Del roles always recheck roles status with Roles info**
 ----------------------------------------------------------------------------------------------------------------------
 
 ```art>{Group/Member}```  
@@ -353,8 +347,6 @@ Shows all your info
 ```vtbot>Set reminder```  
 Update or Set your reminder time  
 Example: `vtbot>Set reminder hololive 20`
-
-**Remember,after use Tag me,Del tag or Set reminder always recheck your status with My tags**
 ----------------------------------------------------------------------------------------------------------------------
 
 ```vtbot>Vtuber data [Group/Member] -Region [region]```  
