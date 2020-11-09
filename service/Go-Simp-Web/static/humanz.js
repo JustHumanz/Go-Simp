@@ -20,7 +20,7 @@ function Del(elem) {
 $(function () {
   var load = function (url) {
       $.get(url).done(function (data) {
-          $("body").html(data);
+          $("html").html(data);
           $(document).ready(function() {
             if ($('h2.counter').length) {
               $('.counter').each(function() {
@@ -78,7 +78,7 @@ $(function () {
       
       document.title = title;
       load(url, function(response){
-        $("body").html(response);
+        $("html").html(response);
       });
   });
 
@@ -87,17 +87,17 @@ $(function () {
       if (state !== null) {
           document.title = state.title;
           load(state.url, function(response){
-            $("body").html(response);
+            $("html").html(response);
           });
       } else {
           document.title = 'Go-Simp';
           if (state == null) {
             load("/", function(response){
-              $("body").html(response);
+              $("html").html(response);
             });
           } else {
             load(state.url, function(response){
-              $("body").html(response);
+              $("html").html(response);
             });
           }
       }
