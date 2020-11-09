@@ -1050,7 +1050,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 						if list != nil {
 							tableString := &strings.Builder{}
 							table := tablewriter.NewWriter(tableString)
-							table.SetHeader([]string{"Vtuber Group", "Vtuber Name"})
+							table.SetHeader([]string{"Vtuber Group", "Vtuber Name", "Reminder"})
 							table.SetAutoWrapText(false)
 							table.SetAutoFormatHeaders(true)
 							table.SetCenterSeparator("")

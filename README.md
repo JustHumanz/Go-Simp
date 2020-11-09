@@ -311,7 +311,7 @@ Just like enable but this disable command :3
 Example: `vtbot>Disable nijisanji`  
 
 ```vtbot>Channel state```  
-Shows what is enable in this channel    
+Shows what is enable on this channel    
 
 ---------------------------------------------------------------------------------------------------------------------
 
