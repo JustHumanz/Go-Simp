@@ -1215,10 +1215,12 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 						SetThumbnail(config.GoSimpIMG).
-						SetURL(config.CommandURL).
-						SetDescription("Invalid command,see command at my github\n"+config.CommandURL).
-						SetColor(Color).MessageEmbed)
-					return
+						SetTitle("List of Vtuber Groups").
+						SetURL(config.VtubersData).
+						SetDescription("```"+strings.Join(engine.GroupsName, "\t")+"```For more detail see at "+config.VtubersData).
+						SetColor(Color).
+						SetFooter("Use Name of group to show vtuber members").MessageEmbed)
+
 				} else {
 					s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
@@ -1233,15 +1235,13 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 			} else {
-				URL := "https://github.com/JustHumanz/Go-Simp#current-notification-support"
 				s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 					SetThumbnail(config.GoSimpIMG).
-					SetTitle("List of Vtuber Groups").
-					SetURL(URL).
-					SetDescription("```"+strings.Join(engine.GroupsName, "\t")+"```For more detail see at "+URL).
-					SetColor(Color).
-					SetFooter("Use Name of group to show vtuber members").MessageEmbed)
+					SetURL(config.CommandURL).
+					SetDescription("Invalid command,see command at my github\n"+config.CommandURL).
+					SetColor(Color).MessageEmbed)
+				return
 			}
 		}
 	}

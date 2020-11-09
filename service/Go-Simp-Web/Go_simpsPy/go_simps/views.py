@@ -4,6 +4,9 @@ from django.shortcuts import render
 import requests,asyncio
 
 
+GroupURL = "https://api.human-z.tech/vtbot/group"
+MemberURL = "https://api.human-z.tech/vtbot/member/"
+SubscriberURL = "https://api.human-z.tech/vtbot/subscriber/"
 
 class GetVtubers:
     def __init__(self, InputData):
@@ -11,16 +14,16 @@ class GetVtubers:
         self.Members = ""
 
     def GetGroups(self):
-        response = requests.get('https://api.human-z.tech/vtbot/group')
+        response = requests.get(GroupURL)
         return response.json()
 
     def GetMembers(self):
-        response = requests.get('https://api.human-z.tech/vtbot/member/'+self.InputData)        
+        response = requests.get(MemberURL+self.InputData)        
         self.Members = response.json()  
         return response.json()  
 
     def GetSubs(self):
-        SubsInfo = requests.get('https://api.human-z.tech/vtbot/subscriber/'+self.InputData)    
+        SubsInfo = requests.get(SubscriberURL+self.InputData)    
         return SubsInfo.json()
 
     def GetRegList(self):
@@ -55,11 +58,9 @@ def go_simps_group(request, GroupName):
 
 def go_simps_members(request):
     Vtubers = GetVtubers("")
-    Members = Vtubers.GetMembers()
-    Region = Vtubers.GetRegList()
-    Members = Vtubers.ResizeImg("s100")
+    Vtubers.GetMembers()
 
-    Payload = {'Members':Members,'Region':Region,'Add':True}
+    Payload = {'Members':Vtubers.ResizeImg("s100"),'Region':Vtubers.GetRegList(),'Add':True}
     return render(request, 'group.html',Payload)
 
 def go_simps_command(request):
@@ -77,11 +78,9 @@ def go_simps_add(request):
 
 def go_simps_member(request,MemberName):
     Vtubers = GetVtubers(MemberName)
-    Member = Vtubers.GetMembers()
-    Subs = Vtubers.GetSubs()
-    Member = Vtubers.ResizeImg("s300")
+    Vtubers.GetMembers()
 
-    Payload = {'Member': Member,'Subs': Subs}
+    Payload = {'Member': Vtubers.ResizeImg("s300"),'Subs': Vtubers.GetSubs()}
     return render(request, 'member.html',Payload)
 
 
