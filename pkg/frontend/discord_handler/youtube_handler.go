@@ -66,7 +66,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						if VTData.ID == 0 {
 							s.ChannelMessageSend(m.ChannelID, "`"+GroupNameQuery+"`,Name of Vtuber Group or Vtuber Name was not found")
 						} else {
-							DataMember := database.YtGetStatus(0, VTData.ID, "upcoming", "")
+							DataMember := database.YtGetStatus(0, VTData.ID, "upcoming", Region)
 							if DataMember != nil {
 								for _, Member := range DataMember {
 									loc := engine.Zawarudo(Member.Region)
@@ -91,16 +91,8 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						var (
-							GroupData []database.YtDbData
-						)
 
-						if CheckReg(VTuberGroup.NameGroup, Region) {
-							GroupData = database.YtGetStatus(VTuberGroup.ID, 0, "upcoming", Region)
-						} else {
-							GroupData = database.YtGetStatus(VTuberGroup.ID, 0, "upcoming", "")
-						}
-
+						GroupData := database.YtGetStatus(VTuberGroup.ID, 0, "upcoming", Region)
 						if GroupData != nil {
 							for _, Data := range GroupData {
 								loc := engine.Zawarudo(Data.Region)
@@ -139,7 +131,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						if VTData.ID == 0 {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry[i]+"`,Name of Vtuber Group or Vtuber Name was not found")
 						} else {
-							DataMember := database.YtGetStatus(0, VTData.ID, "live", "")
+							DataMember := database.YtGetStatus(0, VTData.ID, "live", Region)
 							if DataMember != nil {
 								for _, Member := range DataMember {
 									loc := engine.Zawarudo(Member.Region)
@@ -166,16 +158,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						var (
-							GroupData []database.YtDbData
-						)
-
-						if CheckReg(VTuberGroup.NameGroup, Region) {
-							GroupData = database.YtGetStatus(VTuberGroup.ID, 0, "live", Region)
-						} else {
-							GroupData = database.YtGetStatus(VTuberGroup.ID, 0, "live", "")
-						}
-
+						GroupData := database.YtGetStatus(VTuberGroup.ID, 0, "live", Region)
 						if GroupData != nil {
 							for _, Data := range GroupData {
 								loc := engine.Zawarudo(Data.Region)
@@ -217,7 +200,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						if VTData.ID == 0 {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry[i]+"`,Name of Vtuber Group or Vtuber Name was not found")
 						} else {
-							DataMember := database.YtGetStatus(0, VTData.ID, "past", "")
+							DataMember := database.YtGetStatus(0, VTData.ID, "past", Region)
 							if DataMember != nil {
 								for z := 0; z < len(DataMember); z++ {
 									Color, err := engine.GetColor("/tmp/yt3.tmp", DataMember[z].Thumb)
@@ -298,17 +281,4 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 		}
 	}
-}
-
-func CheckReg(GroupName, Reg string) bool {
-	for Key, Val := range engine.RegList {
-		if strings.ToLower(Key) == strings.ToLower(GroupName) {
-			for _, Region := range strings.Split(strings.ToLower(Val), ",") {
-				if Region == Reg {
-					return true
-				}
-			}
-		}
-	}
-	return false
 }
