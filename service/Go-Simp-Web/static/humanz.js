@@ -53,7 +53,9 @@ $(function () {
           url = $this.attr("href"),
           title = $this.text();
 
-          if (/(.*youtube.+)/.test(url)) {
+          if (url == "#") {
+            return
+          } else if (/(.*youtube.+)/.test(url)) {
             console.log("Youtube");
             window.open(
               url,
@@ -66,8 +68,6 @@ $(function () {
               url,
               '_blank'
             );
-            return
-          } else if (url == "#") {
             return
           }
 
