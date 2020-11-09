@@ -327,10 +327,6 @@ Remove roles from tag list
 
 ----------------------------------------------------------------------------------------------------------------------
 
-```art>{Group/Member}```  
-Show fanart with randomly with their fanart hashtag  
-Example: `art>Kanochi` or `art>hololive`  
-
 ```vtbot>Tag me [Group/Member]```  
 This command will add you to tag lists if any new fanart or livestream started   
 Example: `vtbot>tag me Kanochi`,then you will tagged when there is a new fanart or livestream(depends by channel state) of kano  
@@ -349,6 +345,10 @@ Update or Set your reminder time
 Example: `vtbot>Set reminder hololive 20`
 
 ----------------------------------------------------------------------------------------------------------------------
+
+```art>{Group/Member}```  
+Show fanart with randomly with their fanart hashtag  
+Example: `art>Kanochi` or `art>hololive`  
 
 ```vtbot>Vtuber data [Group/Member] -Region [region]```  
 Shows available Vtuber data  
