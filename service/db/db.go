@@ -330,7 +330,7 @@ func CreateDB(Data config.ConfigFile) error {
 			SELECT VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM Vtuber.BiliBili 
 			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
 			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-			Where (VtuberGroup.id=GroupID or VtuberMember.id=MemberID) Order by UploadDate DESC;		
+			Where (VtuberGroup.id=GroupID or VtuberMember.id=MemberID) Order by UploadDate DESC limit 5;		
 
 		end if;						
 		END`)

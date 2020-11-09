@@ -292,18 +292,46 @@ EOL
 | <a href="https://www.youtube.com/channel/UCD2W-dcuukl4oChTKATdSiw?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJzr5yrtFILMNSZ9RP9TdOCSBdCbRrihJWYLi3Gt=s800-c-k-c0x00ffffff-no-rj" alt="Maha5"></a><br>Nia      |Nia Redalion | ID     | ✓       | ✗        |  ✓      |
 
 ### Command
-`[]` => array,support multiple VtuberName/VtuberGroup *separated by commas*  
+`[]` => array,support multiple VtuberName/VtuberGroup (*separated by commas*)  
 `{}` => only support single VtuberName/VtuberGroup  
 
 ```vtbot>Enable {art/live/all} [Vtuber Group]```
 This command will declare if [Vtuber Group] enable in this channel
-Example: `vtbot>enable all hanayori,hololive` so other users can use `vtbot>tag me kanochi` or `vtbot>tag me fbk`
+Example: `vtbot>enable all hanayori,hololive` so other users can use `vtbot>tag me kanochi` or `vtbot>tag me fbk`  
+if you want just livestream notificaion use `live`  
+Example: `vtbot>enable live noripro,hanayori`  
+
 
 ```vtbot>Update {art/live/all} [Vtuber Group]```
 Use this command if you want to change enable state  
+Example:  
+`vtbot>Update all Hanayori` so now bot will send fanart notificaion and livestream notificaion
 
 ```vtbot>Disable [Vtuber Group]```
 Just like enable but this disable command :3  
+Example:  
+`vtbot>Disable nijisanji`  
+
+```vtbot>Channel state```  
+Shows what is enable in this channel    
+
+
+**Remember,after use Enable,Update or Disable always recheck channel state**
+---------------------------------------------------------------------------------------------------------------------
+
+```vtbot>Tag roles [roles] [Group/Member]```
+Same like `tag me` command,but this will tag roles  (*every role separated by space*)   
+Example: `tag roles @kanochi-simps hanayori` or `tag roles @fbk-simps @hololive-simps fbk`  
+
+```vtbot>Roles info [roles]```  
+Show all roles info
+
+```vtbot>Del roles [roles]```  
+Remove roles from tag list  
+
+
+**Remember,after use Tag roles or Del roles always recheck roles status with Roles info**
+----------------------------------------------------------------------------------------------------------------------
 
 ```art>{Group/Member}```  
 Show fanart with randomly with their fanart hashtag  
@@ -311,7 +339,7 @@ Example: `art>Kanochi` or `art>hololive`
 
 ```vtbot>Tag me [Group/Member]```  
 This command will add you to tag lists if any new fanart or livestream started   
-Example: `vtbot>tag me Kanochi`,then you will tagged when there is a new fanart or livestream of kano  
+Example: `vtbot>tag me Kanochi`,then you will tagged when there is a new fanart or livestream(depends by channel state) of kano  
 
 in other case if you want to remind before livestream started you can add `-setreminder {Minutes}` in `tag me`  
 Example: `vtbot>tag me hanayori -setreminder 30` so bot will remind you 30 Minutes before livestream started  
@@ -320,53 +348,49 @@ Example: `vtbot>tag me hanayori -setreminder 30` so bot will remind you 30 Minut
 This command will remove you from tags list  
 
 ```vtbot>My tags```  
-Shows all lists that you are subscribed  
+Shows all your info
 
 ```vtbot>Set reminder```  
 Update or Set your reminder time  
 Example: `vtbot>Set reminder hololive 20`
 
-```vtbot>Tag roles [roles] [Group/Member]```
-Same like `tag me` command,but this will tag roles  *every role separated by space*   
-Example: `tag roles @kanochi-simps hanayori` or `tag roles @fbk-simps @hololive-simps fbk`  
+**Remember,after use Tag me,Del tag or Set reminder always recheck your status with My tags**
+----------------------------------------------------------------------------------------------------------------------
 
-```vtbot>Roles tags [roles]```  
-Show lists that roles are subscribed
-
-```vtbot>Del roles [roles]```  
-Remove roles are subscribed from tags list  
-
-```vtbot>Channel state```  
-Shows what is enable in this channel    
-
-```vtbot>Vtuber data [Group/Member] -Region {region}```  
+```vtbot>Vtuber data [Group/Member] -Region [region]```  
 Shows available Vtuber data  
 Example:
 `vtbot>vtuber data nijisanji` or `vtbot>vtuber data nijisanji,hololive -Region id,en`  
 
 ```vtbot>Subscriber {Member} ```  
 Shows Vtuber Subscriber data(twitter,Bilibili,Youtube)
+Example:  
+`vtbot>Subscriber sora`
 
-```yt>Upcoming [Vtuber Group/Member] -Region {region}```  
-This command will show Upcoming live streams on Youtube  *only 3 if use Vtuber Group*
+```yt>Upcoming [Vtuber Group/Member] -Region [region]```  
+This command will show Upcoming live streams on Youtube (*only 3 if use Vtuber Group*)  
+Example:  
+`vtbot>Upcoming nijisanji,hololive`  
+with Region  
+`vtbot>Upcoming nijisanji,hololive -Region id,en`  
 
-```yt>Live [Vtuber Group/Member] -Region {region}```  
-This command will show all live streams right now on Youtube  
+```yt>Live [Vtuber Group/Member] -Region [region]```  
+Show all livestreams right now on Youtube  
 
 ```yt>Past [Vtuber Group/Member] -Region {region}```  
-This command will show past streams on Youtube *only 3 if use Vtuber Group*
+Show past streams on Youtube (*only 3 if use Vtuber Group*)  
 
 ~~```bl>Upcoming [Vtuber Group]```  
-This command will show Upcoming live streams on Bilibili~~  
+Show Upcoming live streams on Bilibili~~  
 
 ```bl>Live [Vtuber Group/Member]```  
-This command will show all live streams right now on Bilibili  
+Same like `yt>upcoming` but this for bilibili
 
 ```bl>Past [Vtuber Group/Member]```  
-This command will show past streams on Bilibili
+Same like `yt>past` but this for bilibili
 
 ```sp_bl>[Group/Member]```  
-This command will show latest video on Bilibili  *only 3 if use Vtuber Group*
+Show latest video on Bilibili  (*only 3 if use Vtuber Group*)  
 
 ```vtbot>Help EN```  
 Well,you using it right now  
@@ -385,7 +409,7 @@ Like this but in Japanese
 
 
 #### Reminder  
-Reminder every 30 minutes before livestream start
+Reminder 30 minutes before livestream start
 <p align="center">
   <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Reminder.png" alt="Reminder"/>
 </p>
@@ -411,10 +435,10 @@ Reminder every 30 minutes before livestream start
 [Invite link](https://top.gg/bot/721964514018590802)
 
 ## TODO
-- ~~Add customize reminder~~ Done
-- Vtuber collaboration detection
-- Make a form for add New Vtuber
-- ~~Move to microservice~~ Done
+- ~~Add customize reminder~~ (Done)
+- Vtuber collaboration Detection
+- Make a form for add New Vtuber (On progress)
+- ~~Move to microservice~~ (Done)
 
 
 

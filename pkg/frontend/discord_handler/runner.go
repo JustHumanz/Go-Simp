@@ -19,7 +19,7 @@ const (
 	DelTag       = "del tag"
 	MyTags       = "my tags"
 	TagRoles     = "tag roles"
-	RolesTags    = "roles tags"
+	RolesTags    = "roles info"
 	DelRoles     = "del roles"
 	ChannelState = "channel state"
 	VtuberData   = "vtuber data"
