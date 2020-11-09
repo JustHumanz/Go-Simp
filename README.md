@@ -316,8 +316,8 @@ Shows what is enable on this channel
 ---------------------------------------------------------------------------------------------------------------------
 
 ```vtbot>Tag roles [roles] [Group/Member]```
-Same like `tag me` command,but this will tag roles  (*every role separated by space*)   
-Example: `tag roles @kanochi-simps hanayori` or `tag roles @fbk-simps @hololive-simps fbk`  
+Same like `vtbot>tag me` command,but this will tag roles  (*every role separated by space*)   
+Example: `vtbot>tag roles @kanochi-simps hanayori` or `vtbot>tag roles @fbk-simps @hololive-simps fbk`  
 
 ```vtbot>Roles info [roles]```  
 Show all roles info
