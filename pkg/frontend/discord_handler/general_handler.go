@@ -1316,3 +1316,16 @@ func GetUserAvatar(username string) string {
 func (Data Dynamic_svr) GetUserAvatar() string {
 	return Data.Data.Card.Desc.UserProfile.Info.Face
 }
+
+func CheckReg(GroupName, Reg string) bool {
+	for Key, Val := range engine.RegList {
+		if strings.ToLower(Key) == strings.ToLower(GroupName) {
+			for _, Region := range strings.Split(strings.ToLower(Val), ",") {
+				if Region == Reg {
+					return true
+				}
+			}
+		}
+	}
+	return false
+}
