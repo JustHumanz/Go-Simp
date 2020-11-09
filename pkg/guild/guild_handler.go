@@ -72,13 +72,6 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 					return
 				}
 			}
-		} else {
-			s.ChannelMessageSend(SendInvite.ID, g.Guild.Name+" reinvite me")
-			err := DataGuild.UpdateJoin(Info)
-			if err != nil {
-				log.Error(err)
-				return
-			}
 		}
 		KillSqlConn(sqlite)
 	}
