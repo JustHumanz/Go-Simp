@@ -1221,7 +1221,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 						SetColor(Color).
 						SetFooter("Use Name of group to show vtuber members").MessageEmbed)
 
-				} else {
+				} else if len(tableString.String()) > 42 {
 					s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 						SetDescription("```"+tableString.String()+"```").

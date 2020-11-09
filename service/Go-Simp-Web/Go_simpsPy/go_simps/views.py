@@ -91,6 +91,6 @@ def go_simps_support(request,Type):
     elif Type == "airforceone":
         Payload = "https://img-comment-fun.9cache.com/media/a2NgKoZ/azaXgVx4_700w_0.jpg"
     else:
-        Payload = "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/404.jpg"    
+        Payload = "https://cdn.human-z.tech/404.jpg"    
 
     return render(request, 'support.html',{'Data': Payload})
