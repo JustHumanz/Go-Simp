@@ -50,8 +50,8 @@ const (
 	Assalamu          = "https://cdn.human-z.tech/Assalamu.jpg"
 	Approaching       = "https://cdn.human-z.tech/approaching.jpg"
 	RandomSleep       = 404
-	CommandURL        = "https://github.com/JustHumanz/Go-Simp#command"
-	VtubersData       = "https://go-simp.human-z.tech/"
+	CommandURL        = "https://go-simp.human-z.tech/Exec/"
+	VtubersData       = "https://go-simp.human-z.tech/Vtubers/"
 )
 
 type ConfigFile struct {

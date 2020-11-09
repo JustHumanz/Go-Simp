@@ -325,8 +325,8 @@ Example: `vtbot>tag roles @kanochi-simps hanayori` or `vtbot>tag roles @fbk-simp
 Show all roles info
 
 ```vtbot>Del roles [roles] [Group/Member]```   
-Example: `vtbot>Del roles @kanochi-simps kanochi` or `vtbot>Del roles @hololive-simps fbk`
 Remove roles from tag list  
+Example: `vtbot>Del roles @kanochi-simps kanochi` or `vtbot>Del roles @fbk-simps hololive`
 
 **Only user with permission "Manage Channel or Higher" can use Tag and Del roles**
 
