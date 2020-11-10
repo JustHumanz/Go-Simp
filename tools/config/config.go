@@ -41,7 +41,6 @@ const (
 	Dead              = "https://cdn.human-z.tech/dead.jpg"
 	BSD               = "https://cdn.human-z.tech/bsd.png"
 	Sleep             = "https://cdn.human-z.tech/sleep.png"
-	ChannelPermission = 16
 	Bonjour           = "https://cdn.human-z.tech/bonjour.png"
 	Howdy             = "https://cdn.human-z.tech/howdy.png"
 	Guten             = "https://cdn.human-z.tech/guten.png"
@@ -49,9 +48,10 @@ const (
 	Selamat           = "https://cdn.human-z.tech/selamat.jpg"
 	Assalamu          = "https://cdn.human-z.tech/Assalamu.jpg"
 	Approaching       = "https://cdn.human-z.tech/approaching.jpg"
-	RandomSleep       = 404
 	CommandURL        = "https://go-simp.human-z.tech/Exec/"
-	VtubersData       = "https://go-simp.human-z.tech/Vtubers/"
+	VtubersData       = "https://go-simp.human-z.tech"
+	RandomSleep       = 404
+	ChannelPermission = 16
 )
 
 type ConfigFile struct {

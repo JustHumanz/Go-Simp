@@ -17,12 +17,35 @@ function Del(elem) {
   }
 }
 
+
+
 $(function () {
-  var load = function (url) {
-      $.get(url).done(function (data) {
-          $("body").html(data);
-      })
-  };
+  var counter = function(data) {
+    data.ready(function() {
+      if ($('h2.counter').length) {
+        $('.counter').each(function() {
+          var $this = $(this),
+              countTo = $this.attr('data-count');
+          
+          $({ countNum: $this.text()}).animate({
+            countNum: countTo 
+          },
+          {
+            duration: 8000,
+            easing:'linear',
+            step: function() {
+              $this.text(Math.floor(this.countNum));
+            },
+            complete: function() {
+              $this.text(this.countNum);
+            }
+          });  
+        });
+      }
+    });
+  }
+  
+  counter($('body'))
 
   $(document).on('click', 'a', function (e) {
       e.preventDefault();
@@ -53,31 +76,10 @@ $(function () {
           url: url,
           title: title
       }, title, url);
-      
+
       document.title = title;
       $('body').load(url,function(){
-        $('body').ready(function() {
-          if ($('h2.counter').length) {
-            $('.counter').each(function() {
-              var $this = $(this),
-                  countTo = $this.attr('data-count');
-              
-              $({ countNum: $this.text()}).animate({
-                countNum: countTo 
-              },
-              {
-                duration: 8000,
-                easing:'linear',
-                step: function() {
-                  $this.text(Math.floor(this.countNum));
-                },
-                complete: function() {
-                  $this.text(this.countNum);
-                }
-              });  
-            });
-          }
-        });
+        counter($('body'))
       });
   });
 
@@ -85,18 +87,18 @@ $(function () {
       var state = e.originalEvent.state;
       if (state !== null) {
           document.title = state.title;
-          load(state.url, function(response){
-            $("html").html(response);
+          $('body').load(state.url,function(){
+            counter($('body'))
           });
       } else {
           document.title = 'Go-Simp';
           if (state == null) {
-            load("/", function(response){
-              $("html").html(response);
+            $('body').load("/",function(){
+              counter($('body'))
             });
           } else {
-            load(state.url, function(response){
-              $("html").html(response);
+            $('body').load(state.url,function(){
+              counter($('body'))
             });
           }
       }
