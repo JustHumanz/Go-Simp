@@ -70,6 +70,9 @@ $(function () {
               '_blank'
             );
             return
+          } else if (url == "/") {
+            console.log(url)
+            window.location.href = url;
           }
 
       history.pushState({
