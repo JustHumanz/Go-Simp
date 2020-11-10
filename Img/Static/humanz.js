@@ -20,29 +20,7 @@ function Del(elem) {
 $(function () {
   var load = function (url) {
       $.get(url).done(function (data) {
-          $("html").html(data);
-          $(document).ready(function() {
-            if ($('h2.counter').length) {
-              $('.counter').each(function() {
-                var $this = $(this),
-                    countTo = $this.attr('data-count');
-                
-                $({ countNum: $this.text()}).animate({
-                  countNum: countTo 
-                },
-                {
-                  duration: 8000,
-                  easing:'linear',
-                  step: function() {
-                    $this.text(Math.floor(this.countNum));
-                  },
-                  complete: function() {
-                    $this.text(this.countNum);
-                  }
-                });  
-              });
-            }
-          });
+          $("body").html(data);
       })
   };
 
@@ -77,8 +55,29 @@ $(function () {
       }, title, url);
       
       document.title = title;
-      load(url, function(response){
-        $("html").html(response);
+      $('body').load(url,function(){
+        $('body').ready(function() {
+          if ($('h2.counter').length) {
+            $('.counter').each(function() {
+              var $this = $(this),
+                  countTo = $this.attr('data-count');
+              
+              $({ countNum: $this.text()}).animate({
+                countNum: countTo 
+              },
+              {
+                duration: 8000,
+                easing:'linear',
+                step: function() {
+                  $this.text(Math.floor(this.countNum));
+                },
+                complete: function() {
+                  $this.text(this.countNum);
+                }
+              });  
+            });
+          }
+        });
       });
   });
 
@@ -104,12 +103,6 @@ $(function () {
   });
 });
 
-
-/*
-counter = document.getElementsByClassName("counter")
-for (index = counter.length - 1; index >= 0; index--) {
-    console.log(counter[index].getAttribute('data-count'))
-}*/
 function IsEmpty() {
 if (document.forms['form'].Nickname.value === "" || document.forms['form'].Region.value === "") {
   alert("Nickname or Region empty");
@@ -118,7 +111,13 @@ if (document.forms['form'].Nickname.value === "" || document.forms['form'].Regio
 return true;
 }
 
+
+
 /*
+counter = document.getElementsByClassName("counter")
+for (index = counter.length - 1; index >= 0; index--) {
+    console.log(counter[index].getAttribute('data-count'))
+
 
 $('.GetMembers').on("click",function(){
   GroupName = $(this).attr("data_group");
