@@ -38,7 +38,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									if err != nil {
 										log.Error(err)
 									}
-									s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+									_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 										SetTitle(VTData.VTName).
 										SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 										SetDescription(DataMember.Description).
@@ -49,12 +49,18 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 										AddField("Online", strconv.Itoa(DataMember.Online)).
 										SetColor(Color).
 										SetFooter(DataMember.ScheduledStart.In(loc).Format(time.RFC822)).MessageEmbed)
+									if err != nil {
+										log.Error(err)
+									}
 								}
 							} else {
-								s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 									SetDescription("It looks like `"+VTData.VTName+"` doesn't have a livestream right now").
 									SetImage(config.WorryIMG).MessageEmbed)
+								if err != nil {
+									log.Error(err)
+								}
 							}
 						}
 					} else {
@@ -66,7 +72,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								if err != nil {
 									log.Error(err)
 								}
-								s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+								_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetTitle(engine.FixName(DataGroup.EnName, DataGroup.JpName)).
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetDescription(DataGroup.Description).
@@ -77,12 +83,18 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									AddField("Online", strconv.Itoa(DataGroup.Online)).
 									SetColor(Color).
 									SetFooter(DataGroup.ScheduledStart.In(loc).Format(time.RFC822)).MessageEmbed)
+								if err != nil {
+									log.Error(err)
+								}
 							}
 						} else {
-							s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 								SetDescription("It looks like `"+VTuberGroup.NameGroup+"` doesn't have a livestream right now").
 								SetImage(config.WorryIMG).MessageEmbed)
+							if err != nil {
+								log.Error(err)
+							}
 						}
 					}
 				}
@@ -103,7 +115,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									if err != nil {
 										log.Error(err)
 									}
-									s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+									_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 										SetTitle(engine.FixName(DataMember.EnName, DataMember.JpName)).
 										SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 										SetDescription(DataMember.Description).
@@ -114,12 +126,18 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 										AddField("Online", strconv.Itoa(DataMember.Online)).
 										SetColor(Color).
 										SetFooter(DataMember.ScheduledStart.In(loc).Format(time.RFC822)).MessageEmbed)
+									if err != nil {
+										log.Error(err)
+									}
 								}
 							} else {
-								s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 									SetDescription("It looks like `"+VTData.VTName+"` doesn't have a Past livestream right now").
 									SetImage(config.WorryIMG).MessageEmbed)
+								if err != nil {
+									log.Error(err)
+								}
 							}
 						}
 					} else {
@@ -129,7 +147,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							if err != nil {
 								log.Error(err)
 							}
-							s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+							_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 								SetTitle(engine.FixName(LiveBili.EnName, LiveBili.JpName)).
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 								SetDescription(LiveBili.Description).
@@ -140,12 +158,18 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								AddField("Online", strconv.Itoa(LiveBili.Online)).
 								SetColor(Color).
 								SetFooter(LiveBili.ScheduledStart.In(loc).Format(time.RFC822)).MessageEmbed)
+							if err != nil {
+								log.Error(err)
+							}
 						}
 					}
 				}
 			}
 		} else {
-			s.ChannelMessageSend(m.ChannelID, "Incomplete command")
+			_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete command")
+			if err != nil {
+				log.Error(err)
+			}
 		}
 	}
 }
@@ -173,7 +197,7 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 								if err != nil {
 									log.Error(err)
 								}
-								s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+								_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 									SetTitle(engine.FixName(DataMember.EnName, DataMember.JpName)).
 									SetDescription(DataMember.Title).
@@ -187,12 +211,18 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetFooter(DataMember.UploadDate.In(loc).Format(time.RFC822), config.BiliBiliIMG).
 									InlineAllFields().
 									SetColor(Color).MessageEmbed)
+								if err != nil {
+									log.Error(err)
+								}
 							}
 						} else {
-							s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 								SetDescription("It looks like `"+VTData.VTName+"` doesn't have a video in space.bilibili").
 								SetImage(config.WorryIMG).MessageEmbed)
+							if err != nil {
+								log.Error(err)
+							}
 							return
 						}
 					}
@@ -207,7 +237,7 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 								log.Error(err)
 							}
 
-							s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+							_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 								SetTitle(engine.FixName(DataMember.EnName, DataMember.JpName)).
 								SetDescription(DataMember.Title).
@@ -221,13 +251,19 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 								SetFooter(DataMember.UploadDate.In(loc).Format(time.RFC822), config.BiliBiliIMG).
 								InlineAllFields().
 								SetColor(Color).MessageEmbed)
+							if err != nil {
+								log.Error(err)
+							}
 
 						}
 					} else {
-						s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+						_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 							SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 							SetDescription("It looks like `"+VTuberGroup.NameGroup+"` doesn't have a video in space.bilibili").
 							SetImage(config.WorryIMG).MessageEmbed)
+						if err != nil {
+							log.Error(err)
+						}
 						return
 					}
 				}

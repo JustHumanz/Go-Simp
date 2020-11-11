@@ -25,7 +25,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 
 			if Data.VideoID != "" {
-				s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 					SetTitle(Data.VTName).
 					SetDescription(Data.Title).
@@ -38,12 +38,18 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					AddField("Type", engine.YtFindType(Data.Title)).
 					SetFooter(Data.Msg2, config.YoutubeIMG).
 					SetColor(Color).MessageEmbed)
+				if err != nil {
+					log.Error(err)
+				}
 			} else {
-				s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 					SetTitle(Data.VTName).
 					SetDescription(Data.Msg).
 					SetImage(config.WorryIMG).MessageEmbed)
+				if err != nil {
+					log.Error(err)
+				}
 			}
 		}
 	)
@@ -52,7 +58,10 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if len(CommandArray) > 3 && CommandArray[2] == "-region" {
 			Region = strings.ToLower(CommandArray[3])
 			if len(Region) > 2 {
-				s.ChannelMessageSend(m.ChannelID, "Only support 1 Region,ignoring `"+Region[2:]+"`")
+				_, err := s.ChannelMessageSend(m.ChannelID, "Only support 1 Region,ignoring `"+Region[2:]+"`")
+				if err != nil {
+					log.Error(err)
+				}
 			}
 		} else {
 			Region = ""
@@ -64,7 +73,10 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						VTData := ValidName(GroupNameQuery)
 						if VTData.ID == 0 {
-							s.ChannelMessageSend(m.ChannelID, "`"+GroupNameQuery+"`,Name of Vtuber Group or Vtuber Name was not found")
+							_, err := s.ChannelMessageSend(m.ChannelID, "`"+GroupNameQuery+"`,Name of Vtuber Group or Vtuber Name was not found")
+							if err != nil {
+								log.Error(err)
+							}
 						} else {
 							DataMember := database.YtGetStatus(0, VTData.ID, "upcoming", Region)
 							if DataMember != nil {
@@ -119,7 +131,10 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 			} else {
-				s.ChannelMessageSend(m.ChannelID, "Incomplete Upcoming command")
+				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete Upcoming command")
+				if err != nil {
+					log.Error(err)
+				}
 			}
 		} else if strings.ToLower(CommandArray[0]) == Prefix+Live {
 			if len(CommandArray) > 1 {
@@ -129,7 +144,10 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						VTData := ValidName(FindGroupArry[i])
 						if VTData.ID == 0 {
-							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry[i]+"`,Name of Vtuber Group or Vtuber Name was not found")
+							_, err := s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry[i]+"`,Name of Vtuber Group or Vtuber Name was not found")
+							if err != nil {
+								log.Error(err)
+							}
 						} else {
 							DataMember := database.YtGetStatus(0, VTData.ID, "live", Region)
 							if DataMember != nil {
@@ -186,7 +204,10 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 			} else {
-				s.ChannelMessageSend(m.ChannelID, "Incomplete Live command")
+				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete Live command")
+				if err != nil {
+					log.Error(err)
+				}
 				return
 			}
 		} else if strings.ToLower(CommandArray[0]) == Prefix+"last" || strings.ToLower(CommandArray[0]) == Prefix+Past {
@@ -198,7 +219,10 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						VTData := ValidName(FindGroupArry[i])
 						if VTData.ID == 0 {
-							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry[i]+"`,Name of Vtuber Group or Vtuber Name was not found")
+							_, err := s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry[i]+"`,Name of Vtuber Group or Vtuber Name was not found")
+							if err != nil {
+								log.Error(err)
+							}
 						} else {
 							DataMember := database.YtGetStatus(0, VTData.ID, "past", Region)
 							if DataMember != nil {
@@ -212,7 +236,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									duration := durafmt.Parse(diff).LimitFirstN(2)
 									diff2 := DataMember[z].End.In(loc).Sub(DataMember[z].Schedul)
 									durationlive := durafmt.Parse(diff2).LimitFirstN(2)
-									s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+									_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 										SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 										SetTitle(VTData.VTName).
 										SetDescription(DataMember[z].Title).
@@ -225,6 +249,9 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 										AddField("Viewers", DataMember[z].Viewers).
 										SetFooter(DataMember[z].Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 										SetColor(Color).MessageEmbed)
+									if err != nil {
+										log.Error(err)
+									}
 								}
 							} else {
 								SendEmbed(Memberst{
@@ -254,7 +281,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								loc := engine.Zawarudo(Data[ii].Region)
 								duration := durafmt.Parse(time.Now().In(loc).Sub(Data[ii].Schedul.In(loc))).LimitFirstN(2)
 								durationlive := durafmt.Parse(Data[ii].End.In(loc).Sub(Data[ii].Schedul)).LimitFirstN(2)
-								s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+								_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
 									SetTitle(engine.FixName(Data[ii].NameEN, Data[ii].NameJP)).
 									SetThumbnail(Data[ii].YoutubeAvatar).
@@ -267,6 +294,9 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									AddField("Viewers", Data[ii].Viewers).
 									SetFooter(Data[ii].Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 									SetColor(Color).MessageEmbed)
+								if err != nil {
+									log.Error(err)
+								}
 							}
 						} else {
 							SendEmbed(Memberst{
@@ -277,7 +307,10 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 			} else {
-				s.ChannelMessageSend(m.ChannelID, "Incomplete Last command")
+				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete Last command")
+				if err != nil {
+					log.Error(err)
+				}
 			}
 		}
 	}
