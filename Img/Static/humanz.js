@@ -79,34 +79,35 @@ $(function () {
 
       
       $('.collapse').collapse("hide")
-      $(window).scrollTop(0);
       document.title = title;
       $('#container').load(url+" #container",function(){
         counter($('body'))
       });
+      document.getElementById("container").scrollIntoView();
   });
 
   $(window).on('popstate', function (e) {
       var state = e.originalEvent.state;
       if (state !== null) {
           $('.collapse').collapse("hide")
-          $(window).scrollTop(0);
           document.title = state.title;
           $('#container').load(state.url+" #container",function(){
             counter($('body'))
           });
+          document.getElementById("container").scrollIntoView();
       } else {
           document.title = 'Go-Simp';
           $('.collapse').collapse("hide")
-          $(window).scrollTop(0);
           if (state == null) {
             $('#container').load("/ #container",function(){
               counter($('body'))
             });
+            document.getElementById("container").scrollIntoView();
           } else {
             $('#container').load(state.url+" container",function(){
               counter($('body'))
             });
+            document.getElementById("container").scrollIntoView();
           }
       }
   });
