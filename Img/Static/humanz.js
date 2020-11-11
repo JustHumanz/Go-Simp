@@ -70,8 +70,6 @@ $(function () {
               '_blank'
             );
             return
-          } else if (url == "/") {
-            window.location.href = url;
           }
 
       history.pushState({
@@ -79,8 +77,10 @@ $(function () {
           title: title
       }, title, url);
 
+      
+      $('.collapse').collapse("hide")
       document.title = title;
-      $('body').load(url,function(){
+      $('#container').load(url+" #container",function(){
         counter($('body'))
       });
   });
@@ -89,17 +89,17 @@ $(function () {
       var state = e.originalEvent.state;
       if (state !== null) {
           document.title = state.title;
-          $('body').load(state.url,function(){
+          $('#container').load(state.url+" #container",function(){
             counter($('body'))
           });
       } else {
           document.title = 'Go-Simp';
           if (state == null) {
-            $('body').load("/",function(){
+            $('#container').load("/ #container",function(){
               counter($('body'))
             });
           } else {
-            $('body').load(state.url,function(){
+            $('#container').load(state.url+" container",function(){
               counter($('body'))
             });
           }

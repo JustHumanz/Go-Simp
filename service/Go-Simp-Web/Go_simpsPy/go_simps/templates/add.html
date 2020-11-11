@@ -38,8 +38,7 @@
     </nav>
   </head>
   <body>
-  <div class="container" >
-    <div class="text-center">
+    <div class="container" id="container">
       <div class="registration-form">
         <form name="form" action="/Add/" method="POST">
           {% csrf_token %}
@@ -81,15 +80,14 @@
                 <button type="submit" onclick="return IsEmpty();" class="btn btn-block create-account">Submit Data</button>
             </div>
         </form>
+      </div>
     </div>
-    </div>
-  </div>
     <!--
+    <script type="text/javascript" src="http://localhost:8081/humanz.js"></script> 
+    -->
     <script src="https://cdn.human-z.tech/Static/jquery-3.5.1.js"></script>
     <script src="https://cdn.human-z.tech/Static/popper.min.js"></script>
     <script src="https://cdn.human-z.tech/Static/bootstrap.min.js"></script>
-    <script type="text/javascript" src="http://localhost:8081/humanz.js"></script> 
     <script type="text/javascript" src="https://cdn.human-z.tech/Static/humanz.js"></script> 
-    -->
   </body>
 </html>

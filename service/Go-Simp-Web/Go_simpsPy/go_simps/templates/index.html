@@ -38,21 +38,24 @@
     </nav>
   </head>
   <body>
-    <div class="container" >
-    <div class="text-center">
+    <div class="container" id="container">
+      <div class="text-center">
       {% for Group in Groups %}
         <figure class="figure p-2">
-          <a class="GetMembers" href="/Group/{{Group.VtuberGroupName}}">
+          <a class="GetMembersOfGroup" href="/Group/{{Group.VtuberGroupName}}" >
             <img src={{Group.VtuberGroupIcon}} class="figure-img img-fluid img-thumbnail" alt="" width="200" height="200">
             <figcaption class="figure-caption">{{Group.VtuberGroupName}}</figcaption></a>
         </figure>
       {% endfor %}
+      </div>
     </div>
-    </div>
-    <script src="https://cdn.human-z.tech/Static/jquery-3.5.1.js"></script>
-    <script src="https://cdn.human-z.tech/Static/popper.min.js"></script>
-    <script src="https://cdn.human-z.tech/Static/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://cdn.human-z.tech/Static/humanz.js"></script> 
-    <!--<script type="text/javascript" src="http://localhost:8081/humanz.js"></script> -->
   </body>
+  
+  <!--
+  <script type="text/javascript" src="http://localhost:8081/humanz.js"></script>
+  -->
+  <script src="https://cdn.human-z.tech/Static/jquery-3.5.1.js"></script>
+  <script src="https://cdn.human-z.tech/Static/popper.min.js"></script>
+  <script src="https://cdn.human-z.tech/Static/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://cdn.human-z.tech/Static/humanz.js"></script> 
 </html>
