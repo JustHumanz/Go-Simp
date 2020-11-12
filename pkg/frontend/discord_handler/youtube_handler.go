@@ -12,6 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+//YoutubeMessage Youtube message handler
 func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
 	var (
@@ -103,7 +104,6 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-
 						GroupData := database.YtGetStatus(VTuberGroup.ID, 0, "upcoming", Region)
 						if GroupData != nil {
 							for _, Data := range GroupData {
@@ -131,7 +131,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete Upcoming command")
+				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+Upcoming+"` command")
 				if err != nil {
 					log.Error(err)
 				}
@@ -204,7 +204,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete Live command")
+				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+Live+"` command")
 				if err != nil {
 					log.Error(err)
 				}
@@ -237,7 +237,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									diff2 := DataMember[z].End.In(loc).Sub(DataMember[z].Schedul)
 									durationlive := durafmt.Parse(diff2).LimitFirstN(2)
 									_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-										SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+										SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 										SetTitle(VTData.VTName).
 										SetDescription(DataMember[z].Title).
 										SetImage(DataMember[z].Thumb).
@@ -282,7 +282,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								duration := durafmt.Parse(time.Now().In(loc).Sub(Data[ii].Schedul.In(loc))).LimitFirstN(2)
 								durationlive := durafmt.Parse(Data[ii].End.In(loc).Sub(Data[ii].Schedul)).LimitFirstN(2)
 								_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetTitle(engine.FixName(Data[ii].NameEN, Data[ii].NameJP)).
 									SetThumbnail(Data[ii].YoutubeAvatar).
 									SetDescription(Data[ii].Title).
@@ -307,7 +307,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete Last command")
+				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+Prefix+"` command")
 				if err != nil {
 					log.Error(err)
 				}

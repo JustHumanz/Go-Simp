@@ -16,6 +16,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+//Public variable
 var (
 	DB    *sql.DB
 	debug bool
@@ -27,6 +28,7 @@ func Start(dbsession *sql.DB) {
 	log.Info("Database module ready")
 }
 
+//BruhMoment Bruh moment
 func BruhMoment(err error, msg string, exit bool) {
 	if err != nil {
 		log.Info(msg)
@@ -37,7 +39,7 @@ func BruhMoment(err error, msg string, exit bool) {
 	}
 }
 
-//Get Twitter hashtag by group
+//GetHashtag Get Twitter hashtag by group
 func GetHashtag(GroupID int64) []MemberGroupID {
 	rows, err := DB.Query(`SELECT VtuberMember.id,VtuberName,VtuberName_JP,VtuberGroup_id,Hashtag,VtuberGroupName,VtuberGroupIcon FROM VtuberMember INNER Join VtuberGroup ON VtuberGroup.id = VtuberMember.VtuberGroup_id WHERE Hashtag !="" AND VtuberGroup.id =?`, GroupID)
 	BruhMoment(err, "", false)
@@ -57,7 +59,7 @@ func GetHashtag(GroupID int64) []MemberGroupID {
 	return Data
 }
 
-//Get all vtuber groupData
+//GetGroup Get all vtuber groupData
 func GetGroup() []GroupName {
 	rows, err := DB.Query(`SELECT id,VtuberGroupName,VtuberGroupIcon FROM VtuberGroup`)
 	BruhMoment(err, "", false)
@@ -75,7 +77,7 @@ func GetGroup() []GroupName {
 	return Data
 }
 
-//Get data of Vtuber member
+//GetName Get data of Vtuber member
 func GetName(GroupID int64) []Name {
 	rows, err := DB.Query(`call GetVtuberName(?)`, GroupID)
 	BruhMoment(err, "", false)
@@ -97,7 +99,7 @@ func gacha() bool {
 	return rand.Float32() < 0.5
 }
 
-//Get subs,follow,view,like data from Subscriber
+//GetSubsCount Get subs,follow,view,like data from Subscriber
 func (Member Name) GetSubsCount() *MemberSubs {
 	var Data MemberSubs
 	rows, err := DB.Query(`SELECT * FROM Subscriber WHERE VtuberMember_id=?`, Member.ID)
@@ -111,45 +113,49 @@ func (Member Name) GetSubsCount() *MemberSubs {
 	return &Data
 }
 
-//update bilibili state
+//UpBiliFollow update bilibili state
 func (Member *MemberSubs) UpBiliFollow(new int) *MemberSubs {
 	Member.BiliFollow = new
 	return Member
 }
 
+//UpBiliVideo Add bilibili Videos
 func (Member *MemberSubs) UpBiliVideo(new int) *MemberSubs {
 	Member.BiliVideos = new
 	return Member
 }
 
+//UpBiliViews Add views
 func (Member *MemberSubs) UpBiliViews(new int) *MemberSubs {
 	Member.BiliViews = new
 	return Member
 }
 
-//update youtube state
+//UpYtSubs update youtube state
 func (Member *MemberSubs) UpYtSubs(new int) *MemberSubs {
 	Member.YtSubs = new
 	return Member
 }
 
+//UpYtVideo Update youtube videos
 func (Member *MemberSubs) UpYtVideo(new int) *MemberSubs {
 	Member.YtVideos = new
 	return Member
 }
 
+//UpYtViews Update youtube views
 func (Member *MemberSubs) UpYtViews(new int) *MemberSubs {
 	Member.YtViews = new
 	return Member
 }
 
-//update twitter state
+//UptwFollow Update twitter state
 func (Member *MemberSubs) UptwFollow(new int) *MemberSubs {
 	Member.TwFollow = new
 	return Member
 }
 
-//Update Subscriber data
+//UpdateSubs Update Subscriber data
 func (Data *MemberSubs) UpdateSubs(State string) {
 	if State == "yt" {
 		_, err := DB.Exec(`Update Subscriber set Youtube_Subscriber=?,Youtube_Videos=?,Youtube_Views=? Where id=? `, Data.YtSubs, Data.YtVideos, Data.YtViews, Data.ID)
@@ -163,7 +169,7 @@ func (Data *MemberSubs) UpdateSubs(State string) {
 	}
 }
 
-//Get Member fanart URL from TBiliBili and Twitter
+//GetFanart Get Member fanart URL from TBiliBili and Twitter
 func GetFanart(GroupID, MemberID int64) DataFanart {
 	var (
 		Data     DataFanart
@@ -194,7 +200,7 @@ func GetFanart(GroupID, MemberID int64) DataFanart {
 
 }
 
-//Input new fanart from twitter
+//InputTwitter Input new fanart from twitter
 func (Data InputTW) InputTwitter() {
 
 	stmt, err := DB.Prepare(`INSERT INTO Twitter (PermanentURL,Author,Likes,Photos,Videos,Text,TweetID,VtuberMember_id) values(?,?,?,?,?,?,?,?)`)
@@ -208,13 +214,13 @@ func (Data InputTW) InputTwitter() {
 	BruhMoment(err, "", false)
 }
 
-//Update Likes data
+//UpdateTwitter Update Likes data
 func (Data InputTW) UpdateTwitter(id int) {
 	_, err := DB.Exec(`Update Twitter set Likes=? Where id=?`, Data.Like, id)
 	BruhMoment(err, "", false)
 }
 
-//Get Channel id from Discord ChannelID and VtuberGroupID
+//GetChannelID Get Channel id from Discord ChannelID and VtuberGroupID
 func GetChannelID(DiscordChannelID string, GroupID int64) int {
 	var ChannelID int
 	err := DB.QueryRow("SELECT id from Channel where DiscordChannelID=? AND VtuberGroup_id=?", DiscordChannelID, GroupID).Scan(&ChannelID)
@@ -308,6 +314,37 @@ func AddChannel(ChannelID string, typetag int, VtuberGroupID int64) error {
 
 //delete discord channel from `disable` command
 func DelChannel(ChannelID string, VtuberGroupID int64) error {
+	var (
+		ChanndlID int64
+	)
+
+	row := DB.QueryRow("SELECT id FROM Channel WHERE DiscordChannelID=? AND VtuberGroup_id=?", ChannelID, VtuberGroupID)
+	err := row.Scan(&ChanndlID)
+	if err != nil {
+		return err
+	}
+
+	rows, err := DB.Query(`SELECT id FROM User Where Channel_id=?`, ChanndlID)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var tmp int64
+		err = rows.Scan(&tmp)
+		if err != nil {
+			return err
+		}
+
+		stmt, err := DB.Prepare(`DELETE From User WHERE id=?`)
+		if err != nil {
+			return err
+		}
+		defer stmt.Close()
+		stmt.Exec(tmp)
+	}
+
 	stmt, err := DB.Prepare(`DELETE From Channel WHERE DiscordChannelID=? AND VtuberGroup_id=?`)
 	if err != nil {
 		return err
@@ -315,7 +352,6 @@ func DelChannel(ChannelID string, VtuberGroupID int64) error {
 	defer stmt.Close()
 	stmt.Exec(ChannelID, VtuberGroupID)
 	return nil
-
 }
 
 //update discord channel type from `update` command

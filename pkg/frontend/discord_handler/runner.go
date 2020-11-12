@@ -29,6 +29,7 @@ const (
 	Live         = "live"
 )
 
+//StartInit running the fe
 func StartInit(path string) error {
 	conf, err := config.ReadConfig(path)
 	if err != nil {

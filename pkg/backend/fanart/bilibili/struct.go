@@ -1,5 +1,6 @@
 package bilibili
 
+//TBiliBili TopicBiliBili struct
 type TBiliBili struct {
 	Code    int    `json:"code"`
 	Msg     string `json:"msg"`
@@ -87,6 +88,7 @@ type TBiliBili struct {
 	} `json:"data"`
 }
 
+//Display Display struct
 type Display []struct { //`json:"display,omitempty"`
 	TopicInfo struct {
 		TopicDetails []struct {
@@ -117,6 +119,7 @@ type Display []struct { //`json:"display,omitempty"`
 	} `json:"up_act_button"`
 }
 
+//SubTbili bilibili struct
 type SubTbili struct {
 	Item struct {
 		ID          int           `json:"id"`

@@ -1,3 +1,5 @@
+- Change context timeout from 30s to 120s 
+- Remove all user when a channel was disable one or more vtuber groups
 - Change Multiple Region in yt to single Region
 - Change `Roles tags` to `Roles info`
 - Add customize reminder

@@ -6,7 +6,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//get RoomData from LiveBiliBili
+//GetRoomData get RoomData from LiveBiliBili
 func GetRoomData(MemberID int64, RoomID int) *LiveBiliDB {
 	rows, err := DB.Query(`SELECT id,RoomID,Status,Title,Thumbnails,Description,ScheduledStart,Published,Viewers FROM LiveBiliBili Where VtuberMember_id=? AND RoomID=? order by ScheduledStart ASC`, MemberID, RoomID)
 	BruhMoment(err, "", false)
@@ -23,16 +23,16 @@ func GetRoomData(MemberID int64, RoomID int) *LiveBiliDB {
 	return &Data
 }
 
-//Update LiveBiliBili Data
+//UpdateLiveBili Update LiveBiliBili Data
 func (Data *LiveBiliDB) UpdateLiveBili(MemberID int64) {
 	_, err := DB.Exec(`Update LiveBiliBili set Status=? , Title=? ,Thumbnails=?, Description=?, Published=?, ScheduledStart=?, Viewers=? Where id=? AND VtuberMember_id=?`, Data.Status, Data.Title, Data.Thumbnail, Data.Description, Data.PublishedAt, Data.ScheduledStart, Data.Online, Data.ID, MemberID)
 	BruhMoment(err, "", false)
 }
 
-//Check new post on TBiliBili
-func GetTBiliBili(dynamic_id string) bool {
+//GetTBiliBili Check new post on TBiliBili
+func GetTBiliBili(DynamicID string) bool {
 	var tmp int64
-	row := DB.QueryRow("SELECT id FROM Vtuber.TBiliBili where Dynamic_id=?", dynamic_id)
+	row := DB.QueryRow("SELECT id FROM Vtuber.TBiliBili where Dynamic_id=?", DynamicID)
 	err := row.Scan(&tmp)
 	if err != nil || err == sql.ErrNoRows {
 		return true
@@ -41,7 +41,7 @@ func GetTBiliBili(dynamic_id string) bool {
 	}
 }
 
-//Get LiveBiliBili by Status (live,past)
+//BilGet Get LiveBiliBili by Status (live,past)
 func BilGet(GroupID int64, MemberID int64, Status string) []LiveBiliDB {
 	var (
 		rows *sql.Rows
@@ -72,7 +72,7 @@ func BilGet(GroupID int64, MemberID int64, Status string) []LiveBiliDB {
 	return Data
 }
 
-//Get SpaceBiliBili Data
+//SpaceGet Get SpaceBiliBili Data
 func SpaceGet(GroupID int64, MemberID int64) []SpaceBiliDB {
 	rows, err := DB.Query(`Call GetSpaceBiliBili(?,?)`, GroupID, MemberID)
 	BruhMoment(err, "", false)
@@ -93,7 +93,7 @@ func SpaceGet(GroupID int64, MemberID int64) []SpaceBiliDB {
 	return Data
 }
 
-//Input data to SpaceBiliBili
+//InputSpaceVideo Input data to SpaceBiliBili
 func (Data InputBiliBili) InputSpaceVideo() {
 	stmt, err := DB.Prepare(`INSERT INTO BiliBili (VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberMember_id) values(?,?,?,?,?,?,?,?,?)`)
 	BruhMoment(err, "", false)
@@ -106,7 +106,7 @@ func (Data InputBiliBili) InputSpaceVideo() {
 	BruhMoment(err, "", false)
 }
 
-//Check New video from SpaceBiliBili
+//CheckVideo Check New video from SpaceBiliBili
 func (Data InputBiliBili) CheckVideo() (bool, int) {
 	var tmp int
 	row := DB.QueryRow("SELECT id FROM Vtuber.BiliBili WHERE VideoID=? AND VtuberMember_id=?;", Data.VideoID, Data.MemberID)
@@ -119,7 +119,7 @@ func (Data InputBiliBili) CheckVideo() (bool, int) {
 	}
 }
 
-//Update SpaceBiliBili data
+//UpdateView Update SpaceBiliBili data
 func (Data InputBiliBili) UpdateView(id int) {
 	log.WithFields(log.Fields{
 		"VideoData ID": Data.VideoID,
@@ -130,7 +130,7 @@ func (Data InputBiliBili) UpdateView(id int) {
 
 }
 
-//Input TBiliBili data
+//InputTBiliBili Input TBiliBili data
 func (Data InputTBiliBili) InputTBiliBili(MemberID int64) {
 	stmt, err := DB.Prepare(`INSERT INTO TBiliBili (PermanentURL,Author,Likes,Photos,Videos,Text,Dynamic_id,VtuberMember_id) values(?,?,?,?,?,?,?,?)`)
 	if err != nil {

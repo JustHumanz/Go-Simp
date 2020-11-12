@@ -12,6 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+//Notif struct
 type Notif struct {
 	TBiliData   database.InputTBiliBili
 	Group       database.GroupName
@@ -20,7 +21,7 @@ type Notif struct {
 	MemberID    int64
 }
 
-//Push Data to discord channel
+//PushNotif Push Data to discord channel
 func (NotifData Notif) PushNotif(Color int) {
 	Data := NotifData.TBiliData
 	Group := NotifData.Group

@@ -16,12 +16,13 @@ func gacha() bool {
 	return rand.Float32() < 0.5
 }
 
+//SubsMessage subscriber message handler
 func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
-	prefix := config.PGeneral
+	Prefix := config.PGeneral
 	m.Content = strings.ToLower(m.Content)
-	if strings.HasPrefix(m.Content, prefix) {
+	if strings.HasPrefix(m.Content, Prefix) {
 		CommandArray := strings.Split(m.Content, " ")
-		if CommandArray[0] == prefix+Subscriber {
+		if CommandArray[0] == Prefix+Subscriber {
 			for _, Group := range engine.GroupData {
 				for _, Mem := range strings.Split(CommandArray[1], ",") {
 					for _, Member := range database.GetName(Group.ID) {
@@ -48,7 +49,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 							if SubsData.BiliFollow != 0 {
 								embed = engine.NewEmbed().
-									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetTitle(engine.FixName(Member.EnName, Member.JpName)).
 									SetImage(Avatar).
 									SetURL(URL).
@@ -63,7 +64,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetColor(Color).MessageEmbed
 							} else {
 								embed = engine.NewEmbed().
-									SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetTitle(engine.FixName(Member.EnName, Member.JpName)).
 									SetImage(Avatar).
 									AddField("Youtube subscriber", strconv.Itoa(SubsData.YtSubs)).

@@ -81,7 +81,7 @@ func GetYtToken() string {
 
 //Curl make a http request
 func Curl(url string, addheader []string) ([]byte, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
 	defer cancel()
 
 	var body []byte

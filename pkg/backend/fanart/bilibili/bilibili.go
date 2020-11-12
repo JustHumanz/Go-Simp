@@ -13,7 +13,7 @@ import (
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 )
 
-//Start Check new fanart
+//CheckNew Start Check new fanart
 func CheckNew() {
 	for _, Group := range engine.GroupData {
 		wg := new(sync.WaitGroup)
@@ -116,7 +116,7 @@ func CheckNew() {
 	}
 }
 
-//Mirorring fanart to imgur *sometime discord fail to load image because bilibili CDN(prob)*
+//Mirroring fanart to imgur *sometime discord fail to load image because bilibili CDN(prob)*
 func (Data SubTbili) Mirroring() (string, int, error) {
 	link := Data.Item.Pictures[0].ImgSrc
 	/*
@@ -184,6 +184,7 @@ func (Data SubTbili) Mirroring() (string, int, error) {
 	return link, color, nil
 }
 
+//Imgur struct
 type Imgur struct {
 	Data struct {
 		ID          string        `json:"id"`

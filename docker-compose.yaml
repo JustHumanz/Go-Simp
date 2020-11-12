@@ -1,6 +1,18 @@
 version: "3.7"
 
 services:
+  build_mainbot:
+    build: .
+    image: mainbot
+  
+  build_go_simp_web:
+    build: service/Go-Simp-Web
+    image: go_simp_web
+    
+  build_rest_api:
+    build: service/rest-api
+    image: rest_api
+
   mysql:
     image: mysql:5.7
     environment:
@@ -15,10 +27,6 @@ services:
     image: evait/multitor
     environment: 
     - TOR_INSTANCES=20
-
-  build_mainbot:
-    build: .
-    image: mainbot
 
   db_migrate:
     image: mainbot
@@ -61,6 +69,8 @@ services:
     working_dir: /app/Go-Simp/pkg/guild
     command: go run .
     restart: on-failure
+    volumes:
+      - guild-volume:/app/Go-Simp/pkg/guild/guild.db
 
   yotube-scrap:
     build: service/yt-scrap
@@ -69,9 +79,7 @@ services:
       - ./.env
 
   rest_api:
-    build: service/rest-api
-    image: rest-api
-
+    image: rest_api
     depends_on:
       - mysql
       - db_migrate
@@ -82,8 +90,7 @@ services:
     restart: on-failure
 
   go_simp_web:
-    build: service/Go-Simp-Web
-    image: go-simp-web
+    image: go_simp_web
     env_file:
       - ./.env    
     depends_on:
@@ -91,3 +98,6 @@ services:
     ports:
     - "1337:8000"
     restart: on-failure    
+
+volumes:
+  guild-volume:

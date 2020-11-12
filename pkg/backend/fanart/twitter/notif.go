@@ -12,6 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+//PushData Push data to discord channel struct
 type PushData struct {
 	Twitter    database.InputTW
 	Image      string
@@ -23,12 +24,13 @@ type PushData struct {
 	Group      database.MemberGroupID
 }
 
+//Public variable
 var (
-	UrlTMP string
+	URLTMP string
 	Color  = 14807034
 )
 
-//Send to Discord channel
+//SendNude Send to Discord channel
 func (Data PushData) SendNude() error {
 	ID, DiscordChannelID := database.ChannelTag(Data.Group.MemberID, 1)
 	wg := new(sync.WaitGroup)
@@ -42,7 +44,7 @@ func (Data PushData) SendNude() error {
 			defer wg.Done()
 			Color, _ = engine.GetColor("/tmp/tw", Data.Image)
 			var tags string
-			if UrlTMP != url {
+			if URLTMP != url {
 				if UserTagsList != nil {
 					tags = strings.Join(UserTagsList, " ")
 				} else {
@@ -53,7 +55,7 @@ func (Data PushData) SendNude() error {
 					SetTitle(Data.UserName+"(@"+Data.ScreenName+")").
 					SetURL(url).
 					SetThumbnail(strings.Replace(Data.Avatar, "_normal.jpg", ".jpg", -1)).
-					SetDescription(RemoveTwitterShotlink(Data.Text)).
+					SetDescription(RemoveTwitterShortLink(Data.Text)).
 					SetImage(Data.Image).
 					AddField("User Tags", tags).
 					SetColor(Color).
@@ -71,18 +73,18 @@ func (Data PushData) SendNude() error {
 				}, Bot)
 			} else {
 				log.WithFields(log.Fields{
-					"Old URL": UrlTMP,
+					"Old URL": URLTMP,
 					"New URL": url,
 				}).Info("Same post,multiple hashtags")
 			}
 		}(DiscordChannelID[i], wg)
 	}
 	wg.Wait()
-	UrlTMP = url
+	URLTMP = url
 	return nil
 }
 
-//remove twitter shotlink
-func RemoveTwitterShotlink(text string) string {
+//RemoveTwitterShortLink remove twitter shotlink
+func RemoveTwitterShortLink(text string) string {
 	return regexp.MustCompile(`(?m)^(.*?)https:\/\/t.co\/.+`).ReplaceAllString(text, "${1}$2")
 }

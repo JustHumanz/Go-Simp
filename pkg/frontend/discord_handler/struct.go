@@ -1,6 +1,7 @@
 package discordhandler
 
-type Dynamic_svr struct {
+//DynamicSvr for bilibili author
+type DynamicSvr struct {
 	Code    int    `json:"code"`
 	Msg     string `json:"msg"`
 	Message string `json:"message"`
@@ -97,6 +98,7 @@ type Dynamic_svr struct {
 	} `json:"data"`
 }
 
+//Memberst Vtuber member struct
 type Memberst struct {
 	ID         int64
 	YtChannel  string

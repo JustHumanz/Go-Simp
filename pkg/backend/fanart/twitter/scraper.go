@@ -12,6 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+//CurlTwitter start curl twitter api
 func CurlTwitter(TwitterPayloads []string, Group int64) {
 	var (
 		TWdata TwitterStruct
@@ -49,7 +50,7 @@ func CurlTwitter(TwitterPayloads []string, Group int64) {
 	}
 }
 
-//Start create payload from twitter by group name
+//CreatePayload create payload from twitter by group name
 func CreatePayload(Group int64) []string {
 	var (
 		Hashtags      []string

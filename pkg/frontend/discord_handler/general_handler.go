@@ -25,7 +25,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 		Pic         = config.NotFound
 		Msg         string
 		embed       *discordgo.MessageEmbed
-		DynamicData Dynamic_svr
+		DynamicData DynamicSvr
 	)
 
 	if strings.HasPrefix(m.Content, Prefix) {
@@ -62,7 +62,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 				embed = engine.NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 					SetTitle(Author).
-					SetThumbnail(GetUserAvatar(Author)).
+					SetThumbnail(GetAuthorAvatar(Author)).
 					SetDescription(Text).
 					SetURL(URL).
 					SetImage(Pic).
@@ -86,7 +86,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 		for _, GroupData := range engine.GroupData {
 			if m.Content == strings.ToLower(Prefix+GroupData.NameGroup) {
-				Color, err := engine.GetColor("/tmp/mem.tmp", m.Author.AvatarURL("80"))
+				Color, err := engine.GetColor("/tmp/mem.tmp", m.Author.AvatarURL("128"))
 				if err != nil {
 					log.Error(err)
 				}
@@ -97,17 +97,14 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					Pic = config.NotFound
 				} else if len(DataFix.Photos) > 0 {
 					Pic = DataFix.Photos[0]
-					Color, err = engine.GetColor("/tmp/mem.tmp", DataFix.Photos[0])
-					if err != nil {
-						log.Error(err)
+					_, err = engine.Curl(Pic, nil)
+					if strings.HasPrefix(err.Error(), "404") {
+						Msg = "Original post was deleted"
+						Pic = config.NotFound
+						log.WithFields(log.Fields{
+							"PermanentURL": DataFix.PermanentURL,
+						}).Warn("Original post was deleted")
 					}
-				} else {
-					Msg = "Original post was deleted"
-					Pic = config.NotFound
-
-					log.WithFields(log.Fields{
-						"PermanentURL": DataFix.PermanentURL,
-					}).Warn("Original post was deleted")
 				}
 				Group = SendNude(engine.FixName(DataFix.EnName, DataFix.JpName),
 					DataFix.Author, RemovePic(DataFix.Text),
@@ -118,7 +115,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 			for _, MemberData := range database.GetName(GroupData.ID) {
 				if m.Content == strings.ToLower(Prefix+MemberData.Name) || m.Content == strings.ToLower(Prefix+MemberData.JpName) {
-					Color, err := engine.GetColor("/tmp/mem.tmp", m.Author.AvatarURL("80"))
+					Color, err := engine.GetColor("/tmp/mem.tmp", m.Author.AvatarURL("128"))
 					if err != nil {
 						log.Error(err)
 					}
@@ -129,16 +126,14 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 						Pic = config.NotFound
 					} else if len(DataFix.Photos) > 0 {
 						Pic = DataFix.Photos[0]
-						Color, err = engine.GetColor("/tmp/mem.tmp", DataFix.Photos[0])
-						if err != nil {
-							log.Error(err)
+						_, err = engine.Curl(Pic, nil)
+						if strings.HasPrefix(err.Error(), "404") {
+							Msg = "Original post was deleted"
+							Pic = config.NotFound
+							log.WithFields(log.Fields{
+								"PermanentURL": DataFix.PermanentURL,
+							}).Warn("Original post was deleted")
 						}
-					} else {
-						Msg = "Original post was deleted"
-
-						log.WithFields(log.Fields{
-							"PermanentURL": DataFix.PermanentURL,
-						}).Warn("Original post was deleted")
 					}
 					Member = SendNude(engine.FixName(MemberData.EnName, MemberData.JpName),
 						DataFix.Author, RemovePic(DataFix.Text),
@@ -225,7 +220,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if Data.GroupID == 0 {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
-							s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `vtuber data` command to see vtubers name or see at my github https://github.com/JustHumanz/Go-Simp")
+							s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
 							return
 						}
 						if database.CheckChannelEnable(m.ChannelID, Name, VTuberGroup.ID) {
@@ -302,33 +297,29 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						return
 					}
 				}
-
-				if Already != nil || Done != nil {
-					if Already != nil {
-						_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-							SetDescription("You Already Added\n"+strings.Join(Already, " ")+" from your list").
-							SetThumbnail(config.GoSimpIMG).
-							SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
-							SetColor(Color).MessageEmbed)
-						if err != nil {
-							log.Error(err)
-						}
-
+				if Already != nil {
+					_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+						SetDescription("You Already Added\n"+strings.Join(Already, " ")+" from your list").
+						SetThumbnail(config.GoSimpIMG).
+						SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
+						SetColor(Color).MessageEmbed)
+					if err != nil {
+						log.Error(err)
 					}
-					if Done != nil {
-						_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-							SetDescription("You Add\n"+strings.Join(Done, " ")+" to your list").
-							SetThumbnail(config.GoSimpIMG).
-							SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
-							SetColor(Color).MessageEmbed)
-						if err != nil {
-							log.Error(err)
-						}
+
+				}
+				if Done != nil {
+					_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+						SetDescription("You Add\n"+strings.Join(Done, " ")+" to your list").
+						SetThumbnail(config.GoSimpIMG).
+						SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
+						SetColor(Color).MessageEmbed)
+					if err != nil {
+						log.Error(err)
 					}
 				}
-
 			} else {
 				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+TagMe+"` command")
 				if err != nil {
@@ -381,7 +372,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if Data.GroupID == 0 {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
-							_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `vtuber data` command to see vtubers name or see at my github https://github.com/JustHumanz/Go-Simp")
+							_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
 							if err != nil {
 								log.Error(err)
 							}
@@ -463,14 +454,14 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 			Already = nil
 			Done = nil
 			VtuberName := strings.TrimSpace(strings.Replace(m.Content, Prefix+DelTag, "", -1))
-			if (VtuberName) != "" {
+			if VtuberName != "" {
 				tmp := strings.Split(VtuberName, ",")
 				for _, Name := range tmp {
 					Data := FindName(Name)
 					if Data == (NameStruct{}) {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
-							_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `vtuber data` command to see vtubers name or see at my github https://github.com/JustHumanz/Go-Simp")
+							_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
 							if err != nil {
 								log.Error(err)
 							}
@@ -540,7 +531,6 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							Already = append(Already, "`"+tmp[i]+"`")
 						} else {
 							Done = append(Done, "`"+tmp[i]+"`")
-
 						}
 					} else {
 						_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
@@ -598,14 +588,13 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 				if len(VtuberName[len(VtuberName)-1:]) > 0 {
 					tmp := strings.Split(VtuberName[len(VtuberName)-1:][0], ",")
-
 					for _, Name := range tmp {
 						Data := FindName(Name)
 						if Data.GroupID == 0 {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)
-								_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `vtuber data` command to see vtubers name or see at my github https://github.com/JustHumanz/Go-Simp")
+								_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
 								if err != nil {
 									log.Error(err)
 								}
@@ -735,13 +724,13 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 					}
 				} else {
-					_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `tag role` command")
+					_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+TagRoles+"` command")
 					if err != nil {
 						log.Error(err)
 					}
 				}
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "You don't have enough permission to use this command")
+				_, err := s.ChannelMessageSend(m.ChannelID, "You don't have enough permission to use this command,Only user with permission `Manage Channel or Higher` can use this commandYou don't have enough permission to use this command")
 				if err != nil {
 					log.Error(err)
 				}
@@ -766,7 +755,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)
-								_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `vtuber data` command to see vtubers name or see at my github https://github.com/JustHumanz/Go-Simp")
+								_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
 								if err != nil {
 									log.Error(err)
 								}
@@ -897,13 +886,13 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 					}
 				} else {
-					_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `tag role` command")
+					_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+DelRoles+"` command")
 					if err != nil {
 						log.Error(err)
 					}
 				}
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "You don't have enough permission to use this command,Only user with permission `Manage Channel or Higher` can use this command ")
+				_, err := s.ChannelMessageSend(m.ChannelID, "You don't have enough permission to use this command,Only user with permission `Manage Channel or Higher` can use this command")
 				if err != nil {
 					log.Error(err)
 				}
@@ -1002,13 +991,13 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 					}
 				} else {
-					_, err := s.ChannelMessageSend(m.ChannelID, strings.Join(already, ",")+", already added")
+					_, err := s.ChannelMessageSend(m.ChannelID, strings.Join(already, ",")+", already enabled")
 					if err != nil {
 						log.Error(err)
 					}
 				}
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete enable command")
+				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+Enable+"` command")
 				if err != nil {
 					log.Error(err)
 				}
@@ -1059,6 +1048,11 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						log.Error(err)
 					}
+				}
+			} else {
+				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+Disable+"` command")
+				if err != nil {
+					log.Error(err)
 				}
 			}
 		} else if CommandArray[0] == Prefix+Update {
@@ -1134,7 +1128,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `update` command")
+				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+Update+"` command")
 				if err != nil {
 					log.Error(err)
 				}
@@ -1157,7 +1151,7 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 				SetTitle("Help").
 				SetURL(config.CommandURL).
-				SetDescription("See at my github repository\n"+config.CommandURL).
+				SetDescription("See at web site\n"+config.CommandURL).
 				/*
 					AddField(Prefix+Enable+" {art/live/all} [Vtuber Group]", "This command will declare if [Vtuber Group] enable in this channel\nExample:\n`"+config.PGeneral+Enable+" all hanayori,hololive` so other users can use `"+config.PGeneral+TagMe+" kanochi` or "+"`"+config.PGeneral+TagMe+" gura`").
 					AddField(Prefix+Update+" {art/live/all} [Vtuber Group]", "Use this command if you want to change enable state").
@@ -1232,46 +1226,53 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if err != nil {
 				log.Error(err)
 			}
+			RolesInput := strings.Split(strings.TrimSpace(strings.Replace(m.Content, Prefix+RolesTags, "", -1)), " ")
+			if len(RolesInput) > 0 {
+				for _, UserRoles := range RolesInput {
+					for _, Role := range guild.Roles {
+						if UserRoles == Role.Mention() {
+							list := database.UserStatus(Role.ID, m.ChannelID)
+							if list != nil {
+								tableString := &strings.Builder{}
+								table := tablewriter.NewWriter(tableString)
+								table.SetHeader([]string{"Vtuber Group", "Vtuber Name", "Reminder"})
+								table.SetAutoWrapText(false)
+								table.SetAutoFormatHeaders(true)
+								table.SetCenterSeparator("")
+								table.SetColumnSeparator("")
+								table.SetRowSeparator("")
+								table.SetHeaderLine(true)
+								table.SetBorder(false)
+								table.SetTablePadding("\t")
+								table.SetNoWhiteSpace(true)
+								table.AppendBulk(list)
+								table.Render()
 
-			for _, UserRoles := range strings.Split(strings.TrimSpace(strings.Replace(m.Content, Prefix+RolesTags, "", -1)), " ") {
-				for _, Role := range guild.Roles {
-					if UserRoles == Role.Mention() {
-						list := database.UserStatus(Role.ID, m.ChannelID)
-						if list != nil {
-							tableString := &strings.Builder{}
-							table := tablewriter.NewWriter(tableString)
-							table.SetHeader([]string{"Vtuber Group", "Vtuber Name", "Reminder"})
-							table.SetAutoWrapText(false)
-							table.SetAutoFormatHeaders(true)
-							table.SetCenterSeparator("")
-							table.SetColumnSeparator("")
-							table.SetRowSeparator("")
-							table.SetHeaderLine(true)
-							table.SetBorder(false)
-							table.SetTablePadding("\t")
-							table.SetNoWhiteSpace(true)
-							table.AppendBulk(list)
-							table.Render()
+								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+									SetThumbnail(m.Author.AvatarURL("128")).
+									SetDescription("Role "+Role.Mention()+"\n```"+tableString.String()+"```").
+									SetColor(Color).MessageEmbed)
+								if err != nil {
+									log.Error(err)
+								}
 
-							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-								SetThumbnail(m.Author.AvatarURL("128")).
-								SetDescription("Role "+Role.Mention()+"\n```"+tableString.String()+"```").
-								SetColor(Color).MessageEmbed)
-							if err != nil {
-								log.Error(err)
-							}
-
-						} else {
-							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-								SetTitle("404 Not found").
-								SetImage(config.NotFound).
-								SetColor(Color).MessageEmbed)
-							if err != nil {
-								log.Error(err)
+							} else {
+								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+									SetTitle("404 Not found").
+									SetImage(config.NotFound).
+									SetColor(Color).MessageEmbed)
+								if err != nil {
+									log.Error(err)
+								}
 							}
 						}
 					}
+				}
+			} else {
+				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+RolesTags+"` command")
+				if err != nil {
+					log.Error(err)
 				}
 			}
 
@@ -1320,7 +1321,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				table.Render()
 
 				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-					SetAuthor(m.Author.Username, m.Author.AvatarURL("80")).
+					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 					SetDescription("```"+tableString.String()+"```").
 					SetThumbnail(config.GoSimpIMG).
 					SetColor(Color).
@@ -1414,7 +1415,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 						SetThumbnail(config.GoSimpIMG).
 						SetURL(config.VtubersData).
-						SetDescription("Data too longgggggg\nsee Vtubers Data at my github\n"+config.VtubersData).
+						SetDescription("Data too longgggggg\nsee Vtubers Data at web site\n"+config.VtubersData).
 						SetImage(config.Longcatttt).
 						SetColor(Color).MessageEmbed)
 					if err != nil {
@@ -1473,7 +1474,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 }
 
-//Find a valid Vtuber name from message handler
+//FindName Find a valid Vtuber name from message handler
 func FindName(MemberName string) NameStruct {
 	for _, Group := range engine.GroupData {
 		for _, Name := range database.GetName(Group.ID) {
@@ -1490,13 +1491,14 @@ func FindName(MemberName string) NameStruct {
 
 }
 
+//NameStruct struct
 type NameStruct struct {
 	GroupName string
 	GroupID   int64
 	MemberID  int64
 }
 
-//Find a valid Vtuber Group from message handler
+//FindGropName Find a valid Vtuber Group from message handler
 func FindGropName(GroupName string) (database.GroupName, error) {
 	for _, Group := range engine.GroupData {
 		if strings.ToLower(Group.NameGroup) == strings.ToLower(GroupName) {
@@ -1506,13 +1508,13 @@ func FindGropName(GroupName string) (database.GroupName, error) {
 	return database.GroupName{}, errors.New(GroupName + " Name Vtuber not valid")
 }
 
-//Remove twitter pic
+//RemovePic Remove twitter pic
 func RemovePic(text string) string {
 	return regexp.MustCompile(`(?m)^(.*?)pic\.twitter.com\/.+`).ReplaceAllString(text, "${1}$2")
 }
 
-//Get twitter avatar
-func GetUserAvatar(username string) string {
+//GetAuthorAvatar Get twitter avatar
+func GetAuthorAvatar(username string) string {
 	var (
 		bit     []byte
 		curlerr error
@@ -1538,11 +1540,12 @@ func GetUserAvatar(username string) string {
 	return avatar
 }
 
-//Get bilibili user avatar
-func (Data Dynamic_svr) GetUserAvatar() string {
+//GetUserAvatar Get bilibili user avatar
+func (Data DynamicSvr) GetUserAvatar() string {
 	return Data.Data.Card.Desc.UserProfile.Info.Face
 }
 
+//CheckReg Check available region
 func CheckReg(GroupName, Reg string) bool {
 	for Key, Val := range engine.RegList {
 		if strings.ToLower(Key) == strings.ToLower(GroupName) {

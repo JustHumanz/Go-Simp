@@ -7,10 +7,12 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+//Public variable for Discord bot session
 var (
 	Bot *discordgo.Session
 )
 
+//StartInit Start running BE
 func StartInit(path string) error {
 	conf, err := config.ReadConfig(path)
 	if err != nil {

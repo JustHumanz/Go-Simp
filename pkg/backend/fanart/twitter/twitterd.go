@@ -6,6 +6,7 @@ import (
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 )
 
+//CheckNew Check new fanart
 func CheckNew() {
 	wg := new(sync.WaitGroup)
 	for _, Group := range engine.GroupData {
@@ -18,6 +19,7 @@ func CheckNew() {
 	wg.Wait()
 }
 
+//TwitterStruct Twtter search struct
 type TwitterStruct struct {
 	Statuses       []Statuses `json:"statuses"`
 	SearchMetadata struct {
@@ -33,6 +35,7 @@ type TwitterStruct struct {
 	} `json:"search_metadata"`
 }
 
+//Statuses Twtter search struct
 type Statuses struct {
 	CreatedAt string `json:"created_at"`
 	ID        int64  `json:"id"`

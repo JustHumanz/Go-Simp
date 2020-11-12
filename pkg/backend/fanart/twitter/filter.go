@@ -12,7 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//check if new fanart or not
+//CheckNew check if new fanart or not
 func (Data TwitterStruct) CheckNew() []Statuses {
 	var tmp []Statuses
 	for _, TwData := range Data.Statuses {
@@ -33,7 +33,7 @@ func (Data TwitterStruct) CheckNew() []Statuses {
 	return tmp
 }
 
-//filter hashtag post
+//CheckHashTag filter hashtag post
 func (Data Statuses) CheckHashTag(Group []database.MemberGroupID, wg *sync.WaitGroup) {
 	defer wg.Done()
 	rgx := "(?m)(.+free|leak|wrong|antihololive|asacoco|haachama|Lv[0-9]|Lv.+|taiwan|kson.+)"
@@ -112,7 +112,7 @@ func (Data Statuses) CheckHashTag(Group []database.MemberGroupID, wg *sync.WaitG
 						Msg:        msg,
 						ScreenName: Data.User.ScreenName,
 						UserName:   Data.User.Name,
-						Text:       RemoveTwitterShotlink(Data.Text),
+						Text:       RemoveTwitterShortLink(Data.Text),
 						Avatar:     (strings.Replace(Data.User.ProfileImageURLHTTPS, "_normal.jpg", ".jpg", -1)),
 						Group:      Group[i],
 					}
