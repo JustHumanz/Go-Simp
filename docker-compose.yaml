@@ -29,8 +29,6 @@ services:
 
   multi_tor:
     image: tor_go_brrrrrrr
-    environment: 
-    - TOR_INSTANCES=20
 
   db_migrate:
     image: mainbot

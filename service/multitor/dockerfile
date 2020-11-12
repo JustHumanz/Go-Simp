@@ -39,9 +39,6 @@ RUN	git clone https://github.com/trimstray/multitor && \
 # let haproxy listen from outside, instand only in the docker container
   sed -i s/127.0.0.1:16379/0.0.0.0:16379/g templates/haproxy-template.cfg
 
-COPY startup.sh /multitor/
-RUN chmod +x /multitor/startup.sh
-
 WORKDIR /multitor/
 EXPOSE	16379
 
