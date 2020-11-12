@@ -82,8 +82,10 @@ $(function () {
       document.title = title;
       $('#container').load(url+" #container",function(){
         counter($('body'))
+        $(function() {
+          $(window).scrollTop(0);
       });
-      document.getElementById("container").scrollIntoView();
+      });
   });
 
   $(window).on('popstate', function (e) {
@@ -93,21 +95,27 @@ $(function () {
           document.title = state.title;
           $('#container').load(state.url+" #container",function(){
             counter($('body'))
+            $(function() {
+              $(window).scrollTop(0);
           });
-          document.getElementById("container").scrollIntoView();
+          });
       } else {
           document.title = 'Go-Simp';
           $('.collapse').collapse("hide")
           if (state == null) {
             $('#container').load("/ #container",function(){
               counter($('body'))
+              $(function() {
+                $(window).scrollTop(0);
             });
-            document.getElementById("container").scrollIntoView();
+            });
           } else {
             $('#container').load(state.url+" container",function(){
               counter($('body'))
+              $(function() {
+                $(window).scrollTop(0);
             });
-            document.getElementById("container").scrollIntoView();
+            });
           }
       }
   });
