@@ -29,15 +29,8 @@ func (PushData *NotifStruct) SendNude() {
 	GroupIcon := PushData.Group.IconURL
 
 	var (
-		timestart time.Time
 		MsgEmbend *discordgo.MessageEmbed
 	)
-
-	if PushData.YtData.Schedul.IsZero() {
-		timestart = time.Now().In(loc)
-	} else {
-		timestart = PushData.YtData.Schedul.In(loc)
-	}
 
 	if Status == "upcoming" {
 		Color, err := engine.GetColor("/tmp/yt.tmp", Avatar)
@@ -52,10 +45,10 @@ func (PushData *NotifStruct) SendNude() {
 			SetThumbnail(GroupIcon).
 			SetURL(YtURL).
 			AddField("Type ", PushData.YtData.Type).
-			AddField("Start live in", durafmt.Parse(timestart.Sub(expiresAt)).LimitFirstN(2).String()).
+			AddField("Start live in", durafmt.Parse(PushData.YtData.Schedul.In(loc).Sub(expiresAt)).LimitFirstN(2).String()).
 			InlineAllFields().
 			AddField("Waiting", PushData.YtData.Viewers+" Simps in Room Chat").
-			SetFooter(timestart.Format(time.RFC822), config.YoutubeIMG).
+			SetFooter(PushData.YtData.Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 			SetColor(Color).MessageEmbed
 
 	} else if Status == "live" {
@@ -71,10 +64,10 @@ func (PushData *NotifStruct) SendNude() {
 			SetThumbnail(GroupIcon).
 			SetURL(YtURL).
 			AddField("Type ", PushData.YtData.Type).
-			AddField("Start live", durafmt.Parse(expiresAt.Sub(timestart)).LimitFirstN(2).String()+" Ago").
+			AddField("Start live", durafmt.Parse(expiresAt.Sub(PushData.YtData.Schedul.In(loc))).LimitFirstN(2).String()+" Ago").
 			InlineAllFields().
 			AddField("Viewers", PushData.YtData.Viewers).
-			SetFooter(timestart.Format(time.RFC822), config.YoutubeIMG).
+			SetFooter(PushData.YtData.Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 			SetColor(Color).MessageEmbed
 
 	} else if Status == "past" && PushData.YtData.Type == "Covering" {
@@ -93,7 +86,7 @@ func (PushData *NotifStruct) SendNude() {
 			AddField("Upload", durafmt.Parse(expiresAt.Sub(PushData.YtData.Schedul.In(loc))).LimitFirstN(2).String()+" Ago").
 			InlineAllFields().
 			AddField("Viewers", PushData.YtData.Viewers).
-			AddField("Duration", PushData.YtData.Length).
+			AddField("Duration", ParseDuration(PushData.YtData.Length).String()).
 			SetFooter(PushData.YtData.Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 			SetColor(Color).MessageEmbed
 	} else if Status == "past" {
@@ -109,10 +102,10 @@ func (PushData *NotifStruct) SendNude() {
 			SetThumbnail(GroupIcon).
 			SetURL(YtURL).
 			AddField("Type ", PushData.YtData.Type).
-			AddField("Upload", durafmt.Parse(expiresAt.Sub(timestart)).LimitFirstN(2).String()+" Ago").
+			AddField("Upload", durafmt.Parse(expiresAt.Sub(PushData.YtData.Schedul.In(loc))).LimitFirstN(2).String()+" Ago").
 			InlineAllFields().
 			AddField("Viewers", PushData.YtData.Viewers).
-			SetFooter(timestart.Format(time.RFC822), config.YoutubeIMG).
+			SetFooter(PushData.YtData.Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 			SetColor(Color).MessageEmbed
 	}
 
@@ -122,7 +115,6 @@ func (PushData *NotifStruct) SendNude() {
 			log.Error(err)
 		}
 		id, DiscordChannelID := database.ChannelTag(PushData.Member.ID, 2)
-		loc := engine.Zawarudo(PushData.YtData.Region)
 		UpcominginMinutes := int(math.Round(PushData.YtData.Schedul.In(loc).Sub(time.Now().In(loc)).Minutes()))
 		for i := 0; i < len(DiscordChannelID); i++ {
 			k := 0
@@ -133,16 +125,16 @@ func (PushData *NotifStruct) SendNude() {
 					if UserTagsList != nil {
 						msg, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
 							SetAuthor(VtuberName, Avatar, YtChannel).
-							SetTitle(PushData.Member.EnName+" Live in "+durafmt.Parse(timestart.Sub(expiresAt)).LimitFirstN(1).String()).
+							SetTitle(PushData.Member.EnName+" Live in "+durafmt.Parse(PushData.YtData.Schedul.In(loc).Sub(expiresAt)).LimitFirstN(1).String()).
 							SetDescription(PushData.YtData.Title).
 							SetImage(PushData.YtData.Thumb).
 							SetThumbnail(GroupIcon).
 							SetURL(YtURL).
 							AddField("Type ", PushData.YtData.Type).
-							AddField("Start live in", durafmt.Parse(timestart.Sub(expiresAt)).LimitFirstN(2).String()).
+							AddField("Start live in", durafmt.Parse(PushData.YtData.Schedul.In(loc).Sub(expiresAt)).LimitFirstN(2).String()).
 							InlineAllFields().
 							AddField("Waiting", PushData.YtData.Viewers+" Simps in Room Chat").
-							SetFooter(timestart.Format(time.RFC822), config.YoutubeIMG).
+							SetFooter(PushData.YtData.Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 							SetColor(Color).MessageEmbed)
 						if err != nil {
 							log.Error(msg, err)

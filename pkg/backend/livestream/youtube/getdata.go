@@ -39,8 +39,8 @@ func GetRSS(YtID string) []string {
 }
 
 //StartCheckYT Youtube rss and API
-func StartCheckYT(Name database.Name, Group database.GroupName, wg *sync.WaitGroup) error {
-	VideoID := GetRSS(Name.YoutubeID)
+func StartCheckYT(Member database.Name, Group database.GroupName, wg *sync.WaitGroup) error {
+	VideoID := GetRSS(Member.YoutubeID)
 	Data, err := YtAPI(VideoID)
 	if err != nil {
 		return err
@@ -54,9 +54,9 @@ func StartCheckYT(Name database.Name, Group database.GroupName, wg *sync.WaitGro
 		)
 
 		YoutubeData := &NotifStruct{
-			YtData: Name.CheckYtVideo(VideoID[i]),
+			YtData: Member.CheckYtVideo(VideoID[i]),
 			Group:  Group,
-			Member: Name,
+			Member: Member,
 		}
 
 		if Data.Items[i].Snippet.VideoStatus == "upcoming" {
@@ -77,6 +77,17 @@ func StartCheckYT(Name database.Name, Group database.GroupName, wg *sync.WaitGro
 			Viewers = Data.Items[i].Statistics.ViewCount
 		} else {
 			Viewers = Data.Items[i].LiveDetails.Viewers
+		}
+
+		var (
+			loc       = engine.Zawarudo(Member.Region)
+			timestart time.Time
+		)
+
+		if Data.Items[i].LiveDetails.StartTime.IsZero() {
+			timestart = time.Now().In(loc)
+		} else {
+			timestart = Data.Items[i].Snippet.PublishedAt.In(loc)
 		}
 
 		if YoutubeData.YtData != nil {
@@ -167,17 +178,17 @@ func StartCheckYT(Name database.Name, Group database.GroupName, wg *sync.WaitGro
 				Title:     Data.Items[i].Snippet.Title,
 				Thumb:     Thumb,
 				Desc:      Data.Items[i].Snippet.Description,
-				Schedul:   Data.Items[i].LiveDetails.StartTime,
+				Schedul:   timestart,
 				Published: Data.Items[i].Snippet.PublishedAt,
 				Type:      yttype,
 				Viewers:   Viewers,
-				Length:    Data.Items[i].ContentDetails.Duration,
+				Length:    durafmt.Parse(ParseDuration(Data.Items[i].ContentDetails.Duration)).String(),
 			})
 
 			if Data.Items[i].Snippet.VideoStatus == "upcoming" {
 				log.WithFields(log.Fields{
 					"YtID":       VideoID[i],
-					"MemberName": Name.EnName,
+					"MemberName": Member.EnName,
 					"Message":    "Send to notify",
 				}).Info("New Upcoming live schedule")
 
@@ -190,7 +201,7 @@ func StartCheckYT(Name database.Name, Group database.GroupName, wg *sync.WaitGro
 			} else if Data.Items[i].Snippet.VideoStatus == "live" {
 				log.WithFields(log.Fields{
 					"YtID":       VideoID[i],
-					"MemberName": Name.EnName,
+					"MemberName": Member.EnName,
 					"Message":    "Send to notify",
 				}).Info("New live stream right now")
 
@@ -203,7 +214,7 @@ func StartCheckYT(Name database.Name, Group database.GroupName, wg *sync.WaitGro
 			} else if Data.Items[i].Snippet.VideoStatus == "none" && yttype == "Covering" {
 				log.WithFields(log.Fields{
 					"YtID":       VideoID[i],
-					"MemberName": Name.EnName,
+					"MemberName": Member.EnName,
 				}).Info("New MV or Cover")
 
 				err := YoutubeData.ChangeYtStatus("past").SendtoDB()
@@ -215,7 +226,7 @@ func StartCheckYT(Name database.Name, Group database.GroupName, wg *sync.WaitGro
 			} else if !Data.Items[i].Snippet.PublishedAt.IsZero() && Data.Items[i].Snippet.VideoStatus == "none" {
 				log.WithFields(log.Fields{
 					"YtID":       VideoID[i],
-					"MemberName": Name.EnName,
+					"MemberName": Member.EnName,
 				}).Info("Suddenly upload new video")
 				if YoutubeData.YtData.Schedul.IsZero() {
 					YoutubeData.UpYtSchedul(YoutubeData.YtData.Published)
@@ -229,7 +240,7 @@ func StartCheckYT(Name database.Name, Group database.GroupName, wg *sync.WaitGro
 			} else {
 				log.WithFields(log.Fields{
 					"YtID":       VideoID[i],
-					"MemberName": Name.EnName,
+					"MemberName": Member.EnName,
 				}).Info("Past live stream")
 				YoutubeData.ChangeYtStatus("past").SendNude()
 			}
