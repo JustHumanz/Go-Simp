@@ -95,7 +95,7 @@ func CheckPrivate() {
 					"VideoID": Youtube.VideoID,
 				}).Info("Member only video")
 				Youtube.UpdateYt("past")
-			} else if Youtube.Status == "live" && Youtube.Schedul.Minute() > time.Now().Add(2).Minute() {
+			} else if Youtube.Status == "live" && Youtube.Viewers == "" {
 				log.WithFields(log.Fields{
 					"VideoID": Youtube.VideoID,
 				}).Info("Member only video")

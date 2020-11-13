@@ -97,14 +97,6 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					Pic = config.NotFound
 				} else if len(DataFix.Photos) > 0 {
 					Pic = DataFix.Photos[0]
-					_, err = engine.Curl(Pic, nil)
-					if strings.HasPrefix(err.Error(), "404") {
-						Msg = "Original post was deleted"
-						Pic = config.NotFound
-						log.WithFields(log.Fields{
-							"PermanentURL": DataFix.PermanentURL,
-						}).Warn("Original post was deleted")
-					}
 				}
 				Group = SendNude(engine.FixName(DataFix.EnName, DataFix.JpName),
 					DataFix.Author, RemovePic(DataFix.Text),
@@ -126,14 +118,6 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 						Pic = config.NotFound
 					} else if len(DataFix.Photos) > 0 {
 						Pic = DataFix.Photos[0]
-						_, err = engine.Curl(Pic, nil)
-						if strings.HasPrefix(err.Error(), "404") {
-							Msg = "Original post was deleted"
-							Pic = config.NotFound
-							log.WithFields(log.Fields{
-								"PermanentURL": DataFix.PermanentURL,
-							}).Warn("Original post was deleted")
-						}
 					}
 					Member = SendNude(engine.FixName(MemberData.EnName, MemberData.JpName),
 						DataFix.Author, RemovePic(DataFix.Text),

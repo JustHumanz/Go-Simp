@@ -90,13 +90,11 @@ const GetMemberName = async (Name,Region, result) => {
         delete i.id
         delete i.VtuberGroup_id
       });
-      console.log(data)
       result(null,data)
     } else {
       result({ kind: "not_found" }, null);
     }
   } catch (error) {
-    console.log(error)
     result({kind:"Error cok"},null)
   }
 };
@@ -127,7 +125,6 @@ const GetGroupName = async (Name, result) => {
       data.forEach(i => {
         delete i.id
       });
-      console.log(data)
       result(null,data)
     } else {
       result({ kind: "not_found" }, null);
@@ -158,7 +155,6 @@ const GetTwitter = async (Name, Limit,result) => {
         delete i.VtuberMember_id
         i.Photos = i.Photos.split("\n");
       });
-      console.log(data)
       result(null,data)
     } else {
       result({ kind: "not_found" }, null);
@@ -232,7 +228,6 @@ const GetLiveBilibili = async (Name, Status, Limit,result) => {
   try {
     data = await streamquery(Name,'LiveBiliBili',Status,Limit)
     if (data.length){
-      console.log(data)
       data.forEach(i => {
         delete i.id
         delete i.VtuberGroup_id
