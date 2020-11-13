@@ -79,17 +79,6 @@ func StartCheckYT(Member database.Name, Group database.GroupName, wg *sync.WaitG
 			Viewers = Data.Items[i].LiveDetails.Viewers
 		}
 
-		var (
-			loc       = engine.Zawarudo(Member.Region)
-			timestart time.Time
-		)
-
-		if Data.Items[i].LiveDetails.StartTime.IsZero() {
-			timestart = time.Now().In(loc)
-		} else {
-			timestart = Data.Items[i].Snippet.PublishedAt.In(loc)
-		}
-
 		if YoutubeData.YtData != nil {
 			YoutubeData.
 				UpYtView(Viewers).
@@ -171,6 +160,19 @@ func StartCheckYT(Member database.Name, Group database.GroupName, wg *sync.WaitG
 			if yttype == "Streaming" && Data.Items[i].ContentDetails.Duration != "P0D" {
 				yttype = "Regular video"
 			}
+
+			var (
+				timestart time.Time
+			)
+
+			if !Data.Items[i].LiveDetails.StartTime.IsZero() {
+				timestart = Data.Items[i].LiveDetails.StartTime
+			} else if !Data.Items[i].Snippet.PublishedAt.IsZero() && Data.Items[i].LiveDetails.StartTime.IsZero() {
+				timestart = Data.Items[i].Snippet.PublishedAt
+			} else if Data.Items[i].LiveDetails.StartTime.IsZero() && Data.Items[i].Snippet.PublishedAt.IsZero() {
+				timestart = time.Now()
+			}
+
 			//verify
 			YoutubeData.AddData(&database.YtDbData{
 				Status:    Data.Items[i].Snippet.VideoStatus,
