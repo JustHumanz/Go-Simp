@@ -6,7 +6,7 @@ WORKDIR /app
 RUN git clone https://github.com/JustHumanz/Go-Simp
 WORKDIR Go-Simp/service/Go-Simp-Web/
 RUN pip install -r requirements.txt
-RUN pip install gunicorn
+RUN pip install gunicorn PyGithub
 WORKDIR Go_simpsPy/
 
 EXPOSE 8000
