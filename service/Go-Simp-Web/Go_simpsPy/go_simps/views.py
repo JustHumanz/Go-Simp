@@ -1,7 +1,8 @@
 # Create your views here.
 from django.http import HttpResponse
-from django.shortcuts import render
-import requests,asyncio
+from django.shortcuts import render,redirect
+from github import Github
+import requests,os,json
 
 
 GroupURL = "https://api.human-z.tech/vtbot/group"
@@ -42,7 +43,42 @@ class GetVtubers:
 
         return Members   
 
+class GitGood:
+    def __init__(self, Token):    
+        self.Token = Token
+        self.g = Github(Token)
+        self.repo = self.g.get_repo("JustHumanz/Go-Simp")
 
+    def CheckIssues(self,title):
+        IssueState = {"open","closed"}
+        for state in IssueState:
+            open_issues = self.repo.get_issues(state=state)
+            for issue in open_issues:
+                if issue.title == title:
+                    return issue.number
+
+    def PushNewIssues(self,Payload,Title):
+        Payload = Payload.copy()
+        del Payload["csrfmiddlewaretoken"]
+        del Payload["Group"]
+        Payloadstr = json.dumps(Payload,indent = 1,ensure_ascii=False)
+        label = self.repo.get_label("enhancement")
+        issue = self.repo.create_issue(title=Title, body=str(Payloadstr),labels=[label],assignee="JustHumanz")
+        return issue.number
+
+    def UpdateIssues(self,Payload,Number,Title):
+        Payload = Payload.copy()
+        del Payload["csrfmiddlewaretoken"]
+        del Payload["Group"]
+        Payloadstr = json.dumps(Payload,indent = 1,ensure_ascii=False)
+        issue = self.repo.get_issue(Number)
+        issue.edit(title=Title,body=str(Payloadstr),assignee="JustHumanz")
+
+
+
+
+git = GitGood(os.environ['GITKEY'])
+DiscordLink = os.environ['GUILD']
 def go_simps_index(request):
     Vtubers = GetVtubers("")
     Payload = {'Groups':Vtubers.GetGroups()}
@@ -69,8 +105,24 @@ def go_simps_command(request):
 
 def go_simps_add(request):
     if request.method == "POST":
-        print(request.POST)
-        return HttpResponse("Still Dev~")
+        if request.POST["Nickname"] == "" or request.POST["Region"] == "" :
+            return HttpResponse("????")
+        elif request.POST["Youtube"] == "" and request.POST["BiliBili"] == "":
+            return HttpResponse("????")
+        Title = "Add "+request.POST["Nickname"]+" from "+" "+request.POST["Group"]    
+        issuenum = git.CheckIssues(Title)
+        if issuenum is None:
+            issuenum = git.PushNewIssues(request.POST,Title)
+            Payload = {"State":"New","URL":"https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum),"Guild":DiscordLink}
+            #return redirect("https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum))
+            return render(request,'done.html',Payload)
+        else:
+            git.UpdateIssues(request.POST,issuenum,Title)
+            Payload = {"State":"Duplicate","URL":"https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum),"Guild":DiscordLink}
+            return render(request,'done.html',Payload)
+            #return redirect("https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum))
+
+
     else:
         Vtubers = GetVtubers("")
         Payload = {'Groups':Vtubers.GetGroups()}
