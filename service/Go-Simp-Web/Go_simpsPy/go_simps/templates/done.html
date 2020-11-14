@@ -41,7 +41,14 @@
   <body>
     <div class="container" id="container">
       <div class="text-center">
-        <img src="{{Data}}" alt="Image">
+        <img src="https://cdn.human-z.tech/go-simp.png" alt="">
+        <p>
+        {% if "New" in State%}
+          Done,Dev will review it,maybe need take of time for progress you can see at <a href="{{URL}}">here</a> or you can see at <a href="{{Guild}}" target="_blank" rel="noopener noreferrer">dev server</a>
+        {%else%} 
+          Your request marked as duplicates,Dev still review it for progress you can see at <a href="{{URL}}">here</a> or you can see at <a href="{{Guild}}" target="_blank" rel="noopener noreferrer">dev server</a>
+        {% endif %} 
+        </p>
       </div>
     </div>
     <!--
@@ -52,5 +59,10 @@
      <script src="https://cdn.human-z.tech/Static/bootstrap.min.js"></script>
      <script src="https://cdn.human-z.tech/Static/humanz.js"></script> 
      <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+     <script>
+       $(function () {
+        toastr.success('Form has been submitted successfully', 'Success')
+       })
+     </script>
   </body>
 </html>

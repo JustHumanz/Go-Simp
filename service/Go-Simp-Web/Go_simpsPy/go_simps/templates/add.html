@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.human-z.tech/Static/humanz.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
     <title>Go-Simp</title>
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <a class="navbar-brand" href="/"><img src="https://cdn.human-z.tech/go-simp.png" alt="Go-Simp" width="25" height="25">
@@ -42,7 +43,13 @@
       <div class="registration-form">
         <form name="form" action="/Add/" method="POST">
           {% csrf_token %}
-          <h3>Add Vtuber</h3>
+          <div class="text-center">
+            <h3>Add Vtuber</h3>
+          </div>
+          <p>
+            This form only one way,that mean you can't edit or modify after you submit the form,make sure all information is correct<br>
+            if you made a mistake you can resubmit it 
+          </p>
             <div class="form-group">
                 <input type="text" class="form-control item" name="EN_Name" id="EN_Name" placeholder="Vtuber name[EN]">
             </div>
@@ -50,7 +57,7 @@
               <input type="text" class="form-control item" name="JP_Name" id="JP_Name" placeholder="Vtuber name[JP]">
             </div>
             <div class="form-group">
-              <input type="text" class="form-control item" name="Nickname" id="Nickname" placeholder="Vtuber nickname*">
+              <input type="text" class="form-control item" name="Nickname" id="Nickname" placeholder="Vtuber nickname *required">
             </div>
             <div class="form-group">
               <input type="text" class="form-control item" name="Youtube" id="Youtube" placeholder="Youtube URL">
@@ -65,13 +72,16 @@
               <input type="text" class="form-control item" name="TwitterFanart" id="TwitterFanart" placeholder="Twitter fanart hashtag">
             </div>
             <div class="form-group">
-              <input type="text" class="form-control item" name="Region" id="Region" maxlength="2" placeholder="Region*">
+              <input type="text" class="form-control item" name="BiliBiliFanart" id="BiliBiliFanart" placeholder="BiliBili fanart hashtag">
             </div>
             <div class="form-group">
-              <input type="text" class="form-control item" name="Wiki" id="Wiki" placeholder="Wiki URL">
+              <input type="text" class="form-control item" name="Region" id="Region" maxlength="2" placeholder="Region *required">
             </div>
-            <label for="slct">Group/Agency</label>
-            <select class="form-control" id="slct" name="slct">
+            <div class="form-group">
+              <input type="text" class="form-control item" name="Wiki" id="Wiki" placeholder="Wiki URL *optional">
+            </div>
+            <label for="Group">Group/Agency</label>
+            <select class="form-control" id="Group" name="Group">
               {% for Group in Groups %}
               <option>{{Group.VtuberGroupName}}</option>
               {% endfor %}
@@ -83,11 +93,12 @@
       </div>
     </div>
     <!--
-    <script type="text/javascript" src="http://localhost:8081/humanz.js"></script> 
+    <script src="http://localhost:8081/humanz.js"></script> 
     -->
     <script src="https://cdn.human-z.tech/Static/jquery-3.5.1.js"></script>
     <script src="https://cdn.human-z.tech/Static/popper.min.js"></script>
     <script src="https://cdn.human-z.tech/Static/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://cdn.human-z.tech/Static/humanz.js"></script> 
+    <script src="https://cdn.human-z.tech/Static/humanz.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
   </body>
 </html>
