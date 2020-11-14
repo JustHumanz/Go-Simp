@@ -117,9 +117,10 @@ type YtData struct {
 }
 
 type NotifStruct struct {
-	YtData *database.YtDbData
-	Member database.Name
-	Group  database.GroupName
+	YtData        *database.YtDbData
+	ActuallyStart time.Time
+	Member        database.Name
+	Group         database.GroupName
 }
 
 func (Data *NotifStruct) AddData(new *database.YtDbData) *NotifStruct {
@@ -129,6 +130,11 @@ func (Data *NotifStruct) AddData(new *database.YtDbData) *NotifStruct {
 
 func (Data *NotifStruct) ChangeYtStatus(new string) *NotifStruct {
 	Data.YtData.Status = new
+	return Data
+}
+
+func (Data *NotifStruct) SetActuallyStart(new time.Time) *NotifStruct {
+	Data.YtData.Schedul = new
 	return Data
 }
 
