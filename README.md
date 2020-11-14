@@ -431,7 +431,7 @@ Reminder 30 minutes before livestream start
 ## TODO
 - ~~Add customize reminder~~ (Done)
 - Vtuber collaboration Detection
-- Make a form for add New Vtuber (On progress)
+- ~~Make a form for add New Vtuber~~ (Done)
 - ~~Move to microservice~~ (Done)
 
 

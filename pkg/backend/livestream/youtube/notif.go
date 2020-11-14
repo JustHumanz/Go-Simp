@@ -84,9 +84,9 @@ func (PushData *NotifStruct) SendNude() {
 			SetURL(YtURL).
 			AddField("Type ", PushData.YtData.Type).
 			AddField("Upload", durafmt.Parse(expiresAt.Sub(PushData.YtData.Schedul.In(loc))).LimitFirstN(2).String()+" Ago").
-			InlineAllFields().
 			AddField("Viewers", PushData.YtData.Viewers).
 			AddField("Duration", PushData.YtData.Length).
+			InlineAllFields().
 			SetFooter(PushData.YtData.Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 			SetColor(Color).MessageEmbed
 	} else if Status == "past" {
@@ -103,9 +103,9 @@ func (PushData *NotifStruct) SendNude() {
 			SetURL(YtURL).
 			AddField("Type ", PushData.YtData.Type).
 			AddField("Upload", durafmt.Parse(expiresAt.Sub(PushData.YtData.Schedul.In(loc))).LimitFirstN(2).String()+" Ago").
-			InlineAllFields().
 			AddField("Viewers", PushData.YtData.Viewers).
 			AddField("Duration", PushData.YtData.Length).
+			InlineAllFields().
 			SetFooter(PushData.YtData.Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 			SetColor(Color).MessageEmbed
 	}
