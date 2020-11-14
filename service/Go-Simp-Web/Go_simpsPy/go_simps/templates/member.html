@@ -70,9 +70,9 @@
               Nickname: {{Member.0.VtuberName}}<br>
               {% if Member.0.VtuberName_EN and Member.0.VtuberName_JP %}
                 Fullname: {{Member.0.VtuberName_EN}}/{{Member.0.VtuberName_JP}}<br>
-              {% if Member.0.VtuberName_EN and not Member.0.VtuberName_JP %}  
+              {% elif Member.0.VtuberName_EN and not Member.0.VtuberName_JP %}  
                 Fullname: {{Member.0.VtuberName_EN}}<br>
-              {% if not Member.0.VtuberName_EN and Member.0.VtuberName_JP %}    
+              {% elif not Member.0.VtuberName_EN and Member.0.VtuberName_JP %}    
                 Fullname: {{Member.0.VtuberName_JP}}<br>
               {% endif %} 
               Region: {{Member.0.Region}}<br>
