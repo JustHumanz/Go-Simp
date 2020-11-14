@@ -63,20 +63,26 @@ $(function () {
               '_blank'
             );
             return
-          } else if (/(.*space\.bilibili.+)/.test(url)) {
+          } else if (/(.*space.bilibili.+)/.test(url)) {
             console.log("Bilibili");
             window.open(
               url,
               '_blank'
             );
             return
-          } else if (/(.*github\.com.+)/.test(url)) {
+          } else if (/(.*github.com.+)/.test(url)) {
             window.open(
               url,
               '_blank'
             );
             return
           } else if (/(.*discord.gg.+)/.test(url)){
+            window.open(
+              url,
+              '_blank'
+            );
+            return
+          } else if (/(.*twitter.com.+)/.test(url)){
             window.open(
               url,
               '_blank'

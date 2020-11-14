@@ -143,11 +143,6 @@ body {
 	}
 }
 
-body {
-	min-height: 75rem;
-	padding-top: 4.5rem;
-}
-
 .zoom {
 	transition: transform .2s;
 	margin: 0 auto;
@@ -156,8 +151,6 @@ body {
 .zoom:hover {
 transform: scale(1.2);
 }
-
-
 
 .counter-div {
 	background-color: #f5f5f5;
@@ -195,3 +188,9 @@ transform: scale(1.2);
 	color: #00acee;
 }
 
+.fa-discord {
+	margin: 0 auto;
+	float: none;
+	display: table;
+	color: #7289d9;
+}
