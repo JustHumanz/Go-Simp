@@ -155,6 +155,20 @@
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "kannatamachi",
                     "Region":"ID"
+                },
+                {
+                    "Name":"Jaret",
+                    "EN_Name":"Jaret Fajrianto",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#JaretCoret",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCccGnj6mw4RHQHI_2mKfjCQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "jaretghosty",
+                    "Region":"ID"
                 }
             ]
         },
@@ -1404,6 +1418,20 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "warabeda_meiji",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Sorahoshi",
+                    "EN_Name":"Sorahoshi Kirame",
+                    "JP_Name":"空星きらめ",
+                    "Hashtag": {
+                        "Twitter": "#きら名画",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC_82HBGtvwN1hcGeOGHzUBQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "kirame_2434",
                     "Region":"JP"
                 },
                 {
