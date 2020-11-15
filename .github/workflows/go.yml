@@ -31,7 +31,7 @@ jobs:
     - name: Get dummy config file
       uses: wei/wget@v1
       with:
-        args: -O config.toml https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/config.toml.template        
+        args: -O config.toml https://raw.githubusercontent.com/JustHumanz/Go-Simp/main/config.toml.template        
 
     - name: Build-Backend
       working-directory: ./pkg/backend
@@ -65,7 +65,7 @@ jobs:
       - name: Get dummy config file
         uses: wei/wget@v1
         with:
-          args: -O config.toml https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/config.toml.template        
+          args: -O config.toml https://raw.githubusercontent.com/JustHumanz/Go-Simp/main/config.toml.template        
 
       - name: Build-Frontend
         working-directory: ./pkg/frontend
