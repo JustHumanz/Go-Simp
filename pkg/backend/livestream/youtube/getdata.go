@@ -100,7 +100,11 @@ func StartCheckYT(Member database.Name, Group database.GroupName, wg *sync.WaitG
 				YoutubeData.ChangeYtStatus("live").UpdateYtDB()
 
 				log.Info("Send to notify")
-				YoutubeData.SetActuallyStart(Data.Items[i].LiveDetails.ActualStartTime).SendNude()
+				if Data.Items[i].LiveDetails.ActualStartTime.IsZero() {
+					YoutubeData.SetActuallyStart(Data.Items[i].LiveDetails.ActualStartTime).SendNude()
+				} else {
+					YoutubeData.SendNude()
+				}
 
 			} else if !Data.Items[i].LiveDetails.EndTime.IsZero() && YoutubeData.YtData.Status == "upcoming" || YoutubeData.YtData.Status == "upcoming" && Data.Items[i].Snippet.VideoStatus == "none" {
 				log.WithFields(log.Fields{
@@ -199,7 +203,11 @@ func StartCheckYT(Member database.Name, Group database.GroupName, wg *sync.WaitG
 				if err != nil {
 					return err
 				}
-				YoutubeData.SetActuallyStart(Data.Items[i].LiveDetails.ActualStartTime).SendNude()
+				if Data.Items[i].LiveDetails.ActualStartTime.IsZero() {
+					YoutubeData.SetActuallyStart(Data.Items[i].LiveDetails.ActualStartTime).SendNude()
+				} else {
+					YoutubeData.SendNude()
+				}
 
 			} else if Data.Items[i].Snippet.VideoStatus == "none" && yttype == "Covering" {
 				log.WithFields(log.Fields{

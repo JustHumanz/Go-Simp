@@ -1,6 +1,7 @@
 package youtube
 
 import (
+	"math"
 	"math/rand"
 	"regexp"
 	"strings"
@@ -95,7 +96,7 @@ func CheckPrivate() {
 					"VideoID": Youtube.VideoID,
 				}).Info("Member only video")
 				Youtube.UpdateYt("past")
-			} else if Youtube.Status == "live" && Youtube.Viewers == "" {
+			} else if Youtube.Status == "live" && Youtube.Viewers == "" || Youtube.Status == "live" && int(math.Round(time.Now().Sub(Youtube.Schedul).Hours())) > 30 {
 				log.WithFields(log.Fields{
 					"VideoID": Youtube.VideoID,
 				}).Info("Member only video")
