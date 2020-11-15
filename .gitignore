@@ -11,4 +11,5 @@ docker-compose-prod.yaml
 vendor
 *.toml
 *.db
+*.mp4
 dockerfile-devel

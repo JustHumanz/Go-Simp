@@ -26,5 +26,6 @@ urlpatterns = [
     path('Exec/',views.go_simps_command,name="Command"),
     path('Support/<Type>/',views.go_simps_support,name="Support"),
     path('Add/',views.go_simps_add,name="Add"),
-    path('admin/', admin.site.urls),
+    path('Guide/',views.go_simps_guide,name="Guide"),
+    #path('admin/', admin.site.urls),
 ]

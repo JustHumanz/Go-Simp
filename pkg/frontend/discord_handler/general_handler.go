@@ -1105,7 +1105,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 					}
 				} else {
-					_, err := s.ChannelMessageSend(m.ChannelID, strings.Join(already, ",")+" Same type")
+					_, err := s.ChannelMessageSend(m.ChannelID, strings.Join(already, ",")+" Same state")
 					if err != nil {
 						log.Error(err)
 					}

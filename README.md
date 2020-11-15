@@ -1,17 +1,17 @@
 # Vtuber DiscordBot
 
-![alt text](https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/go-simp.png "Go-Simp")  
+![alt text](https://raw.githubusercontent.com/JustHumanz/Go-Simp/main/Img/go-simp.png "Go-Simp")  
 ##### [Original Source](https://twitter.com/any_star_/status/1288184424320790528)
 ![Inline docs](https://badgen.net/badge/Code%20style/Toxic-Asean/blue?icon=github) ![Inline docs](https://badgen.net/badge/Code%20quality/Better%20than%20yandev%20code/green?icon=github)   ![Inline docs](https://github.com/JustHumanz/Go-Simp/workflows/Go-Simp/badge.svg)
 ----
 
 ## Introduction
 A simple VTuber bot to serve notification Fanart(Twitter,Bilibili) and Livestream(Youtube,Bilibili)  
-for setup see at [Guide](https://github.com/JustHumanz/Go-Simp/blob/master/Guide.md)
+for setup see at [Guide](https://github.com/JustHumanz/Go-Simp/blob/main/Guide.md)
 
 
 ## Current notification support
-### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/hana.png" alt="Hanayori"> Hanayori 
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/main/Img/hana.png" alt="Hanayori"> Hanayori 
 ---------------------------------------------------------------------------------
 
 | Nickname                                                                                                                                                                                                                                                                 | FullName                      | Region | Youtube | Bilibili | Twitter |
@@ -21,7 +21,7 @@ for setup see at [Guide](https://github.com/JustHumanz/Go-Simp/blob/master/Guide
 | <a href="https://www.youtube.com/channel/UCV2m2UifDGr3ebjSnDv5rUA?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJyNRHAYuoJILHUzCkKidPa63UDakRNOthKo4gvd=s800-c-k-c0x00ffffff-no-rj" alt="Hanayori"></a><br>Kohi         | Kohigashi Hitona<br>小東ひとな     | JP     | ✓       | ✓        | ✓       |
 | <a href="https://www.youtube.com/channel/UCiexEBp7-D46FXUtQ-BpgWg?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJz-kzVg0UVf-LSqNk52OObcI_NqbXRzkbiq1EeV=s800-c-k-c0x00ffffff-no-rj" alt="Hanayori"></a><br> ~~Nononon~~ | ~~Nonomiya Nonono<br>野々宮ののの~~ | JP     | ✓       | ✓        | ✓       |
 
-### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/holo.png" alt="Hololive"> Hololive
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/main/Img/holo.png" alt="Hololive"> Hololive
 -----------------------------------------------
 
 | Nickname                                                                                                                                                                                                                                                                 | FullName                    | Region | Youtube | Bilibili | Twitter |
@@ -90,7 +90,7 @@ for setup see at [Guide](https://github.com/JustHumanz/Go-Simp/blob/master/Guide
 EOL
 
 
-### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/niji.png" alt="Nijisanji"> Nijisanji
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/main/Img/niji.png" alt="Nijisanji"> Nijisanji
 -----------------------------------------------
 
 
@@ -160,7 +160,7 @@ EOL
 
 
 
-### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/entum.png" alt="ENTUM"> ENTUM
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/main/Img/entum.png" alt="ENTUM"> ENTUM
 -----------------------------------------------
 
 
@@ -171,7 +171,7 @@ EOL
 
 
 
-### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/kizuna.png" alt="Kizuna_AI"> Kizuna_AI
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/main/Img/kizuna.png" alt="Kizuna_AI"> Kizuna_AI
 -----------------------------------------------
 
 |Nickname | FullName              |Region | Youtube | Bilibili| Twitter|
@@ -182,7 +182,7 @@ EOL
 
 
 
-### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/vox.png" alt="VOMS"> VOMS
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/main/Img/vox.png" alt="VOMS"> VOMS
 -----------------------------------------------
 
 
@@ -194,7 +194,7 @@ EOL
 
 
 
-### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/noripro.png" alt="NoriPro"> NoriPro
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/main/Img/noripro.png" alt="NoriPro"> NoriPro
 -----------------------------------------------
 
 
@@ -208,7 +208,7 @@ EOL
 
 
 
-### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/holostars.png" alt="Holostars"> Holostars
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/main/Img/holostars.png" alt="Holostars"> Holostars
 -----------------------------------------------
 
 
@@ -226,7 +226,7 @@ EOL
 
 
 
-### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/774.png" alt="774.INC"> 774.INC
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/main/Img/774.png" alt="774.INC"> 774.INC
 -----------------------------------------------
 
 | Nickname  | FullName                            | Region | Youtube | Bilibili | Twitter |
@@ -280,7 +280,7 @@ EOL
 | <a href="https://www.youtube.com/channel/UCXSbl3XQYtx1u4Gvvca7NUA?sub_confirmation=1"><img align="left" width="50" height="50" src="https://yt3.ggpht.com/a/AATXAJxT-ODi5IH_bXaburYZJWHmi8g7hHItlrdMRQs=s800-c-k-c0x00ffffff-no-rj" alt="VTuBerflower"></a><br>Lily     |Lily Ifeta   |   ID   |     ✓   |       ✗  |     ✓   |         
 
 
-### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/MAHA5.png" alt="Maha5"> Maha5
+### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/main/Img/MAHA5.png" alt="Maha5"> Maha5
 -----------------------------------------------
 
 | Nickname |FullName    |  Region | Youtube | Bilibili | Twitter |
@@ -398,32 +398,32 @@ Like this but in Japanese
 
 #### New Upcoming live stream  
 <p align="center">
-  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/New%20Upcoming.png" alt="New Upcoming live stream"/>
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/New%20Upcoming.png" alt="New Upcoming live stream"/>
 </p>
 
 
 #### Reminder  
 Reminder 30 minutes before livestream start
 <p align="center">
-  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Reminder.png" alt="Reminder"/>
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/Reminder.png" alt="Reminder"/>
 </p>
 
 
 ##### Upcoming command
 <p align="center">
-  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Youtube%20Upcoming.png" alt="Upcoming command"/>
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/Youtube%20Upcoming.png" alt="Upcoming command"/>
 </p>
 
 
 ##### New Fanart
 <p align="center">
-  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/New%20Fanart.png" alt="New fanart"/>
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/New%20Fanart.png" alt="New fanart"/>
 </p>
 
 
 ##### Subscriber count
 <p align="center">
-  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Subscount.png" alt="Subscriber count"/>
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/Subscount.png" alt="Subscriber count"/>
 </p>
 
 [Invite link](https://top.gg/bot/721964514018590802)

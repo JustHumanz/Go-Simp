@@ -157,3 +157,6 @@ def go_simps_support(request,Type):
         Payload = "https://cdn.human-z.tech/404.jpg"    
 
     return render(request, 'support.html',{'Data': Payload})
+
+def go_simps_guide(request):
+    return render(request,'guide.html')   
