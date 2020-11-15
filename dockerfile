@@ -6,6 +6,7 @@ RUN mkdir /app
 WORKDIR /app
 RUN git clone --single-branch --branch main https://github.com/JustHumanz/Go-Simp
 RUN git checkout main
+WORKDIR /app/Go-Simp
 COPY config.toml /app/Go-Simp
 
 #CMD ["go","run","."]
