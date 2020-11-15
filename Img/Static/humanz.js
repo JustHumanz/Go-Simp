@@ -56,33 +56,7 @@ $(function () {
 
           if (url == "#") {
             return
-          } else if (/(.*youtube.+)/.test(url)) {
-            console.log("Youtube");
-            window.open(
-              url,
-              '_blank'
-            );
-            return
-          } else if (/(.*space.bilibili.+)/.test(url)) {
-            console.log("Bilibili");
-            window.open(
-              url,
-              '_blank'
-            );
-            return
-          } else if (/(.*github.com.+)/.test(url)) {
-            window.open(
-              url,
-              '_blank'
-            );
-            return
-          } else if (/(.*discord.gg.+)/.test(url)){
-            window.open(
-              url,
-              '_blank'
-            );
-            return
-          } else if (/(.*twitter.com.+)/.test(url)){
+          } else if (/(.*youtube.+|bilibili.+|github.+|discord.+|twitter.+)/.test(url)) {
             window.open(
               url,
               '_blank'
@@ -140,7 +114,7 @@ $(function () {
 });
 
 function IsEmpty() {
-var r = /^(ftp|http|https):\/\/[^ "]+$/;
+var r = /^(http|https):\/\/[^ "]+$/;
 var yt = r.test(document.forms['form'].Youtube.value)
 var bili = r.test(document.forms['form'].BiliBili.value)
 
@@ -181,12 +155,11 @@ if (document.forms['form'].Nickname.value === "" || document.forms['form'].Regio
     return false;
   }
 } else if (document.forms['form'].Youtube.value !== "" && document.forms['form'].BiliBili.value === ""){
-  if (!yt){
+  if (!yt || (/((http|https):\/\/)?(www\.)?youtube\.com\/(channel|user)\/[a-zA-Z0-9\-]+/.test(document.forms['form'].Youtube.value))){
     toastr.warning('Youtube URL is invalid')
     $('html, body').animate({
-      scrollTop: $("#BiliBili").offset().top-80
+      scrollTop: $("#Youtube").offset().top-80
     }, 1000);
-  
     return false;
   }
 }

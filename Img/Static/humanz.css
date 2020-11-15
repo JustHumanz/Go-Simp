@@ -194,3 +194,10 @@ transform: scale(1.2);
 	display: table;
 	color: #7289d9;
 }
+
+.fa-git {
+	margin: 0 auto;
+	float: none;
+	display: table;
+	color: #211F1F;
+}
