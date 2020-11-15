@@ -175,7 +175,7 @@
         "Group":[
         {
             "GroupName": "Hanayori",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/hana.png",
+            "GroupIcon": "https://cdn.human-z.tech/hana.png",
             "Members" : [
                 {
                     "Name":"Kanochi",
@@ -237,7 +237,7 @@
         },
         {
             "GroupName": "774.inc",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/774.png",
+            "GroupIcon": "https://cdn.human-z.tech/774.png",
             "Members" : [
                 {
                     "Name":"Patra",
@@ -481,7 +481,7 @@
         },
         {
             "GroupName": "Hololive",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/holo.png",
+            "GroupIcon": "https://cdn.human-z.tech/holo.png",
             "Members" : [
                 {
                     "Name":"Risu",
@@ -1049,7 +1049,7 @@
             
         },{
             "GroupName": "Holostars",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/holostars.png",
+            "GroupIcon": "https://cdn.human-z.tech/holostars.png",
             "Members" :[
                 {
                     "Name":"Izu-Izu",
@@ -1180,7 +1180,7 @@
             ]
         },{
             "GroupName": "Nijisanji",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/niji.png",
+            "GroupIcon": "https://cdn.human-z.tech/niji.png",
             "Members" :[
                 {
                     "Name":"Konlulu",
@@ -1802,7 +1802,7 @@
             ]
         },{
             "GroupName": "Kizuna_AI",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/kizuna.png",
+            "GroupIcon": "https://cdn.human-z.tech/kizuna.png",
             "Members" :[
                 {
                     "Name":"Ai-chan",
@@ -1835,7 +1835,7 @@
             ]
         },{
             "GroupName": "ENTUM",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/entum.png",
+            "GroupIcon": "https://cdn.human-z.tech/entum.png",
             "Members" :[
                 {
                     "Name":"hina-chan",
@@ -1868,7 +1868,7 @@
             ]
         },{
             "GroupName": "sos_ev",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/404.jpg",
+            "GroupIcon": "https://cdn.human-z.tech/404.jpg",
             "Members" :[
                 {
                     "Name":"Evelyn",
@@ -1930,7 +1930,7 @@
         }
         ,{
             "GroupName": "VOMS",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/vox.png",
+            "GroupIcon": "https://cdn.human-z.tech/vox.png",
             "Members" :[
                 {
                     "Name":"Pikamee",
@@ -1977,7 +1977,7 @@
         },
         {
             "GroupName": "MAHA5",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/MAHA5.png",
+            "GroupIcon": "https://cdn.human-z.tech/MAHA5.png",
             "Members" :[
                 {
                     "Name":"Adelia",
@@ -2053,7 +2053,7 @@
         },
         {
             "GroupName": "NoriPro",
-            "GroupIcon": "https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/noripro.png",
+            "GroupIcon": "https://cdn.human-z.tech/noripro.png",
             "Members" :[
                 {
                     "Name":"Tamakin",
