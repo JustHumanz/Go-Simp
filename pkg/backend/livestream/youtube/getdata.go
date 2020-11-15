@@ -100,7 +100,7 @@ func StartCheckYT(Member database.Name, Group database.GroupName, wg *sync.WaitG
 				YoutubeData.ChangeYtStatus("live").UpdateYtDB()
 
 				log.Info("Send to notify")
-				if Data.Items[i].LiveDetails.ActualStartTime.IsZero() {
+				if !Data.Items[i].LiveDetails.ActualStartTime.IsZero() {
 					YoutubeData.SetActuallyStart(Data.Items[i].LiveDetails.ActualStartTime).SendNude()
 				} else {
 					YoutubeData.SendNude()
@@ -143,9 +143,7 @@ func StartCheckYT(Member database.Name, Group database.GroupName, wg *sync.WaitG
 					log.Info("Send to notify")
 
 					YoutubeData.ChangeYtStatus("upcoming").
-						UpYtSchedul(Data.Items[i].LiveDetails.StartTime).SendNude()
-
-					YoutubeData.UpdateYtDB()
+						UpYtSchedul(Data.Items[i].LiveDetails.StartTime).UpdateYtDB()
 				}
 				//send to reminder
 				YoutubeData.ChangeYtStatus("reminder").SendNude()
@@ -161,9 +159,9 @@ func StartCheckYT(Member database.Name, Group database.GroupName, wg *sync.WaitG
 				Thumb = "http://i3.ytimg.com/vi/" + VideoID[i] + "/maxresdefault.jpg"
 			}
 
-			yttype := engine.YtFindType(Data.Items[i].Snippet.Title)
-			if yttype == "Streaming" && Data.Items[i].ContentDetails.Duration != "P0D" && !Data.Items[i].LiveDetails.StartTime.IsZero() {
-				yttype = "Regular video"
+			YtType := engine.YtFindType(Data.Items[i].Snippet.Title)
+			if YtType == "Streaming" && Data.Items[i].ContentDetails.Duration != "P0D" && !Data.Items[i].LiveDetails.StartTime.IsZero() {
+				YtType = "Regular video"
 			}
 
 			YoutubeData.AddData(&database.YtDbData{
@@ -174,7 +172,7 @@ func StartCheckYT(Member database.Name, Group database.GroupName, wg *sync.WaitG
 				Desc:      Data.Items[i].Snippet.Description,
 				Schedul:   Data.Items[i].LiveDetails.StartTime,
 				Published: Data.Items[i].Snippet.PublishedAt,
-				Type:      yttype,
+				Type:      YtType,
 				Viewers:   Viewers,
 				Length:    durafmt.Parse(ParseDuration(Data.Items[i].ContentDetails.Duration)).String(),
 			})
@@ -203,13 +201,13 @@ func StartCheckYT(Member database.Name, Group database.GroupName, wg *sync.WaitG
 				if err != nil {
 					return err
 				}
-				if Data.Items[i].LiveDetails.ActualStartTime.IsZero() {
+				if !Data.Items[i].LiveDetails.ActualStartTime.IsZero() {
 					YoutubeData.SetActuallyStart(Data.Items[i].LiveDetails.ActualStartTime).SendNude()
 				} else {
 					YoutubeData.SendNude()
 				}
 
-			} else if Data.Items[i].Snippet.VideoStatus == "none" && yttype == "Covering" {
+			} else if Data.Items[i].Snippet.VideoStatus == "none" && YtType == "Covering" {
 				log.WithFields(log.Fields{
 					"YtID":       VideoID[i],
 					"MemberName": Member.EnName,
