@@ -199,7 +199,11 @@ func StartCheckYT(Member database.Name, Group database.GroupName, wg *sync.WaitG
 				if err != nil {
 					return err
 				}
-				YoutubeData.SetActuallyStart(Data.Items[i].LiveDetails.ActualStartTime).SendNude()
+				if Data.Items[i].LiveDetails.ActualStartTime.IsZero() {
+					YoutubeData.SetActuallyStart(Data.Items[i].LiveDetails.ActualStartTime).SendNude()
+				} else {
+					YoutubeData.SendNude()
+				}
 
 			} else if Data.Items[i].Snippet.VideoStatus == "none" && yttype == "Covering" {
 				log.WithFields(log.Fields{
