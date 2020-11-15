@@ -160,7 +160,7 @@ func StartCheckYT(Member database.Name, Group database.GroupName, wg *sync.WaitG
 			}
 
 			YtType := engine.YtFindType(Data.Items[i].Snippet.Title)
-			if YtType == "Streaming" && Data.Items[i].ContentDetails.Duration != "P0D" && !Data.Items[i].LiveDetails.StartTime.IsZero() {
+			if YtType == "Streaming" && Data.Items[i].ContentDetails.Duration != "P0D" && Data.Items[i].LiveDetails.StartTime.IsZero() {
 				YtType = "Regular video"
 			}
 
