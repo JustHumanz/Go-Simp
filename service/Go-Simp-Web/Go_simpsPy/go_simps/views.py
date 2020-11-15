@@ -45,7 +45,6 @@ class GetVtubers:
 
 class GitGood:
     def __init__(self, Token):    
-        self.Token = Token
         self.g = Github(Token)
         self.repo = self.g.get_repo("JustHumanz/Go-Simp")
 
@@ -58,21 +57,19 @@ class GitGood:
                     return issue.number
 
     def PushNewIssues(self,Payload,Title):
-        Payload = Payload.copy()
         del Payload["csrfmiddlewaretoken"]
         del Payload["Group"]
-        Payloadstr = json.dumps(Payload,indent = 1,ensure_ascii=False)
+        PayloadStr = json.dumps(Payload,indent = 1,ensure_ascii=False)
         label = self.repo.get_label("enhancement")
-        issue = self.repo.create_issue(title=Title, body=str(Payloadstr),labels=[label],assignee="JustHumanz")
+        issue = self.repo.create_issue(title=Title, body=PayloadStr,labels=[label],assignee="JustHumanz")
         return issue.number
 
     def UpdateIssues(self,Payload,Number,Title):
-        Payload = Payload.copy()
         del Payload["csrfmiddlewaretoken"]
         del Payload["Group"]
-        Payloadstr = json.dumps(Payload,indent = 1,ensure_ascii=False)
+        PayloadStr = json.dumps(Payload,indent = 1,ensure_ascii=False)
         issue = self.repo.get_issue(Number)
-        issue.edit(title=Title,body=str(Payloadstr),assignee="JustHumanz")
+        issue.edit(title=Title,body=PayloadStr,assignee="JustHumanz")
 
 
 
@@ -83,12 +80,7 @@ def GetChannelID(url):
     regex = r"^(?:(http|https):\/\/[a-zA-Z-]*\.{0,1}[a-zA-Z-]{3,}\.[a-z]{2,})\/channel\/([a-zA-Z0-9_]{3,})$"
     matches = re.finditer(regex, url, re.MULTILINE)
     for matchNum, match in enumerate(matches, start=1):
-        print ("Match {matchNum} was found at {start}-{end}: {match}".format(matchNum = matchNum, start = match.start(), end = match.end(), match = match.group()))
-        for groupNum in range(0, len(match.groups())):
-            groupNum = groupNum + 1
-            return match.group(groupNum)
-            #print ("Group {groupNum} found at {start}-{end}: {group}".format(groupNum = groupNum, start = match.start(groupNum), end = match.end(groupNum), group = match.group(groupNum)))
-
+        return match.group(2)
 
 def go_simps_index(request):
     Vtubers = GetVtubers("")
@@ -123,20 +115,24 @@ def go_simps_add(request):
         Title = "Add "+request.POST["Nickname"]+" from "+" "+request.POST["Group"]    
         issuenum = git.CheckIssues(Title)
         ChannelID = GetChannelID(request.POST["Youtube"])
+        POSTData = request.POST.copy()
+
         if ChannelID is None:
             Payload = {"State":"Error","URL":"https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum)}
+            return render(request,'done.html',Payload)
+        else:
+            POSTData["Youtube"] = ChannelID
 
         if issuenum is None:
-            #issuenum = git.PushNewIssues(request.POST,Title)
+            issuenum = git.PushNewIssues(POSTData,Title)
             Payload = {"State":"New","URL":"https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum)}
             #return redirect("https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum))
             return render(request,'done.html',Payload)
         else:
-            #git.UpdateIssues(request.POST,issuenum,Title)
+            git.UpdateIssues(POSTData,issuenum,Title)
             Payload = {"State":"Duplicate","URL":"https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum)}
             return render(request,'done.html',Payload)
             #return redirect("https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum))
-
 
     else:
         Vtubers = GetVtubers("")

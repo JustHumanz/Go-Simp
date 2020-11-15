@@ -53,7 +53,7 @@ $(function () {
       var $this = $(this),
           url = $this.attr("href"),
           title = $this.text();
-
+    
           if (url == "#") {
             return
           } else if (/(.*youtube.+|bilibili.+|github.+|discord.+|twitter.+)/.test(url)) {
@@ -73,9 +73,11 @@ $(function () {
       $('.collapse').collapse("hide")
       document.title = title;
       $('#container').load(url+" #container",function(){
+        $(this).children(':first').unwrap();
         counter($('body'))
         $(function() {
           $(window).scrollTop(0);
+          $('.carousel').carousel()
       });
       });
   });
@@ -86,9 +88,11 @@ $(function () {
           $('.collapse').collapse("hide")
           document.title = state.title;
           $('#container').load(state.url+" #container",function(){
+            $(this).children(':first').unwrap();
             counter($('body'))
             $(function() {
               $(window).scrollTop(0);
+              $('.carousel').carousel()
           });
           });
       } else {
@@ -96,16 +100,20 @@ $(function () {
           $('.collapse').collapse("hide")
           if (state == null) {
             $('#container').load("/ #container",function(){
+              $(this).children(':first').unwrap();
               counter($('body'))
               $(function() {
                 $(window).scrollTop(0);
+                $('.carousel').carousel()
             });
             });
           } else {
             $('#container').load(state.url+" container",function(){
+              $(this).children(':first').unwrap();
               counter($('body'))
               $(function() {
                 $(window).scrollTop(0);
+                $('.carousel').carousel()
             });
             });
           }
@@ -155,6 +163,7 @@ if (document.forms['form'].Nickname.value === "" || document.forms['form'].Regio
     return false;
   }
 } else if (document.forms['form'].Youtube.value !== "" && document.forms['form'].BiliBili.value === ""){
+  document.forms['form'].BiliBili.value = 0;
   if (!yt || (/((http|https):\/\/)?(www\.)?youtube\.com\/(channel|user)\/[a-zA-Z0-9\-]+/.test(document.forms['form'].Youtube.value))){
     toastr.warning('Youtube URL is invalid')
     $('html, body').animate({

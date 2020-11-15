@@ -69,7 +69,13 @@
       $(function () {
        toastr.success('Form has been submitted successfully', 'Success')
       })
-    </script>
+     </script>
+     {%else%} 
+     <script>
+      $(function () {
+        toastr.error('Oops,something error', 'Error')
+      })
+     </script>     
      {% endif %}
   </body>
 </html>

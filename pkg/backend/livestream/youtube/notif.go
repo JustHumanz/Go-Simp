@@ -79,25 +79,6 @@ func (PushData *NotifStruct) SendNude() {
 			SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
 			SetColor(Color).MessageEmbed
 
-	} else if Status == "past" && PushData.YtData.Type == "Covering" {
-		Color, err := engine.GetColor("/tmp/yt.tmp", Avatar)
-		if err != nil {
-			log.Error(err)
-		}
-		MsgEmbend = engine.NewEmbed().
-			SetAuthor(VtuberName, Avatar, YtChannel).
-			SetTitle("Uploaded a new video").
-			SetDescription(PushData.YtData.Title).
-			SetImage(PushData.YtData.Thumb).
-			SetThumbnail(GroupIcon).
-			SetURL(YtURL).
-			AddField("Type ", PushData.YtData.Type).
-			AddField("Upload", durafmt.Parse(expiresAt.Sub(Timestart.In(loc))).LimitFirstN(2).String()+" Ago").
-			AddField("Viewers", PushData.YtData.Viewers).
-			AddField("Duration", PushData.YtData.Length).
-			InlineAllFields().
-			SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
-			SetColor(Color).MessageEmbed
 	} else if Status == "past" {
 		Color, err := engine.GetColor("/tmp/yt.tmp", Avatar)
 		if err != nil {
