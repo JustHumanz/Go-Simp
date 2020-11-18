@@ -38,11 +38,13 @@ const GetMemberAll = async (Reg,result) => {
   try {
     let data
     if(Reg != null) {
-      data = await knex('VtuberMember')
+      data = await knex.select('VtuberMember.*','VtuberGroup.VtuberGroupName').from('VtuberMember')
+      .innerJoin('VtuberGroup','VtuberMember.VtuberGroup_id','VtuberGroup.id')
       .where('Region',Reg)
       .orderBy(['VtuberGroup_id','Region'])        
     } else {
-      data = await knex('VtuberMember')
+      data = await knex.select('VtuberMember.*','VtuberGroup.VtuberGroupName').from('VtuberMember')
+      .innerJoin('VtuberGroup','VtuberMember.VtuberGroup_id','VtuberGroup.id')
       .orderBy(['VtuberGroup_id','Region'])    
     }
     if (data.length){
