@@ -59,6 +59,20 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Shiina Nanoha",
+                    "EN_Name":"Nano",
+                    "JP_Name":"椎名なのは",
+                    "Hashtag": {
+                        "Twitter": "#なのはart",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UC0lIq8G4LgDPlXsDmYSUExw",
+                    "BiliBili_ID": 623441612,
+                    "BiliRoom_ID": 22347054,
+                    "Twitter_Username": "ShiinaNanoha78",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Artia",
                     "EN_Name":"Artia",
                     "JP_Name":"アティア",
