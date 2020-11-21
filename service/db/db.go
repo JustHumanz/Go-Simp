@@ -476,7 +476,7 @@ func AddData(Data Vtuber) {
 				res, err := stmt.Exec(VtuberMember.Name, VtuberMember.ENName, VtuberMember.JPName, VtuberMember.Hashtag.Twitter, VtuberMember.Hashtag.BiliBili, VtuberMember.YtID, VtuberMember.YtAvatar(), GroupIDIndependen, VtuberMember.Region, VtuberMember.BiliBiliID, VtuberMember.BiliRoomID, VtuberMember.BliBiliFace(), VtuberMember.TwitterName)
 				engine.BruhMoment(err, "", false)
 
-				_, err = res.LastInsertId()
+				id, err := res.LastInsertId()
 				engine.BruhMoment(err, "", false)
 
 				defer stmt.Close()
@@ -486,7 +486,7 @@ func AddData(Data Vtuber) {
 						Group: database.GroupName{
 							ID:        GroupIDIndependen,
 							NameGroup: "Independen",
-							IconURL:   "https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/independen.png",
+							IconURL:   "https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/independen.png",
 						},
 						Member: VtuberMember,
 					}.SendNotif())
@@ -496,6 +496,7 @@ func AddData(Data Vtuber) {
 				}
 
 				NewVtuberNamesIndependen = append(NewVtuberNamesIndependen, "`"+VtuberMember.Name+"`")
+				VtuberMember.InputSubs(id)
 				//New.SendNotif(Bot)
 			} else {
 				log.WithFields(log.Fields{
@@ -590,7 +591,7 @@ func AddData(Data Vtuber) {
 					res, err := stmt.Exec(VtuberMember.Name, VtuberMember.ENName, VtuberMember.JPName, VtuberMember.Hashtag.Twitter, VtuberMember.Hashtag.BiliBili, VtuberMember.YtID, VtuberMember.YtAvatar(), GroupID, VtuberMember.Region, VtuberMember.BiliBiliID, VtuberMember.BiliRoomID, VtuberMember.BliBiliFace(), VtuberMember.TwitterName)
 					engine.BruhMoment(err, "", false)
 
-					_, err = res.LastInsertId()
+					id, err := res.LastInsertId()
 					engine.BruhMoment(err, "", false)
 
 					defer stmt.Close()
@@ -609,6 +610,7 @@ func AddData(Data Vtuber) {
 						}
 					}
 					NewVtuberNames = append(NewVtuberNames, "`"+VtuberMember.Name+"`")
+					VtuberMember.InputSubs(id)
 
 				} else {
 					log.WithFields(log.Fields{

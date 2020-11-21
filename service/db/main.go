@@ -59,7 +59,7 @@ func init() {
 	if err != nil {
 		log.Error(err)
 	}
-	YtToken = config.YtToken[len(config.YtToken)-1]
+	YtToken = config.YtToken[0]
 	BiliSession = config.BiliSess
 	Limit = 100
 	Bot, _ = discordgo.New("Bot " + config.Discord)
