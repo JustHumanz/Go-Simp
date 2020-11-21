@@ -19,7 +19,7 @@ import (
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 
 	bilibili "github.com/JustHumanz/Go-simp/pkg/backend/livestream/bilibili/live"
-	"github.com/JustHumanz/Go-simp/pkg/backend/livestream/youtube"
+	youtube "github.com/JustHumanz/Go-simp/pkg/backend/livestream/youtube"
 	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
 )
@@ -79,7 +79,6 @@ func init() {
 
 func main() {
 	database.Start(db)
-
 	AddData(JsonData)
 	go CheckYT()
 	go CheckSchedule()
@@ -239,20 +238,18 @@ func CheckTBili() {
 
 func CheckSchedule() {
 	log.Info("Start check BiliBili room")
-	Group := database.GetGroup()
-	for z := 0; z < len(Group); z++ {
-		Name := database.GetName(Group[z].ID)
-		for k := 0; k < len(Name); k++ {
-			if Name[k].BiliBiliID != 0 {
+	for _, Group := range database.GetGroup() {
+		for _, Member := range database.GetName(Group.ID) {
+			if Member.BiliBiliID != 0 {
 				log.WithFields(log.Fields{
-					"Group":   Group[z].NameGroup,
-					"SpaceID": Name[k].EnName,
+					"Group":   Group.NameGroup,
+					"SpaceID": Member.EnName,
 				}).Info("Check Room")
 				var (
 					ScheduledStart time.Time
 				)
-				DataDB := database.GetRoomData(Name[k].ID, Name[k].BiliRoomID)
-				Status, err := bilibili.GetRoomStatus(Name[k].BiliRoomID)
+				DataDB := database.GetRoomData(Member.ID, Member.BiliRoomID)
+				Status, err := bilibili.GetRoomStatus(Member.BiliRoomID)
 				if err != nil {
 					log.Error(err)
 				}
@@ -263,7 +260,7 @@ func CheckSchedule() {
 					ScheduledStart = time.Time{}
 				}
 				Data := map[string]interface{}{
-					"LiveRoomID":     Name[k].BiliRoomID,
+					"LiveRoomID":     Member.BiliRoomID,
 					"Status":         "",
 					"Title":          Status.Data.RoomInfo.Title,
 					"Thumbnail":      Status.Data.RoomInfo.Cover,
@@ -272,18 +269,30 @@ func CheckSchedule() {
 					"ScheduledStart": ScheduledStart,
 					"Face":           Status.Data.AnchorInfo.BaseInfo.Face,
 					"Online":         Status.Data.RoomInfo.Online,
-					"BiliBiliID":     Name[k].BiliBiliID,
-					"MemberID":       Name[k].ID,
+					"BiliBiliID":     Member.BiliBiliID,
+					"MemberID":       Member.ID,
 				}
 				if Status.CheckScheduleLive() {
 					//Live
+					log.WithFields(log.Fields{
+						"Group":      Group.NameGroup,
+						"VtuberName": Member.Name,
+					}).Info("Status Live")
 					Data["Status"] = "Live"
 					LiveBiliBili(Data)
 				} else if !Status.CheckScheduleLive() && DataDB.Status == "Live" {
 					//prob past
+					log.WithFields(log.Fields{
+						"Group":      Group.NameGroup,
+						"VtuberName": Member.Name,
+					}).Info("Status Past")
 					Data["Status"] = "Past"
 					LiveBiliBili(Data)
-				} else if DataDB == nil {
+				} else if DataDB.LiveRoomID == 0 {
+					log.WithFields(log.Fields{
+						"Group":      Group.NameGroup,
+						"VtuberName": Member.Name,
+					}).Info("Status Unknown")
 					Data["Status"] = "Unknown"
 					LiveBiliBili(Data)
 				}

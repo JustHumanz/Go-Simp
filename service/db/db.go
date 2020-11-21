@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
 	"os"
 	"strconv"
 	"strings"
@@ -393,39 +392,6 @@ func GetHashtag(Group string) []database.MemberGroupID {
 	return Data
 }
 
-func (Data Member) BliBiliFace() string {
-	if Data.BiliBiliID == 0 {
-		return ""
-	} else {
-		var (
-			Info    Avatar
-			body    []byte
-			errcurl error
-			url     = "https://api.bilibili.com/x/space/acc/info?mid=" + strconv.Itoa(Data.BiliBiliID)
-		)
-		body, errcurl = engine.Curl(url, nil)
-		if body == nil {
-			log.Info("Not daijobu,trying use multitor")
-			body, errcurl = engine.CoolerCurl(url, nil)
-
-			if errcurl != nil {
-				log.Error(errcurl)
-				return ""
-			}
-		} else if errcurl != nil {
-			log.Error(errcurl)
-			return ""
-		}
-		err := json.Unmarshal(body, &Info)
-		if err != nil {
-			log.Error(err)
-			return ""
-		}
-
-		return strings.Replace(Info.Data.Face, "http", "https", -1)
-	}
-}
-
 func AddData(Data Vtuber) {
 
 	var (
@@ -805,8 +771,6 @@ func LiveBiliBili(Data map[string]interface{}) bool {
 		defer stmt.Close()
 		return true
 	} else {
-		log.Info("already added...")
-		log.Info("Update LiveBiliBili")
 		_, err := db.Exec(`Update LiveBiliBili set Status=? , Title=? ,Thumbnails=?, Description=?, Published=?, ScheduledStart=?, Viewers=? Where RoomID=? AND VtuberMember_id=?`, Data["Status"], Data["Title"], Data["Thumbnail"], Data["Description"], Data["PublishedAt"], Data["ScheduledStart"], Data["Online"], Data["LiveRoomID"], Data["MemberID"])
 		engine.BruhMoment(err, "", false)
 		return false

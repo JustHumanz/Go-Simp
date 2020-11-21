@@ -250,6 +250,39 @@ func (Data Member) GetTwitterFollow() int {
 	}
 }
 
+func (Data Member) BliBiliFace() string {
+	if Data.BiliBiliID == 0 {
+		return ""
+	} else {
+		var (
+			Info    Avatar
+			body    []byte
+			errcurl error
+			url     = "https://api.bilibili.com/x/space/acc/info?mid=" + strconv.Itoa(Data.BiliBiliID)
+		)
+		body, errcurl = engine.Curl(url, nil)
+		if body == nil {
+			log.Info("Not daijobu,trying use multitor")
+			body, errcurl = engine.CoolerCurl(url, nil)
+
+			if errcurl != nil {
+				log.Error(errcurl)
+				return ""
+			}
+		} else if errcurl != nil {
+			log.Error(errcurl)
+			return ""
+		}
+		err := json.Unmarshal(body, &Info)
+		if err != nil {
+			log.Error(err)
+			return ""
+		}
+
+		return strings.Replace(Info.Data.Face, "http", "https", -1)
+	}
+}
+
 type BiliStat struct {
 	Follow BiliFollow
 	Like   LikeView
