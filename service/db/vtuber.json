@@ -2140,6 +2140,39 @@
                     "Region":"JP"
                 }
             ]
+        },{
+            "GroupName": "ArkNET",
+            "GroupIcon": "https://cdn.human-z.tech/ArkNet.png",
+            "Members" :[
+                {
+                    "Name":"Enji_NC",
+                    "EN_Name":"Enji Notokunchoro",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#Enji_Art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UCoKQhFQUtg6H09u6fHFN1AA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Enji_NC",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Rawrska",
+                    "EN_Name":"Raska Malendra",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#RaskArt",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UCSZn0PHX6eo5zhC9RyyeRYg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "raska_malendra",
+                    "Region":"ID"
+                }
+            ]
         }
     ]
     }
