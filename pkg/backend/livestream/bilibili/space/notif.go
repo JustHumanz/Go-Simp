@@ -39,7 +39,7 @@ func (Data CheckSctruct) SendNude() {
 				InlineAllFields().
 				SetColor(Color).MessageEmbed
 
-			ID, DiscordChannelID := database.ChannelTag(Data.MemberID, 2)
+			ID, DiscordChannelID := database.ChannelTag(Data.MemberID, 2, "LiveOnly")
 			for i := 0; i < len(DiscordChannelID); i++ {
 				UserTagsList := database.GetUserList(ID[i], Data.MemberID)
 				if UserTagsList != nil {

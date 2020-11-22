@@ -11,6 +11,7 @@ for setup see at [Guide](https://github.com/JustHumanz/Go-Simp/blob/main/Guide.m
 
 
 ## Current notification support
+Not Updated,see at [Web]("https://go-simp.human-z.tech)
 ### <img align="left" width="25" height="25" src="https://raw.githubusercontent.com/JustHumanz/Go-Simp/main/Img/hana.png" alt="Hanayori"> Hanayori 
 ---------------------------------------------------------------------------------
 

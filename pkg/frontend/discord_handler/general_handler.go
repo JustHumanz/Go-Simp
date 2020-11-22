@@ -903,7 +903,12 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 	Prefix := config.PGeneral
 	if strings.HasPrefix(m.Content, Prefix) {
 		var (
-			tagtype int
+			ChannelState = database.DiscordChannel{
+				TypeTag:     0,
+				LiveOnly:    false,
+				NewUpcoming: true,
+				ChannelID:   m.ChannelID,
+			}
 			already []string
 			done    []string
 			msg1    = "Remember boys,always respect the author,**do not save the fanart without permission from the author**"
@@ -911,16 +916,50 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 		)
 		CommandArray := strings.Split(m.Content, " ")
 		if CommandArray[0] == Prefix+Enable {
-			if len(CommandArray) > 1 {
+			if len(CommandArray) > 2 {
 				if CommandArray[1] == "art" {
-					tagtype = 1
+					ChannelState.SetTypeTag(1)
 				} else if CommandArray[1] == "live" {
-					tagtype = 2
+					ChannelState.SetTypeTag(2)
+				} else if CommandArray[1] == "all" {
+					ChannelState.SetTypeTag(3)
 				} else {
-					tagtype = 3
+					_, err := s.ChannelMessageSend(m.ChannelID, "`"+CommandArray[1]+"`,Invalid type")
+					if err != nil {
+						log.Error(err)
+					}
+					return
 				}
-				FindGroupArry := strings.Split(strings.TrimSpace(CommandArray[len(CommandArray)-1]), ",")
 
+				if ChannelState.TypeTag == 2 || ChannelState.TypeTag == 3 && len(CommandArray) >= 4 {
+					if CommandArray[3] == "-liveonly" {
+						ChannelState.SetLiveOnly(true)
+					} else if CommandArray[3] == "-newupcoming" {
+						ChannelState.SetNewUpcoming(true)
+					} else {
+						_, err := s.ChannelMessageSend(m.ChannelID, "`"+CommandArray[3]+"`,Invalid options")
+						if err != nil {
+							log.Error(err)
+						}
+						return
+					}
+				}
+
+				if ChannelState.TypeTag == 2 || ChannelState.TypeTag == 3 && len(CommandArray) >= 5 {
+					if CommandArray[4] == "-newupcoming" {
+						ChannelState.SetNewUpcoming(true)
+					} else if CommandArray[4] == "-liveonly" {
+						ChannelState.SetLiveOnly(true)
+					} else {
+						_, err := s.ChannelMessageSend(m.ChannelID, "`"+CommandArray[4]+"`,Invalid options")
+						if err != nil {
+							log.Error(err)
+						}
+						return
+					}
+				}
+
+				FindGroupArry := strings.Split(strings.TrimSpace(CommandArray[2]), ",")
 				for i := 0; i < len(FindGroupArry); i++ {
 					VTuberGroup, err := FindGropName(FindGroupArry[i])
 					if err != nil {
@@ -931,10 +970,11 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 						return
 					}
 					if CheckPermission(m.Author.ID, m.ChannelID, s) {
-						if database.ChannelCheck(VTuberGroup.ID, m.ChannelID) {
+						ChannelState.SetVtuberGroupID(VTuberGroup.ID)
+						if ChannelState.ChannelCheck() {
 							already = append(already, "`"+VTuberGroup.NameGroup+"`")
 						} else {
-							err := database.AddChannel(m.ChannelID, tagtype, VTuberGroup.ID)
+							err := ChannelState.AddChannel()
 							if err != nil {
 								log.Error(err)
 								_, err := s.ChannelMessageSend(m.ChannelID, "Something error XD")
@@ -954,22 +994,22 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 				if done != nil {
-					_, err := s.ChannelMessageSend(m.ChannelID, "done,@here <@"+m.Author.ID+"> is enable "+strings.Join(done, ",")+" on this channel")
+					_, err := s.ChannelMessageSend(m.ChannelID, "done, <@"+m.Author.ID+"> is enable "+strings.Join(done, ",")+" on this channel")
 					if err != nil {
 						log.Error(err)
 					}
-					if tagtype == 1 {
-						_, err := s.ChannelMessageSend(m.ChannelID, msg1+"\n@here")
+					if ChannelState.TypeTag == 1 {
+						_, err := s.ChannelMessageSend(m.ChannelID, msg1+"\n")
 						if err != nil {
 							log.Error(err)
 						}
-					} else if tagtype == 2 {
-						_, err := s.ChannelMessageSend(m.ChannelID, msg2+"\n@here")
+					} else if ChannelState.TypeTag == 2 {
+						_, err := s.ChannelMessageSend(m.ChannelID, msg2+"\n")
 						if err != nil {
 							log.Error(err)
 						}
 					} else {
-						_, err := s.ChannelMessageSend(m.ChannelID, msg1+"\n"+msg2+"\n@here")
+						_, err := s.ChannelMessageSend(m.ChannelID, msg1+"\n"+msg2+"\n")
 						if err != nil {
 							log.Error(err)
 						}
@@ -999,8 +1039,9 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 						return
 					}
 					if CheckPermission(m.Author.ID, m.ChannelID, s) {
-						if database.ChannelCheck(VTuberGroup.ID, m.ChannelID) {
-							err := database.DelChannel(m.ChannelID, VTuberGroup.ID)
+						ChannelState.SetVtuberGroupID(VTuberGroup.ID)
+						if ChannelState.ChannelCheck() {
+							err := ChannelState.DelChannel()
 							if err != nil {
 								log.Error(err)
 								_, err := s.ChannelMessageSend(m.ChannelID, "Something error XD")
@@ -1023,7 +1064,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 				if done != nil {
-					_, err := s.ChannelMessageSend(m.ChannelID, "done,@here <@"+m.Author.ID+"> is disable "+strings.Join(done, ",")+" from this channel")
+					_, err := s.ChannelMessageSend(m.ChannelID, "done, <@"+m.Author.ID+"> is disable "+strings.Join(done, ",")+" from this channel")
 					if err != nil {
 						log.Error(err)
 					}
@@ -1040,16 +1081,22 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			}
 		} else if CommandArray[0] == Prefix+Update {
-			if len(CommandArray) > 1 {
+			if len(CommandArray) > 2 {
 				if CommandArray[1] == "art" {
-					tagtype = 1
+					ChannelState.SetTypeTag(1)
 				} else if CommandArray[1] == "live" {
-					tagtype = 2
+					ChannelState.SetTypeTag(2)
+				} else if CommandArray[1] == "all" {
+					ChannelState.SetTypeTag(3)
 				} else {
-					tagtype = 3
+					_, err := s.ChannelMessageSend(m.ChannelID, "`"+CommandArray[1]+"`,Invalid type")
+					if err != nil {
+						log.Error(err)
+					}
+					return
 				}
-				FindGroupArry := strings.Split(strings.TrimSpace(CommandArray[len(CommandArray)-1]), ",")
 
+				FindGroupArry := strings.Split(strings.TrimSpace(CommandArray[2]), ",")
 				for i := 0; i < len(FindGroupArry); i++ {
 					VTuberGroup, err := FindGropName(FindGroupArry[i])
 					if err != nil {
@@ -1060,13 +1107,89 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 						return
 					}
 					if CheckPermission(m.Author.ID, m.ChannelID, s) {
-						if database.ChannelCheck(VTuberGroup.ID, m.ChannelID) {
-							err := database.UpdateChannel(m.ChannelID, tagtype, VTuberGroup.ID)
+						ChannelState.SetVtuberGroupID(VTuberGroup.ID)
+						if ChannelState.ChannelCheck() {
+							if ChannelState.TypeTag == 2 || ChannelState.TypeTag == 3 && len(CommandArray) >= 4 {
+								if CommandArray[3] == "-liveonly" {
+									err := ChannelState.SetLiveOnly(true).UpdateChannel("LiveOnly")
+									if err != nil {
+										already = append(already, "`"+VTuberGroup.NameGroup+"`")
+									} else {
+										done = append(done, "`"+VTuberGroup.NameGroup+"`")
+									}
+								} else if CommandArray[3] == "-newupcoming" {
+									err := ChannelState.SetNewUpcoming(true).UpdateChannel("NewUpcoming")
+									if err != nil {
+										already = append(already, "`"+VTuberGroup.NameGroup+"`")
+									} else {
+										done = append(done, "`"+VTuberGroup.NameGroup+"`")
+									}
+								} else if CommandArray[3] == "-rm_liveonly" {
+									err := ChannelState.SetLiveOnly(false).UpdateChannel("LiveOnly")
+									if err != nil {
+										already = append(already, "`"+VTuberGroup.NameGroup+"`")
+									} else {
+										done = append(done, "`"+VTuberGroup.NameGroup+"`")
+									}
+								} else if CommandArray[3] == "-rm_newupcoming" {
+									err := ChannelState.SetNewUpcoming(false).UpdateChannel("NewUpcoming")
+									if err != nil {
+										already = append(already, "`"+VTuberGroup.NameGroup+"`")
+									} else {
+										done = append(done, "`"+VTuberGroup.NameGroup+"`")
+									}
+								} else {
+									_, err := s.ChannelMessageSend(m.ChannelID, "`"+CommandArray[3]+"`,Invalid options")
+									if err != nil {
+										log.Error(err)
+									}
+									return
+								}
+							}
+
+							if ChannelState.TypeTag == 2 || ChannelState.TypeTag == 3 && len(CommandArray) >= 5 {
+								if CommandArray[4] == "-newupcoming" {
+									err := ChannelState.SetNewUpcoming(true).UpdateChannel("NewUpcoming")
+									if err != nil {
+										already = append(already, "`"+VTuberGroup.NameGroup+"`")
+									} else {
+										done = append(done, "`"+VTuberGroup.NameGroup+"`")
+									}
+								} else if CommandArray[4] == "-liveonly" {
+									err := ChannelState.SetLiveOnly(true).UpdateChannel("LiveOnly")
+									if err != nil {
+										already = append(already, "`"+VTuberGroup.NameGroup+"`")
+									} else {
+										done = append(done, "`"+VTuberGroup.NameGroup+"`")
+									}
+								} else if CommandArray[4] == "-rm_liveonly" {
+									err := ChannelState.SetLiveOnly(false).UpdateChannel("LiveOnly")
+									if err != nil {
+										already = append(already, "`"+VTuberGroup.NameGroup+"`")
+									} else {
+										done = append(done, "`"+VTuberGroup.NameGroup+"`")
+									}
+								} else if CommandArray[4] == "-rm_newupcoming" {
+									err := ChannelState.SetNewUpcoming(false).UpdateChannel("NewUpcoming")
+									if err != nil {
+										already = append(already, "`"+VTuberGroup.NameGroup+"`")
+									} else {
+										done = append(done, "`"+VTuberGroup.NameGroup+"`")
+									}
+								} else {
+									_, err := s.ChannelMessageSend(m.ChannelID, "`"+CommandArray[4]+"`,Invalid options")
+									if err != nil {
+										log.Error(err)
+									}
+									return
+								}
+							}
+
+							err := ChannelState.UpdateChannel("Type")
 							if err != nil {
 								already = append(already, "`"+VTuberGroup.NameGroup+"`")
 							} else {
 								done = append(done, "`"+VTuberGroup.NameGroup+"`")
-
 							}
 						} else {
 							_, err := s.ChannelMessageSend(m.ChannelID, "this channel not enable `"+VTuberGroup.NameGroup+"`")
@@ -1088,18 +1211,18 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						log.Error(err)
 					}
-					if tagtype == 1 {
-						_, err := s.ChannelMessageSend(m.ChannelID, msg1+"\n@here")
+					if ChannelState.TypeTag == 1 {
+						_, err := s.ChannelMessageSend(m.ChannelID, msg1+"\n")
 						if err != nil {
 							log.Error(err)
 						}
-					} else if tagtype == 2 {
-						_, err := s.ChannelMessageSend(m.ChannelID, msg2+"\n@here")
+					} else if ChannelState.TypeTag == 2 {
+						_, err := s.ChannelMessageSend(m.ChannelID, msg2+"\n")
 						if err != nil {
 							log.Error(err)
 						}
 					} else {
-						_, err := s.ChannelMessageSend(m.ChannelID, msg1+"\n"+msg2+"\n@here")
+						_, err := s.ChannelMessageSend(m.ChannelID, msg1+"\n"+msg2+"\n")
 						if err != nil {
 							log.Error(err)
 						}
@@ -1286,11 +1409,12 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			}
 		} else if m.Content == Prefix+ChannelState {
-			list, Type := database.ChannelStatus(m.ChannelID)
+			list, Type, LiveOnly, NewUpcoming := database.ChannelStatus(m.ChannelID)
 			if list != nil {
 				var (
 					Typestr string
 				)
+				table.SetHeader([]string{"Group", "Type", "LiveOnly", "NewUpcoming"})
 				for i := 0; i < len(list); i++ {
 					if Type[i] == 1 {
 						Typestr = "Art"
@@ -1299,9 +1423,8 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					} else {
 						Typestr = "All"
 					}
-					table.Append([]string{list[i], Typestr})
+					table.Append([]string{list[i], Typestr, LiveOnly[i], NewUpcoming[i]})
 				}
-				table.SetHeader([]string{"Group", "Type"})
 				table.Render()
 
 				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().

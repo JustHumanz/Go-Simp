@@ -26,7 +26,7 @@ func (NotifData Notif) PushNotif(Color int) {
 	Data := NotifData.TBiliData
 	Group := NotifData.Group
 	Bot := runner.Bot
-	ID, DiscordChannelID := database.ChannelTag(NotifData.MemberID, 1)
+	ID, DiscordChannelID := database.ChannelTag(NotifData.MemberID, 1, "")
 
 	msg := ""
 	tags := ""
@@ -48,6 +48,10 @@ func (NotifData Notif) PushNotif(Color int) {
 		msg = "_"
 	}
 	for i := 0; i < len(DiscordChannelID); i++ {
+		ChannelState := database.DiscordChannel{
+			ChannelID:     DiscordChannelID[i],
+			VtuberGroupID: Group.ID,
+		}
 		UserTagsList := database.GetUserList(ID[i], NotifData.MemberID)
 		if UserTagsList != nil {
 			tags = strings.Join(UserTagsList, " ")
@@ -55,31 +59,36 @@ func (NotifData Notif) PushNotif(Color int) {
 			tags = "_"
 		}
 
-		tmp, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
-			SetAuthor(strings.Title(Group.NameGroup), Group.IconURL).
-			SetTitle(Data.Author).
-			SetURL(Data.URL).
-			SetThumbnail(Data.Avatar).
-			SetDescription(Data.Text).
-			SetImage(NotifData.PhotosImgur).
-			AddField("User Tags", tags).
-			AddField("Similar art", msg).
-			SetFooter("1/"+strconv.Itoa(NotifData.PhotosCount)+" photos", config.BiliBiliIMG).
-			InlineAllFields().
-			SetColor(Color).MessageEmbed)
-		if err != nil {
-			log.Error(tmp, err.Error())
-			match, _ := regexp.MatchString("Unknown Channel", err.Error())
-			if match {
-				log.Info("Delete Discord Channel ", DiscordChannelID[i])
-				database.DelChannel(DiscordChannelID[i], NotifData.MemberID)
+		if tags != "_" && Group.NameGroup != "Independen" {
+			tmp, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
+				SetAuthor(strings.Title(Group.NameGroup), Group.IconURL).
+				SetTitle(Data.Author).
+				SetURL(Data.URL).
+				SetThumbnail(Data.Avatar).
+				SetDescription(Data.Text).
+				SetImage(NotifData.PhotosImgur).
+				AddField("User Tags", tags).
+				AddField("Similar art", msg).
+				SetFooter("1/"+strconv.Itoa(NotifData.PhotosCount)+" photos", config.BiliBiliIMG).
+				InlineAllFields().
+				SetColor(Color).MessageEmbed)
+			if err != nil {
+				log.Error(tmp, err.Error())
+				match, _ := regexp.MatchString("Unknown Channel", err.Error())
+				if match {
+					log.Info("Delete Discord Channel ", DiscordChannelID[i])
+					err = ChannelState.DelChannel()
+					if err != nil {
+						log.Error(err)
+					}
+				}
 			}
-		}
-		err = engine.Reacting(map[string]string{
-			"ChannelID": DiscordChannelID[i],
-		}, Bot)
-		if err != nil {
-			log.Error(err)
+			err = engine.Reacting(map[string]string{
+				"ChannelID": DiscordChannelID[i],
+			}, Bot)
+			if err != nil {
+				log.Error(err)
+			}
 		}
 	}
 }

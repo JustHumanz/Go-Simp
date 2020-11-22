@@ -1,3 +1,5 @@
+- Specially for Independent fan art will not be sent if there no one user/role tagged
+- Add -liveonly -newupcoming and -rm_liveonly -rm_newupcoming
 - Add ArkNET  
 - Make a form for add New Vtuber
 - Change context timeout from 30s to 120s 

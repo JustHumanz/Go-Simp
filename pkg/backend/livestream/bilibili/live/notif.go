@@ -18,7 +18,7 @@ import (
 func (Data *LiveBili) Tamod() {
 	MemberID := Data.Member.ID
 	Bot := runner.Bot
-	id, DiscordChannelID := database.ChannelTag(MemberID, 2)
+	id, DiscordChannelID := database.ChannelTag(MemberID, 2, "")
 	for i, DiscordChannel := range DiscordChannelID {
 		UserTagsList := database.GetUserList(id[i], MemberID)
 		if UserTagsList != nil {

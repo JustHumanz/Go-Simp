@@ -32,12 +32,17 @@ var (
 
 //SendNude Send to Discord channel
 func (Data PushData) SendNude() error {
-	ID, DiscordChannelID := database.ChannelTag(Data.Group.MemberID, 1)
+	ID, DiscordChannelID := database.ChannelTag(Data.Group.MemberID, 1, "")
 	wg := new(sync.WaitGroup)
 	url := Data.Twitter.Url
 	Bot := runner.Bot
 	for i := 0; i < len(DiscordChannelID); i++ {
 		wg.Add(1)
+
+		ChannelState := database.DiscordChannel{
+			ChannelID:     DiscordChannelID[i],
+			VtuberGroupID: Data.Group.GroupID,
+		}
 		UserTagsList := database.GetUserList(ID[i], Data.Group.MemberID)
 
 		go func(DiscordChannel string, wg *sync.WaitGroup) {
@@ -50,27 +55,32 @@ func (Data PushData) SendNude() error {
 				} else {
 					tags = "_"
 				}
-				msg, err := Bot.ChannelMessageSendEmbed(DiscordChannel, engine.NewEmbed().
-					SetAuthor(strings.Title(Data.Group.GroupName), Data.Group.GroupIcon).
-					SetTitle(Data.UserName+"(@"+Data.ScreenName+")").
-					SetURL(url).
-					SetThumbnail(strings.Replace(Data.Avatar, "_normal.jpg", ".jpg", -1)).
-					SetDescription(RemoveTwitterShortLink(Data.Text)).
-					SetImage(Data.Image).
-					AddField("User Tags", tags).
-					SetColor(Color).
-					SetFooter(Data.Msg, config.TwitterIMG).MessageEmbed)
-				if err != nil {
-					log.Error(msg, err)
-					match, _ := regexp.MatchString("Unknown Channel", err.Error())
-					if match {
-						log.Info("Delete Discord Channel ", DiscordChannel)
-						database.DelChannel(DiscordChannel, Data.Group.GroupID)
+				if tags != "_" && Data.Group.GroupName != "Independen" {
+					msg, err := Bot.ChannelMessageSendEmbed(DiscordChannel, engine.NewEmbed().
+						SetAuthor(strings.Title(Data.Group.GroupName), Data.Group.GroupIcon).
+						SetTitle(Data.UserName+"(@"+Data.ScreenName+")").
+						SetURL(url).
+						SetThumbnail(strings.Replace(Data.Avatar, "_normal.jpg", ".jpg", -1)).
+						SetDescription(RemoveTwitterShortLink(Data.Text)).
+						SetImage(Data.Image).
+						AddField("User Tags", tags).
+						SetColor(Color).
+						SetFooter(Data.Msg, config.TwitterIMG).MessageEmbed)
+					if err != nil {
+						log.Error(msg, err)
+						match, _ := regexp.MatchString("Unknown Channel", err.Error())
+						if match {
+							log.Info("Delete Discord Channel ", DiscordChannel)
+							err = ChannelState.DelChannel()
+							if err != nil {
+								log.Error(err)
+							}
+						}
 					}
+					engine.Reacting(map[string]string{
+						"ChannelID": DiscordChannel,
+					}, Bot)
 				}
-				engine.Reacting(map[string]string{
-					"ChannelID": DiscordChannel,
-				}, Bot)
 			} else {
 				log.WithFields(log.Fields{
 					"Old URL": URLTMP,

@@ -1449,6 +1449,20 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Kanae",
+                    "EN_Name":"Kana-Kana",
+                    "JP_Name":"叶",
+                    "Hashtag": {
+                        "Twitter": "#かな絵",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCspv01oxUFf_MTSipURRhkA",
+                    "BiliBili_ID": 434563934,
+                    "BiliRoom_ID": 21449068,
+                    "Twitter_Username": "Kanae_2434",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Hanamaki",
                     "EN_Name":"Hana Macchia",
                     "JP_Name":"ハナ・マキア",
