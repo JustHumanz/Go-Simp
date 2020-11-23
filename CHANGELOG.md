@@ -2,6 +2,7 @@ v0.3.4
 - Specially for Independent fan art will not be sent if there no one user/role tagged
 - Add -liveonly -newupcoming and -rm_liveonly -rm_newupcoming see at [here](https://go-simp.human-z.tech/Exec/) 
 - Add ArkNET  
+- Remove `@here`
 
 v0.2.4
 - Change context timeout from 30s to 120s 
