@@ -3,11 +3,11 @@ v0.3.4
 - Add -liveonly -newupcoming and -rm_liveonly -rm_newupcoming see at [here](https://go-simp.human-z.tech/Exec/) 
 - Add ArkNET  
 
-v0.1.4
+v0.2.4
 - Change context timeout from 30s to 120s 
 - Remove all user when a channel was disable one or more vtuber groups
 
-v0.1.3
+v0.2.3
 - Change Multiple Region in yt to single Region
 - Change `Roles tags` to `Roles info`
 
@@ -24,3 +24,5 @@ v0.1.1
 
 v0.0.1
 - Move holoCN to Independen
+- Add BiliBili fanart
+- Change Twitterscraper to official api
