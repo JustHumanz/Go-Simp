@@ -1,32 +1,36 @@
 package discordhandler
 
 import (
+	"errors"
+	"regexp"
 	"strings"
 
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"
+	log "github.com/sirupsen/logrus"
 )
 
 //Prefix command
 const (
-	Enable       = "enable"
-	Disable      = "disable"
-	Update       = "update"
-	TagMe        = "tag me"
-	SetReminder  = "set reminder"
-	DelTag       = "del tag"
-	MyTags       = "my tags"
-	TagRoles     = "tag roles"
-	RolesTags    = "roles info"
-	DelRoles     = "del roles"
-	ChannelState = "channel state"
-	VtuberData   = "vtuber data"
-	Subscriber   = "subscriber"
-	Upcoming     = "upcoming"
-	Past         = "past"
-	Live         = "live"
+	Enable        = "enable"
+	Disable       = "disable"
+	Update        = "update"
+	TagMe         = "tag me"
+	SetReminder   = "set reminder"
+	DelTag        = "del tag"
+	MyTags        = "my tags"
+	TagRoles      = "tag roles"
+	RolesTags     = "roles info"
+	DelRoles      = "del roles"
+	RolesReminder = "roles reminder"
+	ChannelState  = "channel state"
+	VtuberData    = "vtuber data"
+	Subscriber    = "subscriber"
+	Upcoming      = "upcoming"
+	Past          = "past"
+	Live          = "live"
 )
 
 //StartInit running the fe
@@ -61,7 +65,6 @@ func StartInit(path string) error {
 
 //ValidName Find a valid name from user input
 func ValidName(Name string) Memberst {
-
 	for _, Group := range engine.GroupData {
 		for _, Member := range database.GetName(Group.ID) {
 			if Name == strings.ToLower(Member.Name) || Name == strings.ToLower(Member.JpName) {
@@ -77,4 +80,91 @@ func ValidName(Name string) Memberst {
 		}
 	}
 	return Memberst{}
+}
+
+//FindName Find a valid Vtuber name from message handler
+func FindName(MemberName string) NameStruct {
+	for _, Group := range engine.GroupData {
+		for _, Name := range database.GetName(Group.ID) {
+			if strings.ToLower(Name.Name) == MemberName || strings.ToLower(Name.JpName) == MemberName {
+				return NameStruct{
+					GroupName:  Group.NameGroup,
+					GroupID:    Group.ID,
+					MemberName: Name.Name,
+					MemberID:   Name.ID,
+				}
+			}
+		}
+	}
+	return NameStruct{}
+
+}
+
+//NameStruct struct
+type NameStruct struct {
+	GroupName  string
+	GroupID    int64
+	MemberName string
+	MemberID   int64
+}
+
+//FindGropName Find a valid Vtuber Group from message handler
+func FindGropName(GroupName string) (database.GroupName, error) {
+	for _, Group := range engine.GroupData {
+		if strings.ToLower(Group.NameGroup) == strings.ToLower(GroupName) {
+			return Group, nil
+		}
+	}
+	return database.GroupName{}, errors.New(GroupName + " Name Vtuber not valid")
+}
+
+//RemovePic Remove twitter pic
+func RemovePic(text string) string {
+	return regexp.MustCompile(`(?m)^(.*?)pic\.twitter.com\/.+`).ReplaceAllString(text, "${1}$2")
+}
+
+//GetAuthorAvatar Get twitter avatar
+func GetAuthorAvatar(username string) string {
+	var (
+		bit     []byte
+		curlerr error
+		avatar  string
+		url     = "https://mobile.twitter.com/" + regexp.MustCompile("[[:^ascii:]]").ReplaceAllLiteralString(username, "")
+	)
+	bit, curlerr = engine.Curl(url, nil)
+	if curlerr != nil {
+		bit, curlerr = engine.CoolerCurl(url, nil)
+		if curlerr != nil {
+			log.Error(curlerr)
+		}
+	}
+
+	re := regexp.MustCompile(`(?ms)avatar.*?(http.*?)"`)
+	if len(re.FindStringIndex(string(bit))) > 0 {
+		re2 := regexp.MustCompile(`<img[^>]+\bsrc=["']([^"']+)["']`)
+		submatchall := re2.FindAllStringSubmatch(re.FindString(string(bit)), -1)
+		for _, element := range submatchall {
+			avatar = strings.Replace(element[1], "normal.jpg", "400x400.jpg", -1)
+		}
+	}
+	return avatar
+}
+
+//GetUserAvatar Get bilibili user avatar
+func (Data DynamicSvr) GetUserAvatar() string {
+	return Data.Data.Card.Desc.UserProfile.Info.Face
+}
+
+//CheckReg Check available region
+func CheckReg(GroupName, Reg string) bool {
+	for Key, Val := range engine.RegList {
+		if strings.ToLower(Key) == strings.ToLower(GroupName) {
+			for _, Region := range strings.Split(strings.ToLower(Val), ",") {
+				if Region == Reg {
+					return true
+				}
+			}
+		}
+	}
+	return false
 }

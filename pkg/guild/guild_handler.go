@@ -61,7 +61,8 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 						SetImage(H3llcome[rand.Intn(len(H3llcome))]).
 						SetColor(14807034).
 						AddField("Setup", "You can watch [here](https://github.com/JustHumanz/Go-Simp/blob/main/Guide.md)").
-						AddField("Need support?", "Join [dev server](https://discord.com/invite/ydWC5knbJT)").MessageEmbed)
+						AddField("Need support?", "Join [dev server](https://discord.com/invite/ydWC5knbJT)").
+						InlineAllFields().MessageEmbed)
 
 					//send server name to my discord
 					err := DataGuild.InputGuild()

@@ -1,3 +1,6 @@
+v0.4.5
+- Add reminder for roles state #35
+
 v0.3.5
 - Fix `Enable` command #34
 

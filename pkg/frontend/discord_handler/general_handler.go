@@ -2,7 +2,6 @@ package discordhandler
 
 import (
 	"encoding/json"
-	"errors"
 	"regexp"
 	"strconv"
 	"strings"
@@ -590,8 +589,40 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if CheckPermission(m.Author.ID, m.ChannelID, s) {
 				Already = nil
 				Done = nil
-				VtuberName := strings.Split(strings.TrimSpace(strings.Replace(m.Content, Prefix+TagRoles, "", -1)), " ")
+				UserInput := strings.Replace(m.Content, Prefix+TagRoles, "", -1)
+				ReminderUser := 0
+				re := regexp.MustCompile(`(?m)-setreminder\s[1-9].`)
 
+				if len(re.FindAllString(UserInput, -1)) > 0 {
+					tmpvar := re.FindAllString(UserInput, -1)[0]
+					if tmpvar[len(tmpvar)-2:] != "" {
+						tmpvar2 := tmpvar[len(tmpvar)-2:]
+						tmpvar3, err := strconv.Atoi(tmpvar2[:len(tmpvar2)-1] + "6")
+						if err != nil {
+							log.Error(err)
+						} else {
+							ReminderUser = tmpvar3
+						}
+					} else {
+						tmpvar2, err := strconv.Atoi(tmpvar + "6")
+						if err != nil {
+							log.Error(err)
+						} else {
+							ReminderUser = tmpvar2
+						}
+					}
+
+					if ReminderUser > 67 {
+						s.ChannelMessageSend(m.ChannelID, "Can't set Reminder over than 60 Minutes")
+						return
+					}
+					UserInput = strings.TrimSpace(strings.Replace(UserInput, tmpvar, "", -1))
+
+				} else {
+					UserInput = strings.TrimSpace(strings.Replace(UserInput, "-setreminder", "", -1))
+				}
+
+				VtuberName := strings.Split(strings.TrimSpace(UserInput), " ")
 				guild, err := s.Guild(m.GuildID)
 				if err != nil {
 					log.Error(err)
@@ -623,6 +654,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													Channel_ID:      m.ChannelID,
 													GroupID:         VTuberGroup.ID,
 													Human:           false,
+													Reminder:        ReminderUser,
 												}
 												err := User.Adduser(Member.ID)
 												if err != nil {
@@ -686,6 +718,8 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 											DiscordUserName: Role.Name,
 											Channel_ID:      m.ChannelID,
 											GroupID:         Member.GroupID,
+											Human:           false,
+											Reminder:        ReminderUser,
 										}
 										err := User.Adduser(Member.MemberID)
 										if err != nil {
@@ -790,7 +824,6 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													Already = append(Already, "`"+Member.Name+"`")
 												} else {
 													Done = append(Done, "`"+Member.Name+"`")
-
 												}
 											}
 											if Already != nil {
@@ -854,7 +887,6 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 											Already = append(Already, "`"+tmp[i]+"`")
 										} else {
 											Done = append(Done, "`"+tmp[i]+"`")
-
 										}
 
 										if Already != nil {
@@ -904,6 +936,166 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			} else {
 				_, err := s.ChannelMessageSend(m.ChannelID, "You don't have enough permission to use this command,Only user with permission `Manage Channel or Higher` can use this command")
+				if err != nil {
+					log.Error(err)
+				}
+			}
+		} else if strings.HasPrefix(m.Content, Prefix+RolesReminder) {
+			if CheckPermission(m.Author.ID, m.ChannelID, s) {
+				Already = nil
+				Done = nil
+				UserInput := strings.Replace(m.Content, Prefix+RolesReminder, "", -1)
+				VtuberName := strings.Split(strings.TrimSpace(UserInput), " ")
+				tmpvar := VtuberName[len(VtuberName)-1]
+
+				ReminderUser, err := strconv.Atoi(tmpvar[:len(tmpvar)-1] + "6")
+				if err != nil {
+					log.Error(err)
+					_, err := s.ChannelMessageSend(m.ChannelID, "Invalid number")
+					if err != nil {
+						log.Error(err)
+					}
+					return
+				} else if ReminderUser > 67 {
+					s.ChannelMessageSend(m.ChannelID, "Can't set Reminder over than 60 Minutes")
+					return
+				}
+
+				guild, err := s.Guild(m.GuildID)
+				if err != nil {
+					log.Error(err)
+				}
+
+				if len(VtuberName[len(VtuberName)-2:]) > 0 {
+					tmp := strings.Split(VtuberName[len(VtuberName)-2:][0], ",")
+					for _, Name := range tmp {
+						Data := FindName(Name)
+						if Data.GroupID == 0 {
+							VTuberGroup, err := FindGropName(Name)
+							if err != nil {
+								log.Error(err)
+								_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
+								if err != nil {
+									log.Error(err)
+								}
+								return
+							}
+
+							if database.CheckChannelEnable(m.ChannelID, Name, VTuberGroup.ID) {
+								for _, Role := range guild.Roles {
+									for _, UserRole := range VtuberName {
+										if UserRole == Role.Mention() {
+											for _, Member := range database.GetName(VTuberGroup.ID) {
+												User := database.UserStruct{
+													DiscordID:       Role.ID,
+													DiscordUserName: Role.Name,
+													Channel_ID:      m.ChannelID,
+													GroupID:         VTuberGroup.ID,
+													Human:           false,
+													Reminder:        ReminderUser,
+												}
+												err := User.UpdateReminder(Member.ID)
+												if err != nil {
+													log.Error(err)
+													_, err := s.ChannelMessageSend(m.ChannelID, Role.Mention()+" not tag `"+VTuberGroup.NameGroup+"`")
+													if err != nil {
+														log.Error(err)
+													}
+													return
+												} else {
+													Done = append(Done, "`"+Member.Name+"`")
+												}
+											}
+											if Done != nil {
+												_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+													SetDescription(Role.Mention()+" Change reminder to "+strconv.Itoa(ReminderUser)+"\n"+strings.Join(Done, " ")).
+													AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
+													InlineAllFields().
+													SetThumbnail(config.GoSimpIMG).
+													SetFooter("Use \""+config.PGeneral+RolesTags+" @"+Role.Name+"\" to show role tags list").
+													SetColor(Color).MessageEmbed)
+												if err != nil {
+													log.Error(err)
+												}
+												Done = nil
+											}
+										}
+									}
+								}
+							} else {
+								_, err := s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+VTuberGroup.NameGroup+"`")
+								if err != nil {
+									log.Error(err)
+								}
+								return
+							}
+						} else {
+							MemberTag = append(MemberTag, Data)
+						}
+						Done = nil
+					}
+					for i, Member := range MemberTag {
+						if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.GroupID) {
+							for _, Role := range guild.Roles {
+								for _, UserRole := range VtuberName {
+									if UserRole == Role.Mention() {
+										User := database.UserStruct{
+											DiscordID:       Role.ID,
+											DiscordUserName: Role.Name,
+											Channel_ID:      m.ChannelID,
+											GroupID:         Member.GroupID,
+											Human:           false,
+											Reminder:        ReminderUser,
+										}
+										err := User.UpdateReminder(Member.MemberID)
+										if err != nil {
+											log.Error(err)
+											_, err := s.ChannelMessageSend(m.ChannelID, Role.Mention()+" not tag `"+Member.MemberName+"`")
+											if err != nil {
+												log.Error(err)
+											}
+											return
+										} else {
+											Done = append(Done, "`"+tmp[i]+"`")
+										}
+									}
+
+									if Done != nil {
+										_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+											SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+											SetDescription(Role.Mention()+"Change reminder to "+strconv.Itoa(ReminderUser)+"\n"+strings.Join(Done, " ")).
+											SetThumbnail(config.GoSimpIMG).
+											SetFooter("Use \""+config.PGeneral+RolesTags+" @"+Role.Name+"\" to show you tags list").
+											SetColor(Color).MessageEmbed)
+										if err != nil {
+											log.Error(err)
+										}
+										Done = nil
+									}
+								}
+							}
+
+						} else {
+							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+								SetDescription("look like this channel not enable `"+Member.GroupName+"`").
+								SetThumbnail(config.GoSimpIMG).
+								SetColor(Color).MessageEmbed)
+							if err != nil {
+								log.Error(err)
+							}
+							return
+						}
+					}
+				} else {
+					_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+RolesReminder+"` command")
+					if err != nil {
+						log.Error(err)
+					}
+				}
+			} else {
+				_, err := s.ChannelMessageSend(m.ChannelID, "You don't have enough permission to use this command,Only user with permission `Manage Channel or Higher` can use this commandYou don't have enough permission to use this command")
 				if err != nil {
 					log.Error(err)
 				}
@@ -1606,89 +1798,4 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 		}
 	}
-}
-
-//FindName Find a valid Vtuber name from message handler
-func FindName(MemberName string) NameStruct {
-	for _, Group := range engine.GroupData {
-		for _, Name := range database.GetName(Group.ID) {
-			if strings.ToLower(Name.Name) == MemberName || strings.ToLower(Name.JpName) == MemberName {
-				return NameStruct{
-					GroupName: Group.NameGroup,
-					GroupID:   Group.ID,
-					MemberID:  Name.ID,
-				}
-			}
-		}
-	}
-	return NameStruct{}
-
-}
-
-//NameStruct struct
-type NameStruct struct {
-	GroupName string
-	GroupID   int64
-	MemberID  int64
-}
-
-//FindGropName Find a valid Vtuber Group from message handler
-func FindGropName(GroupName string) (database.GroupName, error) {
-	for _, Group := range engine.GroupData {
-		if strings.ToLower(Group.NameGroup) == strings.ToLower(GroupName) {
-			return Group, nil
-		}
-	}
-	return database.GroupName{}, errors.New(GroupName + " Name Vtuber not valid")
-}
-
-//RemovePic Remove twitter pic
-func RemovePic(text string) string {
-	return regexp.MustCompile(`(?m)^(.*?)pic\.twitter.com\/.+`).ReplaceAllString(text, "${1}$2")
-}
-
-//GetAuthorAvatar Get twitter avatar
-func GetAuthorAvatar(username string) string {
-	var (
-		bit     []byte
-		curlerr error
-		avatar  string
-		url     = "https://mobile.twitter.com/" + regexp.MustCompile("[[:^ascii:]]").ReplaceAllLiteralString(username, "")
-	)
-	bit, curlerr = engine.Curl(url, nil)
-	if curlerr != nil {
-		bit, curlerr = engine.CoolerCurl(url, nil)
-		if curlerr != nil {
-			log.Error(curlerr)
-		}
-	}
-
-	re := regexp.MustCompile(`(?ms)avatar.*?(http.*?)"`)
-	if len(re.FindStringIndex(string(bit))) > 0 {
-		re2 := regexp.MustCompile(`<img[^>]+\bsrc=["']([^"']+)["']`)
-		submatchall := re2.FindAllStringSubmatch(re.FindString(string(bit)), -1)
-		for _, element := range submatchall {
-			avatar = strings.Replace(element[1], "normal.jpg", "400x400.jpg", -1)
-		}
-	}
-	return avatar
-}
-
-//GetUserAvatar Get bilibili user avatar
-func (Data DynamicSvr) GetUserAvatar() string {
-	return Data.Data.Card.Desc.UserProfile.Info.Face
-}
-
-//CheckReg Check available region
-func CheckReg(GroupName, Reg string) bool {
-	for Key, Val := range engine.RegList {
-		if strings.ToLower(Key) == strings.ToLower(GroupName) {
-			for _, Region := range strings.Split(strings.ToLower(Val), ",") {
-				if Region == Reg {
-					return true
-				}
-			}
-		}
-	}
-	return false
 }
