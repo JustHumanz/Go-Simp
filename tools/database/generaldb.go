@@ -236,13 +236,19 @@ func (Data UserStruct) Adduser(MemberID int64) error {
 		return errors.New("Already registered")
 	} else {
 		stmt, err := DB.Prepare(`INSERT INTO User (DiscordID,DiscordUserName,Human,Reminder,VtuberMember_id,Channel_id) values(?,?,?,?,?,?)`)
-		BruhMoment(err, "", false)
+		if err != nil {
+			return err
+		}
 		defer stmt.Close()
 		res, err := stmt.Exec(Data.DiscordID, Data.DiscordUserName, Data.Human, Data.Reminder, MemberID, ChannelID)
-		BruhMoment(err, "", false)
+		if err != nil {
+			return err
+		}
 
 		_, err = res.LastInsertId()
-		BruhMoment(err, "", false)
+		if err != nil {
+			return err
+		}
 
 		return nil
 	}
@@ -250,16 +256,15 @@ func (Data UserStruct) Adduser(MemberID int64) error {
 
 func (Data UserStruct) UpdateReminder(MemberID int64) error {
 	ChannelID := GetChannelID(Data.Channel_ID, Data.GroupID)
-
-	stmt, err := DB.Prepare(`Update User set Reminder=? where DiscordID=? And VtuberMember_id=? And Channel_id=?`)
-	BruhMoment(err, "", false)
-	defer stmt.Close()
-	res, err := stmt.Exec(Data.Reminder, Data.DiscordID, MemberID, ChannelID)
-	BruhMoment(err, "", false)
-
-	_, err = res.LastInsertId()
-	BruhMoment(err, "", false)
-
+	tmp := CheckUser(Data.DiscordID, MemberID, ChannelID)
+	if tmp {
+		_, err := DB.Exec(`Update User set Reminder=? where DiscordID=? And VtuberMember_id=? And Channel_id=?`, Data.Reminder, Data.DiscordID, MemberID, ChannelID)
+		if err != nil {
+			return err
+		}
+	} else {
+		return errors.New("User not tag " + strconv.Itoa(int(MemberID)))
+	}
 	return nil
 }
 
@@ -280,9 +285,9 @@ func (Data UserStruct) Deluser(MemberID int64) error {
 }
 
 //Check user if already tagged
-func CheckUser(DiscordID string, MemberID int64, Channel_ChannelID int) bool {
+func CheckUser(DiscordID string, MemberID int64, ChannelChannelID int) bool {
 	var tmp int
-	row := DB.QueryRow("SELECT id FROM User WHERE DiscordID=? AND VtuberMember_id=? AND Channel_id=?", DiscordID, MemberID, Channel_ChannelID)
+	row := DB.QueryRow("SELECT id FROM User WHERE DiscordID=? AND VtuberMember_id=? AND Channel_id=?", DiscordID, MemberID, ChannelChannelID)
 	err := row.Scan(&tmp)
 	if err != nil || err == sql.ErrNoRows {
 		return false
