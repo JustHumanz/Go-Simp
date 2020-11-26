@@ -1,3 +1,6 @@
+v0.4.6
+- Change Guide URL
+
 v0.4.5
 - Add reminder for roles state #35
 

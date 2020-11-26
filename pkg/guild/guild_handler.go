@@ -56,11 +56,11 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 				if Channel.Type == 0 && BotPermission&2048 != 0 {
 					s.ChannelMessageSendEmbed(Channel.ID, engine.NewEmbed().
 						SetTitle("Thx for invite me to this server <3 ").
-						SetURL("https://github.com/JustHumanz/Go-Simp/blob/main/Guide.md").
+						SetURL("https://go-simp.human-z.tech/Guide/").
 						SetThumbnail(config.GoSimpIMG).
 						SetImage(H3llcome[rand.Intn(len(H3llcome))]).
 						SetColor(14807034).
-						AddField("Setup", "You can watch [here](https://github.com/JustHumanz/Go-Simp/blob/main/Guide.md)").
+						AddField("Setup", "You can watch [here](https://go-simp.human-z.tech/Guide/)").
 						AddField("Need support?", "Join [dev server](https://discord.com/invite/ydWC5knbJT)").
 						InlineAllFields().MessageEmbed)
 
