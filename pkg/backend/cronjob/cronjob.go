@@ -17,12 +17,12 @@ func InitCron() {
 	c.Start()
 
 	c.AddFunc("@every 0h1m0s", twitter.CheckNew)
-	c.AddFunc("@every 0h2m0s", bilibili.CheckNew)
+	c.AddFunc("@every 0h1m30s", bilibili.CheckNew)
 
 	c.AddFunc("@every 0h5m0s", youtube.CheckSchedule)
 	c.AddFunc("@every 2h0m0s", youtube.CheckPrivate)
-	c.AddFunc("@every 0h5m0s", live.CheckSchedule)
-	c.AddFunc("@every 0h5m0s", space.CheckVideo)
+	c.AddFunc("@every 0h4m0s", live.CheckSchedule)
+	c.AddFunc("@every 0h6m0s", space.CheckVideo)
 
 	c.AddFunc("@every 1h0m0s", subscriber.CheckYtSubsCount)
 	c.AddFunc("@every 0h15m0s", subscriber.CheckTwFollowCount)

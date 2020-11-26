@@ -38,12 +38,11 @@ func CheckVideo() {
 						MemberFace: Member.BiliBiliAvatar,
 						MemberUrl:  "https://space.bilibili.com/" + strconv.Itoa(Member.BiliBiliID),
 					}
-					Data.Check("10").SendNude()
-					//time.Sleep(time.Duration(int64(rand.Intn((10-4)+4))) * time.Second)
+					Data.Check("3").SendNude()
 
 				}
 			}(Group, Member, wg)
-			time.Sleep(time.Duration(rand.Intn(config.RandomSleep)) * time.Millisecond)
+			time.Sleep(time.Duration(rand.Intn(config.RandomSleep-400)+400) * time.Millisecond)
 		}
 	}
 	wg.Wait()

@@ -223,9 +223,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetDescription("You Already Added\n"+strings.Join(Already, " ")+" from your tag list").
 									AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
-									InlineAllFields().
 									SetThumbnail(config.GoSimpIMG).
 									SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
+									InlineAllFields().
 									SetColor(Color).MessageEmbed)
 								if err != nil {
 									log.Error(err)
@@ -236,9 +236,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetDescription("You Add\n"+strings.Join(Done, " ")+" to your tag list").
 									AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
-									InlineAllFields().
 									SetThumbnail(config.GoSimpIMG).
 									SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
+									InlineAllFields().
 									SetColor(Color).MessageEmbed)
 								if err != nil {
 									log.Error(err)
@@ -493,8 +493,8 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetDescription("Already Removed from your tags or You never tag them\n"+strings.Join(Already, " ")).
 									AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
 									SetThumbnail(config.GoSimpIMG).
-									InlineAllFields().
 									SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
+									InlineAllFields().
 									SetColor(Color).MessageEmbed)
 								if err != nil {
 									log.Error(err)
@@ -506,8 +506,8 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetDescription("You remove "+strings.Join(Done, " ")+" from your tag list").
 									AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
 									SetThumbnail(config.GoSimpIMG).
-									InlineAllFields().
 									SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
+									InlineAllFields().
 									SetColor(Color).MessageEmbed)
 								if err != nil {
 									log.Error(err)
@@ -669,9 +669,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 													SetDescription(Role.Mention()+" Already Added\n"+strings.Join(Already, " ")).
 													AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
-													InlineAllFields().
 													SetThumbnail(config.GoSimpIMG).
 													SetFooter("Use \""+config.PGeneral+RolesTags+" @"+Role.Name+"\" to role tags list").
+													InlineAllFields().
 													SetColor(Color).MessageEmbed)
 												if err != nil {
 													log.Error(err)
@@ -683,9 +683,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 													SetDescription(Role.Mention()+"Add\n"+strings.Join(Done, " ")).
 													AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
-													InlineAllFields().
 													SetThumbnail(config.GoSimpIMG).
 													SetFooter("Use \""+config.PGeneral+RolesTags+" @"+Role.Name+"\" to show role tags list").
+													InlineAllFields().
 													SetColor(Color).MessageEmbed)
 												if err != nil {
 													log.Error(err)
@@ -831,9 +831,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 													SetDescription(Role.Mention()+" Already Remove "+strings.Join(Already, " ")+" from tags list or "+Role.Mention()+" never add them \n").
 													AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
-													InlineAllFields().
 													SetThumbnail(config.GoSimpIMG).
 													SetFooter("Use \""+config.PGeneral+RolesTags+" @"+Role.Name+"\" to role tags list").
+													InlineAllFields().
 													SetColor(Color).MessageEmbed)
 												if err != nil {
 													log.Error(err)
@@ -845,9 +845,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 													SetDescription(Role.Mention()+" Remove\n"+strings.Join(Done, " ")+"\n from tag list").
 													AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
-													InlineAllFields().
 													SetThumbnail(config.GoSimpIMG).
 													SetFooter("Use \""+config.PGeneral+RolesTags+" @"+Role.Name+"\" to show role tags list").
+													InlineAllFields().
 													SetColor(Color).MessageEmbed)
 												if err != nil {
 													log.Error(err)
@@ -1011,9 +1011,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 													SetDescription(Role.Mention()+" Change reminder to "+strconv.Itoa(ReminderUser)+"\n"+strings.Join(Done, " ")).
 													AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
-													InlineAllFields().
 													SetThumbnail(config.GoSimpIMG).
 													SetFooter("Use \""+config.PGeneral+RolesTags+" @"+Role.Name+"\" to show role tags list").
+													InlineAllFields().
 													SetColor(Color).MessageEmbed)
 												if err != nil {
 													log.Error(err)

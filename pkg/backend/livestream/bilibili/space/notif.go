@@ -25,25 +25,23 @@ func (Data CheckSctruct) SendNude() {
 		}).Info("New video uploaded")
 
 		for _, video := range Data.VideoList {
-			Embed := engine.NewEmbed().
-				SetAuthor(Data.MemberName, Data.MemberFace, Data.MemberUrl).
-				SetTitle("Uploaded new video").
-				SetDescription(video.Title).
-				SetImage(video.Pic).
-				SetThumbnail(Data.GroupIcon).
-				SetURL("https://www.bilibili.com/video/"+video.Bvid).
-				AddField("Type ", video.VideoType).
-				AddField("Duration ", video.Length).
-				AddField("Viwers ", strconv.Itoa(video.Play)).
-				SetFooter(durafmt.Parse(time.Now().In(loc).Sub(time.Unix(int64(video.Created), 0).In(loc))).LimitFirstN(2).String()+" Ago", config.BiliBiliIMG).
-				InlineAllFields().
-				SetColor(Color).MessageEmbed
-
 			ID, DiscordChannelID := database.ChannelTag(Data.MemberID, 2, "LiveOnly")
 			for i := 0; i < len(DiscordChannelID); i++ {
 				UserTagsList := database.GetUserList(ID[i], Data.MemberID)
 				if UserTagsList != nil {
-					msg, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], Embed)
+					msg, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
+						SetAuthor(Data.MemberName, Data.MemberFace, Data.MemberUrl).
+						SetTitle("Uploaded new video").
+						SetDescription(video.Title).
+						SetImage(video.Pic).
+						SetThumbnail(Data.GroupIcon).
+						SetURL("https://www.bilibili.com/video/"+video.Bvid).
+						AddField("Type ", video.VideoType).
+						AddField("Duration ", video.Length).
+						AddField("Viwers ", strconv.Itoa(video.Play)).
+						SetFooter(durafmt.Parse(time.Now().In(loc).Sub(time.Unix(int64(video.Created), 0).In(loc))).LimitFirstN(2).String()+" Ago", config.BiliBiliIMG).
+						InlineAllFields().
+						SetColor(Color).MessageEmbed)
 					if err != nil {
 						log.Error(msg, err)
 					} else {

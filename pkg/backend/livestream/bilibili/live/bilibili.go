@@ -84,7 +84,7 @@ func CheckSchedule() {
 				}
 				//time.Sleep(time.Duration(int64(rand.Intn((20-8)+8))) * time.Second)
 			}(Group, Member, wg)
-			time.Sleep(time.Duration(rand.Intn(config.RandomSleep)) * time.Millisecond)
+			time.Sleep(time.Duration(rand.Intn(config.RandomSleep-400)+400) * time.Millisecond)
 		}
 		wg.Wait()
 	}

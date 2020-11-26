@@ -85,12 +85,21 @@
             Same like <code>vtbot&gt;tag me</code> command,but this will tag roles (<em>every role separated by space</em>)<br>
             Example: <code>vtbot&gt;tag roles @kanochi-simps hanayori</code> or <code>vtbot&gt;tag roles @fbk-simps @hololive-simps fbk</code>
          </p>
+         <p>
+            In other case if you want to remind before livestream started you can add <code>-setreminder {Minutes}</code><br>
+            Example: <code>vtbot&gt;tag roles @kanochi-simps hanayori -setreminder 40</code>
+         </p>
          <p><code>vtbot&gt;Roles info [roles]</code><br>
             Show all roles info
          </p>
          <p><code>vtbot&gt;Del roles [roles] [Group/Member]</code><br>
             Remove roles from tag list<br>
             Example: <code>vtbot&gt;Del roles @kanochi-simps kanochi</code> or <code>vtbot&gt;Del roles @hololive-simps fbk</code><br>
+         </p>
+         <p><code>vtbot&gt;Roles reminder [roles] [Group/Member] {Minutes}</code><br>
+            Update or Set Roles reminder time<br>
+            Example: <code>vtbot&gt;Roles reminder @kanochi-simps 30</code>
+
          </p>
          <p><h6>Only user with permission “Manage Channel or Higher” can use Tag and Del roles</h6></p>
          <hr>
