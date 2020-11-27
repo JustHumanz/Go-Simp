@@ -8,7 +8,7 @@ import (
 	"time"
 
 	database "github.com/JustHumanz/Go-simp/tools/database"
-	engine "github.com/JustHumanz/Go-simp/tools/engine"
+	network "github.com/JustHumanz/Go-simp/tools/network"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -22,10 +22,10 @@ func (Space *CheckSctruct) Check(limit string) *CheckSctruct {
 		curlerr   error
 		urls      = "https://api.bilibili.com/x/space/arc/search?mid=" + strconv.Itoa(Space.SpaceID) + "&ps=" + limit
 	)
-	body, curlerr = engine.Curl(urls, nil)
+	body, curlerr = network.Curl(urls, nil)
 	if curlerr != nil {
 		log.Info("Trying use tor")
-		body, curlerr = engine.CoolerCurl(urls, nil)
+		body, curlerr = network.CoolerCurl(urls, nil)
 		if curlerr != nil {
 			log.Error(curlerr)
 		} else {

@@ -1,18 +1,14 @@
 package engine
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"image"
 	_ "image/jpeg"
 	_ "image/png"
 	"io"
-	"io/ioutil"
 	"math/rand"
-	"net"
 	"net/http"
-	"net/url"
 	"os"
 	"regexp"
 	"strconv"
@@ -21,6 +17,7 @@ import (
 
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
+	network "github.com/JustHumanz/Go-simp/tools/network"
 	"github.com/bwmarrin/discordgo"
 	"github.com/cenkalti/dominantcolor"
 	log "github.com/sirupsen/logrus"
@@ -71,105 +68,12 @@ func BruhMoment(err error, msg string, exit bool) {
 func GetYtToken() string {
 	FreshToken := config.YtToken[0]
 	for _, Token := range config.YtToken {
-		_, err := Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UCfuz6xYbYFGsWWBi3SpJI1w&key="+Token, nil)
+		_, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UCfuz6xYbYFGsWWBi3SpJI1w&key="+Token, nil)
 		if err == nil {
 			FreshToken = Token
 		}
 	}
 	return FreshToken
-}
-
-//Curl make a http request
-func Curl(url string, addheader []string) ([]byte, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
-	defer cancel()
-
-	var body []byte
-	spaceClient := http.Client{}
-	request, err := http.NewRequest(http.MethodGet, url, nil)
-	if err != nil {
-		return nil, err
-	}
-	request.Header.Set("cache-control", "no-cache")
-	request.Header.Set("User-Agent", RandomAgent())
-	if addheader != nil {
-		request.Header.Set(addheader[0], addheader[1])
-	}
-
-	response, err := spaceClient.Do(request.WithContext(ctx))
-	if err != nil {
-		return nil, err
-	}
-
-	defer response.Body.Close()
-
-	if response.StatusCode != http.StatusOK {
-		log.WithFields(log.Fields{
-			"Status": response.StatusCode,
-			"Reason": response.Status,
-			"URL":    url,
-		}).Error("Status code not daijobu")
-		return nil, errors.New(response.Status)
-	}
-
-	body, err = ioutil.ReadAll(response.Body)
-	if err != nil {
-		return body, err
-
-	}
-
-	return body, nil
-}
-
-//CoolerCurl make a cooler http request *with multitor*
-func CoolerCurl(urls string, addheader []string) ([]byte, error) {
-	counter := 0
-	for {
-		counter++
-		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-		defer cancel()
-		proxyURL, err := url.Parse("http://multi_tor:16379")
-		if err != nil || counter == 3 {
-			return nil, err
-		}
-
-		client := &http.Client{
-			Transport: &http.Transport{
-				Proxy: http.ProxyURL(proxyURL),
-				DialContext: (&net.Dialer{
-					Timeout: 10 * time.Second,
-				}).DialContext,
-			},
-		}
-
-		request, err := http.NewRequest("GET", urls, nil)
-		if err != nil || counter == 3 {
-			return nil, err
-		}
-		request.Header.Set("cache-control", "no-cache")
-		request.Header.Set("User-Agent", RandomAgent())
-		if addheader != nil {
-			request.Header.Set(addheader[0], addheader[1])
-		}
-		response, err := client.Do(request.WithContext(ctx))
-		if err != nil || counter == 3 {
-			return nil, err
-		}
-		defer response.Body.Close()
-
-		if response.StatusCode != http.StatusOK && counter == 3 {
-			return nil, errors.New("Multi Tor get Error")
-		}
-
-		data, err := ioutil.ReadAll(response.Body)
-		if err != nil || counter == 3 {
-			return nil, err
-		}
-
-		if data != nil {
-			return data, nil
-		}
-	}
 }
 
 //FixName change to Title format
@@ -204,12 +108,12 @@ func SaucenaoCheck(url string) (bool, []string, error) {
 		curlerr error
 		urls    = "https://saucenao.com/search.php?db=999&output_type=2&numres=1&url=" + url + "&api_key=" + config.SauceAPI
 	)
-	body, curlerr = Curl(urls, nil)
+	body, curlerr = network.Curl(urls, nil)
 	if curlerr != nil {
 		log.Error(curlerr, string(body))
 		log.Info("Trying use tor")
 
-		body, curlerr = CoolerCurl(urls, nil)
+		body, curlerr = network.CoolerCurl(urls, nil)
 		if curlerr != nil {
 			log.Error(curlerr)
 			return true, nil, curlerr
@@ -300,22 +204,6 @@ func GetColor(filepath, url string) (int, error) {
 	}
 
 	return int(Fix), nil
-}
-
-//RandomAgent Create random useragent for bypass some IDS
-func RandomAgent() string {
-	Agent := []string{"Windows / Firefox 77 [Desktop]: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0",
-		"Linux / Firefox 77 [Desktop]: Mozilla/5.0 (X11; Linux x86_64; rv:77.0) Gecko/20100101 Firefox/77.0",
-		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
-		"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0",
-		"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9",
-		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36",
-		"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0",
-		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36",
-		"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:80.0) Gecko/20100101 Firefox/80.0",
-		"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36",
-		"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1"}
-	return Agent[rand.Intn(len(Agent))]
 }
 
 func Reacting(Data map[string]string, s *discordgo.Session) error {

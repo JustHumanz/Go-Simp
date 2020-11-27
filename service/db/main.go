@@ -17,6 +17,7 @@ import (
 	"github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
+	network "github.com/JustHumanz/Go-simp/tools/network"
 
 	bilibili "github.com/JustHumanz/Go-simp/pkg/backend/livestream/bilibili/live"
 	youtube "github.com/JustHumanz/Go-simp/pkg/backend/livestream/youtube"
@@ -168,7 +169,7 @@ func CheckTBili() {
 					"Group":  DataGroup[k].NameGroup,
 					"Vtuber": DataMember[z].EnName,
 				}).Info("Start crawler T.bilibili")
-				body, err := engine.Curl("https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_name="+url.QueryEscape(DataMember[z].BiliBiliHashtags), nil)
+				body, err := network.Curl("https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_name="+url.QueryEscape(DataMember[z].BiliBiliHashtags), nil)
 				if err != nil {
 					log.Error(err)
 				}
@@ -320,7 +321,7 @@ func CheckVideoSpace() {
 				baseurl := "https://api.bilibili.com/x/space/arc/search?mid=" + strconv.Itoa(Name[k].BiliBiliID) + "&ps=100"
 				url = []string{baseurl + "&tid=1", baseurl + "&tid=3", baseurl + "&tid=4"}
 				for f := 0; f < len(url); f++ {
-					body, err := engine.Curl(url[f], nil)
+					body, err := network.Curl(url[f], nil)
 					if err != nil {
 						log.Error(err, string(body))
 					}

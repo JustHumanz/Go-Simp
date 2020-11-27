@@ -15,10 +15,9 @@ import (
 )
 
 var (
-	H3llcome   = []string{config.Bonjour, config.Howdy, config.Guten, config.Koni, config.Selamat, config.Assalamu, config.Approaching}
-	GuildList  []string
-	PathLiteDB = "./guild.db"
-	BotID      *discordgo.User
+	H3llcome  = []string{config.Bonjour, config.Howdy, config.Guten, config.Koni, config.Selamat, config.Assalamu, config.Approaching}
+	GuildList []string
+	BotID     *discordgo.User
 )
 
 func main() {

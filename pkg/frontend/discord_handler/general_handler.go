@@ -9,6 +9,7 @@ import (
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
+	network "github.com/JustHumanz/Go-simp/tools/network"
 	"github.com/bwmarrin/discordgo"
 	"github.com/olekukonko/tablewriter"
 	log "github.com/sirupsen/logrus"
@@ -36,12 +37,12 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					errcurl error
 					urls    = "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id=" + Dynamic
 				)
-				body, errcurl = engine.Curl(urls, nil)
+				body, errcurl = network.Curl(urls, nil)
 				if errcurl != nil {
 					log.Error(errcurl, string(body))
 					log.Info("Trying use tor")
 
-					body, errcurl = engine.CoolerCurl(urls, nil)
+					body, errcurl = network.CoolerCurl(urls, nil)
 					if errcurl != nil {
 						log.Error(errcurl)
 					}

@@ -1,18 +1,15 @@
 package database
 
 import (
-	"context"
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"math/rand"
-	"net/http"
 	"os"
 	"strconv"
 	"strings"
-	"time"
 
+	network "github.com/JustHumanz/Go-simp/tools/network"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -626,38 +623,10 @@ func GetUserReminderList(ChannelIDDiscord int, Member int64, Reminder int) []str
 
 //Scrapping twitter followers
 func (Data Name) GetTwitterFollow() TwitterUser {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-
-	Client := http.Client{
-		Timeout: time.Second * 30, // Timeout after 30 seconds
-	}
-	request, err := http.NewRequest(http.MethodGet, "https://api.allorigins.win/raw?url=https://socialbearing.com/scripts/get-user.php?user="+Data.TwitterName, nil)
+	body, err := network.Curl("https://api.allorigins.win/raw?url=https://socialbearing.com/scripts/get-user.php?user="+Data.TwitterName, nil)
 	if err != nil {
 		log.Error(err)
 	}
-	request.Header.Set("cache-control", "no-cache")
-	request.Header.Set("User-Agent", "Mozilla/5.0 (X11; MacOS x86_64; rv:81.0) Gecko/20100101 Firefox/81.0")
-
-	result, err := Client.Do(request.WithContext(ctx))
-	if err != nil {
-		log.Error(err)
-	}
-
-	if result.StatusCode != http.StatusOK {
-		log.WithFields(log.Fields{
-			"Status": result.StatusCode,
-			"Reason": result.Status,
-		}).Warn("Status code not daijobu")
-	}
-
-	defer result.Body.Close()
-	body, err := ioutil.ReadAll(result.Body)
-	if err != nil {
-		log.Error(err)
-
-	}
-
 	var Profile TwitterUser
 	err = json.Unmarshal(body, &Profile)
 	if err != nil {
