@@ -2,6 +2,7 @@ v0.4.8
 - Migrate Guild handler to database
 - Create `network` module
 - Back to twitter-scraper
+- Update multitor
 
 v0.4.7
 - Fix `Update` command out of array
