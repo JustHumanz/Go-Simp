@@ -2,14 +2,13 @@ package database
 
 import (
 	"database/sql"
-	"encoding/json"
 	"errors"
 	"math/rand"
 	"os"
 	"strconv"
 	"strings"
 
-	network "github.com/JustHumanz/Go-simp/tools/network"
+	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -622,15 +621,10 @@ func GetUserReminderList(ChannelIDDiscord int, Member int64, Reminder int) []str
 }
 
 //Scrapping twitter followers
-func (Data Name) GetTwitterFollow() TwitterUser {
-	body, err := network.Curl("https://api.allorigins.win/raw?url=https://socialbearing.com/scripts/get-user.php?user="+Data.TwitterName, nil)
+func (Data Name) GetTwitterFollow() (twitterscraper.Profile, error) {
+	profile, err := twitterscraper.GetProfile(Data.TwitterName)
 	if err != nil {
-		log.Error(err)
+		return twitterscraper.Profile{}, err
 	}
-	var Profile TwitterUser
-	err = json.Unmarshal(body, &Profile)
-	if err != nil {
-		log.Error(err)
-	}
-	return Profile
+	return profile, nil
 }

@@ -1,4 +1,4 @@
-package guild
+package main
 
 import (
 	"encoding/json"
@@ -15,7 +15,7 @@ import (
 
 func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 	if g.Unavailable {
-		log.Info("joined unavailable guild", g.Guild.ID)
+		log.Error("joined unavailable guild", g.Guild.ID)
 		return
 	}
 	New := false
@@ -65,7 +65,7 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 						AddField("Need support?", "Join [dev server](https://discord.com/invite/ydWC5knbJT)").
 						InlineAllFields().MessageEmbed)
 
-					//send server name to my discord
+					//Save discord name to database
 					err := DataGuild.InputGuild()
 					if err != nil {
 						log.Error(err)

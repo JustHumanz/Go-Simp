@@ -41,13 +41,13 @@ func CreateDB(Data config.ConfigFile) error {
 		return err
 	}
 
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "GuildList" (
-		"id"	INTEGER NOT NULL,
-		"GuildID"	TEXT,
-		"GuildName"	TEXT,
-		"JoinDate"	TEXT,
-		PRIMARY KEY("id" AUTOINCREMENT)
-	)`)
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS GuildList (
+		id	int(11) NOT NULL AUTO_INCREMENT,
+		GuildID	varchar(256),
+		GuildName	varchar(256),
+		JoinDate	timestamp,
+		PRIMARY KEY(id)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`)
 	if err != nil {
 		return err
 	}
