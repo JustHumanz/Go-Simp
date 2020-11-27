@@ -1,7 +1,9 @@
-package main
+package guild
 
 import (
 	"math/rand"
+
+	"github.com/JustHumanz/Go-simp/tools/database"
 
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	"github.com/JustHumanz/Go-simp/tools/engine"
@@ -28,17 +30,15 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 		}).Info(g.Guild.Name, " join the battle")
 
 		GuildList = append(GuildList, g.Guild.ID)
-		sqlite := OpenLiteDB(PathLiteDB)
 		timejoin, err := g.Guild.JoinedAt.Parse()
 		if err != nil {
 			log.Error(err)
 			return
 		}
-		DataGuild := Guild{
-			ID:     g.Guild.ID,
-			Name:   g.Guild.Name,
-			Join:   timejoin,
-			Dbconn: sqlite,
+		DataGuild := database.Guild{
+			ID:   g.Guild.ID,
+			Name: g.Guild.Name,
+			Join: timejoin,
 		}
 		Info := DataGuild.CheckGuild()
 		SendInvite, err := s.UserChannelCreate(config.OwnerDiscordID)
@@ -75,6 +75,5 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 				}
 			}
 		}
-		KillSqlConn(sqlite)
 	}
 }

@@ -156,15 +156,15 @@ func (Member *MemberSubs) UptwFollow(new int) *MemberSubs {
 }
 
 //UpdateSubs Update Subscriber data
-func (Data *MemberSubs) UpdateSubs(State string) {
+func (Member *MemberSubs) UpdateSubs(State string) {
 	if State == "yt" {
-		_, err := DB.Exec(`Update Subscriber set Youtube_Subscriber=?,Youtube_Videos=?,Youtube_Views=? Where id=? `, Data.YtSubs, Data.YtVideos, Data.YtViews, Data.ID)
+		_, err := DB.Exec(`Update Subscriber set Youtube_Subscriber=?,Youtube_Videos=?,Youtube_Views=? Where id=? `, Member.YtSubs, Member.YtVideos, Member.YtViews, Member.ID)
 		BruhMoment(err, "", false)
 	} else if State == "bili" {
-		_, err := DB.Exec(`Update Subscriber set BiliBili_Followers=?,BiliBili_Videos=?,BiliBili_Views=? Where id=? `, Data.BiliFollow, Data.BiliVideos, Data.BiliViews, Data.ID)
+		_, err := DB.Exec(`Update Subscriber set BiliBili_Followers=?,BiliBili_Videos=?,BiliBili_Views=? Where id=? `, Member.BiliFollow, Member.BiliVideos, Member.BiliViews, Member.ID)
 		BruhMoment(err, "", false)
 	} else {
-		_, err := DB.Exec(`Update Subscriber set Twitter_Followers=? Where id=? `, Data.TwFollow, Data.ID)
+		_, err := DB.Exec(`Update Subscriber set Twitter_Followers=? Where id=? `, Member.TwFollow, Member.ID)
 		BruhMoment(err, "", false)
 	}
 }
@@ -254,6 +254,7 @@ func (Data UserStruct) Adduser(MemberID int64) error {
 	}
 }
 
+//UpdateReminder Update reminder time
 func (Data UserStruct) UpdateReminder(MemberID int64) error {
 	ChannelID := GetChannelID(Data.Channel_ID, Data.GroupID)
 	tmp := CheckUser(Data.DiscordID, MemberID, ChannelID)
@@ -268,7 +269,7 @@ func (Data UserStruct) UpdateReminder(MemberID int64) error {
 	return nil
 }
 
-//Delete user from `del` command
+//Deluser Delete user from `del` command
 func (Data UserStruct) Deluser(MemberID int64) error {
 	ChannelID := GetChannelID(Data.Channel_ID, Data.GroupID)
 	tmp := CheckUser(Data.DiscordID, MemberID, ChannelID)
@@ -284,7 +285,7 @@ func (Data UserStruct) Deluser(MemberID int64) error {
 	}
 }
 
-//Check user if already tagged
+//CheckUser Check user if already tagged
 func CheckUser(DiscordID string, MemberID int64, ChannelChannelID int) bool {
 	var tmp int
 	row := DB.QueryRow("SELECT id FROM User WHERE DiscordID=? AND VtuberMember_id=? AND Channel_id=?", DiscordID, MemberID, ChannelChannelID)
