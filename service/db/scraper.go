@@ -3,8 +3,6 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
-	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
@@ -127,14 +125,20 @@ func FilterYt(Dat database.Name, wg *sync.WaitGroup) {
 
 func (Data Member) YtAvatar() string {
 	if Data.YtID != "" {
-		resp, err := http.Get("https://www.youtube.com/channel/" + Data.YtID + "/about")
-		engine.BruhMoment(err, "", false)
-
-		defer resp.Body.Close()
-		bit, err := ioutil.ReadAll(resp.Body)
-		engine.BruhMoment(err, "", false)
-
-		var avatar string
+		var (
+			avatar string
+			bit    []byte
+			err    error
+			URL    = "https://www.youtube.com/channel/" + Data.YtID + "/about"
+		)
+		bit, err = network.Curl(URL, nil)
+		if err != nil {
+			log.Error(err)
+			bit, err = network.CoolerCurl(URL, nil)
+			if err != nil {
+				log.Error(err)
+			}
+		}
 		submatchall := regexp.MustCompile(`(?ms)avatar.*?(http.*?)"`).FindAllStringSubmatch(string(bit), -1)
 		for _, element := range submatchall {
 			avatar = strings.Replace(element[1], "s48", "s800", -1)

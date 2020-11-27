@@ -1,11 +1,13 @@
 package guild
 
 import (
+	"encoding/json"
 	"math/rand"
 
-	"github.com/JustHumanz/Go-simp/tools/database"
+	"github.com/JustHumanz/Go-simp/tools/network"
 
 	config "github.com/JustHumanz/Go-simp/tools/config"
+	"github.com/JustHumanz/Go-simp/tools/database"
 	"github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
@@ -41,7 +43,6 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 			Join: timejoin,
 		}
 		Info := DataGuild.CheckGuild()
-		SendInvite, err := s.UserChannelCreate(config.OwnerDiscordID)
 		if err != nil {
 			log.Error(err)
 		}
@@ -70,7 +71,48 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 						log.Error(err)
 						return
 					}
-					s.ChannelMessageSend(SendInvite.ID, g.Guild.Name+" invited me")
+
+					PayloadBytes, err := json.Marshal(map[string]interface{}{
+						"embeds": []interface{}{
+							map[string]interface{}{
+								"description": "A Guild Invited me",
+								"fields": []interface{}{
+									map[string]interface{}{
+										"name":   "GuildName",
+										"value":  g.Guild.Name,
+										"inline": true,
+									},
+									map[string]interface{}{
+										"name":   "OwnerID",
+										"value":  g.Guild.OwnerID,
+										"inline": true,
+									},
+									map[string]interface{}{
+										"name":   "Member Count",
+										"value":  g.Guild.MemberCount,
+										"inline": true,
+									},
+									map[string]interface{}{
+										"name":   "Join Date",
+										"value":  timejoin.String(),
+										"inline": true,
+									},
+									map[string]interface{}{
+										"name":   "Region",
+										"value":  g.Guild.Region,
+										"inline": true,
+									},
+								},
+							},
+						},
+					})
+					if err != nil {
+						log.Error(err)
+					}
+					err = network.CurlPost(config.DiscordWebHook, PayloadBytes)
+					if err != nil {
+						log.Error(err)
+					}
 					return
 				}
 			}
