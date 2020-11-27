@@ -59,7 +59,9 @@ func (NotifData Notif) PushNotif(Color int) {
 			tags = "_"
 		}
 
-		if tags != "_" && Group.NameGroup != "Independen" {
+		if tags == "_" && Group.NameGroup == "Independen" {
+
+		} else {
 			tmp, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
 				SetAuthor(strings.Title(Group.NameGroup), Group.IconURL).
 				SetTitle(Data.Author).

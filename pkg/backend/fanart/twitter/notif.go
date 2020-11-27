@@ -55,7 +55,9 @@ func (Data PushData) SendNude() error {
 				} else {
 					tags = "_"
 				}
-				if tags != "_" && Data.Group.GroupName != "Independen" {
+				if tags == "_" && Data.Group.GroupName == "Independen" {
+
+				} else {
 					msg, err := Bot.ChannelMessageSendEmbed(DiscordChannel, engine.NewEmbed().
 						SetAuthor(strings.Title(Data.Group.GroupName), Data.Group.GroupIcon).
 						SetTitle(Data.UserName+"(@"+Data.ScreenName+")").
