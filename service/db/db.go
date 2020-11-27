@@ -41,6 +41,17 @@ func CreateDB(Data config.ConfigFile) error {
 		return err
 	}
 
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS GuildList (
+		id	int(11) NOT NULL AUTO_INCREMENT,
+		GuildID	varchar(256),
+		GuildName	varchar(256),
+		JoinDate	timestamp,
+		PRIMARY KEY(id)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`)
+	if err != nil {
+		return err
+	}
+
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS User (
 		id int(11) NOT NULL AUTO_INCREMENT,
 		DiscordID varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -368,6 +379,7 @@ func CreateDB(Data config.ConfigFile) error {
 	if err != nil {
 		return err
 	}
+
 	log.Info("DB ok")
 	db.Close()
 	return nil

@@ -1,9 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"math/rand"
 
+	"github.com/JustHumanz/Go-simp/tools/network"
+
 	config "github.com/JustHumanz/Go-simp/tools/config"
+	"github.com/JustHumanz/Go-simp/tools/database"
 	"github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
@@ -11,7 +15,7 @@ import (
 
 func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 	if g.Unavailable {
-		log.Info("joined unavailable guild", g.Guild.ID)
+		log.Error("joined unavailable guild", g.Guild.ID)
 		return
 	}
 	New := false
@@ -28,20 +32,17 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 		}).Info(g.Guild.Name, " join the battle")
 
 		GuildList = append(GuildList, g.Guild.ID)
-		sqlite := OpenLiteDB(PathLiteDB)
 		timejoin, err := g.Guild.JoinedAt.Parse()
 		if err != nil {
 			log.Error(err)
 			return
 		}
-		DataGuild := Guild{
-			ID:     g.Guild.ID,
-			Name:   g.Guild.Name,
-			Join:   timejoin,
-			Dbconn: sqlite,
+		DataGuild := database.Guild{
+			ID:   g.Guild.ID,
+			Name: g.Guild.Name,
+			Join: timejoin,
 		}
 		Info := DataGuild.CheckGuild()
-		SendInvite, err := s.UserChannelCreate(config.OwnerDiscordID)
 		if err != nil {
 			log.Error(err)
 		}
@@ -64,17 +65,57 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 						AddField("Need support?", "Join [dev server](https://discord.com/invite/ydWC5knbJT)").
 						InlineAllFields().MessageEmbed)
 
-					//send server name to my discord
+					//Save discord name to database
 					err := DataGuild.InputGuild()
 					if err != nil {
 						log.Error(err)
 						return
 					}
-					s.ChannelMessageSend(SendInvite.ID, g.Guild.Name+" invited me")
+
+					PayloadBytes, err := json.Marshal(map[string]interface{}{
+						"embeds": []interface{}{
+							map[string]interface{}{
+								"description": "A Guild Invited me",
+								"fields": []interface{}{
+									map[string]interface{}{
+										"name":   "GuildName",
+										"value":  g.Guild.Name,
+										"inline": true,
+									},
+									map[string]interface{}{
+										"name":   "OwnerID",
+										"value":  g.Guild.OwnerID,
+										"inline": true,
+									},
+									map[string]interface{}{
+										"name":   "Member Count",
+										"value":  g.Guild.MemberCount,
+										"inline": true,
+									},
+									map[string]interface{}{
+										"name":   "Join Date",
+										"value":  timejoin.String(),
+										"inline": true,
+									},
+									map[string]interface{}{
+										"name":   "Region",
+										"value":  g.Guild.Region,
+										"inline": true,
+									},
+								},
+							},
+						},
+					})
+					if err != nil {
+						log.Error(err)
+					}
+					err = network.CurlPost(config.DiscordWebHook, PayloadBytes)
+					if err != nil {
+						log.Error(err)
+					}
 					return
 				}
 			}
 		}
-		KillSqlConn(sqlite)
 	}
 }

@@ -14,6 +14,7 @@ import (
 
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
+	network "github.com/JustHumanz/Go-simp/tools/network"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -25,7 +26,7 @@ func GetRSS(YtID string) []string {
 		VideoID []string
 	)
 
-	Data, err := engine.Curl("https://www.youtube.com/feeds/videos.xml?channel_id="+YtID+"&q=searchterms", nil)
+	Data, err := network.Curl("https://www.youtube.com/feeds/videos.xml?channel_id="+YtID+"&q=searchterms", nil)
 	if err != nil {
 		log.Error(err, string(Data))
 	}
@@ -152,7 +153,7 @@ func StartCheckYT(Member database.Name, Group database.GroupName, wg *sync.WaitG
 				YoutubeData.YtData.UpdateYt(YoutubeData.YtData.Status)
 			}
 		} else {
-			_, err := engine.Curl("http://i3.ytimg.com/vi/"+VideoID[i]+"/maxresdefault.jpg", nil)
+			_, err := network.Curl("http://i3.ytimg.com/vi/"+VideoID[i]+"/maxresdefault.jpg", nil)
 			if err != nil {
 				Thumb = "http://i3.ytimg.com/vi/" + VideoID[i] + "/hqdefault.jpg"
 			} else {
@@ -254,7 +255,7 @@ func YtAPI(VideoID []string) (YtData, error) {
 		urls    = "https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id=" + strings.Join(VideoID, ",") + "&key=" + yttoken
 	)
 
-	body, curlerr = engine.Curl(urls, nil)
+	body, curlerr = network.Curl(urls, nil)
 	if curlerr != nil {
 		return YtData{}, errors.New("Token out of limit")
 	}

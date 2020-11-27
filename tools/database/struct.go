@@ -257,3 +257,9 @@ type TwitterUser struct {
 	Notifications                  bool   `json:"notifications"`
 	TranslatorType                 string `json:"translator_type"`
 }
+
+type Guild struct {
+	ID   string
+	Name string
+	Join time.Time
+}

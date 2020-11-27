@@ -11,6 +11,7 @@ import (
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
+	network "github.com/JustHumanz/Go-simp/tools/network"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -46,9 +47,9 @@ func GetWaiting(VideoID string) (string, error) {
 		curlerr error
 		urls    = "https://www.youtube.com/watch?v=" + VideoID
 	)
-	bit, curlerr = engine.Curl(urls, nil)
+	bit, curlerr = network.Curl(urls, nil)
 	if curlerr != nil || bit == nil {
-		bit, curlerr = engine.CoolerCurl(urls, nil)
+		bit, curlerr = network.CoolerCurl(urls, nil)
 		if curlerr != nil {
 			return Ytwaiting, curlerr
 		} else {
@@ -87,9 +88,9 @@ func CheckPrivate() {
 		for {
 			var err error
 			if tor {
-				_, err = engine.CoolerCurl(url, nil)
+				_, err = network.CoolerCurl(url, nil)
 			} else {
-				_, err = engine.Curl(url, nil)
+				_, err = network.Curl(url, nil)
 			}
 			if Youtube.Status == "upcoming" && time.Now().Sub(Youtube.Schedul) > Youtube.Schedul.Sub(time.Now()) {
 				log.WithFields(log.Fields{

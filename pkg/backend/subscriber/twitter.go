@@ -3,10 +3,11 @@ package subscriber
 import (
 	"strconv"
 	"strings"
+	"time"
 
 	config "github.com/JustHumanz/Go-simp/tools/config"
-	"github.com/JustHumanz/Go-simp/tools/database"
-	"github.com/JustHumanz/Go-simp/tools/engine"
+	database "github.com/JustHumanz/Go-simp/tools/database"
+	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -14,10 +15,14 @@ func CheckTwFollowCount() {
 	for _, Group := range engine.GroupData {
 		for _, Name := range database.GetName(Group.ID) {
 			if Name.TwitterName != "" {
-				Twitter := Name.GetTwitterFollow()
+				Twitter, err := Name.GetTwitterFollow()
+				if err != nil {
+					log.Error(err)
+					break
+				}
 				TwFollowDB := Name.GetSubsCount()
 				SendNotif := func(SubsCount, Tweets string) {
-					Avatar := strings.Replace(Twitter.ProfileImageURLHTTPS, "_normal.jpg", ".jpg", -1)
+					Avatar := strings.Replace(Twitter.Avatar, "_normal.jpg", ".jpg", -1)
 					Color, err := engine.GetColor("/tmp/bili.tmp", Avatar)
 					if err != nil {
 						log.Error(err)
@@ -37,25 +42,25 @@ func CheckTwFollowCount() {
 					if Twitter.FollowersCount >= 1000000 {
 						for i := 0; i < 10000001; i += 1000000 {
 							if i == Twitter.FollowersCount {
-								SendNotif(strconv.Itoa(i), strconv.Itoa(Twitter.StatusesCount))
+								SendNotif(strconv.Itoa(i), strconv.Itoa(Twitter.TweetsCount))
 							}
 						}
 					} else if Twitter.FollowersCount >= 100000 {
 						for i := 0; i < 1000001; i += 100000 {
 							if i == Twitter.FollowersCount {
-								SendNotif(strconv.Itoa(i), strconv.Itoa(Twitter.StatusesCount))
+								SendNotif(strconv.Itoa(i), strconv.Itoa(Twitter.TweetsCount))
 							}
 						}
 					} else if Twitter.FollowersCount >= 10000 {
 						for i := 0; i < 100001; i += 10000 {
 							if i == Twitter.FollowersCount {
-								SendNotif(strconv.Itoa(i), strconv.Itoa(Twitter.StatusesCount))
+								SendNotif(strconv.Itoa(i), strconv.Itoa(Twitter.TweetsCount))
 							}
 						}
 					} else if Twitter.FollowersCount >= 1000 {
 						for i := 0; i < 10001; i += 1000 {
 							if i == Twitter.FollowersCount {
-								SendNotif(strconv.Itoa(i), strconv.Itoa(Twitter.StatusesCount))
+								SendNotif(strconv.Itoa(i), strconv.Itoa(Twitter.TweetsCount))
 							}
 						}
 					}
@@ -69,6 +74,7 @@ func CheckTwFollowCount() {
 				TwFollowDB.UptwFollow(Twitter.FollowersCount).
 					UpdateSubs("tw")
 			}
+			time.Sleep(1 * time.Second)
 		}
 	}
 }

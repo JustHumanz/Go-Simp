@@ -8,8 +8,9 @@ import (
 
 	"github.com/JustHumanz/Go-simp/pkg/backend/livestream/bilibili/space"
 	config "github.com/JustHumanz/Go-simp/tools/config"
-	"github.com/JustHumanz/Go-simp/tools/database"
-	"github.com/JustHumanz/Go-simp/tools/engine"
+	database "github.com/JustHumanz/Go-simp/tools/database"
+	engine "github.com/JustHumanz/Go-simp/tools/engine"
+	network "github.com/JustHumanz/Go-simp/tools/network"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -29,10 +30,10 @@ func CheckBiliFollowCount() {
 					var (
 						urls = "https://api.bilibili.com/x/relation/stat?vmid=" + strconv.Itoa(Name.BiliBiliID)
 					)
-					body, curlerr = engine.Curl(urls, nil)
+					body, curlerr = network.Curl(urls, nil)
 					if curlerr != nil {
 						log.Warn("Trying use tor")
-						body, curlerr = engine.CoolerCurl(urls, nil)
+						body, curlerr = network.CoolerCurl(urls, nil)
 						if curlerr != nil {
 							log.Error(curlerr)
 						}
@@ -46,10 +47,10 @@ func CheckBiliFollowCount() {
 
 				go func() {
 					urls := "https://api.bilibili.com/x/space/upstat?mid=" + strconv.Itoa(Name.BiliBiliID)
-					body, curlerr = engine.Curl(urls, nil)
+					body, curlerr = network.Curl(urls, nil)
 					if curlerr != nil {
 						log.Warn("Trying use tor")
-						body, curlerr = engine.CoolerCurl(urls, []string{"Cookie", "SESSDATA=" + config.BiliBiliSes})
+						body, curlerr = network.CoolerCurl(urls, []string{"Cookie", "SESSDATA=" + config.BiliBiliSes})
 						if curlerr != nil {
 							log.Error(curlerr)
 						}
@@ -65,10 +66,10 @@ func CheckBiliFollowCount() {
 					baseurl := "https://api.bilibili.com/x/space/arc/search?mid=" + strconv.Itoa(Name.BiliBiliID) + "&ps=100"
 					url := []string{baseurl + "&tid=1", baseurl + "&tid=3", baseurl + "&tid=4"}
 					for f := 0; f < len(url); f++ {
-						body, curlerr = engine.Curl(url[f], nil)
+						body, curlerr = network.Curl(url[f], nil)
 						if curlerr != nil {
 							log.Warn("Trying use tor")
-							body, curlerr = engine.CoolerCurl(url[f], nil)
+							body, curlerr = network.CoolerCurl(url[f], nil)
 							if curlerr != nil {
 								log.Error(curlerr)
 							}

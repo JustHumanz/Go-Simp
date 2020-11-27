@@ -26,7 +26,7 @@ var (
 	BiliBiliSes    string
 	SauceAPI       string
 	Logging        string
-	OwnerDiscordID string
+	DiscordWebHook string
 	config         ConfigFile
 )
 
@@ -55,13 +55,13 @@ const (
 )
 
 type ConfigFile struct {
-	Discord       string   `toml:"Discord"`
-	TwitterBearer []string `toml:"TwitterBearer"`
-	ImgurClinet   string   `toml:"ImgurClinet"`
-	BiliSess      string   `toml:"BiliSess"`
-	SauceAPI      string   `toml:"SauceAPI"`
-	OwnerID       string   `toml:"OwnerID"`
-	SQL           struct {
+	Discord        string   `toml:"Discord"`
+	TwitterBearer  []string `toml:"TwitterBearer"`
+	ImgurClinet    string   `toml:"ImgurClinet"`
+	BiliSess       string   `toml:"BiliSess"`
+	SauceAPI       string   `toml:"SauceAPI"`
+	DiscordWebHook string   `toml:"DiscordWebHook"`
+	SQL            struct {
 		User string `toml:"User"`
 		Pass string `toml:"Pass"`
 		Host string `toml:"Host"`
@@ -102,7 +102,7 @@ func ReadConfig(path string) (ConfigFile, error) {
 	SauceAPI = config.SauceAPI
 	Logging = os.Getenv("LOG")
 
-	OwnerDiscordID = config.OwnerID
+	DiscordWebHook = config.DiscordWebHook
 
 	Token = config.Discord
 	YtToken = config.YtToken

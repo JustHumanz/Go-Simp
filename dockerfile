@@ -1,6 +1,6 @@
 FROM golang:alpine
 
-RUN apk add --update --no-cache git gcc build-base
+RUN apk add --update --no-cache git
 RUN export CGO_ENABLED=1
 RUN mkdir /app
 WORKDIR /app

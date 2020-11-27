@@ -3,8 +3,6 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
-	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
@@ -13,6 +11,7 @@ import (
 	"github.com/JustHumanz/Go-simp/pkg/backend/livestream/youtube"
 	"github.com/JustHumanz/Go-simp/tools/database"
 	"github.com/JustHumanz/Go-simp/tools/engine"
+	network "github.com/JustHumanz/Go-simp/tools/network"
 
 	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
@@ -70,7 +69,7 @@ type InputTwitter struct {
 func FilterYt(Dat database.Name, wg *sync.WaitGroup) {
 	VideoID := youtube.GetRSS(Dat.YoutubeID)
 	defer wg.Done()
-	body, err := engine.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,actualEndTime),statistics(viewCount))&id="+strings.Join(VideoID, ",")+"&key="+YtToken, nil)
+	body, err := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,actualEndTime),statistics(viewCount))&id="+strings.Join(VideoID, ",")+"&key="+YtToken, nil)
 	if err != nil {
 		log.Error(err, string(body))
 	}
@@ -126,14 +125,20 @@ func FilterYt(Dat database.Name, wg *sync.WaitGroup) {
 
 func (Data Member) YtAvatar() string {
 	if Data.YtID != "" {
-		resp, err := http.Get("https://www.youtube.com/channel/" + Data.YtID + "/about")
-		engine.BruhMoment(err, "", false)
-
-		defer resp.Body.Close()
-		bit, err := ioutil.ReadAll(resp.Body)
-		engine.BruhMoment(err, "", false)
-
-		var avatar string
+		var (
+			avatar string
+			bit    []byte
+			err    error
+			URL    = "https://www.youtube.com/channel/" + Data.YtID + "/about"
+		)
+		bit, err = network.Curl(URL, nil)
+		if err != nil {
+			log.Error(err)
+			bit, err = network.CoolerCurl(URL, nil)
+			if err != nil {
+				log.Error(err)
+			}
+		}
 		submatchall := regexp.MustCompile(`(?ms)avatar.*?(http.*?)"`).FindAllStringSubmatch(string(bit), -1)
 		for _, element := range submatchall {
 			avatar = strings.Replace(element[1], "s48", "s800", -1)
@@ -150,7 +155,7 @@ func (Data Member) GetYtSubs() Subs {
 		datasubs Subs
 	)
 	if Data.YtID != "" {
-		body, err := engine.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+Data.YtID+"&key="+YtToken, nil)
+		body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+Data.YtID+"&key="+YtToken, nil)
 		if err != nil {
 			log.Error(err)
 		}
@@ -175,10 +180,10 @@ func (Data Member) GetBiliFolow() BiliStat {
 		wg.Add(3)
 		go func() {
 			urls := "https://api.bilibili.com/x/relation/stat?vmid=" + strconv.Itoa(Data.BiliBiliID)
-			body, curlerr = engine.Curl(urls, nil)
+			body, curlerr = network.Curl(urls, nil)
 			if curlerr != nil {
 				log.Warn("Trying use tor")
-				body, curlerr = engine.CoolerCurl(urls, nil)
+				body, curlerr = network.CoolerCurl(urls, nil)
 				if curlerr != nil {
 					log.Error(curlerr)
 				}
@@ -192,10 +197,10 @@ func (Data Member) GetBiliFolow() BiliStat {
 
 		go func() {
 			urls := "https://api.bilibili.com/x/space/upstat?mid=" + strconv.Itoa(Data.BiliBiliID)
-			body, curlerr = engine.Curl(urls, []string{"Cookie", "SESSDATA=" + BiliSession})
+			body, curlerr = network.Curl(urls, []string{"Cookie", "SESSDATA=" + BiliSession})
 			if curlerr != nil {
 				log.Warn("Trying use tor")
-				body, curlerr = engine.CoolerCurl(urls, []string{"Cookie", "SESSDATA=" + BiliSession})
+				body, curlerr = network.CoolerCurl(urls, []string{"Cookie", "SESSDATA=" + BiliSession})
 				if curlerr != nil {
 					log.Error(curlerr)
 				}
@@ -211,10 +216,10 @@ func (Data Member) GetBiliFolow() BiliStat {
 			baseurl := "https://api.bilibili.com/x/space/arc/search?mid=" + strconv.Itoa(Data.BiliBiliID) + "&ps=100"
 			url := []string{baseurl + "&tid=1", baseurl + "&tid=3", baseurl + "&tid=4"}
 			for f := 0; f < len(url); f++ {
-				body, curlerr = engine.Curl(url[f], nil)
+				body, curlerr = network.Curl(url[f], nil)
 				if curlerr != nil {
 					log.Warn("Trying use tor")
-					body, curlerr = engine.CoolerCurl(url[f], nil)
+					body, curlerr = network.CoolerCurl(url[f], nil)
 					if curlerr != nil {
 						log.Error(curlerr)
 					}
@@ -260,10 +265,10 @@ func (Data Member) BliBiliFace() string {
 			errcurl error
 			url     = "https://api.bilibili.com/x/space/acc/info?mid=" + strconv.Itoa(Data.BiliBiliID)
 		)
-		body, errcurl = engine.Curl(url, nil)
+		body, errcurl = network.Curl(url, nil)
 		if body == nil {
 			log.Info("Not daijobu,trying use multitor")
-			body, errcurl = engine.CoolerCurl(url, nil)
+			body, errcurl = network.CoolerCurl(url, nil)
 
 			if errcurl != nil {
 				log.Error(errcurl)
