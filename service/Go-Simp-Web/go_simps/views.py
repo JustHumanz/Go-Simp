@@ -104,7 +104,6 @@ def go_simps_members(request):
 
 def go_simps_command(request):
     return render(request,'exec.html')
-    #return HttpResponse("Still Dev~")
 
 def go_simps_add(request):
     if request.method == "POST":
@@ -126,13 +125,11 @@ def go_simps_add(request):
         if issuenum is None:
             issuenum = git.PushNewIssues(POSTData,Title)
             Payload = {"State":"New","URL":"https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum)}
-            #return redirect("https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum))
             return render(request,'done.html',Payload)
         else:
             git.UpdateIssues(POSTData,issuenum,Title)
             Payload = {"State":"Duplicate","URL":"https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum)}
             return render(request,'done.html',Payload)
-            #return redirect("https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum))
 
     else:
         Vtubers = GetVtubers("")
