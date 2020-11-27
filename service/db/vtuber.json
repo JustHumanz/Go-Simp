@@ -1477,8 +1477,8 @@
                     "Region":"JP"
                 },
                 {
-                    "Name":"Kanae",
-                    "EN_Name":"Kana-Kana",
+                    "Name":"Kana-Kana",
+                    "EN_Name":"Kanae",
                     "JP_Name":"叶",
                     "Hashtag": {
                         "Twitter": "#かな絵",
@@ -1488,6 +1488,20 @@
                     "BiliBili_ID": 434563934,
                     "BiliRoom_ID": 21449068,
                     "Twitter_Username": "Kanae_2434",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Saki-chan",
+                    "EN_Name":"Sasaki Saku",
+                    "JP_Name":"笹木 咲",
+                    "Hashtag": {
+                        "Twitter": "#笹の絵",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCoztvTULBYd3WmStqYeoHcA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "saku_sasaki",
                     "Region":"JP"
                 },
                 {
