@@ -11,6 +11,7 @@ import (
 
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
+	network "github.com/JustHumanz/Go-simp/tools/network"
 )
 
 //CheckNew Start Check new fanart
@@ -31,11 +32,11 @@ func CheckNew() {
 						errcurl error
 						urls    = "https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_name=" + url.QueryEscape(Member.BiliBiliHashtags)
 					)
-					body, err := engine.Curl(urls, nil)
+					body, err := network.Curl(urls, nil)
 					if err != nil {
 						log.Info("Trying use tor")
 
-						body, errcurl = engine.CoolerCurl(urls, nil)
+						body, errcurl = network.CoolerCurl(urls, nil)
 						if errcurl != nil {
 							log.Error(errcurl)
 						} else {

@@ -8,7 +8,7 @@ import (
 
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
-	engine "github.com/JustHumanz/Go-simp/tools/engine"
+	network "github.com/JustHumanz/Go-simp/tools/network"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -23,10 +23,10 @@ func CurlTwitter(TwitterPayloads []string, Group int64) {
 			err  error
 		)
 		url := "https://api.twitter.com/1.1/search/tweets.json?" + Payload
-		body, err = engine.Curl(url, []string{"Authorization", "Bearer " + config.TwitterToken[0]})
+		body, err = network.Curl(url, []string{"Authorization", "Bearer " + config.TwitterToken[0]})
 		if err != nil {
 			if strings.HasPrefix(err.Error(), "401 Unauthorized") {
-				body, err = engine.CoolerCurl(url, []string{"Authorization", "Bearer " + config.TwitterToken[0]})
+				body, err = network.CoolerCurl(url, []string{"Authorization", "Bearer " + config.TwitterToken[0]})
 				if err != nil {
 					log.Error(err, string(body))
 					return

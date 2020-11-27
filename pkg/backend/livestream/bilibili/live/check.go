@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"strconv"
 
-	engine "github.com/JustHumanz/Go-simp/tools/engine"
+	network "github.com/JustHumanz/Go-simp/tools/network"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -15,9 +15,9 @@ func GetRoomStatus(RoomID int) (getInfoByRoom, error) {
 		tmp     getInfoByRoom
 		url     = "https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=" + strconv.Itoa(RoomID)
 	)
-	body, curlerr = engine.Curl(url, nil)
+	body, curlerr = network.Curl(url, nil)
 	if curlerr != nil {
-		body, curlerr = engine.CoolerCurl(url, nil)
+		body, curlerr = network.CoolerCurl(url, nil)
 		if curlerr != nil {
 			return getInfoByRoom{}, curlerr
 		} else {

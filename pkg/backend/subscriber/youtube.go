@@ -6,8 +6,9 @@ import (
 	"strings"
 
 	config "github.com/JustHumanz/Go-simp/tools/config"
-	"github.com/JustHumanz/Go-simp/tools/database"
-	"github.com/JustHumanz/Go-simp/tools/engine"
+	database "github.com/JustHumanz/Go-simp/tools/database"
+	engine "github.com/JustHumanz/Go-simp/tools/engine"
+	network "github.com/JustHumanz/Go-simp/tools/network"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -22,7 +23,7 @@ func CheckYtSubsCount() {
 			}
 
 			if i == 24 || i == len(Names)-1 {
-				body, err := engine.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+strings.Join(VtubChannel, ",")+"&key="+engine.GetYtToken(), nil)
+				body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+strings.Join(VtubChannel, ",")+"&key="+engine.GetYtToken(), nil)
 				if err != nil {
 					log.Error(err, string(body))
 					return

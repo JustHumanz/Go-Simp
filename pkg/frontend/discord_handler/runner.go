@@ -8,6 +8,7 @@ import (
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
+	network "github.com/JustHumanz/Go-simp/tools/network"
 	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
 )
@@ -131,9 +132,9 @@ func GetAuthorAvatar(username string) string {
 		avatar  string
 		url     = "https://mobile.twitter.com/" + regexp.MustCompile("[[:^ascii:]]").ReplaceAllLiteralString(username, "")
 	)
-	bit, curlerr = engine.Curl(url, nil)
+	bit, curlerr = network.Curl(url, nil)
 	if curlerr != nil {
-		bit, curlerr = engine.CoolerCurl(url, nil)
+		bit, curlerr = network.CoolerCurl(url, nil)
 		if curlerr != nil {
 			log.Error(curlerr)
 		}

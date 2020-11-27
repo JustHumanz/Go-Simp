@@ -1,18 +1,14 @@
 package database
 
 import (
-	"context"
 	"database/sql"
-	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"math/rand"
-	"net/http"
 	"os"
 	"strconv"
 	"strings"
-	"time"
 
+	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -156,15 +152,15 @@ func (Member *MemberSubs) UptwFollow(new int) *MemberSubs {
 }
 
 //UpdateSubs Update Subscriber data
-func (Data *MemberSubs) UpdateSubs(State string) {
+func (Member *MemberSubs) UpdateSubs(State string) {
 	if State == "yt" {
-		_, err := DB.Exec(`Update Subscriber set Youtube_Subscriber=?,Youtube_Videos=?,Youtube_Views=? Where id=? `, Data.YtSubs, Data.YtVideos, Data.YtViews, Data.ID)
+		_, err := DB.Exec(`Update Subscriber set Youtube_Subscriber=?,Youtube_Videos=?,Youtube_Views=? Where id=? `, Member.YtSubs, Member.YtVideos, Member.YtViews, Member.ID)
 		BruhMoment(err, "", false)
 	} else if State == "bili" {
-		_, err := DB.Exec(`Update Subscriber set BiliBili_Followers=?,BiliBili_Videos=?,BiliBili_Views=? Where id=? `, Data.BiliFollow, Data.BiliVideos, Data.BiliViews, Data.ID)
+		_, err := DB.Exec(`Update Subscriber set BiliBili_Followers=?,BiliBili_Videos=?,BiliBili_Views=? Where id=? `, Member.BiliFollow, Member.BiliVideos, Member.BiliViews, Member.ID)
 		BruhMoment(err, "", false)
 	} else {
-		_, err := DB.Exec(`Update Subscriber set Twitter_Followers=? Where id=? `, Data.TwFollow, Data.ID)
+		_, err := DB.Exec(`Update Subscriber set Twitter_Followers=? Where id=? `, Member.TwFollow, Member.ID)
 		BruhMoment(err, "", false)
 	}
 }
@@ -254,6 +250,7 @@ func (Data UserStruct) Adduser(MemberID int64) error {
 	}
 }
 
+//UpdateReminder Update reminder time
 func (Data UserStruct) UpdateReminder(MemberID int64) error {
 	ChannelID := GetChannelID(Data.Channel_ID, Data.GroupID)
 	tmp := CheckUser(Data.DiscordID, MemberID, ChannelID)
@@ -268,7 +265,7 @@ func (Data UserStruct) UpdateReminder(MemberID int64) error {
 	return nil
 }
 
-//Delete user from `del` command
+//Deluser Delete user from `del` command
 func (Data UserStruct) Deluser(MemberID int64) error {
 	ChannelID := GetChannelID(Data.Channel_ID, Data.GroupID)
 	tmp := CheckUser(Data.DiscordID, MemberID, ChannelID)
@@ -284,7 +281,7 @@ func (Data UserStruct) Deluser(MemberID int64) error {
 	}
 }
 
-//Check user if already tagged
+//CheckUser Check user if already tagged
 func CheckUser(DiscordID string, MemberID int64, ChannelChannelID int) bool {
 	var tmp int
 	row := DB.QueryRow("SELECT id FROM User WHERE DiscordID=? AND VtuberMember_id=? AND Channel_id=?", DiscordID, MemberID, ChannelChannelID)
@@ -624,43 +621,10 @@ func GetUserReminderList(ChannelIDDiscord int, Member int64, Reminder int) []str
 }
 
 //Scrapping twitter followers
-func (Data Name) GetTwitterFollow() TwitterUser {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-
-	Client := http.Client{
-		Timeout: time.Second * 30, // Timeout after 30 seconds
-	}
-	request, err := http.NewRequest(http.MethodGet, "https://api.allorigins.win/raw?url=https://socialbearing.com/scripts/get-user.php?user="+Data.TwitterName, nil)
+func (Data Name) GetTwitterFollow() (twitterscraper.Profile, error) {
+	profile, err := twitterscraper.GetProfile(Data.TwitterName)
 	if err != nil {
-		log.Error(err)
+		return twitterscraper.Profile{}, err
 	}
-	request.Header.Set("cache-control", "no-cache")
-	request.Header.Set("User-Agent", "Mozilla/5.0 (X11; MacOS x86_64; rv:81.0) Gecko/20100101 Firefox/81.0")
-
-	result, err := Client.Do(request.WithContext(ctx))
-	if err != nil {
-		log.Error(err)
-	}
-
-	if result.StatusCode != http.StatusOK {
-		log.WithFields(log.Fields{
-			"Status": result.StatusCode,
-			"Reason": result.Status,
-		}).Warn("Status code not daijobu")
-	}
-
-	defer result.Body.Close()
-	body, err := ioutil.ReadAll(result.Body)
-	if err != nil {
-		log.Error(err)
-
-	}
-
-	var Profile TwitterUser
-	err = json.Unmarshal(body, &Profile)
-	if err != nil {
-		log.Error(err)
-	}
-	return Profile
+	return profile, nil
 }
