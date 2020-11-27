@@ -24,7 +24,13 @@ func (PushData *NotifStruct) SendNude() {
 	loc := engine.Zawarudo(PushData.Member.Region)
 	expiresAt := time.Now().In(loc)
 	VtuberName := engine.FixName(PushData.Member.EnName, PushData.Member.JpName)
-	GroupIcon := PushData.Group.IconURL
+
+	var GroupIcon string
+	if match, _ := regexp.MatchString("404.jpg", PushData.Group.IconURL); match {
+		GroupIcon = ""
+	} else {
+		GroupIcon = PushData.Group.IconURL
+	}
 
 	var (
 		Timestart time.Time

@@ -1449,6 +1449,34 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Rei",
+                    "EN_Name":"Kenmochi Toya",
+                    "JP_Name":"剣持刀也",
+                    "Hashtag": {
+                        "Twitter": "#金剛力也像",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCv1fFr156jc65EMiLbaLImw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "rei_Toya_rei",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Toko-chan",
+                    "EN_Name":"Inui Toko",
+                    "JP_Name":"戌亥とこ",
+                    "Hashtag": {
+                        "Twitter": "#いぬいらすと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCXRlIK3Cw_TJIQC5kSJJQMg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "inui_toko",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Kanae",
                     "EN_Name":"Kana-Kana",
                     "JP_Name":"叶",
@@ -1726,7 +1754,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Aadya_VTuber",
-                    "Region":"EN"
+                    "Region":"IN"
                 },
                 {
                     "Name":"Noor",
@@ -1740,7 +1768,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Noor_VTuber",
-                    "Region":"EN"
+                    "Region":"IN"
                 },
                 {
                     "Name":"Vihaan",
@@ -1754,7 +1782,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Vihaan_VTuber",
-                    "Region":"EN"
+                    "Region":"IN"
                 },
                 {
                     "Name":"Yukie",
