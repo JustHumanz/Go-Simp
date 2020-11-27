@@ -1,3 +1,7 @@
+v0.4.7
+- Fix `Update` command out of array
+- Change 404.jpg Thumbnail to null
+
 v0.4.6
 - Change Guide URL
 

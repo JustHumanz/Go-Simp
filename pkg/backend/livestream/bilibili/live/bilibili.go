@@ -2,6 +2,7 @@ package live
 
 import (
 	"math/rand"
+	"regexp"
 	"sync"
 	"time"
 
@@ -45,6 +46,12 @@ func CheckSchedule() {
 							ScheduledStart = time.Now().In(loc)
 						}
 
+						GroupIcon := ""
+						if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
+							GroupIcon = ""
+						} else {
+							GroupIcon = Group.IconURL
+						}
 						log.WithFields(log.Fields{
 							"Group":  Group.NameGroup,
 							"Vtuber": Member.EnName,
@@ -55,7 +62,7 @@ func CheckSchedule() {
 							UpdateSchdule(ScheduledStart).
 							UpdateOnline(Status.Data.RoomInfo.Online).
 							AddMember(Member).
-							Crotttt(Group.IconURL).
+							Crotttt(GroupIcon).
 							Tamod()
 
 						Data.RoomData.UpdateLiveBili(Member.ID)

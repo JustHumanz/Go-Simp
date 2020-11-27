@@ -1162,6 +1162,13 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 						return
 					}
+				} else if ChannelState.TypeTag == 1 && len(CommandArray) >= 4 {
+					_, err := s.ChannelMessageSend(m.ChannelID, "You enable `Art` state,Ignoring `"+CommandArray[3]+"` options")
+					if err != nil {
+						log.Error(err)
+					}
+					ChannelState.SetLiveOnly(false)
+					ChannelState.SetNewUpcoming(false)
 				}
 
 				if (ChannelState.TypeTag == 2 || ChannelState.TypeTag == 3) && len(CommandArray) >= 5 {
@@ -1328,7 +1335,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if CheckPermission(m.Author.ID, m.ChannelID, s) {
 						ChannelState.SetVtuberGroupID(VTuberGroup.ID)
 						if ChannelState.ChannelCheck() {
-							if ChannelState.TypeTag == 2 || ChannelState.TypeTag == 3 && len(CommandArray) >= 4 {
+							if (ChannelState.TypeTag == 2 || ChannelState.TypeTag == 3) && len(CommandArray) >= 4 {
 								if CommandArray[3] == "-liveonly" {
 									err := ChannelState.SetLiveOnly(true).UpdateChannel("LiveOnly")
 									if err != nil {
@@ -1366,7 +1373,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 								}
 							}
 
-							if ChannelState.TypeTag == 2 || ChannelState.TypeTag == 3 && len(CommandArray) >= 5 {
+							if (ChannelState.TypeTag == 2 || ChannelState.TypeTag == 3) && len(CommandArray) >= 5 {
 								if CommandArray[4] == "-newupcoming" {
 									err := ChannelState.SetNewUpcoming(true).UpdateChannel("NewUpcoming")
 									if err != nil {
