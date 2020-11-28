@@ -1190,6 +1190,20 @@
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "aragamioga",
                     "Region":"JP"
+                },
+                {
+                    "Name":"Shien",
+                    "EN_Name":"Shien",
+                    "JP_Name":"影山シエン",
+                    "Hashtag": {
+                        "Twitter": "#シ絵ン",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UChSvpZYRPh0FvG4SJGSga3g",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "kageyamashien",
+                    "Region":"JP"
                 }
             ]
         },{
@@ -1502,6 +1516,34 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "saku_sasaki",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Rikiichi",
+                    "EN_Name":"Joe Rikiichi",
+                    "JP_Name":"ジョー・力一",
+                    "Hashtag": {
+                        "Twitter": "#ジョー設展",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UChUJbHiTVeGrSkTdBzVfNCQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "joerikiichi",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Chai-chan",
+                    "EN_Name":"Hanabatake Chaika",
+                    "JP_Name":"花畑チャイカ",
+                    "Hashtag": {
+                        "Twitter": "#お花畑青空大写生大会",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCsFn_ueskBkMCEyzCEqAOvg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "ZulmIhP1nlMOT5y",
                     "Region":"JP"
                 },
                 {
