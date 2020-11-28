@@ -1,80 +1,11 @@
 # Create your views here.
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
-from github import Github
-import requests,os,json,re
-
-
-GroupURL = "https://api.human-z.tech/vtbot/group"
-MemberURL = "https://api.human-z.tech/vtbot/member/"
-SubscriberURL = "https://api.human-z.tech/vtbot/subscriber/"
-
-class GetVtubers:
-    def __init__(self, InputData):
-        self.InputData = InputData
-        self.Members = ""
-
-    def GetGroups(self):
-        response = requests.get(GroupURL)
-        return response.json()
-
-    def GetMembers(self):
-        response = requests.get(MemberURL+self.InputData)        
-        self.Members = response.json()  
-        return response.json()  
-
-    def GetSubs(self):
-        SubsInfo = requests.get(SubscriberURL+self.InputData)    
-        return SubsInfo.json()
-
-    def GetRegList(self):
-        Region = []
-
-        for Member in self.Members:
-            if Member['Region'] not in Region:
-                Region.append(Member['Region'])
-        return Region    
-
-    def ResizeImg(self,size):
-        Members = self.Members
-
-        for i in range(len(Members)):
-            Members[i]["Youtube_Avatar"] = Members[i]["Youtube_Avatar"].replace("s800",size)    
-
-        return Members   
-
-class GitGood:
-    def __init__(self, Token):    
-        self.g = Github(Token)
-        self.repo = self.g.get_repo("JustHumanz/Go-Simp")
-
-    def CheckIssues(self,title):
-        IssueState = {"open","closed"}
-        for state in IssueState:
-            open_issues = self.repo.get_issues(state=state)
-            for issue in open_issues:
-                if issue.title == title:
-                    return issue.number
-
-    def PushNewIssues(self,Payload,Title):
-        del Payload["csrfmiddlewaretoken"]
-        del Payload["Group"]
-        PayloadStr = json.dumps(Payload,indent = 1,ensure_ascii=False)
-        label = self.repo.get_label("enhancement")
-        issue = self.repo.create_issue(title=Title, body=PayloadStr,labels=[label],assignee="JustHumanz")
-        return issue.number
-
-    def UpdateIssues(self,Payload,Number,Title):
-        del Payload["csrfmiddlewaretoken"]
-        del Payload["Group"]
-        PayloadStr = json.dumps(Payload,indent = 1,ensure_ascii=False)
-        issue = self.repo.get_issue(Number)
-        issue.edit(title=Title,body=PayloadStr,assignee="JustHumanz")
-
-
-
+from backend.engine import *
 
 git = GitGood(os.environ['GITKEY'])
+LOGINURL = "https://discord.com/api/oauth2/authorize?client_id=719540207552167936&permissions=522304&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2FDiscord%2Flanding&response_type=code&scope=bot%20guilds%20identify"
+Discord = Discortttt()
 
 def GetChannelID(url):
     regex = r"^(?:(http|https):\/\/[a-zA-Z-]*\.{0,1}[a-zA-Z-]{3,}\.[a-z]{2,})\/channel\/([a-zA-Z0-9_]{3,})$"
@@ -157,3 +88,24 @@ def go_simps_support(request,Type):
 
 def go_simps_guide(request):
     return render(request,'guide.html')   
+
+def go_simps_discord_login(request):
+    return redirect(LOGINURL)
+
+def go_simps_discord_landing(request):
+    code = request.GET["code"]
+    access_token = Discord.GetAccessToken(code)
+
+    response = HttpResponse("Cookie Set")  
+    response.set_cookie('oauth2', access_token['access_token'],max_age = access_token['expires_in'])      
+    response = redirect('/Discord/cp')
+    return response
+
+        
+def go_simps_discord_cp(request):
+    cokkie = ""
+    try:
+        cokkie = request.COOKIES['oauth2']
+    except:
+        return redirect('/Discord/login')
+    return HttpResponse("A")
