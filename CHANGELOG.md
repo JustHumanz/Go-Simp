@@ -1,5 +1,6 @@
 v0.4.9
 - Change twitter avatar scraping    
+- Add discord id submitter
 
 v0.4.8
 - Migrate Guild handler to database

@@ -86,12 +86,17 @@
             <div class="form-group">
               <input type="text" class="form-control item" name="Wiki" id="Wiki" placeholder="Wiki URL *optional">
             </div>
-            <label for="Group">Group/Agency</label>
-            <select class="form-control" id="Group" name="Group">
-              {% for Group in Groups %}
-              <option>{{Group.VtuberGroupName}}</option>
-              {% endfor %}
-            </select>
+            <div class="form-group">
+              <label for="Group">Group/Agency</label>
+              <select class="form-control" id="Group" name="Group">
+                {% for Group in Groups %}
+                <option>{{Group.VtuberGroupName}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control item" name="Discord" id="Discord" placeholder="DiscordID submitter *optional">
+            </div>
             <div class="form-group">
                 <button type="submit" onclick="return IsEmpty();" class="btn btn-block create-account">Submit Data</button>
             </div>
