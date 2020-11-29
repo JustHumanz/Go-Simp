@@ -8,8 +8,8 @@ import (
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
-	network "github.com/JustHumanz/Go-simp/tools/network"
 	"github.com/bwmarrin/discordgo"
+	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -126,29 +126,11 @@ func RemovePic(text string) string {
 
 //GetAuthorAvatar Get twitter avatar
 func GetAuthorAvatar(username string) string {
-	var (
-		bit     []byte
-		curlerr error
-		avatar  string
-		url     = "https://mobile.twitter.com/" + regexp.MustCompile("[[:^ascii:]]").ReplaceAllLiteralString(username, "")
-	)
-	bit, curlerr = network.Curl(url, nil)
-	if curlerr != nil {
-		bit, curlerr = network.CoolerCurl(url, nil)
-		if curlerr != nil {
-			log.Error(curlerr)
-		}
+	profile, err := twitterscraper.GetProfile(username)
+	if err != nil {
+		log.Error(err)
 	}
-
-	re := regexp.MustCompile(`(?ms)avatar.*?(http.*?)"`)
-	if len(re.FindStringIndex(string(bit))) > 0 {
-		re2 := regexp.MustCompile(`<img[^>]+\bsrc=["']([^"']+)["']`)
-		submatchall := re2.FindAllStringSubmatch(re.FindString(string(bit)), -1)
-		for _, element := range submatchall {
-			avatar = strings.Replace(element[1], "normal.jpg", "400x400.jpg", -1)
-		}
-	}
-	return avatar
+	return strings.Replace(profile.Avatar, "normal.jpg", "400x400.jpg", -1)
 }
 
 //GetUserAvatar Get bilibili user avatar
