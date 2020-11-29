@@ -6,6 +6,7 @@ from backend.engine import *
 git = GitGood(os.environ['GITKEY'])
 LOGINURL = "https://discord.com/api/oauth2/authorize?client_id=719540207552167936&permissions=522304&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2FDiscord%2Flanding&response_type=code&scope=bot%20guilds%20identify"
 Discord = Discortttt()
+Vtubers = GetVtubers("")
 
 def GetChannelID(url):
     regex = r"^(?:(http|https):\/\/[a-zA-Z-]*\.{0,1}[a-zA-Z-]{3,}\.[a-z]{2,})\/channel\/([a-zA-Z0-9_]{3,})$"
@@ -14,7 +15,6 @@ def GetChannelID(url):
         return match.group(2)
 
 def go_simps_index(request):
-    Vtubers = GetVtubers("")
     Payload = {'Groups':Vtubers.GetGroups()}
     return render(request, 'index.html', Payload)
 
@@ -27,7 +27,6 @@ def go_simps_group(request, GroupName):
     return render(request, 'group.html',Payload)
 
 def go_simps_members(request):
-    Vtubers = GetVtubers("")
     Vtubers.GetMembers()
 
     Payload = {'Members':Vtubers.ResizeImg("s100"),'Region':Vtubers.GetRegList(),'Add':True}
@@ -108,4 +107,28 @@ def go_simps_discord_cp(request):
         cokkie = request.COOKIES['oauth2']
     except:
         return redirect('/Discord/login')
-    return HttpResponse("A")
+    Guilds = Discord.GetUserGuild(cokkie)    
+
+    for i in range(len(Guilds)):
+        Guilds[i]['Channels'] = Discord.GetChannels(Guilds[i]['id'])
+
+    return render(request,'Pilot/guild.html',{'Guilds':Guilds})
+
+
+def go_simps_discord_channel(request,ChannelID):
+    ChannelInfo,ChannelSupport = Discord.GetChannelInfo(ChannelID)
+    Groups = Vtubers.GetGroups()
+    try:
+        for i in range(len(Groups)):
+            del Groups[i]["VtuberGroupIcon"]
+            for Data in ChannelSupport["ChannelData"]:
+                if Data["GroupName"] == Groups[i]["VtuberGroupName"]:
+                    Groups[i]["Enable"] = True
+                    Groups[i]["ChannelData"] = Data
+                else:
+                    Groups[i]["Enable"] = False                
+    except:
+        print("Not enable any groups")
+
+    #return HttpResponse("Dev")
+    return render(request,'Pilot/channel.html',{'ChannelName':ChannelInfo['name'],'Groups':Groups})

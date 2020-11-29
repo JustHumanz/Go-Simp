@@ -54,9 +54,9 @@ $(function () {
           url = $this.attr("href"),
           title = $this.text();
     
-          if (url == "#") {
+          if (/(.*#.+)/.test(url)) {
             return
-          } else if (/(.*youtube.+|bilibili.+|github.+|discord.+|twitter.+)/.test(url)) {
+          } else if (/(.*youtube.+|bilibili.+|github.+|discord.+|twitter.+|channel.+)/.test(url)) {
             window.open(
               url,
               '_blank'

@@ -210,3 +210,20 @@ exports.Subscriber = (req, res) => {
         } else res.send(data);
     });
 };
+
+
+exports.Channel = (req, res) => {
+    model.GetDiscordChannel(req.params.id, (err, data) => {
+        if (err) {
+        if (err.kind === "not_found") {
+            res.status(404).send({
+            message: `Not found GroupName with name ${req.params.id}.`
+            });
+        } else {
+            res.status(500).send({
+            message: "Error retrieving GroupName with name " + req.params.id
+            });
+        }
+        } else res.send(data);
+    });
+};

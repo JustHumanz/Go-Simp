@@ -43,6 +43,9 @@ module.exports = app => {
      //subscriber Vtuber count
     app.get("/subscriber/:nog", Controller.Subscriber)
     //example subscriber/nijisanji or subscriber/fbk
+
+    app.get("/channel/:id",Controller.Channel)
+
     app.get('/doc',function(req,res) {
       res.sendFile(__dirname +'/doc.html');
     });

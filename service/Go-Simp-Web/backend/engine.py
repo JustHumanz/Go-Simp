@@ -4,6 +4,7 @@ import requests,os,json,re
 GroupURL = "http://rest_api:2525/group"
 MemberURL = "http://rest_api:2525/member/"
 SubscriberURL = "http://rest_api:2525/subscriber/"
+ChannelURL = "http://rest_api:2525/channel/"
 API_ENDPOINT = 'https://discord.com/api/v6'
 
 class GetVtubers:
@@ -73,19 +74,50 @@ class Discortttt:
         self.CLIENT_ID = os.environ['CLIENT_ID']
         self.CLIENT_SECRET = os.environ['CLIENT_SECRET']
         self.URLI = 'http://localhost:8000/Discord/landing'
+        self.DisocrdBot = os.environ["DISCORD_BOT"]
 
     def GetAccessToken(self,code):    
-        data = {
+        r = requests.post('%s/oauth2/token' % API_ENDPOINT, data={
             'client_id': self.CLIENT_ID,
             'client_secret': self.CLIENT_SECRET,
             'grant_type': 'authorization_code',
             'code': code,
             'redirect_uri': self.URLI,
             'scope': 'identify guild'
-        }
-        headers = {
+        }, headers={
             'Content-Type': 'application/x-www-form-urlencoded'
-        }
-        r = requests.post('%s/oauth2/token' % API_ENDPOINT, data=data, headers=headers)
+        })
         r.raise_for_status()
         return r.json()        
+
+    def GetUserGuild(self,token):
+        ResultUser = requests.get(API_ENDPOINT+"/users/@me/guilds",headers={
+            'Authorization': 'Bearer '+token
+        })
+
+        ResultBot = requests.get(API_ENDPOINT+"/users/@me/guilds",headers={
+            'Authorization': 'Bot '+self.DisocrdBot
+        })
+        GuildList = []
+        for UserGuild in ResultUser.json():
+            for BotGuild in ResultBot.json():
+                if UserGuild["id"] == BotGuild["id"]:
+                    GuildList.append(UserGuild)               
+        return GuildList
+
+    def GetChannels(self,GuildID):
+        Result = requests.get(API_ENDPOINT+"/guilds/%s/channels" % GuildID,headers={
+            'Authorization': 'Bot '+self.DisocrdBot
+        })
+        Channels = []
+        for Channel in Result.json():
+            if Channel['type'] == 0:
+                Channels.append(Channel)
+        return Channels
+
+    def GetChannelInfo(self,ChannelID):        
+        Result = requests.get(API_ENDPOINT+"/channels/%s" % ChannelID,headers={
+            'Authorization': 'Bot '+self.DisocrdBot
+        })
+
+        return Result.json(),requests.get(ChannelURL+ChannelID).json()
