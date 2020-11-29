@@ -48,16 +48,27 @@ func (Data PushData) SendNude() error {
 		go func(DiscordChannel string, wg *sync.WaitGroup) {
 			defer wg.Done()
 			Color, _ = engine.GetColor("/tmp/tw", Data.Image)
-			var tags string
+			var (
+				tags      string
+				GroupIcon string
+			)
+
+			if match, _ := regexp.MatchString("404.jpg", Data.Group.GroupIcon); match {
+				GroupIcon = ""
+			} else {
+				GroupIcon = Data.Group.GroupIcon
+			}
 			if URLTMP != url {
 				if UserTagsList != nil {
 					tags = strings.Join(UserTagsList, " ")
 				} else {
 					tags = "_"
 				}
-				if tags != "_" && Data.Group.GroupName != "Independen" {
+				if tags == "_" && Data.Group.GroupName == "Independen" {
+
+				} else {
 					msg, err := Bot.ChannelMessageSendEmbed(DiscordChannel, engine.NewEmbed().
-						SetAuthor(strings.Title(Data.Group.GroupName), Data.Group.GroupIcon).
+						SetAuthor(strings.Title(Data.Group.GroupName), GroupIcon).
 						SetTitle(Data.UserName+"(@"+Data.ScreenName+")").
 						SetURL(url).
 						SetThumbnail(strings.Replace(Data.Avatar, "_normal.jpg", ".jpg", -1)).

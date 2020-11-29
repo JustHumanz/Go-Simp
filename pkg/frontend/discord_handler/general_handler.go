@@ -57,7 +57,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					SetImage(Pic).
 					SetColor(Color).
 					InlineAllFields().
-					SetFooter(Msg, config.TwitterIMG).MessageEmbed
+					SetFooter(Msg, config.BiliBiliIMG).MessageEmbed
 			} else {
 				embed = engine.NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).

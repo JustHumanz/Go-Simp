@@ -1190,6 +1190,20 @@
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "aragamioga",
                     "Region":"JP"
+                },
+                {
+                    "Name":"Shien",
+                    "EN_Name":"Shien",
+                    "JP_Name":"影山シエン",
+                    "Hashtag": {
+                        "Twitter": "#シ絵ン",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UChSvpZYRPh0FvG4SJGSga3g",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "kageyamashien",
+                    "Region":"JP"
                 }
             ]
         },{
@@ -1477,8 +1491,8 @@
                     "Region":"JP"
                 },
                 {
-                    "Name":"Kanae",
-                    "EN_Name":"Kana-Kana",
+                    "Name":"Kana-Kana",
+                    "EN_Name":"Kanae",
                     "JP_Name":"叶",
                     "Hashtag": {
                         "Twitter": "#かな絵",
@@ -1488,6 +1502,76 @@
                     "BiliBili_ID": 434563934,
                     "BiliRoom_ID": 21449068,
                     "Twitter_Username": "Kanae_2434",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Saki-chan",
+                    "EN_Name":"Sasaki Saku",
+                    "JP_Name":"笹木 咲",
+                    "Hashtag": {
+                        "Twitter": "#笹の絵",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCoztvTULBYd3WmStqYeoHcA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "saku_sasaki",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Rikiichi",
+                    "EN_Name":"Joe Rikiichi",
+                    "JP_Name":"ジョー・力一",
+                    "Hashtag": {
+                        "Twitter": "#ジョー設展",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UChUJbHiTVeGrSkTdBzVfNCQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "joerikiichi",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Maimoto",
+                    "EN_Name":"Maimoto Keisuke",
+                    "JP_Name":"舞元啓介",
+                    "Hashtag": {
+                        "Twitter": "#しら画",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCJubINhCcFXlsBwnHp0wl_g",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "maimoto_k",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Ange",
+                    "EN_Name":"Ange Katrina",
+                    "JP_Name":"アンジュ・カトリーナ",
+                    "Hashtag": {
+                        "Twitter": "#絵ンジュ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCHVXbQzkl3rDfsXWo8xi2qw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "ange_katrina_",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Chai-chan",
+                    "EN_Name":"Hanabatake Chaika",
+                    "JP_Name":"花畑チャイカ",
+                    "Hashtag": {
+                        "Twitter": "#お花畑青空大写生大会",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCsFn_ueskBkMCEyzCEqAOvg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "ZulmIhP1nlMOT5y",
                     "Region":"JP"
                 },
                 {
