@@ -106,6 +106,7 @@ class Discortttt:
         return GuildList
 
     def GetChannels(self,GuildID):
+        self.GuildID = GuildID
         Result = requests.get(API_ENDPOINT+"/guilds/%s/channels" % GuildID,headers={
             'Authorization': 'Bot '+self.DisocrdBot
         })
@@ -121,3 +122,9 @@ class Discortttt:
         })
 
         return Result.json(),requests.get(ChannelURL+ChannelID).json()
+
+    def GetGuildRols(self):
+        Result = requests.get(API_ENDPOINT+"/guilds/%s/roles" % self.GuildID,headers={
+            'Authorization': 'Bot '+self.DisocrdBot
+        })
+        return Result.json()

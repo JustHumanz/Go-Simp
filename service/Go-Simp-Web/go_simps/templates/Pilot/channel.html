@@ -47,7 +47,7 @@
   <body>
     <div class="container" id="container">
         <div class="text-center">
-            <h3>#{{ChannelName}}</h3>
+            <h3>#{{ChannelName.name}}</h3>
         </div>
         <div class="row">
             <div class="col-3">
@@ -66,89 +66,113 @@
                     {% for Group in Groups %}
                         {% if Group == Groups.0 %}
                         <div class="tab-pane fade show active" id="v-pills-{{Group.VtuberGroupName}}" role="tabpanel" aria-labelledby="v-pills-{{Group.VtuberGroupName}}-tab">
-                            <div class="btn-group" data-toggle="buttons">
+                        <form name="form" action="/Discord/channel/{{ChannelName.id}}" method="POST">
+                            {% csrf_token %}
                             {% if Group.Enable %}
                                 {% if Group.ChannelData.Type == "All" %}
-                                    <label class="btn btn-default active">
-                                        <input type="checkbox" checked="checked">
-                                    </label>Livestream
-                                    <label class="btn btn-default active">
-                                        <input type="checkbox" checked="checked">
-                                    </label>Fanart
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="LiveCheckbox" name="Livestream" value="Enable" checked>
+                                    <label class="form-check-label" for="LiveCheckbox">Livestream</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="FanartCheckbox" name="Fanart" value="Enable" checked>
+                                    <label class="form-check-label" for="FanartCheckbox">Fanart</label>
+                                  </div>
                                 {% elif Group.ChannelData.Type == "Live" %}    
-                                    <label class="btn btn-default active">
-                                        <input type="checkbox" checked="checked">
-                                    </label>Livestream
-                                    <label class="btn btn-default">
-                                        <input type="checkbox">
-                                    </label>Fanart
+                                 <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="LiveCheckbox" name="Livestream" value="Enable" checked>
+                                    <label class="form-check-label" for="LiveCheckbox">Livestream</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="FanartCheckbox" name="Fanart" value="Enable">
+                                    <label class="form-check-label" for="FanartCheckbox">Fanart</label>
+                                  </div>                           
                                 {% elif Group.ChannelData.Type == "Art" %}        
-                                    <label class="btn btn-default">
-                                        <input type="checkbox">
-                                    </label>Livestream
-                                    <label class="btn btn-default active">
-                                        <input type="checkbox" checked="checked">
-                                    </label>Fanart
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="LiveCheckbox" name="Livestream" value="Enable">
+                                    <label class="form-check-label" for="LiveCheckbox">Livestream</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="FanartCheckbox" name="Fanart" value="Enable" checked>
+                                    <label class="form-check-label" for="FanartCheckbox">Fanart</label>
+                                  </div>                           
                                 {% else %}
-                                    <label class="btn btn-default">
-                                        <input type="checkbox">
-                                    </label>Livestream
-                                    <label class="btn btn-default">
-                                        <input type="checkbox">
-                                    </label>Fanart
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="LiveCheckbox" name="Livestream" value="Enable">
+                                    <label class="form-check-label" for="LiveCheckbox">Livestream</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="FanartCheckbox" name="Fanart" value="Enable">
+                                    <label class="form-check-label" for="FanartCheckbox">Fanart</label>
+                                  </div>
                                 {% endif %}
                             {% else %}
-                                    <label class="btn btn-default">
-                                        <input type="checkbox">
-                                    </label>Livestream
-                                    <label class="btn btn-default">
-                                        <input type="checkbox">
-                                    </label>Fanart
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="LiveCheckbox" name="Livestream" value="Enable">
+                                        <label class="form-check-label" for="LiveCheckbox">Livestream</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="FanartCheckbox" name="Fanart" value="Enable">
+                                        <label class="form-check-label" for="FanartCheckbox">Fanart</label>
+                                    </div>
                             {% endif %}
-                            </div>
+                            <button type="submit" class="btn btn-block">Save</button>
+                        </form>
                         </div>
                         {% else %}
                         <div class="tab-pane fade" id="v-pills-{{Group.VtuberGroupName}}" role="tabpanel" aria-labelledby="v-pills-{{Group.VtuberGroupName}}-tab">
-                            <div class="btn-group" data-toggle="buttons">
+                        <form name="form" action="/Discord/channel/{{ChannelName.id}}" method="POST">
+                            {% csrf_token %}
                                 {% if Group.Enable %}
-                                    {% if Group.ChannelData.Type == "All" %}
-                                        <label class="btn btn-default active">
-                                            <input type="checkbox" checked="checked">
-                                        </label>Livestream
-                                        <label class="btn btn-default active">
-                                            <input type="checkbox" checked="checked">
-                                        </label>Fanart
+                                        {% if Group.ChannelData.Type == "All" %}
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="LiveCheckbox" name="Livestream" value="Enable" checked>
+                                            <label class="form-check-label" for="LiveCheckbox">Livestream</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="FanartCheckbox" name="Fanart" value="Enable" checked>
+                                            <label class="form-check-label" for="FanartCheckbox">Fanart</label>
+                                        </div>
                                     {% elif Group.ChannelData.Type == "Live" %}    
-                                        <label class="btn btn-default active">
-                                            <input type="checkbox" checked="checked">
-                                        </label>Livestream
-                                        <label class="btn btn-default">
-                                            <input type="checkbox">
-                                        </label>Fanart
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="LiveCheckbox" name="Livestream" value="Enable" checked>
+                                            <label class="form-check-label" for="LiveCheckbox">Livestream</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="FanartCheckbox" name="Fanart" value="Enable">
+                                            <label class="form-check-label" for="FanartCheckbox">Fanart</label>
+                                        </div>                           
                                     {% elif Group.ChannelData.Type == "Art" %}        
-                                        <label class="btn btn-default">
-                                            <input type="checkbox">
-                                        </label>Livestream
-                                        <label class="btn btn-default active">
-                                            <input type="checkbox" checked="checked">
-                                        </label>Fanart
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="LiveCheckbox" name="Livestream" value="Enable">
+                                            <label class="form-check-label" for="LiveCheckbox">Livestream</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="FanartCheckbox" name="Fanart" value="Enable" checked>
+                                            <label class="form-check-label" for="FanartCheckbox">Fanart</label>
+                                        </div>                           
                                     {% else %}
-                                        <label class="btn btn-default">
-                                            <input type="checkbox">
-                                        </label>Livestream
-                                        <label class="btn btn-default">
-                                            <input type="checkbox">
-                                        </label>Fanart
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="LiveCheckbox" name="Livestream" value="Enable">
+                                            <label class="form-check-label" for="LiveCheckbox">Livestream</label>
+                                        </div>
+                                            <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="FanartCheckbox" name="Fanart" value="Enable">
+                                        <label class="form-check-label" for="FanartCheckbox">Fanart</label>
+                                        </div>
                                     {% endif %}
                                 {% else %}
-                                        <label class="btn btn-default">
-                                            <input type="checkbox">
-                                        </label>Livestream
-                                        <label class="btn btn-default">
-                                            <input type="checkbox">
-                                        </label>Fanart
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="LiveCheckbox" name="Livestream" value="Enable">
+                                        <label class="form-check-label" for="LiveCheckbox">Livestream</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="FanartCheckbox" name="Fanart" value="Enable">
+                                        <label class="form-check-label" for="FanartCheckbox">Fanart</label>
+                                    </div>
                                 {% endif %}
-                                </div>                            
+                            <button type="submit" class="btn btn-block">Save</button>
+                        </form>
                         </div>
                         {% endif %}
                     {% endfor %}                

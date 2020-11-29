@@ -323,7 +323,6 @@ const GetDiscordChannel = async (ID,result) =>{
     let data = await knex.select('Channel.*','VtuberGroup.VtuberGroupName')
     .from("Channel").innerJoin('VtuberGroup','Channel.VtuberGroup_id','VtuberGroup.id')
     .where("Channel.DiscordChannelID",ID)
-
     Datafix = {
       "DiscordChannelID" : data[0].DiscordChannelID,
       "ChannelData" : []
@@ -339,6 +338,44 @@ const GetDiscordChannel = async (ID,result) =>{
         }
   
         Datafix.ChannelData.push({
+          "id": i.id,
+          "GroupName": i.VtuberGroupName,
+          "Type": i.Type,
+          "LiveOnly": Boolean(i.LiveOnly),
+          "NewUpcoming": Boolean(i.NewUpcoming),
+        })
+      });
+      result(null,Datafix)
+    } else {
+      result({ kind: "not_found" }, null); 
+    }
+  } catch (error) {
+    console.log(error)
+    result({kind:"Error kntl"},null)
+  }
+}
+
+const GetRols = async (ChanndlID,result) =>{
+  try {
+    let data = await knex.select('Channel.*','VtuberGroup.VtuberGroupName')
+    .from("Channel").innerJoin('VtuberGroup','Channel.VtuberGroup_id','VtuberGroup.id')
+    .where("Channel.DiscordChannelID",ID)
+    Datafix = {
+      "DiscordChannelID" : data[0].DiscordChannelID,
+      "ChannelData" : []
+    }
+    if (data.length) {
+      data.forEach(i => {
+        if (i.Type == 3) {
+          i.Type = "All"
+        } else if (i.Type == 2) {
+          i.Type = "Live"
+        } else {
+          i.Type = "Art"
+        }
+  
+        Datafix.ChannelData.push({
+          "id": i.id,
           "GroupName": i.VtuberGroupName,
           "Type": i.Type,
           "LiveOnly": Boolean(i.LiveOnly),

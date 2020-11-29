@@ -118,6 +118,9 @@ def go_simps_discord_cp(request):
 def go_simps_discord_channel(request,ChannelID):
     ChannelInfo,ChannelSupport = Discord.GetChannelInfo(ChannelID)
     Groups = Vtubers.GetGroups()
+    Roles = Discord.GetGuildRols()
+
+    print(Roles)
     try:
         for i in range(len(Groups)):
             del Groups[i]["VtuberGroupIcon"]
@@ -129,6 +132,4 @@ def go_simps_discord_channel(request,ChannelID):
                     Groups[i]["Enable"] = False                
     except:
         print("Not enable any groups")
-
-    #return HttpResponse("Dev")
-    return render(request,'Pilot/channel.html',{'ChannelName':ChannelInfo['name'],'Groups':Groups})
+    return render(request,'Pilot/channel.html',{'ChannelName':ChannelInfo,'Groups':Groups})
