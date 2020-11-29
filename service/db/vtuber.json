@@ -1533,6 +1533,34 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Maimoto",
+                    "EN_Name":"Maimoto Keisuke",
+                    "JP_Name":"舞元啓介",
+                    "Hashtag": {
+                        "Twitter": "#しら画",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCJubINhCcFXlsBwnHp0wl_g",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "maimoto_k",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Ange",
+                    "EN_Name":"Ange Katrina",
+                    "JP_Name":"アンジュ・カトリーナ",
+                    "Hashtag": {
+                        "Twitter": "#絵ンジュ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCHVXbQzkl3rDfsXWo8xi2qw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "ange_katrina_",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Chai-chan",
                     "EN_Name":"Hanabatake Chaika",
                     "JP_Name":"花畑チャイカ",
