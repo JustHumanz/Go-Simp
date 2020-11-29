@@ -1,3 +1,6 @@
+v0.4.9
+- Change twitter avatar scraping    
+
 v0.4.8
 - Migrate Guild handler to database
 - Create `network` module
