@@ -1575,6 +1575,20 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Yashiro",
+                    "EN_Name":"Yashiro Kizuku",
+                    "JP_Name":"社築",
+                    "Hashtag": {
+                        "Twitter": "#社築納品物",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCKMYISTJAQ8xTplUPHiABlA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "846kizuQ",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Hanamaki",
                     "EN_Name":"Hana Macchia",
                     "JP_Name":"ハナ・マキア",
