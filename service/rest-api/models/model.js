@@ -316,7 +316,17 @@ const Getsubscriber = async (Name, result) => {
     result({kind:"Error kntl"},null)
   }
 };
+async function GetRoles(ChannelID) {
+  let data = await knex('User').from("User").where("Channel_id", ChannelID);
 
+  let datafix = []
+  data.forEach(i =>  {
+    delete i.Channel_id
+    i.Human = Boolean(i.Human)
+    datafix.push(i)
+  });
+  return datafix
+}
 
 const GetDiscordChannel = async (ID,result) =>{
   try {
@@ -328,28 +338,24 @@ const GetDiscordChannel = async (ID,result) =>{
       "ChannelData" : []
     }
     if (data.length) {
-      data.forEach(i => {
-
-        (async function(){
-          const res = await knex('User').from("User").where("Channel_id", i.id);;
-        })()
-        console.log(res)
-        if (i.Type == 3) {
-          i.Type = "All"
-        } else if (i.Type == 2) {
-          i.Type = "Live"
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].Type == 3) {
+          data[i].Type = "All"
+        } else if (data[i].Type == 2) {
+          data[i].Type = "Live"
         } else {
-          i.Type = "Art"
+          data[i].Type = "Art"
         }
   
         Datafix.ChannelData.push({
-          "id": i.id,
-          "GroupName": i.VtuberGroupName,
-          "Type": i.Type,
-          "LiveOnly": Boolean(i.LiveOnly),
-          "NewUpcoming": Boolean(i.NewUpcoming),
-        })
-      });
+          "id": data[i].id,
+          "GroupName": data[i].VtuberGroupName,
+          "Type": data[i].Type,
+          "LiveOnly": Boolean(data[i].LiveOnly),
+          "NewUpcoming": Boolean(data[i].NewUpcoming),
+          "Roles" : await GetRoles(data[i].id),
+        }) 
+      }
       result(null,Datafix)
     } else {
       result({ kind: "not_found" }, null); 

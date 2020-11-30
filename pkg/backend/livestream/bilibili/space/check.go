@@ -18,19 +18,10 @@ func (Space *CheckSctruct) Check(limit string) *CheckSctruct {
 		Videotype string
 		PushVideo SpaceVideo
 		NewVideo  Vlist
-		body      []byte
-		curlerr   error
-		urls      = "https://api.bilibili.com/x/space/arc/search?mid=" + strconv.Itoa(Space.SpaceID) + "&ps=" + limit
 	)
-	body, curlerr = network.Curl(urls, nil)
+	body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/space/arc/search?mid="+strconv.Itoa(Space.SpaceID)+"&ps="+limit, nil)
 	if curlerr != nil {
-		log.Info("Trying use tor")
-		body, curlerr = network.CoolerCurl(urls, nil)
-		if curlerr != nil {
-			log.Error(curlerr)
-		} else {
-			log.Info("Successfully use tor")
-		}
+		log.Error(curlerr)
 	}
 
 	err := json.Unmarshal(body, &PushVideo)

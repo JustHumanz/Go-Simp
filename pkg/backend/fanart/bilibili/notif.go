@@ -27,7 +27,7 @@ func (NotifData Notif) PushNotif(Color int) {
 	Group := NotifData.Group
 	Bot := runner.Bot
 	ID, DiscordChannelID := database.ChannelTag(NotifData.MemberID, 1, "")
-
+	GroupIcon := ""
 	msg := ""
 	tags := ""
 	repost, url, err := engine.SaucenaoCheck(strings.Split(Data.Photos, "\n")[0])
@@ -59,11 +59,17 @@ func (NotifData Notif) PushNotif(Color int) {
 			tags = "_"
 		}
 
+		if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
+			GroupIcon = ""
+		} else {
+			GroupIcon = Group.IconURL
+		}
+
 		if tags == "_" && Group.NameGroup == "Independen" {
 
 		} else {
 			tmp, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
-				SetAuthor(strings.Title(Group.NameGroup), Group.IconURL).
+				SetAuthor(strings.Title(Group.NameGroup), GroupIcon).
 				SetTitle(Data.Author).
 				SetURL(Data.URL).
 				SetThumbnail(Data.Avatar).

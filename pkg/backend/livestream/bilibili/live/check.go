@@ -5,24 +5,15 @@ import (
 	"strconv"
 
 	network "github.com/JustHumanz/Go-simp/tools/network"
-	log "github.com/sirupsen/logrus"
 )
 
 func GetRoomStatus(RoomID int) (getInfoByRoom, error) {
 	var (
-		body    []byte
-		curlerr error
-		tmp     getInfoByRoom
-		url     = "https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=" + strconv.Itoa(RoomID)
+		tmp getInfoByRoom
 	)
-	body, curlerr = network.Curl(url, nil)
+	body, curlerr := network.CoolerCurl("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id="+strconv.Itoa(RoomID), nil)
 	if curlerr != nil {
-		body, curlerr = network.CoolerCurl(url, nil)
-		if curlerr != nil {
-			return getInfoByRoom{}, curlerr
-		} else {
-			log.Info("Successfully use tor")
-		}
+		return getInfoByRoom{}, curlerr
 	}
 	err := json.Unmarshal(body, &tmp)
 	if err != nil {
