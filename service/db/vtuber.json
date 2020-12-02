@@ -73,6 +73,20 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Tama",
+                    "EN_Name":"Quon Tama",
+                    "JP_Name":"久遠たま",
+                    "Hashtag": {
+                        "Twitter": "#たまのアトリエ工房",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UCBC7vYFNQoGPupe5NxPG4Bw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "quon01tama",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Artia",
                     "EN_Name":"Artia",
                     "JP_Name":"アティア",
@@ -1586,6 +1600,48 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "846kizuQ",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Tomoe",
+                    "EN_Name":"Shirayuki Tomoe",
+                    "JP_Name":"白雪巴",
+                    "Hashtag": {
+                        "Twitter": "#巴絵",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCuvk5PilcvDECU7dDZhQiEw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Tomoe_Shirayuki",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Sukoya",
+                    "EN_Name":"Sukoya Kana",
+                    "JP_Name":"健屋花那",
+                    "Hashtag": {
+                        "Twitter": "#いらすこや",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC8C1LLhBhf_E2IBPLSDJXlQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "sukosuko_sukoya",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Ruco",
+                    "EN_Name":"Suzuki Masaru",
+                    "JP_Name":"鈴木勝",
+                    "Hashtag": {
+                        "Twitter": "#漆黒の水鏡",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCryOPk2GZ1meIDt53tL30Tw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Darkness_Eater",
                     "Region":"JP"
                 },
                 {
