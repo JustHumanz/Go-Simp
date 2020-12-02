@@ -525,14 +525,14 @@ func ChannelStatus(ChannelID string) ([]string, []int, []string, []string) {
 		err = rows.Scan(&tmp, &tmp2, &tmp3, &tmp4)
 		BruhMoment(err, "", false)
 		if tmp3 {
-			LiveOnly = append(LiveOnly, "Enable")
+			LiveOnly = append(LiveOnly, "Enabled")
 		} else {
-			LiveOnly = append(LiveOnly, "Disable")
+			LiveOnly = append(LiveOnly, "Disabled")
 		}
 		if tmp4 {
-			NewUpcoming = append(NewUpcoming, "Enable")
+			NewUpcoming = append(NewUpcoming, "Enabled")
 		} else {
-			NewUpcoming = append(NewUpcoming, "Disable")
+			NewUpcoming = append(NewUpcoming, "Disabled")
 		}
 		Taglist = append(Taglist, tmp)
 		Type = append(Type, tmp2)
