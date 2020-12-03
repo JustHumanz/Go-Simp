@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	twitterscraper "github.com/n0madic/twitter-scraper"
+	twitterscraper "github.com/JustHumanz/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 

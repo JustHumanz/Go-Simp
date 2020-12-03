@@ -8,8 +8,8 @@ import (
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
+	twitterscraper "github.com/JustHumanz/twitter-scraper"
 	"github.com/bwmarrin/discordgo"
-	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 

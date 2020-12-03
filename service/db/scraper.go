@@ -12,8 +12,8 @@ import (
 	"time"
 
 	bilibili "github.com/JustHumanz/Go-simp/pkg/backend/livestream/bilibili/live"
-	"github.com/JustHumanz/Go-simp/pkg/backend/livestream/youtube"
-	"github.com/JustHumanz/Go-simp/tools/database"
+	youtube "github.com/JustHumanz/Go-simp/pkg/backend/livestream/youtube"
+	database "github.com/JustHumanz/Go-simp/tools/database"
 	network "github.com/JustHumanz/Go-simp/tools/network"
 
 	twitterscraper "github.com/JustHumanz/twitter-scraper"
