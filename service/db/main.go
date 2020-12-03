@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	youtube "github.com/JustHumanz/Go-simp/pkg/backend/livestream/youtube"
 	"github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
@@ -74,57 +75,56 @@ func init() {
 
 func main() {
 	database.Start(db)
-	TwitterFanart()
+	AddData(JsonData)
+	go CheckYT()
+	go CheckSchedule()
+	go CheckVideoSpace()
+	go CheckTBili()
+	go youtube.CheckPrivate()
+	go TwitterFanart()
 
 	log.Info("Done")
 	time.Sleep(6 * time.Minute)
 	os.Exit(0)
 	/*
-		AddData(JsonData)
-		go CheckYT()
-		go CheckSchedule()
-		go CheckVideoSpace()
-		go CheckTBili()
-		go youtube.CheckPrivate()
-		go TwitterFanart()
-			if (*Service) == "bootstrapping" {
-				AddData(JsonData)
-				go CheckYT()
-				go CheckSchedule()
-				go CheckVideoSpace()
-				go CheckTBili()
-				go youtube.CheckPrivate()
-				os.Exit(0)
-			} else if (*Service) == "twitter_scrap" {
-				Limit = 10000000
-				if *ScrapMember {
-					if len(flag.Args()) > 0 {
-						for i := 0; i < len(flag.Args()); i++ {
-							Data := engine.FindName(flag.Args()[i])
-							Tweet(Data.GroupName, Data.MemberID, Limit)
-						}
-						log.Info("Done")
-						os.Exit(0)
-					} else {
-						log.Error("No Vtuber Name found")
-						os.Exit(1)
-					}
-				} else {
-					for i := 0; i < len(JsonData.Vtuber.Group); i++ {
-						Tweet(JsonData.Vtuber.Group[i].GroupName, 0, Limit)
+		if (*Service) == "bootstrapping" {
+			AddData(JsonData)
+			go CheckYT()
+			go CheckSchedule()
+			go CheckVideoSpace()
+			go CheckTBili()
+			go youtube.CheckPrivate()
+			os.Exit(0)
+		} else if (*Service) == "twitter_scrap" {
+			Limit = 10000000
+			if *ScrapMember {
+				if len(flag.Args()) > 0 {
+					for i := 0; i < len(flag.Args()); i++ {
+						Data := engine.FindName(flag.Args()[i])
+						Tweet(Data.GroupName, Data.MemberID, Limit)
 					}
 					log.Info("Done")
 					os.Exit(0)
+				} else {
+					log.Error("No Vtuber Name found")
+					os.Exit(1)
 				}
 			} else {
-				AddData(JsonData)
-				//for _, NewData := range New {
-				//	NewData.SendNotif(Bot)
-				// }
-				//Tweet("Independen", 0, Limit)
+				for i := 0; i < len(JsonData.Vtuber.Group); i++ {
+					Tweet(JsonData.Vtuber.Group[i].GroupName, 0, Limit)
+				}
 				log.Info("Done")
 				os.Exit(0)
 			}
+		} else {
+			AddData(JsonData)
+			//for _, NewData := range New {
+			//	NewData.SendNotif(Bot)
+			// }
+			//Tweet("Independen", 0, Limit)
+			log.Info("Done")
+			os.Exit(0)
+		}
 	*/
 }
 
