@@ -56,7 +56,7 @@ func GetHashtag(GroupID int64) []MemberGroupID {
 }
 
 //GetGroup Get all vtuber groupData
-func GetGroup() []GroupName {
+func GetGroups() []GroupName {
 	rows, err := DB.Query(`SELECT id,VtuberGroupName,VtuberGroupIcon FROM VtuberGroup`)
 	BruhMoment(err, "", false)
 	defer rows.Close()
@@ -73,8 +73,8 @@ func GetGroup() []GroupName {
 	return Data
 }
 
-//GetName Get data of Vtuber member
-func GetName(GroupID int64) []Name {
+//GetMember Get data of Vtuber member
+func GetMembers(GroupID int64) []Name {
 	rows, err := DB.Query(`call GetVtuberName(?)`, GroupID)
 	BruhMoment(err, "", false)
 	defer rows.Close()

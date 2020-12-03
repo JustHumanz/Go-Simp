@@ -728,7 +728,7 @@ func GetHastagMember(MemberID int64) string {
 	return Data
 }
 
-func (Data InputTwitter) InputData() {
+func (Data InputTwitter) InputData() error {
 	if Data.MemberID != 0 {
 		var (
 			tmp   string
@@ -749,19 +749,26 @@ func (Data InputTwitter) InputData() {
 				"TweetID":  Data.TwitterData.ID,
 			}).Info("New Tweet")
 			stmt, err := db.Prepare(`INSERT INTO Twitter (PermanentURL,Author,Likes,Photos,Videos,Text,TweetID,VtuberMember_id) values(?,?,?,?,?,?,?,?)`)
-			engine.BruhMoment(err, "", false)
+			if err != nil {
+				return err
+			}
 
 			res, err := stmt.Exec(Data.TwitterData.PermanentURL, Data.TwitterData.Username, Data.TwitterData.Likes, Photos, Video, Data.TwitterData.Text, Data.TwitterData.ID, Data.MemberID)
-			engine.BruhMoment(err, "", false)
+			if err != nil {
+				return err
+			}
 
 			_, err = res.LastInsertId()
-			engine.BruhMoment(err, "", false)
+			if err != nil {
+				return err
+			}
 
 			defer stmt.Close()
 		} else {
 			log.Info("already added...")
 		}
 	}
+	return nil
 }
 
 func LiveBiliBili(Data map[string]interface{}) bool {

@@ -18,7 +18,7 @@ import (
 func CheckNew() {
 	for _, Group := range engine.GroupData {
 		wg := new(sync.WaitGroup)
-		for _, Member := range database.GetName(Group.ID) {
+		for _, Member := range database.GetMembers(Group.ID) {
 			wg.Add(1)
 			go func(Group database.GroupName, Member database.Name, wg *sync.WaitGroup) {
 				defer wg.Done()

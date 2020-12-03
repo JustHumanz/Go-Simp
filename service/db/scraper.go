@@ -3,17 +3,20 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"math/rand"
+	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
+	bilibili "github.com/JustHumanz/Go-simp/pkg/backend/livestream/bilibili/live"
 	"github.com/JustHumanz/Go-simp/pkg/backend/livestream/youtube"
 	"github.com/JustHumanz/Go-simp/tools/database"
-	"github.com/JustHumanz/Go-simp/tools/engine"
 	network "github.com/JustHumanz/Go-simp/tools/network"
 
-	twitterscraper "github.com/n0madic/twitter-scraper"
+	twitterscraper "github.com/JustHumanz/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -22,42 +25,37 @@ type Video struct {
 	Preview string
 }
 
-func Tweet(Group string, NameID int64, Limit int) {
-	var (
-		a []string
-	)
-	if NameID > 0 {
-		tmp := GetHastagMember(NameID)
-		a = append(a, tmp)
-	} else {
-		for _, hashtag := range GetHashtag(Group) {
-			if hashtag.TwitterHashtags != "" && hashtag.JpName != "桐生ココ" {
-				a = append(a, hashtag.TwitterHashtags)
+func TwitterFanart() {
+	for _, Group := range database.GetGroups() {
+		var wg sync.WaitGroup
+		twitterscraper.SetProxy("http://multi_tor:16379")
+		Member := database.GetMembers(Group.ID)
+		for i := 0; i < len(Member)-1; i++ {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				for tweet := range twitterscraper.SearchTweets(context.Background(), Member[i].TwitterHashtags+"  filter:links -filter:replies filter:media", Limit) {
+					if tweet.Error != nil {
+						log.Error(tweet.Error)
+					}
+					Data := &InputTwitter{
+						TwitterData: tweet.Tweet,
+						Group:       Group.NameGroup,
+						MemberID:    Member[i].ID,
+					}
+					err := Data.InputData()
+					if err != nil {
+						log.Error(err)
+					}
+				}
+			}()
+			if len(Member) > 7 && i == len(Member)/4 {
+				time.Sleep(1 * time.Minute)
+				log.Info("Sleep,avoid 429")
 			}
 		}
+		wg.Wait()
 	}
-	Hashtag := strings.Join(a, " OR ")
-	log.Info(Hashtag)
-
-	for tweet := range twitterscraper.SearchTweets(context.Background(), Hashtag+"  filter:links -filter:replies filter:media", Limit) {
-		engine.BruhMoment(tweet.Error, "", false)
-		Data := &InputTwitter{
-			TwitterData: tweet.Tweet,
-			Group:       Group,
-			MemberID:    NameID,
-		}
-		Data.FiltterTweet().InputData()
-	}
-}
-
-func (Data *InputTwitter) FiltterTweet() *InputTwitter {
-	for _, Hashtag := range GetHashtag(Data.Group) {
-		matched, _ := regexp.MatchString(Hashtag.TwitterHashtags, strings.Join(Data.TwitterData.Hashtags, " "))
-		if matched {
-			Data.MemberID = Hashtag.MemberID
-		}
-	}
-	return Data
 }
 
 type InputTwitter struct {
@@ -284,6 +282,227 @@ func (Data Member) BliBiliFace() string {
 		}
 
 		return strings.Replace(Info.Data.Face, "http", "https", -1)
+	}
+}
+
+func CheckYT() {
+	Data := database.GetGroups()
+	for i := 0; i < len(Data); i++ {
+		var wg sync.WaitGroup
+		for _, Name := range database.GetMembers(Data[i].ID) {
+			wg.Add(1)
+			go func(Name database.Name) {
+				if Name.YoutubeID != "" {
+					log.WithFields(log.Fields{
+						"Vtube":        Name.EnName,
+						"Youtube ID":   Name.YoutubeID,
+						"Vtube Region": Name.Region,
+					}).Info("Checking yt")
+					FilterYt(Name, &wg)
+				}
+
+			}(Name)
+		}
+		wg.Wait()
+	}
+}
+
+func CheckTBili() {
+	DataGroup := database.GetGroups()
+	for k := 0; k < len(DataGroup); k++ {
+		DataMember := database.GetMembers(DataGroup[k].ID)
+		for z := 0; z < len(DataMember); z++ {
+			if DataMember[z].BiliBiliHashtags != "" {
+				log.WithFields(log.Fields{
+					"Group":  DataGroup[k].NameGroup,
+					"Vtuber": DataMember[z].EnName,
+				}).Info("Start crawler T.bilibili")
+				body, err := network.Curl("https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_name="+url.QueryEscape(DataMember[z].BiliBiliHashtags), nil)
+				if err != nil {
+					log.Error(err)
+				}
+				var (
+					TB              TBiliBili
+					DynamicIDStrTmp string
+				)
+				_ = json.Unmarshal(body, &TB)
+				if (len(TB.Data.Cards) > 0) && TB.Data.Cards[0].Desc.DynamicIDStr != DynamicIDStrTmp {
+					DynamicIDStrTmp = TB.Data.Cards[0].Desc.DynamicIDStr
+					for i := 0; i < len(TB.Data.Cards); i++ {
+						var (
+							STB  SubTbili
+							img  []string
+							nope bool
+						)
+						_ = json.Unmarshal([]byte(TB.Data.Cards[i].Card), &STB)
+						if STB.Item.Pictures != nil && TB.Data.Cards[i].Desc.Type == 2 { //type 2 is picture post (prob,heheheh)
+							niggerlist := []string{"解锁专属粉丝卡片", "Official", "twitter.com", "咖啡厅", "CD", "专辑", "PIXIV", "遇", "marshmallow-qa.com"}
+							for _, Nworld := range niggerlist {
+								nope, _ = regexp.MatchString(Nworld, STB.Item.Description)
+								if nope {
+									break
+								}
+							}
+							New := database.GetTBiliBili(TB.Data.Cards[i].Desc.DynamicIDStr)
+
+							if New && !nope {
+								log.WithFields(log.Fields{
+									"Group":  DataGroup[k].NameGroup,
+									"Vtuber": DataMember[z].EnName,
+								}).Info("New Fanart")
+								for l := 0; l < len(STB.Item.Pictures); l++ {
+									img = append(img, STB.Item.Pictures[l].ImgSrc)
+								}
+
+								Data := database.InputTBiliBili{
+									URL:        "https://t.bilibili.com/" + TB.Data.Cards[i].Desc.DynamicIDStr + "?tab=2",
+									Author:     TB.Data.Cards[i].Desc.UserProfile.Info.Uname,
+									Avatar:     TB.Data.Cards[i].Desc.UserProfile.Info.Face,
+									Like:       TB.Data.Cards[i].Desc.Like,
+									Photos:     strings.Join(img, "\n"),
+									Dynamic_id: TB.Data.Cards[i].Desc.DynamicIDStr,
+									Text:       STB.Item.Description,
+								}
+								log.Info("Send to database")
+								Data.InputTBiliBili(DataMember[z].ID)
+							} else {
+								log.WithFields(log.Fields{
+									"Group":  DataGroup[k].NameGroup,
+									"Vtuber": DataMember[z].EnName,
+								}).Info("Still same")
+							}
+						}
+					}
+				} else {
+					log.WithFields(log.Fields{
+						"Group":  DataGroup[k].NameGroup,
+						"Vtuber": DataMember[z].EnName,
+					}).Info("Still same")
+				}
+				time.Sleep(time.Duration(int64(rand.Intn((7-1)+1))) * time.Second)
+			}
+		}
+	}
+}
+
+func CheckSchedule() {
+	log.Info("Start check BiliBili room")
+	for _, Group := range database.GetGroups() {
+		for _, Member := range database.GetMembers(Group.ID) {
+			if Member.BiliBiliID != 0 {
+				log.WithFields(log.Fields{
+					"Group":   Group.NameGroup,
+					"SpaceID": Member.EnName,
+				}).Info("Check Room")
+				var (
+					ScheduledStart time.Time
+				)
+				DataDB := database.GetRoomData(Member.ID, Member.BiliRoomID)
+				Status, err := bilibili.GetRoomStatus(Member.BiliRoomID)
+				if err != nil {
+					log.Error(err)
+				}
+				loc, _ := time.LoadLocation("Asia/Shanghai")
+				if Status.Data.RoomInfo.LiveStartTime != 0 {
+					ScheduledStart = time.Unix(int64(Status.Data.RoomInfo.LiveStartTime), 0).In(loc)
+				} else {
+					ScheduledStart = time.Time{}
+				}
+				Data := map[string]interface{}{
+					"LiveRoomID":     Member.BiliRoomID,
+					"Status":         "",
+					"Title":          Status.Data.RoomInfo.Title,
+					"Thumbnail":      Status.Data.RoomInfo.Cover,
+					"Description":    Status.Data.NewsInfo.Content,
+					"PublishedAt":    time.Time{},
+					"ScheduledStart": ScheduledStart,
+					"Face":           Status.Data.AnchorInfo.BaseInfo.Face,
+					"Online":         Status.Data.RoomInfo.Online,
+					"BiliBiliID":     Member.BiliBiliID,
+					"MemberID":       Member.ID,
+				}
+				if Status.CheckScheduleLive() {
+					//Live
+					log.WithFields(log.Fields{
+						"Group":      Group.NameGroup,
+						"VtuberName": Member.Name,
+					}).Info("Status Live")
+					Data["Status"] = "Live"
+					LiveBiliBili(Data)
+				} else if !Status.CheckScheduleLive() && DataDB.Status == "Live" {
+					//prob past
+					log.WithFields(log.Fields{
+						"Group":      Group.NameGroup,
+						"VtuberName": Member.Name,
+					}).Info("Status Past")
+					Data["Status"] = "Past"
+					LiveBiliBili(Data)
+				} else if DataDB.LiveRoomID == 0 {
+					log.WithFields(log.Fields{
+						"Group":      Group.NameGroup,
+						"VtuberName": Member.Name,
+					}).Info("Status Unknown")
+					Data["Status"] = "Unknown"
+					LiveBiliBili(Data)
+				}
+			}
+		}
+	}
+}
+
+func CheckVideoSpace() {
+	Group := database.GetGroups()
+	loc, _ := time.LoadLocation("Asia/Shanghai")
+	for z := 0; z < len(Group); z++ {
+		Name := database.GetMembers(Group[z].ID)
+		for k := 0; k < len(Name); k++ {
+			if Name[k].BiliBiliID != 0 {
+				log.WithFields(log.Fields{
+					"Group":   Group[z].NameGroup,
+					"SpaceID": Name[k].EnName,
+				}).Info("Check Space")
+				var (
+					PushVideo SpaceVideo
+					videotype string
+					url       []string
+				)
+				baseurl := "https://api.bilibili.com/x/space/arc/search?mid=" + strconv.Itoa(Name[k].BiliBiliID) + "&ps=100"
+				url = []string{baseurl + "&tid=1", baseurl + "&tid=3", baseurl + "&tid=4"}
+				for f := 0; f < len(url); f++ {
+					body, err := network.Curl(url[f], nil)
+					if err != nil {
+						log.Error(err, string(body))
+					}
+					var tmp SpaceVideo
+					err = json.Unmarshal(body, &tmp)
+					if err != nil {
+						log.Error(err)
+					}
+					for _, Vlist := range tmp.Data.List.Vlist {
+						PushVideo.Data.List.Vlist = append(PushVideo.Data.List.Vlist, Vlist)
+					}
+				}
+
+				for _, video := range PushVideo.Data.List.Vlist {
+					if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|翻唱|mv)", strings.ToLower(video.Title)); Cover {
+						videotype = "Covering"
+					} else {
+						videotype = "Streaming"
+					}
+					tmp := database.InputBiliBili{
+						VideoID:  video.Bvid,
+						Type:     videotype,
+						Title:    video.Title,
+						Thum:     "https:" + video.Pic,
+						Desc:     video.Description,
+						Update:   time.Unix(int64(video.Created), 0).In(loc),
+						Viewers:  video.Play,
+						MemberID: Name[k].ID,
+					}
+					tmp.InputSpaceVideo()
+				}
+			}
+		}
 	}
 }
 

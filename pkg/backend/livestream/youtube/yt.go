@@ -25,7 +25,7 @@ func CheckSchedule() {
 	yttoken = engine.GetYtToken()
 	for _, Group := range engine.GroupData {
 		var wg sync.WaitGroup
-		for _, Member := range database.GetName(Group.ID) {
+		for _, Member := range database.GetMembers(Group.ID) {
 			if Member.YoutubeID != "" {
 				wg.Add(1)
 				log.WithFields(log.Fields{
@@ -133,7 +133,7 @@ func CheckPrivate() {
 	log.Info("Start Check Private video")
 	for _, Status := range []string{"upcoming", "past", "live", "private"} {
 		for _, Group := range engine.GroupData {
-			for i, Member := range database.GetName(Group.ID) {
+			for i, Member := range database.GetMembers(Group.ID) {
 				if i == 50 {
 					break
 				} else {

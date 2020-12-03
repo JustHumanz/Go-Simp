@@ -13,7 +13,7 @@ import (
 
 func CheckTwFollowCount() {
 	for _, Group := range engine.GroupData {
-		for _, Name := range database.GetName(Group.ID) {
+		for _, Name := range database.GetMembers(Group.ID) {
 			if Name.TwitterName != "" {
 				Twitter, err := Name.GetTwitterFollow()
 				if err != nil {
