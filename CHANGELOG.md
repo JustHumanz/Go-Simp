@@ -1,3 +1,6 @@
+v0.4.10
+- fix fanart #51
+
 v0.4.9
 - Change twitter avatar scraping    
 - Add discord id submitter
