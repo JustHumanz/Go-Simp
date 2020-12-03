@@ -31,7 +31,7 @@ func Tweet(Group string, NameID int64, Limit int) {
 		a = append(a, tmp)
 	} else {
 		for _, hashtag := range GetHashtag(Group) {
-			if hashtag.TwitterHashtags != "" && hashtag.JpName == "桐生ココ" {
+			if hashtag.TwitterHashtags != "" && hashtag.JpName != "桐生ココ" {
 				a = append(a, hashtag.TwitterHashtags)
 			}
 		}
