@@ -185,7 +185,7 @@ func GetFanart(GroupID, MemberID int64) DataFanart {
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&Data.EnName, &Data.JpName, &Data.PermanentURL, &Data.Author, &PhotoTmp, &Video, &Data.Text)
+		err = rows.Scan(&Data.ID, &Data.EnName, &Data.JpName, &Data.PermanentURL, &Data.Author, &PhotoTmp, &Video, &Data.Text)
 		if err != nil {
 			log.Error(err)
 		}
@@ -194,6 +194,24 @@ func GetFanart(GroupID, MemberID int64) DataFanart {
 	Data.Photos = strings.Fields(PhotoTmp.String)
 	return Data
 
+}
+
+func (Data DataFanart) DeleteFanart() error {
+	if Data.State == "Twitter" {
+		stmt, err := DB.Prepare(`DELETE From Twitter WHERE id=?`)
+		BruhMoment(err, "", false)
+		defer stmt.Close()
+
+		stmt.Exec(Data.ID)
+		return nil
+	} else {
+		stmt, err := DB.Prepare(`DELETE From TBiliBili WHERE id=?`)
+		BruhMoment(err, "", false)
+		defer stmt.Close()
+
+		stmt.Exec(Data.ID)
+		return nil
+	}
 }
 
 //InputTwitter Input new fanart from twitter

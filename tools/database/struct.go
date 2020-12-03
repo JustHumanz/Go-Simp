@@ -15,6 +15,7 @@ type MemberGroupID struct {
 }
 
 type DataFanart struct {
+	ID           int64
 	EnName       string
 	JpName       string
 	PermanentURL string

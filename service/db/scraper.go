@@ -41,7 +41,7 @@ func Tweet(Group string, NameID int64, Limit int) {
 
 	for tweet := range twitterscraper.SearchTweets(context.Background(), Hashtag+"  filter:links -filter:replies filter:media", Limit) {
 		engine.BruhMoment(tweet.Error, "", false)
-		Data := InputTwitter{
+		Data := &InputTwitter{
 			TwitterData: tweet.Tweet,
 			Group:       Group,
 			MemberID:    NameID,
@@ -50,7 +50,7 @@ func Tweet(Group string, NameID int64, Limit int) {
 	}
 }
 
-func (Data InputTwitter) FiltterTweet() InputTwitter {
+func (Data *InputTwitter) FiltterTweet() *InputTwitter {
 	for _, Hashtag := range GetHashtag(Data.Group) {
 		matched, _ := regexp.MatchString(Hashtag.TwitterHashtags, strings.Join(Data.TwitterData.Hashtags, " "))
 		if matched {
@@ -133,7 +133,6 @@ func (Data Member) YtAvatar() string {
 		)
 		bit, err = network.Curl(URL, nil)
 		if err != nil {
-			log.Error(err)
 			bit, err = network.CoolerCurl(URL, nil)
 			if err != nil {
 				log.Error(err)

@@ -363,12 +363,12 @@ func CreateDB(Data config.ConfigFile) error {
 		)
 		BEGIN
 		IF State = 'twitter' THEN
-			SELECT VtuberName_EN,VtuberName_JP,PermanentURL,Author,Photos,Videos,Text FROM Vtuber.Twitter 
+			SELECT Twitter.id,VtuberName_EN,VtuberName_JP,PermanentURL,Author,Photos,Videos,Text FROM Vtuber.Twitter 
 			Inner Join Vtuber.VtuberMember on VtuberMember.id = Twitter.VtuberMember_id 
 			Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id 
 			where (VtuberGroup.id=GroupID OR VtuberMember.id=MemberID)  ORDER by RAND() LIMIT 1;
 		else
-			SELECT VtuberName_EN,VtuberName_JP,PermanentURL,Author,Photos,Videos,Text FROM Vtuber.TBiliBili  
+			SELECT TBiliBili.id,VtuberName_EN,VtuberName_JP,PermanentURL,Author,Photos,Videos,Text FROM Vtuber.TBiliBili  
 			Inner Join Vtuber.VtuberMember on VtuberMember.id = TBiliBili.VtuberMember_id 
 			Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id 
 			where (VtuberGroup.id=GroupID OR VtuberMember.id=MemberID)  ORDER by RAND() LIMIT 1;
