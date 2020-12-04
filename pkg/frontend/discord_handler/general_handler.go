@@ -118,7 +118,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					break
 				}
 			}
-			for _, MemberData := range database.GetName(GroupData.ID) {
+			for _, MemberData := range database.GetMembers(GroupData.ID) {
 				if m.Content == strings.ToLower(Prefix+MemberData.Name) || m.Content == strings.ToLower(Prefix+MemberData.JpName) {
 					Color, err := engine.GetColor("/tmp/mem.tmp", m.Author.AvatarURL("128"))
 					if err != nil {
@@ -237,7 +237,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							User.SetGroupID(VTuberGroup.ID).
 								SetReminder(ReminderUser)
 
-							for _, Member := range database.GetName(VTuberGroup.ID) {
+							for _, Member := range database.GetMembers(VTuberGroup.ID) {
 								err := User.Adduser(Member.ID)
 								if err != nil {
 									Already = append(Already, "`"+Member.Name+"`")
@@ -391,7 +391,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						if database.CheckChannelEnable(m.ChannelID, Name, VTuberGroup.ID) {
 							User.SetGroupID(VTuberGroup.ID).
 								SetReminder(ReminderUser)
-							for _, Member := range database.GetName(VTuberGroup.ID) {
+							for _, Member := range database.GetMembers(VTuberGroup.ID) {
 								err = User.UpdateReminder(Member.ID)
 								if err != nil {
 									log.Error(err)
@@ -506,7 +506,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 						if database.CheckChannelEnable(m.ChannelID, Name, VTuberGroup.ID) {
 							User.SetGroupID(VTuberGroup.ID)
-							for _, Member := range database.GetName(VTuberGroup.ID) {
+							for _, Member := range database.GetMembers(VTuberGroup.ID) {
 								err := User.Deluser(Member.ID)
 								if err != nil {
 									Already = append(Already, "`"+Member.Name+"`")
@@ -674,7 +674,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								for _, Role := range guild.Roles {
 									for _, UserRole := range VtuberName {
 										if UserRole == Role.Mention() {
-											for _, Member := range database.GetName(VTuberGroup.ID) {
+											for _, Member := range database.GetMembers(VTuberGroup.ID) {
 												User := database.UserStruct{
 													DiscordID:       Role.ID,
 													DiscordUserName: Role.Name,
@@ -838,7 +838,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								for _, Role := range guild.Roles {
 									for _, UserRole := range VtuberName {
 										if UserRole == Role.Mention() {
-											for _, Member := range database.GetName(VTuberGroup.ID) {
+											for _, Member := range database.GetMembers(VTuberGroup.ID) {
 												User := database.UserStruct{
 													DiscordID:       Role.ID,
 													DiscordUserName: Role.Name,
@@ -1012,7 +1012,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								for _, Role := range guild.Roles {
 									for _, UserRole := range VtuberName {
 										if UserRole == Role.Mention() {
-											for _, Member := range database.GetName(VTuberGroup.ID) {
+											for _, Member := range database.GetMembers(VTuberGroup.ID) {
 												User := database.UserStruct{
 													DiscordID:       Role.ID,
 													DiscordUserName: Role.Name,
@@ -1739,7 +1739,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				for _, Group := range engine.GroupData {
 					for _, Grp := range GroupInput {
 						if Grp == strings.ToLower(Group.NameGroup) {
-							for _, Member := range database.GetName(Group.ID) {
+							for _, Member := range database.GetMembers(Group.ID) {
 								yt := ""
 								bl := ""
 								if Member.YoutubeID != "" {

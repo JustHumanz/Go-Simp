@@ -75,7 +75,7 @@ func init() {
 
 func main() {
 	database.Start(db)
-	AddData(JsonData)
+	//AddData(JsonData)
 	go CheckYT()
 	go CheckSchedule()
 	go CheckVideoSpace()

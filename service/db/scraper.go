@@ -16,7 +16,7 @@ import (
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	network "github.com/JustHumanz/Go-simp/tools/network"
 
-	twitterscraper "github.com/JustHumanz/twitter-scraper"
+	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -49,10 +49,6 @@ func TwitterFanart() {
 					}
 				}
 			}()
-			if len(Member) > 7 && i == len(Member)/4 {
-				time.Sleep(1 * time.Minute)
-				log.Info("Sleep,avoid 429")
-			}
 		}
 		wg.Wait()
 	}

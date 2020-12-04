@@ -8,8 +8,8 @@ import (
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
-	twitterscraper "github.com/JustHumanz/twitter-scraper"
 	"github.com/bwmarrin/discordgo"
+	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -67,7 +67,7 @@ func StartInit(path string) error {
 //ValidName Find a valid name from user input
 func ValidName(Name string) Memberst {
 	for _, Group := range engine.GroupData {
-		for _, Member := range database.GetName(Group.ID) {
+		for _, Member := range database.GetMembers(Group.ID) {
 			if Name == strings.ToLower(Member.Name) || Name == strings.ToLower(Member.JpName) {
 				return Memberst{
 					VTName:     engine.FixName(Member.EnName, Member.JpName),
@@ -86,7 +86,7 @@ func ValidName(Name string) Memberst {
 //FindName Find a valid Vtuber name from message handler
 func FindName(MemberName string) NameStruct {
 	for _, Group := range engine.GroupData {
-		for _, Name := range database.GetName(Group.ID) {
+		for _, Name := range database.GetMembers(Group.ID) {
 			if strings.ToLower(Name.Name) == MemberName || strings.ToLower(Name.JpName) == MemberName {
 				return NameStruct{
 					GroupName:  Group.NameGroup,
