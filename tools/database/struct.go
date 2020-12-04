@@ -28,13 +28,13 @@ type DataFanart struct {
 	State        string
 }
 
-type GroupName struct {
+type Group struct {
 	ID        int64
 	IconURL   string
 	NameGroup string
 }
 
-type Name struct {
+type Member struct {
 	ID               int64
 	Name             string
 	EnName           string

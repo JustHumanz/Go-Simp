@@ -110,13 +110,13 @@ type NameStruct struct {
 }
 
 //FindGropName Find a valid Vtuber Group from message handler
-func FindGropName(GroupName string) (database.GroupName, error) {
+func FindGropName(GroupName string) (database.Group, error) {
 	for _, Group := range engine.GroupData {
 		if strings.ToLower(Group.NameGroup) == strings.ToLower(GroupName) {
 			return Group, nil
 		}
 	}
-	return database.GroupName{}, errors.New(GroupName + " Name Vtuber not valid")
+	return database.Group{}, errors.New(GroupName + " Name Vtuber not valid")
 }
 
 //RemovePic Remove twitter pic

@@ -23,7 +23,7 @@ func CheckSchedule() {
 		wg := new(sync.WaitGroup)
 		for _, Member := range database.GetMembers(Group.ID) {
 			wg.Add(1)
-			go func(Group database.GroupName, Member database.Name, wg *sync.WaitGroup) {
+			go func(Group database.Group, Member database.Member, wg *sync.WaitGroup) {
 				defer wg.Done()
 				if Member.BiliBiliID != 0 {
 					var (

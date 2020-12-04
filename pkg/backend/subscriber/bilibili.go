@@ -27,16 +27,9 @@ func CheckBiliFollowCount() {
 				)
 				wg.Add(3)
 				go func() {
-					var (
-						urls = "https://api.bilibili.com/x/relation/stat?vmid=" + strconv.Itoa(Name.BiliBiliID)
-					)
-					body, curlerr = network.Curl(urls, nil)
+					body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/relation/stat?vmid="+strconv.Itoa(Name.BiliBiliID), nil)
 					if curlerr != nil {
-						log.Warn("Trying use tor")
-						body, curlerr = network.CoolerCurl(urls, nil)
-						if curlerr != nil {
-							log.Error(curlerr)
-						}
+						log.Error(curlerr)
 					}
 					err := json.Unmarshal(body, &bilistate.Follow)
 					if err != nil {
@@ -46,14 +39,9 @@ func CheckBiliFollowCount() {
 				}()
 
 				go func() {
-					urls := "https://api.bilibili.com/x/space/upstat?mid=" + strconv.Itoa(Name.BiliBiliID)
-					body, curlerr = network.Curl(urls, nil)
+					body, curlerr = network.CoolerCurl("https://api.bilibili.com/x/space/upstat?mid="+strconv.Itoa(Name.BiliBiliID), nil)
 					if curlerr != nil {
-						log.Warn("Trying use tor")
-						body, curlerr = network.CoolerCurl(urls, []string{"Cookie", "SESSDATA=" + config.BiliBiliSes})
-						if curlerr != nil {
-							log.Error(curlerr)
-						}
+						log.Error(curlerr)
 					}
 					err := json.Unmarshal(body, &bilistate.LikeView)
 					if err != nil {
@@ -66,13 +54,9 @@ func CheckBiliFollowCount() {
 					baseurl := "https://api.bilibili.com/x/space/arc/search?mid=" + strconv.Itoa(Name.BiliBiliID) + "&ps=100"
 					url := []string{baseurl + "&tid=1", baseurl + "&tid=3", baseurl + "&tid=4"}
 					for f := 0; f < len(url); f++ {
-						body, curlerr = network.Curl(url[f], nil)
+						body, curlerr := network.CoolerCurl(url[f], nil)
 						if curlerr != nil {
-							log.Warn("Trying use tor")
-							body, curlerr = network.CoolerCurl(url[f], nil)
-							if curlerr != nil {
-								log.Error(curlerr)
-							}
+							log.Error(curlerr)
 						}
 						var video space.SpaceVideo
 						err := json.Unmarshal(body, &video)

@@ -13,6 +13,7 @@ import (
 
 	bilibili "github.com/JustHumanz/Go-simp/pkg/backend/livestream/bilibili/live"
 	youtube "github.com/JustHumanz/Go-simp/pkg/backend/livestream/youtube"
+	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	network "github.com/JustHumanz/Go-simp/tools/network"
 	twitterscraper "github.com/n0madic/twitter-scraper"
@@ -20,12 +21,12 @@ import (
 )
 
 func TwitterFanart() {
-	twitterscraper.SetProxy("http://multi_tor:16379")
+	twitterscraper.SetProxy(config.MultiTOR)
 	for _, Group := range database.GetGroups() {
 		var wg sync.WaitGroup
 		for _, Member := range database.GetMembers(Group.ID) {
 			wg.Add(1)
-			go func(wg *sync.WaitGroup, Member database.Name, Group database.GroupName) {
+			go func(wg *sync.WaitGroup, Member database.Member, Group database.Group) {
 				defer wg.Done()
 				if Member.TwitterHashtags != "" {
 					for tweet := range twitterscraper.SearchTweets(context.Background(), Member.TwitterHashtags+"  filter:links -filter:replies filter:media", Limit) {
@@ -52,10 +53,10 @@ func TwitterFanart() {
 
 type InputTwitter struct {
 	TwitterData twitterscraper.Tweet
-	Member      database.Name
+	Member      database.Member
 }
 
-func FilterYt(Dat database.Name, wg *sync.WaitGroup) {
+func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 	VideoID := youtube.GetRSS(Dat.YoutubeID)
 	defer wg.Done()
 	body, err := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,actualEndTime),statistics(viewCount))&id="+strings.Join(VideoID, ",")+"&key="+YtToken, nil)
@@ -282,7 +283,7 @@ func CheckYT() {
 		var wg sync.WaitGroup
 		for _, Name := range database.GetMembers(Data[i].ID) {
 			wg.Add(1)
-			go func(Name database.Name) {
+			go func(Name database.Member) {
 				if Name.YoutubeID != "" {
 					log.WithFields(log.Fields{
 						"Vtube":        Name.EnName,

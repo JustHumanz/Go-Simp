@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 
+	config "github.com/JustHumanz/Go-simp/tools/config"
 	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
@@ -56,14 +57,14 @@ func GetHashtag(GroupID int64) []MemberGroupID {
 }
 
 //GetGroup Get all vtuber groupData
-func GetGroups() []GroupName {
+func GetGroups() []Group {
 	rows, err := DB.Query(`SELECT id,VtuberGroupName,VtuberGroupIcon FROM VtuberGroup`)
 	BruhMoment(err, "", false)
 	defer rows.Close()
 
-	var Data []GroupName
+	var Data []Group
 	for rows.Next() {
-		var list GroupName
+		var list Group
 		err = rows.Scan(&list.ID, &list.NameGroup, &list.IconURL)
 		BruhMoment(err, "", false)
 
@@ -74,14 +75,14 @@ func GetGroups() []GroupName {
 }
 
 //GetMember Get data of Vtuber member
-func GetMembers(GroupID int64) []Name {
+func GetMembers(GroupID int64) []Member {
 	rows, err := DB.Query(`call GetVtuberName(?)`, GroupID)
 	BruhMoment(err, "", false)
 	defer rows.Close()
 
-	var Data []Name
+	var Data []Member
 	for rows.Next() {
-		var list Name
+		var list Member
 		err = rows.Scan(&list.ID, &list.Name, &list.EnName, &list.JpName, &list.YoutubeID, &list.BiliBiliID, &list.BiliRoomID, &list.Region, &list.TwitterHashtags, &list.BiliBiliHashtags, &list.BiliBiliAvatar, &list.TwitterName, &list.YoutubeAvatar)
 		BruhMoment(err, "", false)
 		Data = append(Data, list)
@@ -96,7 +97,7 @@ func gacha() bool {
 }
 
 //GetSubsCount Get subs,follow,view,like data from Subscriber
-func (Member Name) GetSubsCount() *MemberSubs {
+func (Member Member) GetSubsCount() *MemberSubs {
 	var Data MemberSubs
 	rows, err := DB.Query(`SELECT * FROM Subscriber WHERE VtuberMember_id=?`, Member.ID)
 	BruhMoment(err, "", false)
@@ -469,7 +470,7 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 }
 
 //Get DiscordChannelID from VtuberGroup
-func (Data GroupName) GetChannelByGroup() ([]int, []string) {
+func (Data Group) GetChannelByGroup() ([]int, []string) {
 	var (
 		channellist []string
 		idlist      []int
@@ -659,7 +660,8 @@ func GetUserReminderList(ChannelIDDiscord int, Member int64, Reminder int) []str
 }
 
 //Scrapping twitter followers
-func (Data Name) GetTwitterFollow() (twitterscraper.Profile, error) {
+func (Data Member) GetTwitterFollow() (twitterscraper.Profile, error) {
+	twitterscraper.SetProxy(config.MultiTOR)
 	profile, err := twitterscraper.GetProfile(Data.TwitterName)
 	if err != nil {
 		return twitterscraper.Profile{}, err

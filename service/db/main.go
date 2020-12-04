@@ -33,7 +33,7 @@ var (
 
 type NewVtuber struct {
 	Member Member
-	Group  database.GroupName
+	Group  database.Group
 }
 
 func init() {
@@ -210,9 +210,9 @@ func Dead(s *discordgo.Session, m *discordgo.MessageCreate) {
 			s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 				SetTitle("Bot update new Vtubers").
-				SetURL("https://github.com/JustHumanz/Go-Simp/blob/main/CHANGELOG").
+				SetURL("https://github.com/JustHumanz/Go-Simp/blob/main/CHANGELOG.md").
 				SetDescription("Still Processing new data,Comeback when i ready to bang you (around 10-20 minutes or more,~~idk i don't fvcking count~~)").
-				AddField("See update at", "[Changelog](https://github.com/JustHumanz/Go-Simp/blob/main/CHANGELOG)").
+				AddField("See update at", "[Changelog](https://github.com/JustHumanz/Go-Simp/blob/main/CHANGELOG.md)").
 				SetThumbnail(config.Sleep).
 				SetImage(config.Dead).
 				SetColor(Color).

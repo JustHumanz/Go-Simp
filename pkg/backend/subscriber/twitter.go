@@ -3,7 +3,6 @@ package subscriber
 import (
 	"strconv"
 	"strings"
-	"time"
 
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
@@ -74,7 +73,6 @@ func CheckTwFollowCount() {
 				TwFollowDB.UptwFollow(Twitter.FollowersCount).
 					UpdateSubs("tw")
 			}
-			time.Sleep(1 * time.Second)
 		}
 	}
 }

@@ -464,7 +464,7 @@ func AddData(Data Vtuber) {
 
 				for _, Channel := range Channels {
 					msg, err := Bot.ChannelMessageSendEmbed(Channel, NewVtuber{
-						Group: database.GroupName{
+						Group: database.Group{
 							ID:        GroupIDIndependen,
 							NameGroup: "Independen",
 							IconURL:   "https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/independen.png",
@@ -579,7 +579,7 @@ func AddData(Data Vtuber) {
 
 					for _, Channel := range Channels {
 						msg, err := Bot.ChannelMessageSendEmbed(Channel, NewVtuber{
-							Group: database.GroupName{
+							Group: database.Group{
 								ID:        GroupID,
 								NameGroup: Group.GroupName,
 								IconURL:   Group.GroupIcon,

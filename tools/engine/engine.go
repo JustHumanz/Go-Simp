@@ -28,7 +28,7 @@ var (
 	//BotID      *discordgo.User
 	//BotSession *discordgo.Session
 	//db         *sql.DB
-	GroupData  []database.GroupName
+	GroupData  []database.Group
 	GroupsName []string
 	RegList    = make(map[string]string)
 	//PathLiteDB = "./engine/guild.db"

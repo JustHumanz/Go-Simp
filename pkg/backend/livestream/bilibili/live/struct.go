@@ -841,7 +841,7 @@ type RoomID2 struct {
 
 type LiveBili struct {
 	RoomData *database.LiveBiliDB
-	Member   database.Name
+	Member   database.Member
 	Embed    *discordgo.MessageEmbed
 }
 
@@ -865,7 +865,7 @@ func (Data *LiveBili) UpdateOnline(new int) *LiveBili {
 	return Data
 }
 
-func (Data *LiveBili) AddMember(new database.Name) *LiveBili {
+func (Data *LiveBili) AddMember(new database.Member) *LiveBili {
 	Data.Member = new
 	return Data
 }

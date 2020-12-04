@@ -10,7 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func SendNude(Embed *discordgo.MessageEmbed, Group database.GroupName, MemberID int64) {
+func SendNude(Embed *discordgo.MessageEmbed, Group database.Group, MemberID int64) {
 	Bot := runner.Bot
 	ChannelID, DiscordChannelID := Group.GetChannelByGroup()
 	for i, Channel := range DiscordChannelID {

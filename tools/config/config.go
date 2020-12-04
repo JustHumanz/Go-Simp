@@ -28,6 +28,7 @@ var (
 	Logging        string
 	DiscordWebHook string
 	config         ConfigFile
+	MultiTOR       string
 )
 
 const (
@@ -61,6 +62,7 @@ type ConfigFile struct {
 	BiliSess       string   `toml:"BiliSess"`
 	SauceAPI       string   `toml:"SauceAPI"`
 	DiscordWebHook string   `toml:"DiscordWebHook"`
+	MultiTOR       string   `toml:"Multitor"`
 	SQL            struct {
 		User string `toml:"User"`
 		Pass string `toml:"Pass"`
@@ -103,6 +105,7 @@ func ReadConfig(path string) (ConfigFile, error) {
 	Logging = os.Getenv("LOG")
 
 	DiscordWebHook = config.DiscordWebHook
+	MultiTOR = config.MultiTOR
 
 	Token = config.Discord
 	YtToken = config.YtToken

@@ -8,6 +8,7 @@ ImgurClinet = "#ImgurClinet"
 BiliSess = "#BiliSess"
 SauceAPI = "#SauceAPI"
 DiscordWebHook = "#URL"
+Multitor = "#Http Proxy"
 YtToken = [
   "#GoogleAPI",
   "#GoogleAPI"
