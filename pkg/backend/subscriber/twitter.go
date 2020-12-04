@@ -3,7 +3,6 @@ package subscriber
 import (
 	"strconv"
 	"strings"
-	"time"
 
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
@@ -13,7 +12,7 @@ import (
 
 func CheckTwFollowCount() {
 	for _, Group := range engine.GroupData {
-		for _, Name := range database.GetName(Group.ID) {
+		for _, Name := range database.GetMembers(Group.ID) {
 			if Name.TwitterName != "" {
 				Twitter, err := Name.GetTwitterFollow()
 				if err != nil {
@@ -74,7 +73,6 @@ func CheckTwFollowCount() {
 				TwFollowDB.UptwFollow(Twitter.FollowersCount).
 					UpdateSubs("tw")
 			}
-			time.Sleep(1 * time.Second)
 		}
 	}
 }

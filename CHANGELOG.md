@@ -1,3 +1,10 @@
+v0.4.10
+- Fix fanart #51
+- Change some log format
+- Add http proxy in .toml config
+- Change struct name
+
+
 v0.4.9
 - Change twitter avatar scraping    
 - Add discord id submitter

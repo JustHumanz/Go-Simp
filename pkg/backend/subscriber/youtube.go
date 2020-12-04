@@ -16,7 +16,7 @@ func CheckYtSubsCount() {
 	var YTstate Subs
 	for _, Group := range engine.GroupData {
 		var VtubChannel []string
-		Names := database.GetName(Group.ID)
+		Names := database.GetMembers(Group.ID)
 		for i, Member := range Names {
 			if Member.YoutubeID != "" {
 				VtubChannel = append(VtubChannel, Member.YoutubeID)

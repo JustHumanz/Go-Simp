@@ -26,7 +26,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if CommandArray[0] == Prefix+Subscriber {
 				for _, Group := range engine.GroupData {
 					for _, Mem := range strings.Split(CommandArray[1], ",") {
-						for _, Member := range database.GetName(Group.ID) {
+						for _, Member := range database.GetMembers(Group.ID) {
 							if Mem == strings.ToLower(Member.Name) {
 								var (
 									embed  *discordgo.MessageEmbed

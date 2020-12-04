@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"time"
 
+	config "github.com/JustHumanz/Go-simp/tools/config"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -63,7 +64,7 @@ func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 		counter++
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
-		proxyURL, err := url.Parse("http://multi_tor:16379")
+		proxyURL, err := url.Parse(config.MultiTOR)
 		if err != nil || counter == 3 {
 			return nil, err
 		}

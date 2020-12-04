@@ -15,7 +15,7 @@ import (
 //Notif struct
 type Notif struct {
 	TBiliData   database.InputTBiliBili
-	Group       database.GroupName
+	Group       database.Group
 	PhotosImgur string
 	PhotosCount int
 	MemberID    int64

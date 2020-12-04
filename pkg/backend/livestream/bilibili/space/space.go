@@ -21,9 +21,9 @@ func CheckVideo() {
 	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
 	wg := new(sync.WaitGroup)
 	for _, Group := range engine.GroupData {
-		for _, Member := range database.GetName(Group.ID) {
+		for _, Member := range database.GetMembers(Group.ID) {
 			wg.Add(1)
-			go func(Group database.GroupName, Member database.Name, wg *sync.WaitGroup) {
+			go func(Group database.Group, Member database.Member, wg *sync.WaitGroup) {
 				defer wg.Done()
 				if Member.BiliBiliID != 0 {
 					log.WithFields(log.Fields{

@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 
+	config "github.com/JustHumanz/Go-simp/tools/config"
 	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
@@ -56,14 +57,14 @@ func GetHashtag(GroupID int64) []MemberGroupID {
 }
 
 //GetGroup Get all vtuber groupData
-func GetGroup() []GroupName {
+func GetGroups() []Group {
 	rows, err := DB.Query(`SELECT id,VtuberGroupName,VtuberGroupIcon FROM VtuberGroup`)
 	BruhMoment(err, "", false)
 	defer rows.Close()
 
-	var Data []GroupName
+	var Data []Group
 	for rows.Next() {
-		var list GroupName
+		var list Group
 		err = rows.Scan(&list.ID, &list.NameGroup, &list.IconURL)
 		BruhMoment(err, "", false)
 
@@ -73,15 +74,15 @@ func GetGroup() []GroupName {
 	return Data
 }
 
-//GetName Get data of Vtuber member
-func GetName(GroupID int64) []Name {
+//GetMember Get data of Vtuber member
+func GetMembers(GroupID int64) []Member {
 	rows, err := DB.Query(`call GetVtuberName(?)`, GroupID)
 	BruhMoment(err, "", false)
 	defer rows.Close()
 
-	var Data []Name
+	var Data []Member
 	for rows.Next() {
-		var list Name
+		var list Member
 		err = rows.Scan(&list.ID, &list.Name, &list.EnName, &list.JpName, &list.YoutubeID, &list.BiliBiliID, &list.BiliRoomID, &list.Region, &list.TwitterHashtags, &list.BiliBiliHashtags, &list.BiliBiliAvatar, &list.TwitterName, &list.YoutubeAvatar)
 		BruhMoment(err, "", false)
 		Data = append(Data, list)
@@ -96,7 +97,7 @@ func gacha() bool {
 }
 
 //GetSubsCount Get subs,follow,view,like data from Subscriber
-func (Member Name) GetSubsCount() *MemberSubs {
+func (Member Member) GetSubsCount() *MemberSubs {
 	var Data MemberSubs
 	rows, err := DB.Query(`SELECT * FROM Subscriber WHERE VtuberMember_id=?`, Member.ID)
 	BruhMoment(err, "", false)
@@ -175,25 +176,63 @@ func GetFanart(GroupID, MemberID int64) DataFanart {
 		err      error
 	)
 
-	if gacha() {
+	Twitter := func() {
 		rows, err = DB.Query(`Call GetArt(?,?,'twitter')`, GroupID, MemberID)
 		BruhMoment(err, "", false)
-	} else {
-		rows, err = DB.Query(`Call GetArt(?,?,'westtaiwan')`, GroupID, MemberID)
-		BruhMoment(err, "", false)
-	}
-	defer rows.Close()
 
-	for rows.Next() {
-		err = rows.Scan(&Data.EnName, &Data.JpName, &Data.PermanentURL, &Data.Author, &PhotoTmp, &Video, &Data.Text)
-		if err != nil {
-			log.Error(err)
+		defer rows.Close()
+		for rows.Next() {
+			err = rows.Scan(&Data.ID, &Data.EnName, &Data.JpName, &Data.PermanentURL, &Data.Author, &PhotoTmp, &Video, &Data.Text)
+			if err != nil {
+				log.Error(err)
+			}
 		}
 	}
+	Tbilibili := func() {
+		rows, err = DB.Query(`Call GetArt(?,?,'westtaiwan')`, GroupID, MemberID)
+		BruhMoment(err, "", false)
+
+		defer rows.Close()
+		for rows.Next() {
+			err = rows.Scan(&Data.ID, &Data.EnName, &Data.JpName, &Data.PermanentURL, &Data.Author, &PhotoTmp, &Video, &Data.Text)
+			if err != nil {
+				log.Error(err)
+			}
+		}
+	}
+
+	if gacha() {
+		Twitter()
+	} else {
+		Tbilibili()
+		if Data.ID == 0 {
+			log.Warn("Tbilibili nill")
+			Twitter()
+		}
+	}
+
 	Data.Videos = Video.String
 	Data.Photos = strings.Fields(PhotoTmp.String)
 	return Data
 
+}
+
+func (Data DataFanart) DeleteFanart() error {
+	if Data.State == "Twitter" {
+		stmt, err := DB.Prepare(`DELETE From Twitter WHERE id=?`)
+		BruhMoment(err, "", false)
+		defer stmt.Close()
+
+		stmt.Exec(Data.ID)
+		return nil
+	} else {
+		stmt, err := DB.Prepare(`DELETE From TBiliBili WHERE id=?`)
+		BruhMoment(err, "", false)
+		defer stmt.Close()
+
+		stmt.Exec(Data.ID)
+		return nil
+	}
 }
 
 //InputTwitter Input new fanart from twitter
@@ -431,7 +470,7 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 }
 
 //Get DiscordChannelID from VtuberGroup
-func (Data GroupName) GetChannelByGroup() ([]int, []string) {
+func (Data Group) GetChannelByGroup() ([]int, []string) {
 	var (
 		channellist []string
 		idlist      []int
@@ -525,14 +564,14 @@ func ChannelStatus(ChannelID string) ([]string, []int, []string, []string) {
 		err = rows.Scan(&tmp, &tmp2, &tmp3, &tmp4)
 		BruhMoment(err, "", false)
 		if tmp3 {
-			LiveOnly = append(LiveOnly, "Enable")
+			LiveOnly = append(LiveOnly, "Enabled")
 		} else {
-			LiveOnly = append(LiveOnly, "Disable")
+			LiveOnly = append(LiveOnly, "Disabled")
 		}
 		if tmp4 {
-			NewUpcoming = append(NewUpcoming, "Enable")
+			NewUpcoming = append(NewUpcoming, "Enabled")
 		} else {
-			NewUpcoming = append(NewUpcoming, "Disable")
+			NewUpcoming = append(NewUpcoming, "Disabled")
 		}
 		Taglist = append(Taglist, tmp)
 		Type = append(Type, tmp2)
@@ -621,7 +660,8 @@ func GetUserReminderList(ChannelIDDiscord int, Member int64, Reminder int) []str
 }
 
 //Scrapping twitter followers
-func (Data Name) GetTwitterFollow() (twitterscraper.Profile, error) {
+func (Data Member) GetTwitterFollow() (twitterscraper.Profile, error) {
+	twitterscraper.SetProxy(config.MultiTOR)
 	profile, err := twitterscraper.GetProfile(Data.TwitterName)
 	if err != nil {
 		return twitterscraper.Profile{}, err

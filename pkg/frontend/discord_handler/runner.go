@@ -67,7 +67,7 @@ func StartInit(path string) error {
 //ValidName Find a valid name from user input
 func ValidName(Name string) Memberst {
 	for _, Group := range engine.GroupData {
-		for _, Member := range database.GetName(Group.ID) {
+		for _, Member := range database.GetMembers(Group.ID) {
 			if Name == strings.ToLower(Member.Name) || Name == strings.ToLower(Member.JpName) {
 				return Memberst{
 					VTName:     engine.FixName(Member.EnName, Member.JpName),
@@ -86,7 +86,7 @@ func ValidName(Name string) Memberst {
 //FindName Find a valid Vtuber name from message handler
 func FindName(MemberName string) NameStruct {
 	for _, Group := range engine.GroupData {
-		for _, Name := range database.GetName(Group.ID) {
+		for _, Name := range database.GetMembers(Group.ID) {
 			if strings.ToLower(Name.Name) == MemberName || strings.ToLower(Name.JpName) == MemberName {
 				return NameStruct{
 					GroupName:  Group.NameGroup,
@@ -110,13 +110,13 @@ type NameStruct struct {
 }
 
 //FindGropName Find a valid Vtuber Group from message handler
-func FindGropName(GroupName string) (database.GroupName, error) {
+func FindGropName(GroupName string) (database.Group, error) {
 	for _, Group := range engine.GroupData {
 		if strings.ToLower(Group.NameGroup) == strings.ToLower(GroupName) {
 			return Group, nil
 		}
 	}
-	return database.GroupName{}, errors.New(GroupName + " Name Vtuber not valid")
+	return database.Group{}, errors.New(GroupName + " Name Vtuber not valid")
 }
 
 //RemovePic Remove twitter pic

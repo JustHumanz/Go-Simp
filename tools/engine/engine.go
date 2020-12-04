@@ -28,7 +28,7 @@ var (
 	//BotID      *discordgo.User
 	//BotSession *discordgo.Session
 	//db         *sql.DB
-	GroupData  []database.GroupName
+	GroupData  []database.Group
 	GroupsName []string
 	RegList    = make(map[string]string)
 	//PathLiteDB = "./engine/guild.db"
@@ -37,12 +37,12 @@ var (
 
 //Start module
 func Start() {
-	GroupData = database.GetGroup()
+	GroupData = database.GetGroups()
 	for _, Group := range GroupData {
 		GroupsName = append(GroupsName, Group.NameGroup)
 		list := []string{}
 		keys := make(map[string]bool)
-		for _, Member := range database.GetName(Group.ID) {
+		for _, Member := range database.GetMembers(Group.ID) {
 			if _, value := keys[Member.Region]; !value {
 				keys[Member.Region] = true
 				list = append(list, Member.Region)
