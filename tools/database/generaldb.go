@@ -175,21 +175,41 @@ func GetFanart(GroupID, MemberID int64) DataFanart {
 		err      error
 	)
 
-	if gacha() {
+	Twitter := func() {
 		rows, err = DB.Query(`Call GetArt(?,?,'twitter')`, GroupID, MemberID)
 		BruhMoment(err, "", false)
-	} else {
-		rows, err = DB.Query(`Call GetArt(?,?,'westtaiwan')`, GroupID, MemberID)
-		BruhMoment(err, "", false)
-	}
-	defer rows.Close()
 
-	for rows.Next() {
-		err = rows.Scan(&Data.ID, &Data.EnName, &Data.JpName, &Data.PermanentURL, &Data.Author, &PhotoTmp, &Video, &Data.Text)
-		if err != nil {
-			log.Error(err)
+		defer rows.Close()
+		for rows.Next() {
+			err = rows.Scan(&Data.ID, &Data.EnName, &Data.JpName, &Data.PermanentURL, &Data.Author, &PhotoTmp, &Video, &Data.Text)
+			if err != nil {
+				log.Error(err)
+			}
 		}
 	}
+	Tbilibili := func() {
+		rows, err = DB.Query(`Call GetArt(?,?,'westtaiwan')`, GroupID, MemberID)
+		BruhMoment(err, "", false)
+
+		defer rows.Close()
+		for rows.Next() {
+			err = rows.Scan(&Data.ID, &Data.EnName, &Data.JpName, &Data.PermanentURL, &Data.Author, &PhotoTmp, &Video, &Data.Text)
+			if err != nil {
+				log.Error(err)
+			}
+		}
+	}
+
+	if gacha() {
+		Twitter()
+	} else {
+		Tbilibili()
+		if Data.ID == 0 {
+			log.Warn("Tbilibili nill")
+			Twitter()
+		}
+	}
+
 	Data.Videos = Video.String
 	Data.Photos = strings.Fields(PhotoTmp.String)
 	return Data
