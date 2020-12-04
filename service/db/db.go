@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"errors"
 	"os"
 	"strconv"
 	"strings"
@@ -729,44 +730,46 @@ func GetHastagMember(MemberID int64) string {
 }
 
 func (Data InputTwitter) InputData() error {
-	if Data.MemberID != 0 {
-		var (
-			tmp   string
-			Video string
-		)
+	var (
+		tmp   string
+		Video string
+	)
 
-		Photos := strings.Join(Data.TwitterData.Photos, "\n")
-		if Data.TwitterData.Videos != nil {
-			Video = "https://pbs.twimg.com/tweet_video/" + Data.TwitterData.Videos[0].ID + ".mp4"
+	if Data.TwitterData.Hashtags == nil {
+		return errors.New("not found any hashtag")
+	}
+	Photos := strings.Join(Data.TwitterData.Photos, "\n")
+	if Data.TwitterData.Videos != nil {
+		Video = "https://pbs.twimg.com/tweet_video/" + Data.TwitterData.Videos[0].ID + ".mp4"
+	}
+
+	row := db.QueryRow("SELECT PermanentURL FROM Twitter WHERE PermanentURL=? AND VtuberMember_id=?", Data.TwitterData.PermanentURL, Data.Member.ID)
+	err := row.Scan(&tmp)
+	if err != nil || err == sql.ErrNoRows {
+		log.WithFields(log.Fields{
+			"Hashtag":  Data.TwitterData.Hashtags,
+			"Username": Data.TwitterData.Username,
+			"Like":     Data.TwitterData.Likes,
+			"TweetID":  Data.TwitterData.ID,
+		}).Info(Data.Member.EnName)
+		stmt, err := db.Prepare(`INSERT INTO Twitter (PermanentURL,Author,Likes,Photos,Videos,Text,TweetID,VtuberMember_id) values(?,?,?,?,?,?,?,?)`)
+		if err != nil {
+			return err
 		}
 
-		row := db.QueryRow("SELECT PermanentURL FROM Twitter WHERE PermanentURL=? AND VtuberMember_id=?", Data.TwitterData.PermanentURL, Data.MemberID)
-		err := row.Scan(&tmp)
-		if err != nil || err == sql.ErrNoRows {
-			log.WithFields(log.Fields{
-				"Username": Data.TwitterData.Username,
-				"Like":     Data.TwitterData.Likes,
-				"TweetID":  Data.TwitterData.ID,
-			}).Info("New Tweet")
-			stmt, err := db.Prepare(`INSERT INTO Twitter (PermanentURL,Author,Likes,Photos,Videos,Text,TweetID,VtuberMember_id) values(?,?,?,?,?,?,?,?)`)
-			if err != nil {
-				return err
-			}
-
-			res, err := stmt.Exec(Data.TwitterData.PermanentURL, Data.TwitterData.Username, Data.TwitterData.Likes, Photos, Video, Data.TwitterData.Text, Data.TwitterData.ID, Data.MemberID)
-			if err != nil {
-				return err
-			}
-
-			_, err = res.LastInsertId()
-			if err != nil {
-				return err
-			}
-
-			defer stmt.Close()
-		} else {
-			log.Info("already added...")
+		res, err := stmt.Exec(Data.TwitterData.PermanentURL, Data.TwitterData.Username, Data.TwitterData.Likes, Photos, Video, Data.TwitterData.Text, Data.TwitterData.ID, Data.Member.ID)
+		if err != nil {
+			return err
 		}
+
+		_, err = res.LastInsertId()
+		if err != nil {
+			return err
+		}
+
+		defer stmt.Close()
+	} else {
+		log.Info("already added...")
 	}
 	return nil
 }

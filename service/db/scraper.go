@@ -15,40 +15,36 @@ import (
 	youtube "github.com/JustHumanz/Go-simp/pkg/backend/livestream/youtube"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	network "github.com/JustHumanz/Go-simp/tools/network"
-
 	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 
-type Video struct {
-	ID      string
-	Preview string
-}
-
 func TwitterFanart() {
+	twitterscraper.SetProxy("http://multi_tor:16379")
 	for _, Group := range database.GetGroups() {
 		var wg sync.WaitGroup
-		twitterscraper.SetProxy("http://multi_tor:16379")
-		Member := database.GetMembers(Group.ID)
-		for i := 0; i < len(Member)-1; i++ {
+		for _, Member := range database.GetMembers(Group.ID) {
 			wg.Add(1)
-			go func() {
+			go func(wg *sync.WaitGroup, Member database.Name, Group database.GroupName) {
 				defer wg.Done()
-				for tweet := range twitterscraper.SearchTweets(context.Background(), Member[i].TwitterHashtags+"  filter:links -filter:replies filter:media", Limit) {
-					if tweet.Error != nil {
-						log.Error(tweet.Error)
+				if Member.TwitterHashtags != "" {
+					for tweet := range twitterscraper.SearchTweets(context.Background(), Member.TwitterHashtags+"  filter:links -filter:replies filter:media", Limit) {
+						if tweet.Error != nil {
+							log.Error(tweet.Error)
+						}
+						Data := &InputTwitter{
+							TwitterData: tweet.Tweet,
+							Member:      Member,
+						}
+						err := Data.InputData()
+						if err != nil {
+							log.Error(err)
+						}
 					}
-					Data := &InputTwitter{
-						TwitterData: tweet.Tweet,
-						Group:       Group.NameGroup,
-						MemberID:    Member[i].ID,
-					}
-					err := Data.InputData()
-					if err != nil {
-						log.Error(err)
-					}
+				} else {
+					log.Info(Member.EnName + " don't have twitter hashtag")
 				}
-			}()
+			}(&wg, Member, Group)
 		}
 		wg.Wait()
 	}
@@ -56,8 +52,7 @@ func TwitterFanart() {
 
 type InputTwitter struct {
 	TwitterData twitterscraper.Tweet
-	Group       string
-	MemberID    int64
+	Member      database.Name
 }
 
 func FilterYt(Dat database.Name, wg *sync.WaitGroup) {
