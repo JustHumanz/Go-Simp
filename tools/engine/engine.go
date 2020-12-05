@@ -39,7 +39,7 @@ var (
 func Start() {
 	GroupData = database.GetGroups()
 	for _, Group := range GroupData {
-		GroupsName = append(GroupsName, Group.NameGroup)
+		GroupsName = append(GroupsName, Group.GroupName)
 		list := []string{}
 		keys := make(map[string]bool)
 		for _, Member := range database.GetMembers(Group.ID) {
@@ -48,7 +48,7 @@ func Start() {
 				list = append(list, Member.Region)
 			}
 		}
-		RegList[Group.NameGroup] = strings.Join(list, ",")
+		RegList[Group.GroupName] = strings.Join(list, ",")
 	}
 	log.Info("Engine module ready")
 }

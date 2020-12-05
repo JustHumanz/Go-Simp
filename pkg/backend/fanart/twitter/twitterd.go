@@ -14,7 +14,7 @@ func CheckNew() {
 		go func(GroupID int64, GroupName string, wg *sync.WaitGroup) {
 			defer wg.Done()
 			CurlTwitter(CreatePayload(GroupID), GroupID) //this offical API
-		}(Group.ID, Group.NameGroup, wg)
+		}(Group.ID, Group.GroupName, wg)
 	}
 	wg.Wait()
 }

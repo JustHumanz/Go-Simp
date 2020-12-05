@@ -27,7 +27,7 @@ func CheckTwFollowCount() {
 						log.Error(err)
 					}
 					SendNude(engine.NewEmbed().
-						SetAuthor(Group.NameGroup, Group.IconURL, "https://twitter.com/"+Name.TwitterName).
+						SetAuthor(Group.GroupName, Group.IconURL, "https://twitter.com/"+Name.TwitterName).
 						SetTitle(engine.FixName(Name.EnName, Name.JpName)).
 						SetThumbnail(config.TwitterIMG).
 						SetDescription("Congratulation for "+SubsCount+" followers").

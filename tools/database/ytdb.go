@@ -33,6 +33,7 @@ func YtGetStatus(Group, Member int64, Status, Region string) []YtDbData {
 		if err != nil {
 			log.Error(err)
 		}
+		list.Status = Status
 		Data = append(Data, list)
 	}
 	return Data

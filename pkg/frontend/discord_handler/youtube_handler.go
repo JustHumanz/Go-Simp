@@ -124,7 +124,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						} else {
 							SendEmbed(Memberst{
-								VTName: VTuberGroup.NameGroup,
+								VTName: VTuberGroup.GroupName,
 								Msg:    "It seems like `" + strings.Title(GroupNameQuery+" "+Region) + "` doesn't have livestream schedule for now",
 							})
 						}
@@ -197,7 +197,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						} else {
 							SendEmbed(Memberst{
-								VTName: VTuberGroup.NameGroup,
+								VTName: VTuberGroup.GroupName,
 								Msg:    "It looks like `" + strings.Title(FindGroupArry[i]+" "+Region) + "` doesn't have a livestream right now",
 							})
 						}
@@ -255,7 +255,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								}
 							} else {
 								SendEmbed(Memberst{
-									VTName: VTuberGroup.NameGroup,
+									VTName: VTuberGroup.GroupName,
 									Msg:    "Internal error XD",
 								})
 							}
@@ -265,7 +265,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							Data []database.YtDbData
 						)
 
-						if CheckReg(VTuberGroup.NameGroup, Region) {
+						if CheckReg(VTuberGroup.GroupName, Region) {
 							Data = database.YtGetStatus(VTuberGroup.ID, 0, "past", Region)
 						} else {
 							Data = database.YtGetStatus(VTuberGroup.ID, 0, "past", "")
@@ -300,7 +300,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						} else {
 							SendEmbed(Memberst{
-								VTName: VTuberGroup.NameGroup,
+								VTName: VTuberGroup.GroupName,
 								Msg:    "Internal error XD",
 							})
 						}

@@ -85,7 +85,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 			return true
 		}
 		for _, GroupData := range engine.GroupData {
-			if m.Content == strings.ToLower(Prefix+GroupData.NameGroup) {
+			if m.Content == strings.ToLower(Prefix+GroupData.GroupName) {
 				Color, err := engine.GetColor("/tmp/mem.tmp", m.Author.AvatarURL("128"))
 				if err != nil {
 					log.Error(err)
@@ -249,7 +249,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetDescription("You Already Added\n"+strings.Join(Already, " ")+" from your tag list").
-									AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
+									AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 									SetThumbnail(config.GoSimpIMG).
 									SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
 									InlineAllFields().
@@ -262,7 +262,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetDescription("You Add\n"+strings.Join(Done, " ")+" to your tag list").
-									AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
+									AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 									SetThumbnail(config.GoSimpIMG).
 									SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
 									InlineAllFields().
@@ -272,7 +272,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								}
 							}
 						} else {
-							_, err := s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+VTuberGroup.NameGroup+"`")
+							_, err := s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+VTuberGroup.GroupName+"`")
 							if err != nil {
 								log.Error(err)
 							}
@@ -424,7 +424,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								Already = nil
 							}
 						} else {
-							_, err := s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+VTuberGroup.NameGroup+"`")
+							_, err := s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+VTuberGroup.GroupName+"`")
 							if err != nil {
 								log.Error(err)
 							}
@@ -518,7 +518,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetDescription("Already Removed from your tags or You never tag them\n"+strings.Join(Already, " ")).
-									AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
+									AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 									SetThumbnail(config.GoSimpIMG).
 									SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
 									InlineAllFields().
@@ -531,7 +531,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetDescription("You remove "+strings.Join(Done, " ")+" from your tag list").
-									AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
+									AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 									SetThumbnail(config.GoSimpIMG).
 									SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
 									InlineAllFields().
@@ -543,7 +543,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						} else {
 							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-								SetDescription("look like this channel not enable `"+VTuberGroup.NameGroup+"`").
+								SetDescription("look like this channel not enable `"+VTuberGroup.GroupName+"`").
 								SetImage(VTuberGroup.IconURL).
 								SetThumbnail(config.GoSimpIMG).
 								SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
@@ -695,7 +695,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 												_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 													SetDescription(Role.Mention()+" Already Added\n"+strings.Join(Already, " ")).
-													AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
+													AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 													SetThumbnail(config.GoSimpIMG).
 													SetFooter("Use \""+config.PGeneral+RolesTags+" @"+Role.Name+"\" to role tags list").
 													InlineAllFields().
@@ -709,7 +709,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 												_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 													SetDescription(Role.Mention()+"Add\n"+strings.Join(Done, " ")).
-													AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
+													AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 													SetThumbnail(config.GoSimpIMG).
 													SetFooter("Use \""+config.PGeneral+RolesTags+" @"+Role.Name+"\" to show role tags list").
 													InlineAllFields().
@@ -723,7 +723,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 									}
 								}
 							} else {
-								_, err := s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+VTuberGroup.NameGroup+"`")
+								_, err := s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+VTuberGroup.GroupName+"`")
 								if err != nil {
 									log.Error(err)
 								}
@@ -857,7 +857,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 												_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 													SetDescription(Role.Mention()+" Already Remove "+strings.Join(Already, " ")+" from tags list or "+Role.Mention()+" never add them \n").
-													AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
+													AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 													SetThumbnail(config.GoSimpIMG).
 													SetFooter("Use \""+config.PGeneral+RolesTags+" @"+Role.Name+"\" to role tags list").
 													InlineAllFields().
@@ -871,7 +871,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 												_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 													SetDescription(Role.Mention()+" Remove\n"+strings.Join(Done, " ")+"\n from tag list").
-													AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
+													AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 													SetThumbnail(config.GoSimpIMG).
 													SetFooter("Use \""+config.PGeneral+RolesTags+" @"+Role.Name+"\" to show role tags list").
 													InlineAllFields().
@@ -885,7 +885,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 									}
 								}
 							} else {
-								_, err := s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+VTuberGroup.NameGroup+"`")
+								_, err := s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+VTuberGroup.GroupName+"`")
 								if err != nil {
 									log.Error(err)
 								}
@@ -1024,7 +1024,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 												err := User.UpdateReminder(Member.ID)
 												if err != nil {
 													log.Error(err)
-													_, err := s.ChannelMessageSend(m.ChannelID, Role.Mention()+" not tag `"+VTuberGroup.NameGroup+"`")
+													_, err := s.ChannelMessageSend(m.ChannelID, Role.Mention()+" not tag `"+VTuberGroup.GroupName+"`")
 													if err != nil {
 														log.Error(err)
 													}
@@ -1037,7 +1037,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 												_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 													SetDescription(Role.Mention()+" Change reminder to "+strconv.Itoa(ReminderUser)+"\n"+strings.Join(Done, " ")).
-													AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
+													AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 													SetThumbnail(config.GoSimpIMG).
 													SetFooter("Use \""+config.PGeneral+RolesTags+" @"+Role.Name+"\" to show role tags list").
 													InlineAllFields().
@@ -1051,7 +1051,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 									}
 								}
 							} else {
-								_, err := s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+VTuberGroup.NameGroup+"`")
+								_, err := s.ChannelMessageSend(m.ChannelID, "look like this channel not enable `"+VTuberGroup.GroupName+"`")
 								if err != nil {
 									log.Error(err)
 								}
@@ -1225,7 +1225,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if CheckPermission(m.Author.ID, m.ChannelID, s) {
 						ChannelState.SetVtuberGroupID(VTuberGroup.ID)
 						if ChannelState.ChannelCheck() {
-							already = append(already, "`"+VTuberGroup.NameGroup+"`")
+							already = append(already, "`"+VTuberGroup.GroupName+"`")
 						} else {
 							err := ChannelState.AddChannel()
 							if err != nil {
@@ -1235,7 +1235,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 									log.Error(err)
 								}
 							}
-							done = append(done, "`"+VTuberGroup.NameGroup+"`")
+							done = append(done, "`"+VTuberGroup.GroupName+"`")
 
 						}
 					} else {
@@ -1303,10 +1303,10 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 								}
 								return
 							}
-							done = append(done, "`"+VTuberGroup.NameGroup+"`")
+							done = append(done, "`"+VTuberGroup.GroupName+"`")
 
 						} else {
-							already = append(already, "`"+VTuberGroup.NameGroup+"`")
+							already = append(already, "`"+VTuberGroup.GroupName+"`")
 						}
 					} else {
 						_, err := s.ChannelMessageSend(m.ChannelID, "You don't have permission to enable/disable/update")
@@ -1366,30 +1366,30 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 								if CommandArray[3] == "-liveonly" {
 									err := ChannelState.SetLiveOnly(true).UpdateChannel("LiveOnly")
 									if err != nil {
-										already = append(already, "`"+VTuberGroup.NameGroup+"`")
+										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
-										done = append(done, "`"+VTuberGroup.NameGroup+"`")
+										done = append(done, "`"+VTuberGroup.GroupName+"`")
 									}
 								} else if CommandArray[3] == "-newupcoming" {
 									err := ChannelState.SetNewUpcoming(true).UpdateChannel("NewUpcoming")
 									if err != nil {
-										already = append(already, "`"+VTuberGroup.NameGroup+"`")
+										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
-										done = append(done, "`"+VTuberGroup.NameGroup+"`")
+										done = append(done, "`"+VTuberGroup.GroupName+"`")
 									}
 								} else if CommandArray[3] == "-rm_liveonly" {
 									err := ChannelState.SetLiveOnly(false).UpdateChannel("LiveOnly")
 									if err != nil {
-										already = append(already, "`"+VTuberGroup.NameGroup+"`")
+										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
-										done = append(done, "`"+VTuberGroup.NameGroup+"`")
+										done = append(done, "`"+VTuberGroup.GroupName+"`")
 									}
 								} else if CommandArray[3] == "-rm_newupcoming" {
 									err := ChannelState.SetNewUpcoming(false).UpdateChannel("NewUpcoming")
 									if err != nil {
-										already = append(already, "`"+VTuberGroup.NameGroup+"`")
+										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
-										done = append(done, "`"+VTuberGroup.NameGroup+"`")
+										done = append(done, "`"+VTuberGroup.GroupName+"`")
 									}
 								} else {
 									_, err := s.ChannelMessageSend(m.ChannelID, "`"+CommandArray[3]+"`,Invalid options")
@@ -1404,30 +1404,30 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 								if CommandArray[4] == "-newupcoming" {
 									err := ChannelState.SetNewUpcoming(true).UpdateChannel("NewUpcoming")
 									if err != nil {
-										already = append(already, "`"+VTuberGroup.NameGroup+"`")
+										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
-										done = append(done, "`"+VTuberGroup.NameGroup+"`")
+										done = append(done, "`"+VTuberGroup.GroupName+"`")
 									}
 								} else if CommandArray[4] == "-liveonly" {
 									err := ChannelState.SetLiveOnly(true).UpdateChannel("LiveOnly")
 									if err != nil {
-										already = append(already, "`"+VTuberGroup.NameGroup+"`")
+										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
-										done = append(done, "`"+VTuberGroup.NameGroup+"`")
+										done = append(done, "`"+VTuberGroup.GroupName+"`")
 									}
 								} else if CommandArray[4] == "-rm_liveonly" {
 									err := ChannelState.SetLiveOnly(false).UpdateChannel("LiveOnly")
 									if err != nil {
-										already = append(already, "`"+VTuberGroup.NameGroup+"`")
+										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
-										done = append(done, "`"+VTuberGroup.NameGroup+"`")
+										done = append(done, "`"+VTuberGroup.GroupName+"`")
 									}
 								} else if CommandArray[4] == "-rm_newupcoming" {
 									err := ChannelState.SetNewUpcoming(false).UpdateChannel("NewUpcoming")
 									if err != nil {
-										already = append(already, "`"+VTuberGroup.NameGroup+"`")
+										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
-										done = append(done, "`"+VTuberGroup.NameGroup+"`")
+										done = append(done, "`"+VTuberGroup.GroupName+"`")
 									}
 								} else {
 									_, err := s.ChannelMessageSend(m.ChannelID, "`"+CommandArray[4]+"`,Invalid options")
@@ -1440,12 +1440,12 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 							err := ChannelState.UpdateChannel("Type")
 							if err != nil {
-								already = append(already, "`"+VTuberGroup.NameGroup+"`")
+								already = append(already, "`"+VTuberGroup.GroupName+"`")
 							} else {
-								done = append(done, "`"+VTuberGroup.NameGroup+"`")
+								done = append(done, "`"+VTuberGroup.GroupName+"`")
 							}
 						} else {
-							_, err := s.ChannelMessageSend(m.ChannelID, "this channel not enable `"+VTuberGroup.NameGroup+"`")
+							_, err := s.ChannelMessageSend(m.ChannelID, "this channel not enable `"+VTuberGroup.GroupName+"`")
 							if err != nil {
 								log.Error(err)
 							}
@@ -1738,7 +1738,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 				for _, Group := range engine.GroupData {
 					for _, Grp := range GroupInput {
-						if Grp == strings.ToLower(Group.NameGroup) {
+						if Grp == strings.ToLower(Group.GroupName) {
 							for _, Member := range database.GetMembers(Group.ID) {
 								yt := ""
 								bl := ""
@@ -1758,7 +1758,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 									table.SetHeader([]string{"Nickname", "Region", "Youtube", "BiliBili", "Group"})
 									for _, Reg := range GroupsByReg {
 										if Reg == strings.ToLower(Member.Region) {
-											table.Append([]string{Member.Name, Member.Region, yt, bl, Group.NameGroup})
+											table.Append([]string{Member.Name, Member.Region, yt, bl, Group.GroupName})
 										}
 									}
 								} else {

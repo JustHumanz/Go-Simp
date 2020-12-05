@@ -21,7 +21,7 @@ type PushData struct {
 	UserName   string
 	Text       string
 	Avatar     string
-	Group      database.MemberGroupID
+	Group      database.MemberGroup
 }
 
 //Public variable

@@ -24,7 +24,7 @@ func CheckNew() {
 				defer wg.Done()
 				if Member.BiliBiliHashtags != "" {
 					log.WithFields(log.Fields{
-						"Group":  Group.NameGroup,
+						"Group":  Group.GroupName,
 						"Vtuber": Member.EnName,
 					}).Info("Start crawler bilibili")
 					body, errcurl := network.CoolerCurl("https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_name="+url.QueryEscape(Member.BiliBiliHashtags), nil)
@@ -54,7 +54,7 @@ func CheckNew() {
 									link, color, err := STB.Mirroring()
 									if err != nil {
 										log.WithFields(log.Fields{
-											"Group":  Group.NameGroup,
+											"Group":  Group.GroupName,
 											"Vtuber": Member.EnName,
 										}).Error(err)
 										break
@@ -69,7 +69,7 @@ func CheckNew() {
 										}
 
 										log.Info("Send to database")
-										log.WithFields(log.Fields{"Group": Group.NameGroup, "Vtuber": Member.EnName}).Info("Push to notif")
+										log.WithFields(log.Fields{"Group": Group.GroupName, "Vtuber": Member.EnName}).Info("Push to notif")
 										Data := Notif{
 											TBiliData: database.InputTBiliBili{
 												URL:        "https://t.bilibili.com/" + TB.Data.Cards[i].Desc.DynamicIDStr + "?tab=2",
@@ -93,7 +93,7 @@ func CheckNew() {
 						}
 					} else {
 						log.WithFields(log.Fields{
-							"Group":  Group.NameGroup,
+							"Group":  Group.GroupName,
 							"Vtuber": Member.EnName,
 						}).Info("Still same")
 					}
