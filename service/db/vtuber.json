@@ -1645,6 +1645,20 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Rena",
+                    "EN_Name":"Yorumi Rena",
+                    "JP_Name":"夜見れな",
+                    "Hashtag": {
+                        "Twitter": "#れなの鳥っくあーと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCL34fAoFim9oHLbVzMKFavQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "rena_yorumi",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Hanamaki",
                     "EN_Name":"Hana Macchia",
                     "JP_Name":"ハナ・マキア",
