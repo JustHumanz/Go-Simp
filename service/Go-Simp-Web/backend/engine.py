@@ -1,28 +1,26 @@
 from github import Github
 import requests,os,json,re
 
-GroupURL = "http://rest_api:2525/group"
-MemberURL = "http://rest_api:2525/member/"
-SubscriberURL = "http://rest_api:2525/subscriber/"
+GroupURL = "http://rest_api:2525/Groups/"
+MemberURL = "http://rest_api:2525/Members/"
+SubscriberURL = "http://rest_api:2525/Subscribe/"
 ChannelURL = "http://rest_api:2525/channel/"
 API_ENDPOINT = 'https://discord.com/api/v6'
 
 class GetVtubers:
-    def __init__(self, InputData):
-        self.InputData = InputData
+    def __init__(self):
         self.Members = ""
 
     def GetGroups(self):
-        response = requests.get(GroupURL)
+        return requests.get(GroupURL).json()
+
+    def GetMemberGroups(self,GroupID):
+        response = requests.get(MemberURL data={'groupid':GroupID})
+        self.Members = response.json()
         return response.json()
 
-    def GetMembers(self):
-        response = requests.get(MemberURL+self.InputData)        
-        self.Members = response.json()  
-        return response.json()  
-
     def GetSubs(self):
-        SubsInfo = requests.get(SubscriberURL+self.InputData)    
+        SubsInfo = requests.get(SubscriberURL)    
         return SubsInfo.json()
 
     def GetRegList(self):

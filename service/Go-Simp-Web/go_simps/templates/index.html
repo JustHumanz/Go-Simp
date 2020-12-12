@@ -49,7 +49,7 @@
       <div class="text-center">
       {% for Group in Groups %}
         <figure class="figure p-2">
-          <a class="GetMembersOfGroup" href="/Group/{{Group.VtuberGroupName}}" >
+          <a class="GetMembersOfGroup" href="/Group/{{Group.ID}}" >
             <img src={{Group.VtuberGroupIcon}} class="figure-img img-fluid img-thumbnail" alt="" width="200" height="200">
             <figcaption class="figure-caption">{{Group.VtuberGroupName}}</figcaption></a>
         </figure>
