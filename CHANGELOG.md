@@ -1,3 +1,6 @@
+v0.5.12
+- Add Nijisanji ID gen 5
+
 v0.5.11
 - Update exec doc
 - Add channel remover on db migrate

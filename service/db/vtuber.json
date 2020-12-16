@@ -1882,6 +1882,48 @@
                     "Region":"ID"
                 },
                 {
+                    "Name":"Nagisa",
+                    "EN_Name":"Nagisa Arcinia",
+                    "JP_Name":"ナギサ・アルシニア",
+                    "Hashtag": {
+                        "Twitter": "#Nagisa_ArciArt",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCijNnZ-6m8g85UGaRAWuw7g",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "NagisaArcinia",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Kado",
+                    "EN_Name":"Derem Kado",
+                    "JP_Name":"デレム・カド",
+                    "Hashtag": {
+                        "Twitter": "#Derem_Art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCMzVa7B8UEdrvUGsPmSgyjA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "DeremKado",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Eja",
+                    "EN_Name":"Reza Avanluna",
+                    "JP_Name":"レザ・アファンルナ",
+                    "Hashtag": {
+                        "Twitter": "#artvanluna",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC5yckZliCkuaEFbqzLBD7hQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "RezaAvanluna",
+                    "Region":"ID"
+                },
+                {
                     "Name":"Yuya",
                     "EN_Name":"Shin Yuya",
                     "JP_Name":"シン・ユヤ",
