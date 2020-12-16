@@ -1,3 +1,7 @@
+v0.5.10
+- Add disable `reminder time` command
+- Add HoloID gen 2
+
 v0.4.10
 - Fix fanart #51
 - Change some log format

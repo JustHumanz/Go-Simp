@@ -2,6 +2,7 @@ package discordhandler
 
 import (
 	"encoding/json"
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -214,6 +215,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 
+				fmt.Println(ReminderUser)
 				if ReminderUser > 67 {
 					s.ChannelMessageSend(m.ChannelID, "Can't set Reminder over than 60 Minutes")
 					return
@@ -360,16 +362,22 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							return
 						}
 
+					} else if FindInt[2] == "0" {
+						_, err := s.ChannelMessageSend(m.ChannelID, "You disable reminder time")
+						if err != nil {
+							log.Error(err)
+						}
+						ReminderUser = 0
 					} else {
 						//Invaild
-						_, err := s.ChannelMessageSend(m.ChannelID, "Invaild number")
+						_, err := s.ChannelMessageSend(m.ChannelID, "Invaild number\nmin 10,max 60")
 						if err != nil {
 							log.Error(err)
 						}
 						return
 					}
 				} else {
-					_, err := s.ChannelMessageSend(m.ChannelID, "Number not found")
+					_, err := s.ChannelMessageSend(m.ChannelID, "Invalid `"+SetReminder+"` command")
 					if err != nil {
 						log.Error(err)
 					}
@@ -401,20 +409,32 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								}
 							}
 							if Done != nil {
-								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-									SetDescription("You Update reminder time\n"+strings.Join(Done, " ")+" to your list").
-									SetThumbnail(config.GoSimpIMG).
-									SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
-									SetColor(Color).MessageEmbed)
-								if err != nil {
-									log.Error(err)
+								if ReminderUser == 0 {
+									_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+										SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+										SetDescription("You Disable reminder time\n"+strings.Join(Done, " ")).
+										SetThumbnail(config.GoSimpIMG).
+										SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
+										SetColor(Color).MessageEmbed)
+									if err != nil {
+										log.Error(err)
+									}
+								} else {
+									_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+										SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+										SetDescription("You Update reminder time\n"+strings.Join(Done, " ")).
+										SetThumbnail(config.GoSimpIMG).
+										SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
+										SetColor(Color).MessageEmbed)
+									if err != nil {
+										log.Error(err)
+									}
 								}
 								Done = nil
 							} else if Already != nil {
 								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-									SetDescription("You not tag \n"+strings.Join(Already, " ")+" to your list").
+									SetDescription("You not tag \n"+strings.Join(Already, " ")).
 									SetThumbnail(config.GoSimpIMG).
 									SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
 									SetColor(Color).MessageEmbed)
@@ -459,19 +479,31 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 				if Done != nil {
-					_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-						SetDescription("You Update reminder time\n"+strings.Join(Done, " ")+" to your list").
-						SetThumbnail(config.GoSimpIMG).
-						SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
-						SetColor(Color).MessageEmbed)
-					if err != nil {
-						log.Error(err)
+					if ReminderUser == 0 {
+						_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+							SetDescription("You Disable reminder time\n"+strings.Join(Done, " ")).
+							SetThumbnail(config.GoSimpIMG).
+							SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
+							SetColor(Color).MessageEmbed)
+						if err != nil {
+							log.Error(err)
+						}
+					} else {
+						_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+							SetDescription("You Update reminder time\n"+strings.Join(Done, " ")).
+							SetThumbnail(config.GoSimpIMG).
+							SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
+							SetColor(Color).MessageEmbed)
+						if err != nil {
+							log.Error(err)
+						}
 					}
 				} else if Already != nil {
 					_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-						SetDescription("You not tag \n"+strings.Join(Already, " ")+" to your list").
+						SetDescription("You not tag \n"+strings.Join(Already, " ")).
 						SetThumbnail(config.GoSimpIMG).
 						SetFooter("Use \""+config.PGeneral+MyTags+"\" to show you tags list").
 						SetColor(Color).MessageEmbed)
@@ -853,6 +885,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													Done = append(Done, "`"+Member.Name+"`")
 												}
 											}
+
 											if Already != nil {
 												_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
@@ -866,8 +899,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													log.Error(err)
 												}
 												Already = nil
-											}
-											if Done != nil {
+											} else if Done != nil {
 												_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 													SetDescription(Role.Mention()+" Remove\n"+strings.Join(Done, " ")+"\n from tag list").
@@ -894,9 +926,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						} else {
 							MemberTag = append(MemberTag, Data)
 						}
-						Already = nil
-						Done = nil
 					}
+					Already = nil
+					Done = nil
 					for i, Member := range MemberTag {
 						if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.GroupID) {
 							for _, Role := range guild.Roles {
@@ -984,8 +1016,11 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 					return
 				} else if ReminderUser > 67 {
-					s.ChannelMessageSend(m.ChannelID, "Can't set Reminder over than 60 Minutes")
+					s.ChannelMessageSend(m.ChannelID, "Can't set Reminder over than 60 Minutes\nMin 10 Max 60")
 					return
+				} else if ReminderUser == 6 {
+					ReminderUser = 0
+					s.ChannelMessageSend(m.ChannelID, "You disable reminder time")
 				}
 
 				guild, err := s.Guild(m.GuildID)
@@ -1034,16 +1069,31 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 												}
 											}
 											if Done != nil {
-												_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-													SetDescription(Role.Mention()+" Change reminder to "+strconv.Itoa(ReminderUser)+"\n"+strings.Join(Done, " ")).
-													AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
-													SetThumbnail(config.GoSimpIMG).
-													SetFooter("Use \""+config.PGeneral+RolesTags+" @"+Role.Name+"\" to show role tags list").
-													InlineAllFields().
-													SetColor(Color).MessageEmbed)
-												if err != nil {
-													log.Error(err)
+												if ReminderUser == 0 {
+													_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+														SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+														SetDescription(Role.Mention()+" Disable reminder time\n"+strings.Join(Done, " ")).
+														AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
+														SetThumbnail(config.GoSimpIMG).
+														SetFooter("Use \""+config.PGeneral+RolesTags+" @"+Role.Name+"\" to show role tags list").
+														InlineAllFields().
+														SetColor(Color).MessageEmbed)
+													if err != nil {
+														log.Error(err)
+													}
+												} else {
+													_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+														SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+														SetDescription(Role.Mention()+" Change reminder to "+strconv.Itoa(ReminderUser)+"\n"+strings.Join(Done, " ")).
+														AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
+														SetThumbnail(config.GoSimpIMG).
+														SetFooter("Use \""+config.PGeneral+RolesTags+" @"+Role.Name+"\" to show role tags list").
+														InlineAllFields().
+														SetColor(Color).MessageEmbed)
+													if err != nil {
+														log.Error(err)
+													}
+
 												}
 												Done = nil
 											}

@@ -75,7 +75,7 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 					PayloadBytes, err := json.Marshal(map[string]interface{}{
 						"embeds": []interface{}{
 							map[string]interface{}{
-								"description": "A Guild Invited me",
+								"description": "A Guild Invited VTbot",
 								"fields": []interface{}{
 									map[string]interface{}{
 										"name":   "GuildName",
