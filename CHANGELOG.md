@@ -1,3 +1,7 @@
+v0.5.11
+- Update exec doc
+- Add channel remover on db migrate
+
 v0.5.10
 - Add disable `reminder time` command
 - Add HoloID gen 2

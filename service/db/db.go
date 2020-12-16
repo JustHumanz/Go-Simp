@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -438,7 +439,7 @@ func AddData(Data Vtuber) {
 		Update.Exec(GroupName, GroupIcon, GroupIDIndependen)
 	}
 
-	Channels := GetChannelByGroup(GroupIDIndependen)
+	Channels, ChannelsID := GetChannelByGroup(GroupIDIndependen)
 	wg2 := new(sync.WaitGroup)
 	for _, VtuberMember := range Data.Vtuber.Independen.Members {
 		wg2.Add(1)
@@ -462,7 +463,7 @@ func AddData(Data Vtuber) {
 
 				defer stmt.Close()
 
-				for _, Channel := range Channels {
+				for j, Channel := range Channels {
 					msg, err := Bot.ChannelMessageSendEmbed(Channel, NewVtuber{
 						Group: database.Group{
 							ID:        GroupIDIndependen,
@@ -473,6 +474,11 @@ func AddData(Data Vtuber) {
 					}.SendNotif())
 					if err != nil {
 						log.Error(msg, err)
+						match, _ := regexp.MatchString("Unknown Channel", err.Error())
+						if match {
+							log.Info("Delete Discord Channel ", Channel)
+							DeleteChannel(ChannelsID[j])
+						}
 					}
 				}
 
@@ -508,10 +514,16 @@ func AddData(Data Vtuber) {
 	wg2.Wait()
 
 	if NewVtuberNamesIndependen != nil {
-		for _, Channel := range GetChannelByGroup(GroupIDIndependen) {
+		Channels, ChannelsID := GetChannelByGroup(GroupIDIndependen)
+		for j, Channel := range Channels {
 			msg, err := Bot.ChannelMessageSend(Channel, "New Update!!!! @here "+strings.Join(NewVtuberNamesIndependen, ","))
 			if err != nil {
 				log.Error(msg, err)
+				match, _ := regexp.MatchString("Unknown Channel", err.Error())
+				if match {
+					log.Info("Delete Discord Channel ", Channel)
+					DeleteChannel(ChannelsID[j])
+				}
 			}
 		}
 	}
@@ -553,7 +565,7 @@ func AddData(Data Vtuber) {
 			Update.Exec(Group.GroupName, Group.GroupIcon, GroupID)
 		}
 
-		Channels := GetChannelByGroup(GroupID)
+		Channels, ChannelsID := GetChannelByGroup(GroupID)
 		wg2 := new(sync.WaitGroup)
 		for j := 0; j < len(Group.Members); j++ {
 			wg2.Add(1)
@@ -577,7 +589,7 @@ func AddData(Data Vtuber) {
 
 					defer stmt.Close()
 
-					for _, Channel := range Channels {
+					for j, Channel := range Channels {
 						msg, err := Bot.ChannelMessageSendEmbed(Channel, NewVtuber{
 							Group: database.Group{
 								ID:        GroupID,
@@ -588,6 +600,11 @@ func AddData(Data Vtuber) {
 						}.SendNotif())
 						if err != nil {
 							log.Error(msg, err)
+							match, _ := regexp.MatchString("Unknown Channel", err.Error())
+							if match {
+								log.Info("Delete Discord Channel ", Channel)
+								DeleteChannel(ChannelsID[j])
+							}
 						}
 					}
 					NewVtuberNames = append(NewVtuberNames, "`"+VtuberMember.Name+"`")
@@ -620,34 +637,55 @@ func AddData(Data Vtuber) {
 		}
 		wg2.Wait()
 		if NewVtuberNames != nil {
-			for _, Channel := range GetChannelByGroup(GroupID) {
+			Channels, ChannelsID := GetChannelByGroup(GroupID)
+			for j, Channel := range Channels {
 				msg, err := Bot.ChannelMessageSend(Channel, "New Update!!!! @here "+strings.Join(NewVtuberNames, ","))
 				if err != nil {
 					log.Error(msg, err)
+					match, _ := regexp.MatchString("Unknown Channel", err.Error())
+					if match {
+						log.Info("Delete Discord Channel ", Channel)
+						DeleteChannel(ChannelsID[j])
+					}
 				}
 			}
 		}
 	}
 }
 
-//Get discord channel id from VtuberGroup
-func GetChannelByGroup(VtuberGroupID int64) []string {
-	var channellist []string
-	rows, err := db.Query(`SELECT DiscordChannelID FROM Channel WHERE VtuberGroup_id=?`, VtuberGroupID)
+func DeleteChannel(id int64) error {
+	_, err := db.Exec(`DELETE From Channel WHERE id=?`, id)
+	if err != nil {
+		return nil
+	}
+	return nil
+}
+
+//GetChannelByGroupGet DiscordChannelID from VtuberGroup
+func GetChannelByGroup(VtuberGroupID int64) ([]string, []int64) {
+	var (
+		channellist []string
+		ids         []int64
+	)
+	rows, err := db.Query(`SELECT id,DiscordChannelID FROM Channel WHERE VtuberGroup_id=?`, VtuberGroupID)
 	if err != nil {
 		log.Error(err)
 	}
 
 	defer rows.Close()
 	for rows.Next() {
-		var list string
-		err = rows.Scan(&list)
+		var (
+			list string
+			id   int64
+		)
+		err = rows.Scan(&id, &list)
 		if err != nil {
 			log.Error(err)
 		}
 		channellist = append(channellist, list)
+		ids = append(ids, id)
 	}
-	return channellist
+	return channellist, ids
 }
 
 func (Data Member) InputSubs(MemberID int64) {
