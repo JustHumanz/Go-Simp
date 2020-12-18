@@ -21,7 +21,8 @@ import (
 )
 
 func TwitterFanart() {
-	twitterscraper.SetProxy(config.MultiTOR)
+	scraper := twitterscraper.New()
+	scraper.SetProxy(config.MultiTOR)
 	for _, Group := range database.GetGroups() {
 		var wg sync.WaitGroup
 		for _, Member := range database.GetMembers(Group.ID) {
@@ -29,7 +30,7 @@ func TwitterFanart() {
 			go func(wg *sync.WaitGroup, Member database.Member, Group database.Group) {
 				defer wg.Done()
 				if Member.TwitterHashtags != "" || Member.EnName == "Kaichou" {
-					for tweet := range twitterscraper.SearchTweets(context.Background(), Member.TwitterHashtags+"  filter:links -filter:replies filter:media", Limit) {
+					for tweet := range scraper.SearchTweets(context.Background(), Member.TwitterHashtags+" -filter:replies AND -filter:retweets", Limit) {
 						if tweet.Error != nil {
 							log.Error(tweet.Error)
 						}
