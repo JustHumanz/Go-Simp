@@ -68,7 +68,7 @@ func (Data Statuses) CheckHashTag(Group []database.MemberGroupID, wg *sync.WaitG
 					}
 				}
 
-				if "#"+hashtag.Text == Group[i].TwitterHashtags {
+				if "#"+hashtag.Text == Group[i].TwitterHashtags && len(Data.ExtendedEntities.Media) > 0 {
 					//new
 					log.WithFields(log.Fields{
 						"Hashtags":   Group[i].TwitterHashtags,
