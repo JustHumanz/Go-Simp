@@ -1,3 +1,6 @@
+v0.5.14
+- Change cron twitter scraping
+
 v0.5.13
 - Change logic twitter scraping
 - Add donation message
