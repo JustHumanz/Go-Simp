@@ -220,7 +220,7 @@ func CreateDB(Data config.ConfigFile) error {
 			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
 			Where (VtuberGroup.id=grpid or VtuberMember.id=memid) 
 			AND Status='upcoming' 
-			Order by ScheduledStart ASC Limit lmt;
+			Order by ScheduledStart DESC Limit lmt;
 		ELSEIF sts = 'live' OR sts = 'private' THEN 
 			SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,
 			Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers 
@@ -236,7 +236,7 @@ func CreateDB(Data config.ConfigFile) error {
 			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
 			Where (VtuberGroup.id=grpid or VtuberMember.id=memid) 
 			AND Status='past'
-			AND EndStream !='' order by EndStream DESC Limit lmt;
+			AND EndStream !='' order by EndStream ASC Limit lmt;
 			
 		end if;	
 		END`)
@@ -261,7 +261,7 @@ func CreateDB(Data config.ConfigFile) error {
 			Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers 
 			FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
 			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-			Where VtuberGroup.id=grpid AND Status='upcoming' AND Region=reg Order by ScheduledStart ASC Limit 3;
+			Where VtuberGroup.id=grpid AND Status='upcoming' AND Region=reg Order by ScheduledStart DESC Limit 3;
 
 		ELSEIF sts = 'live' OR sts = 'private' THEN 
 			SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,
@@ -274,7 +274,7 @@ func CreateDB(Data config.ConfigFile) error {
 			Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers 
 			FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
 			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-			Where VtuberGroup.id=grpid AND Status='past' AND Region=reg AND EndStream !='' order by EndStream DESC Limit 3;
+			Where VtuberGroup.id=grpid AND Status='past' AND Region=reg AND EndStream !='' order by EndStream ASC Limit 3;
 			
 		end if;	
 		END`)
@@ -318,7 +318,7 @@ func CreateDB(Data config.ConfigFile) error {
 			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
 			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where 
 			(VtuberGroup.id=GroupID or VtuberMember.id=MemberID) 
-			AND Status=Sts Order by ScheduledStart ASC Limit lmt;
+			AND Status=Sts Order by ScheduledStart DESC Limit lmt;
 		END`)
 	if err != nil {
 		return err

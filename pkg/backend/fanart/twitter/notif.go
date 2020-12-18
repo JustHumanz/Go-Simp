@@ -65,7 +65,7 @@ func (Data PushData) SendNude() error {
 					tags = "_"
 				}
 				if tags == "_" && Data.Group.GroupName == "Independen" {
-
+					//do nothing,like my life
 				} else {
 					msg, err := Bot.ChannelMessageSendEmbed(DiscordChannel, engine.NewEmbed().
 						SetAuthor(strings.Title(Data.Group.GroupName), GroupIcon).
@@ -79,13 +79,9 @@ func (Data PushData) SendNude() error {
 						SetFooter(Data.Msg, config.TwitterIMG).MessageEmbed)
 					if err != nil {
 						log.Error(msg, err)
-						match, _ := regexp.MatchString("Unknown Channel", err.Error())
-						if match {
-							log.Info("Delete Discord Channel ", DiscordChannel)
-							err = ChannelState.DelChannel()
-							if err != nil {
-								log.Error(err)
-							}
+						err = ChannelState.DelChannel(err.Error())
+						if err != nil {
+							log.Error(err)
 						}
 					}
 					engine.Reacting(map[string]string{

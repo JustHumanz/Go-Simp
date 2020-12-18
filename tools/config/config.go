@@ -29,6 +29,7 @@ var (
 	DiscordWebHook string
 	config         ConfigFile
 	MultiTOR       string
+	KoFiLink       string
 )
 
 const (
@@ -63,6 +64,7 @@ type ConfigFile struct {
 	SauceAPI       string   `toml:"SauceAPI"`
 	DiscordWebHook string   `toml:"DiscordWebHook"`
 	MultiTOR       string   `toml:"Multitor"`
+	DonationLink   string   `toml:"DonationLink"`
 	SQL            struct {
 		User string `toml:"User"`
 		Pass string `toml:"Pass"`
@@ -106,6 +108,7 @@ func ReadConfig(path string) (ConfigFile, error) {
 
 	DiscordWebHook = config.DiscordWebHook
 	MultiTOR = config.MultiTOR
+	KoFiLink = config.DonationLink
 
 	Token = config.Discord
 	YtToken = config.YtToken

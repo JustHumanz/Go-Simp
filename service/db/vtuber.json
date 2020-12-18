@@ -1700,6 +1700,62 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Kanda-kun",
+                    "EN_Name":"Kanda Shoichi",
+                    "JP_Name":"神田笑一",
+                    "Hashtag": {
+                        "Twitter": "#クリ笑イト",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCWz0CSYCxf4MhRKPDm220AQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Kanda_Shoichi",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Lize",
+                    "EN_Name":"Lize Helesta",
+                    "JP_Name":"リゼ・ヘルエスタ",
+                    "Hashtag": {
+                        "Twitter": "#ヘル絵スタ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCZ1xuCK1kNmn5RzPYIZop3w",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Lize_Helesta",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Roa-chan",
+                    "EN_Name":"Yuzuki Roa",
+                    "JP_Name":"夢月ロア",
+                    "Hashtag": {
+                        "Twitter": "#ロアート",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCCVwhI5trmaSxfcze_Ovzfw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "yuzuki_roa",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Gunmichi",
+                    "EN_Name":"Gundo Mirei",
+                    "JP_Name":"郡道美玲",
+                    "Hashtag": {
+                        "Twitter": "#3年0組黒板新聞",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCeShTCVgZyq2lsBW9QwIJcw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "g9v9g_mirei",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Hanamaki",
                     "EN_Name":"Hana Macchia",
                     "JP_Name":"ハナ・マキア",

@@ -1,3 +1,9 @@
+v0.5.13
+- Change logic twitter scraping
+- Add donation message
+- Change logic delete channel
+- Add #53 #54 #55 #56
+
 v0.5.12
 - Add Nijisanji ID gen 5
 

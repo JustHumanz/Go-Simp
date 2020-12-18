@@ -14,7 +14,9 @@ import (
 
 //CheckNew check if new fanart or not
 func (Data TwitterStruct) CheckNew() []Statuses {
-	var tmp []Statuses
+	var (
+		tmp []Statuses
+	)
 	for _, TwData := range Data.Statuses {
 		var (
 			id int
