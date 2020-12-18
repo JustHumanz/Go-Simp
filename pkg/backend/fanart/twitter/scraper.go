@@ -67,7 +67,7 @@ func CreatePayload(Group int64) []string {
 				GroupName = hashtag.GroupName
 			}
 		}
-		params.Add("q", strings.Join(Hashtags, " OR ")+" "+"filter:links AND filter:media AND -filter:replies AND -filter:retweets")
+		params.Add("q", strings.Join(Hashtags, " OR ")+" "+"-filter:replies AND -filter:retweets")
 		log.WithFields(log.Fields{
 			"Hashtags":  strings.Join(Hashtags, " OR "),
 			"GroupName": GroupName,
@@ -82,7 +82,7 @@ func CreatePayload(Group int64) []string {
 					"Hashtags":  strings.Join(Hashtags, " OR "),
 					"GroupName": hashtag.GroupName,
 				}).Info("Start Curl new art")
-				params.Add("q", strings.Join(Hashtags, " OR ")+" "+"filter:links AND -filter:replies AND filter:media AND -filter:retweets")
+				params.Add("q", strings.Join(Hashtags, " OR ")+" "+"-filter:replies AND -filter:retweets")
 				FinalTags = append(FinalTags, params.Encode())
 				Hashtags = nil
 				counter = 0
