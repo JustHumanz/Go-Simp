@@ -1070,23 +1070,11 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 												}
 											}
 											if Done != nil {
-<<<<<<< HEAD
-												_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-													SetDescription(Role.Mention()+" Change reminder to "+strconv.Itoa(ReminderUser)+"\n"+strings.Join(Done, " ")).
-													AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
-													SetThumbnail(config.GoSimpIMG).
-													SetFooter("Use \""+config.PGeneral+RolesTags+" @"+Role.Name+"\" to show role tags list").
-													InlineAllFields().
-													SetColor(Color).MessageEmbed)
-												if err != nil {
-													log.Error(err)
-=======
 												if ReminderUser == 0 {
 													_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 														SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 														SetDescription(Role.Mention()+" Disable reminder time\n"+strings.Join(Done, " ")).
-														AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
+														AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 														SetThumbnail(config.GoSimpIMG).
 														SetFooter("Use \""+config.PGeneral+RolesTags+" @"+Role.Name+"\" to show role tags list").
 														InlineAllFields().
@@ -1098,7 +1086,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 														SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 														SetDescription(Role.Mention()+" Change reminder to "+strconv.Itoa(ReminderUser)+"\n"+strings.Join(Done, " ")).
-														AddField("Group Name", "**"+VTuberGroup.NameGroup+"**").
+														AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 														SetThumbnail(config.GoSimpIMG).
 														SetFooter("Use \""+config.PGeneral+RolesTags+" @"+Role.Name+"\" to show role tags list").
 														InlineAllFields().
@@ -1107,7 +1095,6 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 														log.Error(err)
 													}
 
->>>>>>> main
 												}
 												Done = nil
 											}
@@ -1419,12 +1406,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 								}
 								return
 							}
-<<<<<<< HEAD
 							done = append(done, "`"+VTuberGroup.GroupName+"`")
-
-=======
-							done = append(done, "`"+VTuberGroup.NameGroup+"`")
->>>>>>> main
 						} else {
 							already = append(already, "`"+VTuberGroup.GroupName+"`")
 						}

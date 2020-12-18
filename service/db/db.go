@@ -387,16 +387,16 @@ func CreateDB(Data config.ConfigFile) error {
 	return nil
 }
 
-func GetHashtag(Group string) []database.MemberGroupID {
+func GetHashtag(Group string) []database.MemberGroup {
 	rows, err := db.Query(`SELECT VtuberMember.id,VtuberName,VtuberName_JP,VtuberGroup_id,Hashtag,VtuberGroupName,VtuberGroupIcon FROM VtuberMember INNER Join VtuberGroup ON VtuberGroup.id = VtuberMember.VtuberGroup_id WHERE VtuberGroup.VtuberGroupName =?`, Group)
 	if err != nil {
 		log.Error(err)
 	}
 	defer rows.Close()
 
-	Data := []database.MemberGroupID{}
+	Data := []database.MemberGroup{}
 	for rows.Next() {
-		var list database.MemberGroupID
+		var list database.MemberGroup
 		err = rows.Scan(&list.MemberID, &list.EnName, &list.JpName, &list.GroupID, &list.TwitterHashtags, &list.GroupName, &list.GroupIcon)
 		if err != nil {
 			log.Error(err)
@@ -467,7 +467,7 @@ func AddData(Data Vtuber) {
 					msg, err := Bot.ChannelMessageSendEmbed(Channel, NewVtuber{
 						Group: database.Group{
 							ID:        GroupIDIndependen,
-							NameGroup: "Independen",
+							GroupName: "Independen",
 							IconURL:   "https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/independen.png",
 						},
 						Member: VtuberMember,
@@ -593,7 +593,7 @@ func AddData(Data Vtuber) {
 						msg, err := Bot.ChannelMessageSendEmbed(Channel, NewVtuber{
 							Group: database.Group{
 								ID:        GroupID,
-								NameGroup: Group.GroupName,
+								GroupName: Group.GroupName,
 								IconURL:   Group.GroupIcon,
 							},
 							Member: VtuberMember,

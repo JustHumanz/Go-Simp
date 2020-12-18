@@ -58,7 +58,7 @@ func (NotifData Notif) PushNotif(Color int) {
 			tags = "_"
 		}
 
-		if tags == "_" && Group.NameGroup == "Independen" {
+		if tags == "_" && Group.GroupName == "Independen" {
 			//do nothing,like my life
 		} else {
 			tmp, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
