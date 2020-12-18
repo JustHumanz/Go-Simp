@@ -553,7 +553,48 @@
                     "Twitter_Username": "airaniiofifteen",
                     "Region":"ID"
                 },
-        
+                {
+                    "Name":"Ollie",
+                    "EN_Name":"Kureiji Ollie",
+                    "JP_Name":"クレイジー・オリー",
+                    "Hashtag": {
+                        "Twitter": "#graveyART",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCYz_5n-uDuChHtLo7My1HnQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "kureijiollie",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Anya",
+                    "EN_Name":"Anya Melfissa",
+                    "JP_Name":"アーニャ・メルフィッサ",
+                    "Hashtag": {
+                        "Twitter": "#anyatelier",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC727SQYUvx5pDDGQpTICNWg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "anyamelfissa",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Reine",
+                    "EN_Name":"Pavolia Reine",
+                    "JP_Name":"パヴォリア・レイネ",
+                    "Hashtag": {
+                        "Twitter": "#Reinessance",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UChgTyjG-pdNvxxhdsXfHQ5Q",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "pavoliareine",
+                    "Region":"ID"
+                },
                 {
                     "Name":"FBK",
                     "EN_Name":"Shirakami Fubuki",
@@ -1659,6 +1700,62 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Kanda-kun",
+                    "EN_Name":"Kanda Shoichi",
+                    "JP_Name":"神田笑一",
+                    "Hashtag": {
+                        "Twitter": "#クリ笑イト",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCWz0CSYCxf4MhRKPDm220AQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Kanda_Shoichi",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Lize",
+                    "EN_Name":"Lize Helesta",
+                    "JP_Name":"リゼ・ヘルエスタ",
+                    "Hashtag": {
+                        "Twitter": "#ヘル絵スタ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCZ1xuCK1kNmn5RzPYIZop3w",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Lize_Helesta",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Roa-chan",
+                    "EN_Name":"Yuzuki Roa",
+                    "JP_Name":"夢月ロア",
+                    "Hashtag": {
+                        "Twitter": "#ロアート",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCCVwhI5trmaSxfcze_Ovzfw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "yuzuki_roa",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Gunmichi",
+                    "EN_Name":"Gundo Mirei",
+                    "JP_Name":"郡道美玲",
+                    "Hashtag": {
+                        "Twitter": "#3年0組黒板新聞",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCeShTCVgZyq2lsBW9QwIJcw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "g9v9g_mirei",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Hanamaki",
                     "EN_Name":"Hana Macchia",
                     "JP_Name":"ハナ・マキア",
@@ -1838,6 +1935,48 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "SiskaLeontyne",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Nagisa",
+                    "EN_Name":"Nagisa Arcinia",
+                    "JP_Name":"ナギサ・アルシニア",
+                    "Hashtag": {
+                        "Twitter": "#Nagisa_ArciArt",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCijNnZ-6m8g85UGaRAWuw7g",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "NagisaArcinia",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Kado",
+                    "EN_Name":"Derem Kado",
+                    "JP_Name":"デレム・カド",
+                    "Hashtag": {
+                        "Twitter": "#Derem_Art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCMzVa7B8UEdrvUGsPmSgyjA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "DeremKado",
+                    "Region":"ID"
+                },
+                {
+                    "Name":"Eja",
+                    "EN_Name":"Reza Avanluna",
+                    "JP_Name":"レザ・アファンルナ",
+                    "Hashtag": {
+                        "Twitter": "#artvanluna",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC5yckZliCkuaEFbqzLBD7hQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "RezaAvanluna",
                     "Region":"ID"
                 },
                 {

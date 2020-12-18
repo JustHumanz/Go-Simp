@@ -1,7 +1,6 @@
 package bilibili
 
 import (
-	"regexp"
 	"strconv"
 	"strings"
 
@@ -59,14 +58,8 @@ func (NotifData Notif) PushNotif(Color int) {
 			tags = "_"
 		}
 
-		if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
-			GroupIcon = ""
-		} else {
-			GroupIcon = Group.IconURL
-		}
-
-		if tags == "_" && Group.GroupName == "Independen" {
-
+		if tags == "_" && Group.NameGroup == "Independen" {
+			//do nothing,like my life
 		} else {
 			tmp, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
 				SetAuthor(strings.Title(Group.GroupName), GroupIcon).
@@ -82,13 +75,9 @@ func (NotifData Notif) PushNotif(Color int) {
 				SetColor(Color).MessageEmbed)
 			if err != nil {
 				log.Error(tmp, err.Error())
-				match, _ := regexp.MatchString("Unknown Channel", err.Error())
-				if match {
-					log.Info("Delete Discord Channel ", DiscordChannelID[i])
-					err = ChannelState.DelChannel()
-					if err != nil {
-						log.Error(err)
-					}
+				err = ChannelState.DelChannel(err.Error())
+				if err != nil {
+					log.Error(err)
 				}
 			}
 			err = engine.Reacting(map[string]string{

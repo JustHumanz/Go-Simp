@@ -52,6 +52,7 @@ Reminder 30 minutes before livestream start
 [Invite link](https://top.gg/bot/721964514018590802)
 
 ## TODO
+- Add hall of flame for contributor
 - Add twitch
 - ~~Specially for Independent fan art will not be sent if there no one user/role tagged~~ (Done)
 - ~~Add -liveonly -newupcoming and -rm_liveonly -rm_newupcoming~~ (Done)

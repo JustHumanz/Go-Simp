@@ -25,16 +25,16 @@ func (PushData *NotifStruct) SendNude() {
 	expiresAt := time.Now().In(loc)
 	VtuberName := engine.FixName(PushData.Member.EnName, PushData.Member.JpName)
 
-	var GroupIcon string
+	var (
+		Timestart time.Time
+		GroupIcon string
+	)
+
 	if match, _ := regexp.MatchString("404.jpg", PushData.Group.IconURL); match {
 		GroupIcon = ""
 	} else {
 		GroupIcon = PushData.Group.IconURL
 	}
-
-	var (
-		Timestart time.Time
-	)
 
 	if !PushData.YtData.Schedul.IsZero() {
 		Timestart = PushData.YtData.Schedul
@@ -72,13 +72,9 @@ func (PushData *NotifStruct) SendNude() {
 					SetColor(Color).MessageEmbed)
 				if err != nil {
 					log.Error(msg, err)
-					match, _ := regexp.MatchString("Unknown Channel", err.Error())
-					if match {
-						log.Info("Delete Discord Channel ", DiscordChannelID[i])
-						err = ChannelState.DelChannel()
-						if err != nil {
-							log.Error(err)
-						}
+					err = ChannelState.DelChannel(err.Error())
+					if err != nil {
+						log.Error(err)
 					}
 				}
 				msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
@@ -113,13 +109,9 @@ func (PushData *NotifStruct) SendNude() {
 					SetColor(Color).MessageEmbed)
 				if err != nil {
 					log.Error(msg, err)
-					match, _ := regexp.MatchString("Unknown Channel", err.Error())
-					if match {
-						log.Info("Delete Discord Channel ", DiscordChannelID[i])
-						err = ChannelState.DelChannel()
-						if err != nil {
-							log.Error(err)
-						}
+					err = ChannelState.DelChannel(err.Error())
+					if err != nil {
+						log.Error(err)
 					}
 				}
 				msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
@@ -156,13 +148,9 @@ func (PushData *NotifStruct) SendNude() {
 					SetColor(Color).MessageEmbed)
 				if err != nil {
 					log.Error(msg, err)
-					match, _ := regexp.MatchString("Unknown Channel", err.Error())
-					if match {
-						log.Info("Delete Discord Channel ", DiscordChannelID[i])
-						err = ChannelState.DelChannel()
-						if err != nil {
-							log.Error(err)
-						}
+					err = ChannelState.DelChannel(err.Error())
+					if err != nil {
+						log.Error(err)
 					}
 				}
 				msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
@@ -203,13 +191,9 @@ func (PushData *NotifStruct) SendNude() {
 							SetColor(Color).MessageEmbed)
 						if err != nil {
 							log.Error(msg, err)
-							match, _ := regexp.MatchString("Unknown Channel", err.Error())
-							if match {
-								log.Info("Delete Discord Channel ", DiscordChannelID[i])
-								err = ChannelState.DelChannel()
-								if err != nil {
-									log.Error(err)
-								}
+							err = ChannelState.DelChannel(err.Error())
+							if err != nil {
+								log.Error(err)
 							}
 						}
 						msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))

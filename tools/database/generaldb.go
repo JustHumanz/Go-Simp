@@ -5,6 +5,7 @@ import (
 	"errors"
 	"math/rand"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -382,44 +383,49 @@ func (Data *DiscordChannel) AddChannel() error {
 }
 
 //delete discord channel from `disable` command
-func (Data *DiscordChannel) DelChannel() error {
-	var (
-		ID int64
-	)
+func (Data *DiscordChannel) DelChannel(errmsg string) error {
+	match, _ := regexp.MatchString("Unknown Channel|HTTP 403 Forbidden|Delete", errmsg)
 
-	row := DB.QueryRow("SELECT id FROM Channel WHERE DiscordChannelID=? AND VtuberGroup_id=?", Data.ChannelID, Data.VtuberGroupID)
-	err := row.Scan(&ID)
-	if err != nil {
-		return err
-	}
+	if match {
+		log.Info("Delete Discord Channel ", Data.ChannelID)
+		var (
+			ID int64
+		)
 
-	rows, err := DB.Query(`SELECT id FROM User Where Channel_id=?`, ID)
-	if err != nil {
-		return err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var tmp int64
-		err = rows.Scan(&tmp)
+		row := DB.QueryRow("SELECT id FROM Channel WHERE DiscordChannelID=? AND VtuberGroup_id=?", Data.ChannelID, Data.VtuberGroupID)
+		err := row.Scan(&ID)
 		if err != nil {
 			return err
 		}
 
-		stmt, err := DB.Prepare(`DELETE From User WHERE id=?`)
+		rows, err := DB.Query(`SELECT id FROM User Where Channel_id=?`, ID)
+		if err != nil {
+			return err
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			var tmp int64
+			err = rows.Scan(&tmp)
+			if err != nil {
+				return err
+			}
+
+			stmt, err := DB.Prepare(`DELETE From User WHERE id=?`)
+			if err != nil {
+				return err
+			}
+			defer stmt.Close()
+			stmt.Exec(tmp)
+		}
+
+		stmt, err := DB.Prepare(`DELETE From Channel WHERE DiscordChannelID=? AND VtuberGroup_id=?`)
 		if err != nil {
 			return err
 		}
 		defer stmt.Close()
-		stmt.Exec(tmp)
+		stmt.Exec(Data.ChannelID, Data.VtuberGroupID)
 	}
-
-	stmt, err := DB.Prepare(`DELETE From Channel WHERE DiscordChannelID=? AND VtuberGroup_id=?`)
-	if err != nil {
-		return err
-	}
-	defer stmt.Close()
-	stmt.Exec(Data.ChannelID, Data.VtuberGroupID)
 	return nil
 }
 

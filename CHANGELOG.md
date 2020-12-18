@@ -1,3 +1,20 @@
+v0.5.13
+- Change logic twitter scraping
+- Add donation message
+- Change logic delete channel
+- Add #53 #54 #55 #56
+
+v0.5.12
+- Add Nijisanji ID gen 5
+
+v0.5.11
+- Update exec doc
+- Add channel remover on db migrate
+
+v0.5.10
+- Add disable `reminder time` command
+- Add HoloID gen 2
+
 v0.4.10
 - Fix fanart #51
 - Change some log format

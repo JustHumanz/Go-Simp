@@ -9,7 +9,8 @@ import (
 
 //Public variable for Discord bot session
 var (
-	Bot *discordgo.Session
+	Bot     *discordgo.Session
+	BotInfo *discordgo.User
 )
 
 //StartInit Start running BE

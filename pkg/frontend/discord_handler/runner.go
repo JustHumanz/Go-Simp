@@ -13,6 +13,10 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+var (
+	BotInfo *discordgo.User
+)
+
 //Prefix command
 const (
 	Enable        = "enable"
@@ -46,6 +50,10 @@ func StartInit(path string) error {
 	err = Bot.Open()
 	if err != nil {
 		return err
+	}
+	BotInfo, err = Bot.User("@me")
+	if err != nil {
+		log.Error(err)
 	}
 
 	database.Start(db)
