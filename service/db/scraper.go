@@ -30,7 +30,7 @@ func TwitterFanart() {
 			go func(wg *sync.WaitGroup, Member database.Member, Group database.Group) {
 				defer wg.Done()
 				if Member.TwitterHashtags != "" || Member.EnName == "Kaichou" {
-					for tweet := range scraper.SearchTweets(context.Background(), Member.TwitterHashtags+" -filter:replies AND -filter:retweets", Limit) {
+					for tweet := range scraper.SearchTweets(context.Background(), Member.TwitterHashtags+" AND -filter:retweets AND -filter:replies", Limit) {
 						if tweet.Error != nil {
 							log.Error(tweet.Error)
 						}
