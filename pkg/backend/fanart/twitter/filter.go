@@ -103,7 +103,7 @@ func (Data Statuses) CheckHashTag(Group []database.MemberGroup, wg *sync.WaitGro
 					TwitterData := PushData{
 						Twitter: database.InputTW{
 							Url:      "https://twitter.com/" + Data.User.ScreenName + "/status/" + Data.IDStr,
-							Author:   Data.User.Name,
+							Author:   Data.User.ScreenName,
 							Like:     Data.FavoriteCount,
 							Photos:   strings.Join(Photos, "\n"),
 							Video:    Video,
