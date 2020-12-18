@@ -21,7 +21,7 @@ func (Data TwitterStruct) CheckNew() []Statuses {
 		var (
 			id int
 		)
-		err := database.DB.QueryRow(`SELECT id FROM Twitter WHERE TweetID=? AND Author=? `, TwData.IDStr, TwData.User.ScreenName).Scan(&id)
+		err := database.DB.QueryRow(`SELECT id FROM Twitter WHERE PermanentURL=?`, "https://twitter.com/"+TwData.User.ScreenName+"/status/"+TwData.IDStr).Scan(&id)
 		if err == sql.ErrNoRows {
 			tmp = append(tmp, TwData)
 		} else {
