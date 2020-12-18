@@ -21,7 +21,7 @@ func (Data TwitterStruct) CheckNew() []Statuses {
 		var (
 			id int
 		)
-		err := database.DB.QueryRow(`SELECT id FROM Twitter WHERE TweetID=? `, TwData.IDStr).Scan(&id)
+		err := database.DB.QueryRow(`SELECT id FROM Twitter WHERE TweetID=? AND Author=? `, TwData.IDStr, TwData.User.ScreenName).Scan(&id)
 		if err == sql.ErrNoRows {
 			tmp = append(tmp, TwData)
 		} else {
@@ -73,6 +73,7 @@ func (Data Statuses) CheckHashTag(Group []database.MemberGroup, wg *sync.WaitGro
 					log.WithFields(log.Fields{
 						"Hashtags":   Group[i].TwitterHashtags,
 						"MemberName": Group[i].EnName,
+						"URL":        "https://twitter.com/" + Data.User.ScreenName + "/status/" + Data.IDStr,
 					}).Info("Get new post")
 
 					var (
