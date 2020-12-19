@@ -37,6 +37,7 @@ func BruhMoment(err error, msg string, exit bool) {
 	}
 }
 
+/*
 //GetHashtag Get Twitter hashtag by group
 func GetHashtag(GroupID int64) []MemberGroupID {
 	rows, err := DB.Query(`SELECT VtuberMember.id,VtuberName,VtuberName_JP,VtuberGroup_id,Hashtag,VtuberGroupName,VtuberGroupIcon FROM VtuberMember INNER Join VtuberGroup ON VtuberGroup.id = VtuberMember.VtuberGroup_id WHERE Hashtag !="" AND VtuberGroup.id =?`, GroupID)
@@ -56,6 +57,7 @@ func GetHashtag(GroupID int64) []MemberGroupID {
 	}
 	return Data
 }
+*/
 
 //GetGroup Get all vtuber groupData
 func GetGroups() []Group {

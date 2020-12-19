@@ -13,12 +13,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//Public variable
-var (
-	URLTMP string
-	Color  = 14807034
-)
-
 //SendNude Send to Discord channel
 func (Data *TwitterFanart) SendNude() {
 	for _, Fanart := range Data.Fanart {
@@ -54,49 +48,47 @@ func (Data *TwitterFanart) SendNude() {
 					Msg = "Photos/Video oversize,check original post"
 				}
 
-				Color, _ = engine.GetColor("/tmp/tw", Media)
+				Color, err := engine.GetColor("/tmp/tw", Media)
+				if err != nil {
+					log.Error(err)
+				}
 
 				if match, _ := regexp.MatchString("404.jpg", Data.Group.IconURL); match {
 					GroupIcon = ""
 				} else {
 					GroupIcon = Data.Group.IconURL
 				}
-				if URLTMP != url {
-					if UserTagsList != nil {
-						tags = strings.Join(UserTagsList, " ")
-					} else {
-						tags = "_"
-					}
-					if tags == "_" && Data.Group.NameGroup == "Independen" {
-						//do nothing,like my life
-					} else {
-						msg, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
-							SetAuthor(strings.Title(Data.Group.NameGroup), GroupIcon).
-							SetTitle("@"+Fanart.Username).
-							SetURL(url).
-							SetThumbnail(engine.GetAuthorAvatar(Fanart.Username)).
-							SetDescription(RemoveTwitterShortLink(Fanart.Text)).
-							SetImage(Media).
-							AddField("User Tags", tags).
-							SetColor(Color).
-							SetFooter(Msg, config.TwitterIMG).MessageEmbed)
-						if err != nil {
-							log.Error(msg, err)
-							err = ChannelState.DelChannel(err.Error())
-							if err != nil {
-								log.Error(err)
-							}
-						}
-						engine.Reacting(map[string]string{
-							"ChannelID": DiscordChannelID[i],
-						}, Bot)
-					}
+				if UserTagsList != nil {
+					tags = strings.Join(UserTagsList, " ")
 				} else {
-					log.Info("Same post,multiple hashtags")
+					tags = "_"
+				}
+				if tags == "_" && Data.Group.NameGroup == "Independen" {
+					//do nothing,like my life
+				} else {
+					msg, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
+						SetAuthor(strings.Title(Data.Group.NameGroup), GroupIcon).
+						SetTitle("@"+Fanart.Username).
+						SetURL(url).
+						SetThumbnail(engine.GetAuthorAvatar(Fanart.Username)).
+						SetDescription(RemoveTwitterShortLink(Fanart.Text)).
+						SetImage(Media).
+						AddField("User Tags", tags).
+						SetColor(Color).
+						SetFooter(Msg, config.TwitterIMG).MessageEmbed)
+					if err != nil {
+						log.Error(msg, err)
+						err = ChannelState.DelChannel(err.Error())
+						if err != nil {
+							log.Error(err)
+						}
+					}
+					engine.Reacting(map[string]string{
+						"ChannelID": DiscordChannelID[i],
+					}, Bot)
 				}
 			}(DiscordChannelID[i], ID[i], Data, wg)
 			wg.Wait()
-			URLTMP = url
 		}
 	}
 }

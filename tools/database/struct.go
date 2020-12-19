@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+/*
 type MemberGroupID struct {
 	EnName          string
 	JpName          string
@@ -13,6 +14,7 @@ type MemberGroupID struct {
 	GroupName       string
 	GroupIcon       string
 }
+*/
 
 type DataFanart struct {
 	ID           int64

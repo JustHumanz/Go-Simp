@@ -38,7 +38,7 @@ func CheckNew() {
 					}).Info("Scraping Fanart")
 
 					newfanart.CurlTwitter()
-					newfanart.RemoveDuplicate().SendNude()
+					newfanart.SendNude()
 				} else {
 					log.Info(Member.EnName + " don't have twitter hashtag")
 				}
