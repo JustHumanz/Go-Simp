@@ -36,7 +36,6 @@ func (Data *TwitterFanart) SendNude() {
 				}
 				UserTagsList := database.GetUserList(ID, Data.Member.ID)
 
-				Color, _ = engine.GetColor("/tmp/tw", Fanart.Photos[0])
 				var (
 					tags      string
 					GroupIcon string
@@ -54,6 +53,8 @@ func (Data *TwitterFanart) SendNude() {
 					Media = config.NotFound
 					Msg = "Photos/Video oversize,check original post"
 				}
+
+				Color, _ = engine.GetColor("/tmp/tw", Media)
 
 				if match, _ := regexp.MatchString("404.jpg", Data.Group.IconURL); match {
 					GroupIcon = ""

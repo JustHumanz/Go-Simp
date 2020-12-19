@@ -3,6 +3,7 @@ package twitter
 import (
 	"context"
 
+	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -17,5 +18,18 @@ func (Data *TwitterFanart) CurlTwitter() *TwitterFanart {
 			Data.Fanart = append(Data.Fanart, tweet)
 		}
 	}
+	return Data
+}
+
+func (Data *TwitterFanart) RemoveDuplicate() *TwitterFanart {
+	keys := make(map[*twitterscraper.Result]bool)
+	list := []*twitterscraper.Result{}
+	for _, entry := range Data.Fanart {
+		if _, value := keys[entry]; !value {
+			keys[entry] = true
+			list = append(list, entry)
+		}
+	}
+	Data.Fanart = list
 	return Data
 }
