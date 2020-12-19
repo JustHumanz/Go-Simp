@@ -88,8 +88,8 @@ func (Data *TwitterFanart) SendNude() {
 					}, Bot)
 				}
 			}(DiscordChannelID[i], ID[i], Data, wg)
-			wg.Wait()
 		}
+		wg.Wait()
 	}
 }
 
