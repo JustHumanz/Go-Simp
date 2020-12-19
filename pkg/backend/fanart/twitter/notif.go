@@ -66,7 +66,7 @@ func (Data *TwitterFanart) SendNude() {
 				if tags == "_" && Data.Group.NameGroup == "Independen" {
 					//do nothing,like my life
 				} else {
-					msg, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
+					msg, err := Bot.ChannelMessageSendEmbed(DiscordChannel, engine.NewEmbed().
 						SetAuthor(strings.Title(Data.Group.NameGroup), GroupIcon).
 						SetTitle("@"+Fanart.Username).
 						SetURL(url).
