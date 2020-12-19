@@ -297,7 +297,9 @@ func YtFindType(title string) string {
 
 //GetAuthorAvatar Get twitter avatar
 func GetAuthorAvatar(username string) string {
-	profile, err := twitterscraper.GetProfile(username)
+	scraper := twitterscraper.New()
+	scraper.SetProxy(config.MultiTOR)
+	profile, err := scraper.GetProfile(username)
 	if err != nil {
 		log.Error(err)
 	}
