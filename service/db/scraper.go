@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"math/rand"
 	"net/url"
@@ -11,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/JustHumanz/Go-simp/pkg/backend/fanart/twitter"
 	bilibili "github.com/JustHumanz/Go-simp/pkg/backend/livestream/bilibili/live"
 	youtube "github.com/JustHumanz/Go-simp/pkg/backend/livestream/youtube"
 	config "github.com/JustHumanz/Go-simp/tools/config"
@@ -29,20 +29,14 @@ func TwitterFanart() {
 			wg.Add(1)
 			go func(wg *sync.WaitGroup, Member database.Member, Group database.Group) {
 				defer wg.Done()
-				if Member.TwitterHashtags != "" || Member.EnName == "Kaichou" {
-					for tweet := range scraper.SearchTweets(context.Background(), Member.TwitterHashtags+" AND -filter:retweets AND -filter:replies", Limit) {
-						if tweet.Error != nil {
-							log.Error(tweet.Error)
-						}
-						Data := &InputTwitter{
-							TwitterData: tweet.Tweet,
-							Member:      Member,
-						}
-						err := Data.InputData()
-						if err != nil {
-							log.Error(err)
-						}
+				if Member.TwitterHashtags != "" || Member.Name != "Kaichou" {
+					Newfanart := twitter.TwitterFanart{
+						Member:  Member,
+						Limit:   100,
+						Group:   Group,
+						Scraper: scraper,
 					}
+					Newfanart.CurlTwitter()
 				} else {
 					log.Info(Member.EnName + " don't have twitter hashtag")
 				}
@@ -50,11 +44,6 @@ func TwitterFanart() {
 		}
 		wg.Wait()
 	}
-}
-
-type InputTwitter struct {
-	TwitterData twitterscraper.Tweet
-	Member      database.Member
 }
 
 func FilterYt(Dat database.Member, wg *sync.WaitGroup) {

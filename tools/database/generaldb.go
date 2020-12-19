@@ -236,24 +236,51 @@ func (Data DataFanart) DeleteFanart() error {
 	}
 }
 
-//InputTwitter Input new fanart from twitter
-func (Data InputTW) InputTwitter() {
+func (Member Member) CheckMemberFanart(Data *twitterscraper.Result) bool {
+	var (
+		id     int
+		videos string
+	)
+	err := DB.QueryRow(`SELECT id FROM Twitter WHERE PermanentURL=?`, Data.PermanentURL).Scan(&id)
+	if err == sql.ErrNoRows {
+		log.WithFields(log.Fields{
+			"Name":    Member.EnName,
+			"Hashtag": Member.TwitterHashtags,
+		}).Info("New Fanart")
 
-	stmt, err := DB.Prepare(`INSERT INTO Twitter (PermanentURL,Author,Likes,Photos,Videos,Text,TweetID,VtuberMember_id) values(?,?,?,?,?,?,?,?)`)
-	BruhMoment(err, "", false)
-	defer stmt.Close()
+		stmt, err := DB.Prepare(`INSERT INTO Twitter (PermanentURL,Author,Likes,Photos,Videos,Text,TweetID,VtuberMember_id) values(?,?,?,?,?,?,?,?)`)
+		if err != nil {
+			log.Error(err)
+		}
+		defer stmt.Close()
 
-	res, err := stmt.Exec(Data.Url, Data.Author, Data.Like, Data.Photos, Data.Video, Data.Text, Data.TweetID, Data.MemberID)
-	BruhMoment(err, "", false)
+		if len(Data.Videos) > 0 {
+			videos = Data.Videos[0].URL
+		}
 
-	_, err = res.LastInsertId()
-	BruhMoment(err, "", false)
-}
+		res, err := stmt.Exec(Data.PermanentURL, Data.Username, Data.Likes, strings.Join(Data.Photos, "\n"), videos, Data.Text, Data.ID, Member.ID)
+		if err != nil {
+			log.Error(err)
+		}
 
-//UpdateTwitter Update Likes data
-func (Data InputTW) UpdateTwitter(id int) {
-	_, err := DB.Exec(`Update Twitter set Likes=? Where id=?`, Data.Like, id)
-	BruhMoment(err, "", false)
+		_, err = res.LastInsertId()
+		if err != nil {
+			log.Error(err)
+		}
+		return true
+	} else {
+		//update like
+		log.WithFields(log.Fields{
+			"Name":    Member.EnName,
+			"Hashtag": Member.TwitterHashtags,
+			"Likes":   Data.Likes,
+		}).Info("Update like")
+		_, err := DB.Exec(`Update Twitter set Likes=? Where id=? `, Data.Likes, id)
+		if err != nil {
+			log.Error(err)
+		}
+		return false
+	}
 }
 
 //GetChannelID Get Channel id from Discord ChannelID and VtuberGroupID

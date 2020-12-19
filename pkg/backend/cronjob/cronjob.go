@@ -13,6 +13,7 @@ import (
 //InitCron Start cron job
 func InitCron() {
 
+	twitter.CheckNew()
 	c := cron.New()
 	c.Start()
 

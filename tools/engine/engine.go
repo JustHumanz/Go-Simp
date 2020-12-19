@@ -20,6 +20,7 @@ import (
 	network "github.com/JustHumanz/Go-simp/tools/network"
 	"github.com/bwmarrin/discordgo"
 	"github.com/cenkalti/dominantcolor"
+	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -292,4 +293,13 @@ func YtFindType(title string) string {
 		yttype = "Streaming"
 	}
 	return yttype
+}
+
+//GetAuthorAvatar Get twitter avatar
+func GetAuthorAvatar(username string) string {
+	profile, err := twitterscraper.GetProfile(username)
+	if err != nil {
+		log.Error(err)
+	}
+	return strings.Replace(profile.Avatar, "normal.jpg", "400x400.jpg", -1)
 }

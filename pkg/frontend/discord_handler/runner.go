@@ -9,7 +9,6 @@ import (
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"
-	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -130,15 +129,6 @@ func FindGropName(GroupName string) (database.Group, error) {
 //RemovePic Remove twitter pic
 func RemovePic(text string) string {
 	return regexp.MustCompile(`(?m)^(.*?)pic\.twitter.com\/.+`).ReplaceAllString(text, "${1}$2")
-}
-
-//GetAuthorAvatar Get twitter avatar
-func GetAuthorAvatar(username string) string {
-	profile, err := twitterscraper.GetProfile(username)
-	if err != nil {
-		log.Error(err)
-	}
-	return strings.Replace(profile.Avatar, "normal.jpg", "400x400.jpg", -1)
 }
 
 //GetUserAvatar Get bilibili user avatar

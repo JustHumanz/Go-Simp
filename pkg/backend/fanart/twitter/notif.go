@@ -2,8 +2,8 @@ package twitter
 
 import (
 	"regexp"
+	"strconv"
 	"strings"
-	"sync"
 
 	runner "github.com/JustHumanz/Go-simp/pkg/backend/runner"
 	config "github.com/JustHumanz/Go-simp/tools/config"
@@ -12,18 +12,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//PushData Push data to discord channel struct
-type PushData struct {
-	Twitter    database.InputTW
-	Image      string
-	Msg        string
-	ScreenName string
-	UserName   string
-	Text       string
-	Avatar     string
-	Group      database.MemberGroupID
-}
-
 //Public variable
 var (
 	URLTMP string
@@ -31,32 +19,38 @@ var (
 )
 
 //SendNude Send to Discord channel
-func (Data PushData) SendNude() error {
-	ID, DiscordChannelID := database.ChannelTag(Data.Group.MemberID, 1, "")
-	wg := new(sync.WaitGroup)
-	url := Data.Twitter.Url
-	Bot := runner.Bot
-	for i := 0; i < len(DiscordChannelID); i++ {
-		wg.Add(1)
+func (Data *TwitterFanart) SendNude() error {
+	for _, Fanart := range Data.Fanart {
+		url := Fanart.PermanentURL
+		ID, DiscordChannelID := database.ChannelTag(Data.Member.ID, 1, "")
+		Bot := runner.Bot
+		for i := 0; i < len(DiscordChannelID); i++ {
+			ChannelState := database.DiscordChannel{
+				ChannelID:     DiscordChannelID[i],
+				VtuberGroupID: Data.Group.ID,
+			}
+			UserTagsList := database.GetUserList(ID[i], Data.Member.ID)
 
-		ChannelState := database.DiscordChannel{
-			ChannelID:     DiscordChannelID[i],
-			VtuberGroupID: Data.Group.GroupID,
-		}
-		UserTagsList := database.GetUserList(ID[i], Data.Group.MemberID)
-
-		go func(DiscordChannel string, wg *sync.WaitGroup) {
-			defer wg.Done()
-			Color, _ = engine.GetColor("/tmp/tw", Data.Image)
+			Color, _ = engine.GetColor("/tmp/tw", Fanart.Photos[0])
 			var (
 				tags      string
 				GroupIcon string
+				Media     string
+				Msg       string
 			)
 
-			if match, _ := regexp.MatchString("404.jpg", Data.Group.GroupIcon); match {
+			if len(Fanart.Videos) > 0 {
+				Media = Fanart.Videos[0].Preview
+				Msg = "1/1 Videos"
+			} else {
+				Media = Fanart.Photos[0]
+				Msg = "1/" + strconv.Itoa(len(Fanart.Photos)) + " Photos"
+			}
+
+			if match, _ := regexp.MatchString("404.jpg", Data.Group.IconURL); match {
 				GroupIcon = ""
 			} else {
-				GroupIcon = Data.Group.GroupIcon
+				GroupIcon = Data.Group.IconURL
 			}
 			if URLTMP != url {
 				if UserTagsList != nil {
@@ -64,40 +58,39 @@ func (Data PushData) SendNude() error {
 				} else {
 					tags = "_"
 				}
-				if tags == "_" && Data.Group.GroupName == "Independen" {
+				if tags == "_" && Data.Group.NameGroup == "Independen" {
 					//do nothing,like my life
 				} else {
-					msg, err := Bot.ChannelMessageSendEmbed(DiscordChannel, engine.NewEmbed().
-						SetAuthor(strings.Title(Data.Group.GroupName), GroupIcon).
-						SetTitle(Data.UserName+"(@"+Data.ScreenName+")").
+					msg, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
+						SetAuthor(strings.Title(Data.Group.NameGroup), GroupIcon).
+						SetTitle("(@"+Fanart.Username+")").
 						SetURL(url).
-						SetThumbnail(strings.Replace(Data.Avatar, "_normal.jpg", ".jpg", -1)).
-						SetDescription(RemoveTwitterShortLink(Data.Text)).
-						SetImage(Data.Image).
+						SetThumbnail(engine.GetAuthorAvatar(Fanart.Username)).
+						SetDescription(RemoveTwitterShortLink(Fanart.Text)).
+						SetImage(Media).
 						AddField("User Tags", tags).
 						SetColor(Color).
-						SetFooter(Data.Msg, config.TwitterIMG).MessageEmbed)
+						SetFooter(Msg, config.TwitterIMG).MessageEmbed)
 					if err != nil {
 						log.Error(msg, err)
 						err = ChannelState.DelChannel(err.Error())
 						if err != nil {
-							log.Error(err)
+							return err
 						}
 					}
 					engine.Reacting(map[string]string{
-						"ChannelID": DiscordChannel,
+						"ChannelID": DiscordChannelID[i],
 					}, Bot)
 				}
+				URLTMP = url
 			} else {
 				log.WithFields(log.Fields{
 					"Old URL": URLTMP,
 					"New URL": url,
 				}).Info("Same post,multiple hashtags")
 			}
-		}(DiscordChannelID[i], wg)
+		}
 	}
-	wg.Wait()
-	URLTMP = url
 	return nil
 }
 
