@@ -84,7 +84,7 @@ func (Data *TwitterFanart) SendNude() {
 						}
 					}
 					engine.Reacting(map[string]string{
-						"ChannelID": DiscordChannelID[i],
+						"ChannelID": DiscordChannel,
 					}, Bot)
 				}
 			}(DiscordChannelID[i], ID[i], Data, wg)
