@@ -4,6 +4,7 @@ v0.5.15
 - Change twitter filter
 - Add image filter
 - Update exec page
+- Remove dirty func&struct
 
 v0.5.14
 - Change cron twitter scraping
