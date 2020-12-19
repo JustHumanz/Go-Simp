@@ -3,6 +3,7 @@ v0.5.15
 - Update n0madic/twitter-scraper
 - Change twitter filter
 - Add image filter
+- Update exec page
 
 v0.5.14
 - Change cron twitter scraping
