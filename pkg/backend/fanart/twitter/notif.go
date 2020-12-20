@@ -40,7 +40,7 @@ func (Data *TwitterFanart) SendNude() {
 				if len(Fanart.Videos) > 0 {
 					Media = Fanart.Videos[0].Preview
 					Msg = "1/1 Videos"
-				} else if len(Fanart.Photos[0]) > 0 {
+				} else if len(Fanart.Photos) > 0 {
 					Media = Fanart.Photos[0]
 					Msg = "1/" + strconv.Itoa(len(Fanart.Photos)) + " Photos"
 				} else {
