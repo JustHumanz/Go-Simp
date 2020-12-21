@@ -386,27 +386,6 @@ func CreateDB(Data config.ConfigFile) error {
 	return nil
 }
 
-func GetHashtag(Group string) []database.MemberGroupID {
-	rows, err := db.Query(`SELECT VtuberMember.id,VtuberName,VtuberName_JP,VtuberGroup_id,Hashtag,VtuberGroupName,VtuberGroupIcon FROM VtuberMember INNER Join VtuberGroup ON VtuberGroup.id = VtuberMember.VtuberGroup_id WHERE VtuberGroup.VtuberGroupName =?`, Group)
-	if err != nil {
-		log.Error(err)
-	}
-	defer rows.Close()
-
-	Data := []database.MemberGroupID{}
-	for rows.Next() {
-		var list database.MemberGroupID
-		err = rows.Scan(&list.MemberID, &list.EnName, &list.JpName, &list.GroupID, &list.TwitterHashtags, &list.GroupName, &list.GroupIcon)
-		if err != nil {
-			log.Error(err)
-		}
-
-		Data = append(Data, list)
-
-	}
-	return Data
-}
-
 func AddData(Data Vtuber) {
 
 	var (
