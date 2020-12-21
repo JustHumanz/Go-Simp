@@ -15,7 +15,7 @@ require (
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/olekukonko/tablewriter v0.0.4
 	github.com/sirupsen/logrus v1.7.0
-	golang.org/x/crypto v0.0.0-20201217014255-9d1352758620 // indirect
-	golang.org/x/sys v0.0.0-20201218084310-7d0127a74742 // indirect
+	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad // indirect
+	golang.org/x/sys v0.0.0-20201221093633-bc327ba9c2f0 // indirect
 	gopkg.in/robfig/cron.v2 v2.0.0-20150107220207-be2e0b0deed5
 )
