@@ -865,7 +865,7 @@ func (Data *LiveBili) UpdateOnline(new int) *LiveBili {
 	return Data
 }
 
-func (Data *LiveBili) AddMember(new database.Member) *LiveBili {
+func (Data *LiveBili) SetMember(new database.Member) *LiveBili {
 	Data.Member = new
 	return Data
 }
