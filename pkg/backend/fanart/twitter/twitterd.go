@@ -28,21 +28,22 @@ func CheckNew() {
 			wg.Add(1)
 			go func(Member database.Member, Group database.Group, wg *sync.WaitGroup) {
 				defer wg.Done()
-				if Member.TwitterHashtags != "" || Member.Name != "Kaichou" {
-					newfanart := TwitterFanart{
-						Member:  Member,
-						Limit:   5,
-						Group:   Group,
-						Scraper: Scraper,
+				if Member.TwitterHashtags != "" {
+					if Member.Name != "Kaichou" {
+						newfanart := TwitterFanart{
+							Member:  Member,
+							Limit:   5,
+							Group:   Group,
+							Scraper: Scraper,
+						}
+						log.WithFields(log.Fields{
+							"Name":    Member.EnName,
+							"Hashtag": Member.TwitterHashtags,
+							"Group":   Group.NameGroup,
+						}).Info("Scraping Fanart")
+
+						newfanart.CurlTwitter().SendNude()
 					}
-					log.WithFields(log.Fields{
-						"Name":    Member.EnName,
-						"Hashtag": Member.TwitterHashtags,
-						"Group":   Group.NameGroup,
-					}).Info("Scraping Fanart")
-
-					newfanart.CurlTwitter().SendNude()
-
 				} else {
 					log.Info(Member.EnName + " don't have twitter hashtag")
 				}

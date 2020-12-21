@@ -30,14 +30,16 @@ func TwitterFanart() {
 			wg.Add(1)
 			go func(wg *sync.WaitGroup, Member database.Member, Group database.Group) {
 				defer wg.Done()
-				if Member.TwitterHashtags != "" || Member.Name != "Kaichou" {
-					Newfanart := twitter.TwitterFanart{
-						Member:  Member,
-						Limit:   100,
-						Group:   Group,
-						Scraper: scraper,
+				if Member.TwitterHashtags != "" {
+					if Member.Name != "Kaichou" {
+						Newfanart := twitter.TwitterFanart{
+							Member:  Member,
+							Limit:   100,
+							Group:   Group,
+							Scraper: scraper,
+						}
+						Newfanart.CurlTwitter()
 					}
-					Newfanart.CurlTwitter()
 				} else {
 					log.Info(Member.EnName + " don't have twitter hashtag")
 				}
