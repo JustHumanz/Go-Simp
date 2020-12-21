@@ -2,10 +2,10 @@ module github.com/JustHumanz/Go-simp
 
 go 1.15
 
+replace github.com/n0madic/twitter-scraper v0.0.0-20201218132833-0275c93c3738 => github.com/JustHumanz/twitter-scraper v0.0.0-20201219172027-9a3c1158155f
+
 require (
 	github.com/BurntSushi/toml v0.3.1
-	github.com/PuerkitoBio/goquery v1.6.0 // indirect
-	github.com/andybalholm/cascadia v1.2.0 // indirect
 	github.com/bwmarrin/discordgo v0.22.0
 	github.com/cenkalti/dominantcolor v0.0.0-20171020061837-df772e8dd39e
 	github.com/go-sql-driver/mysql v1.5.0
@@ -14,6 +14,7 @@ require (
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/olekukonko/tablewriter v0.0.4
 	github.com/sirupsen/logrus v1.7.0
-	golang.org/x/net v0.0.0-20201202161906-c7110b5ffcbb // indirect
+	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9 // indirect
+	golang.org/x/sys v0.0.0-20200930185726-fdedc70b468f // indirect
 	gopkg.in/robfig/cron.v2 v2.0.0-20150107220207-be2e0b0deed5
 )

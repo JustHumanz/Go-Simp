@@ -61,9 +61,12 @@ func CheckSchedule() {
 						Data.SetStatus("Live").
 							UpdateSchdule(ScheduledStart).
 							UpdateOnline(Status.Data.RoomInfo.Online).
-							AddMember(Member).
-							Crotttt(GroupIcon).
-							Tamod()
+							SetMember(Member)
+
+						err = Data.Crotttt(GroupIcon)
+						if err != nil {
+							log.Error(err)
+						}
 
 						Data.RoomData.UpdateLiveBili(Member.ID)
 
