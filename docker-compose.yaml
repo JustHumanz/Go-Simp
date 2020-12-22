@@ -47,7 +47,7 @@ services:
       - multi_tor
       - build_mainbot
     working_dir: /app/Go-Simp/pkg/backend
-    command: go run .
+    command: ./start.sh
     restart: on-failure
 
   frontend:
@@ -58,7 +58,7 @@ services:
       - multi_tor
       - build_mainbot
     working_dir: /app/Go-Simp/pkg/frontend
-    command: go run .
+    command: ./start.sh
     restart: on-failure
 
   guild:
