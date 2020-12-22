@@ -7,7 +7,7 @@ do
         echo "Still waiting db_migrate"
     else
         echo "db_migrate done,let's fvcking goooooo!!!!!"
-        go run .
+        break
     fi
     sleep 30
 done
