@@ -1,9 +1,7 @@
 package twitter
 
 import (
-	"math/rand"
 	"sync"
-	"time"
 
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	"github.com/JustHumanz/Go-simp/tools/database"
@@ -24,7 +22,7 @@ func CheckNew() {
 	for _, GroupData := range engine.GroupData {
 		wg := new(sync.WaitGroup)
 		MembersData := database.GetMembers(GroupData.ID)
-		for _, MemberData := range MembersData {
+		for i, MemberData := range MembersData {
 			wg.Add(1)
 			go func(Member database.Member, Group database.Group, wg *sync.WaitGroup) {
 				defer wg.Done()
@@ -48,8 +46,8 @@ func CheckNew() {
 					log.Info(Member.EnName + " don't have twitter hashtag")
 				}
 			}(MemberData, GroupData, wg)
-			if len(MembersData) > 7 {
-				time.Sleep(time.Duration(rand.Intn(config.RandomSleep-400)+400) * time.Millisecond)
+			if i%2 == 0 {
+				wg.Wait()
 			}
 		}
 		wg.Wait()
