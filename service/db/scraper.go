@@ -23,7 +23,7 @@ import (
 func TwitterFanart() {
 	scraper := twitterscraper.New()
 	scraper.SetProxy(config.MultiTOR)
-	scraper.SearchLive(true)
+	scraper.SetSearchMode(twitterscraper.SearchLatest)
 	for _, Group := range database.GetGroups() {
 		var wg sync.WaitGroup
 		for _, Member := range database.GetMembers(Group.ID) {

@@ -14,7 +14,7 @@ import (
 //CheckNew Check new fanart
 func CheckNew() {
 	Scraper := twitterscraper.New()
-	Scraper.SearchLive(true)
+	Scraper.SetSearchMode(twitterscraper.SearchLatest)
 	err := Scraper.SetProxy(config.MultiTOR)
 	if err != nil {
 		log.Error(err)

@@ -20,7 +20,7 @@ func InitCron() {
 	c.AddFunc("@every 0h7m0s", bilibili.CheckNew)
 
 	c.AddFunc("@every 0h5m0s", youtube.CheckSchedule)
-	c.AddFunc("@every 2h0m0s", youtube.CheckPrivate)
+	c.AddFunc("@every 6h0m0s", youtube.CheckPrivate)
 	c.AddFunc("@every 0h4m0s", live.CheckSchedule)
 	c.AddFunc("@every 0h6m0s", space.CheckVideo)
 
