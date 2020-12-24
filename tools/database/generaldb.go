@@ -37,19 +37,18 @@ func BruhMoment(err error, msg string, exit bool) {
 	}
 }
 
-/*
 //GetHashtag Get Twitter hashtag by group
-func GetHashtag(GroupID int64) []MemberGroupID {
-	rows, err := DB.Query(`SELECT VtuberMember.id,VtuberName,VtuberName_JP,VtuberGroup_id,Hashtag,VtuberGroupName,VtuberGroupIcon FROM VtuberMember INNER Join VtuberGroup ON VtuberGroup.id = VtuberMember.VtuberGroup_id WHERE Hashtag !="" AND VtuberGroup.id =?`, GroupID)
+func GetHashtag(GroupID int64) []Member {
+	rows, err := DB.Query(`SELECT VtuberMember.id,VtuberName,VtuberName_JP,Hashtag FROM VtuberMember INNER Join VtuberGroup ON VtuberGroup.id = VtuberMember.VtuberGroup_id WHERE Hashtag !="" AND VtuberGroup.id =?`, GroupID)
 	BruhMoment(err, "", false)
 	defer rows.Close()
 
 	var (
-		Data []MemberGroupID
-		list MemberGroupID
+		Data []Member
+		list Member
 	)
 	for rows.Next() {
-		err = rows.Scan(&list.MemberID, &list.EnName, &list.JpName, &list.GroupID, &list.TwitterHashtags, &list.GroupName, &list.GroupIcon)
+		err = rows.Scan(&list.ID, &list.EnName, &list.JpName, &list.TwitterHashtags)
 		BruhMoment(err, "", false)
 
 		Data = append(Data, list)
@@ -57,7 +56,6 @@ func GetHashtag(GroupID int64) []MemberGroupID {
 	}
 	return Data
 }
-*/
 
 //GetGroup Get all vtuber groupData
 func GetGroups() []Group {

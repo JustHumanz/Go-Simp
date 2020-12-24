@@ -1,3 +1,7 @@
+v0.5.17
+- Upgrade twitter-scraper
+- Change fanart scraping logic
+
 v0.5.16
 - Replicate n0madic/twitter-scraper to JustHumanz/twitter-scraper
 - Fix BiliBili ghost notif

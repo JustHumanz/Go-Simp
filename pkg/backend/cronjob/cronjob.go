@@ -2,6 +2,7 @@ package cronjob
 
 import (
 	"github.com/JustHumanz/Go-simp/pkg/backend/fanart/bilibili"
+	"github.com/JustHumanz/Go-simp/pkg/backend/fanart/twitter"
 	"github.com/JustHumanz/Go-simp/pkg/backend/livestream/bilibili/live"
 	"github.com/JustHumanz/Go-simp/pkg/backend/livestream/bilibili/space"
 	"github.com/JustHumanz/Go-simp/pkg/backend/livestream/youtube"
@@ -12,14 +13,15 @@ import (
 //InitCron Start cron job
 func InitCron() {
 
+	twitter.CheckNew()
 	c := cron.New()
 	c.Start()
 
-	//c.AddFunc("@every 0h1m30s", twitter.CheckNew)
+	c.AddFunc("@every 0h1m30s", twitter.CheckNew)
 	c.AddFunc("@every 0h7m0s", bilibili.CheckNew)
 
 	c.AddFunc("@every 0h5m0s", youtube.CheckSchedule)
-	c.AddFunc("@every 6h0m0s", youtube.CheckPrivate)
+	c.AddFunc("@every 2h0m0s", youtube.CheckPrivate)
 	c.AddFunc("@every 0h4m0s", live.CheckSchedule)
 	c.AddFunc("@every 0h6m0s", space.CheckVideo)
 
