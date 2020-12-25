@@ -264,11 +264,7 @@ func YtAPI(VideoID []string) (YtData, error) {
 	}
 	err := json.Unmarshal(body, &Data)
 	if err != nil {
-<<<<<<< HEAD
-		return YtData{}, errors.New("Parsing error")
-=======
 		log.Error(err)
->>>>>>> main
 	}
 
 	return Data, nil
