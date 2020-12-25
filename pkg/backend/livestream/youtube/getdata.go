@@ -260,7 +260,9 @@ func YtAPI(VideoID []string) (YtData, error) {
 		return YtData{}, errors.New("Token out of limit")
 	}
 	err := json.Unmarshal(body, &Data)
-	engine.BruhMoment(err, "", false)
+	if err != nil {
+		log.Error(err)
+	}
 
 	return Data, nil
 }

@@ -54,17 +54,6 @@ func Start() {
 	log.Info("Engine module ready")
 }
 
-//BruhMoment Error hanlder
-func BruhMoment(err error, msg string, exit bool) {
-	if err != nil {
-		log.Info(msg)
-		log.Error(err)
-		if exit {
-			os.Exit(1)
-		}
-	}
-}
-
 //GetYtToken Get a valid token
 func GetYtToken() string {
 	FreshToken := config.YtToken[0]
