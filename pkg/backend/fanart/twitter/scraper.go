@@ -27,7 +27,7 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 			//Find hashtags members
 			for _, MemberHashtag := range Data {
 				for _, TweetHashtag := range tweet.Hashtags {
-					if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) {
+					if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) && MemberHashtag.EnName != "Kaichou" {
 						if MemberHashtag.CheckMemberFanart(tweet) {
 							Fanarts = append(Fanarts, Fanart{
 								Member: MemberHashtag,
