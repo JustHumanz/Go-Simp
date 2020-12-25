@@ -23,7 +23,7 @@ func CheckSchedule() {
 	yttoken = engine.GetYtToken()
 	for _, Group := range engine.GroupData {
 		var wg sync.WaitGroup
-		for i, Member := range database.GetMembers(Group.ID) {
+		for _, Member := range database.GetMembers(Group.ID) {
 			if Member.YoutubeID != "" {
 				wg.Add(1)
 				log.WithFields(log.Fields{
@@ -32,9 +32,6 @@ func CheckSchedule() {
 					"Vtube Region": Member.Region,
 				}).Info("Checking Youtube")
 				go StartCheckYT(Member, Group, &wg)
-			}
-			if i%2 == 0 {
-				wg.Wait()
 			}
 		}
 		wg.Wait()

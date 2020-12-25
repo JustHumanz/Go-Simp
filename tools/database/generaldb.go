@@ -287,18 +287,16 @@ func (Member Member) CheckMemberFanart(Data *twitterscraper.Result) bool {
 		}
 		return true
 	} else {
-		/*
-			//update like
-			log.WithFields(log.Fields{
-				"Name":    Member.EnName,
-				"Hashtag": Member.TwitterHashtags,
-				"Likes":   Data.Likes,
-			}).Info("Update like")
-			_, err := DB.Exec(`Update Twitter set Likes=? Where id=? `, Data.Likes, id)
-			if err != nil {
-				log.Error(err)
-			}
-		*/
+		//update like
+		log.WithFields(log.Fields{
+			"Name":    Member.EnName,
+			"Hashtag": Member.TwitterHashtags,
+			"Likes":   Data.Likes,
+		}).Info("Update like")
+		_, err := DB.Exec(`Update Twitter set Likes=? Where id=? `, Data.Likes, id)
+		if err != nil {
+			log.Error(err)
+		}
 		return false
 	}
 }
