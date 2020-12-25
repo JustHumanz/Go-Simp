@@ -9,19 +9,27 @@ API_ENDPOINT = 'https://discord.com/api/v6'
 
 class GetVtubers:
     def __init__(self):
-        self.Members = ""
+        response = requests.get(MemberURL)
+        self.Members = response.json()
 
     def GetGroups(self):
         return requests.get(GroupURL).json()
 
+    def GetMember(self,ID):
+        for MembersData in self.Members:
+            if int(MembersData["ID"]) == int(ID):
+                return MembersData
+        return None        
+
     def GetMemberGroups(self,GroupID):
-        response = requests.get(MemberURL data={'groupid':GroupID})
+        response = requests.get(MemberURL,params={'groupid':GroupID})
         self.Members = response.json()
         return response.json()
 
-    def GetSubs(self):
-        SubsInfo = requests.get(SubscriberURL)    
-        return SubsInfo.json()
+    def GetMemberSubs(self):
+        for MemberData in self.Members:
+            SubsInfo = requests.get(SubscriberURL+"Member/"+str(MemberData["ID"]))    
+            return SubsInfo.json()[0]
 
     def GetRegList(self):
         Region = []
@@ -31,13 +39,14 @@ class GetVtubers:
                 Region.append(Member['Region'])
         return Region    
 
+
     def ResizeImg(self,size):
         Members = self.Members
 
         for i in range(len(Members)):
-            Members[i]["Youtube_Avatar"] = Members[i]["Youtube_Avatar"].replace("s800",size)    
+            Members[i]["YoutubeAvatar"] = Members[i]["YoutubeAvatar"].replace("s800","s"+size)    
 
-        return Members   
+        return Members           
 
 class GitGood:
     def __init__(self, Token):    

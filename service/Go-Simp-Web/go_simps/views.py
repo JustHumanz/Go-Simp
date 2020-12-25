@@ -24,13 +24,11 @@ def go_simps_group(request, GroupID):
     return render(request, 'group.html',{'Members':Members,'Region':Region,'Add':False})
 
 def go_simps_members(request):
-    Members = []
-    RegList = []
-    for Group in Groups:
-        Vtubers.GetMemberGroups(Group["ID"])
-
-        RegList.append(Vtubers.GetRegList())
-        Members.append(Vtubers.ResizeImg("s100"))
+    Vtubers = GetVtubers()
+    Vtubers.ResizeImg("128")
+    Members = Vtubers.Members
+    RegList = Vtubers.GetRegList
+    
 
     return render(request, 'group.html',{'Members':Members,'Region':RegList,'Add':True})
 
@@ -64,16 +62,13 @@ def go_simps_add(request):
             return render(request,'done.html',Payload)
 
     else:
-        Vtubers = GetVtubers("")
         Payload = {'Groups':Vtubers.GetGroups()}
         return render(request,'add.html',Payload)
 
-def go_simps_member(request,MemberName):
-    Vtubers = GetVtubers(MemberName)
-    Vtubers.GetMembers()
-
-    Payload = {'Member': Vtubers.ResizeImg("s300"),'Subs': Vtubers.GetSubs()}
-    return render(request, 'member.html',Payload)
+def go_simps_member(request,MemberID):
+    Member = Vtubers.GetMember(MemberID)
+    Subs = Vtubers.GetMemberSubs()
+    return render(request, 'member.html',{'Member': Member,'Subs': Subs})
 
 
 def go_simps_support(request,Type):
@@ -121,8 +116,6 @@ def go_simps_discord_channel(request,ChannelID):
     ChannelInfo,ChannelSupport = Discord.GetChannelInfo(ChannelID)
     Groups = Vtubers.GetGroups()
     Roles = Discord.GetGuildRols()
-
-    print(Roles)
     try:
         for i in range(len(Groups)):
             del Groups[i]["VtuberGroupIcon"]

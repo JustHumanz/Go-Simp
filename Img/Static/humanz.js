@@ -56,7 +56,7 @@ $(function () {
     
           if (/(.*#.+)/.test(url)) {
             return
-          } else if (/(.*youtube.+|bilibili.+|github.+|discord.+|twitter.+|channel.+)/.test(url)) {
+          } else if (/(.*http.+)/.test(url)) {
             window.open(
               url,
               '_blank'
