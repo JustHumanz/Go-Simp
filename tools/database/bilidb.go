@@ -9,7 +9,9 @@ import (
 //GetRoomData get RoomData from LiveBiliBili
 func GetRoomData(MemberID int64, RoomID int) *LiveBiliDB {
 	rows, err := DB.Query(`SELECT id,RoomID,Status,Title,Thumbnails,Description,ScheduledStart,Published,Viewers FROM LiveBiliBili Where VtuberMember_id=? AND RoomID=? order by ScheduledStart ASC`, MemberID, RoomID)
-	BruhMoment(err, "", false)
+	if err != nil {
+		log.Error(err)
+	}
 
 	defer rows.Close()
 
@@ -18,7 +20,9 @@ func GetRoomData(MemberID int64, RoomID int) *LiveBiliDB {
 	)
 	for rows.Next() {
 		err = rows.Scan(&Data.ID, &Data.LiveRoomID, &Data.Status, &Data.Title, &Data.Thumbnail, &Data.Description, &Data.ScheduledStart, &Data.PublishedAt, &Data.Online)
-		BruhMoment(err, "", false)
+		if err != nil {
+			log.Error(err)
+		}
 	}
 	return &Data
 }
@@ -26,7 +30,9 @@ func GetRoomData(MemberID int64, RoomID int) *LiveBiliDB {
 //UpdateLiveBili Update LiveBiliBili Data
 func (Data *LiveBiliDB) UpdateLiveBili(MemberID int64) {
 	_, err := DB.Exec(`Update LiveBiliBili set Status=? , Title=? ,Thumbnails=?, Description=?, Published=?, ScheduledStart=?, Viewers=? Where id=? AND VtuberMember_id=?`, Data.Status, Data.Title, Data.Thumbnail, Data.Description, Data.PublishedAt, Data.ScheduledStart, Data.Online, Data.ID, MemberID)
-	BruhMoment(err, "", false)
+	if err != nil {
+		log.Error(err)
+	}
 }
 
 //GetTBiliBili Check new post on TBiliBili
@@ -50,10 +56,14 @@ func BilGet(GroupID int64, MemberID int64, Status string) []LiveBiliDB {
 
 	if GroupID > 0 && Status != "Live" {
 		rows, err = DB.Query(`call GetLiveBiliBili(?,?,?,?)`, GroupID, MemberID, Status, 3)
-		BruhMoment(err, "", false)
+		if err != nil {
+			log.Error(err)
+		}
 	} else {
 		rows, err = DB.Query(`call GetLiveBiliBili(?,?,?,?)`, GroupID, MemberID, Status, 2525)
-		BruhMoment(err, "", false)
+		if err != nil {
+			log.Error(err)
+		}
 	}
 
 	defer rows.Close()
@@ -75,7 +85,9 @@ func BilGet(GroupID int64, MemberID int64, Status string) []LiveBiliDB {
 //SpaceGet Get SpaceBiliBili Data
 func SpaceGet(GroupID int64, MemberID int64) []SpaceBiliDB {
 	rows, err := DB.Query(`Call GetSpaceBiliBili(?,?)`, GroupID, MemberID)
-	BruhMoment(err, "", false)
+	if err != nil {
+		log.Error(err)
+	}
 
 	defer rows.Close()
 
@@ -96,14 +108,20 @@ func SpaceGet(GroupID int64, MemberID int64) []SpaceBiliDB {
 //InputSpaceVideo Input data to SpaceBiliBili
 func (Data InputBiliBili) InputSpaceVideo() {
 	stmt, err := DB.Prepare(`INSERT INTO BiliBili (VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberMember_id) values(?,?,?,?,?,?,?,?,?)`)
-	BruhMoment(err, "", false)
+	if err != nil {
+		log.Error(err)
+	}
 	defer stmt.Close()
 
 	res, err := stmt.Exec(Data.VideoID, Data.Type, Data.Title, Data.Thum, Data.Desc, Data.Update, Data.Viewers, Data.Length, Data.MemberID)
-	BruhMoment(err, "", false)
+	if err != nil {
+		log.Error(err)
+	}
 
 	_, err = res.LastInsertId()
-	BruhMoment(err, "", false)
+	if err != nil {
+		log.Error(err)
+	}
 }
 
 //CheckVideo Check New video from SpaceBiliBili
@@ -126,7 +144,9 @@ func (Data InputBiliBili) UpdateView(id int) {
 		"Viwers":       Data.Viewers,
 	}).Info("Update Space.Bilibili")
 	_, err := DB.Exec(`Update BiliBili set Viewers=? Where id=?`, Data.Viewers, id)
-	BruhMoment(err, "", false)
+	if err != nil {
+		log.Error(err)
+	}
 
 }
 

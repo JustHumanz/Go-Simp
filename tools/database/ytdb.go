@@ -64,12 +64,16 @@ func (Data YtDbData) InputYt(MemberID int64) error {
 func (Member Member) CheckYtVideo(VideoID string) *YtDbData {
 	var Data YtDbData
 	rows, err := DB.Query(`SELECT id,VideoID,Type,Status,Title,Thumbnails,Description,PublishedAt,ScheduledStart,EndStream,Viewers FROM Vtuber.Youtube Where VideoID=? AND VtuberMember_id=?`, VideoID, Member.ID)
-	BruhMoment(err, "", false)
+	if err != nil {
+		log.Error(err)
+	}
 	defer rows.Close()
 
 	for rows.Next() {
 		err = rows.Scan(&Data.ID, &Data.VideoID, &Data.Type, &Data.Status, &Data.Title, &Data.Thumb, &Data.Desc, &Data.Published, &Data.Schedul, &Data.End, &Data.Viewers)
-		BruhMoment(err, "", false)
+		if err != nil {
+			log.Error(err)
+		}
 	}
 	if Data.ID == 0 {
 		return nil
@@ -81,5 +85,7 @@ func (Member Member) CheckYtVideo(VideoID string) *YtDbData {
 //Update youtube data
 func (Data YtDbData) UpdateYt(Status string) {
 	_, err := DB.Exec(`Update Youtube set Type=?,Status=?,Title=?,Thumbnails=?,Description=?,PublishedAt=?,ScheduledStart=?,EndStream=?,Viewers=?,Length=? where id=?`, Data.Type, Status, Data.Title, Data.Thumb, Data.Desc, Data.Published, Data.Schedul, Data.End, Data.Viewers, Data.Length, Data.ID)
-	BruhMoment(err, "", false)
+	if err != nil {
+		log.Error(err)
+	}
 }
