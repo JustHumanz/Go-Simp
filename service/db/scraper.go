@@ -284,7 +284,7 @@ func CheckTBili() {
 		for z := 0; z < len(DataMember); z++ {
 			if DataMember[z].BiliBiliHashtags != "" {
 				log.WithFields(log.Fields{
-					"Group":  DataGroup[k].NameGroup,
+					"Group":  DataGroup[k].GroupName,
 					"Vtuber": DataMember[z].EnName,
 				}).Info("Start crawler T.bilibili")
 				body, err := network.Curl("https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_name="+url.QueryEscape(DataMember[z].BiliBiliHashtags), nil)
@@ -317,7 +317,7 @@ func CheckTBili() {
 
 							if New && !nope {
 								log.WithFields(log.Fields{
-									"Group":  DataGroup[k].NameGroup,
+									"Group":  DataGroup[k].GroupName,
 									"Vtuber": DataMember[z].EnName,
 								}).Info("New Fanart")
 								for l := 0; l < len(STB.Item.Pictures); l++ {
@@ -337,7 +337,7 @@ func CheckTBili() {
 								Data.InputTBiliBili(DataMember[z].ID)
 							} else {
 								log.WithFields(log.Fields{
-									"Group":  DataGroup[k].NameGroup,
+									"Group":  DataGroup[k].GroupName,
 									"Vtuber": DataMember[z].EnName,
 								}).Info("Still same")
 							}
@@ -345,7 +345,7 @@ func CheckTBili() {
 					}
 				} else {
 					log.WithFields(log.Fields{
-						"Group":  DataGroup[k].NameGroup,
+						"Group":  DataGroup[k].GroupName,
 						"Vtuber": DataMember[z].EnName,
 					}).Info("Still same")
 				}
@@ -361,7 +361,7 @@ func CheckSchedule() {
 		for _, Member := range database.GetMembers(Group.ID) {
 			if Member.BiliBiliID != 0 {
 				log.WithFields(log.Fields{
-					"Group":   Group.NameGroup,
+					"Group":   Group.GroupName,
 					"SpaceID": Member.EnName,
 				}).Info("Check Room")
 				var (
@@ -394,7 +394,7 @@ func CheckSchedule() {
 				if Status.CheckScheduleLive() {
 					//Live
 					log.WithFields(log.Fields{
-						"Group":      Group.NameGroup,
+						"Group":      Group.GroupName,
 						"VtuberName": Member.Name,
 					}).Info("Status Live")
 					Data["Status"] = "Live"
@@ -402,14 +402,14 @@ func CheckSchedule() {
 				} else if !Status.CheckScheduleLive() && DataDB.Status == "Live" {
 					//prob past
 					log.WithFields(log.Fields{
-						"Group":      Group.NameGroup,
+						"Group":      Group.GroupName,
 						"VtuberName": Member.Name,
 					}).Info("Status Past")
 					Data["Status"] = "Past"
 					LiveBiliBili(Data)
 				} else if DataDB.LiveRoomID == 0 {
 					log.WithFields(log.Fields{
-						"Group":      Group.NameGroup,
+						"Group":      Group.GroupName,
 						"VtuberName": Member.Name,
 					}).Info("Status Unknown")
 					Data["Status"] = "Unknown"
@@ -428,7 +428,7 @@ func CheckVideoSpace() {
 		for k := 0; k < len(Name); k++ {
 			if Name[k].BiliBiliID != 0 {
 				log.WithFields(log.Fields{
-					"Group":   Group[z].NameGroup,
+					"Group":   Group[z].GroupName,
 					"SpaceID": Name[k].EnName,
 				}).Info("Check Space")
 				var (

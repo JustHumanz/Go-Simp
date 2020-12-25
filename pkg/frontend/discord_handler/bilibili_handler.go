@@ -90,7 +90,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						} else {
 							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-								SetDescription("It looks like `"+VTuberGroup.NameGroup+"` doesn't have a livestream right now").
+								SetDescription("It looks like `"+VTuberGroup.GroupName+"` doesn't have a livestream right now").
 								SetImage(config.WorryIMG).MessageEmbed)
 							if err != nil {
 								log.Error(err)
@@ -259,7 +259,7 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 					} else {
 						_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-							SetDescription("It looks like `"+VTuberGroup.NameGroup+"` doesn't have a video in space.bilibili").
+							SetDescription("It looks like `"+VTuberGroup.GroupName+"` doesn't have a video in space.bilibili").
 							SetImage(config.WorryIMG).MessageEmbed)
 						if err != nil {
 							log.Error(err)

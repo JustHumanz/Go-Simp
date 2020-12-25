@@ -96,7 +96,7 @@ func FindName(MemberName string) NameStruct {
 		for _, Name := range database.GetMembers(Group.ID) {
 			if strings.ToLower(Name.Name) == MemberName || strings.ToLower(Name.JpName) == MemberName {
 				return NameStruct{
-					GroupName:  Group.NameGroup,
+					GroupName:  Group.GroupName,
 					GroupID:    Group.ID,
 					MemberName: Name.Name,
 					MemberID:   Name.ID,
@@ -119,7 +119,7 @@ type NameStruct struct {
 //FindGropName Find a valid Vtuber Group from message handler
 func FindGropName(GroupName string) (database.Group, error) {
 	for _, Group := range engine.GroupData {
-		if strings.ToLower(Group.NameGroup) == strings.ToLower(GroupName) {
+		if strings.ToLower(Group.GroupName) == strings.ToLower(GroupName) {
 			return Group, nil
 		}
 	}

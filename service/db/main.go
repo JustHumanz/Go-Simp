@@ -179,7 +179,7 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 	}
 
 	return engine.NewEmbed().
-		SetAuthor(Data.Group.NameGroup, Data.Group.IconURL).
+		SetAuthor(Data.Group.GroupName, Data.Group.IconURL).
 		SetTitle(engine.FixName(Data.Member.ENName, Data.Member.JPName)).
 		SetImage(Avatar).
 		SetThumbnail("https://justhumanz.me/update.png").

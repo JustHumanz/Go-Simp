@@ -19,10 +19,10 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//Get RSS from Channel
+//GetRSS GetRSS from Channel
 func GetRSS(YtID string) []string {
 	var (
-		DataXml YtXML
+		DataXML YtXML
 		VideoID []string
 	)
 
@@ -31,10 +31,13 @@ func GetRSS(YtID string) []string {
 		log.Error(err, string(Data))
 	}
 
-	xml.Unmarshal(Data, &DataXml)
+	xml.Unmarshal(Data, &DataXML)
 
-	for i := 0; i < len(DataXml.Entry); i++ {
-		VideoID = append(VideoID, DataXml.Entry[i].VideoId)
+	for i := 0; i < len(DataXML.Entry); i++ {
+		VideoID = append(VideoID, DataXML.Entry[i].VideoId)
+		if i == 4 {
+			break
+		}
 	}
 	return VideoID
 }

@@ -25,7 +25,7 @@ func CheckVideo() {
 				defer wg.Done()
 				if Member.BiliBiliID != 0 {
 					log.WithFields(log.Fields{
-						"Group":      Group.NameGroup,
+						"Group":      Group.GroupName,
 						"Vtuber":     Member.EnName,
 						"BiliBiliID": Member.BiliBiliID,
 					}).Info("Check Space")

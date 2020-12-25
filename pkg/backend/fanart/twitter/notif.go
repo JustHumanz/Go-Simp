@@ -62,11 +62,11 @@ func SendFanart(Data []Fanart, Group database.Group) {
 				} else {
 					tags = "_"
 				}
-				if tags == "_" && Group.NameGroup == "Independen" {
+				if tags == "_" && Group.GroupName == "Independen" {
 					//do nothing,like my life
 				} else {
 					msg, err := Bot.ChannelMessageSendEmbed(DiscordChannel, engine.NewEmbed().
-						SetAuthor(strings.Title(Group.NameGroup), GroupIcon).
+						SetAuthor(strings.Title(Group.GroupName), GroupIcon).
 						SetTitle("@"+MemberFanart.Tweet.Username).
 						SetURL(url).
 						SetThumbnail(engine.GetAuthorAvatar(MemberFanart.Tweet.Username)).
@@ -143,11 +143,11 @@ func (Data *TwitterFanart) SendNude() {
 				} else {
 					tags = "_"
 				}
-				if tags == "_" && Data.Group.NameGroup == "Independen" {
+				if tags == "_" && Data.Group.GroupName == "Independen" {
 					//do nothing,like my life
 				} else {
 					msg, err := Bot.ChannelMessageSendEmbed(DiscordChannel, engine.NewEmbed().
-						SetAuthor(strings.Title(Data.Group.NameGroup), GroupIcon).
+						SetAuthor(strings.Title(Data.Group.GroupName), GroupIcon).
 						SetTitle("@"+Fanart.Username).
 						SetURL(url).
 						SetThumbnail(engine.GetAuthorAvatar(Fanart.Username)).

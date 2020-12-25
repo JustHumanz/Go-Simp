@@ -18,7 +18,7 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 	CurlTwitter := func(Hashtags []string) {
 		log.WithFields(log.Fields{
 			"Hashtag": strings.Join(Hashtags, " OR "),
-			"Group":   Group.NameGroup,
+			"Group":   Group.GroupName,
 		}).Info("Start curl twitter")
 		for tweet := range Scraper.SearchTweets(context.Background(), strings.Join(Hashtags, " OR ")+" filter:media -filter:replies -filter:retweets", Limit) {
 			if tweet.Error != nil {

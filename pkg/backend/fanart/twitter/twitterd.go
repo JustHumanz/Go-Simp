@@ -21,7 +21,7 @@ func CheckNew() {
 		Fanarts, err := CreatePayload(database.GetHashtag(GroupData.ID), GroupData, Scraper, config.FanartLimit)
 		if err != nil {
 			log.WithFields(log.Fields{
-				"Group": GroupData.NameGroup,
+				"Group": GroupData.GroupName,
 			}).Error(err)
 		} else {
 			SendFanart(Fanarts, GroupData)

@@ -51,7 +51,7 @@ func CheckSchedule() {
 							GroupIcon = Group.IconURL
 						}
 						log.WithFields(log.Fields{
-							"Group":  Group.NameGroup,
+							"Group":  Group.GroupName,
 							"Vtuber": Member.EnName,
 							"Start":  ScheduledStart,
 						}).Info("Start live right now")
@@ -71,7 +71,7 @@ func CheckSchedule() {
 					} else if !Status.CheckScheduleLive() && DataDB.Status == "Live" {
 						//prob past
 						log.WithFields(log.Fields{
-							"Group":  Group.NameGroup,
+							"Group":  Group.GroupName,
 							"Vtuber": Member.EnName,
 							"Start":  ScheduledStart,
 						}).Info("Past live stream")
@@ -82,7 +82,7 @@ func CheckSchedule() {
 					} else {
 						//update online
 						log.WithFields(log.Fields{
-							"Group":  Group.NameGroup,
+							"Group":  Group.GroupName,
 							"Vtuber": Member.EnName,
 						}).Info("Update LiveBiliBili")
 

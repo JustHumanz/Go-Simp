@@ -46,7 +46,7 @@ func CheckYtSubsCount() {
 									log.Error(err)
 								}
 								SendNude(engine.NewEmbed().
-									SetAuthor(Group.NameGroup, Group.IconURL, "https://www.youtube.com/channel/"+Name2.YoutubeID+"?sub_confirmation=1").
+									SetAuthor(Group.GroupName, Group.IconURL, "https://www.youtube.com/channel/"+Name2.YoutubeID+"?sub_confirmation=1").
 									SetTitle(engine.FixName(Name2.EnName, Name2.JpName)).
 									SetThumbnail(config.YoutubeIMG).
 									SetDescription("Congratulation for "+SubsCount+" subscriber").

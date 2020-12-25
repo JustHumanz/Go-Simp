@@ -81,7 +81,7 @@ func CheckBiliFollowCount() {
 										log.Error(err)
 									}
 									SendNude(engine.NewEmbed().
-										SetAuthor(Group.NameGroup, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
+										SetAuthor(Group.GroupName, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
 										SetTitle(engine.FixName(Name.EnName, Name.JpName)).
 										SetThumbnail(config.BiliBiliIMG).
 										SetDescription("Congratulation for "+strconv.Itoa(i)+" followers").
@@ -102,7 +102,7 @@ func CheckBiliFollowCount() {
 										log.Error(err)
 									}
 									SendNude(engine.NewEmbed().
-										SetAuthor(Group.NameGroup, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
+										SetAuthor(Group.GroupName, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
 										SetTitle(engine.FixName(Name.EnName, Name.JpName)).
 										SetThumbnail(config.BiliBiliIMG).
 										SetDescription("Congratulation for "+strconv.Itoa(i)+" followers").

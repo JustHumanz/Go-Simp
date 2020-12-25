@@ -33,7 +33,7 @@ type DataFanart struct {
 type Group struct {
 	ID        int64
 	IconURL   string
-	NameGroup string
+	GroupName string
 }
 
 type Member struct {

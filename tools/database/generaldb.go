@@ -60,7 +60,7 @@ func GetGroups() []Group {
 	var Data []Group
 	for rows.Next() {
 		var list Group
-		err = rows.Scan(&list.ID, &list.NameGroup, &list.IconURL)
+		err = rows.Scan(&list.ID, &list.GroupName, &list.IconURL)
 		if err != nil {
 			log.Error(err)
 		}

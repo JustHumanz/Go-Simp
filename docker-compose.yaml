@@ -8,10 +8,6 @@ services:
   build_go_simp_web:
     build: service/Go-Simp-Web
     image: go_simp_web
-    
-  build_rest_api:
-    build: service/rest-api
-    image: rest_api
 
   build_multitor:
     build: service/multitor
@@ -81,7 +77,8 @@ services:
       - ./.env
 
   rest_api:
-    image: rest_api
+    image: mainbot
+    working_dir: /app/Go-Simp/service/rest-api    
     depends_on:
       - mysql
       - db_migrate

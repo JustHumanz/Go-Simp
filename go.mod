@@ -7,6 +7,7 @@ require (
 	github.com/bwmarrin/discordgo v0.22.0
 	github.com/cenkalti/dominantcolor v0.0.0-20171020061837-df772e8dd39e
 	github.com/go-sql-driver/mysql v1.5.0
+	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hako/durafmt v0.0.0-20200710122514-c0fb7b4da026
 	github.com/n0madic/twitter-scraper v0.0.0-20201223175348-1d3f84fc4ac9
