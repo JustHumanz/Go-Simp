@@ -1,7 +1,19 @@
+v0.5.17
+- Upgrade twitter-scraper
+- Change fanart scraping logic
+
+v0.5.16
+- Replicate n0madic/twitter-scraper to JustHumanz/twitter-scraper
+- Fix BiliBili ghost notif
+- Add sleep for twitter scraping
+
 v0.5.15
 - Fix twitter scraping bug
 - Update n0madic/twitter-scraper
 - Change twitter filter
+- Add image filter
+- Update exec page
+- Remove dirty func&struct
 
 v0.5.14
 - Change cron twitter scraping

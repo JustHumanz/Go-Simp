@@ -87,6 +87,20 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Tenshi",
+                    "EN_Name":"Amatsuka Uto",
+                    "JP_Name":"天使うと",
+                    "Hashtag": {
+                        "Twitter": "#utoart",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UCdYR5Oyz8Q4g0ZmB4PkTD7g",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "amatsukauto",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Artia",
                     "EN_Name":"Artia",
                     "JP_Name":"アティア",

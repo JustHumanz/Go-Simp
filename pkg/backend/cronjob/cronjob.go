@@ -17,7 +17,7 @@ func InitCron() {
 	c.Start()
 
 	c.AddFunc("@every 0h1m30s", twitter.CheckNew)
-	c.AddFunc("@every 0h2m0s", bilibili.CheckNew)
+	c.AddFunc("@every 0h7m0s", bilibili.CheckNew)
 
 	c.AddFunc("@every 0h5m0s", youtube.CheckSchedule)
 	c.AddFunc("@every 2h0m0s", youtube.CheckPrivate)

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"math/rand"
 	"net/url"
@@ -11,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/JustHumanz/Go-simp/pkg/backend/fanart/twitter"
 	bilibili "github.com/JustHumanz/Go-simp/pkg/backend/livestream/bilibili/live"
 	youtube "github.com/JustHumanz/Go-simp/pkg/backend/livestream/youtube"
 	config "github.com/JustHumanz/Go-simp/tools/config"
@@ -23,38 +23,15 @@ import (
 func TwitterFanart() {
 	scraper := twitterscraper.New()
 	scraper.SetProxy(config.MultiTOR)
+	scraper.SetSearchMode(twitterscraper.SearchLatest)
 	for _, Group := range database.GetGroups() {
-		var wg sync.WaitGroup
-		for _, Member := range database.GetMembers(Group.ID) {
-			wg.Add(1)
-			go func(wg *sync.WaitGroup, Member database.Member, Group database.Group) {
-				defer wg.Done()
-				if Member.TwitterHashtags != "" || Member.EnName == "Kaichou" {
-					for tweet := range scraper.SearchTweets(context.Background(), Member.TwitterHashtags+" -filter:replies AND -filter:retweets", Limit) {
-						if tweet.Error != nil {
-							log.Error(tweet.Error)
-						}
-						Data := &InputTwitter{
-							TwitterData: tweet.Tweet,
-							Member:      Member,
-						}
-						err := Data.InputData()
-						if err != nil {
-							log.Error(err)
-						}
-					}
-				} else {
-					log.Info(Member.EnName + " don't have twitter hashtag")
-				}
-			}(&wg, Member, Group)
+		_, err := twitter.CreatePayload(database.GetHashtag(Group.ID), Group, scraper, 100)
+		if err != nil {
+			log.WithFields(log.Fields{
+				"Group": Group.NameGroup,
+			}).Error(err)
 		}
-		wg.Wait()
 	}
-}
-
-type InputTwitter struct {
-	TwitterData twitterscraper.Tweet
-	Member      database.Member
 }
 
 func FilterYt(Dat database.Member, wg *sync.WaitGroup) {

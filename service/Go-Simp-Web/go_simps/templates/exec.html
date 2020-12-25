@@ -48,7 +48,8 @@
        <div class="container" id="container">
          <h3><a id="Command_0"></a>Command of VTbot</h3>
          <p><code>[]</code> =&gt; array,support multiple VtuberName/VtuberGroup (<em>separated by commas</em>)<br>
-            <code>{}</code> =&gt; only support single VtuberName/VtuberGroup
+            <code>{}</code> =&gt; only support single VtuberName/VtuberGroup <br>
+            Utility command don't need enable state,you can execute that command anywhere
          </p>
          <p><code>vtbot&gt;Enable {art/live/all} [Vtuber Group] ...Options</code><br>
             This command will declare if [Vtuber Group] enable in this channel<br>
@@ -59,7 +60,7 @@
             Example: <code>vtbot&gt;enable live hanayori,nijisanji -liveonly</code>
          </p>
          <p><code>vtbot&gt;Update {art/live/all} [Vtuber Group] ...Options</code><br>
-            Use this command if you want to change enable state<br>
+            Use this command if you want to change channel state<br>
             Example: <code>vtbot&gt;Update art Hanayori</code> now bot will send fanart notification,and remove livestream notification<br>
             Disable New upcoming livestream notification<br>
             Example: <code>vtbot&gt;Update live Hanayori -rm_newupcoming</code>
@@ -70,7 +71,7 @@
          </p>
          <p>
             Options: <br>
-            <code>-liveonly</code> Set livestreams(ignoring covering or regular video) notification<br>
+            <code>-liveonly</code> Set livestreams in strict mode(ignoring covering or regular video) notification<br>
             <code>-newupcoming</code> Enable new livestreams notification(by default will enable this) <br>
             <code>-rm_liveonly</code> Disable <code>-liveonly</code> <br>
             <code>-rm_newupcoming</code> Disable new livestreams notification<br>
@@ -125,6 +126,7 @@
             Example: <code>vtbot&gt;Set reminder hololive 0</code> <br>
          </p>
          <hr>
+         <p><b>Utility command</b></p>
          <p><code>art&gt;{Group/Member}</code><br>
             Show fanart with randomly with their fanart hashtag<br>
             Example: <code>art&gt;Kanochi</code> or <code>art&gt;hololive</code>

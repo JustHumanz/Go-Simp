@@ -1,6 +1,7 @@
 package live
 
 import (
+	"errors"
 	"strconv"
 	"strings"
 	"time"
@@ -15,33 +16,15 @@ import (
 )
 
 //push to discord channel
-func (Data *LiveBili) Tamod() {
-	MemberID := Data.Member.ID
-	Bot := runner.Bot
-	id, DiscordChannelID := database.ChannelTag(MemberID, 2, "")
-	for i, DiscordChannel := range DiscordChannelID {
-		UserTagsList := database.GetUserList(id[i], MemberID)
-		if UserTagsList != nil {
-			msg, err := Bot.ChannelMessageSendEmbed(DiscordChannel, Data.Embed)
-			if err != nil {
-				log.Error(msg, err)
-			}
-			msg, err = Bot.ChannelMessageSend(DiscordChannel, "UserTags: "+strings.Join(UserTagsList, " "))
-			if err != nil {
-				log.Error(msg, err)
-			}
-		}
-	}
-}
 
 //make a embed
-func (Data *LiveBili) Crotttt(GroupIcon string) *LiveBili {
+func (Data *LiveBili) Crotttt(GroupIcon string) error {
 	BiliBiliAccount := "https://space.bilibili.com/" + strconv.Itoa(Data.Member.BiliBiliID)
 	BiliBiliURL := "https://live.bilibili.com/" + strconv.Itoa(Data.RoomData.LiveRoomID)
 	Online := strconv.Itoa(Data.RoomData.Online)
 	Color, err := engine.GetColor("/tmp/bilThum", Data.RoomData.Thumbnail)
 	if err != nil {
-		log.Error(err)
+		return err
 	}
 
 	if Data.RoomData.Status == "Live" {
@@ -58,6 +41,25 @@ func (Data *LiveBili) Crotttt(GroupIcon string) *LiveBili {
 			//AddField("Rank",Data).
 			SetFooter(Data.RoomData.ScheduledStart.In(loc).Format(time.RFC822), config.BiliBiliIMG).
 			SetColor(Color).MessageEmbed
+	} else {
+		return errors.New("it's not live")
+	}
+
+	MemberID := Data.Member.ID
+	Bot := runner.Bot
+	id, DiscordChannelID := database.ChannelTag(MemberID, 2, "")
+	for i, DiscordChannel := range DiscordChannelID {
+		UserTagsList := database.GetUserList(id[i], MemberID)
+		if UserTagsList != nil {
+			msg, err := Bot.ChannelMessageSendEmbed(DiscordChannel, Data.Embed)
+			if err != nil {
+				log.Error(msg, err)
+			}
+			msg, err = Bot.ChannelMessageSend(DiscordChannel, "UserTags: "+strings.Join(UserTagsList, " "))
+			if err != nil {
+				log.Error(msg, err)
+			}
+		}
 	}
 
 	/* else if DataRoom.Status == "Upcoming" {
@@ -84,6 +86,6 @@ func (Data *LiveBili) Crotttt(GroupIcon string) *LiveBili {
 		InlineAllFields().
 		SetColor(Color).MessageEmbed
 	*/
-	return Data
 
+	return nil
 }

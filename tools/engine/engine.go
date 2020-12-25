@@ -20,6 +20,7 @@ import (
 	network "github.com/JustHumanz/Go-simp/tools/network"
 	"github.com/bwmarrin/discordgo"
 	"github.com/cenkalti/dominantcolor"
+	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -51,17 +52,6 @@ func Start() {
 		RegList[Group.GroupName] = strings.Join(list, ",")
 	}
 	log.Info("Engine module ready")
-}
-
-//BruhMoment Error hanlder
-func BruhMoment(err error, msg string, exit bool) {
-	if err != nil {
-		log.Info(msg)
-		log.Error(err)
-		if exit {
-			os.Exit(1)
-		}
-	}
 }
 
 //GetYtToken Get a valid token
@@ -292,4 +282,15 @@ func YtFindType(title string) string {
 		yttype = "Streaming"
 	}
 	return yttype
+}
+
+//GetAuthorAvatar Get twitter avatar
+func GetAuthorAvatar(username string) string {
+	scraper := twitterscraper.New()
+	scraper.SetProxy(config.MultiTOR)
+	profile, err := scraper.GetProfile(username)
+	if err != nil {
+		log.Error(err)
+	}
+	return strings.Replace(profile.Avatar, "normal.jpg", "400x400.jpg", -1)
 }

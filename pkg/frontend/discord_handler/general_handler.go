@@ -64,7 +64,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 				embed = engine.NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 					SetTitle(Author).
-					SetThumbnail(GetAuthorAvatar(Author)).
+					SetThumbnail(engine.GetAuthorAvatar(Author)).
 					SetDescription(Text).
 					SetURL(URL).
 					SetImage(Pic).
