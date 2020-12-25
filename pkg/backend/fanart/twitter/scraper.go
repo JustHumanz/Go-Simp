@@ -39,10 +39,11 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 			}
 		}
 	}
+
 	if len(Data) > 7 {
 		for i, Member := range Data {
 			Hashtags = append(Hashtags, Member.TwitterHashtags)
-			if i == len(Data)/2 || i == len(Data)-1 {
+			if (i%5 == 0) || (i == len(Data)-1) {
 				CurlTwitter(Hashtags)
 				Hashtags = nil
 			}
