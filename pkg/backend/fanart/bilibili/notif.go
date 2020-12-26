@@ -27,25 +27,27 @@ func (NotifData Notif) PushNotif(Color int) {
 	Bot := runner.Bot
 	ID, DiscordChannelID := database.ChannelTag(NotifData.MemberID, 1, "")
 	GroupIcon := ""
-	msg := ""
 	tags := ""
-	repost, url, err := engine.SaucenaoCheck(strings.Split(Data.Photos, "\n")[0])
-	if err != nil {
-		log.Error(err)
-		msg = "??????"
-	} else if repost && url != nil {
-		log.WithFields(log.Fields{
-			"Source Img": Data.URL,
-			"Sauce Img":  url,
-		}).Info("Repost")
-		msg = url[0]
-	} else {
-		log.WithFields(log.Fields{
-			"Source Img": Data.URL,
-			"Sauce Img":  url,
-		}).Info("Ntap,Anyar cok")
-		msg = "_"
-	}
+	/*
+		msg := ""
+		repost, url, err := engine.SaucenaoCheck(strings.Split(Data.Photos, "\n")[0])
+		if err != nil {
+			log.Error(err)
+			msg = "??????"
+		} else if repost && url != nil {
+			log.WithFields(log.Fields{
+				"Source Img": Data.URL,
+				"Sauce Img":  url,
+			}).Info("Repost")
+			msg = url[0]
+		} else {
+			log.WithFields(log.Fields{
+				"Source Img": Data.URL,
+				"Sauce Img":  url,
+			}).Info("Ntap,Anyar cok")
+			msg = "_"
+		}
+	*/
 	for i := 0; i < len(DiscordChannelID); i++ {
 		ChannelState := database.DiscordChannel{
 			ChannelID:     DiscordChannelID[i],
@@ -58,6 +60,9 @@ func (NotifData Notif) PushNotif(Color int) {
 			tags = "_"
 		}
 
+		if Group.GroupName != "Independen" {
+			GroupIcon = Group.IconURL
+		}
 		if tags == "_" && Group.GroupName == "Independen" {
 			//do nothing,like my life
 		} else {
@@ -69,7 +74,7 @@ func (NotifData Notif) PushNotif(Color int) {
 				SetDescription(Data.Text).
 				SetImage(NotifData.PhotosImgur).
 				AddField("User Tags", tags).
-				AddField("Similar art", msg).
+				//AddField("Similar art", msg).
 				SetFooter("1/"+strconv.Itoa(NotifData.PhotosCount)+" photos", config.BiliBiliIMG).
 				InlineAllFields().
 				SetColor(Color).MessageEmbed)

@@ -28,7 +28,7 @@ func TwitterFanart() {
 		_, err := twitter.CreatePayload(database.GetHashtag(Group.ID), Group, scraper, 100)
 		if err != nil {
 			log.WithFields(log.Fields{
-				"Group": Group.NameGroup,
+				"Group": Group.GroupName,
 			}).Error(err)
 		}
 	}
@@ -95,16 +95,10 @@ func (Data Member) YtAvatar() string {
 	if Data.YtID != "" {
 		var (
 			avatar string
-			bit    []byte
-			err    error
-			URL    = "https://www.youtube.com/channel/" + Data.YtID + "/about"
 		)
-		bit, err = network.Curl(URL, nil)
+		bit, err := network.CoolerCurl("https://www.youtube.com/channel/"+Data.YtID+"/about", nil)
 		if err != nil {
-			bit, err = network.CoolerCurl(URL, nil)
-			if err != nil {
-				log.Error(err)
-			}
+			log.Error(err)
 		}
 		submatchall := regexp.MustCompile(`(?ms)avatar.*?(http.*?)"`).FindAllStringSubmatch(string(bit), -1)
 		for _, element := range submatchall {
@@ -138,22 +132,15 @@ func (Data Member) GetYtSubs() Subs {
 
 func (Data Member) GetBiliFolow() BiliStat {
 	var (
-		wg      sync.WaitGroup
-		stat    BiliStat
-		body    []byte
-		curlerr error
+		wg   sync.WaitGroup
+		stat BiliStat
 	)
 	if Data.BiliRoomID != 0 {
 		wg.Add(3)
 		go func() {
-			urls := "https://api.bilibili.com/x/relation/stat?vmid=" + strconv.Itoa(Data.BiliBiliID)
-			body, curlerr = network.Curl(urls, nil)
+			body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/relation/stat?vmid="+strconv.Itoa(Data.BiliBiliID), nil)
 			if curlerr != nil {
-				log.Warn("Trying use tor")
-				body, curlerr = network.CoolerCurl(urls, nil)
-				if curlerr != nil {
-					log.Error(curlerr)
-				}
+				log.Error(curlerr)
 			}
 			err := json.Unmarshal(body, &stat.Follow)
 			if err != nil {
@@ -163,14 +150,9 @@ func (Data Member) GetBiliFolow() BiliStat {
 		}()
 
 		go func() {
-			urls := "https://api.bilibili.com/x/space/upstat?mid=" + strconv.Itoa(Data.BiliBiliID)
-			body, curlerr = network.Curl(urls, []string{"Cookie", "SESSDATA=" + BiliSession})
+			body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/space/upstat?mid="+strconv.Itoa(Data.BiliBiliID), []string{"Cookie", "SESSDATA=" + BiliSession})
 			if curlerr != nil {
-				log.Warn("Trying use tor")
-				body, curlerr = network.CoolerCurl(urls, []string{"Cookie", "SESSDATA=" + BiliSession})
-				if curlerr != nil {
-					log.Error(curlerr)
-				}
+				log.Error(curlerr)
 			}
 			err := json.Unmarshal(body, &stat.Like)
 			if err != nil {
@@ -183,13 +165,9 @@ func (Data Member) GetBiliFolow() BiliStat {
 			baseurl := "https://api.bilibili.com/x/space/arc/search?mid=" + strconv.Itoa(Data.BiliBiliID) + "&ps=100"
 			url := []string{baseurl + "&tid=1", baseurl + "&tid=3", baseurl + "&tid=4"}
 			for f := 0; f < len(url); f++ {
-				body, curlerr = network.Curl(url[f], nil)
+				body, curlerr := network.CoolerCurl(url[f], nil)
 				if curlerr != nil {
-					log.Warn("Trying use tor")
-					body, curlerr = network.CoolerCurl(url[f], nil)
-					if curlerr != nil {
-						log.Error(curlerr)
-					}
+					log.Error(curlerr)
 				}
 				var video SpaceVideo
 				err := json.Unmarshal(body, &video)
@@ -227,21 +205,10 @@ func (Data Member) BliBiliFace() string {
 		return ""
 	} else {
 		var (
-			Info    Avatar
-			body    []byte
-			errcurl error
-			url     = "https://api.bilibili.com/x/space/acc/info?mid=" + strconv.Itoa(Data.BiliBiliID)
+			Info Avatar
 		)
-		body, errcurl = network.Curl(url, nil)
-		if body == nil {
-			log.Info("Not daijobu,trying use multitor")
-			body, errcurl = network.CoolerCurl(url, nil)
-
-			if errcurl != nil {
-				log.Error(errcurl)
-				return ""
-			}
-		} else if errcurl != nil {
+		body, errcurl := network.CoolerCurl("https://api.bilibili.com/x/space/acc/info?mid="+strconv.Itoa(Data.BiliBiliID), nil)
+		if errcurl != nil {
 			log.Error(errcurl)
 			return ""
 		}

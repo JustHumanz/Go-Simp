@@ -31,7 +31,7 @@ services:
     depends_on:
       - mysql  
       - build_mainbot
-    working_dir: /app/Go-Simp/service/db
+    working_dir: /app/Go-Simp/service/migrate
     command: go run .
     restart: on-failure    
 
