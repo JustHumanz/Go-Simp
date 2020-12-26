@@ -18,6 +18,7 @@ class GetVtubers:
     def GetMember(self,ID):
         for MembersData in self.Members:
             if int(MembersData["ID"]) == int(ID):
+                self.Members = MembersData
                 return MembersData
         return None        
 
