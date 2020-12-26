@@ -15,22 +15,17 @@ class GetVtubers:
     def GetGroups(self):
         return requests.get(GroupURL).json()
 
-    def GetMember(self,ID):
-        for MembersData in self.Members:
-            if int(MembersData["ID"]) == int(ID):
-                self.Members = MembersData
-                return MembersData
+    def GetMemberSubs(self,ID):
+        for Member in self.Members:
+            if int(Member["ID"]) == int(ID):
+                SubInfo = requests.get(SubscriberURL+"Member/"+str(Member["ID"]))    
+                return Member,SubInfo.json()[0]
         return None        
 
     def GetMemberGroups(self,GroupID):
         response = requests.get(MemberURL,params={'groupid':GroupID})
         self.Members = response.json()
         return response.json()
-
-    def GetMemberSubs(self):
-        for MemberData in self.Members:
-            SubsInfo = requests.get(SubscriberURL+"Member/"+str(MemberData["ID"]))    
-            return SubsInfo.json()[0]
 
     def GetRegList(self):
         Region = []

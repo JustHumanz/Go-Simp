@@ -66,9 +66,8 @@ def go_simps_add(request):
         return render(request,'add.html',Payload)
 
 def go_simps_member(request,MemberID):
-    Member = Vtubers.GetMember(MemberID)
-    Subs = Vtubers.GetMemberSubs()
-    return render(request, 'member.html',{'Member': Member,'Subs': Subs})
+    Member,Subs = Vtubers.GetMemberSubs(MemberID)
+    return render(request, 'member.html',{'Member': Member,'SubsInfo':Subs})
 
 
 def go_simps_support(request,Type):

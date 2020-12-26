@@ -415,10 +415,6 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 func getSubs(w http.ResponseWriter, r *http.Request) {
 	type SubsJson struct {
 		MemberID          int64
-		NickName          string
-		EnName            string
-		JpName            string
-		GroupName         string
 		YoutubeSubscribe  int
 		YoutubeVideos     int
 		YoutubeViews      int
@@ -450,10 +446,6 @@ func getSubs(w http.ResponseWriter, r *http.Request) {
 						tmp := Member.GetSubsCount()
 						SubsData = append(SubsData, SubsJson{
 							MemberID:          tmp.MemberID,
-							NickName:          Member.Name,
-							EnName:            Member.EnName,
-							JpName:            Member.JpName,
-							GroupName:         Group.GroupName,
 							YoutubeSubscribe:  tmp.YtSubs,
 							YoutubeVideos:     tmp.YtVideos,
 							YoutubeViews:      tmp.YtViews,
@@ -485,10 +477,6 @@ func getSubs(w http.ResponseWriter, r *http.Request) {
 						tmp := Member.GetSubsCount()
 						SubsData = append(SubsData, SubsJson{
 							MemberID:          tmp.MemberID,
-							NickName:          Member.Name,
-							EnName:            Member.EnName,
-							JpName:            Member.JpName,
-							GroupName:         Group.GroupName,
 							YoutubeSubscribe:  tmp.YtSubs,
 							YoutubeVideos:     tmp.YtVideos,
 							YoutubeViews:      tmp.YtViews,
@@ -507,10 +495,6 @@ func getSubs(w http.ResponseWriter, r *http.Request) {
 				tmp := Member.GetSubsCount()
 				SubsData = append(SubsData, SubsJson{
 					MemberID:          tmp.MemberID,
-					NickName:          Member.Name,
-					EnName:            Member.EnName,
-					JpName:            Member.JpName,
-					GroupName:         Group.GroupName,
 					YoutubeSubscribe:  tmp.YtSubs,
 					YoutubeVideos:     tmp.YtVideos,
 					YoutubeViews:      tmp.YtViews,
