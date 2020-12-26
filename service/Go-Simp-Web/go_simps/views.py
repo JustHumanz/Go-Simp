@@ -24,11 +24,9 @@ def go_simps_group(request, GroupID):
     return render(request, 'group.html',{'Members':Members,'Region':Region,'Add':False})
 
 def go_simps_members(request):
-    Vtubers = GetVtubers()
     Vtubers.ResizeImg("128")
     Members = Vtubers.Members
     RegList = Vtubers.GetRegList
-    
 
     return render(request, 'group.html',{'Members':Members,'Region':RegList,'Add':True})
 
@@ -66,6 +64,7 @@ def go_simps_add(request):
         return render(request,'add.html',Payload)
 
 def go_simps_member(request,MemberID):
+    Vtubers.ResizeImg("512")
     Member,Subs = Vtubers.GetMemberSubs(MemberID)
     return render(request, 'member.html',{'Member': Member,'SubsInfo':Subs})
 

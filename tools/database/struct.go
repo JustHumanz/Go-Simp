@@ -50,6 +50,7 @@ type Member struct {
 	BiliBiliHashtags string
 	BiliBiliAvatar   string
 	Region           string
+	GroupID          int64
 }
 
 type YtDbData struct {

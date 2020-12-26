@@ -23,10 +23,12 @@ class GetVtubers:
         return None        
 
     def GetMemberGroups(self,GroupID):
-        response = requests.get(MemberURL,params={'groupid':GroupID})
-        self.Members = response.json()
-        return response.json()
+        GroupMember = []
+        for MemberData in self.Members:
+            if int(MemberData["GroupID"]) == int(GroupID):
+                GroupMember.append(MemberData)
 
+        return GroupMember
     def GetRegList(self):
         Region = []
 
@@ -38,7 +40,6 @@ class GetVtubers:
 
     def ResizeImg(self,size):
         Members = self.Members
-
         for i in range(len(Members)):
             Members[i]["YoutubeAvatar"] = Members[i]["YoutubeAvatar"].replace("s800","s"+size)    
 

@@ -333,15 +333,15 @@ func getGroup(w http.ResponseWriter, r *http.Request) {
 }
 
 func getMembers(w http.ResponseWriter, r *http.Request) {
-	groupidstr := r.FormValue("groupid")
 	region := r.FormValue("region")
 	idstr := mux.Vars(r)["MemberID"]
 	Members := []database.Member{}
 
-	GetMembers := func(GroupID int64) {
+	for _, Group := range database.GetGroups() {
 		if idstr != "" {
 			key := strings.Split(idstr, ",")
-			for _, Member := range database.GetMembers(GroupID) {
+			for _, Member := range database.GetMembers(Group.ID) {
+				Member.GroupID = Group.ID
 				for _, MemberStr := range key {
 					MemberInt, err := strconv.Atoi(MemberStr)
 					if err != nil {
@@ -355,17 +355,18 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 					}
 					if region != "" {
 						if MemberInt == int(Member.ID) && strings.ToLower(region) == strings.ToLower(Member.Region) {
-							Members = append(Members, Member)
+							Member.GroupID = Group.ID
 						}
 					} else {
 						if MemberInt == int(Member.ID) {
-							Members = append(Members, Member)
+							Member.GroupID = Group.ID
 						}
 					}
 				}
 			}
 		} else {
-			for _, Member := range database.GetMembers(GroupID) {
+			for _, Member := range database.GetMembers(Group.ID) {
+				Member.GroupID = Group.ID
 				if region != "" {
 					if strings.ToLower(region) == strings.ToLower(Member.Region) {
 						Members = append(Members, Member)
@@ -374,29 +375,6 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 					Members = append(Members, Member)
 				}
 			}
-		}
-	}
-
-	for _, Group := range database.GetGroups() {
-		if groupidstr != "" {
-			key := strings.Split(groupidstr, ",")
-			for _, GroupID := range key {
-				GroupIDInt, err := strconv.Atoi(GroupID)
-				if err != nil {
-					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(MessageError{
-						Message: err.Error(),
-						Date:    time.Now(),
-					})
-					w.WriteHeader(http.StatusInternalServerError)
-					return
-				}
-				if GroupIDInt == int(Group.ID) {
-					GetMembers(Group.ID)
-				}
-			}
-		} else {
-			GetMembers(Group.ID)
 		}
 	}
 	if len(Members) > 0 {
