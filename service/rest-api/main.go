@@ -355,11 +355,11 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 					}
 					if region != "" {
 						if MemberInt == int(Member.ID) && strings.ToLower(region) == strings.ToLower(Member.Region) {
-							Member.GroupID = Group.ID
+							Members = append(Members, Member)
 						}
 					} else {
 						if MemberInt == int(Member.ID) {
-							Member.GroupID = Group.ID
+							Members = append(Members, Member)
 						}
 					}
 				}
