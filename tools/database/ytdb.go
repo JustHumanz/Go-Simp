@@ -22,11 +22,17 @@ func YtGetStatus(Group, Member int64, Status, Region string) []YtDbData {
 	}
 	if Region == "" {
 		rows, err = DB.Query(`call GetYt(?,?,?,?)`, Member, Group, limit, Status)
+		if err != nil {
+			log.Error(err)
+		}
+		defer rows.Close()
 	} else {
 		rows, err = DB.Query(`call GetYtByReg(?,?,?)`, Group, Status, Region)
+		if err != nil {
+			log.Error(err)
+		}
+		defer rows.Close()
 	}
-
-	defer rows.Close()
 
 	for rows.Next() {
 		err = rows.Scan(&list.ID, &list.Group, &list.ChannelID, &list.NameEN, &list.NameJP, &list.YoutubeAvatar, &list.VideoID, &list.Title, &list.Thumb, &list.Desc, &list.Schedul, &list.End, &list.Region, &list.Viewers, &list.MemberID, &list.GroupID)

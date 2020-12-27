@@ -15,8 +15,7 @@ import (
 
 //Public variable
 var (
-	DB    *sql.DB
-	debug bool
+	DB *sql.DB
 )
 
 //Start Database session
@@ -665,18 +664,20 @@ func ChannelTag(MemberID int64, typetag int, Options string) ([]int, []string) {
 		if err != nil {
 			log.Error(err)
 		}
+		defer rows.Close()
 	} else if Options == "NewUpcoming" {
 		rows, err = DB.Query(`Select Channel.id,DiscordChannelID FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND NewUpcoming=1`, MemberID)
 		if err != nil {
 			log.Error(err)
 		}
+		defer rows.Close()
 	} else {
 		rows, err = DB.Query(`Select Channel.id,DiscordChannelID FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=? OR Channel.type=3)`, MemberID, typetag)
 		if err != nil {
 			log.Error(err)
 		}
+		defer rows.Close()
 	}
-	defer rows.Close()
 
 	for rows.Next() {
 		var (

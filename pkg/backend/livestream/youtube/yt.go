@@ -70,79 +70,46 @@ func GetWaiting(VideoID string) (string, error) {
 }
 
 func CheckPrivate() {
-	log.Info("Start Check video")
-	var (
-		wg sync.WaitGroup
-	)
+	log.Info("Start Youtube checker")
+	Check := func(Youtube database.YtDbData) {
+		if Youtube.Status == "upcoming" && time.Now().Sub(Youtube.Schedul) > Youtube.Schedul.Sub(time.Now()) {
+			log.WithFields(log.Fields{
+				"VideoID": Youtube.VideoID,
+			}).Info("Member only video")
+			Youtube.UpdateYt("past")
+		} else if Youtube.Status == "live" && Youtube.Viewers == "" || Youtube.Status == "live" && int(math.Round(time.Now().Sub(Youtube.Schedul).Hours())) > 30 {
+			log.WithFields(log.Fields{
+				"VideoID": Youtube.VideoID,
+			}).Info("Member only video")
+			Youtube.UpdateYt("past")
+		}
 
-	Check := func(Youtube database.YtDbData, wg *sync.WaitGroup) {
-		defer wg.Done()
-
-		var (
-			tor = false
-			url = "https://i3.ytimg.com/vi/" + Youtube.VideoID + "/hqdefault.jpg"
-		)
-		for {
-			var err error
-			if tor {
-				_, err = network.CoolerCurl(url, nil)
-			} else {
-				_, err = network.Curl(url, nil)
-			}
-			if Youtube.Status == "upcoming" && time.Now().Sub(Youtube.Schedul) > Youtube.Schedul.Sub(time.Now()) {
-				log.WithFields(log.Fields{
-					"VideoID": Youtube.VideoID,
-				}).Info("Member only video")
-				Youtube.UpdateYt("past")
-			} else if Youtube.Status == "live" && Youtube.Viewers == "" || Youtube.Status == "live" && int(math.Round(time.Now().Sub(Youtube.Schedul).Hours())) > 30 {
-				log.WithFields(log.Fields{
-					"VideoID": Youtube.VideoID,
-				}).Info("Member only video")
-				Youtube.UpdateYt("past")
-			}
-
-			if err != nil && strings.HasPrefix(err.Error(), "404") && Youtube.Status != "private" {
-				log.WithFields(log.Fields{
-					"VideoID": Youtube.VideoID,
-				}).Info("Private Video")
-				Youtube.UpdateYt("private")
-				break
-			} else if err == nil && Youtube.Status == "private" {
-				log.WithFields(log.Fields{
-					"VideoID": Youtube.VideoID,
-				}).Info("From Private Video to past")
-				Youtube.UpdateYt("past")
-				break
-			} else if err != nil {
-				log.Error(err)
-				log.Info("Trying use tor")
-				tor = true
-				continue
-			} else {
-				log.WithFields(log.Fields{
-					"VideoID": Youtube.VideoID,
-				}).Info("Video was daijobu")
-				break
-			}
+		_, err := network.Curl("https://i3.ytimg.com/vi/"+Youtube.VideoID+"/hqdefault.jpg", nil)
+		if err != nil && strings.HasPrefix(err.Error(), "404") && Youtube.Status != "private" {
+			log.WithFields(log.Fields{
+				"VideoID": Youtube.VideoID,
+			}).Info("Private Video")
+			Youtube.UpdateYt("private")
+		} else if err == nil && Youtube.Status == "private" {
+			log.WithFields(log.Fields{
+				"VideoID": Youtube.VideoID,
+			}).Info("From Private Video to past")
+			Youtube.UpdateYt("past")
+		} else {
+			log.WithFields(log.Fields{
+				"VideoID": Youtube.VideoID,
+			}).Info("Video was daijobu")
 		}
 	}
 
 	log.Info("Start Check Private video")
 	for _, Status := range []string{"upcoming", "past", "live", "private"} {
 		for _, Group := range engine.GroupData {
-			for i, Member := range database.GetMembers(Group.ID) {
-				if i == 50 {
-					break
-				} else {
-					YtData := database.YtGetStatus(0, Member.ID, Status, "")
-					for j, Y := range YtData {
-						Y.Status = Status
-						wg.Add(1)
-						go Check(Y, &wg)
-						if j == 20 || j == len(YtData)-1 {
-							wg.Wait()
-						}
-					}
+			for _, Member := range database.GetMembers(Group.ID) {
+				YtData := database.YtGetStatus(0, Member.ID, Status, "")
+				for _, Y := range YtData {
+					Y.Status = Status
+					Check(Y)
 				}
 			}
 		}
