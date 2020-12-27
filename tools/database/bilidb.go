@@ -12,7 +12,6 @@ func GetRoomData(MemberID int64, RoomID int) *LiveBiliDB {
 	if err != nil {
 		log.Error(err)
 	}
-
 	defer rows.Close()
 
 	var (
@@ -59,14 +58,14 @@ func BilGet(GroupID int64, MemberID int64, Status string) []LiveBiliDB {
 		if err != nil {
 			log.Error(err)
 		}
+		defer rows.Close()
 	} else {
 		rows, err = DB.Query(`call GetLiveBiliBili(?,?,?,?)`, GroupID, MemberID, Status, 2525)
 		if err != nil {
 			log.Error(err)
 		}
+		defer rows.Close()
 	}
-
-	defer rows.Close()
 
 	var (
 		Data []LiveBiliDB
@@ -88,7 +87,6 @@ func SpaceGet(GroupID int64, MemberID int64) []SpaceBiliDB {
 	if err != nil {
 		log.Error(err)
 	}
-
 	defer rows.Close()
 
 	var (

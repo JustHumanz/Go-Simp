@@ -1,3 +1,7 @@
+v0.5.18
+- Add flag to backend service
+- Disable hololive from bilibili
+
 v0.5.17
 - Upgrade twitter-scraper
 - Change fanart scraping logic
