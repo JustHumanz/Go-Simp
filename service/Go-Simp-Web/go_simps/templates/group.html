@@ -64,9 +64,10 @@
         <br>
         <a class="btn btn-primary" href="/Add/" role="button">Add Vtubers</a>
       {% else %}
-      <div class="card-columns" style="column-count: 4;">
+      <div class="row row-cols-1 row-cols-md-4 ">
         {% for Member in Members %}
-          <div class="card" name="{{Member.Region}}" id="{{Member.Name}}" style="width: 14rem;">
+        <div class="col mb-4">
+          <div class="card" name="{{Member.Region}}" id="{{Member.Name}}">
             <img class="card-img-top" src="{{Member.YoutubeAvatar}}" alt="Card image cap">
             <div class="card-body">
               <h5 class="card-title">{{Member.Name}}</h5>
@@ -78,6 +79,7 @@
               </div>
             {% endif %}      
           </div>
+        </div>
         {% endfor %} 
       </div>
       {% endif %}
