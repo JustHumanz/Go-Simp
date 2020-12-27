@@ -54,7 +54,7 @@ const (
 	VtubersData       = "https://go-simp.human-z.tech"
 	RandomSleep       = 404
 	ChannelPermission = 16
-	FanartLimit       = 20
+	FanartLimit       = 10
 )
 
 type ConfigFile struct {
