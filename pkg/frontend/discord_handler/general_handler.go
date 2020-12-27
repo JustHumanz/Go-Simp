@@ -34,20 +34,9 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 		SendNude := func(Title, Author, Text, URL, Pic, Msg string, Color int, State, Dynamic string) bool {
 			Msg = Msg + " *sometimes image not showing,because image oversize*"
 			if State == "TBiliBili" {
-				var (
-					body    []byte
-					errcurl error
-					urls    = "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id=" + Dynamic
-				)
-				body, errcurl = network.Curl(urls, nil)
+				body, errcurl := network.CoolerCurl("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id="+Dynamic, nil)
 				if errcurl != nil {
-					log.Error(errcurl, string(body))
-					log.Info("Trying use tor")
-
-					body, errcurl = network.CoolerCurl(urls, nil)
-					if errcurl != nil {
-						log.Error(errcurl)
-					}
+					log.Error(errcurl)
 				}
 				json.Unmarshal(body, &DynamicData)
 				embed = engine.NewEmbed().
@@ -1638,6 +1627,7 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 			_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 				SetTitle("Help").
+				AddField("Support this bot for make a batter performance", "[Ko-Fi]("+config.KoFiLink+")").
 				SetURL(config.CommandURL).
 				SetDescription("See at web site\n"+config.CommandURL).
 				/*

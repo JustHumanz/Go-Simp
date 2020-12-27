@@ -22,8 +22,6 @@ func CheckBiliFollowCount() {
 				var (
 					wg        sync.WaitGroup
 					bilistate BiliBiliStat
-					body      []byte
-					curlerr   error
 				)
 				wg.Add(3)
 				go func() {
@@ -39,7 +37,7 @@ func CheckBiliFollowCount() {
 				}()
 
 				go func() {
-					body, curlerr = network.CoolerCurl("https://api.bilibili.com/x/space/upstat?mid="+strconv.Itoa(Name.BiliBiliID), nil)
+					body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/space/upstat?mid="+strconv.Itoa(Name.BiliBiliID), nil)
 					if curlerr != nil {
 						log.Error(curlerr)
 					}

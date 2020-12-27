@@ -19,7 +19,7 @@ func InitCron() {
 
 	Flags := runner.Flags
 	if *Flags["twitterfanart"].(*bool) {
-		c.AddFunc("@every 0h1m0s", twitter.CheckNew)
+		c.AddFunc("@every 0h3m0s", twitter.CheckNew)
 		log.Info("Add twitter fanart to cronjob")
 	}
 
