@@ -5,7 +5,7 @@ BuildModule() {
 }
 
 RunModule(){
-    ./backend -Bilibili -Space.Bilibili -Subscriber -Youtube -TwitterFanart 
+    ./backend $@
     exit_status=$?
     if [ $exit_status -eq 1 ]; then
         exit $exit_status
