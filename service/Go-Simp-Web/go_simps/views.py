@@ -7,6 +7,7 @@ git = GitGood(os.environ['GITKEY'])
 LOGINURL = "https://discord.com/api/oauth2/authorize?client_id=719540207552167936&permissions=522304&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2FDiscord%2Flanding&response_type=code&scope=bot%20guilds%20identify"
 Discord = Discortttt()
 Vtubers = GetVtubers()
+Vtubers.ResizeImg("512")
 Groups = Vtubers.GetGroups()
 regex = r"^(?:(http|https):\/\/[a-zA-Z-]*\.{0,1}[a-zA-Z-]{3,}\.[a-z]{2,})\/channel\/([a-zA-Z0-9_]{3,})$"
 
@@ -20,15 +21,11 @@ def go_simps_index(request):
 
 def go_simps_group(request, GroupID):
     Members = Vtubers.GetMemberGroups(GroupID)
-    Region = Vtubers.GetRegList
-    return render(request, 'group.html',{'Members':Members,'Region':Region,'Add':False})
+    return render(request, 'group.html',{'Members':Members,'Region':GetRegList(Members),'Add':False})
 
 def go_simps_members(request):
-    Vtubers.ResizeImg("128")
     Members = Vtubers.Members
-    RegList = Vtubers.GetRegList
-
-    return render(request, 'group.html',{'Members':Members,'Region':RegList,'Add':True})
+    return render(request, 'group.html',{'Members':Members,'Region':GetRegList(Members),'Add':True})
 
 def go_simps_command(request):
     return render(request,'exec.html')
@@ -64,7 +61,6 @@ def go_simps_add(request):
         return render(request,'add.html',Payload)
 
 def go_simps_member(request,MemberID):
-    Vtubers.ResizeImg("512")
     Member,Subs = Vtubers.GetMemberSubs(MemberID)
     return render(request, 'member.html',{'Member': Member,'SubsInfo':Subs})
 
