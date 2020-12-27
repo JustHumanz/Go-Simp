@@ -209,6 +209,7 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(YoutubeData)
 	} else {
 		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(MessageError{
 			Message: "Reqest not found,404",
 			Date:    time.Now(),
@@ -283,6 +284,7 @@ func getBilibili(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(BiliBiliData)
 	} else {
 		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(MessageError{
 			Message: "Reqest not found,404",
 			Date:    time.Now(),
@@ -320,6 +322,7 @@ func getGroup(w http.ResponseWriter, r *http.Request) {
 			return
 		} else {
 			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(w).Encode(MessageError{
 				Message: "Reqest not found,404",
 				Date:    time.Now(),
@@ -382,6 +385,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(Members)
 	} else {
 		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(MessageError{
 			Message: "Reqest not found,404",
 			Date:    time.Now(),
@@ -490,6 +494,7 @@ func getSubs(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(SubsData)
 	} else {
 		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(MessageError{
 			Message: "Reqest not found,404",
 			Date:    time.Now(),

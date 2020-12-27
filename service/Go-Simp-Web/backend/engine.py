@@ -27,9 +27,11 @@ class GetVtubers:
         GroupMember = []
         LiveInfo = CheckLive(GroupID)
         for MemberData in self.Members:
+            MemberData["YtLive"] = False
             if int(MemberData["GroupID"]) == int(GroupID):
                 MemberData["YtLive"] = False
                 if LiveInfo is not None:
+                    print(LiveInfo)
                     for Live in LiveInfo:
                         if int(Live["MemberID"]) == int(MemberData["ID"]):
                             MemberData["YtLive"] = True
@@ -50,7 +52,10 @@ def GetRegList(Members):
 
 def CheckLive(GroupID):
     response = requests.get(Youtube+"Group/"+GroupID+"/Live")
-    return response.json()
+    if response.ok:
+        return response.json()
+    else:
+        return None    
 
 
 
