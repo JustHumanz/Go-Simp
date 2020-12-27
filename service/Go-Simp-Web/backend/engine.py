@@ -5,6 +5,7 @@ GroupURL = "http://rest_api:2525/Groups/"
 MemberURL = "http://rest_api:2525/Members/"
 SubscriberURL = "http://rest_api:2525/Subscribe/"
 ChannelURL = "http://rest_api:2525/channel/"
+Youtube = "http://rest_api:2525/Youtube/"
 API_ENDPOINT = 'https://discord.com/api/v6'
 
 class GetVtubers:
@@ -14,7 +15,7 @@ class GetVtubers:
 
     def GetGroups(self):
         return requests.get(GroupURL).json()
-
+        
     def GetMemberSubs(self,ID):
         for Member in self.Members:
             if int(Member["ID"]) == int(ID):
@@ -24,26 +25,35 @@ class GetVtubers:
 
     def GetMemberGroups(self,GroupID):
         GroupMember = []
+        LiveInfo = CheckLive(GroupID)
         for MemberData in self.Members:
             if int(MemberData["GroupID"]) == int(GroupID):
+                MemberData["YtLive"] = False
+                if LiveInfo is not None:
+                    for Live in LiveInfo:
+                        if int(Live["MemberID"]) == int(MemberData["ID"]):
+                            MemberData["YtLive"] = True
                 GroupMember.append(MemberData)
 
         return GroupMember
-    def GetRegList(self):
-        Region = []
-
-        for Member in self.Members:
-            if Member['Region'] not in Region:
-                Region.append(Member['Region'])
-        return Region    
-
 
     def ResizeImg(self,size):
-        Members = self.Members
-        for i in range(len(Members)):
-            Members[i]["YoutubeAvatar"] = Members[i]["YoutubeAvatar"].replace("s800","s"+size)    
+        for i in range(len(self.Members)):
+            self.Members[i]["YoutubeAvatar"] = self.Members[i]["YoutubeAvatar"].replace("s800","s"+size)    
 
-        return Members           
+def GetRegList(Members):
+    Region = []
+    for Member in Members:
+        if Member['Region'] not in Region:
+            Region.append(Member['Region'])
+    return Region    
+
+def CheckLive(GroupID):
+    response = requests.get(Youtube+"Group/"+GroupID+"/Live")
+    return response.json()
+
+
+
 
 class GitGood:
     def __init__(self, Token):    

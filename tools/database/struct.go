@@ -72,6 +72,8 @@ type YtDbData struct {
 	Region        string
 	Viewers       string
 	Length        string
+	MemberID      int64
+	GroupID       int64
 }
 
 type UserStruct struct {
