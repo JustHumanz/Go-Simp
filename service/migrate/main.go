@@ -51,6 +51,9 @@ func init() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+}
+
+func main() {
 	config, err := config.ReadConfig("../../config.toml")
 	if err != nil {
 		log.Error(err)
@@ -71,9 +74,7 @@ func init() {
 		os.Exit(1)
 	}
 	Bot.AddHandler(Dead)
-}
 
-func main() {
 	database.Start(db)
 	AddData(JsonData)
 	go CheckYT()
