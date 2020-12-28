@@ -108,7 +108,6 @@ func ReadConfig(path string) (ConfigFile, error) {
 	if err != nil {
 		return ConfigFile{}, err
 	}
-	fmt.Println(BotConf.YtToken)
 	/*
 		TwitterToken = config.TwitterBearer
 		ImgurClient = config.ImgurClinet
