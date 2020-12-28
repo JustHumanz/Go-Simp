@@ -37,7 +37,7 @@ func StartInit(path string) error {
 
 	flag.Parse()
 
-	Bot, _ = discordgo.New("Bot " + config.Token)
+	Bot, _ = discordgo.New("Bot " + config.BotConf.Discord)
 	err = Bot.Open()
 	if err != nil {
 		return err
@@ -59,8 +59,9 @@ func StartInit(path string) error {
 //ModuleInfo send user about module info
 func ModuleInfo(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
-	if strings.HasPrefix(m.Content, config.PGeneral+"module") {
-		Color, err := engine.GetColor("/tmp/mem.tmp", m.Author.AvatarURL("128"))
+	Prefix := config.BotConf.BotPrefix.General
+	if strings.HasPrefix(m.Content, Prefix+"module") {
+		Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 		if err != nil {
 			log.Error(err)
 		}

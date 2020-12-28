@@ -13,23 +13,26 @@ import (
 
 // Public variables
 var (
-	Token          string
-	YtToken        []string
-	EmojiFanart    []string
-	EmojiStream    []string
-	PFanart        string
-	PYoutube       string
-	PBilibili      string
-	PGeneral       string
-	TwitterToken   []string
-	ImgurClient    string
-	BiliBiliSes    string
-	SauceAPI       string
-	Logging        string
-	DiscordWebHook string
-	config         ConfigFile
-	MultiTOR       string
-	KoFiLink       string
+	/*
+		Token          string
+		YtToken        []string
+		EmojiFanart    []string
+		EmojiStream    []string
+		PFanart        string
+		PYoutube       string
+		PBilibili      string
+		PGeneral       string
+		TwitterToken   []string
+		ImgurClient    string
+		BiliBiliSes    string
+		SauceAPI       string
+		Logging        string
+		DiscordWebHook string
+		MultiTOR       string
+		KoFiLink       string
+	*/
+	BotConf ConfigFile
+	TmpDir  = "/var/tmp.img"
 )
 
 const (
@@ -52,9 +55,7 @@ const (
 	Approaching       = "https://cdn.human-z.tech/approaching.jpg"
 	CommandURL        = "https://go-simp.human-z.tech/Exec/"
 	VtubersData       = "https://go-simp.human-z.tech"
-	RandomSleep       = 404
 	ChannelPermission = 16
-	FanartLimit       = 10
 )
 
 type ConfigFile struct {
@@ -66,7 +67,13 @@ type ConfigFile struct {
 	DiscordWebHook string   `toml:"DiscordWebHook"`
 	MultiTOR       string   `toml:"Multitor"`
 	DonationLink   string   `toml:"DonationLink"`
-	SQL            struct {
+	TopGG          string   `toml:"TOPGG"`
+	LimitConf      struct {
+		TwitterFanart int `toml:"TwitterLimit"`
+		SpaceBiliBili int `toml:"SpaceBiliBili"`
+		YoutubeLimit  int `toml:"YoutubeLimit"`
+	} `toml:"Limit"`
+	SQL struct {
 		User string `toml:"User"`
 		Pass string `toml:"Pass"`
 		Host string `toml:"Host"`
@@ -97,36 +104,37 @@ func ReadConfig(path string) (ConfigFile, error) {
 
 	fmt.Println(string(file))
 
-	_, err = toml.Decode(string(file), &config)
+	_, err = toml.Decode(string(file), &BotConf)
 	if err != nil {
 		return ConfigFile{}, err
 	}
-	TwitterToken = config.TwitterBearer
-	ImgurClient = config.ImgurClinet
-	BiliBiliSes = config.BiliSess
-	SauceAPI = config.SauceAPI
-	Logging = os.Getenv("LOG")
+	/*
+		TwitterToken = config.TwitterBearer
+		ImgurClient = config.ImgurClinet
+		BiliBiliSes = config.BiliSess
+		SauceAPI = config.SauceAPI
 
-	DiscordWebHook = config.DiscordWebHook
-	MultiTOR = config.MultiTOR
-	KoFiLink = config.DonationLink
+		DiscordWebHook = config.DiscordWebHook
+		MultiTOR = config.MultiTOR
+		KoFiLink = config.DonationLink
 
-	Token = config.Discord
-	YtToken = config.YtToken
-	EmojiFanart = config.Emoji.Fanart
+		Token = config.Discord
+		YtToken = config.YtToken
+		EmojiFanart = config.Emoji.Fanart
 
-	PGeneral = config.BotPrefix.General
-	PFanart = config.BotPrefix.Fanart
-	PYoutube = config.BotPrefix.Youtube
-	PBilibili = config.BotPrefix.Bilibili
+		PGeneral = config.BotPrefix.General
+		PFanart = config.BotPrefix.Fanart
+		PYoutube = config.BotPrefix.Youtube
+		PBilibili = config.BotPrefix.Bilibili
+	*/
 
-	return config, nil
+	return BotConf, nil
 }
 
 func (Data ConfigFile) CheckSQL() *sql.DB {
 	log.Info("Open DB")
 
-	db, err := sql.Open("mysql", config.SQL.User+":"+config.SQL.Pass+"@tcp("+config.SQL.Host+":3306)/Vtuber?parseTime=true")
+	db, err := sql.Open("mysql", Data.SQL.User+":"+Data.SQL.Pass+"@tcp("+Data.SQL.Host+":3306)/Vtuber?parseTime=true")
 	if err != nil {
 		log.Error(err, " Something worng with database,make sure you create Vtuber database first")
 		os.Exit(1)

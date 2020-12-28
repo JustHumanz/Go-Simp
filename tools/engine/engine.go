@@ -1,7 +1,6 @@
 package engine
 
 import (
-	"encoding/json"
 	"errors"
 	"image"
 	_ "image/jpeg"
@@ -56,8 +55,8 @@ func Start() {
 
 //GetYtToken Get a valid token
 func GetYtToken() string {
-	FreshToken := config.YtToken[0]
-	for _, Token := range config.YtToken {
+	FreshToken := config.BotConf.YtToken[0]
+	for _, Token := range config.BotConf.YtToken {
 		_, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UCfuz6xYbYFGsWWBi3SpJI1w&key="+Token, nil)
 		if err == nil {
 			FreshToken = Token
@@ -90,6 +89,7 @@ func RanString() string {
 	return b.String()
 }
 
+/*
 //SaucenaoCheck Check image from bilibili to saucenao *cuz to many reupload on bilibili*
 func SaucenaoCheck(url string) (bool, []string, error) {
 	var (
@@ -127,6 +127,7 @@ func SaucenaoCheck(url string) (bool, []string, error) {
 	}
 	return false, nil, nil
 }
+*/
 
 //GetColor Get color from image
 func GetColor(filepath, url string) (int, error) {
@@ -144,7 +145,7 @@ func GetColor(filepath, url string) (int, error) {
 	}
 
 	if match {
-		filepath = filepath + RanString()
+		filepath += RanString()
 		out, err := os.Create(filepath)
 		if err != nil {
 			return def, err
@@ -197,7 +198,7 @@ func GetColor(filepath, url string) (int, error) {
 }
 
 func Reacting(Data map[string]string, s *discordgo.Session) error {
-	EmojiList := config.EmojiFanart
+	EmojiList := config.BotConf.Emoji.Fanart
 	ChannelID := Data["ChannelID"]
 	MessID, err := s.Channel(ChannelID)
 	if err != nil {
@@ -287,7 +288,7 @@ func YtFindType(title string) string {
 //GetAuthorAvatar Get twitter avatar
 func GetAuthorAvatar(username string) string {
 	scraper := twitterscraper.New()
-	scraper.SetProxy(config.MultiTOR)
+	scraper.SetProxy(config.BotConf.MultiTOR)
 	profile, err := scraper.GetProfile(username)
 	if err != nil {
 		log.Error(err)

@@ -45,7 +45,7 @@ func (PushData *NotifStruct) SendNude() {
 	}
 
 	if Status == "upcoming" {
-		Color, err := engine.GetColor("/tmp/yt.tmp", Avatar)
+		Color, err := engine.GetColor(config.TmpDir, Avatar)
 		if err != nil {
 			log.Error(err)
 		}

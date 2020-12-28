@@ -9,6 +9,13 @@ BiliSess = "#BiliSess"
 SauceAPI = "#SauceAPI"
 DiscordWebHook = "#URL"
 Multitor = "#Http Proxy"
+DonationLink = "#DonationLink"
+
+[Limit]
+TwitterFanart = int
+SpaceBiliBili = int
+YoutubeLimit = int
+
 YtToken = [
   "#GoogleAPI",
   "#GoogleAPI"

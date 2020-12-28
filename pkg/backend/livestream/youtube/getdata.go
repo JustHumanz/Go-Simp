@@ -10,6 +10,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/JustHumanz/Go-simp/tools/config"
+
 	"github.com/hako/durafmt"
 
 	database "github.com/JustHumanz/Go-simp/tools/database"
@@ -35,7 +37,7 @@ func GetRSS(YtID string) []string {
 
 	for i := 0; i < len(DataXML.Entry); i++ {
 		VideoID = append(VideoID, DataXML.Entry[i].VideoId)
-		if i == 4 {
+		if i == config.BotConf.LimitConf.YoutubeLimit {
 			break
 		}
 	}

@@ -64,7 +64,7 @@ func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 		counter++
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
-		proxyURL, err := url.Parse(config.MultiTOR)
+		proxyURL, err := url.Parse(config.BotConf.MultiTOR)
 		if err != nil || counter == 3 {
 			return nil, err
 		}

@@ -17,10 +17,10 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
 	var (
 		Region    string
-		Prefix    = config.PYoutube
+		Prefix    = config.BotConf.BotPrefix.Youtube
 		SendEmbed = func(Data Memberst) {
 
-			Color, err := engine.GetColor("/tmp/yt2.tmp", Data.Thumb)
+			Color, err := engine.GetColor(config.TmpDir, Data.Thumb)
 			if err != nil {
 				log.Error(err)
 			}
@@ -227,7 +227,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							DataMember := database.YtGetStatus(0, VTData.ID, "past", Region)
 							if DataMember != nil {
 								for z := 0; z < len(DataMember); z++ {
-									Color, err := engine.GetColor("/tmp/yt3.tmp", DataMember[z].Thumb)
+									Color, err := engine.GetColor(config.TmpDir, DataMember[z].Thumb)
 									if err != nil {
 										log.Error(err)
 									}
@@ -273,7 +273,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 						if Data != nil {
 							for ii := 0; ii < len(Data); ii++ {
-								Color, err := engine.GetColor("/tmp/yt3.tmp", Data[ii].Thumb)
+								Color, err := engine.GetColor(config.TmpDir, Data[ii].Thumb)
 								if err != nil {
 									log.Error(err)
 								}

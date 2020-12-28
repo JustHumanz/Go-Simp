@@ -22,7 +22,7 @@ func (Data *LiveBili) Crotttt(GroupIcon string) error {
 	BiliBiliAccount := "https://space.bilibili.com/" + strconv.Itoa(Data.Member.BiliBiliID)
 	BiliBiliURL := "https://live.bilibili.com/" + strconv.Itoa(Data.RoomData.LiveRoomID)
 	Online := strconv.Itoa(Data.RoomData.Online)
-	Color, err := engine.GetColor("/tmp/bilThum", Data.RoomData.Thumbnail)
+	Color, err := engine.GetColor(config.TmpDir, Data.RoomData.Thumbnail)
 	if err != nil {
 		return err
 	}

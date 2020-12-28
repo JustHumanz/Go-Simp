@@ -15,7 +15,7 @@ import (
 
 //BiliBiliMessage message handler
 func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
-	Prefix := config.PBilibili
+	Prefix := config.BotConf.BotPrefix.Bilibili
 	loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
 	m.Content = strings.ToLower(m.Content)
 	if strings.HasPrefix(m.Content, Prefix) {
@@ -34,7 +34,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							if len(DataMembers) > 0 {
 								for _, DataMember := range DataMembers {
 									diff := time.Now().In(loc).Sub(DataMember.ScheduledStart.In(loc))
-									Color, err := engine.GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
+									Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 									if err != nil {
 										log.Error(err)
 									}
@@ -68,7 +68,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						if len(DataGroups) > 0 {
 							for _, DataGroup := range DataGroups {
 								diff := time.Now().In(loc).Sub(DataGroup.ScheduledStart.In(loc))
-								Color, err := engine.GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
+								Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 								if err != nil {
 									log.Error(err)
 								}
@@ -111,7 +111,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							if len(DataMembers) > 0 {
 								for _, DataMember := range DataMembers {
 									diff := DataMember.ScheduledStart.In(loc).Sub(time.Now().In(loc))
-									Color, err := engine.GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
+									Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 									if err != nil {
 										log.Error(err)
 									}
@@ -143,7 +143,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					} else {
 						for _, LiveBili := range database.BilGet(VTuberGroup.ID, 0, "Past") {
 							diff := time.Now().In(loc).Sub(LiveBili.ScheduledStart.In(loc))
-							Color, err := engine.GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
+							Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 							if err != nil {
 								log.Error(err)
 							}
@@ -176,10 +176,10 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 //BiliBiliSpace message hadler
 func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
-	loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
 	m.Content = strings.ToLower(m.Content)
-	Prefix := "sp_" + config.PBilibili
+	Prefix := "sp_" + config.BotConf.BotPrefix.Bilibili
 	if strings.HasPrefix(m.Content, Prefix) {
+		loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
 		Payload := m.Content[len(Prefix):]
 		if Payload != "" {
 			for _, FindGroupArry := range strings.Split(strings.TrimSpace(Payload), ",") {
@@ -193,7 +193,7 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 						if len(DataMembers) > 0 {
 							for _, DataMember := range DataMembers {
 								diff := time.Now().In(loc).Sub(DataMember.UploadDate.In(loc))
-								Color, err := engine.GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
+								Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 								if err != nil {
 									log.Error(err)
 								}
@@ -232,7 +232,7 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if len(DataMembers) > 0 {
 						for _, DataMember := range DataMembers {
 							diff := time.Now().In(loc).Sub(DataMember.UploadDate.In(loc))
-							Color, err := engine.GetColor("/tmp/bil1.tmp", m.Author.AvatarURL("128"))
+							Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 							if err != nil {
 								log.Error(err)
 							}

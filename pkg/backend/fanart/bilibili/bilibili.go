@@ -9,6 +9,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	network "github.com/JustHumanz/Go-simp/tools/network"
@@ -97,7 +98,6 @@ func CheckNew() {
 							"Vtuber": Member.EnName,
 						}).Info("Still same")
 					}
-					//time.Sleep(time.Duration(int64(rand.Intn((7-1)+1))) * time.Second)
 				}
 			}(Group, Member, wg)
 		}
@@ -119,7 +119,7 @@ func (Data SubTbili) Mirroring() (string, int, error) {
 			log.Error(err)
 		}
 	*/
-	color, err := engine.GetColor("/tmp/bilibili", link)
+	color, err := engine.GetColor(config.TmpDir, link)
 	if err != nil {
 		log.Error(err)
 	}

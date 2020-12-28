@@ -16,7 +16,7 @@ import (
 func (Data CheckSctruct) SendNude() {
 	Bot := runner.Bot
 	if Data.VideoList != nil {
-		Color, err := engine.GetColor("/tmp/bilispace.tmps", Data.MemberFace)
+		Color, err := engine.GetColor(config.TmpDir, Data.MemberFace)
 		if err != nil {
 			log.Error(err)
 		}

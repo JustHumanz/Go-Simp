@@ -751,10 +751,21 @@ func GetUserReminderList(ChannelIDDiscord int, Member int64, Reminder int) []str
 
 //Scrapping twitter followers
 func (Data Member) GetTwitterFollow() (twitterscraper.Profile, error) {
-	twitterscraper.SetProxy(config.MultiTOR)
+	twitterscraper.SetProxy(config.BotConf.MultiTOR)
 	profile, err := twitterscraper.GetProfile(Data.TwitterName)
 	if err != nil {
 		return twitterscraper.Profile{}, err
 	}
 	return profile, nil
+}
+
+//GetRanChannel get random id channel
+func GetRanChannel() string {
+	var tmp string
+	row := DB.QueryRow("SELECT DiscordChannelID FROM Vtuber.Channel ORDER BY RAND() LIMIT 1")
+	err := row.Scan(&tmp)
+	if err != nil {
+		log.Error(err)
+	}
+	return tmp
 }

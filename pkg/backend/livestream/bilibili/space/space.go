@@ -6,6 +6,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/JustHumanz/Go-simp/tools/config"
+
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	log "github.com/sirupsen/logrus"
@@ -20,7 +22,7 @@ func CheckVideo() {
 	wg := new(sync.WaitGroup)
 	for _, Group := range engine.GroupData {
 		if Group.GroupName != "Hololive" {
-			for i, Member := range database.GetMembers(Group.ID) {
+			for _, Member := range database.GetMembers(Group.ID) {
 				wg.Add(1)
 				go func(Group database.Group, Member database.Member, wg *sync.WaitGroup) {
 					defer wg.Done()
@@ -45,14 +47,10 @@ func CheckVideo() {
 							MemberFace: Member.BiliBiliAvatar,
 							MemberUrl:  "https://space.bilibili.com/" + strconv.Itoa(Member.BiliBiliID),
 						}
-						Data.Check("3").SendNude()
+						Data.Check(strconv.Itoa(config.BotConf.LimitConf.SpaceBiliBili)).SendNude()
 
 					}
 				}(Group, Member, wg)
-				//time.Sleep(time.Duration(rand.Intn(config.RandomSleep-400)+400) * time.Millisecond)
-				if i%2 == 0 {
-					wg.Wait()
-				}
 			}
 		}
 	}

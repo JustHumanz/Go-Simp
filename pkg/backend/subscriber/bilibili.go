@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"strconv"
 	"sync"
-	"time"
 
 	"github.com/JustHumanz/Go-simp/pkg/backend/livestream/bilibili/space"
 	config "github.com/JustHumanz/Go-simp/tools/config"
@@ -74,7 +73,7 @@ func CheckBiliFollowCount() {
 							for i := 0; i < 1000001; i += 100000 {
 								if i == bilistate.Follow.Data.Follower && bilistate.Follow.Data.Follower != 0 {
 									Avatar := Name.BiliBiliAvatar
-									Color, err := engine.GetColor("/tmp/bili.tmp", Avatar)
+									Color, err := engine.GetColor(config.TmpDir, Avatar)
 									if err != nil {
 										log.Error(err)
 									}
@@ -95,7 +94,7 @@ func CheckBiliFollowCount() {
 							for i := 0; i < 10001; i += 1000 {
 								if i == bilistate.Follow.Data.Follower && bilistate.Follow.Data.Follower != 0 {
 									Avatar := Name.BiliBiliAvatar
-									Color, err := engine.GetColor("/tmp/bili.tmp", Avatar)
+									Color, err := engine.GetColor(config.TmpDir, Avatar)
 									if err != nil {
 										log.Error(err)
 									}
@@ -124,8 +123,6 @@ func CheckBiliFollowCount() {
 					UpBiliVideo(bilistate.Videos).
 					UpBiliViews(bilistate.LikeView.Data.Archive.View).
 					UpdateSubs("bili")
-
-				time.Sleep(1 * time.Second)
 			}
 		}
 	}

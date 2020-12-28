@@ -41,7 +41,7 @@ func CheckYtSubsCount() {
 								log.Error(err)
 							}
 							SendNotif := func(SubsCount string) {
-								Color, err := engine.GetColor("/tmp/yt.tmp", Name2.YoutubeAvatar)
+								Color, err := engine.GetColor(config.TmpDir, Name2.YoutubeAvatar)
 								if err != nil {
 									log.Error(err)
 								}

@@ -26,7 +26,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	Bot, _ := discordgo.New("Bot " + config.Token)
+	Bot, _ := discordgo.New("Bot " + config.BotConf.Discord)
 	err = Bot.Open()
 	if err != nil {
 		log.Error(err)

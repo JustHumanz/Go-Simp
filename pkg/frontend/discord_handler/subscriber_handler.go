@@ -18,7 +18,7 @@ func gacha() bool {
 
 //SubsMessage subscriber message handler
 func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
-	Prefix := config.PGeneral
+	Prefix := config.BotConf.BotPrefix.General
 	m.Content = strings.ToLower(m.Content)
 	if strings.HasPrefix(m.Content, Prefix) {
 		CommandArray := strings.Split(m.Content, " ")
@@ -44,7 +44,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 										Avatar = Member.YoutubeAvatar
 									}
 								}
-								Color, err := engine.GetColor("/tmp/bilia.tmp", m.Author.AvatarURL("128"))
+								Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 								if err != nil {
 									log.Error(err)
 								}

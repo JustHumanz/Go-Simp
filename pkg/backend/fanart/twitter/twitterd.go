@@ -13,12 +13,12 @@ import (
 func CheckNew() {
 	Scraper := twitterscraper.New()
 	Scraper.SetSearchMode(twitterscraper.SearchLatest)
-	err := Scraper.SetProxy(config.MultiTOR)
+	err := Scraper.SetProxy(config.BotConf.MultiTOR)
 	if err != nil {
 		log.Error(err)
 	}
 	for _, GroupData := range engine.GroupData {
-		Fanarts, err := CreatePayload(database.GetHashtag(GroupData.ID), GroupData, Scraper, config.FanartLimit)
+		Fanarts, err := CreatePayload(database.GetHashtag(GroupData.ID), GroupData, Scraper, config.BotConf.LimitConf.TwitterFanart)
 		if err != nil {
 			log.WithFields(log.Fields{
 				"Group": GroupData.GroupName,

@@ -47,7 +47,7 @@ func SendFanart(Data []Fanart, Group database.Group) {
 					Msg = "Photos/Video oversize,check original post"
 				}
 
-				Color, err := engine.GetColor("/tmp/tw", Media)
+				Color, err := engine.GetColor(config.TmpDir, Media)
 				if err != nil {
 					log.Error(err)
 				}

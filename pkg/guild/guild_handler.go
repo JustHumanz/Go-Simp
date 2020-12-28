@@ -55,7 +55,8 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 					return
 				}
 				if Channel.Type == 0 && BotPermission&2048 != 0 {
-					if config.KoFiLink == "" {
+					Donation := config.BotConf.DonationLink
+					if Donation == "" {
 						s.ChannelMessageSendEmbed(Channel.ID, engine.NewEmbed().
 							SetTitle("Thx for invite me to this server <3 ").
 							SetURL("https://go-simp.human-z.tech/Guide/").
@@ -75,7 +76,8 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 							AddField("Setup", "You can watch [here](https://go-simp.human-z.tech/Guide/)").
 							AddField("Need support?", "Join [dev server](https://discord.com/invite/ydWC5knbJT)").
 							InlineAllFields().
-							AddField("Support "+BotID.Username, "[Ko-Fi]("+config.KoFiLink+")").MessageEmbed)
+							AddField("Support "+BotID.Username, "[Ko-Fi]("+Donation+")").
+							AddField("Or if you a broke gang,you can upvote "+BotID.Username, "[top.gg]("+config.BotConf.TopGG+")").MessageEmbed)
 					}
 
 					//Save discord name to database
@@ -122,7 +124,7 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 					if err != nil {
 						log.Error(err)
 					}
-					err = network.CurlPost(config.DiscordWebHook, PayloadBytes)
+					err = network.CurlPost(config.BotConf.DiscordWebHook, PayloadBytes)
 					if err != nil {
 						log.Error(err)
 					}

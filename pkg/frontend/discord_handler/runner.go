@@ -45,7 +45,7 @@ func StartInit(path string) error {
 	}
 	db := conf.CheckSQL()
 
-	Bot, _ := discordgo.New("Bot " + config.Token)
+	Bot, _ := discordgo.New("Bot " + config.BotConf.Discord)
 	err = Bot.Open()
 	if err != nil {
 		return err

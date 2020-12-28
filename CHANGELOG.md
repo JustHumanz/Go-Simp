@@ -1,3 +1,8 @@
+v1.2.2
+- Add donation message
+- Move hardcode config to toml file
+- Change tmp dir
+
 v1.1.1
 - Add modul info
 - Change tor node

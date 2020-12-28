@@ -8,6 +8,7 @@ import (
 	"github.com/JustHumanz/Go-simp/pkg/backend/livestream/youtube"
 	"github.com/JustHumanz/Go-simp/pkg/backend/runner"
 	"github.com/JustHumanz/Go-simp/pkg/backend/subscriber"
+	"github.com/JustHumanz/Go-simp/tools/config"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/robfig/cron.v2"
 )
@@ -49,5 +50,8 @@ func InitCron() {
 		c.AddFunc("@every 0h15m0s", subscriber.CheckTwFollowCount)
 		c.AddFunc("@every 0h30m0s", subscriber.CheckBiliFollowCount)
 		log.Info("Add subscriber to cronjob")
+	}
+	if config.BotConf.DonationLink != "" {
+		c.AddFunc("@every 0h30m0s", runner.Donate)
 	}
 }
