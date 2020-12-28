@@ -102,8 +102,6 @@ func ReadConfig(path string) (ConfigFile, error) {
 		return ConfigFile{}, err
 	}
 
-	fmt.Println(string(file))
-
 	_, err = toml.Decode(string(file), &BotConf)
 	if err != nil {
 		return ConfigFile{}, err
@@ -128,6 +126,7 @@ func ReadConfig(path string) (ConfigFile, error) {
 		PBilibili = config.BotPrefix.Bilibili
 	*/
 
+	fmt.Println(BotConf)
 	return BotConf, nil
 }
 
