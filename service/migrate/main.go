@@ -156,10 +156,10 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 }
 
 func Dead(s *discordgo.Session, m *discordgo.MessageCreate) {
-	General := config.PGeneral
-	Fanart := config.PFanart
-	BiliBili := config.PBilibili
-	Youtube := config.PYoutube
+	General := config.BotConf.BotPrefix.General
+	Fanart := config.BotConf.BotPrefix.Fanart
+	BiliBili := config.BotConf.BotPrefix.Bilibili
+	Youtube := config.BotConf.BotPrefix.Youtube
 	m.Content = strings.ToLower(m.Content)
 	Color, err := engine.GetColor("/tmp/discordpp.tmp", m.Author.AvatarURL("128"))
 	if err != nil {

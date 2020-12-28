@@ -22,7 +22,7 @@ import (
 
 func TwitterFanart() {
 	scraper := twitterscraper.New()
-	scraper.SetProxy(config.MultiTOR)
+	scraper.SetProxy(config.BotConf.MultiTOR)
 	scraper.SetSearchMode(twitterscraper.SearchLatest)
 	for _, Group := range database.GetGroups() {
 		_, err := twitter.CreatePayload(database.GetHashtag(Group.ID), Group, scraper, 100)
