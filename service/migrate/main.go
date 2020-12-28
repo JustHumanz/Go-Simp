@@ -21,14 +21,14 @@ import (
 )
 
 var (
-	JsonData    Vtuber
-	Limit       int
-	db          *sql.DB
-	YtToken     string
-	Publish     time.Time
-	Roomstatus  string
-	BiliSession string
-	Bot         *discordgo.Session
+	JsonData     Vtuber
+	Limit        int
+	db           *sql.DB
+	YoutubeToken string
+	Publish      time.Time
+	Roomstatus   string
+	BiliSession  string
+	Bot          *discordgo.Session
 )
 
 type NewVtuber struct {
@@ -58,7 +58,7 @@ func main() {
 	if err != nil {
 		log.Error(err)
 	}
-	YtToken = config.YtToken[0]
+	YoutubeToken = config.YtToken[0]
 	BiliSession = config.BiliSess
 	Limit = 100
 	Bot, _ = discordgo.New("Bot " + config.Discord)
