@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/rand"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -32,7 +33,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if strings.HasPrefix(m.Content, Prefix) {
 		SendNude := func(Title, Author, Text, URL, Pic, Msg string, Color int, State, Dynamic string) bool {
-			Msg = Msg + " *sometimes image not showing,because image oversize*"
+			Msg += " *sometimes image not showing,because image oversize*"
 			if State == "TBiliBili" {
 				body, errcurl := network.CoolerCurl("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id="+Dynamic, nil)
 				if errcurl != nil {
@@ -1627,9 +1628,9 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 			_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 				SetTitle("Help").
-				AddField("Support this bot for make a batter performance", "[Ko-Fi]("+config.KoFiLink+")").
+				AddField("Support "+BotInfo.Username+" for improve bot performance", "[Ko-Fi]("+config.KoFiLink+")").
 				SetURL(config.CommandURL).
-				SetDescription("See at web site\n"+config.CommandURL).
+				AddField("See at web site", config.CommandURL).
 				/*
 					AddField(Prefix+Enable+" {art/live/all} [Vtuber Group]", "This command will declare if [Vtuber Group] enable in this channel\nExample:\n`"+config.PGeneral+Enable+" all hanayori,hololive` so other users can use `"+config.PGeneral+TagMe+" kanochi` or "+"`"+config.PGeneral+TagMe+" gura`").
 					AddField(Prefix+Update+" {art/live/all} [Vtuber Group]", "Use this command if you want to change enable state").
@@ -1655,6 +1656,7 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 					AddField(Prefix+"Help JP", "Like this but in Japanese").
 				*/
 				SetThumbnail(config.BSD).
+				SetFooter(os.Getenv("VERSION")).
 				//SetFooter("Only user with permission \"Manage Channel or Higher\" can Enable/Disable/Update Vtuber Group").
 				SetColor(Color).MessageEmbed)
 			if err != nil {

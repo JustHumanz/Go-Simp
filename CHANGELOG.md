@@ -1,3 +1,10 @@
+v1.1.1
+- Add modul info
+- Change tor node
+- Fix youtube avatar scraper
+- Add bot version info in help command
+
+----------------------------------------------------------
 v0.5.18
 - Add flag to backend service
 - Disable hololive from bilibili

@@ -1,6 +1,7 @@
 #!/bin/sh
 
 BuildModule() {
+    export VERSION=$(git tag | tail -n1)
     go build -o frontend
 }
 

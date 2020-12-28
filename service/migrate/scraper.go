@@ -95,10 +95,17 @@ func (Data Member) YtAvatar() string {
 	if Data.YtID != "" {
 		var (
 			avatar string
+			bit    []byte
+			err    error
+			url    = "https://www.youtube.com/channel/" + Data.YtID + "/about"
 		)
-		bit, err := network.CoolerCurl("https://www.youtube.com/channel/"+Data.YtID+"/about", nil)
+		bit, err = network.CoolerCurl(url, nil)
 		if err != nil {
-			log.Error(err)
+			log.Error(err, "trying use default network")
+			bit, err = network.Curl(url, nil)
+			if err != nil {
+				log.Error(err, " still error :( ")
+			}
 		}
 		submatchall := regexp.MustCompile(`(?ms)avatar.*?(http.*?)"`).FindAllStringSubmatch(string(bit), -1)
 		for _, element := range submatchall {
