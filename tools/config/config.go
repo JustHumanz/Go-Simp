@@ -88,7 +88,7 @@ type ConfigFile struct {
 		Fanart     []string `toml:"Fanart"`
 		Livestream []string `toml:"Livestream"`
 	} `toml:"Emoji"`
-	YtToken []string `toml:"YtToken"`
+	YtToken []string `toml:"YoutubeToken"`
 }
 
 //read from config file
@@ -108,6 +108,7 @@ func ReadConfig(path string) (ConfigFile, error) {
 	if err != nil {
 		return ConfigFile{}, err
 	}
+	fmt.Println(BotConf.YtToken)
 	/*
 		TwitterToken = config.TwitterBearer
 		ImgurClient = config.ImgurClinet
