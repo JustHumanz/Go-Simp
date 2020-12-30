@@ -106,7 +106,7 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		URL = "https://www.youtube.com/channel/" + Data.Member.YtID + "?sub_confirmation=1"
 
 		Avatar = Data.Member.YtAvatar()
-		Color, err = engine.GetColor("/tmp/notf.gg", Avatar)
+		Color, err = engine.GetColor(config.TmpDir, Avatar)
 		if err != nil {
 			log.Error(err)
 		}
@@ -115,7 +115,7 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		Youtube = "✘"
 		URL = "https://space.bilibili.com/" + strconv.Itoa(Data.Member.BiliBiliID)
 		Avatar = Data.Member.BliBiliFace()
-		Color, err = engine.GetColor("/tmp/notf.gg", Avatar)
+		Color, err = engine.GetColor(config.TmpDir, Avatar)
 		if err != nil {
 			log.Error(err)
 		}
@@ -162,7 +162,7 @@ func Dead(s *discordgo.Session, m *discordgo.MessageCreate) {
 	BiliBili := config.BotConf.BotPrefix.Bilibili
 	Youtube := config.BotConf.BotPrefix.Youtube
 	m.Content = strings.ToLower(m.Content)
-	Color, err := engine.GetColor("/tmp/discordpp.tmp", m.Author.AvatarURL("128"))
+	Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 	if err != nil {
 		log.Error(err)
 	}

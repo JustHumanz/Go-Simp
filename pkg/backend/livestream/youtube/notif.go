@@ -82,7 +82,7 @@ func (PushData *NotifStruct) SendNude() {
 		}
 
 	} else if Status == "live" {
-		Color, err := engine.GetColor("/tmp/yt.tmp", Avatar)
+		Color, err := engine.GetColor(config.TmpDir, Avatar)
 		if err != nil {
 			log.Error(err)
 		}
@@ -119,7 +119,7 @@ func (PushData *NotifStruct) SendNude() {
 		}
 
 	} else if Status == "past" {
-		Color, err := engine.GetColor("/tmp/yt.tmp", Avatar)
+		Color, err := engine.GetColor(config.TmpDir, Avatar)
 		if err != nil {
 			log.Error(err)
 		}
@@ -159,7 +159,7 @@ func (PushData *NotifStruct) SendNude() {
 	}
 
 	if Status == "reminder" {
-		Color, err := engine.GetColor("/tmp/yt.tmp", Avatar)
+		Color, err := engine.GetColor(config.TmpDir, Avatar)
 		if err != nil {
 			log.Error(err)
 		}

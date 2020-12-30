@@ -66,11 +66,44 @@ type Subs struct {
 	Items    []Items  `json:"items"`
 }
 type PageInfo struct {
+	TotalResults   int `json:"totalResults"`
 	ResultsPerPage int `json:"resultsPerPage"`
+}
+type Default struct {
+	URL    string `json:"url"`
+	Width  int    `json:"width"`
+	Height int    `json:"height"`
+}
+type Medium struct {
+	URL    string `json:"url"`
+	Width  int    `json:"width"`
+	Height int    `json:"height"`
+}
+type High struct {
+	URL    string `json:"url"`
+	Width  int    `json:"width"`
+	Height int    `json:"height"`
+}
+type Thumbnails struct {
+	Default Default `json:"default"`
+	Medium  Medium  `json:"medium"`
+	High    High    `json:"high"`
+}
+type Localized struct {
+	Title       string `json:"title"`
+	Description string `json:"description"`
+}
+type Snippet struct {
+	Title           string     `json:"title"`
+	Description     string     `json:"description"`
+	PublishedAt     time.Time  `json:"publishedAt"`
+	Thumbnails      Thumbnails `json:"thumbnails"`
+	DefaultLanguage string     `json:"defaultLanguage"`
+	Localized       Localized  `json:"localized"`
+	Country         string     `json:"country"`
 }
 type Statistics struct {
 	ViewCount             string `json:"viewCount"`
-	CommentCount          string `json:"commentCount"`
 	SubscriberCount       string `json:"subscriberCount"`
 	HiddenSubscriberCount bool   `json:"hiddenSubscriberCount"`
 	VideoCount            string `json:"videoCount"`
@@ -79,6 +112,7 @@ type Items struct {
 	Kind       string     `json:"kind"`
 	Etag       string     `json:"etag"`
 	ID         string     `json:"id"`
+	Snippet    Snippet    `json:"snippet"`
 	Statistics Statistics `json:"statistics"`
 }
 

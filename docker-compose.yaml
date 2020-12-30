@@ -6,7 +6,7 @@ services:
     image: mainbot
   
   build_go_simp_web:
-    build: service/Go-Simp-Web
+    build: service/web
     image: go_simp_web
 
   build_multitor:

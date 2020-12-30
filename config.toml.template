@@ -11,15 +11,15 @@ DiscordWebHook = "#URL"
 Multitor = "#Http Proxy"
 DonationLink = "#DonationLink"
 
+YoutubeToken = [
+  "#GoogleAPI",
+  "#GoogleAPI"
+]
+
 [Limit]
 TwitterFanart = int
 SpaceBiliBili = int
 YoutubeLimit = int
-
-YtToken = [
-  "#GoogleAPI",
-  "#GoogleAPI"
-]
 
 [Sql]
 User = "humanz"

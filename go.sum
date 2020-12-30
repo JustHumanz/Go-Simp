@@ -22,6 +22,8 @@ github.com/mattn/go-runewidth v0.0.7 h1:Ei8KR0497xHyKJPAv59M1dkC+rOZCMBJ+t3fZ+tw
 github.com/mattn/go-runewidth v0.0.7/go.mod h1:H031xJmbD/WCDINGzjvQ9THkh0rPKHF+m2gUSrubnMI=
 github.com/n0madic/twitter-scraper v0.0.0-20201223175348-1d3f84fc4ac9 h1:eLGCIXO74wK5Ed1lp1/gDR/N+2uB5uRmWUWEx600LYM=
 github.com/n0madic/twitter-scraper v0.0.0-20201223175348-1d3f84fc4ac9/go.mod h1:uzFP7WK9gCykBnULzfmxScXgIbs+423tWjbHRLYVq/g=
+github.com/n0madic/twitter-scraper v0.0.0-20201224081830-2f14c6affef9 h1:V7w0S+gH3HsoTb8ibG76KJa6cyrWSTvcaO5Jmpy6xj4=
+github.com/n0madic/twitter-scraper v0.0.0-20201224081830-2f14c6affef9/go.mod h1:uzFP7WK9gCykBnULzfmxScXgIbs+423tWjbHRLYVq/g=
 github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 h1:zYyBkD/k9seD2A7fsi6Oo2LfFZAehjjQMERAvZLEDnQ=
 github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646/go.mod h1:jpp1/29i3P1S/RLdc7JQKbRpFeM1dOBd8T9ki5s+AY8=
 github.com/olekukonko/tablewriter v0.0.4 h1:vHD/YYe1Wolo78koG299f7V/VAS08c6IpCLn+Ejf/w8=

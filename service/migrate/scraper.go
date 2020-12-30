@@ -92,29 +92,21 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 }
 
 func (Data Member) YtAvatar() string {
+	var (
+		datasubs Subs
+	)
 	if Data.YtID != "" {
-		var (
-			avatar string
-			bit    []byte
-			err    error
-			url    = "https://www.youtube.com/channel/" + Data.YtID + "/about"
-		)
-		bit, err = network.CoolerCurl(url, nil)
+		body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=snippet&id="+Data.YtID+"&key="+YoutubeToken, nil)
 		if err != nil {
-			log.Error(err, "trying use default network")
-			bit, err = network.Curl(url, nil)
-			if err != nil {
-				log.Error(err, " still error :( ")
-			}
+			log.Error(err)
 		}
-		submatchall := regexp.MustCompile(`(?ms)avatar.*?(http.*?)"`).FindAllStringSubmatch(string(bit), -1)
-		for _, element := range submatchall {
-			avatar = strings.Replace(element[1], "s48", "s800", -1)
-			break
+		err = json.Unmarshal(body, &datasubs)
+		if err != nil {
+			log.Error(err)
 		}
-		return avatar
+		return datasubs.Items[0].Snippet.Thumbnails.High.URL
 	} else {
-		return Data.BliBiliFace()
+		return ""
 	}
 }
 

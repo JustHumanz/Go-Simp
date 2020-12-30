@@ -1,3 +1,10 @@
+v1.2.3
+- Change Go-Simp-Web to Web
+- Fix twitter search query
+- Change "/tmp" to const
+- Change Youtube scraper to offical API
+- Upgrade twitter-scraper
+
 v1.2.2
 - Add donation message
 - Move hardcode config to toml file
