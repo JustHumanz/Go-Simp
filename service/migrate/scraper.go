@@ -58,7 +58,13 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 		} else {
 			yttype = "Streaming"
 		}
-		if Dat.CheckYtVideo(VideoID[i]) != nil {
+
+		YtData, err := Dat.CheckYtVideo(VideoID[i])
+		if err != nil {
+			log.Error(err)
+		}
+
+		if YtData != nil {
 			continue
 		} else {
 			log.Info("New video")

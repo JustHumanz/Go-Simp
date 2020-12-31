@@ -108,6 +108,10 @@ func ReadConfig(path string) (ConfigFile, error) {
 	if err != nil {
 		return ConfigFile{}, err
 	}
+
+	if BotConf.LimitConf.YoutubeLimit >= 15 {
+		BotConf.LimitConf.YoutubeLimit = 15
+	}
 	/*
 		TwitterToken = config.TwitterBearer
 		ImgurClient = config.ImgurClinet

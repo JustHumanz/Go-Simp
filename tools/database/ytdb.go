@@ -68,24 +68,24 @@ func (Data YtDbData) InputYt(MemberID int64) error {
 }
 
 //Check new video or not
-func (Member Member) CheckYtVideo(VideoID string) *YtDbData {
+func (Member Member) CheckYtVideo(VideoID string) (*YtDbData, error) {
 	var Data YtDbData
 	rows, err := DB.Query(`SELECT id,VideoID,Type,Status,Title,Thumbnails,Description,PublishedAt,ScheduledStart,EndStream,Viewers FROM Vtuber.Youtube Where VideoID=? AND VtuberMember_id=?`, VideoID, Member.ID)
 	if err != nil {
-		log.Error(err)
+		return nil, err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
 		err = rows.Scan(&Data.ID, &Data.VideoID, &Data.Type, &Data.Status, &Data.Title, &Data.Thumb, &Data.Desc, &Data.Published, &Data.Schedul, &Data.End, &Data.Viewers)
 		if err != nil {
-			log.Error(err)
+			return nil, err
 		}
 	}
 	if Data.ID == 0 {
-		return nil
+		return &Data, nil
 	} else {
-		return &Data
+		return &Data, nil
 	}
 }
 

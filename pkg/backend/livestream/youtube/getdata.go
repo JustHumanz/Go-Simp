@@ -59,8 +59,13 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 			Thumb   string
 		)
 
+		YtData, err := Member.CheckYtVideo(VideoID[i])
+		if err != nil {
+			log.Error(err)
+		}
+
 		YoutubeData := &NotifStruct{
-			YtData: Member.CheckYtVideo(VideoID[i]),
+			YtData: YtData,
 			Group:  Group,
 			Member: Member,
 		}
