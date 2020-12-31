@@ -4,7 +4,7 @@ RUN apk add --update --no-cache git
 RUN mkdir /app
 WORKDIR /app
 RUN git clone --single-branch --branch main https://github.com/JustHumanz/Go-Simp
-WORKDIR Go-Simp/service/Go-Simp-Web
+WORKDIR Go-Simp/service/web
 RUN git checkout main
 RUN pip install -r requirements.txt
 RUN pip install gunicorn PyGithub
