@@ -85,7 +85,7 @@ func main() {
 	go TwitterFanart()
 
 	log.Info("Done")
-	time.Sleep(6 * time.Minute)
+	time.Sleep(15 * time.Minute)
 	os.Exit(0)
 }
 

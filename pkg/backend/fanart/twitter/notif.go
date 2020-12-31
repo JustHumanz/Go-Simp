@@ -87,6 +87,9 @@ func SendFanart(Data []Fanart, Group database.Group) {
 					}, Bot)
 				}
 			}(DiscordChannelID[i], ID[i], wg)
+			if i%4 == 0 {
+				wg.Wait()
+			}
 		}
 		wg.Wait()
 	}
