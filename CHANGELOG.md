@@ -1,3 +1,7 @@
+v1.2.4
+- Add wg.wait() every 10 members
+- Change cron job
+
 v1.2.3
 - Change Go-Simp-Web to Web
 - Fix twitter search query
