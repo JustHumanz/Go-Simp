@@ -12,5 +12,5 @@ vendor
 *.toml
 *.db
 *.mp4
-img/*
+Img/*
 dockerfile-devel
