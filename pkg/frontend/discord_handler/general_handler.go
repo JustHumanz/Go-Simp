@@ -33,7 +33,6 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if strings.HasPrefix(m.Content, Prefix) {
 		SendNude := func(Title, Author, Text, URL, Pic, Msg string, Color int, State, Dynamic string) bool {
-			Msg += " *sometimes image not showing,because image oversize*"
 			if State == "TBiliBili" {
 				body, errcurl := network.CoolerCurl("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id="+Dynamic, nil)
 				if errcurl != nil {
@@ -101,6 +100,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 						Pic = config.NotFound
 					} else if len(DataFix.Photos) > 0 {
 						Pic = DataFix.Photos[0]
+						Msg = "1/" + strconv.Itoa(len(DataFix.Photos)) + " Photos"
 					}
 					Group = SendNude(engine.FixName(DataFix.EnName, DataFix.JpName),
 						DataFix.Author, RemovePic(DataFix.Text),
@@ -134,6 +134,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 							Msg = "Video type,check original post"
 							Pic = config.NotFound
 						} else if len(DataFix.Photos) > 0 {
+							Msg = "1/" + strconv.Itoa(len(DataFix.Photos)) + " Photos"
 							Pic = DataFix.Photos[0]
 						}
 						Member = SendNude(engine.FixName(MemberData.EnName, MemberData.JpName),

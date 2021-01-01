@@ -20,12 +20,12 @@ func InitCron() {
 
 	Flags := runner.Flags
 	if *Flags["twitterfanart"].(*bool) {
-		c.AddFunc("@every 0h1m0s", twitter.CheckNew)
+		c.AddFunc("@every 0h3m0s", twitter.CheckNew)
 		log.Info("Add twitter fanart to cronjob")
 	}
 
 	if *Flags["bilibilifanart"].(*bool) {
-		c.AddFunc("@every 0h2m0s", bilibili.CheckNew)
+		c.AddFunc("@every 0h4m0s", bilibili.CheckNew)
 		log.Info("Add bilibili fanart to cronjob")
 	}
 
@@ -51,6 +51,7 @@ func InitCron() {
 		c.AddFunc("@every 0h30m0s", subscriber.CheckBiliFollowCount)
 		log.Info("Add subscriber to cronjob")
 	}
+
 	if config.BotConf.DonationLink != "" {
 		c.AddFunc("@every 0h30m0s", runner.Donate)
 	}

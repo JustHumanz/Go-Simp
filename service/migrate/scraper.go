@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"math/rand"
 	"net/url"
 	"regexp"
 	"strconv"
@@ -143,7 +142,7 @@ func (Data Member) GetBiliFolow() BiliStat {
 	if Data.BiliRoomID != 0 {
 		wg.Add(3)
 		go func() {
-			body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/relation/stat?vmid="+strconv.Itoa(Data.BiliBiliID), nil)
+			body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/relation/stat?vmid="+strconv.Itoa(Data.BiliBiliID), BiliBiliSession)
 			if curlerr != nil {
 				log.Error(curlerr)
 			}
@@ -155,7 +154,7 @@ func (Data Member) GetBiliFolow() BiliStat {
 		}()
 
 		go func() {
-			body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/space/upstat?mid="+strconv.Itoa(Data.BiliBiliID), []string{"Cookie", "SESSDATA=" + BiliSession})
+			body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/space/upstat?mid="+strconv.Itoa(Data.BiliBiliID), BiliBiliSession)
 			if curlerr != nil {
 				log.Error(curlerr)
 			}
@@ -170,7 +169,7 @@ func (Data Member) GetBiliFolow() BiliStat {
 			baseurl := "https://api.bilibili.com/x/space/arc/search?mid=" + strconv.Itoa(Data.BiliBiliID) + "&ps=100"
 			url := []string{baseurl + "&tid=1", baseurl + "&tid=3", baseurl + "&tid=4"}
 			for f := 0; f < len(url); f++ {
-				body, curlerr := network.CoolerCurl(url[f], nil)
+				body, curlerr := network.CoolerCurl(url[f], BiliBiliSession)
 				if curlerr != nil {
 					log.Error(curlerr)
 				}
@@ -212,7 +211,7 @@ func (Data Member) BliBiliFace() string {
 		var (
 			Info Avatar
 		)
-		body, errcurl := network.CoolerCurl("https://api.bilibili.com/x/space/acc/info?mid="+strconv.Itoa(Data.BiliBiliID), nil)
+		body, errcurl := network.CoolerCurl("https://api.bilibili.com/x/space/acc/info?mid="+strconv.Itoa(Data.BiliBiliID), BiliBiliSession)
 		if errcurl != nil {
 			log.Error(errcurl)
 			return ""
@@ -321,7 +320,7 @@ func CheckTBili() {
 						"Vtuber": DataMember[z].EnName,
 					}).Info("Still same")
 				}
-				time.Sleep(time.Duration(int64(rand.Intn((7-1)+1))) * time.Second)
+				time.Sleep(1 * time.Second)
 			}
 		}
 	}

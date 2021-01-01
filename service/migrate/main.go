@@ -21,14 +21,14 @@ import (
 )
 
 var (
-	JsonData     Vtuber
-	Limit        int
-	db           *sql.DB
-	YoutubeToken string
-	Publish      time.Time
-	Roomstatus   string
-	BiliSession  string
-	Bot          *discordgo.Session
+	JsonData        Vtuber
+	Limit           int
+	db              *sql.DB
+	YoutubeToken    string
+	Publish         time.Time
+	Roomstatus      string
+	BiliBiliSession []string
+	Bot             *discordgo.Session
 )
 
 type NewVtuber struct {
@@ -51,15 +51,12 @@ func init() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-}
-
-func main() {
 	config, err := config.ReadConfig("../../config.toml")
 	if err != nil {
 		log.Error(err)
 	}
 	YoutubeToken = config.YtToken[0]
-	BiliSession = config.BiliSess
+	BiliBiliSession = []string{"Cookie", "SESSDATA=" + config.BiliSess}
 	Limit = 100
 	Bot, _ = discordgo.New("Bot " + config.Discord)
 	db = config.CheckSQL()
@@ -74,7 +71,9 @@ func main() {
 		os.Exit(1)
 	}
 	Bot.AddHandler(Dead)
+}
 
+func main() {
 	database.Start(db)
 	AddData(JsonData)
 	go CheckYT()

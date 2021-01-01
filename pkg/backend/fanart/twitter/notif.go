@@ -4,7 +4,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"sync"
 
 	"github.com/JustHumanz/Go-simp/pkg/backend/runner"
 	config "github.com/JustHumanz/Go-simp/tools/config"
@@ -18,7 +17,6 @@ func SendFanart(Data []Fanart, Group database.Group) {
 		url := MemberFanart.Tweet.PermanentURL
 		ID, DiscordChannelID := database.ChannelTag(MemberFanart.Member.ID, 1, "")
 		Bot := runner.Bot
-		wg := new(sync.WaitGroup)
 		for i := 0; i < len(DiscordChannelID); i++ {
 			ChannelState := database.DiscordChannel{
 				ChannelID:     DiscordChannelID[i],
@@ -85,7 +83,6 @@ func SendFanart(Data []Fanart, Group database.Group) {
 				}, Bot)
 			}
 		}
-		wg.Wait()
 	}
 }
 

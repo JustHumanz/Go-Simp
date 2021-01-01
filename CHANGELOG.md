@@ -1,3 +1,8 @@
+v1.2.5
+- Change wg.wait to sleep
+- Change cronjob
+- Add kano bilibili hashtag
+
 v1.2.4
 - Add wg.wait() every 10 members
 - Change cron job

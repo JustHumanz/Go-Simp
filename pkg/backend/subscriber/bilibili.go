@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/JustHumanz/Go-simp/pkg/backend/livestream/bilibili/space"
 	config "github.com/JustHumanz/Go-simp/tools/config"
@@ -14,9 +15,10 @@ import (
 )
 
 func CheckBiliFollowCount() {
+	BiliBiliSession := []string{"Cookie", "SESSDATA=" + config.BotConf.BiliSess}
 	for _, Group := range engine.GroupData {
 		Names := database.GetMembers(Group.ID)
-		for _, Name := range Names {
+		for i, Name := range Names {
 			if Name.BiliBiliID != 0 {
 				var (
 					wg        sync.WaitGroup
@@ -24,7 +26,7 @@ func CheckBiliFollowCount() {
 				)
 				wg.Add(3)
 				go func() {
-					body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/relation/stat?vmid="+strconv.Itoa(Name.BiliBiliID), nil)
+					body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/relation/stat?vmid="+strconv.Itoa(Name.BiliBiliID), BiliBiliSession)
 					if curlerr != nil {
 						log.Error(curlerr)
 					}
@@ -36,7 +38,7 @@ func CheckBiliFollowCount() {
 				}()
 
 				go func() {
-					body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/space/upstat?mid="+strconv.Itoa(Name.BiliBiliID), nil)
+					body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/space/upstat?mid="+strconv.Itoa(Name.BiliBiliID), BiliBiliSession)
 					if curlerr != nil {
 						log.Error(curlerr)
 					}
@@ -51,7 +53,7 @@ func CheckBiliFollowCount() {
 					baseurl := "https://api.bilibili.com/x/space/arc/search?mid=" + strconv.Itoa(Name.BiliBiliID) + "&ps=100"
 					url := []string{baseurl + "&tid=1", baseurl + "&tid=3", baseurl + "&tid=4"}
 					for f := 0; f < len(url); f++ {
-						body, curlerr := network.CoolerCurl(url[f], nil)
+						body, curlerr := network.CoolerCurl(url[f], BiliBiliSession)
 						if curlerr != nil {
 							log.Error(curlerr)
 						}
@@ -123,6 +125,9 @@ func CheckBiliFollowCount() {
 					UpBiliVideo(bilistate.Videos).
 					UpBiliViews(bilistate.LikeView.Data.Archive.View).
 					UpdateSubs("bili")
+			}
+			if i%10 == 0 {
+				time.Sleep(3 * time.Second)
 			}
 		}
 	}

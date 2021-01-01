@@ -14,7 +14,7 @@ func Donate() {
 		SetThumbnail(BotInfo.AvatarURL("128")).
 		SetImage(config.GoSimpIMG).
 		SetColor(14807034).
-		SetDescription("Enjoy the bot?,don't forget to support this bot and dev").
+		SetDescription("Enjoy the bot?\ndon't forget to support this bot and dev").
 		AddField("Ko-Fi", "[Link]("+Donation+")").
-		AddField("Or if you a broke gang,you can upvote "+BotInfo.Username, "[top.gg]("+config.BotConf.TopGG+")").MessageEmbed)
+		AddField("if you a broke gang,you can upvote "+BotInfo.Username, "[top.gg]("+config.BotConf.TopGG+")").MessageEmbed)
 }

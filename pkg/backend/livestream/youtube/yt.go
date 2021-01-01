@@ -34,7 +34,7 @@ func CheckSchedule() {
 				go StartCheckYT(Member, Group, &wg)
 			}
 			if i%10 == 0 {
-				wg.Wait()
+				time.Sleep(3 * time.Second)
 			}
 		}
 		wg.Wait()
@@ -118,7 +118,5 @@ func CheckPrivate() {
 		}
 		time.Sleep(10 * time.Second)
 	}
-	log.Info("Push to database")
-
 	log.Info("Done")
 }

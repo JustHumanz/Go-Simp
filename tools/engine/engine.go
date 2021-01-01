@@ -59,7 +59,7 @@ func GetYtToken() string {
 	for _, Token := range config.BotConf.YtToken {
 		_, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UCfuz6xYbYFGsWWBi3SpJI1w&key="+Token, nil)
 		if err == nil {
-			FreshToken = Token
+			return Token
 		}
 	}
 	return FreshToken

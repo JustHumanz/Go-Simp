@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"strconv"
 	"strings"
+	"time"
 
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
@@ -105,6 +106,9 @@ func CheckYtSubsCount() {
 						}
 					}
 				}
+			}
+			if i%10 == 0 {
+				time.Sleep(3 * time.Second)
 			}
 		}
 	}
