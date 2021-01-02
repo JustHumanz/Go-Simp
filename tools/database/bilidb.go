@@ -7,10 +7,10 @@ import (
 )
 
 //GetRoomData get RoomData from LiveBiliBili
-func GetRoomData(MemberID int64, RoomID int) *LiveBiliDB {
+func GetRoomData(MemberID int64, RoomID int) (*LiveBiliDB, error) {
 	rows, err := DB.Query(`SELECT id,RoomID,Status,Title,Thumbnails,Description,ScheduledStart,Published,Viewers FROM LiveBiliBili Where VtuberMember_id=? AND RoomID=? order by ScheduledStart ASC`, MemberID, RoomID)
 	if err != nil {
-		log.Error(err)
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -20,10 +20,10 @@ func GetRoomData(MemberID int64, RoomID int) *LiveBiliDB {
 	for rows.Next() {
 		err = rows.Scan(&Data.ID, &Data.LiveRoomID, &Data.Status, &Data.Title, &Data.Thumbnail, &Data.Description, &Data.ScheduledStart, &Data.PublishedAt, &Data.Online)
 		if err != nil {
-			log.Error(err)
+			return nil, err
 		}
 	}
-	return &Data
+	return &Data, nil
 }
 
 //UpdateLiveBili Update LiveBiliBili Data

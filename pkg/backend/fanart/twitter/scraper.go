@@ -34,13 +34,17 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 					if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) && MemberHashtag.EnName != "Kaichou" {
 						_, err := rdb.Get(ctx, tweet.ID).Result()
 						if err == redis.Nil {
-							if MemberHashtag.CheckMemberFanart(tweet) {
+							New, err := MemberHashtag.CheckMemberFanart(tweet)
+							if err != nil {
+								log.Error(err)
+							}
+							if New {
 								Fanarts = append(Fanarts, Fanart{
 									Member: MemberHashtag,
 									Tweet:  tweet,
 								})
 							}
-							err := rdb.Set(ctx, tweet.ID, MemberHashtag.Name, 30*time.Minute).Err()
+							err = rdb.Set(ctx, tweet.ID, MemberHashtag.Name, 30*time.Minute).Err()
 							if err != nil {
 								log.Error(err)
 							}

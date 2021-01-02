@@ -29,7 +29,10 @@ func CheckSchedule() {
 							ScheduledStart time.Time
 							Data           LiveBili
 						)
-						DataDB := database.GetRoomData(Member.ID, Member.BiliRoomID)
+						DataDB, err := database.GetRoomData(Member.ID, Member.BiliRoomID)
+						if err != nil {
+							log.Error(err)
+						}
 						Status, err := GetRoomStatus(Member.BiliRoomID)
 						if err != nil {
 							log.Error(err)

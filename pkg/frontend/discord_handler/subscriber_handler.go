@@ -33,7 +33,10 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									Avatar string
 									URL    = "https://www.youtube.com/channel/" + Member.YoutubeID + "?sub_confirmation=1"
 								)
-								SubsData := Member.GetSubsCount()
+								SubsData, err := Member.GetSubsCount()
+								if err != nil {
+									log.Error(err)
+								}
 								if gacha() {
 									Avatar = Member.YoutubeAvatar
 								} else {

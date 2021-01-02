@@ -112,21 +112,21 @@ func gacha() bool {
 }
 
 //GetSubsCount Get subs,follow,view,like data from Subscriber
-func (Member Member) GetSubsCount() *MemberSubs {
+func (Member Member) GetSubsCount() (*MemberSubs, error) {
 	var Data MemberSubs
 	rows, err := DB.Query(`SELECT * FROM Subscriber WHERE VtuberMember_id=?`, Member.ID)
 	if err != nil {
-		log.Error(err)
+		return nil, err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
 		err = rows.Scan(&Data.ID, &Data.YtSubs, &Data.YtVideos, &Data.YtViews, &Data.BiliFollow, &Data.BiliVideos, &Data.BiliViews, &Data.TwFollow, &Data.MemberID)
 		if err != nil {
-			log.Error(err)
+			return nil, err
 		}
 	}
-	return &Data
+	return &Data, nil
 }
 
 //UpBiliFollow update bilibili state
@@ -270,7 +270,7 @@ func (Data DataFanart) DeleteFanart() error {
 	}
 }
 
-func (Member Member) CheckMemberFanart(Data *twitterscraper.Result) bool {
+func (Member Member) CheckMemberFanart(Data *twitterscraper.Result) (bool, error) {
 	var (
 		id     int
 		videos string
@@ -284,7 +284,7 @@ func (Member Member) CheckMemberFanart(Data *twitterscraper.Result) bool {
 
 		stmt, err := DB.Prepare(`INSERT INTO Twitter (PermanentURL,Author,Likes,Photos,Videos,Text,TweetID,VtuberMember_id) values(?,?,?,?,?,?,?,?)`)
 		if err != nil {
-			log.Error(err)
+			return false, err
 		}
 		defer stmt.Close()
 
@@ -294,14 +294,14 @@ func (Member Member) CheckMemberFanart(Data *twitterscraper.Result) bool {
 
 		res, err := stmt.Exec(Data.PermanentURL, Data.Username, Data.Likes, strings.Join(Data.Photos, "\n"), videos, Data.Text, Data.ID, Member.ID)
 		if err != nil {
-			log.Error(err)
+			return false, err
 		}
 
 		_, err = res.LastInsertId()
 		if err != nil {
-			log.Error(err)
+			return false, err
 		}
-		return true
+		return true, nil
 	} else {
 		//update like
 		log.WithFields(log.Fields{
@@ -311,9 +311,9 @@ func (Member Member) CheckMemberFanart(Data *twitterscraper.Result) bool {
 		}).Info("Update like")
 		_, err := DB.Exec(`Update Twitter set Likes=? Where id=? `, Data.Likes, id)
 		if err != nil {
-			log.Error(err)
+			return false, err
 		}
-		return false
+		return false, nil
 	}
 }
 
