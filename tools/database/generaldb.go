@@ -9,18 +9,32 @@ import (
 	"strings"
 
 	config "github.com/JustHumanz/Go-simp/tools/config"
+	"github.com/go-redis/redis/v8"
 	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 
 //Public variable
 var (
-	DB *sql.DB
+	DB          *sql.DB
+	FanartCache *redis.Client
+	LiveCache   *redis.Client
 )
 
 //Start Database session
 func Start(dbsession *sql.DB) {
 	DB = dbsession
+	FanartCache = redis.NewClient(&redis.Options{
+		Addr:     "redis:6379",
+		Password: "",
+		DB:       0,
+	})
+
+	LiveCache = redis.NewClient(&redis.Options{
+		Addr:     "redis:6379",
+		Password: "",
+		DB:       1,
+	})
 	log.Info("Database module ready")
 }
 
@@ -63,7 +77,6 @@ func GetGroups() []Group {
 		if err != nil {
 			log.Error(err)
 		}
-
 		Data = append(Data, list)
 
 	}
@@ -186,7 +199,7 @@ func GetFanart(GroupID, MemberID int64) DataFanart {
 		err      error
 	)
 
-	Twitter := func() {
+	Twitter := func(State string) {
 		rows, err = DB.Query(`Call GetArt(?,?,'twitter')`, GroupID, MemberID)
 		if err != nil {
 			log.Error(err)
@@ -199,8 +212,9 @@ func GetFanart(GroupID, MemberID int64) DataFanart {
 				log.Error(err)
 			}
 		}
+		Data.State = State
 	}
-	Tbilibili := func() {
+	Tbilibili := func(State string) {
 		rows, err = DB.Query(`Call GetArt(?,?,'westtaiwan')`, GroupID, MemberID)
 		if err != nil {
 			log.Error(err)
@@ -213,15 +227,16 @@ func GetFanart(GroupID, MemberID int64) DataFanart {
 				log.Error(err)
 			}
 		}
+		Data.State = State
 	}
 
 	if gacha() {
-		Twitter()
+		Twitter("Twitter")
 	} else {
-		Tbilibili()
+		Tbilibili("TBiliBili")
 		if Data.ID == 0 {
 			log.Warn("Tbilibili nill")
-			Twitter()
+			Twitter("Twitter")
 		}
 	}
 
@@ -286,18 +301,16 @@ func (Member Member) CheckMemberFanart(Data *twitterscraper.Result) bool {
 		}
 		return true
 	} else {
-		/*
-			//update like
-			log.WithFields(log.Fields{
-				"Name":    Member.EnName,
-				"Hashtag": Member.TwitterHashtags,
-				"Likes":   Data.Likes,
-			}).Info("Update like")
-			_, err := DB.Exec(`Update Twitter set Likes=? Where id=? `, Data.Likes, id)
-			if err != nil {
-				log.Error(err)
-			}
-		*/
+		//update like
+		log.WithFields(log.Fields{
+			"Name":    Member.EnName,
+			"Hashtag": Member.TwitterHashtags,
+			"Likes":   Data.Likes,
+		}).Info("Update like")
+		_, err := DB.Exec(`Update Twitter set Likes=? Where id=? `, Data.Likes, id)
+		if err != nil {
+			log.Error(err)
+		}
 		return false
 	}
 }

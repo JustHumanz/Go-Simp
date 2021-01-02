@@ -4,8 +4,10 @@ import (
 	"context"
 	"errors"
 	"strings"
+	"time"
 
 	"github.com/JustHumanz/Go-simp/tools/database"
+	"github.com/go-redis/redis/v8"
 	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
@@ -14,6 +16,8 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 	var (
 		Hashtags []string
 		Fanarts  []Fanart
+		ctx      = context.Background()
+		rdb      = database.FanartCache
 	)
 	CurlTwitter := func(Hashtags []string) {
 		log.WithFields(log.Fields{
@@ -28,11 +32,20 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 			for _, MemberHashtag := range Data {
 				for _, TweetHashtag := range tweet.Hashtags {
 					if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) && MemberHashtag.EnName != "Kaichou" {
-						if MemberHashtag.CheckMemberFanart(tweet) {
-							Fanarts = append(Fanarts, Fanart{
-								Member: MemberHashtag,
-								Tweet:  tweet,
-							})
+						_, err := rdb.Get(ctx, tweet.ID).Result()
+						if err == redis.Nil {
+							if MemberHashtag.CheckMemberFanart(tweet) {
+								Fanarts = append(Fanarts, Fanart{
+									Member: MemberHashtag,
+									Tweet:  tweet,
+								})
+							}
+							err := rdb.Set(ctx, tweet.ID, MemberHashtag.Name, 30*time.Minute).Err()
+							if err != nil {
+								log.Error(err)
+							}
+						} else if err != nil {
+							log.Error(err)
 						}
 					}
 				}
@@ -58,7 +71,7 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 	if len(Fanarts) > 0 {
 		return Fanarts, nil
 	} else {
-		return []Fanart{}, errors.New("No new fanart")
+		return []Fanart{}, errors.New("Still same")
 	}
 }
 

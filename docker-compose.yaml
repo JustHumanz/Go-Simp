@@ -99,5 +99,10 @@ services:
     - "1337:8000"
     restart: on-failure    
 
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      
 volumes:
   guild-volume:

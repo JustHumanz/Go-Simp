@@ -32,7 +32,7 @@ var (
 		KoFiLink       string
 	*/
 	BotConf ConfigFile
-	TmpDir  = "/var/tmp.img"
+	TmpDir  = "/tmp/tmp.img"
 )
 
 const (
