@@ -2,7 +2,6 @@ package discordhandler
 
 import (
 	"encoding/json"
-	"fmt"
 	"math/rand"
 	"os"
 	"regexp"
@@ -185,35 +184,33 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 			var (
 				VtuberName   string
 				ReminderUser int
-				re           = regexp.MustCompile(`(?m)-setreminder\s[1-9].`)
+				re           = regexp.MustCompile(`(?m)-setreminder\s[0-9]`)
 			)
 
 			if len(re.FindAllString(UserInput, -1)) > 0 {
 				tmpvar := re.FindAllString(UserInput, -1)[0]
-				if tmpvar[len(tmpvar)-2:] != "" {
-					tmpvar2 := tmpvar[len(tmpvar)-2:]
-					tmpvar3, err := strconv.Atoi(tmpvar2[:len(tmpvar2)-1] + "6")
-					if err != nil {
-						log.Error(err)
-					} else {
-						ReminderUser = tmpvar3
-					}
+				tmpvar2, err := strconv.Atoi(strings.TrimSpace(tmpvar[len(tmpvar)-2:]))
+				if err != nil {
+					s.ChannelMessageSend(m.ChannelID, "Invalid number, "+err.Error())
+					return
 				} else {
-					tmpvar2, err := strconv.Atoi(tmpvar + "6")
-					if err != nil {
-						log.Error(err)
+					if tmpvar2 < 10 && tmpvar2 != 0 {
+						s.ChannelMessageSend(m.ChannelID, "10 was minimum number")
+						return
+					} else if tmpvar2 > 65 {
+						s.ChannelMessageSend(m.ChannelID, "Can't set Reminder over than 65 Minutes")
+						return
+					} else if tmpvar2 == 0 {
+						ReminderUser = 0
+						s.ChannelMessageSend(m.ChannelID, "You disable reminder time")
 					} else {
+						if tmpvar2%5 != 0 && tmpvar2%10 != 0 {
+							s.ChannelMessageSend(m.ChannelID, "I do not recommend this number, set number with modulus 5 or 10")
+						}
 						ReminderUser = tmpvar2
 					}
 				}
-
-				fmt.Println(ReminderUser)
-				if ReminderUser > 67 {
-					s.ChannelMessageSend(m.ChannelID, "Can't set Reminder over than 60 Minutes")
-					return
-				}
 				VtuberName = strings.TrimSpace(strings.Replace(UserInput, tmpvar, "", -1))
-
 			} else {
 				VtuberName = strings.TrimSpace(strings.Replace(UserInput, "-setreminder", "", -1))
 			}
@@ -340,33 +337,26 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if UserInput != "" {
 				if len(FindInt) > 2 {
 					tmpvar := FindInt[2]
-					if lenstr, _ := regexp.MatchString("^[0-9]{2}[:.,-]?$", tmpvar); lenstr {
-						tmpvar3, err := strconv.Atoi(tmpvar[:len(tmpvar)-1] + "6")
-						if err != nil {
-							log.Error(err)
-						}
-						ReminderUser = tmpvar3
-						if ReminderUser > 67 {
-							_, err := s.ChannelMessageSend(m.ChannelID, "Can't set Reminder over than 60 Minutes")
-							if err != nil {
-								log.Error(err)
-							}
-							return
-						}
-
-					} else if FindInt[2] == "0" {
-						_, err := s.ChannelMessageSend(m.ChannelID, "You disable reminder time")
-						if err != nil {
-							log.Error(err)
-						}
-						ReminderUser = 0
-					} else {
-						//Invaild
-						_, err := s.ChannelMessageSend(m.ChannelID, "Invaild number\nmin 10,max 60")
-						if err != nil {
-							log.Error(err)
-						}
+					tmpvar2, err := strconv.Atoi(tmpvar)
+					if err != nil {
+						s.ChannelMessageSend(m.ChannelID, "Invalid number, "+err.Error())
 						return
+					} else {
+						if tmpvar2 < 10 && tmpvar2 != 0 {
+							s.ChannelMessageSend(m.ChannelID, "10 was minimum number")
+							return
+						} else if tmpvar2 > 65 {
+							s.ChannelMessageSend(m.ChannelID, "Can't set Reminder over than 65 Minutes")
+							return
+						} else if tmpvar2 == 0 {
+							ReminderUser = 0
+							s.ChannelMessageSend(m.ChannelID, "You disable reminder time")
+						} else {
+							if tmpvar2%5 != 0 && tmpvar2%10 != 0 {
+								s.ChannelMessageSend(m.ChannelID, "I do not recommend this number, set number with modulus 5 or 10")
+							}
+							ReminderUser = tmpvar2
+						}
 					}
 				} else {
 					_, err := s.ChannelMessageSend(m.ChannelID, "Invalid `"+SetReminder+"` command")
@@ -642,31 +632,32 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				Done = nil
 				UserInput := strings.Replace(m.Content, Prefix+TagRoles, "", -1)
 				ReminderUser := 0
-				re := regexp.MustCompile(`(?m)-setreminder\s[1-9].`)
+				re := regexp.MustCompile(`(?m)-setreminder\s[1-9]`)
 
 				if len(re.FindAllString(UserInput, -1)) > 0 {
 					tmpvar := re.FindAllString(UserInput, -1)[0]
-					if tmpvar[len(tmpvar)-2:] != "" {
-						tmpvar2 := tmpvar[len(tmpvar)-2:]
-						tmpvar3, err := strconv.Atoi(tmpvar2[:len(tmpvar2)-1] + "6")
-						if err != nil {
-							log.Error(err)
-						} else {
-							ReminderUser = tmpvar3
-						}
+					tmpvar2, err := strconv.Atoi(strings.TrimSpace(tmpvar[len(tmpvar)-2:]))
+					if err != nil {
+						s.ChannelMessageSend(m.ChannelID, "Invalid number, "+err.Error())
+						return
 					} else {
-						tmpvar2, err := strconv.Atoi(tmpvar + "6")
-						if err != nil {
-							log.Error(err)
+						if tmpvar2 < 10 && tmpvar2 != 0 {
+							s.ChannelMessageSend(m.ChannelID, "10 was minimum number")
+							return
+						} else if tmpvar2 > 65 {
+							s.ChannelMessageSend(m.ChannelID, "Can't set Reminder over than 65 Minutes")
+							return
+						} else if tmpvar2 == 0 {
+							ReminderUser = 0
+							s.ChannelMessageSend(m.ChannelID, "You disable reminder time")
 						} else {
+							if tmpvar2%5 != 0 && tmpvar2%10 != 0 {
+								s.ChannelMessageSend(m.ChannelID, "I do not recommend this number, set number with modulus 5 or 10")
+							}
 							ReminderUser = tmpvar2
 						}
 					}
 
-					if ReminderUser > 67 {
-						s.ChannelMessageSend(m.ChannelID, "Can't set Reminder over than 60 Minutes")
-						return
-					}
 					UserInput = strings.TrimSpace(strings.Replace(UserInput, tmpvar, "", -1))
 
 				} else {
@@ -998,21 +989,27 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				UserInput := strings.Replace(m.Content, Prefix+RolesReminder, "", -1)
 				VtuberName := strings.Split(strings.TrimSpace(UserInput), " ")
 				tmpvar := VtuberName[len(VtuberName)-1]
-
-				ReminderUser, err := strconv.Atoi(tmpvar[:len(tmpvar)-1] + "6")
+				ReminderUser := 0
+				tmpvar2, err := strconv.Atoi(strings.TrimSpace(tmpvar))
 				if err != nil {
-					log.Error(err)
-					_, err := s.ChannelMessageSend(m.ChannelID, "Invalid number")
-					if err != nil {
-						log.Error(err)
+					s.ChannelMessageSend(m.ChannelID, "Invalid number, "+err.Error())
+					return
+				} else {
+					if tmpvar2 < 10 && tmpvar2 != 0 {
+						s.ChannelMessageSend(m.ChannelID, "10 was minimum number")
+						return
+					} else if tmpvar2 > 65 {
+						s.ChannelMessageSend(m.ChannelID, "Can't set Reminder over than 65 Minutes")
+						return
+					} else if tmpvar2 == 0 {
+						ReminderUser = 0
+						s.ChannelMessageSend(m.ChannelID, "You disable reminder time")
+					} else {
+						if tmpvar2%5 != 0 && tmpvar2%10 != 0 {
+							s.ChannelMessageSend(m.ChannelID, "I do not recommend this number, set number with modulus 5 or 10")
+						}
+						ReminderUser = tmpvar2
 					}
-					return
-				} else if ReminderUser > 67 {
-					s.ChannelMessageSend(m.ChannelID, "Can't set Reminder over than 60 Minutes\nMin 10 Max 60")
-					return
-				} else if ReminderUser == 6 {
-					ReminderUser = 0
-					s.ChannelMessageSend(m.ChannelID, "You disable reminder time")
 				}
 
 				guild, err := s.Guild(m.GuildID)
