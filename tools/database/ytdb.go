@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/go-redis/redis/v8"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -25,11 +24,14 @@ func YtGetStatus(Group, Member int64, Status, Region string) []YtDbData {
 		limit   int
 		err     error
 		ctx     = context.Background()
-		Key     = strconv.Itoa(int(Group)) + strconv.Itoa(int(Member)) + Status + Region + "*"
-		counter = 0
+		Key     = strconv.Itoa(int(Group+Member)) + Status + Region + "*"
+		counter = 1
 	)
 	val, err := LiveCache.Keys(ctx, Key).Result()
-	if err == redis.Nil {
+	if err != nil {
+		log.Error(err)
+	}
+	if len(val) == 0 {
 		if (Group != 0 && Status != "live") || (Member != 0 && Status == "past") {
 			limit = 3
 		} else {
@@ -62,12 +64,10 @@ func YtGetStatus(Group, Member int64, Status, Region string) []YtDbData {
 				log.Error(err)
 			}
 		}
-	} else if err != nil {
-		log.Error(err)
 	} else {
 		if len(val) > 0 {
-			for _, key := range val {
-				val2, err := LiveCache.Get(ctx, key).Result()
+			for _, key2 := range val {
+				val2, err := LiveCache.Get(ctx, key2).Result()
 				if err != nil {
 					log.Error(err)
 				}

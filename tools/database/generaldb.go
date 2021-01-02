@@ -1,12 +1,14 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"math/rand"
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	"github.com/go-redis/redis/v8"
@@ -708,30 +710,48 @@ func ChannelTag(MemberID int64, typetag int, Options string) ([]int, []string) {
 	return IdDiscordChannelID, DiscordChannelID
 }
 
-//get tags
+//GetUserList GetUser tags
 func GetUserList(ChannelIDDiscord int, Member int64) []string {
 	var (
 		UserTagsList  []string
 		DiscordUserID string
 		Type          bool
+		ctx           = context.Background()
+		Key           = strconv.Itoa(ChannelIDDiscord + int(Member))
 	)
-	rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id =?`, ChannelIDDiscord, Member)
-	if err != nil {
-		log.Error(err)
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		err = rows.Scan(&DiscordUserID, &Type)
+	val2, err := LiveCache.Get(ctx, Key).Result()
+	if err == redis.Nil {
+		rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id=?`, ChannelIDDiscord, Member)
 		if err != nil {
 			log.Error(err)
 		}
-		if Type {
-			UserTagsList = append(UserTagsList, "<@"+DiscordUserID+">")
+		defer rows.Close()
+
+		for rows.Next() {
+			err = rows.Scan(&DiscordUserID, &Type)
+			if err != nil {
+				log.Error(err)
+			}
+			if Type {
+				UserTagsList = append(UserTagsList, "<@"+DiscordUserID+">")
+			} else {
+				UserTagsList = append(UserTagsList, "<@&"+DiscordUserID+">")
+			}
+		}
+		err = LiveCache.Set(ctx, Key, strings.Join(UserTagsList, ","), 12*time.Minute).Err()
+		if err != nil {
+			log.Error(err)
+		}
+	} else if err != nil {
+		log.Error(err)
+	} else {
+		if val2 == "" {
+			UserTagsList = nil
 		} else {
-			UserTagsList = append(UserTagsList, "<@&"+DiscordUserID+">")
+			UserTagsList = strings.Split(val2, ",")
 		}
 	}
+
 	return UserTagsList
 }
 
