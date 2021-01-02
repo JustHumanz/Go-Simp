@@ -26,9 +26,9 @@ func SendFanart(Data []Fanart, Group database.Group) {
 					ChannelID:     DiscordChannel,
 					VtuberGroupID: Group.ID,
 				}
-				defer wg.Done()
 				UserTagsList := database.GetUserList(ID, MemberFanart.Member.ID)
 
+				defer wg.Done()
 				var (
 					tags      string
 					GroupIcon string
@@ -47,7 +47,7 @@ func SendFanart(Data []Fanart, Group database.Group) {
 					Msg = "Photos/Video oversize,check original post"
 				}
 
-				Color, err := engine.GetColor("/tmp/tw", Media)
+				Color, err := engine.GetColor(config.TmpDir, Media)
 				if err != nil {
 					log.Error(err)
 				}
