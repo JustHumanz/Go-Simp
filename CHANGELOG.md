@@ -1,3 +1,8 @@
+v1.3.5
+- Add redis for cache
+- Set yt state to cache
+- Set fanart checker to cache
+
 v1.2.5
 - Change wg.wait to sleep
 - Change cronjob
