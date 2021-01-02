@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"strconv"
 	"time"
 
@@ -120,7 +121,7 @@ func (Member Member) CheckYtVideo(VideoID string) (*YtDbData, error) {
 		}
 	}
 	if Data.ID == 0 {
-		return nil, nil
+		return nil, errors.New("VideoID not found in database")
 	} else {
 		return &Data, nil
 	}
