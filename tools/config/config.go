@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"time"
 
 	"github.com/BurntSushi/toml"
 	_ "github.com/go-sql-driver/mysql"
@@ -74,9 +75,11 @@ type ConfigFile struct {
 		YoutubeLimit  int `toml:"YoutubeLimit"`
 	} `toml:"Limit"`
 	SQL struct {
-		User string `toml:"User"`
-		Pass string `toml:"Pass"`
-		Host string `toml:"Host"`
+		User         string `toml:"User"`
+		Pass         string `toml:"Pass"`
+		Host         string `toml:"Host"`
+		MaxOpenConns int    `toml:"MaxOpenConns"`
+		MaxIdleConns int    `toml:"MaxIdleConns"`
 	} `toml:"Sql"`
 	BotPrefix struct {
 		Fanart   string `toml:"Fanart"`
@@ -143,6 +146,9 @@ func (Data ConfigFile) CheckSQL() *sql.DB {
 		log.Error(err, " Something worng with database,make sure you create Vtuber database first")
 		os.Exit(1)
 	}
+	db.SetConnMaxLifetime(time.Minute * 3)
+	db.SetMaxOpenConns(Data.SQL.MaxOpenConns)
+	db.SetMaxIdleConns(Data.SQL.MaxIdleConns)
 
 	//make sure can access database
 	_, err = db.Exec(`SELECT NOW()`)
