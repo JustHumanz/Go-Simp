@@ -23,6 +23,7 @@ func CheckTwFollowCount() {
 				TwFollowDB, err := Name.GetSubsCount()
 				if err != nil {
 					log.Error(err)
+					break
 				}
 				SendNotif := func(SubsCount, Tweets string) {
 					Avatar := strings.Replace(Twitter.Avatar, "_normal.jpg", ".jpg", -1)

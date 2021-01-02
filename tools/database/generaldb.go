@@ -738,7 +738,7 @@ func GetUserList(ChannelIDDiscord int, Member int64) []string {
 				UserTagsList = append(UserTagsList, "<@&"+DiscordUserID+">")
 			}
 		}
-		err = LiveCache.Set(ctx, Key, strings.Join(UserTagsList, ","), 12*time.Minute).Err()
+		err = LiveCache.Set(ctx, Key, strings.Join(UserTagsList, ","), 6*time.Minute).Err()
 		if err != nil {
 			log.Error(err)
 		}
