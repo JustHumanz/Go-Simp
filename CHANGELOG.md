@@ -1,3 +1,7 @@
+v1.3.6
+- Fix youtube not send notif
+- Fix migrate token out of limit
+
 v1.3.5
 - Add redis for cache
 - Set yt state to cache

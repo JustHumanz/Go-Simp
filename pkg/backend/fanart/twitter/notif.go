@@ -4,6 +4,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/JustHumanz/Go-simp/pkg/backend/runner"
 	config "github.com/JustHumanz/Go-simp/tools/config"
@@ -17,72 +18,77 @@ func SendFanart(Data []Fanart, Group database.Group) {
 		url := MemberFanart.Tweet.PermanentURL
 		ID, DiscordChannelID := database.ChannelTag(MemberFanart.Member.ID, 1, "")
 		Bot := runner.Bot
+		wg := new(sync.WaitGroup)
 		for i := 0; i < len(DiscordChannelID); i++ {
-			ChannelState := database.DiscordChannel{
-				ChannelID:     DiscordChannelID[i],
-				VtuberGroupID: Group.ID,
-			}
-
-			UserTagsList := database.GetUserList(ID[i], MemberFanart.Member.ID)
-
-			var (
-				tags      string
-				GroupIcon string
-				Media     string
-				Msg       string
-			)
-
-			if len(MemberFanart.Tweet.Videos) > 0 {
-				Media = MemberFanart.Tweet.Videos[0].Preview
-				Msg = "1/1 Videos"
-			} else if len(MemberFanart.Tweet.Photos) > 0 {
-				Media = MemberFanart.Tweet.Photos[0]
-				Msg = "1/" + strconv.Itoa(len(MemberFanart.Tweet.Photos)) + " Photos"
-			} else {
-				Media = config.NotFound
-				Msg = "Photos/Video oversize,check original post"
-			}
-
-			Color, err := engine.GetColor(config.TmpDir, Media)
-			if err != nil {
-				log.Error(err)
-			}
-
-			if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
-				GroupIcon = ""
-			} else {
-				GroupIcon = Group.IconURL
-			}
-			if UserTagsList != nil {
-				tags = strings.Join(UserTagsList, " ")
-			} else {
-				tags = "_"
-			}
-			if tags == "_" && Group.GroupName == "Independen" {
-				//do nothing,like my life
-			} else {
-				msg, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
-					SetAuthor(strings.Title(Group.GroupName), GroupIcon).
-					SetTitle("@"+MemberFanart.Tweet.Username).
-					SetURL(url).
-					SetThumbnail(engine.GetAuthorAvatar(MemberFanart.Tweet.Username)).
-					SetDescription(RemoveTwitterShortLink(MemberFanart.Tweet.Text)).
-					SetImage(Media).
-					AddField("User Tags", tags).
-					SetColor(Color).
-					SetFooter(Msg, config.TwitterIMG).MessageEmbed)
-				if err != nil {
-					log.Error(msg, err)
-					err = ChannelState.DelChannel(err.Error())
-					if err != nil {
-						log.Error(err)
-					}
+			wg.Add(1)
+			go func(DiscordChannel string, ID int, wg *sync.WaitGroup) {
+				ChannelState := database.DiscordChannel{
+					ChannelID:     DiscordChannel,
+					VtuberGroupID: Group.ID,
 				}
-				engine.Reacting(map[string]string{
-					"ChannelID": DiscordChannelID[i],
-				}, Bot)
-			}
+				defer wg.Done()
+				UserTagsList := database.GetUserList(ID, MemberFanart.Member.ID)
+
+				var (
+					tags      string
+					GroupIcon string
+					Media     string
+					Msg       string
+				)
+
+				if len(MemberFanart.Tweet.Videos) > 0 {
+					Media = MemberFanart.Tweet.Videos[0].Preview
+					Msg = "1/1 Videos"
+				} else if len(MemberFanart.Tweet.Photos) > 0 {
+					Media = MemberFanart.Tweet.Photos[0]
+					Msg = "1/" + strconv.Itoa(len(MemberFanart.Tweet.Photos)) + " Photos"
+				} else {
+					Media = config.NotFound
+					Msg = "Photos/Video oversize,check original post"
+				}
+
+				Color, err := engine.GetColor("/tmp/tw", Media)
+				if err != nil {
+					log.Error(err)
+				}
+
+				if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
+					GroupIcon = ""
+				} else {
+					GroupIcon = Group.IconURL
+				}
+				if UserTagsList != nil {
+					tags = strings.Join(UserTagsList, " ")
+				} else {
+					tags = "_"
+				}
+				if tags == "_" && Group.GroupName == "Independen" {
+					//do nothing,like my life
+				} else {
+					msg, err := Bot.ChannelMessageSendEmbed(DiscordChannel, engine.NewEmbed().
+						SetAuthor(strings.Title(Group.GroupName), GroupIcon).
+						SetTitle("@"+MemberFanart.Tweet.Username).
+						SetURL(url).
+						SetThumbnail(engine.GetAuthorAvatar(MemberFanart.Tweet.Username)).
+						SetDescription(RemoveTwitterShortLink(MemberFanart.Tweet.Text)).
+						SetImage(Media).
+						AddField("User Tags", tags).
+						SetColor(Color).
+						SetFooter(Msg, config.TwitterIMG).MessageEmbed)
+					if err != nil {
+						log.Error(msg, err)
+						err = ChannelState.DelChannel(err.Error())
+						if err != nil {
+							log.Error(err)
+						}
+					}
+					engine.Reacting(map[string]string{
+						"ChannelID": DiscordChannel,
+					}, Bot)
+				}
+			}(DiscordChannelID[i], ID[i], wg)
 		}
+		wg.Wait()
 	}
 }
 

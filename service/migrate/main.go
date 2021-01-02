@@ -55,7 +55,7 @@ func init() {
 	if err != nil {
 		log.Error(err)
 	}
-	YoutubeToken = config.YtToken[0]
+	YoutubeToken = engine.GetYtToken()
 	BiliBiliSession = []string{"Cookie", "SESSDATA=" + config.BiliSess}
 	Limit = 100
 	Bot, _ = discordgo.New("Bot " + config.Discord)
