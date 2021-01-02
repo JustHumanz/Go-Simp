@@ -150,9 +150,16 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 
 			} else if Data.Items[i].Snippet.VideoStatus == "upcoming" {
 				if Data.Items[i].LiveDetails.StartTime != YoutubeData.YtData.Schedul {
-					log.Info("Livestream schdule changed")
+					log.WithFields(log.Fields{
+						"VideoData ID": VideoID[i],
+						"old schdule":  YoutubeData.YtData.Schedul,
+						"new schdule":  Data.Items[i].LiveDetails.StartTime,
+						"Status":       "upcoming",
+					}).Info("Livestream schdule changed")
+
 					YoutubeData.ChangeYtStatus("upcoming").
-						UpYtSchedul(Data.Items[i].LiveDetails.StartTime).UpdateYtDB()
+						UpYtSchedul(Data.Items[i].LiveDetails.StartTime).
+						UpdateYtDB()
 				}
 				//send to reminder
 				YoutubeData.ChangeYtStatus("reminder").SendNude()
