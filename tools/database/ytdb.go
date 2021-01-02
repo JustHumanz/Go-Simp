@@ -85,7 +85,7 @@ func YtGetStatus(Group, Member int64, Status, Region string) ([]YtDbData, error)
 }
 
 //Input youtube new video
-func (Data YtDbData) InputYt(MemberID int64) error {
+func (Data *YtDbData) InputYt(MemberID int64) error {
 	stmt, err := DB.Prepare(`INSERT INTO Youtube (VideoID,Type,Status,Title,Thumbnails,Description,PublishedAt,ScheduledStart,EndStream,Viewers,Length,VtuberMember_id) values(?,?,?,?,?,?,?,?,?,?,?,?)`)
 	if err != nil {
 		return err
@@ -128,7 +128,7 @@ func (Member Member) CheckYtVideo(VideoID string) (*YtDbData, error) {
 }
 
 //Update youtube data
-func (Data YtDbData) UpdateYt(Status string) {
+func (Data *YtDbData) UpdateYt(Status string) {
 	_, err := DB.Exec(`Update Youtube set Type=?,Status=?,Title=?,Thumbnails=?,Description=?,PublishedAt=?,ScheduledStart=?,EndStream=?,Viewers=?,Length=? where id=?`, Data.Type, Status, Data.Title, Data.Thumb, Data.Desc, Data.Published, Data.Schedul, Data.End, Data.Viewers, Data.Length, Data.ID)
 	if err != nil {
 		log.Error(err)
