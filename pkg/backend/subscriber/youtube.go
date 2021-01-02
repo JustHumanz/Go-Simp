@@ -36,7 +36,10 @@ func CheckYtSubsCount() {
 				for _, Name2 := range Names {
 					for _, Item := range YTstate.Items {
 						if Name2.YoutubeID == Item.ID && !Item.Statistics.HiddenSubscriberCount {
-							YtSubsDB := Name2.GetSubsCount()
+							YtSubsDB, err := Name2.GetSubsCount()
+							if err != nil {
+								log.Error(err)
+							}
 							YTSubscriberCount, err := strconv.Atoi(Item.Statistics.SubscriberCount)
 							if err != nil {
 								log.Error(err)

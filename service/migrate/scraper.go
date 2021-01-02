@@ -338,7 +338,10 @@ func CheckSchedule() {
 				var (
 					ScheduledStart time.Time
 				)
-				DataDB := database.GetRoomData(Member.ID, Member.BiliRoomID)
+				DataDB, err := database.GetRoomData(Member.ID, Member.BiliRoomID)
+				if err != nil {
+					log.Error(err)
+				}
 				Status, err := bilibili.GetRoomStatus(Member.BiliRoomID)
 				if err != nil {
 					log.Error(err)

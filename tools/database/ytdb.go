@@ -16,7 +16,7 @@ func (ac YtDbData) MarshalBinary() ([]byte, error) {
 }
 
 //Get Youtube data from status
-func YtGetStatus(Group, Member int64, Status, Region string) []YtDbData {
+func YtGetStatus(Group, Member int64, Status, Region string) ([]YtDbData, error) {
 	var (
 		Data    []YtDbData
 		list    YtDbData
@@ -29,7 +29,7 @@ func YtGetStatus(Group, Member int64, Status, Region string) []YtDbData {
 	)
 	val, err := LiveCache.Keys(ctx, Key).Result()
 	if err != nil {
-		log.Error(err)
+		return nil, err
 	}
 	if len(val) == 0 {
 		if (Group != 0 && Status != "live") || (Member != 0 && Status == "past") {
@@ -40,13 +40,13 @@ func YtGetStatus(Group, Member int64, Status, Region string) []YtDbData {
 		if Region == "" {
 			rows, err = DB.Query(`call GetYt(?,?,?,?)`, Member, Group, limit, Status)
 			if err != nil {
-				log.Error(err)
+				return nil, err
 			}
 			defer rows.Close()
 		} else {
 			rows, err = DB.Query(`call GetYtByReg(?,?,?)`, Group, Status, Region)
 			if err != nil {
-				log.Error(err)
+				return nil, err
 			}
 			defer rows.Close()
 		}
@@ -55,13 +55,13 @@ func YtGetStatus(Group, Member int64, Status, Region string) []YtDbData {
 			counter++
 			err = rows.Scan(&list.ID, &list.Group, &list.ChannelID, &list.NameEN, &list.NameJP, &list.YoutubeAvatar, &list.VideoID, &list.Title, &list.Thumb, &list.Desc, &list.Schedul, &list.End, &list.Region, &list.Viewers, &list.MemberID, &list.GroupID)
 			if err != nil {
-				log.Error(err)
+				return nil, err
 			}
 			list.Status = Status
 			Data = append(Data, list)
 			err := LiveCache.Set(ctx, Key+strconv.Itoa(counter), list, 20*time.Minute).Err()
 			if err != nil {
-				log.Error(err)
+				return nil, err
 			}
 		}
 	} else {
@@ -69,18 +69,18 @@ func YtGetStatus(Group, Member int64, Status, Region string) []YtDbData {
 			for _, key2 := range val {
 				val2, err := LiveCache.Get(ctx, key2).Result()
 				if err != nil {
-					log.Error(err)
+					return nil, err
 				}
 				err = json.Unmarshal([]byte(val2), &list)
 				if err != nil {
-					log.Error(err)
+					return nil, err
 				}
 				Data = append(Data, list)
 			}
 		}
 	}
 
-	return Data
+	return Data, nil
 
 }
 

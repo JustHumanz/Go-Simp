@@ -68,7 +68,10 @@ func CheckBiliFollowCount() {
 				}()
 				wg.Wait()
 
-				BiliFollowDB := Name.GetSubsCount()
+				BiliFollowDB, err := Name.GetSubsCount()
+				if err != nil {
+					log.Error(err)
+				}
 				if Name.BiliBiliID != 0 {
 					if BiliFollowDB.BiliFollow != bilistate.Follow.Data.Follower {
 						if bilistate.Follow.Data.Follower <= 10000 {

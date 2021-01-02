@@ -146,7 +146,7 @@ func (Data ConfigFile) CheckSQL() *sql.DB {
 		log.Error(err, " Something worng with database,make sure you create Vtuber database first")
 		os.Exit(1)
 	}
-	db.SetConnMaxLifetime(time.Minute * 3)
+	db.SetConnMaxLifetime(time.Minute * 1)
 	db.SetMaxOpenConns(Data.SQL.MaxOpenConns)
 	db.SetMaxIdleConns(Data.SQL.MaxIdleConns)
 

@@ -173,7 +173,11 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				if GroupIDint == int(Group.ID) {
-					YoutubeData = append(YoutubeData, database.YtGetStatus(Group.ID, 0, Status, Region)...)
+					YTData, err := database.YtGetStatus(Group.ID, 0, Status, Region)
+					if err != nil {
+						log.Error(err)
+					}
+					YoutubeData = append(YoutubeData, YTData...)
 				}
 			}
 		}
@@ -193,14 +197,22 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 						return
 					}
 					if MemberIDint == int(Member.ID) {
-						YoutubeData = append(YoutubeData, database.YtGetStatus(0, Member.ID, Status, Region)...)
+						YTData, err := database.YtGetStatus(0, Member.ID, Status, Region)
+						if err != nil {
+							log.Error(err)
+						}
+						YoutubeData = append(YoutubeData, YTData...)
 					}
 				}
 			}
 		}
 	} else {
 		for _, Group := range Groups {
-			YoutubeData = append(YoutubeData, database.YtGetStatus(Group.ID, 0, Status, Region)...)
+			YTData, err := database.YtGetStatus(Group.ID, 0, Status, Region)
+			if err != nil {
+				log.Error(err)
+			}
+			YoutubeData = append(YoutubeData, YTData...)
 		}
 	}
 
@@ -425,7 +437,10 @@ func getSubs(w http.ResponseWriter, r *http.Request) {
 				}
 				if GroupIDint == int(Group.ID) {
 					for _, Member := range database.GetMembers(Group.ID) {
-						tmp := Member.GetSubsCount()
+						tmp, err := Member.GetSubsCount()
+						if err != nil {
+							log.Error(err)
+						}
 						SubsData = append(SubsData, SubsJson{
 							MemberID:          tmp.MemberID,
 							YoutubeSubscribe:  tmp.YtSubs,
@@ -456,7 +471,10 @@ func getSubs(w http.ResponseWriter, r *http.Request) {
 						return
 					}
 					if MemberIDint == int(Member.ID) {
-						tmp := Member.GetSubsCount()
+						tmp, err := Member.GetSubsCount()
+						if err != nil {
+							log.Error(err)
+						}
 						SubsData = append(SubsData, SubsJson{
 							MemberID:          tmp.MemberID,
 							YoutubeSubscribe:  tmp.YtSubs,
@@ -474,7 +492,10 @@ func getSubs(w http.ResponseWriter, r *http.Request) {
 	} else {
 		for _, Group := range Groups {
 			for _, Member := range database.GetMembers(Group.ID) {
-				tmp := Member.GetSubsCount()
+				tmp, err := Member.GetSubsCount()
+				if err != nil {
+					log.Error(err)
+				}
 				SubsData = append(SubsData, SubsJson{
 					MemberID:          tmp.MemberID,
 					YoutubeSubscribe:  tmp.YtSubs,

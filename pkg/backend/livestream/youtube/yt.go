@@ -109,7 +109,10 @@ func CheckPrivate() {
 	for _, Status := range []string{"upcoming", "past", "live", "private"} {
 		for _, Group := range engine.GroupData {
 			for _, Member := range database.GetMembers(Group.ID) {
-				YtData := database.YtGetStatus(0, Member.ID, Status, "")
+				YtData, err := database.YtGetStatus(0, Member.ID, Status, "")
+				if err != nil {
+					log.Error(err)
+				}
 				for _, Y := range YtData {
 					Y.Status = Status
 					Check(Y)

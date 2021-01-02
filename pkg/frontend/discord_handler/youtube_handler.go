@@ -79,7 +79,10 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								log.Error(err)
 							}
 						} else {
-							DataMember := database.YtGetStatus(0, VTData.ID, "upcoming", Region)
+							DataMember, err := database.YtGetStatus(0, VTData.ID, "upcoming", Region)
+							if err != nil {
+								log.Error(err)
+							}
 							if DataMember != nil {
 								for _, Member := range DataMember {
 									loc := engine.Zawarudo(Member.Region)
@@ -104,7 +107,10 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						GroupData := database.YtGetStatus(VTuberGroup.ID, 0, "upcoming", Region)
+						GroupData, err := database.YtGetStatus(VTuberGroup.ID, 0, "upcoming", Region)
+						if err != nil {
+							log.Error(err)
+						}
 						if GroupData != nil {
 							for _, Data := range GroupData {
 								loc := engine.Zawarudo(Data.Region)
@@ -149,7 +155,10 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								log.Error(err)
 							}
 						} else {
-							DataMember := database.YtGetStatus(0, VTData.ID, "live", Region)
+							DataMember, err := database.YtGetStatus(0, VTData.ID, "live", Region)
+							if err != nil {
+								log.Error(err)
+							}
 							if DataMember != nil {
 								for _, Member := range DataMember {
 									loc := engine.Zawarudo(Member.Region)
@@ -176,7 +185,10 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						GroupData := database.YtGetStatus(VTuberGroup.ID, 0, "live", Region)
+						GroupData, err := database.YtGetStatus(VTuberGroup.ID, 0, "live", Region)
+						if err != nil {
+							log.Error(err)
+						}
 						if GroupData != nil {
 							for _, Data := range GroupData {
 								loc := engine.Zawarudo(Data.Region)
@@ -224,7 +236,10 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								log.Error(err)
 							}
 						} else {
-							DataMember := database.YtGetStatus(0, VTData.ID, "past", Region)
+							DataMember, err := database.YtGetStatus(0, VTData.ID, "past", Region)
+							if err != nil {
+								log.Error(err)
+							}
 							if DataMember != nil {
 								for z := 0; z < len(DataMember); z++ {
 									Color, err := engine.GetColor(config.TmpDir, DataMember[z].Thumb)
@@ -266,9 +281,15 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						)
 
 						if CheckReg(VTuberGroup.GroupName, Region) {
-							Data = database.YtGetStatus(VTuberGroup.ID, 0, "past", Region)
+							Data, err = database.YtGetStatus(VTuberGroup.ID, 0, "past", Region)
+							if err != nil {
+								log.Error(err)
+							}
 						} else {
-							Data = database.YtGetStatus(VTuberGroup.ID, 0, "past", "")
+							Data, err = database.YtGetStatus(VTuberGroup.ID, 0, "past", "")
+							if err != nil {
+								log.Error(err)
+							}
 						}
 
 						if Data != nil {
