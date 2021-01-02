@@ -120,7 +120,7 @@ func (Member Member) CheckYtVideo(VideoID string) (*YtDbData, error) {
 		}
 	}
 	if Data.ID == 0 {
-		return &Data, nil
+		return nil, nil
 	} else {
 		return &Data, nil
 	}

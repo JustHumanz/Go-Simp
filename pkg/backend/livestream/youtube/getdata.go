@@ -90,7 +90,7 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 			Viewers = Data.Items[i].LiveDetails.Viewers
 		}
 
-		if YoutubeData.YtData.Status != "" {
+		if YoutubeData.YtData != nil {
 			YoutubeData.
 				UpYtView(Viewers).
 				UpYtEnd(Data.Items[i].LiveDetails.EndTime).

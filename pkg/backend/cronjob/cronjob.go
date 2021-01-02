@@ -18,7 +18,6 @@ func InitCron() {
 	c := cron.New()
 	c.Start()
 
-	youtube.CheckSchedule()
 	Flags := runner.Flags
 	if *Flags["twitterfanart"].(*bool) {
 		c.AddFunc("@every 0h3m0s", twitter.CheckNew)
