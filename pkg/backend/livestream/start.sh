@@ -1,12 +1,11 @@
 #!/bin/sh
 
 BuildModule() {
-    export VERSION=$(git tag | tail -n1)
     go build -o livestream
 }
 
 RunModule(){
-    ./livestream
+    ./livestream $@
     exit_status=$?
     if [ $exit_status -eq 1 ]; then
         exit $exit_status
@@ -16,6 +15,7 @@ RunModule(){
 
 
 Start(){
+    export VERSION=$(git tag | tail -n1)
     BuildModule
     while true
     do
