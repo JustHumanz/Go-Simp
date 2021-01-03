@@ -110,7 +110,8 @@ services:
       - ./.env
 
   rest_api:
-    image: mainbot
+    build: service/rest-api
+    image: mainbot_rest-api
     working_dir: /app/Go-Simp/service/rest-api    
     depends_on:
       - mysql
