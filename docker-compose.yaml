@@ -42,7 +42,7 @@ services:
       - db_migrate
       - multi_tor
       - build_mainbot
-    working_dir: pkg/backend/fanart/
+    working_dir: /app/Go-Simp/pkg/backend/fanart/
     command: ./start.sh
     restart: on-failure
 
@@ -53,7 +53,7 @@ services:
       - db_migrate
       - multi_tor
       - build_mainbot
-    working_dir: pkg/backend/livestream/
+    working_dir: /app/Go-Simp/pkg/backend/livestream/
     command: ./start.sh
     restart: on-failure
 
@@ -64,7 +64,7 @@ services:
       - db_migrate
       - multi_tor
       - build_mainbot
-    working_dir: pkg/backend/subscriber/
+    working_dir: /app/Go-Simp/pkg/backend/subscriber/
     command: ./start.sh
     restart: on-failure    
 
@@ -75,7 +75,7 @@ services:
       - db_migrate
       - multi_tor
       - build_mainbot
-    working_dir: pkg/backend/utility/
+    working_dir: /app/Go-Simp/pkg/backend/utility/
     command: go run .
     restart: on-failure    
 
@@ -100,8 +100,6 @@ services:
     working_dir: /app/Go-Simp/pkg/guild
     command: go run .
     restart: on-failure
-    volumes:
-      - guild-volume:/app/Go-Simp/pkg/guild/guild.db
 
   yotube-scrap:
     build: service/yt-scrap
@@ -137,6 +135,3 @@ services:
     image: 'bitnami/redis:latest'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
-      
-volumes:
-  guild-volume:
