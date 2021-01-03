@@ -30,4 +30,4 @@ Start(){
     done
 }
 
-Start
+Start $@
