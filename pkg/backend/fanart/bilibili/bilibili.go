@@ -9,14 +9,28 @@ import (
 	"sync"
 	"time"
 
+	"github.com/bwmarrin/discordgo"
 	"github.com/go-redis/redis/v8"
 	log "github.com/sirupsen/logrus"
+	"gopkg.in/robfig/cron.v2"
 
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	network "github.com/JustHumanz/Go-simp/tools/network"
 )
+
+//Public variable
+var (
+	Bot *discordgo.Session
+)
+
+//Start start twitter module
+func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
+	Bot = BotInit
+	cronInit.AddFunc("@every 0h4m0s", CheckNew)
+	log.Info("Enable bilibili fanart module")
+}
 
 //CheckNew Start Check new fanart
 func CheckNew() {

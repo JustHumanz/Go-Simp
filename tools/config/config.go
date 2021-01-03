@@ -115,26 +115,6 @@ func ReadConfig(path string) (ConfigFile, error) {
 	if BotConf.LimitConf.YoutubeLimit >= 15 {
 		BotConf.LimitConf.YoutubeLimit = 15
 	}
-	/*
-		TwitterToken = config.TwitterBearer
-		ImgurClient = config.ImgurClinet
-		BiliBiliSes = config.BiliSess
-		SauceAPI = config.SauceAPI
-
-		DiscordWebHook = config.DiscordWebHook
-		MultiTOR = config.MultiTOR
-		KoFiLink = config.DonationLink
-
-		Token = config.Discord
-		YtToken = config.YtToken
-		EmojiFanart = config.Emoji.Fanart
-
-		PGeneral = config.BotPrefix.General
-		PFanart = config.BotPrefix.Fanart
-		PYoutube = config.BotPrefix.Youtube
-		PBilibili = config.BotPrefix.Bilibili
-	*/
-
 	return BotConf, nil
 }
 

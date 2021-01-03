@@ -1,0 +1,5 @@
+FROM mainbot
+
+WORKDIR /app/Go-Simp/service/rest-api
+EXPOSE 2525
+CMD go run .

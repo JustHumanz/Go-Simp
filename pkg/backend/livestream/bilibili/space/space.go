@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/JustHumanz/Go-simp/tools/config"
+	"github.com/bwmarrin/discordgo"
+	"gopkg.in/robfig/cron.v2"
 
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
@@ -15,10 +17,18 @@ import (
 
 var (
 	loc *time.Location
+	Bot *discordgo.Session
 )
 
-func CheckVideo() {
+//Start start twitter module
+func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
 	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
+	Bot = BotInit
+	cronInit.AddFunc("@every 0h11m0s", CheckSpaceVideo)
+	log.Info("Enable space bilibili module")
+}
+
+func CheckSpaceVideo() {
 	wg := new(sync.WaitGroup)
 	for _, Group := range engine.GroupData {
 		if Group.GroupName != "Hololive" {

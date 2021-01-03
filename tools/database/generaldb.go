@@ -717,7 +717,7 @@ func GetUserList(ChannelIDDiscord int, Member int64) []string {
 		DiscordUserID string
 		Type          bool
 		ctx           = context.Background()
-		Key           = strconv.Itoa(ChannelIDDiscord + int(Member))
+		Key           = strconv.Itoa(ChannelIDDiscord * int(Member))
 	)
 	val2, err := LiveCache.Get(ctx, Key).Result()
 	if err == redis.Nil {

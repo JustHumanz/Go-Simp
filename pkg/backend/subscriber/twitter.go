@@ -1,4 +1,4 @@
-package subscriber
+package main
 
 import (
 	"strconv"
@@ -11,7 +11,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func CheckTwFollowCount() {
+func CheckTwitter() {
 	for _, Group := range engine.GroupData {
 		for i, Name := range database.GetMembers(Group.ID) {
 			if Name.TwitterName != "" {

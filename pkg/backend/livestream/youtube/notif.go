@@ -6,7 +6,6 @@ import (
 	"strings"
 	"time"
 
-	runner "github.com/JustHumanz/Go-simp/pkg/backend/runner"
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
@@ -18,7 +17,6 @@ import (
 func (PushData *NotifStruct) SendNude() {
 	Status := PushData.YtData.Status
 	Avatar := PushData.Member.YoutubeAvatar
-	Bot := runner.Bot
 	YtChannel := "https://www.youtube.com/channel/" + PushData.Member.YoutubeID + "?sub_confirmation=1"
 	YtURL := "https://www.youtube.com/watch?v=" + PushData.YtData.VideoID
 	loc := engine.Zawarudo(PushData.Member.Region)

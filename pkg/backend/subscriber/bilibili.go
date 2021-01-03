@@ -1,4 +1,4 @@
-package subscriber
+package main
 
 import (
 	"encoding/json"
@@ -14,7 +14,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func CheckBiliFollowCount() {
+func CheckBiliBili() {
 	BiliBiliSession := []string{"Cookie", "SESSDATA=" + config.BotConf.BiliSess}
 	for _, Group := range engine.GroupData {
 		Names := database.GetMembers(Group.ID)

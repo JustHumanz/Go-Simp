@@ -6,7 +6,6 @@ import (
 	"strings"
 	"time"
 
-	runner "github.com/JustHumanz/Go-simp/pkg/backend/runner"
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
@@ -46,7 +45,6 @@ func (Data *LiveBili) Crotttt(GroupIcon string) error {
 	}
 
 	MemberID := Data.Member.ID
-	Bot := runner.Bot
 	id, DiscordChannelID := database.ChannelTag(MemberID, 2, "")
 	for i, DiscordChannel := range DiscordChannelID {
 		UserTagsList := database.GetUserList(id[i], MemberID)
