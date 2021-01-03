@@ -16,6 +16,7 @@ RunModule(){
 
 
 Start(){
+    BuildModule
     while true
     do
         if ping -c 1 db_migrate &> /dev/null
