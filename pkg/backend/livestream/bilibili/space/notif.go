@@ -5,7 +5,6 @@ import (
 	"strings"
 	"time"
 
-	runner "github.com/JustHumanz/Go-simp/pkg/backend/runner"
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
@@ -14,7 +13,6 @@ import (
 )
 
 func (Data CheckSctruct) SendNude() {
-	Bot := runner.Bot
 	if Data.VideoList != nil {
 		Color, err := engine.GetColor(config.TmpDir, Data.MemberFace)
 		if err != nil {

@@ -1,4 +1,4 @@
-package subscriber
+package main
 
 import (
 	"encoding/json"
@@ -13,7 +13,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func CheckYtSubsCount() {
+func CheckYoutube() {
 	var YTstate Subs
 	for _, Group := range engine.GroupData {
 		var VtubChannel []string

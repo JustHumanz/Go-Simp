@@ -1,17 +1,65 @@
-package subscriber
+package main
 
 import (
+	"flag"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
+	"gopkg.in/robfig/cron.v2"
 
-	runner "github.com/JustHumanz/Go-simp/pkg/backend/runner"
+	"github.com/JustHumanz/Go-simp/pkg/backend/utility/runfunc"
+	config "github.com/JustHumanz/Go-simp/tools/config"
 	"github.com/JustHumanz/Go-simp/tools/database"
+	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	log "github.com/sirupsen/logrus"
 )
 
+var (
+	Bot *discordgo.Session
+)
+
+func main() {
+	Youtube := flag.Bool("Youtube", false, "Enable youtube module")
+	BiliBili := flag.Bool("BiliBili", false, "Enable bilibili module")
+	Twitter := flag.Bool("LiveBiliBili", false, "Enable twitter module")
+
+	flag.Parse()
+
+	conf, err := config.ReadConfig("../../../config.toml")
+	if err != nil {
+		log.Panic(err)
+	}
+
+	Bot, _ := discordgo.New("Bot " + config.BotConf.Discord)
+	err = Bot.Open()
+	if err != nil {
+		log.Panic(err)
+	}
+
+	database.Start(conf.CheckSQL())
+	engine.Start()
+
+	c := cron.New()
+	c.Start()
+
+	if *Youtube {
+		c.AddFunc("@every 1h0m0s", CheckYoutube)
+		log.Info("Add youtube subscriber to cronjob")
+	}
+
+	if *BiliBili {
+		c.AddFunc("@every 0h30m0s", CheckBiliBili)
+		log.Info("Add bilibili followers to cronjob")
+	}
+
+	if *Twitter {
+		c.AddFunc("@every 0h15m0s", CheckTwitter)
+		log.Info("Add twitter followers to cronjob")
+	}
+	runfunc.Run()
+}
+
 func SendNude(Embed *discordgo.MessageEmbed, Group database.Group, MemberID int64) {
-	Bot := runner.Bot
 	ChannelID, DiscordChannelID := Group.GetChannelByGroup()
 	for i, Channel := range DiscordChannelID {
 		UserTagsList := database.GetUserList(ChannelID[i], MemberID)

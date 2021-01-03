@@ -1,12 +1,12 @@
 #!/bin/sh
 
 BuildModule() {
-    go build -o backend
+    go build -o subscriber
 }
 
 RunModule(){
     export VERSION=$(git tag | tail -n1)
-    ./backend $@
+    ./subscriber $@
     exit_status=$?
     if [ $exit_status -eq 1 ]; then
         exit $exit_status
@@ -16,7 +16,6 @@ RunModule(){
 
 
 Start(){
-    BuildModule
     while true
     do
         if ping -c 1 db_migrate &> /dev/null

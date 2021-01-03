@@ -4,7 +4,6 @@ import (
 	"strconv"
 	"strings"
 
-	runner "github.com/JustHumanz/Go-simp/pkg/backend/runner"
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
@@ -24,7 +23,6 @@ type Notif struct {
 func (NotifData Notif) PushNotif(Color int) {
 	Data := NotifData.TBiliData
 	Group := NotifData.Group
-	Bot := runner.Bot
 	ID, DiscordChannelID := database.ChannelTag(NotifData.MemberID, 1, "")
 	GroupIcon := ""
 	tags := ""

@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/JustHumanz/Go-simp/pkg/backend/runner"
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	"github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
@@ -16,7 +15,6 @@ func SendFanart(Data []Fanart, Group database.Group) {
 	for _, MemberFanart := range Data {
 		url := MemberFanart.Tweet.PermanentURL
 		ID, DiscordChannelID := database.ChannelTag(MemberFanart.Member.ID, 1, "")
-		Bot := runner.Bot
 		for i := 0; i < len(DiscordChannelID); i++ {
 			ChannelState := database.DiscordChannel{
 				ChannelID:     DiscordChannelID[i],

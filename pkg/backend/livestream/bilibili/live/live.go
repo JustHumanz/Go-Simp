@@ -7,14 +7,25 @@ import (
 
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
+	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
+	"gopkg.in/robfig/cron.v2"
 )
 
 var (
 	loc *time.Location
+	Bot *discordgo.Session
 )
 
-func CheckSchedule() {
+//Start start twitter module
+func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
+	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
+	Bot = BotInit
+	cronInit.AddFunc("@every 0h7m0s", CheckLiveSchedule)
+	log.Info("Enable live bilibili module")
+}
+
+func CheckLiveSchedule() {
 	loc, _ = time.LoadLocation("Asia/Shanghai")
 	log.Info("Start check Schedule")
 	for _, Group := range engine.GroupData {

@@ -1,3 +1,6 @@
+v1.3.7
+- Change backend to micro service
+
 v1.3.6
 - Fix youtube not send notif
 - Fix migrate token out of limit

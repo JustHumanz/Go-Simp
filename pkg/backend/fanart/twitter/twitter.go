@@ -3,11 +3,24 @@ package twitter
 import (
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	"github.com/JustHumanz/Go-simp/tools/database"
+	engine "github.com/JustHumanz/Go-simp/tools/engine"
+	"github.com/bwmarrin/discordgo"
 	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
-
-	engine "github.com/JustHumanz/Go-simp/tools/engine"
+	"gopkg.in/robfig/cron.v2"
 )
+
+//Public variable
+var (
+	Bot *discordgo.Session
+)
+
+//Start start twitter module
+func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
+	Bot = BotInit
+	cronInit.AddFunc("@every 0h3m0s", CheckNew)
+	log.Info("Enable twitter fanart module")
+}
 
 //CheckNew Check new fanart
 func CheckNew() {

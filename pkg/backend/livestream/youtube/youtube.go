@@ -10,6 +10,8 @@ import (
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	network "github.com/JustHumanz/Go-simp/tools/network"
+	"github.com/bwmarrin/discordgo"
+	"gopkg.in/robfig/cron.v2"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -17,9 +19,17 @@ import (
 var (
 	yttoken   string
 	Ytwaiting = "???"
+	Bot       *discordgo.Session
 )
 
-func CheckSchedule() {
+//Start start twitter module
+func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
+	Bot = BotInit
+	cronInit.AddFunc("@every 0h5m0s", CheckYtSchedule)
+	log.Info("Enable youtube module")
+}
+
+func CheckYtSchedule() {
 	yttoken = engine.GetYtToken()
 	for _, Group := range engine.GroupData {
 		var wg sync.WaitGroup
