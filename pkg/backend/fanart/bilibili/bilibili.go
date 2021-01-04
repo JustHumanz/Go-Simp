@@ -34,10 +34,10 @@ func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
 
 //CheckNew Start Check new fanart
 func CheckNew() {
-	for _, Group := range engine.GroupData {
-		wg := new(sync.WaitGroup)
-		for i, Member := range database.GetMembers(Group.ID) {
-			wg.Add(1)
+	for _, GroupData := range engine.GroupData {
+		wga := new(sync.WaitGroup)
+		for _, MemberData := range database.GetMembers(GroupData.ID) {
+			wga.Add(1)
 			go func(Group database.Group, Member database.Member, wg *sync.WaitGroup) {
 				defer wg.Done()
 				if Member.BiliBiliHashtags != "" {
@@ -116,12 +116,9 @@ func CheckNew() {
 						}
 					}
 				}
-			}(Group, Member, wg)
-			if i%10 == 0 {
-				wg.Wait()
-			}
+			}(GroupData, MemberData, wga)
 		}
-		wg.Wait()
+		wga.Wait()
 	}
 }
 

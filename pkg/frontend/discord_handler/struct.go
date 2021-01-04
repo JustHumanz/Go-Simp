@@ -1,5 +1,7 @@
 package discordhandler
 
+import database "github.com/JustHumanz/Go-simp/tools/database"
+
 //DynamicSvr for bilibili author
 type DynamicSvr struct {
 	Code    int    `json:"code"`
@@ -101,15 +103,13 @@ type DynamicSvr struct {
 //Memberst Vtuber member struct
 type Memberst struct {
 	ID         int64
+	VTName     string
 	YtChannel  string
 	SpaceID    int
-	VTName     string
-	Title      string
-	Desc       string
-	Thumb      string
-	VideoID    string
 	BiliAvatar string
-	YtAvatar   string
+	YtData     database.YtDbData
+	SpaceData  database.SpaceBiliDB
+	LiveData   database.LiveBiliDB
 	Msg        string
 	Msg1       string
 	Msg2       string

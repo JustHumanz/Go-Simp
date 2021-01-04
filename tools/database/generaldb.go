@@ -102,10 +102,10 @@ func GetMembers(GroupID int64) []Member {
 		Key  = "VtuberMember"
 	)
 	val := GeneralCache.LRange(ctx, Key, 0, -1).Val()
-	if len(val) == 0 {
-		err := LiveCache.Expire(ctx, Key, 3*time.Hour).Err()
-		if err != nil {
-			log.Error(err)
+	if len(val) < 180 {
+		rederr := GeneralCache.Del(ctx, Key).Err()
+		if rederr != nil {
+			log.Error(rederr)
 		}
 		rows, err := DB.Query(`call GetVtuberName(?)`, GroupID)
 		if err != nil {
@@ -122,6 +122,10 @@ func GetMembers(GroupID int64) []Member {
 				log.Error(err)
 			}
 			Data = append(Data, list)
+		}
+		err = LiveCache.Expire(ctx, Key, 3*time.Hour).Err()
+		if err != nil {
+			log.Error(err)
 		}
 	} else {
 		for _, result := range val {

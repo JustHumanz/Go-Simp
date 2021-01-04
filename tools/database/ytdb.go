@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
 	"errors"
 	"strconv"
@@ -16,15 +15,13 @@ func YtGetStatus(Group, Member int64, Status, Region string) ([]YtDbData, error)
 	var (
 		Data  []YtDbData
 		list  YtDbData
-		rows  *sql.Rows
 		limit int
-		err   error
 		ctx   = context.Background()
-		Key   = strconv.Itoa(int(Group*Member)) + Status + Region + "*"
+		Key   = strconv.Itoa(int(Group)) + strconv.Itoa(int(Member)) + Status + Region
 	)
 	val := LiveCache.LRange(ctx, Key, 0, -1).Val()
 	if len(val) == 0 {
-		err = LiveCache.Expire(ctx, Key, 20*time.Minute).Err()
+		err := LiveCache.Expire(ctx, Key, 20*time.Minute).Err()
 		if err != nil {
 			return nil, err
 		}
@@ -34,19 +31,11 @@ func YtGetStatus(Group, Member int64, Status, Region string) ([]YtDbData, error)
 		} else {
 			limit = 2525
 		}
-		if Region == "" {
-			rows, err = DB.Query(`call GetYt(?,?,?,?)`, Member, Group, limit, Status)
-			if err != nil {
-				return nil, err
-			}
-			defer rows.Close()
-		} else {
-			rows, err = DB.Query(`call GetYtByReg(?,?,?)`, Group, Status, Region)
-			if err != nil {
-				return nil, err
-			}
-			defer rows.Close()
+		rows, err := DB.Query(`call GetYt(?,?,?,?)`, Member, Group, limit, Status, Region)
+		if err != nil {
+			return nil, err
 		}
+		defer rows.Close()
 
 		for rows.Next() {
 			err = rows.Scan(&list.ID, &list.Group, &list.ChannelID, &list.NameEN, &list.NameJP, &list.YoutubeAvatar, &list.VideoID, &list.Title, &list.Thumb, &list.Desc, &list.Schedul, &list.End, &list.Region, &list.Viewers, &list.MemberID, &list.GroupID)
@@ -62,7 +51,7 @@ func YtGetStatus(Group, Member int64, Status, Region string) ([]YtDbData, error)
 		}
 	} else {
 		for _, result := range val {
-			err = json.Unmarshal([]byte(result), &list)
+			err := json.Unmarshal([]byte(result), &list)
 			if err != nil {
 				return nil, err
 			}
@@ -93,6 +82,14 @@ func (Data *YtDbData) InputYt(MemberID int64) error {
 	}
 
 	return nil
+}
+
+func (Data YtDbData) IsEmpty() bool {
+	if Data.VideoID != "" {
+		return false
+	} else {
+		return true
+	}
 }
 
 //Check new video or not

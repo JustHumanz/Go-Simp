@@ -82,7 +82,6 @@ func ValidName(Name string) Memberst {
 					YtChannel:  Member.YoutubeID,
 					SpaceID:    Member.BiliBiliID,
 					BiliAvatar: Member.BiliBiliAvatar,
-					YtAvatar:   Member.YoutubeAvatar,
 				}
 			}
 		}

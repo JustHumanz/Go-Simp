@@ -1,3 +1,8 @@
+v1.3.8
+- Fix redis malfunction
+- Change bilibili-fanart logic
+- Add youtube changer status in user handler
+
 v1.3.7
 - Change backend to micro service
 - Fix & change redis TTL
