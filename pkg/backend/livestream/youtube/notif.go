@@ -65,7 +65,7 @@ func (PushData *NotifStruct) SendNude() {
 					AddField("Type ", PushData.YtData.Type).
 					AddField("Start live in", durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(2).String()).
 					InlineAllFields().
-					AddField("Waiting", PushData.YtData.Viewers+" Simps in Room Chat").
+					AddField("Waiting", PushData.YtData.Viewers+" Simps in ChatRoom").
 					SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
 					SetColor(Color).MessageEmbed)
 				if err != nil {
@@ -184,7 +184,7 @@ func (PushData *NotifStruct) SendNude() {
 							AddField("Type ", PushData.YtData.Type).
 							AddField("Start live in", durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(2).String()).
 							InlineAllFields().
-							AddField("Waiting", PushData.YtData.Viewers+" Simps in Room Chat").
+							AddField("Waiting", PushData.YtData.Viewers+" Simps in ChatRoom").
 							SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
 							SetColor(Color).MessageEmbed)
 						if err != nil {
@@ -199,6 +199,5 @@ func (PushData *NotifStruct) SendNude() {
 				}
 			}
 		}
-		return
 	}
 }

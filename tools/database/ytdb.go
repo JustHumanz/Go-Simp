@@ -11,27 +11,24 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (ac YtDbData) MarshalBinary() ([]byte, error) {
-	return json.Marshal(ac)
-}
-
 //Get Youtube data from status
 func YtGetStatus(Group, Member int64, Status, Region string) ([]YtDbData, error) {
 	var (
-		Data    []YtDbData
-		list    YtDbData
-		rows    *sql.Rows
-		limit   int
-		err     error
-		ctx     = context.Background()
-		Key     = strconv.Itoa(int(Group+Member)) + Status + Region + "*"
-		counter = 1
+		Data  []YtDbData
+		list  YtDbData
+		rows  *sql.Rows
+		limit int
+		err   error
+		ctx   = context.Background()
+		Key   = strconv.Itoa(int(Group*Member)) + Status + Region + "*"
 	)
-	val, err := LiveCache.Keys(ctx, Key).Result()
-	if err != nil {
-		return nil, err
-	}
+	val := LiveCache.LRange(ctx, Key, 0, -1).Val()
 	if len(val) == 0 {
+		err = LiveCache.Expire(ctx, Key, 20*time.Minute).Err()
+		if err != nil {
+			return nil, err
+		}
+
 		if (Group != 0 && Status != "live") || (Member != 0 && Status == "past") {
 			limit = 3
 		} else {
@@ -52,31 +49,24 @@ func YtGetStatus(Group, Member int64, Status, Region string) ([]YtDbData, error)
 		}
 
 		for rows.Next() {
-			counter++
 			err = rows.Scan(&list.ID, &list.Group, &list.ChannelID, &list.NameEN, &list.NameJP, &list.YoutubeAvatar, &list.VideoID, &list.Title, &list.Thumb, &list.Desc, &list.Schedul, &list.End, &list.Region, &list.Viewers, &list.MemberID, &list.GroupID)
 			if err != nil {
 				return nil, err
 			}
 			list.Status = Status
 			Data = append(Data, list)
-			err := LiveCache.Set(ctx, Key+strconv.Itoa(counter), list, 20*time.Minute).Err()
+			err = LiveCache.LPush(ctx, Key, list).Err()
 			if err != nil {
 				return nil, err
 			}
 		}
 	} else {
-		if len(val) > 0 {
-			for _, key2 := range val {
-				val2, err := LiveCache.Get(ctx, key2).Result()
-				if err != nil {
-					return nil, err
-				}
-				err = json.Unmarshal([]byte(val2), &list)
-				if err != nil {
-					return nil, err
-				}
-				Data = append(Data, list)
+		for _, result := range val {
+			err = json.Unmarshal([]byte(result), &list)
+			if err != nil {
+				return nil, err
 			}
+			Data = append(Data, list)
 		}
 	}
 
