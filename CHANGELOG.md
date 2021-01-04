@@ -1,6 +1,7 @@
 v1.3.7
 - Change backend to micro service
 - Fix & change redis TTL
+- Update reminder logic
 
 v1.3.6
 - Fix youtube not send notif
