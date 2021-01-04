@@ -1,6 +1,7 @@
 package database
 
 import (
+	"encoding/json"
 	"time"
 )
 
@@ -268,4 +269,12 @@ type Guild struct {
 	ID   string
 	Name string
 	Join time.Time
+}
+
+func (ac YtDbData) MarshalBinary() ([]byte, error) {
+	return json.Marshal(ac)
+}
+
+func (ac Member) MarshalBinary() ([]byte, error) {
+	return json.Marshal(ac)
 }

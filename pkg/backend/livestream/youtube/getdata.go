@@ -117,7 +117,7 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 					YoutubeData.SendNude()
 				}
 
-			} else if !Data.Items[i].LiveDetails.EndTime.IsZero() && YoutubeData.YtData.Status == "upcoming" || YoutubeData.YtData.Status == "upcoming" && Data.Items[i].Snippet.VideoStatus == "none" {
+			} else if (!Data.Items[i].LiveDetails.EndTime.IsZero() && YoutubeData.YtData.Status == "upcoming") || (YoutubeData.YtData.Status == "upcoming" && Data.Items[i].Snippet.VideoStatus == "none") {
 				log.WithFields(log.Fields{
 					"VideoData ID": VideoID[i],
 					"Status":       "Past",
@@ -136,9 +136,9 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 					"VideoData ID": VideoID[i],
 					"Viwers past":  YoutubeData.YtData.Viewers,
 					"Viwers now":   Data.Items[i].Statistics.ViewCount,
-					"Status":       "Live",
+					"Status":       "past",
 				}).Info("Update viwers")
-				YoutubeData.YtData.UpdateYt("live")
+				YoutubeData.YtData.UpdateYt("past")
 
 			} else if Data.Items[i].Snippet.VideoStatus == "live" {
 				log.WithFields(log.Fields{

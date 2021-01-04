@@ -348,9 +348,6 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						} else if tmpvar2 > 65 {
 							s.ChannelMessageSend(m.ChannelID, "Can't set Reminder over than 65 Minutes")
 							return
-						} else if tmpvar2 == 0 {
-							ReminderUser = 0
-							s.ChannelMessageSend(m.ChannelID, "You disable reminder time")
 						} else {
 							if tmpvar2%5 != 0 && tmpvar2%10 != 0 {
 								s.ChannelMessageSend(m.ChannelID, "I do not recommend this number, set number with modulus 5 or 10")
@@ -647,9 +644,6 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						} else if tmpvar2 > 65 {
 							s.ChannelMessageSend(m.ChannelID, "Can't set Reminder over than 65 Minutes")
 							return
-						} else if tmpvar2 == 0 {
-							ReminderUser = 0
-							s.ChannelMessageSend(m.ChannelID, "You disable reminder time")
 						} else {
 							if tmpvar2%5 != 0 && tmpvar2%10 != 0 {
 								s.ChannelMessageSend(m.ChannelID, "I do not recommend this number, set number with modulus 5 or 10")
@@ -1001,9 +995,6 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					} else if tmpvar2 > 65 {
 						s.ChannelMessageSend(m.ChannelID, "Can't set Reminder over than 65 Minutes")
 						return
-					} else if tmpvar2 == 0 {
-						ReminderUser = 0
-						s.ChannelMessageSend(m.ChannelID, "You disable reminder time")
 					} else {
 						if tmpvar2%5 != 0 && tmpvar2%10 != 0 {
 							s.ChannelMessageSend(m.ChannelID, "I do not recommend this number, set number with modulus 5 or 10")

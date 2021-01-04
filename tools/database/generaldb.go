@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"math/rand"
 	"regexp"
@@ -18,9 +19,10 @@ import (
 
 //Public variable
 var (
-	DB          *sql.DB
-	FanartCache *redis.Client
-	LiveCache   *redis.Client
+	DB           *sql.DB
+	FanartCache  *redis.Client
+	LiveCache    *redis.Client
+	GeneralCache *redis.Client
 )
 
 //Start Database session
@@ -36,6 +38,12 @@ func Start(dbsession *sql.DB) {
 		Addr:     "redis:6379",
 		Password: "",
 		DB:       1,
+	})
+
+	GeneralCache = redis.NewClient(&redis.Options{
+		Addr:     "redis:6379",
+		Password: "",
+		DB:       2,
 	})
 	log.Info("Database module ready")
 }
@@ -87,21 +95,42 @@ func GetGroups() []Group {
 
 //GetMember Get data of Vtuber member
 func GetMembers(GroupID int64) []Member {
-	rows, err := DB.Query(`call GetVtuberName(?)`, GroupID)
-	if err != nil {
-		log.Error(err)
-	}
-	defer rows.Close()
-
-	var Data []Member
-	for rows.Next() {
-		var list Member
-		err = rows.Scan(&list.ID, &list.Name, &list.EnName, &list.JpName, &list.YoutubeID, &list.BiliBiliID, &list.BiliRoomID, &list.Region, &list.TwitterHashtags, &list.BiliBiliHashtags, &list.BiliBiliAvatar, &list.TwitterName, &list.YoutubeAvatar)
+	var (
+		list Member
+		Data []Member
+		ctx  = context.Background()
+		Key  = "VtuberMember"
+	)
+	val := GeneralCache.LRange(ctx, Key, 0, -1).Val()
+	if len(val) == 0 {
+		err := LiveCache.Expire(ctx, Key, 3*time.Hour).Err()
 		if err != nil {
 			log.Error(err)
 		}
-		Data = append(Data, list)
-
+		rows, err := DB.Query(`call GetVtuberName(?)`, GroupID)
+		if err != nil {
+			log.Error(err)
+		}
+		defer rows.Close()
+		for rows.Next() {
+			err = rows.Scan(&list.ID, &list.Name, &list.EnName, &list.JpName, &list.YoutubeID, &list.BiliBiliID, &list.BiliRoomID, &list.Region, &list.TwitterHashtags, &list.BiliBiliHashtags, &list.BiliBiliAvatar, &list.TwitterName, &list.YoutubeAvatar)
+			if err != nil {
+				log.Error(err)
+			}
+			err = GeneralCache.LPush(ctx, Key, list).Err()
+			if err != nil {
+				log.Error(err)
+			}
+			Data = append(Data, list)
+		}
+	} else {
+		for _, result := range val {
+			err := json.Unmarshal([]byte(result), &list)
+			if err != nil {
+				log.Error(err)
+			}
+			Data = append(Data, list)
+		}
 	}
 	return Data
 }
@@ -738,7 +767,7 @@ func GetUserList(ChannelIDDiscord int, Member int64) []string {
 				UserTagsList = append(UserTagsList, "<@&"+DiscordUserID+">")
 			}
 		}
-		err = LiveCache.Set(ctx, Key, strings.Join(UserTagsList, ","), 6*time.Minute).Err()
+		err = LiveCache.Set(ctx, Key, strings.Join(UserTagsList, ","), 12*time.Minute).Err()
 		if err != nil {
 			log.Error(err)
 		}
