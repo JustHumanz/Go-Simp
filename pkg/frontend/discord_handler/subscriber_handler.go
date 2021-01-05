@@ -23,15 +23,13 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if strings.HasPrefix(m.Content, Prefix) {
 		CommandArray := strings.Split(m.Content, " ")
 		if len(CommandArray) > 0 {
-			if CommandArray[0] == Prefix+Subscriber {
+			if CommandArray[0] == Prefix+Info {
 				for _, Group := range engine.GroupData {
 					for _, Mem := range strings.Split(CommandArray[1], ",") {
 						for _, Member := range database.GetMembers(Group.ID) {
 							if Mem == strings.ToLower(Member.Name) {
 								var (
-									embed  *discordgo.MessageEmbed
 									Avatar string
-									URL    = "https://www.youtube.com/channel/" + Member.YoutubeID + "?sub_confirmation=1"
 								)
 								SubsData, err := Member.GetSubsCount()
 								if err != nil {
@@ -42,7 +40,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								} else {
 									if Member.BiliRoomID != 0 {
 										Avatar = Member.BiliBiliAvatar
-										URL = "https://space.bilibili.com/" + strconv.Itoa(Member.BiliBiliID)
+										//URL = "https://space.bilibili.com/" + strconv.Itoa(Member.BiliBiliID)
 									} else {
 										Avatar = Member.YoutubeAvatar
 									}
@@ -51,36 +49,45 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								if err != nil {
 									log.Error(err)
 								}
+								YTSubs := "[Youtube](https://www.youtube.com/channel/" + Member.YoutubeID + "?sub_confirmation=1)"
+								BiliFollow := "[BiliBili](https://space.bilibili.com/" + strconv.Itoa(Member.BiliBiliID) + ")"
+								TwitterFollow := "[Twitter](https://twitter.com/" + Member.TwitterName + ")"
 								if SubsData.BiliFollow != 0 {
-									embed = engine.NewEmbed().
+									msg, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 										SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 										SetTitle(engine.FixName(Member.EnName, Member.JpName)).
 										SetImage(Avatar).
-										SetURL(URL).
-										AddField("Youtube subscriber", strconv.Itoa(SubsData.YtSubs)).
-										AddField("Youtube views", strconv.Itoa(SubsData.YtViews)).
-										AddField("Youtube videos", strconv.Itoa(SubsData.YtVideos)).
-										AddField("BiliBili followers", strconv.Itoa(SubsData.BiliFollow)).
-										AddField("BiliBili views", strconv.Itoa(SubsData.BiliViews)).
-										AddField("BiliBili videos", strconv.Itoa(SubsData.BiliVideos)).
-										AddField("Twitter followers", strconv.Itoa(SubsData.TwFollow)).
+										SetThumbnail(Group.IconURL).
+										AddField("Youtube subscriber", engine.NearestThousandFormat(float64(SubsData.YtSubs))).
+										AddField("Youtube views", engine.NearestThousandFormat(float64(SubsData.YtViews))).
+										AddField("Youtube videos", engine.NearestThousandFormat(float64(SubsData.YtVideos))).
 										InlineAllFields().
-										SetColor(Color).MessageEmbed
+										AddField("BiliBili followers", engine.NearestThousandFormat(float64(SubsData.YtViews))).
+										AddField("BiliBili views", engine.NearestThousandFormat(float64(SubsData.BiliViews))).
+										AddField("BiliBili videos", engine.NearestThousandFormat(float64(SubsData.BiliVideos))).
+										InlineAllFields().
+										AddField("Twitter followers", engine.NearestThousandFormat(float64(SubsData.TwFollow))).
+										AddField("Subscribe and follow", "<:yt:796023828723269662>\t"+YTSubs+"\t<:bili:796025336542265344>\t"+BiliFollow+"\t<:tw:796025611210588187>\t"+TwitterFollow).
+										SetColor(Color).MessageEmbed)
+									if err != nil {
+										log.Error(err, msg)
+									}
 								} else {
-									embed = engine.NewEmbed().
+									msg, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 										SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 										SetTitle(engine.FixName(Member.EnName, Member.JpName)).
 										SetImage(Avatar).
-										AddField("Youtube subscriber", strconv.Itoa(SubsData.YtSubs)).
-										AddField("Youtube views", strconv.Itoa(SubsData.YtViews)).
-										AddField("Youtube videos", strconv.Itoa(SubsData.YtVideos)).
-										AddField("Twitter followers", strconv.Itoa(SubsData.TwFollow)).
+										AddField("Youtube subscriber", YTSubs).
+										AddField("Youtube views", engine.NearestThousandFormat(float64(SubsData.YtViews))).
+										AddField("Youtube videos", engine.NearestThousandFormat(float64(SubsData.YtVideos))).
 										InlineAllFields().
-										SetColor(Color).MessageEmbed
-								}
-								msg, err := s.ChannelMessageSendEmbed(m.ChannelID, embed)
-								if err != nil {
-									log.Error(err, msg)
+										AddField("Twitter followers", TwitterFollow).
+										AddField("Twitter followers", engine.NearestThousandFormat(float64(SubsData.TwFollow))).
+										AddField("Subscribe and follow", "<:yt:796023828723269662>\t"+YTSubs+"\t<:tw:796025611210588187>\t"+TwitterFollow).
+										SetColor(Color).MessageEmbed)
+									if err != nil {
+										log.Error(err, msg)
+									}
 								}
 							}
 						}

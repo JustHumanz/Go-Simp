@@ -463,6 +463,8 @@ func AddData(Data Vtuber) {
 				NewVtuberNamesIndependen = append(NewVtuberNamesIndependen, "`"+VtuberMember.Name+"`")
 				VtuberMember.InputSubs(id)
 				//New.SendNotif(Bot)
+			} else if err != nil {
+				log.Error(err)
 			} else {
 				log.WithFields(log.Fields{
 					"VtuberGroup": "Independen",
@@ -563,7 +565,7 @@ func AddData(Data Vtuber) {
 				var tmp int64
 				row := db.QueryRow("SELECT id FROM VtuberMember WHERE VtuberName=? AND (Youtube_ID=? OR  BiliBili_SpaceID=? OR BiliBili_RoomID=?)", VtuberMember.Name, VtuberMember.YtID, VtuberMember.BiliBiliID, VtuberMember.BiliRoomID)
 				err := row.Scan(&tmp)
-				if err != nil || err == sql.ErrNoRows {
+				if err == sql.ErrNoRows {
 					stmt, err := db.Prepare("INSERT INTO VtuberMember (VtuberName,VtuberName_EN,VtuberName_JP,Hashtag,BiliBili_Hashtag,Youtube_ID,Youtube_Avatar,VtuberGroup_id,Region,BiliBili_SpaceID,BiliBili_RoomID,BiliBili_Avatar,Twitter_Username) values(?,?,?,?,?,?,?,?,?,?,?,?,?)")
 					if err != nil {
 						log.Error(err)
@@ -602,6 +604,8 @@ func AddData(Data Vtuber) {
 					NewVtuberNames = append(NewVtuberNames, "`"+VtuberMember.Name+"`")
 					VtuberMember.InputSubs(id)
 
+				} else if err != nil {
+					log.Error(err)
 				} else {
 					log.WithFields(log.Fields{
 						"VtuberGroup": Group.GroupName,

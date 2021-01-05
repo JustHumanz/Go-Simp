@@ -1,7 +1,6 @@
 package space
 
 import (
-	"strconv"
 	"strings"
 	"time"
 
@@ -36,7 +35,7 @@ func (Data CheckSctruct) SendNude() {
 						SetURL("https://www.bilibili.com/video/"+video.Bvid).
 						AddField("Type ", video.VideoType).
 						AddField("Duration ", video.Length).
-						AddField("Viwers ", strconv.Itoa(video.Play)).
+						AddField("Viwers ", engine.NearestThousandFormat(float64(video.Play))).
 						SetFooter(durafmt.Parse(time.Now().In(loc).Sub(time.Unix(int64(video.Created), 0).In(loc))).LimitFirstN(2).String()+" Ago", config.BiliBiliIMG).
 						InlineAllFields().
 						SetColor(Color).MessageEmbed)

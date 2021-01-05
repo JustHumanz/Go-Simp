@@ -1,7 +1,6 @@
 package main
 
 import (
-	"strconv"
 	"strings"
 	"time"
 
@@ -46,25 +45,25 @@ func CheckTwitter() {
 					if Twitter.FollowersCount >= 1000000 {
 						for i := 0; i < 10000001; i += 1000000 {
 							if i == Twitter.FollowersCount {
-								SendNotif(strconv.Itoa(i), strconv.Itoa(Twitter.TweetsCount))
+								SendNotif(engine.NearestThousandFormat(float64(i)), engine.NearestThousandFormat(float64(Twitter.TweetsCount)))
 							}
 						}
 					} else if Twitter.FollowersCount >= 100000 {
 						for i := 0; i < 1000001; i += 100000 {
 							if i == Twitter.FollowersCount {
-								SendNotif(strconv.Itoa(i), strconv.Itoa(Twitter.TweetsCount))
+								SendNotif(engine.NearestThousandFormat(float64(i)), engine.NearestThousandFormat(float64(Twitter.TweetsCount)))
 							}
 						}
 					} else if Twitter.FollowersCount >= 10000 {
 						for i := 0; i < 100001; i += 10000 {
 							if i == Twitter.FollowersCount {
-								SendNotif(strconv.Itoa(i), strconv.Itoa(Twitter.TweetsCount))
+								SendNotif(engine.NearestThousandFormat(float64(i)), engine.NearestThousandFormat(float64(Twitter.TweetsCount)))
 							}
 						}
 					} else if Twitter.FollowersCount >= 1000 {
 						for i := 0; i < 10001; i += 1000 {
 							if i == Twitter.FollowersCount {
-								SendNotif(strconv.Itoa(i), strconv.Itoa(Twitter.TweetsCount))
+								SendNotif(engine.NearestThousandFormat(float64(i)), engine.NearestThousandFormat(float64(Twitter.TweetsCount)))
 							}
 						}
 					}

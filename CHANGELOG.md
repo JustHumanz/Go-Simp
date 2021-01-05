@@ -1,3 +1,7 @@
+v1.4.9
+- Change Viwers/Online/Followers number to human readable
+- Change `subscribe` to `info`
+
 v1.3.8
 - Fix redis malfunction
 - Change bilibili-fanart logic

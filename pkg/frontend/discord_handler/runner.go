@@ -31,7 +31,7 @@ const (
 	RolesReminder = "roles reminder"
 	ChannelState  = "channel state"
 	VtuberData    = "vtuber data"
-	Subscriber    = "subscriber"
+	Info          = "info"
 	Upcoming      = "upcoming"
 	Past          = "past"
 	Live          = "live"

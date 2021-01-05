@@ -86,7 +86,7 @@ func CheckBiliBili() {
 										SetAuthor(Group.GroupName, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
 										SetTitle(engine.FixName(Name.EnName, Name.JpName)).
 										SetThumbnail(config.BiliBiliIMG).
-										SetDescription("Congratulation for "+strconv.Itoa(i)+" followers").
+										SetDescription("Congratulation for "+engine.NearestThousandFormat(float64(i))+" followers").
 										SetImage(Avatar).
 										AddField("Viewers", strconv.Itoa(bilistate.LikeView.Data.Archive.View)).
 										AddField("Videos", strconv.Itoa(bilistate.Videos)).
@@ -107,10 +107,10 @@ func CheckBiliBili() {
 										SetAuthor(Group.GroupName, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
 										SetTitle(engine.FixName(Name.EnName, Name.JpName)).
 										SetThumbnail(config.BiliBiliIMG).
-										SetDescription("Congratulation for "+strconv.Itoa(i)+" followers").
+										SetDescription("Congratulation for "+engine.NearestThousandFormat(float64(i))+" followers").
 										SetImage(Avatar).
-										AddField("Views", strconv.Itoa(bilistate.LikeView.Data.Archive.View)).
-										AddField("Videos", strconv.Itoa(bilistate.Videos)).
+										AddField("Views", engine.NearestThousandFormat(float64(bilistate.LikeView.Data.Archive.View))).
+										AddField("Videos", engine.NearestThousandFormat(float64(bilistate.Videos))).
 										SetURL("https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
 										InlineAllFields().
 										SetColor(Color).MessageEmbed, Group, Name.ID)

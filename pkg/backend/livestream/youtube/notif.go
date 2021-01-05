@@ -3,6 +3,7 @@ package youtube
 import (
 	"math"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -42,6 +43,11 @@ func (PushData *NotifStruct) SendNude() {
 		Timestart = time.Now()
 	}
 
+	Views, err := strconv.Atoi(PushData.YtData.Viewers)
+	if err != nil {
+		log.Error(err)
+	}
+	PushData.YtData.Viewers = engine.NearestThousandFormat(float64(Views))
 	if Status == "upcoming" {
 		Color, err := engine.GetColor(config.TmpDir, Avatar)
 		if err != nil {

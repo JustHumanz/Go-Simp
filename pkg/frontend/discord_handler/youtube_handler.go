@@ -1,6 +1,7 @@
 package discordhandler
 
 import (
+	"strconv"
 	"strings"
 	"time"
 
@@ -92,6 +93,11 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								for _, Member := range DataMember {
 									loc := engine.Zawarudo(Member.Region)
 									duration := durafmt.Parse(Member.Schedul.In(loc).Sub(time.Now().In(loc))).LimitFirstN(2)
+									Views, err := strconv.Atoi(Member.Viewers)
+									if err != nil {
+										log.Error(err)
+									}
+									Member.Viewers = engine.NearestThousandFormat(float64(Views))
 									SendEmbed(Memberst{
 										VTName: VTData.VTName,
 										YtData: Member,
@@ -114,17 +120,22 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							log.Error(err)
 						}
 						if GroupData != nil {
-							for _, Data := range GroupData {
-								loc := engine.Zawarudo(Data.Region)
-								duration := durafmt.Parse(Data.Schedul.In(loc).Sub(time.Now().In(loc))).LimitFirstN(2)
+							for _, Member := range GroupData {
+								loc := engine.Zawarudo(Member.Region)
+								duration := durafmt.Parse(Member.Schedul.In(loc).Sub(time.Now().In(loc))).LimitFirstN(2)
+								Views, err := strconv.Atoi(Member.Viewers)
+								if err != nil {
+									log.Error(err)
+								}
+								Member.Viewers = engine.NearestThousandFormat(float64(Views))
 								SendEmbed(Memberst{
-									VTName:    engine.FixName(Data.NameEN, Data.NameJP),
-									YtData:    Data,
+									VTName:    engine.FixName(Member.NameEN, Member.NameJP),
+									YtData:    Member,
 									Msg:       "Start in",
 									Msg1:      duration.String(),
-									Msg2:      Data.Schedul.In(loc).Format(time.RFC822),
-									Msg3:      Data.Viewers + " simps waiting in Room Chat",
-									YtChannel: Data.ChannelID,
+									Msg2:      Member.Schedul.In(loc).Format(time.RFC822),
+									Msg3:      Member.Viewers + " simps waiting in Room Chat",
+									YtChannel: Member.ChannelID,
 								})
 							}
 						} else {
@@ -162,9 +173,12 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								for _, Member := range DataMember {
 									loc := engine.Zawarudo(Member.Region)
 									expiresAt := time.Now().In(loc)
-									diff := expiresAt.In(loc).Sub(Member.Schedul)
-									duration := durafmt.Parse(diff).LimitFirstN(2)
-
+									duration := durafmt.Parse(expiresAt.In(loc).Sub(Member.Schedul)).LimitFirstN(2)
+									Views, err := strconv.Atoi(Member.Viewers)
+									if err != nil {
+										log.Error(err)
+									}
+									Member.Viewers = engine.NearestThousandFormat(float64(Views))
 									SendEmbed(Memberst{
 										VTName: VTData.VTName,
 										YtData: Member,
@@ -186,18 +200,22 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							log.Error(err)
 						}
 						if GroupData != nil {
-							for _, Data := range GroupData {
-								loc := engine.Zawarudo(Data.Region)
-								diff := time.Now().In(loc).Sub(Data.Schedul.In(loc))
-								duration := durafmt.Parse(diff).LimitFirstN(2)
+							for _, Member := range GroupData {
+								loc := engine.Zawarudo(Member.Region)
+								duration := durafmt.Parse(time.Now().In(loc).Sub(Member.Schedul.In(loc))).LimitFirstN(2)
+								Views, err := strconv.Atoi(Member.Viewers)
+								if err != nil {
+									log.Error(err)
+								}
+								Member.Viewers = engine.NearestThousandFormat(float64(Views))
 								SendEmbed(Memberst{
-									VTName:    engine.FixName(Data.NameEN, Data.NameJP),
-									YtData:    Data,
+									VTName:    engine.FixName(Member.NameEN, Member.NameJP),
+									YtData:    Member,
 									Msg:       "Start in",
 									Msg1:      duration.String() + " Ago",
-									Msg2:      Data.Schedul.In(loc).Format(time.RFC822),
-									Msg3:      Data.Viewers + " Simps",
-									YtChannel: Data.ChannelID,
+									Msg2:      Member.Schedul.In(loc).Format(time.RFC822),
+									Msg3:      Member.Viewers + " Simps",
+									YtChannel: Member.ChannelID,
 								})
 							}
 						} else {
@@ -218,7 +236,6 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 		} else if strings.ToLower(CommandArray[0]) == Prefix+"last" || strings.ToLower(CommandArray[0]) == Prefix+Past {
 			if len(CommandArray) > 1 {
 				FindGroupArry := strings.Split(strings.TrimSpace(CommandArray[1]), ",")
-
 				for i := 0; i < len(FindGroupArry); i++ {
 					VTuberGroup, err := FindGropName(FindGroupArry[i])
 					if err != nil {
@@ -234,28 +251,32 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								log.Error(err)
 							}
 							if DataMember != nil {
-								for z := 0; z < len(DataMember); z++ {
-									Color, err := engine.GetColor(config.TmpDir, DataMember[z].Thumb)
+								for _, Member := range DataMember {
+									Color, err := engine.GetColor(config.TmpDir, Member.Thumb)
 									if err != nil {
 										log.Error(err)
 									}
-									loc := engine.Zawarudo(DataMember[z].Region)
-									diff := time.Now().In(loc).Sub(DataMember[z].Schedul)
-									duration := durafmt.Parse(diff).LimitFirstN(2)
-									diff2 := DataMember[z].End.In(loc).Sub(DataMember[z].Schedul)
-									durationlive := durafmt.Parse(diff2).LimitFirstN(2)
+									Views, err := strconv.Atoi(Member.Viewers)
+									if err != nil {
+										log.Error(err)
+									}
+									Member.Viewers = engine.NearestThousandFormat(float64(Views))
+
+									loc := engine.Zawarudo(Member.Region)
+									duration := durafmt.Parse(time.Now().In(loc).Sub(Member.Schedul)).LimitFirstN(2)
+									durationlive := durafmt.Parse(Member.End.In(loc).Sub(Member.Schedul)).LimitFirstN(2)
 									_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 										SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 										SetTitle(VTData.VTName).
-										SetDescription(DataMember[z].Title).
-										SetImage(DataMember[z].Thumb).
+										SetDescription(Member.Title).
+										SetImage(Member.Thumb).
 										SetThumbnail(VTData.YtData.YoutubeAvatar).
-										SetURL("https://www.youtube.com/watch?v="+DataMember[z].VideoID).
+										SetURL("https://www.youtube.com/watch?v="+Member.VideoID).
 										AddField("Live duration", durationlive.String()).
 										AddField("Live ended", duration.String()+" Ago").
 										InlineAllFields().
-										AddField("Viewers", DataMember[z].Viewers).
-										SetFooter(DataMember[z].Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
+										AddField("Viewers", Member.Viewers).
+										SetFooter(Member.Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 										SetColor(Color).MessageEmbed)
 									if err != nil {
 										log.Error(err)
@@ -286,27 +307,32 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 
 						if Data != nil {
-							for ii := 0; ii < len(Data); ii++ {
-								Color, err := engine.GetColor(config.TmpDir, Data[ii].Thumb)
+							for _, Member := range Data {
+								Color, err := engine.GetColor(config.TmpDir, Member.Thumb)
 								if err != nil {
 									log.Error(err)
 								}
+								Views, err := strconv.Atoi(Member.Viewers)
+								if err != nil {
+									log.Error(err)
+								}
+								Member.Viewers = engine.NearestThousandFormat(float64(Views))
 
-								loc := engine.Zawarudo(Data[ii].Region)
-								duration := durafmt.Parse(time.Now().In(loc).Sub(Data[ii].Schedul.In(loc))).LimitFirstN(2)
-								durationlive := durafmt.Parse(Data[ii].End.In(loc).Sub(Data[ii].Schedul)).LimitFirstN(2)
+								loc := engine.Zawarudo(Member.Region)
+								duration := durafmt.Parse(time.Now().In(loc).Sub(Member.Schedul.In(loc))).LimitFirstN(2)
+								durationlive := durafmt.Parse(Member.End.In(loc).Sub(Member.Schedul)).LimitFirstN(2)
 								_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-									SetTitle(engine.FixName(Data[ii].NameEN, Data[ii].NameJP)).
-									SetThumbnail(Data[ii].YoutubeAvatar).
-									SetDescription(Data[ii].Title).
-									SetImage(Data[ii].Thumb).
-									SetURL("https://www.youtube.com/watch?v="+Data[ii].VideoID).
+									SetTitle(engine.FixName(Member.NameEN, Member.NameJP)).
+									SetThumbnail(Member.YoutubeAvatar).
+									SetDescription(Member.Title).
+									SetImage(Member.Thumb).
+									SetURL("https://www.youtube.com/watch?v="+Member.VideoID).
 									AddField("Live duration", durationlive.String()).
 									AddField("Live ended", duration.String()+" Ago").
 									InlineAllFields().
-									AddField("Viewers", Data[ii].Viewers).
-									SetFooter(Data[ii].Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
+									AddField("Viewers", Member.Viewers).
+									SetFooter(Member.Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 									SetColor(Color).MessageEmbed)
 								if err != nil {
 									log.Error(err)

@@ -46,7 +46,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 										SetImage(DataMember.Thumbnail).
 										SetURL("https://live.bilibili.com/"+strconv.Itoa(DataMember.LiveRoomID)).
 										AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-										AddField("Online", strconv.Itoa(DataMember.Online)).
+										AddField("Online", engine.NearestThousandFormat(float64(DataMember.Online))).
 										SetColor(Color).
 										SetFooter(DataMember.ScheduledStart.In(loc).Format(time.RFC822)).MessageEmbed)
 									if err != nil {
@@ -80,7 +80,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetImage(DataGroup.Thumbnail).
 									SetURL("https://live.bilibili.com/"+strconv.Itoa(DataGroup.LiveRoomID)).
 									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-									AddField("Online", strconv.Itoa(DataGroup.Online)).
+									AddField("Online", engine.NearestThousandFormat(float64(DataGroup.Online))).
 									SetColor(Color).
 									SetFooter(DataGroup.ScheduledStart.In(loc).Format(time.RFC822)).MessageEmbed)
 								if err != nil {
@@ -123,7 +123,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 										SetImage(DataMember.Thumbnail).
 										SetURL("https://live.bilibili.com/"+strconv.Itoa(DataMember.LiveRoomID)).
 										AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-										AddField("Online", strconv.Itoa(DataMember.Online)).
+										AddField("Online", engine.NearestThousandFormat(float64(DataMember.Online))).
 										SetColor(Color).
 										SetFooter(DataMember.ScheduledStart.In(loc).Format(time.RFC822)).MessageEmbed)
 									if err != nil {
@@ -155,7 +155,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								SetImage(LiveBili.Thumbnail).
 								SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveBili.LiveRoomID)).
 								AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-								AddField("Online", strconv.Itoa(LiveBili.Online)).
+								AddField("Online", engine.NearestThousandFormat(float64(LiveBili.Online))).
 								SetColor(Color).
 								SetFooter(LiveBili.ScheduledStart.In(loc).Format(time.RFC822)).MessageEmbed)
 							if err != nil {
@@ -207,7 +207,7 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 									AddField("Type", DataMember.Type).
 									AddField("Video uploaded", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
 									AddField("Duration", DataMember.Length).
-									AddField("Viewers now", strconv.Itoa(DataMember.Viewers)).
+									AddField("Viewers now", engine.NearestThousandFormat(float64(DataMember.Viewers))).
 									SetFooter(DataMember.UploadDate.In(loc).Format(time.RFC822), config.BiliBiliIMG).
 									InlineAllFields().
 									SetColor(Color).MessageEmbed)
@@ -247,7 +247,7 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 								AddField("Type", DataMember.Type).
 								AddField("Video uploaded", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
 								AddField("Duration", DataMember.Length).
-								AddField("Viewers now", strconv.Itoa(DataMember.Viewers)).
+								AddField("Viewers now", engine.NearestThousandFormat(float64(DataMember.Viewers))).
 								SetFooter(DataMember.UploadDate.In(loc).Format(time.RFC822), config.BiliBiliIMG).
 								InlineAllFields().
 								SetColor(Color).MessageEmbed)

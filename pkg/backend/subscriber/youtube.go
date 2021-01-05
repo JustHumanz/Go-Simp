@@ -65,25 +65,25 @@ func CheckYoutube() {
 								if YTSubscriberCount >= 1000000 {
 									for i := 0; i < 10000001; i += 1000000 {
 										if i == YTSubscriberCount && !Item.Statistics.HiddenSubscriberCount {
-											SendNotif(strconv.Itoa(i))
+											SendNotif(engine.NearestThousandFormat(float64(i)))
 										}
 									}
 								} else if YTSubscriberCount >= 100000 {
 									for i := 0; i < 1000001; i += 100000 {
 										if i == YTSubscriberCount && !Item.Statistics.HiddenSubscriberCount {
-											SendNotif(strconv.Itoa(i))
+											SendNotif(engine.NearestThousandFormat(float64(i)))
 										}
 									}
 								} else if YTSubscriberCount >= 10000 {
 									for i := 0; i < 100001; i += 10000 {
 										if i == YTSubscriberCount && !Item.Statistics.HiddenSubscriberCount {
-											SendNotif(strconv.Itoa(i))
+											SendNotif(engine.NearestThousandFormat(float64(i)))
 										}
 									}
 								} else if YTSubscriberCount >= 1000 {
 									for i := 0; i < 10001; i += 1000 {
 										if i == YTSubscriberCount && !Item.Statistics.HiddenSubscriberCount {
-											SendNotif(strconv.Itoa(i))
+											SendNotif(engine.NearestThousandFormat(float64(i)))
 										}
 									}
 								}

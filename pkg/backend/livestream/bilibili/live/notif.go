@@ -11,16 +11,12 @@ import (
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 
 	"github.com/hako/durafmt"
-	log "github.com/sirupsen/logrus"
 )
 
 //push to discord channel
-
-//make a embed
 func (Data *LiveBili) Crotttt(GroupIcon string) error {
 	BiliBiliAccount := "https://space.bilibili.com/" + strconv.Itoa(Data.Member.BiliBiliID)
 	BiliBiliURL := "https://live.bilibili.com/" + strconv.Itoa(Data.RoomData.LiveRoomID)
-	Online := strconv.Itoa(Data.RoomData.Online)
 	Color, err := engine.GetColor(config.TmpDir, Data.RoomData.Thumbnail)
 	if err != nil {
 		return err
@@ -35,7 +31,7 @@ func (Data *LiveBili) Crotttt(GroupIcon string) error {
 			SetImage(Data.RoomData.Thumbnail).
 			SetURL(BiliBiliURL).
 			AddField("Start live", durafmt.Parse(time.Now().In(loc).Sub(Data.RoomData.ScheduledStart.In(loc))).LimitFirstN(2).String()+" Ago").
-			AddField("Online", Online).
+			AddField("Online", engine.NearestThousandFormat(float64(Data.RoomData.Online))).
 			InlineAllFields().
 			//AddField("Rank",Data).
 			SetFooter(Data.RoomData.ScheduledStart.In(loc).Format(time.RFC822), config.BiliBiliIMG).
@@ -49,13 +45,13 @@ func (Data *LiveBili) Crotttt(GroupIcon string) error {
 	for i, DiscordChannel := range DiscordChannelID {
 		UserTagsList := database.GetUserList(id[i], MemberID)
 		if UserTagsList != nil {
-			msg, err := Bot.ChannelMessageSendEmbed(DiscordChannel, Data.Embed)
+			_, err := Bot.ChannelMessageSendEmbed(DiscordChannel, Data.Embed)
 			if err != nil {
-				log.Error(msg, err)
+				return err
 			}
-			msg, err = Bot.ChannelMessageSend(DiscordChannel, "UserTags: "+strings.Join(UserTagsList, " "))
+			_, err = Bot.ChannelMessageSend(DiscordChannel, "UserTags: "+strings.Join(UserTagsList, " "))
 			if err != nil {
-				log.Error(msg, err)
+				return err
 			}
 		}
 	}
