@@ -31,7 +31,7 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 			//Find hashtags members
 			for _, MemberHashtag := range Data {
 				for _, TweetHashtag := range tweet.Hashtags {
-					if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) && MemberHashtag.EnName != "Kaichou" {
+					if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) && !tweet.IsQuoted && !tweet.IsReply && MemberHashtag.EnName != "Kaichou" {
 						_, err := rdb.Get(ctx, tweet.ID).Result()
 						if err == redis.Nil {
 							New, err := MemberHashtag.CheckMemberFanart(tweet)
@@ -59,15 +59,19 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 
 	if len(Data) > 7 {
 		for i, Member := range Data {
-			Hashtags = append(Hashtags, Member.TwitterHashtags)
-			if (i%5 == 0) || (i == len(Data)-1) {
-				CurlTwitter(Hashtags)
-				Hashtags = nil
+			if Member.TwitterHashtags != "" {
+				Hashtags = append(Hashtags, Member.TwitterHashtags)
+				if (i%5 == 0) || (i == len(Data)-1) {
+					CurlTwitter(Hashtags)
+					Hashtags = nil
+				}
 			}
 		}
 	} else {
 		for _, Member := range Data {
-			Hashtags = append(Hashtags, Member.TwitterHashtags)
+			if Member.TwitterHashtags != "" {
+				Hashtags = append(Hashtags, Member.TwitterHashtags)
+			}
 		}
 		CurlTwitter(Hashtags)
 	}

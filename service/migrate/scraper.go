@@ -24,7 +24,7 @@ func TwitterFanart() {
 	scraper.SetProxy(config.BotConf.MultiTOR)
 	scraper.SetSearchMode(twitterscraper.SearchLatest)
 	for _, Group := range database.GetGroups() {
-		_, err := twitter.CreatePayload(database.GetHashtag(Group.ID), Group, scraper, 100)
+		_, err := twitter.CreatePayload(database.GetMembers(Group.ID), Group, scraper, 100)
 		if err != nil {
 			log.WithFields(log.Fields{
 				"Group": Group.GroupName,

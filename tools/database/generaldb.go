@@ -48,30 +48,6 @@ func Start(dbsession *sql.DB) {
 	log.Info("Database module ready")
 }
 
-//GetHashtag Get Twitter hashtag by group
-func GetHashtag(GroupID int64) []Member {
-	rows, err := DB.Query(`SELECT VtuberMember.id,VtuberName,VtuberName_JP,Hashtag FROM VtuberMember INNER Join VtuberGroup ON VtuberGroup.id = VtuberMember.VtuberGroup_id WHERE Hashtag !="" AND VtuberGroup.id =?`, GroupID)
-	if err != nil {
-		log.Error(err)
-	}
-	defer rows.Close()
-
-	var (
-		Data []Member
-		list Member
-	)
-	for rows.Next() {
-		err = rows.Scan(&list.ID, &list.EnName, &list.JpName, &list.TwitterHashtags)
-		if err != nil {
-			log.Error(err)
-		}
-
-		Data = append(Data, list)
-
-	}
-	return Data
-}
-
 //GetGroup Get all vtuber groupData
 func GetGroups() []Group {
 	rows, err := DB.Query(`SELECT id,VtuberGroupName,VtuberGroupIcon FROM VtuberGroup`)

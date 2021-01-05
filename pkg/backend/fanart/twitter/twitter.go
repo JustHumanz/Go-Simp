@@ -31,8 +31,7 @@ func CheckNew() {
 		log.Error(err)
 	}
 	for _, GroupData := range engine.GroupData {
-		Members := database.GetHashtag(GroupData.ID)
-		Fanarts, err := CreatePayload(Members, GroupData, Scraper, config.BotConf.LimitConf.TwitterFanart)
+		Fanarts, err := CreatePayload(database.GetMembers(GroupData.ID), GroupData, Scraper, config.BotConf.LimitConf.TwitterFanart)
 		if err != nil {
 			log.WithFields(log.Fields{
 				"Group": GroupData.GroupName,
