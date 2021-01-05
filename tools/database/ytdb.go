@@ -21,11 +21,6 @@ func YtGetStatus(Group, Member int64, Status, Region string) ([]YtDbData, error)
 	)
 	val := LiveCache.LRange(ctx, Key, 0, -1).Val()
 	if len(val) == 0 {
-		err := LiveCache.Expire(ctx, Key, 20*time.Minute).Err()
-		if err != nil {
-			return nil, err
-		}
-
 		if (Group != 0 && Status != "live") || (Member != 0 && Status == "past") {
 			limit = 3
 		} else {
@@ -48,6 +43,10 @@ func YtGetStatus(Group, Member int64, Status, Region string) ([]YtDbData, error)
 			if err != nil {
 				return nil, err
 			}
+		}
+		err = LiveCache.Expire(ctx, Key, 20*time.Minute).Err()
+		if err != nil {
+			return nil, err
 		}
 	} else {
 		for _, result := range val {

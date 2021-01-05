@@ -25,7 +25,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 				Color, err := engine.GetColor(config.TmpDir, YTData.Thumb)
 				if err != nil {
 					log.Error(err)
-					if strings.HasPrefix(err.Error(), "404") {
+					if err.Error() == "Server Error,status get 404 Not Found" {
 						YTData.UpdateYt("private")
 					}
 				}
