@@ -30,32 +30,31 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 
-				if YTData.VideoID != "" {
-					_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-						SetTitle(Data.VTName).
-						SetDescription(YTData.Title).
-						SetImage(YTData.Thumb).
-						SetThumbnail(YTData.YoutubeAvatar).
-						SetURL("https://www.youtube.com/watch?v="+YTData.VideoID).
-						AddField(Data.Msg, Data.Msg1).
-						AddField("Viewers", Data.Msg3).
-						InlineAllFields().
-						AddField("Type", engine.YtFindType(YTData.Title)).
-						SetFooter(Data.Msg2, config.YoutubeIMG).
-						SetColor(Color).MessageEmbed)
-					if err != nil {
-						log.Error(err)
-					}
-				} else {
-					_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-						SetTitle(Data.VTName).
-						SetDescription(Data.Msg).
-						SetImage(config.WorryIMG).MessageEmbed)
-					if err != nil {
-						log.Error(err)
-					}
+				_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+					SetTitle(Data.VTName).
+					SetDescription(YTData.Title).
+					SetImage(YTData.Thumb).
+					SetThumbnail(YTData.YoutubeAvatar).
+					SetURL("https://www.youtube.com/watch?v="+YTData.VideoID).
+					AddField(Data.Msg, Data.Msg1).
+					AddField("Viewers", Data.Msg3).
+					InlineAllFields().
+					AddField("Type", engine.YtFindType(YTData.Title)).
+					SetFooter(Data.Msg2, config.YoutubeIMG).
+					SetColor(Color).MessageEmbed)
+				if err != nil {
+					log.Error(err)
+				}
+
+			} else {
+				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+					SetTitle(Data.VTName).
+					SetDescription(Data.Msg).
+					SetImage(config.WorryIMG).MessageEmbed)
+				if err != nil {
+					log.Error(err)
 				}
 			}
 		}
