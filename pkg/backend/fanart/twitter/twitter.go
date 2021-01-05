@@ -35,6 +35,7 @@ func CheckNew() {
 	}
 	var w sync.WaitGroup
 	for _, GroupData := range engine.GroupData {
+		w.Add(1)
 		go func(wg *sync.WaitGroup, Group database.Group) {
 			defer wg.Done()
 			Fanarts, err := CreatePayload(database.GetMembers(Group.ID), Group, Scraper, config.BotConf.LimitConf.TwitterFanart)
