@@ -31,7 +31,7 @@ func YtGetStatus(Group, Member int64, Status, Region string) ([]YtDbData, error)
 		} else {
 			limit = 2525
 		}
-		rows, err := DB.Query(`call GetYt(?,?,?,?)`, Member, Group, limit, Status, Region)
+		rows, err := DB.Query(`call GetYt(?,?,?,?,?)`, Member, Group, limit, Status, Region)
 		if err != nil {
 			return nil, err
 		}
