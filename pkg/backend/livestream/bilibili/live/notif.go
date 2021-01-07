@@ -49,7 +49,7 @@ func (Data *LiveBili) Crotttt(GroupIcon string) error {
 			if err != nil {
 				return err
 			}
-			_, err = Bot.ChannelMessageSend(DiscordChannel, Data.Member.Name+"Live right now\nUserTags: "+strings.Join(UserTagsList, " "))
+			_, err = Bot.ChannelMessageSend(DiscordChannel, "`"+Data.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " "))
 			if err != nil {
 				return err
 			}
