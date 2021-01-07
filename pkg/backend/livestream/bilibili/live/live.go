@@ -21,7 +21,7 @@ var (
 func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
 	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
 	Bot = BotInit
-	cronInit.AddFunc("@every 0h7m0s", CheckLiveSchedule)
+	cronInit.AddFunc("@every 0h7m30s", CheckLiveSchedule)
 	log.Info("Enable live bilibili module")
 }
 
@@ -31,7 +31,7 @@ func CheckLiveSchedule() {
 	for _, Group := range engine.GroupData {
 		wg := new(sync.WaitGroup)
 		if Group.GroupName != "Hololive" {
-			for i, Member := range database.GetMembers(Group.ID) {
+			for _, Member := range database.GetMembers(Group.ID) {
 				wg.Add(1)
 				go func(Group database.Group, Member database.Member, wg *sync.WaitGroup) {
 					defer wg.Done()
@@ -106,9 +106,6 @@ func CheckLiveSchedule() {
 						}
 					}
 				}(Group, Member, wg)
-				if i%5 == 0 {
-					time.Sleep(3 * time.Second)
-				}
 			}
 		}
 		wg.Wait()

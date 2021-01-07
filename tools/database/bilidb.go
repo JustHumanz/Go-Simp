@@ -34,6 +34,13 @@ func (Data *LiveBiliDB) UpdateLiveBili(MemberID int64) {
 	}
 }
 
+func SetRoomToLive(MemberID int64) {
+	_, err := DB.Exec(`Update LiveBiliBili set Status='Live' Where VtuberMember_id=?`, MemberID)
+	if err != nil {
+		log.Error(err)
+	}
+}
+
 //GetTBiliBili Check new post on TBiliBili
 func GetTBiliBili(DynamicID string) bool {
 	var tmp int64

@@ -1,3 +1,8 @@
+v1.4.11
+- Bring back module info
+- Change reminder interval
+- Add Youtube live bilibili checker 
+
 v1.4.10
 - Update discordgo
 - Change `EnName` to `Name` in fanart scraper

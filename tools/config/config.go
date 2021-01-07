@@ -32,8 +32,9 @@ var (
 		MultiTOR       string
 		KoFiLink       string
 	*/
-	BotConf ConfigFile
-	TmpDir  = "/tmp/tmp.img"
+	ModuleList = []string{"LiveBiliBili", "SpaceBiliBili", "Youtube", "TwitterFanart", "BiliBiliFanart", "YoutubeSubscriber", "BiliBiliFollowers", "TwitterFollowers"}
+	BotConf    ConfigFile
+	TmpDir     = "/tmp/tmp.img"
 )
 
 const (

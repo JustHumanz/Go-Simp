@@ -5,7 +5,7 @@ import (
 	"os/signal"
 	"runtime/pprof"
 
-	"github.com/prometheus/common/log"
+	log "github.com/sirupsen/logrus"
 )
 
 func Run() {

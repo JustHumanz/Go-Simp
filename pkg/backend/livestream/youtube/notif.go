@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/JustHumanz/Go-simp/pkg/backend/livestream/bilibili/live"
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
@@ -90,6 +91,17 @@ func (PushData *NotifStruct) SendNude() {
 		if err != nil {
 			log.Error(err)
 		}
+		Bili := false
+		if PushData.Member.BiliRoomID != 0 {
+			LiveBili, err := live.GetRoomStatus(PushData.Member.BiliRoomID)
+			if err != nil {
+				log.Error(err)
+			}
+			if LiveBili.CheckScheduleLive() {
+				Bili = true
+				database.SetRoomToLive(PushData.Member.ID)
+			}
+		}
 		id, DiscordChannelID := database.ChannelTag(PushData.Member.ID, 2, "")
 		for i := 0; i < len(DiscordChannelID); i++ {
 			ChannelState := database.DiscordChannel{
@@ -108,7 +120,7 @@ func (PushData *NotifStruct) SendNude() {
 					AddField("Type ", PushData.YtData.Type).
 					AddField("Start live", durafmt.Parse(expiresAt.Sub(Timestart.In(loc))).LimitFirstN(2).String()+" Ago").
 					InlineAllFields().
-					AddField("Viewers", PushData.YtData.Viewers).
+					AddField("Viewers", PushData.YtData.Viewers+" simps").
 					SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
 					SetColor(Color).MessageEmbed)
 				if err != nil {
@@ -118,7 +130,11 @@ func (PushData *NotifStruct) SendNude() {
 						log.Error(err)
 					}
 				}
-				msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "`"+PushData.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " "))
+				if Bili {
+					msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "`"+PushData.Member.Name+"` Live right now at BiliBili And Youtube\nUserTags: "+strings.Join(UserTagsList, " "))
+				} else {
+					msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "`"+PushData.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " "))
+				}
 			}
 		}
 
@@ -176,7 +192,7 @@ func (PushData *NotifStruct) SendNude() {
 			}
 			k := 0
 			for ii := 0; ii < 70; ii += 10 {
-				k = ii + 6
+				k = ii + 5
 				if UpcominginMinutes > ii && UpcominginMinutes < k {
 					UserTagsList := database.GetUserReminderList(id[i], PushData.Member.ID, k)
 					LiveCount := durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(1).String()

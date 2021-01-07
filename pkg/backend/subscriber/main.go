@@ -45,16 +45,19 @@ func main() {
 	if *Youtube {
 		c.AddFunc("@every 1h0m0s", CheckYoutube)
 		log.Info("Add youtube subscriber to cronjob")
+		database.ModuleInfo("YoutubeSubscriber")
 	}
 
 	if *BiliBili {
 		c.AddFunc("@every 0h30m0s", CheckBiliBili)
 		log.Info("Add bilibili followers to cronjob")
+		database.ModuleInfo("BiliBiliFollowers")
 	}
 
 	if *Twitter {
 		c.AddFunc("@every 0h15m0s", CheckTwitter)
 		log.Info("Add twitter followers to cronjob")
+		database.ModuleInfo("TwitterFollowers")
 	}
 	runfunc.Run()
 }

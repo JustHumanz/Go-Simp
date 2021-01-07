@@ -39,10 +39,12 @@ func main() {
 
 	if *Twitter {
 		twitter.Start(Bot, c)
+		database.ModuleInfo("TwitterFanart")
 	}
 
 	if *BiliBili {
 		bilibili.Start(Bot, c)
+		database.ModuleInfo("BiliBiliFanart")
 	}
 	runfunc.Run()
 }

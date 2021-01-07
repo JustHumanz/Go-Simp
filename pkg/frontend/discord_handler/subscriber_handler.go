@@ -29,11 +29,15 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						for _, Member := range database.GetMembers(Group.ID) {
 							if Mem == strings.ToLower(Member.Name) {
 								var (
-									Avatar string
+									Avatar    string
+									GroupIcon string
 								)
 								SubsData, err := Member.GetSubsCount()
 								if err != nil {
 									log.Error(err)
+								}
+								if Group.GroupName != "Independen" {
+									GroupIcon = Group.IconURL
 								}
 								if gacha() {
 									Avatar = Member.YoutubeAvatar
@@ -57,7 +61,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 										SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 										SetTitle(engine.FixName(Member.EnName, Member.JpName)).
 										SetImage(Avatar).
-										SetThumbnail(Group.IconURL).
+										SetThumbnail(GroupIcon).
 										AddField("Youtube subscriber", engine.NearestThousandFormat(float64(SubsData.YtSubs))).
 										AddField("Youtube views", engine.NearestThousandFormat(float64(SubsData.YtViews))).
 										AddField("Youtube videos", engine.NearestThousandFormat(float64(SubsData.YtVideos))).
@@ -80,13 +84,17 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 										SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 										SetTitle(engine.FixName(Member.EnName, Member.JpName)).
 										SetImage(Avatar).
-										AddField("Youtube subscriber", YTSubs).
+										SetThumbnail(GroupIcon).
+										AddField("Youtube subscriber", engine.NearestThousandFormat(float64(SubsData.YtSubs))).
 										AddField("Youtube views", engine.NearestThousandFormat(float64(SubsData.YtViews))).
 										AddField("Youtube videos", engine.NearestThousandFormat(float64(SubsData.YtVideos))).
 										InlineAllFields().
-										AddField("Twitter followers", TwitterFollow).
 										AddField("Twitter followers", engine.NearestThousandFormat(float64(SubsData.TwFollow))).
-										AddField("Subscribe and follow", "<:yt:796023828723269662>\t"+YTSubs+"\t<:tw:796025611210588187>\t"+TwitterFollow).
+										RemoveInline().
+										AddField("<:yt:796023828723269662>", YTSubs).
+										AddField("<:bili:796025336542265344>", BiliFollow).
+										AddField("<:tw:796025611210588187>", TwitterFollow).
+										InlineAllFields().
 										SetColor(Color).MessageEmbed)
 									if err != nil {
 										log.Error(err, msg)

@@ -28,7 +28,6 @@ func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
 	cronInit.AddFunc("@every 0h5m0s", CheckYtSchedule)
 	cronInit.AddFunc("@every 2h30m0s", CheckPrivate)
 	log.Info("Enable youtube module")
-	CheckYtSchedule()
 }
 
 func CheckYtSchedule() {
@@ -46,7 +45,7 @@ func CheckYtSchedule() {
 				go StartCheckYT(Member, Group, &wg)
 			}
 			if i%10 == 0 {
-				time.Sleep(3 * time.Second)
+				wg.Wait()
 			}
 		}
 		wg.Wait()

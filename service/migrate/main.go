@@ -113,7 +113,10 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 	} else {
 		Youtube = "✘"
 		URL = "https://space.bilibili.com/" + strconv.Itoa(Data.Member.BiliBiliID)
-		Avatar = Data.Member.BliBiliFace()
+		Avatar, err = Data.Member.BliBiliFace()
+		if err != nil {
+			log.Error(err)
+		}
 		Color, err = engine.GetColor(config.TmpDir, Avatar)
 		if err != nil {
 			log.Error(err)

@@ -35,6 +35,7 @@ const (
 	Upcoming      = "upcoming"
 	Past          = "past"
 	Live          = "live"
+	ModuleInfo    = "module"
 )
 
 //StartInit running the fe
@@ -67,8 +68,35 @@ func StartInit(path string) error {
 	Bot.AddHandler(BiliBiliSpace)
 	Bot.AddHandler(YoutubeMessage)
 	Bot.AddHandler(SubsMessage)
+	Bot.AddHandler(Module)
 
 	return nil
+}
+
+func Module(s *discordgo.Session, m *discordgo.MessageCreate) {
+	m.Content = strings.ToLower(m.Content)
+	Prefix := config.BotConf.BotPrefix.General
+	if strings.HasPrefix(m.Content, Prefix) {
+		if m.Content == Prefix+ModuleInfo {
+			list := []string{}
+			keys := make(map[string]bool)
+			for _, Member := range database.GetModule() {
+				if _, value := keys[Member]; !value {
+					keys[Member] = true
+					list = append(list, Member)
+				}
+			}
+			_, err := s.ChannelMessageSend(m.ChannelID, strings.Join(list, "\n"))
+			if err != nil {
+				log.Error(err)
+			}
+		} else {
+			_, err := s.ChannelMessageSend(m.ChannelID, "Invalid command")
+			if err != nil {
+				log.Error(err)
+			}
+		}
+	}
 }
 
 //ValidName Find a valid name from user input

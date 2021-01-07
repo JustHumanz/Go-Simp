@@ -41,14 +41,17 @@ func main() {
 
 	if *Youtube {
 		youtube.Start(Bot, c)
+		database.ModuleInfo("Youtube")
 	}
 
 	if *SpaceBiliBili {
 		space.Start(Bot, c)
+		database.ModuleInfo("SpaceBiliBili")
 	}
 
 	if *LiveBiliBili {
 		live.Start(Bot, c)
+		database.ModuleInfo("LiveBiliBili")
 	}
 	runfunc.Run()
 }

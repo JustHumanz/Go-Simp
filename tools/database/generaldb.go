@@ -49,6 +49,19 @@ func Start(dbsession *sql.DB) {
 	log.Info("Database module ready")
 }
 
+func ModuleInfo(Name string) {
+	ctx := context.Background()
+	err := GeneralCache.LPush(ctx, "ModuleInfo", Name).Err()
+	if err != nil {
+		log.Error(err)
+	}
+}
+
+func GetModule() []string {
+	ctx := context.Background()
+	return GeneralCache.LRange(ctx, "ModuleInfo", 0, -1).Val()
+}
+
 //GetGroup Get all vtuber groupData
 func GetGroups() []Group {
 	rows, err := DB.Query(`SELECT id,VtuberGroupName,VtuberGroupIcon FROM VtuberGroup`)

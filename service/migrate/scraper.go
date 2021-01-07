@@ -192,37 +192,35 @@ func (Data Member) GetBiliFolow() BiliStat {
 	}
 }
 
-func (Data Member) GetTwitterFollow() int {
+func (Data Member) GetTwitterFollow() (int, error) {
 	if Data.TwitterName != "" {
 		profile, err := twitterscraper.GetProfile(Data.TwitterName)
 		if err != nil {
-			log.Error(err)
+			return 0, nil
 		}
-		return profile.FollowersCount
+		return profile.FollowersCount, nil
 	} else {
-		return 0
+		return 0, nil
 	}
 }
 
-func (Data Member) BliBiliFace() string {
+func (Data Member) BliBiliFace() (string, error) {
 	if Data.BiliBiliID == 0 {
-		return ""
+		return "", nil
 	} else {
 		var (
 			Info Avatar
 		)
 		body, errcurl := network.CoolerCurl("https://api.bilibili.com/x/space/acc/info?mid="+strconv.Itoa(Data.BiliBiliID), BiliBiliSession)
 		if errcurl != nil {
-			log.Error(errcurl)
-			return ""
+			return "", errcurl
 		}
 		err := json.Unmarshal(body, &Info)
 		if err != nil {
-			log.Error(err)
-			return ""
+			return "", errcurl
 		}
 
-		return strings.Replace(Info.Data.Face, "http", "https", -1)
+		return strings.Replace(Info.Data.Face, "http", "https", -1), nil
 	}
 }
 
