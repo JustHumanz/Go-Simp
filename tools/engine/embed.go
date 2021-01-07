@@ -1,10 +1,13 @@
 package engine
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"github.com/bwmarrin/discordgo"
+)
 
 //Embed ...
 type Embed struct {
 	*discordgo.MessageEmbed
+	IgnoreLine []int
 }
 
 // Constants for message embed character limits
@@ -20,7 +23,7 @@ const (
 
 //NewEmbed returns a new embed object
 func NewEmbed() *Embed {
-	return &Embed{&discordgo.MessageEmbed{}}
+	return &Embed{&discordgo.MessageEmbed{}, []int{}}
 }
 
 //SetTitle ...
@@ -176,9 +179,22 @@ func (e *Embed) SetColor(clr int) *Embed {
 
 // InlineAllFields sets all fields in the embed to be inline
 func (e *Embed) InlineAllFields() *Embed {
-	for _, v := range e.Fields {
-		v.Inline = true
+	for i, v := range e.Fields {
+		for _, numline := range e.IgnoreLine {
+			if numline != i {
+				v.Inline = true
+			} else {
+				v.Inline = false
+			}
+		}
 	}
+	return e
+}
+
+// RemoveInline remove upper fields
+func (e *Embed) RemoveInline() *Embed {
+	e.Fields[len(e.Fields)-1].Inline = false
+	e.IgnoreLine = append(e.IgnoreLine, len(e.Fields)-1)
 	return e
 }
 

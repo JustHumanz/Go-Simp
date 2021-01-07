@@ -271,6 +271,10 @@ type Guild struct {
 	Join time.Time
 }
 
+func (ac MemberSubs) MarshalBinary() ([]byte, error) {
+	return json.Marshal(ac)
+}
+
 func (ac YtDbData) MarshalBinary() ([]byte, error) {
 	return json.Marshal(ac)
 }

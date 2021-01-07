@@ -122,19 +122,40 @@ func gacha() bool {
 
 //GetSubsCount Get subs,follow,view,like data from Subscriber
 func (Member Member) GetSubsCount() (*MemberSubs, error) {
-	var Data MemberSubs
-	rows, err := DB.Query(`SELECT * FROM Subscriber WHERE VtuberMember_id=?`, Member.ID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
+	var (
+		ctx  = context.Background()
+		Data MemberSubs
+		Key  = strconv.Itoa(int(Member.ID)) + Member.Name
+	)
 
-	for rows.Next() {
-		err = rows.Scan(&Data.ID, &Data.YtSubs, &Data.YtVideos, &Data.YtViews, &Data.BiliFollow, &Data.BiliVideos, &Data.BiliViews, &Data.TwFollow, &Data.MemberID)
+	val, err := GeneralCache.Get(ctx, Key).Result()
+	if err == redis.Nil {
+		rows, err := DB.Query(`SELECT * FROM Subscriber WHERE VtuberMember_id=?`, Member.ID)
+		if err != nil {
+			return nil, err
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			err = rows.Scan(&Data.ID, &Data.YtSubs, &Data.YtVideos, &Data.YtViews, &Data.BiliFollow, &Data.BiliVideos, &Data.BiliViews, &Data.TwFollow, &Data.MemberID)
+			if err != nil {
+				return nil, err
+			}
+		}
+		err = GeneralCache.Set(ctx, Key, Data, 16*time.Minute).Err()
+		if err != nil {
+			return nil, err
+		}
+
+	} else if err != nil {
+		return nil, err
+	} else {
+		err := json.Unmarshal([]byte(val), &Data)
 		if err != nil {
 			return nil, err
 		}
 	}
+
 	return &Data, nil
 }
 

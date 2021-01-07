@@ -2,6 +2,7 @@ package twitter
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"strings"
 	"time"
@@ -29,11 +30,11 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 				log.Error(tweet.Error)
 			}
 			//Find hashtags members
-			for _, MemberHashtag := range Data {
-				for _, TweetHashtag := range tweet.Hashtags {
-					if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) && !tweet.IsQuoted && !tweet.IsReply && MemberHashtag.EnName != "Kaichou" {
-						_, err := rdb.Get(ctx, tweet.ID).Result()
-						if err == redis.Nil {
+			_, err := rdb.Get(ctx, tweet.ID).Result()
+			if err == redis.Nil {
+				for _, MemberHashtag := range Data {
+					for _, TweetHashtag := range tweet.Hashtags {
+						if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) && !tweet.IsQuoted && !tweet.IsReply && MemberHashtag.Name != "Kaichou" {
 							New, err := MemberHashtag.CheckMemberFanart(tweet)
 							if err != nil {
 								log.Error(err)
@@ -44,15 +45,19 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 									Tweet:  tweet,
 								})
 							}
-							err = rdb.Set(ctx, tweet.ID, MemberHashtag.Name, 30*time.Minute).Err()
+							bit, err := json.Marshal(tweet)
 							if err != nil {
 								log.Error(err)
 							}
-						} else if err != nil {
-							log.Error(err)
+							err = rdb.Set(ctx, tweet.ID, bit, 30*time.Minute).Err()
+							if err != nil {
+								log.Error(err)
+							}
 						}
 					}
 				}
+			} else if err != nil {
+				log.Error(err)
 			}
 		}
 	}

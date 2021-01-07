@@ -61,13 +61,16 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 										AddField("Youtube subscriber", engine.NearestThousandFormat(float64(SubsData.YtSubs))).
 										AddField("Youtube views", engine.NearestThousandFormat(float64(SubsData.YtViews))).
 										AddField("Youtube videos", engine.NearestThousandFormat(float64(SubsData.YtVideos))).
-										InlineAllFields().
 										AddField("BiliBili followers", engine.NearestThousandFormat(float64(SubsData.YtViews))).
 										AddField("BiliBili views", engine.NearestThousandFormat(float64(SubsData.BiliViews))).
 										AddField("BiliBili videos", engine.NearestThousandFormat(float64(SubsData.BiliVideos))).
 										InlineAllFields().
 										AddField("Twitter followers", engine.NearestThousandFormat(float64(SubsData.TwFollow))).
-										AddField("Subscribe and follow", "<:yt:796023828723269662>\t"+YTSubs+"\t<:bili:796025336542265344>\t"+BiliFollow+"\t<:tw:796025611210588187>\t"+TwitterFollow).
+										RemoveInline().
+										AddField("<:yt:796023828723269662>", YTSubs).
+										AddField("<:bili:796025336542265344>", BiliFollow).
+										AddField("<:tw:796025611210588187>", TwitterFollow).
+										InlineAllFields().
 										SetColor(Color).MessageEmbed)
 									if err != nil {
 										log.Error(err, msg)
