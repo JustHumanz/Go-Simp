@@ -347,18 +347,21 @@ func (Member Member) CheckMemberFanart(Data *twitterscraper.Result) (bool, error
 		}
 		return true, nil
 	} else {
-		//update like
-		log.WithFields(log.Fields{
-			"Name":    Member.EnName,
-			"Hashtag": Member.TwitterHashtags,
-			"Likes":   Data.Likes,
-		}).Info("Update like")
-		_, err := DB.Exec(`Update Twitter set Likes=? Where id=? `, Data.Likes, id)
-		if err != nil {
-			return false, err
-		}
-		return false, nil
+		/*
+			//update like
+			log.WithFields(log.Fields{
+				"Name":    Member.EnName,
+				"Hashtag": Member.TwitterHashtags,
+				"Likes":   Data.Likes,
+			}).Info("Update like")
+			_, err := DB.Exec(`Update Twitter set Likes=? Where id=? `, Data.Likes, id)
+			if err != nil {
+				return false, err
+			}
+		*/
+
 	}
+	return false, nil
 }
 
 //GetChannelID Get Channel id from Discord ChannelID and VtuberGroupID

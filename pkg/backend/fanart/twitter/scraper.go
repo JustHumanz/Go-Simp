@@ -17,15 +17,17 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 	var (
 		Hashtags []string
 		Fanarts  []Fanart
-		ctx      = context.Background()
 		rdb      = database.FanartCache
 	)
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+
 	CurlTwitter := func(Hashtags []string) {
 		log.WithFields(log.Fields{
 			"Hashtag": strings.Join(Hashtags, " OR "),
 			"Group":   Group.GroupName,
 		}).Info("Start curl twitter")
-		for tweet := range Scraper.SearchTweets(context.Background(), "("+strings.Join(Hashtags, " OR ")+") AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)", Limit) {
+		for tweet := range Scraper.SearchTweets(ctx, "("+strings.Join(Hashtags, " OR ")+") AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)", Limit) {
 			if tweet.Error != nil {
 				log.Error(tweet.Error)
 			}
