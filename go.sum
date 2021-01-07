@@ -194,6 +194,8 @@ github.com/n0madic/twitter-scraper v0.0.0-20201223175348-1d3f84fc4ac9 h1:eLGCIXO
 github.com/n0madic/twitter-scraper v0.0.0-20201223175348-1d3f84fc4ac9/go.mod h1:uzFP7WK9gCykBnULzfmxScXgIbs+423tWjbHRLYVq/g=
 github.com/n0madic/twitter-scraper v0.0.0-20201224081830-2f14c6affef9 h1:V7w0S+gH3HsoTb8ibG76KJa6cyrWSTvcaO5Jmpy6xj4=
 github.com/n0madic/twitter-scraper v0.0.0-20201224081830-2f14c6affef9/go.mod h1:uzFP7WK9gCykBnULzfmxScXgIbs+423tWjbHRLYVq/g=
+github.com/n0madic/twitter-scraper v0.0.0-20210106191912-6f9f1f94f606 h1:v6WadjXSH9MogDl7GYFaFwB0WK3m7ObMD4p7ktRXrmI=
+github.com/n0madic/twitter-scraper v0.0.0-20210106191912-6f9f1f94f606/go.mod h1:uzFP7WK9gCykBnULzfmxScXgIbs+423tWjbHRLYVq/g=
 github.com/nats-io/jwt v0.3.0/go.mod h1:fRYCDE99xlTsqUzISS1Bi75UBJ6ljOJQOAAu5VglpSg=
 github.com/nats-io/jwt v0.3.2/go.mod h1:/euKqTS1ZD+zzjYrY7pseZrTtWQSjujC7xjPc8wL6eU=
 github.com/nats-io/nats-server/v2 v2.1.2/go.mod h1:Afk+wRZqkMQs/p45uXdrVLuab3gwv3Z8C4HTBu8GD/k=

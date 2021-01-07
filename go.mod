@@ -12,7 +12,7 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hako/durafmt v0.0.0-20200710122514-c0fb7b4da026
-	github.com/n0madic/twitter-scraper v0.0.0-20201224081830-2f14c6affef9
+	github.com/n0madic/twitter-scraper v0.0.0-20210106191912-6f9f1f94f606
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/olekukonko/tablewriter v0.0.4
 	github.com/prometheus/common v0.15.0
