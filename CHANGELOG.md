@@ -4,6 +4,7 @@ v1.4.10
 - Change fanart scraper logic
 - Add config format
 - Update twitter-scraper
+- Update youtube send notif format
 
 v1.4.9
 - Change Viwers/Online/Followers number to human readable

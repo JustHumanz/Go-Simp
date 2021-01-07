@@ -49,7 +49,7 @@ func (PushData *NotifStruct) SendNude() {
 	}
 	PushData.YtData.Viewers = engine.NearestThousandFormat(float64(Views))
 	if Status == "upcoming" {
-		Color, err := engine.GetColor(config.TmpDir, Avatar)
+		Color, err := engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
 		if err != nil {
 			log.Error(err)
 		}
@@ -81,12 +81,12 @@ func (PushData *NotifStruct) SendNude() {
 						log.Error(err)
 					}
 				}
-				msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
+				msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "`"+PushData.Member.Name+"` New upcoming Livestream\nUserTags: "+strings.Join(UserTagsList, " "))
 			}
 		}
 
 	} else if Status == "live" {
-		Color, err := engine.GetColor(config.TmpDir, Avatar)
+		Color, err := engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
 		if err != nil {
 			log.Error(err)
 		}
@@ -118,12 +118,12 @@ func (PushData *NotifStruct) SendNude() {
 						log.Error(err)
 					}
 				}
-				msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
+				msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "`"+PushData.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " "))
 			}
 		}
 
 	} else if Status == "past" {
-		Color, err := engine.GetColor(config.TmpDir, Avatar)
+		Color, err := engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
 		if err != nil {
 			log.Error(err)
 		}
@@ -157,13 +157,13 @@ func (PushData *NotifStruct) SendNude() {
 						log.Error(err)
 					}
 				}
-				msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
+				msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "`"+PushData.Member.Name+"` Uploaded a new video\nUserTags: "+strings.Join(UserTagsList, " "))
 			}
 		}
 	}
 
 	if Status == "reminder" {
-		Color, err := engine.GetColor(config.TmpDir, Avatar)
+		Color, err := engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
 		if err != nil {
 			log.Error(err)
 		}
@@ -179,10 +179,11 @@ func (PushData *NotifStruct) SendNude() {
 				k = ii + 6
 				if UpcominginMinutes > ii && UpcominginMinutes < k {
 					UserTagsList := database.GetUserReminderList(id[i], PushData.Member.ID, k)
+					LiveCount := durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(1).String()
 					if UserTagsList != nil {
 						msg, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
 							SetAuthor(VtuberName, Avatar, YtChannel).
-							SetTitle(PushData.Member.EnName+" Live in "+durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(1).String()).
+							SetTitle(PushData.Member.EnName+" Live in "+LiveCount).
 							SetDescription(PushData.YtData.Title).
 							SetImage(PushData.YtData.Thumb).
 							SetThumbnail(GroupIcon).
@@ -200,7 +201,7 @@ func (PushData *NotifStruct) SendNude() {
 								log.Error(err)
 							}
 						}
-						msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
+						msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "`"+PushData.Member.Name+"` Live in "+LiveCount+"\nUserTags: "+strings.Join(UserTagsList, " "))
 					}
 				}
 			}
