@@ -7,7 +7,6 @@ RUN git clone --single-branch --branch main https://github.com/JustHumanz/Go-Sim
 WORKDIR Go-Simp/service/web
 RUN git checkout main
 RUN pip install -r requirements.txt
-RUN pip install gunicorn PyGithub
 
 EXPOSE 8000
 CMD ["gunicorn", "Go_simpsPy.wsgi:application", "--bind", "0.0.0.0:8000"]
