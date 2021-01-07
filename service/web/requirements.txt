@@ -9,7 +9,7 @@ lazy-object-proxy==1.4.3
 mccabe==0.6.1
 pylint==2.6.0
 pytz==2020.5
-requests==2.24.0
+requests==2.25.1
 six==1.15.0
 sqlparse==0.4.1
 toml==0.10.2
