@@ -90,11 +90,6 @@ func Module(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if err != nil {
 				log.Error(err)
 			}
-		} else {
-			_, err := s.ChannelMessageSend(m.ChannelID, "Invalid command")
-			if err != nil {
-				log.Error(err)
-			}
 		}
 	}
 }
