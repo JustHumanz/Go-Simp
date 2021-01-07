@@ -26,7 +26,14 @@ MaxIdleConns = 66
 [Sql]
 User = "humanz"
 Pass = "1sampai8"
-Host = "127.0.0.1"
+Host = "localhost"
+Port = "3306"
+MaxOpenConns = 66
+MaxIdleConns = 66
+
+[Cached]
+Host = "redis"
+Port = "6379"
 
 [BotPrefix]
 Fanart = "art!>"

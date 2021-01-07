@@ -180,12 +180,16 @@ func (e *Embed) SetColor(clr int) *Embed {
 // InlineAllFields sets all fields in the embed to be inline
 func (e *Embed) InlineAllFields() *Embed {
 	for i, v := range e.Fields {
-		for _, numline := range e.IgnoreLine {
-			if numline != i {
-				v.Inline = true
-			} else {
-				v.Inline = false
+		if len(e.IgnoreLine) > 0 {
+			for _, numline := range e.IgnoreLine {
+				if numline != i {
+					v.Inline = true
+				} else {
+					v.Inline = false
+				}
 			}
+		} else {
+			v.Inline = true
 		}
 	}
 	return e

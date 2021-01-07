@@ -2,6 +2,7 @@ v1.4.10
 - Update discordgo
 - Change `EnName` to `Name` in fanart scraper
 - Change fanart scraper logic
+- Add config format
 
 v1.4.9
 - Change Viwers/Online/Followers number to human readable

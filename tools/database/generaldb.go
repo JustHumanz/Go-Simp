@@ -28,20 +28,21 @@ var (
 //Start Database session
 func Start(dbsession *sql.DB) {
 	DB = dbsession
+	RedisHost := config.BotConf.Cached.Host + ":" + config.BotConf.Cached.Port
 	FanartCache = redis.NewClient(&redis.Options{
-		Addr:     "redis:6379",
+		Addr:     RedisHost,
 		Password: "",
 		DB:       0,
 	})
 
 	LiveCache = redis.NewClient(&redis.Options{
-		Addr:     "redis:6379",
+		Addr:     RedisHost,
 		Password: "",
 		DB:       1,
 	})
 
 	GeneralCache = redis.NewClient(&redis.Options{
-		Addr:     "redis:6379",
+		Addr:     RedisHost,
 		Password: "",
 		DB:       2,
 	})

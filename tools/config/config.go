@@ -78,9 +78,14 @@ type ConfigFile struct {
 		User         string `toml:"User"`
 		Pass         string `toml:"Pass"`
 		Host         string `toml:"Host"`
+		Port         string `toml:"Port"`
 		MaxOpenConns int    `toml:"MaxOpenConns"`
 		MaxIdleConns int    `toml:"MaxIdleConns"`
 	} `toml:"Sql"`
+	Cached struct {
+		Host string `toml:"Host"`
+		Port string `toml:"Port"`
+	} `toml:"Cached"`
 	BotPrefix struct {
 		Fanart   string `toml:"Fanart"`
 		Youtube  string `toml:"Youtube"`
@@ -121,7 +126,7 @@ func ReadConfig(path string) (ConfigFile, error) {
 func (Data ConfigFile) CheckSQL() *sql.DB {
 	log.Info("Open DB")
 
-	db, err := sql.Open("mysql", Data.SQL.User+":"+Data.SQL.Pass+"@tcp("+Data.SQL.Host+":3306)/Vtuber?parseTime=true")
+	db, err := sql.Open("mysql", Data.SQL.User+":"+Data.SQL.Pass+"@tcp("+Data.SQL.Host+":"+Data.SQL.Port+")/Vtuber?parseTime=true")
 	if err != nil {
 		log.Error(err, " Something worng with database,make sure you create Vtuber database first")
 		os.Exit(1)
