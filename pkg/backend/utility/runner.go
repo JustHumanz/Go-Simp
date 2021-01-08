@@ -34,6 +34,7 @@ func main() {
 	}
 	BotID = BotInfo.ID
 
+	CheckServerCount()
 	Donation := config.BotConf.DonationLink
 	database.Start(conf.CheckSQL())
 	engine.Start()
