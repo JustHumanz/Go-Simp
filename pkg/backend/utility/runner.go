@@ -61,6 +61,7 @@ func main() {
 }
 
 func CheckServerCount() {
+	log.Info("Post bot info to top.gg")
 	dblClient, err := dbl.NewClient(os.Getenv("TOPGG"))
 	if err != nil {
 		log.Error(err)
