@@ -162,7 +162,7 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 						UpdateYtDB()
 				}
 
-				if time.Now().Sub(Data.Items[i].LiveDetails.StartTime) > Data.Items[i].LiveDetails.StartTime.Sub(time.Now()) && Data.Items[i].LiveDetails.ActualStartTime.IsZero() && Data.Items[i].Snippet.VideoStatus == "upcoming" {
+				if time.Now().Sub(Data.Items[i].LiveDetails.StartTime) > Data.Items[i].LiveDetails.StartTime.Sub(time.Now()) && Data.Items[i].LiveDetails.ActualStartTime.IsZero() && YoutubeData.YtData.Status == "upcoming" {
 					log.WithFields(log.Fields{
 						"VideoData ID": VideoID[i],
 						"Status":       "Live",
