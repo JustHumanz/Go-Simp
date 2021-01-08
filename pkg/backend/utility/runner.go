@@ -34,11 +34,11 @@ func main() {
 	}
 	BotID = BotInfo.ID
 
-	CheckServerCount()
 	Donation := config.BotConf.DonationLink
 	database.Start(conf.CheckSQL())
 	engine.Start()
 
+	CheckServerCount()
 	c := cron.New()
 	c.Start()
 	if config.BotConf.DonationLink != "" {
