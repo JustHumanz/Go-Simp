@@ -77,7 +77,8 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 							AddField("Need support?", "Join [dev server](https://discord.com/invite/ydWC5knbJT)").
 							InlineAllFields().
 							AddField("Support "+BotID.Username, "[Ko-Fi]("+Donation+")").
-							AddField("Or if you a broke gang,you can upvote "+BotID.Username, "[top.gg]("+config.BotConf.TopGG+")").MessageEmbed)
+							AddField("if you a broke gang,you can upvote "+BotID.Username, "[top.gg]("+config.BotConf.TopGG+")").
+							AddField("give some star on github", "[Github](https://github.com/JustHumanz/Go-Simp)").MessageEmbed)
 					}
 
 					//Save discord name to database
@@ -90,7 +91,7 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 					PayloadBytes, err := json.Marshal(map[string]interface{}{
 						"embeds": []interface{}{
 							map[string]interface{}{
-								"description": "A Guild Invited VTbot",
+								"description": "A Guild Invited " + BotID.Username,
 								"fields": []interface{}{
 									map[string]interface{}{
 										"name":   "GuildName",
