@@ -1,3 +1,8 @@
+v1.4.12
+- Add Top.gg server count
+- Remove async from bilibili fanart
+- Fix youtube notif
+
 v1.4.11
 - Bring back module info
 - Change reminder interval

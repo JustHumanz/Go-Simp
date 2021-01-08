@@ -41,3 +41,12 @@ func (Data Guild) InputGuild() error {
 	}
 	return nil
 }
+
+func GetGuildsCount() int {
+	var count int
+	err := DB.QueryRow(`SELECT Count(*) FROM Vtuber.GuildList`).Scan(&count)
+	if err != nil {
+		log.Error(err)
+	}
+	return count
+}

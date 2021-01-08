@@ -3,9 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/signal"
-	"runtime/pprof"
 
+	"github.com/JustHumanz/Go-simp/pkg/backend/utility/runfunc"
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
@@ -48,15 +47,5 @@ func main() {
 	Bot.AddHandler(GuildJoin)
 	log.Info("Guild handler ready.......")
 
-	chain := make(chan os.Signal, 0)
-	signal.Notify(chain, os.Interrupt)
-	go func() {
-		for sig := range chain {
-			log.Warn("captured ", sig, ", stopping profiler and exiting..")
-			pprof.StopCPUProfile()
-			os.Exit(0)
-		}
-	}()
-	<-make(chan struct{})
-	return
+	runfunc.Run()
 }

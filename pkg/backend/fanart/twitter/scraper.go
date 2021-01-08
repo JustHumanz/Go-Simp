@@ -19,10 +19,11 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 		Fanarts  []Fanart
 		rdb      = database.FanartCache
 	)
-	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
-	defer cancel()
 
 	CurlTwitter := func(Hashtags []string) {
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+
 		log.WithFields(log.Fields{
 			"Hashtag": strings.Join(Hashtags, " OR "),
 			"Group":   Group.GroupName,

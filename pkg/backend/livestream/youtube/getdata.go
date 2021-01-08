@@ -162,14 +162,16 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 						UpdateYtDB()
 				}
 
-				if time.Now().Sub(Data.Items[i].LiveDetails.StartTime) > Data.Items[i].LiveDetails.StartTime.Sub(time.Now()) && Data.Items[i].LiveDetails.ActualStartTime.IsZero() && YoutubeData.YtData.Status == "upcoming" {
-					log.WithFields(log.Fields{
-						"VideoData ID": VideoID[i],
-						"Status":       "Live",
-					}).Info("Livestream schedule late,change video status to live")
-					YoutubeData.ChangeYtStatus("live").SendNude()
-					log.Info("send to db")
-					YoutubeData.UpdateYtDB()
+				if time.Now().Sub(Data.Items[i].LiveDetails.StartTime) > Data.Items[i].LiveDetails.StartTime.Sub(time.Now()) && Data.Items[i].LiveDetails.ActualStartTime.IsZero() {
+					if YoutubeData.YtData.Status == "upcoming" {
+						log.WithFields(log.Fields{
+							"VideoData ID": VideoID[i],
+							"Status":       "Live",
+						}).Info("Livestream schedule late,change video status to live")
+						YoutubeData.ChangeYtStatus("live").SendNude()
+						log.Info("send to db")
+						YoutubeData.UpdateYtDB()
+					}
 				}
 
 				//send to reminder
