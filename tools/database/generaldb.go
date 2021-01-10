@@ -89,7 +89,7 @@ func GetMembers(GroupID int64) []Member {
 		list Member
 		Data []Member
 		ctx  = context.Background()
-		Key  = "VtuberMember"
+		Key  = "VtuberMember" + strconv.Itoa(int(GroupID))
 	)
 	val := GeneralCache.LRange(ctx, Key, 0, -1).Val()
 	if len(val) < 180 {

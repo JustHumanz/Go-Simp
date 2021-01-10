@@ -1,3 +1,7 @@
+v1.4.15
+- Fix subs milistone not send
+- Fix member cache
+
 v1.4.12
 - Add Top.gg server count
 - Remove async from bilibili fanart

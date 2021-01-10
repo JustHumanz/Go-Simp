@@ -20,11 +20,11 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 		rdb      = database.FanartCache
 	)
 
-	CurlTwitter := func(Hashtags []string) {
+	CurlTwitter := func(Hashtags []string, GroupData database.Group) {
 		ctx := context.Background()
 		log.WithFields(log.Fields{
 			"Hashtag": strings.Join(Hashtags, " OR "),
-			"Group":   Group.GroupName,
+			"Group":   GroupData.GroupName,
 		}).Info("Start curl twitter")
 		for tweet := range Scraper.SearchTweets(ctx, "("+strings.Join(Hashtags, " OR ")+") AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)", Limit) {
 			if tweet.Error != nil {
@@ -68,7 +68,7 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 			if Member.TwitterHashtags != "" {
 				Hashtags = append(Hashtags, Member.TwitterHashtags)
 				if (i%5 == 0) || (i == len(Data)-1) {
-					CurlTwitter(Hashtags)
+					CurlTwitter(Hashtags, Group)
 					Hashtags = nil
 				}
 			}
@@ -79,7 +79,7 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 				Hashtags = append(Hashtags, Member.TwitterHashtags)
 			}
 		}
-		CurlTwitter(Hashtags)
+		CurlTwitter(Hashtags, Group)
 	}
 
 	if len(Fanarts) > 0 {
