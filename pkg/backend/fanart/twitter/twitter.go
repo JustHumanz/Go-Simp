@@ -20,7 +20,6 @@ func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
 	Bot = BotInit
 	cronInit.AddFunc(config.TwitterFanart, CheckNew)
 	log.Info("Enable twitter fanart module")
-	CheckNew()
 }
 
 //CheckNew Check new fanart
