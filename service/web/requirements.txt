@@ -1,9 +1,9 @@
 asgiref==3.3.1
 astroid==2.4.2
 certifi==2020.6.20
-chardet==3.0.4
+chardet==4.0.0
 Django==3.1.5
-idna==2.10
+idna==3.1
 isort==5.7.0
 lazy-object-proxy==1.4.3
 mccabe==0.6.1
@@ -13,7 +13,7 @@ requests==2.25.1
 six==1.15.0
 sqlparse==0.4.1
 toml==0.10.2
-urllib3==1.25.11
+urllib3==1.26.2
 wrapt==1.12.1
 gunicorn==20.0.4
-PyGithub==1.54
+PyGithub==1.54.1
