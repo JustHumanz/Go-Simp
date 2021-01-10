@@ -46,7 +46,7 @@ func (PushData *NotifStruct) SendNude() {
 
 	Views, err := strconv.Atoi(PushData.YtData.Viewers)
 	if err != nil {
-		log.Error(err)
+		Views = 0
 	}
 	PushData.YtData.Viewers = engine.NearestThousandFormat(float64(Views))
 	if Status == "upcoming" {

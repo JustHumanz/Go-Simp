@@ -28,10 +28,10 @@ func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
 func CheckLiveSchedule() {
 	loc, _ = time.LoadLocation("Asia/Shanghai")
 	log.Info("Start check Schedule")
-	for _, Group := range engine.GroupData {
+	for _, GroupData := range engine.GroupData {
 		wg := new(sync.WaitGroup)
-		if Group.GroupName != "Hololive" {
-			for _, Member := range database.GetMembers(Group.ID) {
+		if GroupData.GroupName != "Hololive" {
+			for _, MemberData := range database.GetMembers(GroupData.ID) {
 				wg.Add(1)
 				go func(Group database.Group, Member database.Member, wg *sync.WaitGroup) {
 					defer wg.Done()
@@ -105,7 +105,7 @@ func CheckLiveSchedule() {
 							Data.RoomData.UpdateLiveBili(Member.ID)
 						}
 					}
-				}(Group, Member, wg)
+				}(GroupData, MemberData, wg)
 			}
 		}
 		wg.Wait()
