@@ -1,6 +1,7 @@
 v1.4.15
 - Fix subs milistone not send
 - Fix member cache
+- Fix reminder time
 
 v1.4.12
 - Add Top.gg server count
