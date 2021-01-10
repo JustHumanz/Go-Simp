@@ -21,9 +21,7 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 	)
 
 	CurlTwitter := func(Hashtags []string) {
-		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-		defer cancel()
-
+		ctx := context.Background()
 		log.WithFields(log.Fields{
 			"Hashtag": strings.Join(Hashtags, " OR "),
 			"Group":   Group.GroupName,
