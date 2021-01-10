@@ -1,9 +1,12 @@
 package config
 
 import (
+	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"time"
 
@@ -32,12 +35,13 @@ var (
 		MultiTOR       string
 		KoFiLink       string
 	*/
-	ModuleList = []string{"LiveBiliBili", "SpaceBiliBili", "Youtube", "TwitterFanart", "BiliBiliFanart", "YoutubeSubscriber", "BiliBiliFollowers", "TwitterFollowers"}
-	BotConf    ConfigFile
-	TmpDir     = "/tmp/tmp.img"
+	ModuleList  = []string{"LiveBiliBili", "SpaceBiliBili", "Youtube", "TwitterFanart", "BiliBiliFanart", "YoutubeSubscriber", "BiliBiliFollowers", "TwitterFollowers"}
+	BotConf     ConfigFile
+	TwitchToken string
 )
 
 const (
+	TmpDir            = "/tmp/tmp.img"
 	NotFound          = "https://cdn.human-z.tech/404.jpg"
 	YoutubeIMG        = "https://cdn.human-z.tech/youtube.png"
 	BiliBiliIMG       = "https://cdn.human-z.tech/bilibili.png"
@@ -58,6 +62,19 @@ const (
 	CommandURL        = "https://go-simp.human-z.tech/Exec/"
 	VtubersData       = "https://go-simp.human-z.tech"
 	ChannelPermission = 16
+
+	//Crontab
+	TwitterFanart        = "@every 0h7m0s"
+	BiliBiliFanart       = "@every 0h6m0s"
+	BiliBiliLive         = "@every 0h8m0s"
+	BiliBiliSpace        = "@every 0h10m0s"
+	YoutubeCheckChannel  = "@every 0h5m0s"
+	YoutubePrivateSlayer = "@every 2h31m0s"
+	YoutubeSubscriber    = "@every 1h0m0s"
+	BiliBiliFollowers    = "@every 0h30m0s"
+	TwitterFollowers     = "@every 0h17m0s"
+	DonationMsg          = "@every 0h30m0s"
+	CheckServerCount     = "@every 0h1m0s"
 )
 
 type ConfigFile struct {
@@ -70,7 +87,11 @@ type ConfigFile struct {
 	MultiTOR       string   `toml:"Multitor"`
 	DonationLink   string   `toml:"DonationLink"`
 	TopGG          string   `toml:"TOPGG"`
-	LimitConf      struct {
+	Twitch         struct {
+		ClientID     string `toml:"ClientID"`
+		ClientSecret string `toml:"ClientSecret"`
+	} `toml:"Twitch"`
+	LimitConf struct {
 		TwitterFanart int `toml:"TwitterLimit"`
 		SpaceBiliBili int `toml:"SpaceBiliBili"`
 		YoutubeLimit  int `toml:"YoutubeLimit"`
@@ -143,4 +164,52 @@ func (Data ConfigFile) CheckSQL() *sql.DB {
 		os.Exit(1)
 	}
 	return db
+}
+
+func (Data ConfigFile) GetTwitchAccessToken() string {
+	if TwitchToken != "" {
+		return TwitchToken
+	} else {
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+
+		var (
+			url  = "https://id.twitch.tv/oauth2/token?client_id=" + Data.Twitch.ClientID + "&client_secret=" + Data.Twitch.ClientSecret + "&grant_type=client_credentials"
+			body []byte
+		)
+		spaceClient := http.Client{}
+		request, err := http.NewRequest(http.MethodPost, url, nil)
+		if err != nil {
+			log.Error(err)
+		}
+		request.Header.Set("cache-control", "no-cache")
+		request.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9")
+
+		response, err := spaceClient.Do(request.WithContext(ctx))
+		if err != nil {
+			log.Error(err)
+		}
+
+		defer response.Body.Close()
+
+		if response.StatusCode != http.StatusOK {
+			log.WithFields(log.Fields{
+				"Status": response.StatusCode,
+				"Reason": response.Status,
+			}).Error("Status code not daijobu")
+		}
+
+		body, err = ioutil.ReadAll(response.Body)
+		if err != nil {
+			log.Error(err)
+
+		}
+		var result map[string]interface{}
+		err = json.Unmarshal(body, &result)
+		if err != nil {
+			log.Error(err)
+		}
+		TwitchToken = result["access_token"].(string)
+		return TwitchToken
+	}
 }

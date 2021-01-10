@@ -42,7 +42,7 @@ func main() {
 	c := cron.New()
 	c.Start()
 	if config.BotConf.DonationLink != "" {
-		c.AddFunc("@every 0h30m0s", func() {
+		c.AddFunc(config.DonationMsg, func() {
 			Bot.ChannelMessageSendEmbed(database.GetRanChannel(), engine.NewEmbed().
 				SetTitle("Donate").
 				SetURL(Donation).
@@ -55,13 +55,13 @@ func main() {
 				AddField("or give some star on github", "[Github](https://github.com/JustHumanz/Go-Simp)").MessageEmbed)
 		})
 	}
-	c.AddFunc("@every 0h1m0s", CheckServerCount)
+	c.AddFunc(config.CheckServerCount, CheckServerCount)
 
 	runfunc.Run()
 }
 
 func CheckServerCount() {
-	log.Info("Post bot info to top.gg")
+	log.Info("POST bot info to top.gg")
 	dblClient, err := dbl.NewClient(os.Getenv("TOPGG"))
 	if err != nil {
 		log.Error(err)

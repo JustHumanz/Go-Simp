@@ -27,7 +27,7 @@ var (
 //Start start twitter module
 func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
 	Bot = BotInit
-	cronInit.AddFunc("@every 0h2m0s", CheckNew)
+	cronInit.AddFunc(config.BiliBiliFanart, CheckNew)
 	log.Info("Enable bilibili fanart module")
 }
 

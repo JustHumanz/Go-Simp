@@ -46,7 +46,7 @@ func (PushData *NotifStruct) SendNude() {
 
 	Views, err := strconv.Atoi(PushData.YtData.Viewers)
 	if err != nil {
-		log.Error(err)
+		Views = 0
 	}
 	PushData.YtData.Viewers = engine.NearestThousandFormat(float64(Views))
 	if Status == "upcoming" {
@@ -190,11 +190,10 @@ func (PushData *NotifStruct) SendNude() {
 				ChannelID:     DiscordChannelID[i],
 				VtuberGroupID: PushData.Group.ID,
 			}
-			k := 0
-			for ii := 0; ii < 70; ii += 10 {
-				k = ii + 5
-				if UpcominginMinutes > ii && UpcominginMinutes < k {
-					UserTagsList := database.GetUserReminderList(id[i], PushData.Member.ID, k)
+			for ii := 10; ii < 70; ii += 5 {
+				k := ii - 5
+				if UpcominginMinutes <= ii && UpcominginMinutes >= k {
+					UserTagsList := database.GetUserReminderList(id[i], PushData.Member.ID, ii)
 					LiveCount := durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(1).String()
 					if UserTagsList != nil {
 						msg, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().

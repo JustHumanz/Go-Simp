@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	network "github.com/JustHumanz/Go-simp/tools/network"
@@ -18,15 +19,15 @@ import (
 
 var (
 	yttoken   string
-	Ytwaiting = "???"
+	Ytwaiting = "0"
 	Bot       *discordgo.Session
 )
 
 //Start start twitter module
 func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
 	Bot = BotInit
-	cronInit.AddFunc("@every 0h5m0s", CheckYtSchedule)
-	cronInit.AddFunc("@every 2h30m0s", CheckPrivate)
+	cronInit.AddFunc(config.YoutubeCheckChannel, CheckYtSchedule)
+	cronInit.AddFunc(config.YoutubePrivateSlayer, CheckPrivate)
 	log.Info("Enable youtube module")
 }
 

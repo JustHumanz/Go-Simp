@@ -5,6 +5,7 @@ import (
 	"sync"
 	"time"
 
+	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"
@@ -21,17 +22,17 @@ var (
 func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
 	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
 	Bot = BotInit
-	cronInit.AddFunc("@every 0h7m30s", CheckLiveSchedule)
+	cronInit.AddFunc(config.BiliBiliLive, CheckLiveSchedule)
 	log.Info("Enable live bilibili module")
 }
 
 func CheckLiveSchedule() {
 	loc, _ = time.LoadLocation("Asia/Shanghai")
 	log.Info("Start check Schedule")
-	for _, Group := range engine.GroupData {
-		wg := new(sync.WaitGroup)
-		if Group.GroupName != "Hololive" {
-			for _, Member := range database.GetMembers(Group.ID) {
+	for _, GroupData := range engine.GroupData {
+		if GroupData.GroupName != "Hololive" {
+			wg := new(sync.WaitGroup)
+			for i, MemberData := range database.GetMembers(GroupData.ID) {
 				wg.Add(1)
 				go func(Group database.Group, Member database.Member, wg *sync.WaitGroup) {
 					defer wg.Done()
@@ -105,9 +106,12 @@ func CheckLiveSchedule() {
 							Data.RoomData.UpdateLiveBili(Member.ID)
 						}
 					}
-				}(Group, Member, wg)
+				}(GroupData, MemberData, wg)
+				if i%5 == 0 {
+					wg.Wait()
+				}
 			}
+			wg.Wait()
 		}
-		wg.Wait()
 	}
 }
