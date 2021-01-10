@@ -21,7 +21,7 @@ var (
 func main() {
 	Youtube := flag.Bool("Youtube", false, "Enable youtube module")
 	BiliBili := flag.Bool("BiliBili", false, "Enable bilibili module")
-	Twitter := flag.Bool("LiveBiliBili", false, "Enable twitter module")
+	Twitter := flag.Bool("Twitter", false, "Enable twitter module")
 
 	flag.Parse()
 
