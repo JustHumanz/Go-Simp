@@ -30,7 +30,7 @@ func main() {
 		log.Panic(err)
 	}
 
-	Bot, _ := discordgo.New("Bot " + config.BotConf.Discord)
+	Bot, _ = discordgo.New("Bot " + config.BotConf.Discord)
 	err = Bot.Open()
 	if err != nil {
 		log.Panic(err)
@@ -43,19 +43,19 @@ func main() {
 	c.Start()
 
 	if *Youtube {
-		c.AddFunc("@every 1h0m0s", CheckYoutube)
+		c.AddFunc(config.YoutubeSubscriber, CheckYoutube)
 		log.Info("Add youtube subscriber to cronjob")
 		database.ModuleInfo("YoutubeSubscriber")
 	}
 
 	if *BiliBili {
-		c.AddFunc("@every 0h30m0s", CheckBiliBili)
+		c.AddFunc(config.BiliBiliFollowers, CheckBiliBili)
 		log.Info("Add bilibili followers to cronjob")
 		database.ModuleInfo("BiliBiliFollowers")
 	}
 
 	if *Twitter {
-		c.AddFunc("@every 0h15m0s", CheckTwitter)
+		c.AddFunc(config.TwitterFollowers, CheckTwitter)
 		log.Info("Add twitter followers to cronjob")
 		database.ModuleInfo("TwitterFollowers")
 	}

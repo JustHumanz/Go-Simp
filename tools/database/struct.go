@@ -50,6 +50,7 @@ type Member struct {
 	TwitterName      string
 	BiliBiliHashtags string
 	BiliBiliAvatar   string
+	TwitchUserName   string
 	Region           string
 	GroupID          int64
 }

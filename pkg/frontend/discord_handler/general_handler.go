@@ -1187,7 +1187,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 			ChannelState = database.DiscordChannel{
 				TypeTag:     0,
 				LiveOnly:    false,
-				NewUpcoming: true,
+				NewUpcoming: false,
 				ChannelID:   m.ChannelID,
 			}
 			already []string

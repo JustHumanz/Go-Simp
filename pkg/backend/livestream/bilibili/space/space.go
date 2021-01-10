@@ -24,7 +24,7 @@ var (
 func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
 	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
 	Bot = BotInit
-	cronInit.AddFunc("@every 0h11m0s", CheckSpaceVideo)
+	cronInit.AddFunc(config.BiliBiliSpace, CheckSpaceVideo)
 	log.Info("Enable space bilibili module")
 }
 

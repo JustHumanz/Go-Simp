@@ -16,6 +16,7 @@ import (
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	network "github.com/JustHumanz/Go-simp/tools/network"
 	twitterscraper "github.com/n0madic/twitter-scraper"
+	"github.com/nicklaw5/helix"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -386,6 +387,52 @@ func CheckSchedule() {
 					}).Info("Status Unknown")
 					Data["Status"] = "Unknown"
 					LiveBiliBili(Data)
+				}
+			}
+		}
+	}
+}
+
+func CheckTwitch() {
+	log.Info("Start check Twitch")
+	client, err := helix.NewClient(&helix.Options{
+		ClientID:     config.BotConf.Twitch.ClientID,
+		ClientSecret: config.BotConf.Twitch.ClientSecret,
+	})
+	if err != nil {
+		log.Error(err)
+	}
+	client.SetUserAccessToken(TwitchToken)
+	for _, Group := range database.GetGroups() {
+		for _, Member := range database.GetMembers(Group.ID) {
+			if Member.TwitchUserName != "" {
+				result, err := client.GetStreams(&helix.StreamsParams{
+					UserLogins: []string{Member.TwitchUserName},
+				})
+				if err != nil {
+					log.Error(err)
+				}
+				for _, Stream := range result.Data.Streams {
+					if strings.ToLower(Stream.UserName) == strings.ToLower(Member.TwitchUserName) {
+						result, err := client.GetGames(&helix.GamesParams{
+							IDs: []string{Stream.GameID},
+						})
+						if err != nil {
+							log.Error(err)
+						}
+						Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{width}", "1280", -1)
+						Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{height}", "720", -1)
+						Data := map[string]interface{}{
+							"MemberID":       Member.ID,
+							"Status":         Stream.Type,
+							"Title":          Stream.Title,
+							"Viewers":        Stream.ViewerCount,
+							"ScheduledStart": Stream.StartedAt,
+							"Thumbnails":     Stream.ThumbnailURL,
+							"Game":           result.Data.Games[0].Name,
+						}
+						AddTwitchInfo(Data)
+					}
 				}
 			}
 		}

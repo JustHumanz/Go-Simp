@@ -29,6 +29,7 @@ var (
 	Roomstatus      string
 	BiliBiliSession []string
 	Bot             *discordgo.Session
+	TwitchToken     string
 )
 
 type NewVtuber struct {
@@ -60,6 +61,7 @@ func init() {
 	Limit = 100
 	Bot, _ = discordgo.New("Bot " + config.Discord)
 	db = config.CheckSQL()
+	TwitchToken = config.GetTwitchAccessToken()
 	err = Bot.Open()
 	if err != nil {
 		log.Error(err)

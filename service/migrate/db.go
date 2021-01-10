@@ -120,6 +120,7 @@ func CreateDB(Data config.ConfigFile) error {
 		BiliBili_RoomID INT(11) DEFAULT NULL,
 		BiliBili_Avatar varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 		Twitter_Username varchar(24) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+		Twitch_Username varchar(26) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 		Region varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 		VtuberGroup_id int(11) NOT NULL,
 		PRIMARY KEY (id)
@@ -182,7 +183,22 @@ func CreateDB(Data config.ConfigFile) error {
 		return err
 	}
 
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS Vtuber.Subscriber (
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS Twitch (
+		id int(11) NOT NULL AUTO_INCREMENT,
+		Game varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+		Status varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL,
+		Title varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+		Thumbnails varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+		ScheduledStart timestamp NOT NULL DEFAULT current_timestamp(),
+		Viewers varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+		VtuberMember_id int(11) NOT NULL,
+		PRIMARY KEY (id)
+	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS Subscriber (
 		id INT NOT NULL AUTO_INCREMENT,
 		Youtube_Subscriber INT(11) NULL,
 		Youtube_Videos INT(11) NULL,
@@ -277,7 +293,7 @@ func CreateDB(Data config.ConfigFile) error {
 		)
 		BEGIN
 			SELECT id,VtuberName,VtuberName_EN,VtuberName_JP,Youtube_ID,BiliBili_SpaceID,BiliBili_RoomID,
-			Region,Hashtag,BiliBili_Hashtag,BiliBili_Avatar,Twitter_Username,Youtube_Avatar 
+			Region,Hashtag,BiliBili_Hashtag,BiliBili_Avatar,Twitter_Username,Twitch_Username,Youtube_Avatar 
 			FROM Vtuber.VtuberMember WHERE VtuberGroup_id=GroupID 
 			Order by Region,VtuberGroup_id;
 		END`)
@@ -777,7 +793,7 @@ func GetHastagMember(MemberID int64) string {
 	return Data
 }
 
-func LiveBiliBili(Data map[string]interface{}) bool {
+func LiveBiliBili(Data map[string]interface{}) error {
 	var tmp int
 	row := db.QueryRow("SELECT RoomID FROM LiveBiliBili WHERE RoomID=? AND VtuberMember_id=?", Data["LiveRoomID"], Data["MemberID"])
 	err := row.Scan(&tmp)
@@ -793,15 +809,41 @@ func LiveBiliBili(Data map[string]interface{}) bool {
 
 		_, err = res.LastInsertId()
 		if err != nil {
-			log.Error(err)
+			return err
 		}
 		defer stmt.Close()
-		return true
+	} else if err != nil {
+		return err
 	} else {
 		_, err := db.Exec(`Update LiveBiliBili set Status=? , Title=? ,Thumbnails=?, Description=?, Published=?, ScheduledStart=?, Viewers=? Where RoomID=? AND VtuberMember_id=?`, Data["Status"], Data["Title"], Data["Thumbnail"], Data["Description"], Data["PublishedAt"], Data["ScheduledStart"], Data["Online"], Data["LiveRoomID"], Data["MemberID"])
 		if err != nil {
-			log.Error(err)
+			return err
 		}
-		return false
 	}
+	return nil
+}
+
+func AddTwitchInfo(Data map[string]interface{}) error {
+	var tmp int
+	row := db.QueryRow("SELECT id FROM Twitch WHERE VtuberMember_id=?", Data["MemberID"])
+	err := row.Scan(&tmp)
+	if err == sql.ErrNoRows {
+		stmt, err := db.Prepare("INSERT INTO Twitch (Game,Status,Title,Thumbnails,ScheduledStart,Viewers,VtuberMember_id) values(?,?,?,?,?,?,?)")
+		if err != nil {
+			return err
+		}
+		res, err := stmt.Exec(Data["Game"], Data["Status"], Data["Title"], Data["Thumbnails"], Data["ScheduledStart"], Data["Viewers"], Data["MemberID"])
+		if err != nil {
+			return err
+		}
+
+		_, err = res.LastInsertId()
+		if err != nil {
+			return err
+		}
+		defer stmt.Close()
+	} else if err != nil {
+		log.Error(err)
+	}
+	return nil
 }
