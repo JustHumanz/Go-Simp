@@ -39,9 +39,10 @@ func CheckYtSchedule() {
 			if Member.YoutubeID != "" {
 				wg.Add(1)
 				log.WithFields(log.Fields{
-					"Vtube":        Member.EnName,
-					"Youtube ID":   Member.YoutubeID,
-					"Vtube Region": Member.Region,
+					"Vtuber":        Member.EnName,
+					"Group":         Group.GroupName,
+					"Youtube ID":    Member.YoutubeID,
+					"Vtuber Region": Member.Region,
 				}).Info("Checking Youtube")
 				go StartCheckYT(Member, Group, &wg)
 			}

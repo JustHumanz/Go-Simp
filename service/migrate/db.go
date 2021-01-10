@@ -120,7 +120,6 @@ func CreateDB(Data config.ConfigFile) error {
 		BiliBili_RoomID INT(11) DEFAULT NULL,
 		BiliBili_Avatar varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 		Twitter_Username varchar(24) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		Twitch_Username varchar(26) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 		Region varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 		VtuberGroup_id int(11) NOT NULL,
 		PRIMARY KEY (id)
@@ -293,7 +292,7 @@ func CreateDB(Data config.ConfigFile) error {
 		)
 		BEGIN
 			SELECT id,VtuberName,VtuberName_EN,VtuberName_JP,Youtube_ID,BiliBili_SpaceID,BiliBili_RoomID,
-			Region,Hashtag,BiliBili_Hashtag,BiliBili_Avatar,Twitter_Username,Twitch_Username,Youtube_Avatar 
+			Region,Hashtag,BiliBili_Hashtag,BiliBili_Avatar,Twitter_Username,Youtube_Avatar 
 			FROM Vtuber.VtuberMember WHERE VtuberGroup_id=GroupID 
 			Order by Region,VtuberGroup_id;
 		END`)
