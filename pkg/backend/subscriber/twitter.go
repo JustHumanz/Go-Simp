@@ -2,7 +2,6 @@ package main
 
 import (
 	"strings"
-	"time"
 
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
@@ -12,7 +11,7 @@ import (
 
 func CheckTwitter() {
 	for _, Group := range engine.GroupData {
-		for i, Name := range database.GetMembers(Group.ID) {
+		for _, Name := range database.GetMembers(Group.ID) {
 			if Name.TwitterName != "" {
 				Twitter, err := Name.GetTwitterFollow()
 				if err != nil {
@@ -76,9 +75,6 @@ func CheckTwitter() {
 
 				TwFollowDB.UptwFollow(Twitter.FollowersCount).
 					UpdateSubs("tw")
-			}
-			if i%10 == 0 {
-				time.Sleep(3 * time.Second)
 			}
 		}
 	}

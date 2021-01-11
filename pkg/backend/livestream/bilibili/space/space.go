@@ -29,10 +29,10 @@ func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
 }
 
 func CheckSpaceVideo() {
-	wg := new(sync.WaitGroup)
-	for _, Group := range engine.GroupData {
-		if Group.GroupName != "Hololive" {
-			for i, Member := range database.GetMembers(Group.ID) {
+	for _, GroupData := range engine.GroupData {
+		if GroupData.GroupName != "Hololive" {
+			wg := new(sync.WaitGroup)
+			for i, MemberData := range database.GetMembers(GroupData.ID) {
 				wg.Add(1)
 				go func(Group database.Group, Member database.Member, wg *sync.WaitGroup) {
 					defer wg.Done()
@@ -60,12 +60,12 @@ func CheckSpaceVideo() {
 						Data.Check(strconv.Itoa(config.BotConf.LimitConf.SpaceBiliBili)).SendNude()
 
 					}
-				}(Group, Member, wg)
+				}(GroupData, MemberData, wg)
 				if i%5 == 0 {
 					time.Sleep(3 * time.Second)
 				}
 			}
+			wg.Wait()
 		}
 	}
-	wg.Wait()
 }

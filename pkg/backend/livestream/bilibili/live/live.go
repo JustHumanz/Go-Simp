@@ -32,6 +32,7 @@ func CheckLiveSchedule() {
 	for _, GroupData := range engine.GroupData {
 		var wg sync.WaitGroup
 		for i, MemberData := range database.GetMembers(GroupData.ID) {
+			wg.Add(1)
 			go CheckBili(GroupData, MemberData, &wg)
 			if i%10 == 0 {
 				wg.Wait()

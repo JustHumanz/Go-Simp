@@ -1,6 +1,8 @@
 package twitter
 
 import (
+	"sync"
+
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	"github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
@@ -30,14 +32,20 @@ func CheckNew() {
 	if err != nil {
 		log.Error(err)
 	}
+	wg := new(sync.WaitGroup)
 	for _, GroupData := range engine.GroupData {
-		Fanarts, err := CreatePayload(database.GetMembers(GroupData.ID), GroupData, Scraper, config.BotConf.LimitConf.TwitterFanart)
-		if err != nil {
-			log.WithFields(log.Fields{
-				"Group": GroupData.GroupName,
-			}).Error(err)
-		} else {
-			SendFanart(Fanarts, GroupData)
-		}
+		wg.Add(1)
+		go func(Group database.Group, wg *sync.WaitGroup) {
+			defer wg.Done()
+			Fanarts, err := CreatePayload(database.GetMembers(Group.ID), Group, Scraper, config.BotConf.LimitConf.TwitterFanart)
+			if err != nil {
+				log.WithFields(log.Fields{
+					"Group": Group.GroupName,
+				}).Error(err)
+			} else {
+				SendFanart(Fanarts, Group)
+			}
+		}(GroupData, wg)
 	}
+	wg.Wait()
 }
