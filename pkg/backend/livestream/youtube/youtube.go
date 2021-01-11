@@ -19,7 +19,7 @@ import (
 
 var (
 	yttoken   string
-	Ytwaiting = "0"
+	Ytwaiting = "???"
 	Bot       *discordgo.Session
 )
 

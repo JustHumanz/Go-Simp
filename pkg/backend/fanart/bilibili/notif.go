@@ -23,9 +23,54 @@ type Notif struct {
 func (NotifData Notif) PushNotif(Color int) {
 	Data := NotifData.TBiliData
 	Group := NotifData.Group
-	ID, DiscordChannelID := database.ChannelTag(NotifData.MemberID, 1, "")
+	ChannelData := database.ChannelTag(NotifData.MemberID, 1, "")
 	GroupIcon := ""
 	tags := ""
+	for _, Channel := range ChannelData {
+		ChannelState := database.DiscordChannel{
+			ChannelID: Channel.ChannelID,
+			Group:     Group,
+		}
+		UserTagsList := database.GetUserList(Channel.ID, NotifData.MemberID)
+		if UserTagsList != nil {
+			tags = strings.Join(UserTagsList, " ")
+		} else {
+			tags = "_"
+		}
+
+		if Group.GroupName != "Independen" {
+			GroupIcon = Group.IconURL
+		}
+		if tags == "_" && Group.GroupName == "Independen" {
+			//do nothing,like my life
+		} else {
+			tmp, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
+				SetAuthor(strings.Title(Group.GroupName), GroupIcon).
+				SetTitle(Data.Author).
+				SetURL(Data.URL).
+				SetThumbnail(Data.Avatar).
+				SetDescription(Data.Text).
+				SetImage(NotifData.PhotosImgur).
+				AddField("User Tags", tags).
+				//AddField("Similar art", msg).
+				SetFooter("1/"+strconv.Itoa(NotifData.PhotosCount)+" photos", config.BiliBiliIMG).
+				InlineAllFields().
+				SetColor(Color).MessageEmbed)
+			if err != nil {
+				log.Error(tmp, err.Error())
+				err = ChannelState.DelChannel(err.Error())
+				if err != nil {
+					log.Error(err)
+				}
+			}
+			err = engine.Reacting(map[string]string{
+				"ChannelID": Channel.ChannelID,
+			}, Bot)
+			if err != nil {
+				log.Error(err)
+			}
+		}
+	}
 	/*
 		msg := ""
 		repost, url, err := engine.SaucenaoCheck(strings.Split(Data.Photos, "\n")[0])
@@ -46,49 +91,4 @@ func (NotifData Notif) PushNotif(Color int) {
 			msg = "_"
 		}
 	*/
-	for i := 0; i < len(DiscordChannelID); i++ {
-		ChannelState := database.DiscordChannel{
-			ChannelID:     DiscordChannelID[i],
-			VtuberGroupID: Group.ID,
-		}
-		UserTagsList := database.GetUserList(ID[i], NotifData.MemberID)
-		if UserTagsList != nil {
-			tags = strings.Join(UserTagsList, " ")
-		} else {
-			tags = "_"
-		}
-
-		if Group.GroupName != "Independen" {
-			GroupIcon = Group.IconURL
-		}
-		if tags == "_" && Group.GroupName == "Independen" {
-			//do nothing,like my life
-		} else {
-			tmp, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
-				SetAuthor(strings.Title(Group.GroupName), GroupIcon).
-				SetTitle(Data.Author).
-				SetURL(Data.URL).
-				SetThumbnail(Data.Avatar).
-				SetDescription(Data.Text).
-				SetImage(NotifData.PhotosImgur).
-				AddField("User Tags", tags).
-				//AddField("Similar art", msg).
-				SetFooter("1/"+strconv.Itoa(NotifData.PhotosCount)+" photos", config.BiliBiliIMG).
-				InlineAllFields().
-				SetColor(Color).MessageEmbed)
-			if err != nil {
-				log.Error(tmp, err.Error())
-				err = ChannelState.DelChannel(err.Error())
-				if err != nil {
-					log.Error(err)
-				}
-			}
-			err = engine.Reacting(map[string]string{
-				"ChannelID": DiscordChannelID[i],
-			}, Bot)
-			if err != nil {
-				log.Error(err)
-			}
-		}
-	}
 }

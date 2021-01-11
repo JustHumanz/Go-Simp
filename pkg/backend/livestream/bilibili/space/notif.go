@@ -22,11 +22,12 @@ func (Data CheckSctruct) SendNude() {
 		}).Info("New video uploaded")
 
 		for _, video := range Data.VideoList {
-			ID, DiscordChannelID := database.ChannelTag(Data.MemberID, 2, "LiveOnly")
-			for i := 0; i < len(DiscordChannelID); i++ {
-				UserTagsList := database.GetUserList(ID[i], Data.MemberID)
+			//ID, DiscordChannelID
+			ChannelData := database.ChannelTag(Data.MemberID, 2, "LiveOnly")
+			for _, Channel := range ChannelData {
+				UserTagsList := database.GetUserList(Channel.ID, Data.MemberID)
 				if UserTagsList != nil {
-					msg, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
+					msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 						SetAuthor(Data.MemberName, Data.MemberFace, Data.MemberUrl).
 						SetTitle("Uploaded new video").
 						SetDescription(video.Title).
@@ -42,7 +43,7 @@ func (Data CheckSctruct) SendNude() {
 					if err != nil {
 						log.Error(msg, err)
 					} else {
-						msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "UserTags: "+strings.Join(UserTagsList, " "))
+						msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "UserTags: "+strings.Join(UserTagsList, " "))
 						if err != nil {
 							log.Error(msg, err)
 						}

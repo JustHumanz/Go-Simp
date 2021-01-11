@@ -63,24 +63,24 @@ func YtGetStatus(Group, Member int64, Status, Region string) ([]YtDbData, error)
 }
 
 //Input youtube new video
-func (Data *YtDbData) InputYt(MemberID int64) error {
+func (Data *YtDbData) InputYt() (int64, error) {
 	stmt, err := DB.Prepare(`INSERT INTO Youtube (VideoID,Type,Status,Title,Thumbnails,Description,PublishedAt,ScheduledStart,EndStream,Viewers,Length,VtuberMember_id) values(?,?,?,?,?,?,?,?,?,?,?,?)`)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	defer stmt.Close()
 
-	res, err := stmt.Exec(Data.VideoID, Data.Type, Data.Status, Data.Title, Data.Thumb, Data.Desc, Data.Published, Data.Schedul, Data.End, Data.Viewers, Data.Length, MemberID)
+	res, err := stmt.Exec(Data.VideoID, Data.Type, Data.Status, Data.Title, Data.Thumb, Data.Desc, Data.Published, Data.Schedul, Data.End, Data.Viewers, Data.Length, Data.MemberID)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	_, err = res.LastInsertId()
+	id, err := res.LastInsertId()
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	return id, nil
 }
 
 func (Data YtDbData) IsEmpty() bool {

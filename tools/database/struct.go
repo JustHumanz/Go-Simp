@@ -56,7 +56,7 @@ type Member struct {
 }
 
 type YtDbData struct {
-	ID            int
+	ID            int64
 	ChannelID     string
 	Group         string
 	Status        string
@@ -282,4 +282,61 @@ func (ac YtDbData) MarshalBinary() ([]byte, error) {
 
 func (ac Member) MarshalBinary() ([]byte, error) {
 	return json.Marshal(ac)
+}
+
+func (ac DiscordChannel) MarshalBinary() ([]byte, error) {
+	return json.Marshal(ac)
+}
+
+type DiscordChannel struct {
+	ID             int64
+	ChannelID      string
+	TypeTag        int
+	LiveOnly       bool
+	NewUpcoming    bool
+	Dynamic        bool
+	Group          Group
+	YoutubeVideoID string
+	EmbedMessageID string
+	TextMessageID  string
+}
+
+func (Data *DiscordChannel) SetTypeTag(new int) *DiscordChannel {
+	Data.TypeTag = new
+	return Data
+}
+
+func (Data *DiscordChannel) SetLiveOnly(new bool) *DiscordChannel {
+	Data.LiveOnly = new
+	return Data
+}
+
+func (Data *DiscordChannel) SetNewUpcoming(new bool) *DiscordChannel {
+	Data.NewUpcoming = new
+	return Data
+}
+
+func (Data *DiscordChannel) SetVtuberGroupID(new int64) *DiscordChannel {
+	Data.Group.ID = new
+	return Data
+}
+
+func (Data *DiscordChannel) SetDynamic(new bool) *DiscordChannel {
+	Data.Dynamic = new
+	return Data
+}
+
+func (Data *DiscordChannel) SetYoutubeVideoID(new string) *DiscordChannel {
+	Data.YoutubeVideoID = new
+	return Data
+}
+
+func (Data *DiscordChannel) SetMsgEmbedID(new string) *DiscordChannel {
+	Data.EmbedMessageID = new
+	return Data
+}
+
+func (Data *DiscordChannel) SetMsgTextID(new string) *DiscordChannel {
+	Data.TextMessageID = new
+	return Data
 }

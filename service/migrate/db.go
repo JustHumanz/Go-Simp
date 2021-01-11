@@ -33,6 +33,7 @@ func CreateDB(Data config.ConfigFile) error {
 		Type int(11) NOT NULL,
 		LiveOnly TINYINT NOT NULL DEFAULT 0,
 		NewUpcoming TINYINT NOT NULL DEFAULT 1,
+		Dynamic TINYINT NOT NULL DEFAULT 0,
 		VtuberGroup_id int(11) NOT NULL,
 		PRIMARY KEY (id)
 	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`)
@@ -245,7 +246,7 @@ func CreateDB(Data config.ConfigFile) error {
 				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id 
 				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
 				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-				Where VtuberGroup.id=grpid AND Status='past' AND Region=reg AND EndStream !='' order by EndStream ASC Limit 3;
+				Where VtuberGroup.id=grpid AND Status='past' AND Region=reg AND EndStream !='' order by EndStream DESC Limit 3;
 				
 			END if;	
 		ELSE
