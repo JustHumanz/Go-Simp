@@ -1,3 +1,8 @@
+v1.5.16
+- Add Dynamic notif #83
+- Fix twitter fanart high cpu usage
+- Add DiscordChannel struct
+
 v1.4.15
 - Fix subs milistone not send
 - Fix member cache
