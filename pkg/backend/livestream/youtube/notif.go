@@ -46,7 +46,7 @@ func (PushData *NotifStruct) SendNude() {
 
 	Views, err := strconv.Atoi(PushData.YtData.Viewers)
 	if err != nil {
-		Views = 0
+		log.Error(err)
 	}
 	PushData.YtData.Viewers = engine.NearestThousandFormat(float64(Views))
 	if Status == "upcoming" {
@@ -84,6 +84,9 @@ func (PushData *NotifStruct) SendNude() {
 					}
 				}
 				msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` New upcoming Livestream\nUserTags: "+strings.Join(UserTagsList, " "))
+				if err != nil {
+					log.Error(err)
+				}
 			}
 		}
 
@@ -138,7 +141,7 @@ func (PushData *NotifStruct) SendNude() {
 						"VtuberGroupID":  PushData.Group.ID,
 						"YoutubeID":      PushData.YtData.ID,
 					}).Info("Set dynamic mode")
-					ChannelState.SetYoutubeID(PushData.YtData.ID).
+					ChannelState.SetYoutubeVideoID(PushData.YtData.VideoID).
 						SetMsgEmbedID(MsgEmbed.ID)
 				}
 				if Bili {
@@ -172,7 +175,7 @@ func (PushData *NotifStruct) SendNude() {
 		}
 
 		//id, DiscordChannelID
-		ChannelData := database.ChannelTag(PushData.Member.ID, 2, "LiveOnly")
+		ChannelData := database.ChannelTag(PushData.Member.ID, 2, "NotLiveOnly")
 		for _, Channel := range ChannelData {
 			ChannelState := &database.DiscordChannel{
 				ChannelID: Channel.ChannelID,
@@ -218,7 +221,7 @@ func (PushData *NotifStruct) SendNude() {
 				Group:     PushData.Group,
 			}
 			for ii := 10; ii < 70; ii += 5 {
-				k := ii - 5
+				k := ii - 6
 				if UpcominginMinutes <= ii && UpcominginMinutes >= k {
 					UserTagsList := database.GetUserReminderList(int(Channel.ID), PushData.Member.ID, ii)
 					LiveCount := durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(1).String()
@@ -253,7 +256,7 @@ func (PushData *NotifStruct) SendNude() {
 								"VtuberGroupID":  PushData.Group.ID,
 								"YoutubeID":      PushData.YtData.ID,
 							}).Info("Set dynamic mode")
-							ChannelState.SetYoutubeID(PushData.YtData.ID).
+							ChannelState.SetYoutubeVideoID(PushData.YtData.VideoID).
 								SetMsgEmbedID(MsgEmbed.ID).
 								SetMsgTextID(MsgText.ID)
 						}

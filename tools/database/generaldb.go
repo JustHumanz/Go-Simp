@@ -584,12 +584,11 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 }
 
 //Get DiscordChannelID from VtuberGroup
-func (Data Group) GetChannelByGroup() ([]int, []string) {
+func (Data Group) GetChannelByGroup() []DiscordChannel {
 	var (
-		channellist []string
-		idlist      []int
 		list        string
-		id          int
+		id          int64
+		ChannelData []DiscordChannel
 	)
 	rows, err := DB.Query(`SELECT id,DiscordChannelID FROM Channel WHERE VtuberGroup_id=? group by DiscordChannelID`, Data.ID)
 	if err != nil {
@@ -602,10 +601,12 @@ func (Data Group) GetChannelByGroup() ([]int, []string) {
 		if err != nil {
 			log.Error(err)
 		}
-		channellist = append(channellist, list)
-		idlist = append(idlist, id)
+		ChannelData = append(ChannelData, DiscordChannel{
+			ID:        id,
+			ChannelID: list,
+		})
 	}
-	return idlist, channellist
+	return ChannelData
 }
 
 //Check Discord Channel from VtuberGroup
@@ -719,7 +720,7 @@ func ChannelTag(MemberID int64, typetag int, Options string) []DiscordChannel {
 	var (
 		Data []DiscordChannel
 	)
-	if Options == "LiveOnly" {
+	if Options == "NotLiveOnly" {
 		rows, err := DB.Query(`Select Channel.id,DiscordChannelID,Dynamic FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND LiveOnly=0`, MemberID)
 		if err != nil {
 			log.Error(err)
@@ -793,7 +794,7 @@ func ChannelTag(MemberID int64, typetag int, Options string) []DiscordChannel {
 
 func (Data *DiscordChannel) PushReddis() {
 	ctx := context.Background()
-	err := GeneralCache.LPush(ctx, "yt"+strconv.Itoa(int(Data.YoutubeID)), Data).Err()
+	err := GeneralCache.LPush(ctx, "yt"+Data.YoutubeVideoID, Data).Err()
 	if err != nil {
 		log.Error(err)
 	}

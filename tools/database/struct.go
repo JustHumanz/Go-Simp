@@ -296,7 +296,7 @@ type DiscordChannel struct {
 	NewUpcoming    bool
 	Dynamic        bool
 	Group          Group
-	YoutubeID      int64
+	YoutubeVideoID string
 	EmbedMessageID string
 	TextMessageID  string
 }
@@ -326,8 +326,8 @@ func (Data *DiscordChannel) SetDynamic(new bool) *DiscordChannel {
 	return Data
 }
 
-func (Data *DiscordChannel) SetYoutubeID(new int64) *DiscordChannel {
-	Data.YoutubeID = new
+func (Data *DiscordChannel) SetYoutubeVideoID(new string) *DiscordChannel {
+	Data.YoutubeVideoID = new
 	return Data
 }
 

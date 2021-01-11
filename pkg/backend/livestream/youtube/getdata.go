@@ -134,6 +134,17 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 					"Status":       "Past",
 				}).Info("Update video status from " + Data.Items[i].Snippet.VideoStatus + " to past,probably member only")
 				YoutubeData.ChangeYtStatus("past").UpdateYtDB()
+				ChannelState := database.GetLiveNotifMsg("yt" + strconv.Itoa(int(YoutubeData.YtData.ID)))
+				for _, v := range ChannelState {
+					log.WithFields(log.Fields{
+						"VideoData ID": VideoID[i],
+						"Status":       "Past",
+					}).Info("Delete message from ", []string{v.TextMessageID, v.EmbedMessageID})
+					err := Bot.ChannelMessagesBulkDelete(v.ChannelID, []string{v.TextMessageID, v.EmbedMessageID})
+					if err != nil {
+						log.Error(err)
+					}
+				}
 
 			} else if Data.Items[i].Snippet.VideoStatus == "upcoming" && YoutubeData.YtData.Status == "past" {
 				log.Info("maybe yt error or human error")
