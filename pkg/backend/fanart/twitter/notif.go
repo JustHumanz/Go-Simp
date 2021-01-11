@@ -15,41 +15,40 @@ func SendFanart(Data []Fanart, Group database.Group) {
 	for _, MemberFanart := range Data {
 		url := MemberFanart.Tweet.PermanentURL
 		ChannelData := database.ChannelTag(MemberFanart.Member.ID, 1, "")
+		var (
+			tags      string
+			GroupIcon string
+			Media     string
+			Msg       string
+		)
+
+		if len(MemberFanart.Tweet.Videos) > 0 {
+			Media = MemberFanart.Tweet.Videos[0].Preview
+			Msg = "1/1 Videos"
+		} else if len(MemberFanart.Tweet.Photos) > 0 {
+			Media = MemberFanart.Tweet.Photos[0]
+			Msg = "1/" + strconv.Itoa(len(MemberFanart.Tweet.Photos)) + " Photos"
+		} else {
+			Media = config.NotFound
+			Msg = "Photos/Video oversize,check original post"
+		}
+
+		Color, err := engine.GetColor(config.TmpDir, Media)
+		if err != nil {
+			log.Error(err)
+		}
+
+		if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
+			GroupIcon = ""
+		} else {
+			GroupIcon = Group.IconURL
+		}
 		for _, Channel := range ChannelData {
 			ChannelState := database.DiscordChannel{
 				ChannelID: Channel.ChannelID,
 				Group:     Group,
 			}
 			UserTagsList := database.GetUserList(Channel.ID, MemberFanart.Member.ID)
-
-			var (
-				tags      string
-				GroupIcon string
-				Media     string
-				Msg       string
-			)
-
-			if len(MemberFanart.Tweet.Videos) > 0 {
-				Media = MemberFanart.Tweet.Videos[0].Preview
-				Msg = "1/1 Videos"
-			} else if len(MemberFanart.Tweet.Photos) > 0 {
-				Media = MemberFanart.Tweet.Photos[0]
-				Msg = "1/" + strconv.Itoa(len(MemberFanart.Tweet.Photos)) + " Photos"
-			} else {
-				Media = config.NotFound
-				Msg = "Photos/Video oversize,check original post"
-			}
-
-			Color, err := engine.GetColor(config.TmpDir, Media)
-			if err != nil {
-				log.Error(err)
-			}
-
-			if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
-				GroupIcon = ""
-			} else {
-				GroupIcon = Group.IconURL
-			}
 			if UserTagsList != nil {
 				tags = strings.Join(UserTagsList, " ")
 			} else {
