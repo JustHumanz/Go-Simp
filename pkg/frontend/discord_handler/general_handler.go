@@ -1461,6 +1461,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 								if CommandArray[3] == "-liveonly" {
 									err := ChannelState.SetLiveOnly(true).UpdateChannel("LiveOnly")
 									if err != nil {
+										log.Error(err)
 										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
 										done = append(done, "`"+VTuberGroup.GroupName+"`")
@@ -1468,13 +1469,15 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 								} else if CommandArray[3] == "-newupcoming" {
 									err := ChannelState.SetNewUpcoming(true).UpdateChannel("NewUpcoming")
 									if err != nil {
+										log.Error(err)
 										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
 										done = append(done, "`"+VTuberGroup.GroupName+"`")
 									}
 								} else if CommandArray[3] == "-dynamic" {
-									err := ChannelState.SetLiveOnly(true).SetDynamic(true).UpdateChannel("Dynamic")
+									err := ChannelState.SetDynamic(true).UpdateChannel("Dynamic")
 									if err != nil {
+										log.Error(err)
 										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
 										done = append(done, "`"+VTuberGroup.GroupName+"`")
@@ -1482,6 +1485,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 								} else if CommandArray[3] == "-rm_liveonly" {
 									err := ChannelState.SetLiveOnly(false).UpdateChannel("LiveOnly")
 									if err != nil {
+										log.Error(err)
 										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
 										done = append(done, "`"+VTuberGroup.GroupName+"`")
@@ -1489,6 +1493,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 								} else if CommandArray[3] == "-rm_newupcoming" {
 									err := ChannelState.SetNewUpcoming(false).UpdateChannel("NewUpcoming")
 									if err != nil {
+										log.Error(err)
 										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
 										done = append(done, "`"+VTuberGroup.GroupName+"`")
@@ -1496,6 +1501,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 								} else if CommandArray[3] == "-rm_dynamic" {
 									err := ChannelState.SetDynamic(false).UpdateChannel("Dynamic")
 									if err != nil {
+										log.Error(err)
 										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
 										done = append(done, "`"+VTuberGroup.GroupName+"`")
@@ -1513,6 +1519,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 								if CommandArray[4] == "-newupcoming" {
 									err := ChannelState.SetNewUpcoming(true).UpdateChannel("NewUpcoming")
 									if err != nil {
+										log.Error(err)
 										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
 										done = append(done, "`"+VTuberGroup.GroupName+"`")
@@ -1520,13 +1527,15 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 								} else if CommandArray[4] == "-liveonly" {
 									err := ChannelState.SetLiveOnly(true).UpdateChannel("LiveOnly")
 									if err != nil {
+										log.Error(err)
 										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
 										done = append(done, "`"+VTuberGroup.GroupName+"`")
 									}
 								} else if CommandArray[4] == "-dynamic" {
-									err := ChannelState.SetLiveOnly(true).SetDynamic(true).UpdateChannel("Dynamic")
+									err := ChannelState.SetDynamic(true).UpdateChannel("Dynamic")
 									if err != nil {
+										log.Error(err)
 										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
 										done = append(done, "`"+VTuberGroup.GroupName+"`")
@@ -1534,6 +1543,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 								} else if CommandArray[4] == "-rm_liveonly" {
 									err := ChannelState.SetLiveOnly(false).UpdateChannel("LiveOnly")
 									if err != nil {
+										log.Error(err)
 										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
 										done = append(done, "`"+VTuberGroup.GroupName+"`")
@@ -1541,6 +1551,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 								} else if CommandArray[4] == "-rm_newupcoming" {
 									err := ChannelState.SetNewUpcoming(false).UpdateChannel("NewUpcoming")
 									if err != nil {
+										log.Error(err)
 										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
 										done = append(done, "`"+VTuberGroup.GroupName+"`")
@@ -1548,6 +1559,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 								} else if CommandArray[3] == "-rm_dynamic" {
 									err := ChannelState.SetDynamic(false).UpdateChannel("Dynamic")
 									if err != nil {
+										log.Error(err)
 										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
 										done = append(done, "`"+VTuberGroup.GroupName+"`")

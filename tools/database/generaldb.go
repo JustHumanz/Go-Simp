@@ -520,10 +520,10 @@ func (Data *DiscordChannel) DelChannel(errmsg string) error {
 //update discord channel type from `update` command
 func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 	var (
-		typ     int
-		live    bool
-		newup   bool
-		dynamic bool
+		channeltype int
+		liveonly    bool
+		newupcoming bool
+		dynamic     bool
 	)
 	rows, err := DB.Query(`SELECT Type,LiveOnly,NewUpcoming,Dynamic FROM Channel WHERE VtuberGroup_id=? AND DiscordChannelID=?`, Data.Group.ID, Data.ChannelID)
 	if err != nil {
@@ -532,29 +532,31 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&typ, &live, &newup, &dynamic)
+		err = rows.Scan(&channeltype, &liveonly, &newupcoming, &dynamic)
 		if err != nil {
 			log.Error(err)
 		}
 	}
-	if typ == 1 {
-		Data.SetLiveOnly(false).SetNewUpcoming(false).SetDynamic(false)
+	if channeltype == 1 {
+		liveonly = false
+		newupcoming = false
+		dynamic = false
 	}
 
 	if UpdateType == "Type" {
-		if typ == Data.TypeTag {
+		if channeltype == Data.TypeTag {
 			return errors.New("Already set that type on this channel")
 		} else {
-			_, err := DB.Exec(`Update Channel set Type=?,LiveOnly=?,NewUpcoming=?,Dynamic=? Where VtuberGroup_id=? AND DiscordChannelID=?`, Data.TypeTag, live, newup, dynamic, Data.Group.ID, Data.ChannelID)
+			_, err := DB.Exec(`Update Channel set Type=?,LiveOnly=?,NewUpcoming=?,Dynamic=? Where VtuberGroup_id=? AND DiscordChannelID=?`, Data.TypeTag, liveonly, newupcoming, dynamic, Data.Group.ID, Data.ChannelID)
 			if err != nil {
 				return err
 			}
 		}
 	} else if UpdateType == "LiveOnly" {
-		if live == Data.LiveOnly {
+		if liveonly == Data.LiveOnly {
 			return errors.New("Already set LiveOnly on this channel")
 		} else {
-			_, err := DB.Exec(`Update Channel set Type=?,LiveOnly=?,NewUpcoming=?,Dynamic=? Where VtuberGroup_id=? AND DiscordChannelID=?`, Data.TypeTag, Data.LiveOnly, newup, dynamic, Data.Group.ID, Data.ChannelID)
+			_, err := DB.Exec(`Update Channel set Type=?,LiveOnly=?,NewUpcoming=?,Dynamic=? Where VtuberGroup_id=? AND DiscordChannelID=?`, channeltype, Data.LiveOnly, newupcoming, dynamic, Data.Group.ID, Data.ChannelID)
 			if err != nil {
 				return err
 			}
@@ -562,19 +564,20 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 	} else if UpdateType == "Dynamic" {
 		if dynamic == Data.Dynamic {
 			return errors.New("Already set Dynamic on this channel")
-		} else if newup && dynamic {
-			Data.SetNewUpcoming(false)
+		} else if newupcoming && dynamic {
+			newupcoming = false
+			liveonly = true
 		} else {
-			_, err := DB.Exec(`Update Channel set Type=?,LiveOnly=?,NewUpcoming=?,Dynamic=? Where VtuberGroup_id=? AND DiscordChannelID=?`, Data.Dynamic, Data.NewUpcoming, Data.Group.ID, Data.ChannelID)
+			_, err := DB.Exec(`Update Channel set Type=?,LiveOnly=?,NewUpcoming=?,Dynamic=? Where VtuberGroup_id=? AND DiscordChannelID=?`, channeltype, liveonly, newupcoming, Data.Dynamic, Data.Group.ID, Data.ChannelID)
 			if err != nil {
 				return err
 			}
 		}
 	} else {
-		if newup == Data.NewUpcoming {
+		if newupcoming == Data.NewUpcoming {
 			return errors.New("Already set NewUpcoming on this channel")
 		} else {
-			_, err := DB.Exec(`Update Channel set NewUpcoming=? Where VtuberGroup_id=? AND DiscordChannelID=?`, Data.NewUpcoming, Data.Group.ID, Data.ChannelID)
+			_, err := DB.Exec(`Update Channel set Type=?,LiveOnly=?,NewUpcoming=?,Dynamic=? Where VtuberGroup_id=? AND DiscordChannelID=?`, channeltype, liveonly, Data.NewUpcoming, dynamic, Data.Group.ID, Data.ChannelID)
 			if err != nil {
 				return err
 			}
