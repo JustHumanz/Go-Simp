@@ -41,15 +41,16 @@ func (Data *LiveBili) Crotttt(GroupIcon string) error {
 	}
 
 	MemberID := Data.Member.ID
-	id, DiscordChannelID := database.ChannelTag(MemberID, 2, "")
-	for i, DiscordChannel := range DiscordChannelID {
-		UserTagsList := database.GetUserList(id[i], MemberID)
+	//id, DiscordChannelID
+	ChannelData := database.ChannelTag(MemberID, 2, "")
+	for _, Channel := range ChannelData {
+		UserTagsList := database.GetUserList(Channel.ID, MemberID)
 		if UserTagsList != nil {
-			_, err := Bot.ChannelMessageSendEmbed(DiscordChannel, Data.Embed)
+			_, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, Data.Embed)
 			if err != nil {
 				return err
 			}
-			_, err = Bot.ChannelMessageSend(DiscordChannel, "`"+Data.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " "))
+			_, err = Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " "))
 			if err != nil {
 				return err
 			}

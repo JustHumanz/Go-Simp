@@ -245,7 +245,7 @@ func CreateDB(Data config.ConfigFile) error {
 				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id 
 				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
 				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-				Where VtuberGroup.id=grpid AND Status='past' AND Region=reg AND EndStream !='' order by EndStream ASC Limit 3;
+				Where VtuberGroup.id=grpid AND Status='past' AND Region=reg AND EndStream !='' order by EndStream DESC Limit 3;
 				
 			END if;	
 		ELSE

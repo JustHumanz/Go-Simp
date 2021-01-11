@@ -19,7 +19,7 @@ import (
 
 var (
 	yttoken   string
-	Ytwaiting = "0"
+	Ytwaiting = "???"
 	Bot       *discordgo.Session
 )
 
@@ -29,6 +29,7 @@ func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
 	cronInit.AddFunc(config.YoutubeCheckChannel, CheckYtSchedule)
 	cronInit.AddFunc(config.YoutubePrivateSlayer, CheckPrivate)
 	log.Info("Enable youtube module")
+	CheckYtScheduleTest("Hololive")
 }
 
 func CheckYtSchedule() {
@@ -51,6 +52,31 @@ func CheckYtSchedule() {
 			}
 		}
 		wg.Wait()
+	}
+}
+
+func CheckYtScheduleTest(GroupName string) {
+	yttoken = engine.GetYtToken()
+	for _, Group := range engine.GroupData {
+		if Group.GroupName == GroupName {
+			var wg sync.WaitGroup
+			for i, Member := range database.GetMembers(Group.ID) {
+				if Member.YoutubeID != "" {
+					wg.Add(1)
+					log.WithFields(log.Fields{
+						"Vtuber":        Member.EnName,
+						"Group":         Group.GroupName,
+						"Youtube ID":    Member.YoutubeID,
+						"Vtuber Region": Member.Region,
+					}).Info("Checking Youtube")
+					go StartCheckYT(Member, Group, &wg)
+				}
+				if i%10 == 0 {
+					wg.Wait()
+				}
+			}
+			wg.Wait()
+		}
 	}
 }
 

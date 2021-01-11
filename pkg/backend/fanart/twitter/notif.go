@@ -14,13 +14,13 @@ import (
 func SendFanart(Data []Fanart, Group database.Group) {
 	for _, MemberFanart := range Data {
 		url := MemberFanart.Tweet.PermanentURL
-		ID, DiscordChannelID := database.ChannelTag(MemberFanart.Member.ID, 1, "")
-		for i := 0; i < len(DiscordChannelID); i++ {
+		ChannelData := database.ChannelTag(MemberFanart.Member.ID, 1, "")
+		for _, Channel := range ChannelData {
 			ChannelState := database.DiscordChannel{
-				ChannelID:     DiscordChannelID[i],
-				VtuberGroupID: Group.ID,
+				ChannelID: Channel.ChannelID,
+				Group:     Group,
 			}
-			UserTagsList := database.GetUserList(ID[i], MemberFanart.Member.ID)
+			UserTagsList := database.GetUserList(Channel.ID, MemberFanart.Member.ID)
 
 			var (
 				tags      string
@@ -58,7 +58,7 @@ func SendFanart(Data []Fanart, Group database.Group) {
 			if tags == "_" && Group.GroupName == "Independen" {
 				//do nothing,like my life
 			} else {
-				msg, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
+				msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 					SetAuthor(strings.Title(Group.GroupName), GroupIcon).
 					SetTitle("@"+MemberFanart.Tweet.Username).
 					SetURL(url).
@@ -76,7 +76,7 @@ func SendFanart(Data []Fanart, Group database.Group) {
 					}
 				}
 				engine.Reacting(map[string]string{
-					"ChannelID": DiscordChannelID[i],
+					"ChannelID": Channel.ChannelID,
 				}, Bot)
 			}
 		}

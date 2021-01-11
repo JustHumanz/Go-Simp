@@ -54,15 +54,16 @@ func (PushData *NotifStruct) SendNude() {
 		if err != nil {
 			log.Error(err)
 		}
-		id, DiscordChannelID := database.ChannelTag(PushData.Member.ID, 2, "NewUpcoming")
-		for i := 0; i < len(DiscordChannelID); i++ {
+		//id, DiscordChannelID
+		ChannelData := database.ChannelTag(PushData.Member.ID, 2, "NewUpcoming")
+		for _, Channel := range ChannelData {
 			ChannelState := database.DiscordChannel{
-				ChannelID:     DiscordChannelID[i],
-				VtuberGroupID: PushData.Group.ID,
+				ChannelID: Channel.ChannelID,
+				Group:     PushData.Group,
 			}
-			UserTagsList := database.GetUserList(id[i], PushData.Member.ID)
+			UserTagsList := database.GetUserList(Channel.ID, PushData.Member.ID)
 			if UserTagsList != nil {
-				msg, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
+				msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 					SetAuthor(VtuberName, Avatar, YtChannel).
 					SetTitle("New upcoming Livestream").
 					SetDescription(PushData.YtData.Title).
@@ -82,7 +83,7 @@ func (PushData *NotifStruct) SendNude() {
 						log.Error(err)
 					}
 				}
-				msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "`"+PushData.Member.Name+"` New upcoming Livestream\nUserTags: "+strings.Join(UserTagsList, " "))
+				msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` New upcoming Livestream\nUserTags: "+strings.Join(UserTagsList, " "))
 			}
 		}
 
@@ -102,15 +103,16 @@ func (PushData *NotifStruct) SendNude() {
 				database.SetRoomToLive(PushData.Member.ID)
 			}
 		}
-		id, DiscordChannelID := database.ChannelTag(PushData.Member.ID, 2, "")
-		for i := 0; i < len(DiscordChannelID); i++ {
-			ChannelState := database.DiscordChannel{
-				ChannelID:     DiscordChannelID[i],
-				VtuberGroupID: PushData.Group.ID,
+		//id, DiscordChannelID
+		ChannelData := database.ChannelTag(PushData.Member.ID, 2, "")
+		for _, Channel := range ChannelData {
+			ChannelState := &database.DiscordChannel{
+				ChannelID: Channel.ChannelID,
+				Group:     PushData.Group,
 			}
-			UserTagsList := database.GetUserList(id[i], PushData.Member.ID)
+			UserTagsList := database.GetUserList(Channel.ID, PushData.Member.ID)
 			if UserTagsList != nil {
-				msg, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
+				MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 					SetAuthor(VtuberName, Avatar, YtChannel).
 					SetTitle("Live right now").
 					SetDescription(PushData.YtData.Title).
@@ -124,16 +126,41 @@ func (PushData *NotifStruct) SendNude() {
 					SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
 					SetColor(Color).MessageEmbed)
 				if err != nil {
-					log.Error(msg, err)
+					log.Error(MsgEmbed, err)
 					err = ChannelState.DelChannel(err.Error())
 					if err != nil {
 						log.Error(err)
 					}
 				}
+				if Channel.Dynamic {
+					log.WithFields(log.Fields{
+						"DiscordChannel": Channel.ChannelID,
+						"VtuberGroupID":  PushData.Group.ID,
+						"YoutubeID":      PushData.YtData.ID,
+					}).Info("Set dynamic mode")
+					ChannelState.SetYoutubeID(PushData.YtData.ID).
+						SetMsgEmbedID(MsgEmbed.ID)
+				}
 				if Bili {
-					msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "`"+PushData.Member.Name+"` Live right now at BiliBili And Youtube\nUserTags: "+strings.Join(UserTagsList, " "))
+					msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Live right now at BiliBili And Youtube\nUserTags: "+strings.Join(UserTagsList, " "))
+					if err != nil {
+						log.Error(err)
+					}
+					if Channel.Dynamic {
+						ChannelState.SetMsgTextID(msg.ID)
+					}
+
 				} else {
-					msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "`"+PushData.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " "))
+					msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " "))
+					if err != nil {
+						log.Error(err)
+					}
+					if Channel.Dynamic {
+						ChannelState.SetMsgTextID(msg.ID)
+					}
+				}
+				if Channel.Dynamic {
+					ChannelState.PushReddis()
 				}
 			}
 		}
@@ -144,15 +171,16 @@ func (PushData *NotifStruct) SendNude() {
 			log.Error(err)
 		}
 
-		id, DiscordChannelID := database.ChannelTag(PushData.Member.ID, 2, "LiveOnly")
-		for i := 0; i < len(DiscordChannelID); i++ {
-			ChannelState := database.DiscordChannel{
-				ChannelID:     DiscordChannelID[i],
-				VtuberGroupID: PushData.Group.ID,
+		//id, DiscordChannelID
+		ChannelData := database.ChannelTag(PushData.Member.ID, 2, "LiveOnly")
+		for _, Channel := range ChannelData {
+			ChannelState := &database.DiscordChannel{
+				ChannelID: Channel.ChannelID,
+				Group:     PushData.Group,
 			}
-			UserTagsList := database.GetUserList(id[i], PushData.Member.ID)
+			UserTagsList := database.GetUserList(Channel.ID, PushData.Member.ID)
 			if UserTagsList != nil {
-				msg, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
+				msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 					SetAuthor(VtuberName, Avatar, YtChannel).
 					SetTitle("Uploaded a new video").
 					SetDescription(PushData.YtData.Title).
@@ -173,30 +201,29 @@ func (PushData *NotifStruct) SendNude() {
 						log.Error(err)
 					}
 				}
-				msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "`"+PushData.Member.Name+"` Uploaded a new video\nUserTags: "+strings.Join(UserTagsList, " "))
+				msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Uploaded a new video\nUserTags: "+strings.Join(UserTagsList, " "))
 			}
 		}
-	}
-
-	if Status == "reminder" {
+	} else if Status == "reminder" {
 		Color, err := engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
 		if err != nil {
 			log.Error(err)
 		}
-		id, DiscordChannelID := database.ChannelTag(PushData.Member.ID, 2, "")
 		UpcominginMinutes := int(math.Round(Timestart.In(loc).Sub(time.Now().In(loc)).Minutes()))
-		for i := 0; i < len(DiscordChannelID); i++ {
-			ChannelState := database.DiscordChannel{
-				ChannelID:     DiscordChannelID[i],
-				VtuberGroupID: PushData.Group.ID,
+		//id, DiscordChannelID
+		ChanelData := database.ChannelTag(PushData.Member.ID, 2, "")
+		for _, Channel := range ChanelData {
+			ChannelState := &database.DiscordChannel{
+				ChannelID: Channel.ChannelID,
+				Group:     PushData.Group,
 			}
 			for ii := 10; ii < 70; ii += 5 {
 				k := ii - 5
 				if UpcominginMinutes <= ii && UpcominginMinutes >= k {
-					UserTagsList := database.GetUserReminderList(id[i], PushData.Member.ID, ii)
+					UserTagsList := database.GetUserReminderList(int(Channel.ID), PushData.Member.ID, ii)
 					LiveCount := durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(1).String()
 					if UserTagsList != nil {
-						msg, err := Bot.ChannelMessageSendEmbed(DiscordChannelID[i], engine.NewEmbed().
+						MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 							SetAuthor(VtuberName, Avatar, YtChannel).
 							SetTitle(PushData.Member.EnName+" Live in "+LiveCount).
 							SetDescription(PushData.YtData.Title).
@@ -210,13 +237,26 @@ func (PushData *NotifStruct) SendNude() {
 							SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
 							SetColor(Color).MessageEmbed)
 						if err != nil {
-							log.Error(msg, err)
+							log.Error(MsgEmbed, err)
 							err = ChannelState.DelChannel(err.Error())
 							if err != nil {
 								log.Error(err)
 							}
 						}
-						msg, err = Bot.ChannelMessageSend(DiscordChannelID[i], "`"+PushData.Member.Name+"` Live in "+LiveCount+"\nUserTags: "+strings.Join(UserTagsList, " "))
+						MsgText, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Live in "+LiveCount+"\nUserTags: "+strings.Join(UserTagsList, " "))
+						if err != nil {
+							log.Error(err)
+						}
+						if Channel.Dynamic {
+							log.WithFields(log.Fields{
+								"DiscordChannel": Channel.ChannelID,
+								"VtuberGroupID":  PushData.Group.ID,
+								"YoutubeID":      PushData.YtData.ID,
+							}).Info("Set dynamic mode")
+							ChannelState.SetYoutubeID(PushData.YtData.ID).
+								SetMsgEmbedID(MsgEmbed.ID).
+								SetMsgTextID(MsgText.ID)
+						}
 					}
 				}
 			}

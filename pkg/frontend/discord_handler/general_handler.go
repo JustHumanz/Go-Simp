@@ -1188,6 +1188,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 				TypeTag:     0,
 				LiveOnly:    false,
 				NewUpcoming: false,
+				Dynamic:     false,
 				ChannelID:   m.ChannelID,
 			}
 			already []string
@@ -1240,6 +1241,8 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 						ChannelState.SetLiveOnly(true)
 					} else if CommandArray[3] == "-newupcoming" {
 						ChannelState.SetNewUpcoming(true)
+					} else if CommandArray[3] == "-dynamic" {
+						ChannelState.SetDynamic(true)
 					} else {
 						_, err := s.ChannelMessageSend(m.ChannelID, "`"+CommandArray[3]+"`,Invalid options")
 						if err != nil {
@@ -1248,12 +1251,13 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 						return
 					}
 				} else if ChannelState.TypeTag == 1 && len(CommandArray) >= 4 {
-					_, err := s.ChannelMessageSend(m.ChannelID, "You enable `Art` state,Ignoring `"+CommandArray[3]+"` options")
+					_, err := s.ChannelMessageSend(m.ChannelID, "You enabled `Art` state,Ignoring `"+CommandArray[3]+"` options")
 					if err != nil {
 						log.Error(err)
 					}
 					ChannelState.SetLiveOnly(false)
 					ChannelState.SetNewUpcoming(false)
+					ChannelState.SetDynamic(false)
 				}
 
 				if (ChannelState.TypeTag == 2 || ChannelState.TypeTag == 3) && len(CommandArray) >= 5 {
@@ -1261,6 +1265,8 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 						ChannelState.SetNewUpcoming(true)
 					} else if CommandArray[4] == "-liveonly" {
 						ChannelState.SetLiveOnly(true)
+					} else if CommandArray[4] == "-dynamic" {
+						ChannelState.SetDynamic(true)
 					} else {
 						_, err := s.ChannelMessageSend(m.ChannelID, "`"+CommandArray[4]+"`,Invalid options")
 						if err != nil {
@@ -1287,10 +1293,18 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 						} else {
 							err := ChannelState.AddChannel()
 							if err != nil {
-								log.Error(err)
-								_, err := s.ChannelMessageSend(m.ChannelID, "Something error XD")
-								if err != nil {
+								if err.Error() == "force to set Dynamic" {
+									_, err := s.ChannelMessageSend(m.ChannelID, "You set `dynamic` mode,channel has been forcing to set `live only`")
+									if err != nil {
+										log.Error(err)
+									}
+								} else {
 									log.Error(err)
+									_, err := s.ChannelMessageSend(m.ChannelID, "Something error XD "+err.Error())
+									if err != nil {
+										log.Error(err)
+									}
+									return
 								}
 							}
 							done = append(done, "`"+VTuberGroup.GroupName+"`")
@@ -1458,6 +1472,13 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 									} else {
 										done = append(done, "`"+VTuberGroup.GroupName+"`")
 									}
+								} else if CommandArray[3] == "-dynamic" {
+									err := ChannelState.SetLiveOnly(true).SetDynamic(true).UpdateChannel("Dynamic")
+									if err != nil {
+										already = append(already, "`"+VTuberGroup.GroupName+"`")
+									} else {
+										done = append(done, "`"+VTuberGroup.GroupName+"`")
+									}
 								} else if CommandArray[3] == "-rm_liveonly" {
 									err := ChannelState.SetLiveOnly(false).UpdateChannel("LiveOnly")
 									if err != nil {
@@ -1467,6 +1488,13 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 									}
 								} else if CommandArray[3] == "-rm_newupcoming" {
 									err := ChannelState.SetNewUpcoming(false).UpdateChannel("NewUpcoming")
+									if err != nil {
+										already = append(already, "`"+VTuberGroup.GroupName+"`")
+									} else {
+										done = append(done, "`"+VTuberGroup.GroupName+"`")
+									}
+								} else if CommandArray[3] == "-rm_dynamic" {
+									err := ChannelState.SetDynamic(false).UpdateChannel("Dynamic")
 									if err != nil {
 										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
@@ -1496,6 +1524,13 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 									} else {
 										done = append(done, "`"+VTuberGroup.GroupName+"`")
 									}
+								} else if CommandArray[4] == "-dynamic" {
+									err := ChannelState.SetLiveOnly(true).SetDynamic(true).UpdateChannel("Dynamic")
+									if err != nil {
+										already = append(already, "`"+VTuberGroup.GroupName+"`")
+									} else {
+										done = append(done, "`"+VTuberGroup.GroupName+"`")
+									}
 								} else if CommandArray[4] == "-rm_liveonly" {
 									err := ChannelState.SetLiveOnly(false).UpdateChannel("LiveOnly")
 									if err != nil {
@@ -1505,6 +1540,13 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 									}
 								} else if CommandArray[4] == "-rm_newupcoming" {
 									err := ChannelState.SetNewUpcoming(false).UpdateChannel("NewUpcoming")
+									if err != nil {
+										already = append(already, "`"+VTuberGroup.GroupName+"`")
+									} else {
+										done = append(done, "`"+VTuberGroup.GroupName+"`")
+									}
+								} else if CommandArray[3] == "-rm_dynamic" {
+									err := ChannelState.SetDynamic(false).UpdateChannel("Dynamic")
 									if err != nil {
 										already = append(already, "`"+VTuberGroup.GroupName+"`")
 									} else {
@@ -1771,28 +1813,42 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			}
 		} else if m.Content == Prefix+ChannelState {
-			list, Type, LiveOnly, NewUpcoming := database.ChannelStatus(m.ChannelID)
-			if list != nil {
+			ChannelData := database.ChannelStatus(m.ChannelID)
+			if len(ChannelData) > 0 {
 				var (
 					Typestr string
 				)
-				table.SetHeader([]string{"Group", "Type", "LiveOnly", "NewUpcoming"})
-				for i := 0; i < len(list); i++ {
-					if Type[i] == 1 {
+				table.SetHeader([]string{"Group", "Type", "LiveOnly", "Dynamic", "NewUpcoming"})
+				for i := 0; i < len(ChannelData); i++ {
+					if ChannelData[i].TypeTag == 1 {
 						Typestr = "Art"
-					} else if Type[i] == 2 {
+					} else if ChannelData[i].TypeTag == 2 {
 						Typestr = "Live"
 					} else {
 						Typestr = "All"
 					}
-					table.Append([]string{list[i], Typestr, LiveOnly[i], NewUpcoming[i]})
+					LiveOnly := "Disabled"
+					NewUpcoming := "Disabled"
+					Dynamic := "Disabled"
+
+					if ChannelData[i].LiveOnly {
+						LiveOnly = "Enabled"
+					}
+
+					if ChannelData[i].NewUpcoming {
+						NewUpcoming = "Enabled"
+					}
+
+					if ChannelData[i].Dynamic {
+						Dynamic = "Enabled"
+					}
+					table.Append([]string{ChannelData[i].Group.GroupName, Typestr, LiveOnly, Dynamic, NewUpcoming})
 				}
 				table.Render()
 
 				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 					SetDescription("```"+tableString.String()+"```").
-					SetThumbnail(config.GoSimpIMG).
 					SetColor(Color).
 					SetFooter("Use `update` command to change type of channel").MessageEmbed)
 				if err != nil {
@@ -1801,6 +1857,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 			} else {
 				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 					SetTitle("404 Not found").
+					SetThumbnail(config.GoSimpIMG).
 					SetImage(config.NotFound).
 					SetColor(Color).MessageEmbed)
 				if err != nil {

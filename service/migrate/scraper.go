@@ -85,13 +85,14 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 				End:       Data.Items[i].LiveDetails.EndTime,
 				Type:      yttype,
 				Viewers:   Viewers,
+				MemberID:  Dat.ID,
 			}
 
 			if Data.Items[i].Snippet.VideoStatus != "upcoming" || Data.Items[i].Snippet.VideoStatus != "live" {
 				NewData.Status = "past"
-				NewData.InputYt(Dat.ID)
+				NewData.InputYt()
 			} else {
-				NewData.InputYt(Dat.ID)
+				NewData.InputYt()
 			}
 		}
 	}

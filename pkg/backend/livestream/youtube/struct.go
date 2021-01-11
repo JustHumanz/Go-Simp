@@ -142,14 +142,6 @@ func (Data *NotifStruct) UpdateYtDB() {
 	Data.YtData.UpdateYt(Data.YtData.Status)
 }
 
-func (Data *NotifStruct) SendtoDB() error {
-	err := Data.YtData.InputYt(Data.Member.ID)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func (Data *NotifStruct) UpYtView(new string) *NotifStruct {
 	Data.YtData.Viewers = new
 	return Data
@@ -167,5 +159,10 @@ func (Data *NotifStruct) UpYtLen(new string) *NotifStruct {
 
 func (Data *NotifStruct) UpYtSchedul(new time.Time) *NotifStruct {
 	Data.YtData.Schedul = new
+	return Data
+}
+
+func (Data *NotifStruct) SetYoutubeID(new int64) *NotifStruct {
+	Data.YtData.ID = new
 	return Data
 }
