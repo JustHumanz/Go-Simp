@@ -81,6 +81,7 @@ type YtDbData struct {
 type UserStruct struct {
 	DiscordID, DiscordUserName, Channel_ID string
 	GroupID                                int64
+	MemberID                               int64
 	Reminder                               int
 	Human                                  bool
 }
@@ -112,6 +113,11 @@ func (Data *UserStruct) SetHuman(new bool) *UserStruct {
 
 func (Data *UserStruct) SetReminder(new int) *UserStruct {
 	Data.Reminder = new
+	return Data
+}
+
+func (Data *UserStruct) SetMemberID(new int64) *UserStruct {
+	Data.MemberID = new
 	return Data
 }
 

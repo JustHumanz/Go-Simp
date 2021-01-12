@@ -229,7 +229,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								SetReminder(ReminderUser)
 
 							for _, Member := range database.GetMembers(VTuberGroup.ID) {
-								err := User.Adduser(Member.ID)
+								err := User.SetMemberID(Member.ID).Adduser()
 								if err != nil {
 									Already = append(Already, "`"+Member.Name+"`")
 								} else {
@@ -280,7 +280,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						User.SetGroupID(Member.GroupID).
 							SetReminder(ReminderUser)
 
-						err := User.Adduser(Member.MemberID)
+						err := User.SetMemberID(Member.MemberID).Adduser()
 						if err != nil {
 							Already = append(Already, "`"+tmp[i]+"`")
 						} else {
@@ -692,7 +692,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 													Human:           false,
 													Reminder:        ReminderUser,
 												}
-												err := User.Adduser(Member.ID)
+												err := User.SetMemberID(Member.ID).Adduser()
 												if err != nil {
 													Already = append(Already, "`"+Member.Name+"`")
 												} else {
@@ -757,7 +757,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 											Human:           false,
 											Reminder:        ReminderUser,
 										}
-										err := User.Adduser(Member.MemberID)
+										err := User.SetMemberID(Member.MemberID).Adduser()
 										if err != nil {
 											Already = append(Already, "`"+tmp[i]+"`")
 										} else {

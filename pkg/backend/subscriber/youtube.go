@@ -49,14 +49,22 @@ func CheckYoutube() {
 								if err != nil {
 									log.Error(err)
 								}
+								VideoCount, err := strconv.Atoi(Item.Statistics.VideoCount)
+								if err != nil {
+									log.Error(err)
+								}
+								ViewCount, err := strconv.Atoi(Item.Statistics.ViewCount)
+								if err != nil {
+									log.Error(err)
+								}
 								SendNude(engine.NewEmbed().
 									SetAuthor(Group.GroupName, Group.IconURL, "https://www.youtube.com/channel/"+Name2.YoutubeID+"?sub_confirmation=1").
 									SetTitle(engine.FixName(Name2.EnName, Name2.JpName)).
 									SetThumbnail(config.YoutubeIMG).
 									SetDescription("Congratulation for "+SubsCount+" subscriber").
 									SetImage(Name2.YoutubeAvatar).
-									AddField("Viewers", Item.Statistics.ViewCount).
-									AddField("Videos", Item.Statistics.VideoCount).
+									AddField("Viewers", engine.NearestThousandFormat(float64(ViewCount))).
+									AddField("Videos", engine.NearestThousandFormat(float64(VideoCount))).
 									InlineAllFields().
 									SetURL("https://www.youtube.com/channel/"+Name2.YoutubeID+"?sub_confirmation=1").
 									SetColor(Color).MessageEmbed, Group, Name2.ID)

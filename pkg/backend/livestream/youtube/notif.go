@@ -28,6 +28,10 @@ func (PushData *NotifStruct) SendNude() {
 	var (
 		Timestart time.Time
 		GroupIcon string
+		User      = &database.UserStruct{
+			Human:    true,
+			Reminder: 0,
+		}
 	)
 
 	if match, _ := regexp.MatchString("404.jpg", PushData.Group.IconURL); match {
@@ -206,6 +210,11 @@ func (PushData *NotifStruct) SendNude() {
 				}
 				msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Uploaded a new video\nUserTags: "+strings.Join(UserTagsList, " "))
 			}
+			msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "React `"+config.BotConf.Emoji.Livestream[0]+` to add you in `+PushData.Member.Name+"` ping list\nReact "+config.BotConf.Emoji.Livestream[1]+" to remove you from ping list")
+			if err != nil {
+				log.Error(err)
+			}
+			User.SetDiscordChannelID(Channel.ChannelID).SetGroupID(PushData.Group.ID).SetMemberID(PushData.Member.ID)
 		}
 	} else if Status == "reminder" {
 		Color, err := engine.GetColor(config.TmpDir, PushData.YtData.Thumb)

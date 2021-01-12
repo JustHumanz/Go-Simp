@@ -372,9 +372,9 @@ func GetChannelID(DiscordChannelID string, GroupID int64) int {
 }
 
 //Adduser form `tag me command`
-func (Data UserStruct) Adduser(MemberID int64) error {
+func (Data *UserStruct) Adduser() error {
 	ChannelID := GetChannelID(Data.Channel_ID, Data.GroupID)
-	tmp := CheckUser(Data.DiscordID, MemberID, ChannelID)
+	tmp := CheckUser(Data.DiscordID, Data.MemberID, ChannelID)
 	if tmp {
 		return errors.New("Already registered")
 	} else {
@@ -383,7 +383,7 @@ func (Data UserStruct) Adduser(MemberID int64) error {
 			return err
 		}
 		defer stmt.Close()
-		res, err := stmt.Exec(Data.DiscordID, Data.DiscordUserName, Data.Human, Data.Reminder, MemberID, ChannelID)
+		res, err := stmt.Exec(Data.DiscordID, Data.DiscordUserName, Data.Human, Data.Reminder, Data.MemberID, ChannelID)
 		if err != nil {
 			return err
 		}
