@@ -102,7 +102,7 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 					"Status":       "Past",
 				}).Info("Update video status from " + Data.Items[i].Snippet.VideoStatus + " to past")
 				YoutubeData.ChangeYtStatus("past").UpdateYtDB()
-				ChannelState := database.GetLiveNotifMsg("yt" + strconv.Itoa(int(YoutubeData.YtData.ID)))
+				ChannelState := database.GetLiveNotifMsg(YtData.VideoID)
 				for _, v := range ChannelState {
 					log.WithFields(log.Fields{
 						"VideoData ID": VideoID[i],
@@ -134,7 +134,7 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 					"Status":       "Past",
 				}).Info("Update video status from " + Data.Items[i].Snippet.VideoStatus + " to past,probably member only")
 				YoutubeData.ChangeYtStatus("past").UpdateYtDB()
-				ChannelState := database.GetLiveNotifMsg("yt" + strconv.Itoa(int(YoutubeData.YtData.ID)))
+				ChannelState := database.GetLiveNotifMsg(YtData.VideoID)
 				for _, v := range ChannelState {
 					log.WithFields(log.Fields{
 						"VideoData ID": VideoID[i],
