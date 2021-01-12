@@ -797,7 +797,7 @@ func ChannelTag(MemberID int64, typetag int, Options string) []DiscordChannel {
 
 func (Data *DiscordChannel) PushReddis() {
 	ctx := context.Background()
-	err := GeneralCache.LPush(ctx, "yt"+Data.YoutubeVideoID, Data).Err()
+	err := GeneralCache.LPush(ctx, Data.YoutubeVideoID, Data).Err()
 	if err != nil {
 		log.Error(err)
 	}
