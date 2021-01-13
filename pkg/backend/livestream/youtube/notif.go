@@ -169,6 +169,24 @@ func (PushData *NotifStruct) SendNude() {
 				if Channel.Dynamic {
 					ChannelState.PushReddis()
 				}
+				msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "Push "+config.BotConf.Emoji.Livestream[0]+" to add you in `"+PushData.Member.Name+"` ping list\nPush "+config.BotConf.Emoji.Livestream[1]+" to remove you from ping list")
+				if err != nil {
+					log.Error(err)
+				}
+
+				User.SetDiscordChannelID(Channel.ChannelID).
+					SetGroup(PushData.Group).
+					SetMember(PushData.Member).
+					SendToCache(msg.ID)
+
+				err = engine.Reacting(map[string]string{
+					"ChannelID": Channel.ChannelID,
+					"State":     "Youtube",
+					"MessageID": msg.ID,
+				}, Bot)
+				if err != nil {
+					log.Error(err)
+				}
 			}
 		}
 
@@ -210,11 +228,6 @@ func (PushData *NotifStruct) SendNude() {
 				}
 				msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Uploaded a new video\nUserTags: "+strings.Join(UserTagsList, " "))
 			}
-			msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "React `"+config.BotConf.Emoji.Livestream[0]+` to add you in `+PushData.Member.Name+"` ping list\nReact "+config.BotConf.Emoji.Livestream[1]+" to remove you from ping list")
-			if err != nil {
-				log.Error(err)
-			}
-			User.SetDiscordChannelID(Channel.ChannelID).SetGroupID(PushData.Group.ID).SetMemberID(PushData.Member.ID)
 		}
 	} else if Status == "reminder" {
 		Color, err := engine.GetColor(config.TmpDir, PushData.YtData.Thumb)

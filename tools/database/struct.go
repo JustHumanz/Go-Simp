@@ -80,8 +80,8 @@ type YtDbData struct {
 
 type UserStruct struct {
 	DiscordID, DiscordUserName, Channel_ID string
-	GroupID                                int64
-	MemberID                               int64
+	Group                                  Group
+	Member                                 Member
 	Reminder                               int
 	Human                                  bool
 }
@@ -101,8 +101,8 @@ func (Data *UserStruct) SetDiscordChannelID(new string) *UserStruct {
 	return Data
 }
 
-func (Data *UserStruct) SetGroupID(new int64) *UserStruct {
-	Data.GroupID = new
+func (Data *UserStruct) SetGroup(new Group) *UserStruct {
+	Data.Group = new
 	return Data
 }
 
@@ -116,8 +116,8 @@ func (Data *UserStruct) SetReminder(new int) *UserStruct {
 	return Data
 }
 
-func (Data *UserStruct) SetMemberID(new int64) *UserStruct {
-	Data.MemberID = new
+func (Data *UserStruct) SetMember(new Member) *UserStruct {
+	Data.Member = new
 	return Data
 }
 
@@ -291,6 +291,10 @@ func (ac Member) MarshalBinary() ([]byte, error) {
 }
 
 func (ac DiscordChannel) MarshalBinary() ([]byte, error) {
+	return json.Marshal(ac)
+}
+
+func (ac UserStruct) MarshalBinary() ([]byte, error) {
 	return json.Marshal(ac)
 }
 

@@ -15,6 +15,7 @@ import (
 
 func CheckYoutube() {
 	var YTstate Subs
+	Token := engine.GetYtToken()
 	for _, Group := range engine.GroupData {
 		var VtubChannel []string
 		Names := database.GetMembers(Group.ID)
@@ -24,10 +25,10 @@ func CheckYoutube() {
 			}
 
 			if i == 24 || i == len(Names)-1 {
-				body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+strings.Join(VtubChannel, ",")+"&key="+engine.GetYtToken(), nil)
+				body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+strings.Join(VtubChannel, ",")+"&key="+Token, nil)
 				if err != nil {
 					log.Error(err, string(body))
-					return
+					break
 				}
 				err = json.Unmarshal(body, &YTstate)
 				if err != nil {
