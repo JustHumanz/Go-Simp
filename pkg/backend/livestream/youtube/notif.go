@@ -141,6 +141,7 @@ func (PushData *NotifStruct) SendNude() {
 				if err != nil {
 					log.Error(err)
 				}
+				break
 			}
 			if Channel.Dynamic {
 				log.WithFields(log.Fields{
