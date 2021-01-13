@@ -61,7 +61,7 @@ const (
 	Approaching       = "https://cdn.human-z.tech/approaching.jpg"
 	CommandURL        = "https://go-simp.human-z.tech/Exec/"
 	VtubersData       = "https://go-simp.human-z.tech"
-	ChannelPermission = 16
+	ChannelPermission = 8208
 
 	//Crontab
 	TwitterFanart        = "@every 0h3m0s"
