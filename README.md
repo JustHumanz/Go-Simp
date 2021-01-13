@@ -49,6 +49,13 @@ Reminder 30 minutes before livestream start
   <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/Subscount.png" alt="Subscriber count"/>
 </p>
 
+
+#### Add User to tag list
+<p align="center">
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/AddUser.png" alt="New Upcoming live stream"/>
+</p>
+
+
 [Invite link](https://top.gg/bot/721964514018590802)
 
 ## TODO
