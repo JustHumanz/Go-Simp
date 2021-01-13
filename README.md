@@ -9,15 +9,31 @@
 A simple VTuber bot to serve notification Fanart(Twitter,Bilibili) and Livestream(Youtube,Bilibili)  
 for setup see at [Guide](https://github.com/JustHumanz/Go-Simp/blob/main/Guide.md)
 
+## Simple Setup
+##### Livestream notification
+First create a channel for this bot,Example `holosimps_channel`  
+then execute `vtbot>enable live hololive` command,after that you can wait until hololive member going live and got notification  
+And if you want ping some roles you can execute `vtbot>tag roles <Rolename> hololive` In other case if you want to remind before livestream started you can add `-setreminder {Minutes}`  
+Example : `vtbot>tag roles @holosimp hololive -setreminder 20`
+
+##### Fanart notification
+First create a channel for this bot,Example `nijisimps`  
+then execute `vtbot>enable art nijisanji` command,after that you can wait until new fanart from twitter appear
 
 ## Current notification support
 See at [Web](https://go-simp.human-z.tech)
 
 ### Command
-See at [Web](https://go-simp.human-z.tech/Exec/)
+See at [Exec](https://go-simp.human-z.tech/Exec/)
 
 
 ### Notification&Command 
+
+
+#### Add User to tag list
+<p align="center">
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/AddUser.png" alt="New Upcoming live stream"/>
+</p>
 
 #### New Upcoming live stream  
 <p align="center">
@@ -49,11 +65,6 @@ Reminder 30 minutes before livestream start
   <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/Subscount.png" alt="Subscriber count"/>
 </p>
 
-
-#### Add User to tag list
-<p align="center">
-  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/AddUser.png" alt="New Upcoming live stream"/>
-</p>
 
 
 [Invite link](https://top.gg/bot/721964514018590802)
