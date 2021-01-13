@@ -111,7 +111,7 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 			log.WithFields(log.Fields{
 				"Group":  Group.GroupName,
 				"Vtuber": Member.EnName,
-			}).Info("Update LiveBiliBili")
+			}).Info("Check LiveBiliBili")
 
 			Data.UpdateOnline(Status.Data.RoomInfo.Online)
 			Data.RoomData.UpdateLiveBili(Member.ID)
