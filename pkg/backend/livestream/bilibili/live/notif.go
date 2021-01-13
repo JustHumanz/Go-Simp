@@ -84,6 +84,14 @@ func (Data *LiveBili) Crotttt() error {
 			SetGroup(Data.Group).
 			SetMember(Data.Member).
 			SendToCache(MsgTxt.ID)
+		err = engine.Reacting(map[string]string{
+			"ChannelID": Channel.ChannelID,
+			"State":     "Youtube",
+			"MessageID": MsgTxt.ID,
+		}, Bot)
+		if err != nil {
+			log.Error(err)
+		}
 	}
 
 	/* else if DataRoom.Status == "Upcoming" {
