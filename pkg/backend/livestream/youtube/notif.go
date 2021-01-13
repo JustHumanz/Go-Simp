@@ -151,38 +151,37 @@ func (PushData *NotifStruct) SendNude() {
 				ChannelState.SetVideoID(PushData.YtData.VideoID).
 					SetMsgEmbedID(MsgEmbed.ID)
 			}
+			Msg := "Push " + config.BotConf.Emoji.Livestream[0] + " to add you in `" + PushData.Member.Name + "` ping list\nPush " + config.BotConf.Emoji.Livestream[1] + " to remove you from ping list"
+			MsgID := ""
 			if Bili {
-				msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Live right now at BiliBili And Youtube\nUserTags: "+strings.Join(UserTagsList, " "))
+				msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Live right now at BiliBili And Youtube\nUserTags: "+strings.Join(UserTagsList, " ")+"\n"+Msg)
 				if err != nil {
 					log.Error(err)
 				}
 				if Channel.Dynamic {
 					ChannelState.SetMsgTextID(msg.ID).PushReddis()
 				}
+				MsgID = msg.ID
 
 			} else {
-				msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " "))
+				msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " ")+"\n"+Msg)
 				if err != nil {
 					log.Error(err)
 				}
 				if Channel.Dynamic {
 					ChannelState.SetMsgTextID(msg.ID).PushReddis()
 				}
+				MsgID = msg.ID
 			}
-			msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "Push "+config.BotConf.Emoji.Livestream[0]+" to add you in `"+PushData.Member.Name+"` ping list\nPush "+config.BotConf.Emoji.Livestream[1]+" to remove you from ping list")
-			if err != nil {
-				log.Error(err)
-			}
-
 			User.SetDiscordChannelID(Channel.ChannelID).
 				SetGroup(PushData.Group).
 				SetMember(PushData.Member).
-				SendToCache(msg.ID)
+				SendToCache(MsgID)
 
 			err = engine.Reacting(map[string]string{
 				"ChannelID": Channel.ChannelID,
 				"State":     "Youtube",
-				"MessageID": msg.ID,
+				"MessageID": MsgID,
 			}, Bot)
 			if err != nil {
 				log.Error(err)
