@@ -2,6 +2,7 @@ package live
 
 import (
 	"regexp"
+	"strconv"
 	"sync"
 	"time"
 
@@ -67,12 +68,10 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 				ScheduledStart = time.Now().In(loc)
 			}
 
-			GroupIcon := ""
 			if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
-				GroupIcon = ""
-			} else {
-				GroupIcon = Group.IconURL
+				Group.IconURL = ""
 			}
+
 			log.WithFields(log.Fields{
 				"Group":  Group.GroupName,
 				"Vtuber": Member.EnName,
@@ -82,9 +81,10 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 			Data.SetStatus("Live").
 				UpdateSchdule(ScheduledStart).
 				UpdateOnline(Status.Data.RoomInfo.Online).
-				SetMember(Member)
+				SetMember(Member).
+				SetGroup(Group)
 
-			err = Data.Crotttt(GroupIcon)
+			err = Data.Crotttt()
 			if err != nil {
 				log.Error(err)
 			}
@@ -98,6 +98,10 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 				"Vtuber": Member.EnName,
 				"Start":  ScheduledStart,
 			}).Info("Past live stream")
+			err := engine.RemoveEmbed(strconv.Itoa(DataDB.LiveRoomID), Bot)
+			if err != nil {
+				log.Error(err)
+			}
 			Data.SetStatus("Past").
 				UpdateOnline(Status.Data.RoomInfo.Online)
 

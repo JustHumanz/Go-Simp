@@ -102,7 +102,7 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 					"Status":       "Past",
 				}).Info("Update video status from " + Data.Items[i].Snippet.VideoStatus + " to past")
 				YoutubeData.ChangeYtStatus("past").UpdateYtDB()
-				err := RemoveEmbed(VideoID[i])
+				err := engine.RemoveEmbed(VideoID[i], Bot)
 				if err != nil {
 					log.Error(err)
 				}
@@ -126,7 +126,7 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 					"Status":       "Past",
 				}).Info("Update video status from " + Data.Items[i].Snippet.VideoStatus + " to past,probably member only")
 				YoutubeData.ChangeYtStatus("past").UpdateYtDB()
-				err := RemoveEmbed(VideoID[i])
+				err := engine.RemoveEmbed(VideoID[i], Bot)
 				if err != nil {
 					log.Error(err)
 				}
@@ -330,19 +330,4 @@ func ParseInt64(value string) int64 {
 		return 0
 	}
 	return int64(parsed)
-}
-
-func RemoveEmbed(YoutubeVideoID string) error {
-	ChannelState := database.GetLiveNotifMsg(YoutubeVideoID)
-	for _, v := range ChannelState {
-		log.WithFields(log.Fields{
-			"VideoData ID": YoutubeVideoID,
-			"Status":       "Past",
-		}).Info("Delete message from ", []string{v.TextMessageID, v.EmbedMessageID})
-		err := Bot.ChannelMessagesBulkDelete(v.ChannelID, []string{v.TextMessageID, v.EmbedMessageID})
-		if err != nil {
-			return err
-		}
-	}
-	return nil
 }

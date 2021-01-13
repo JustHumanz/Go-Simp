@@ -13,13 +13,17 @@ import (
 	"gopkg.in/robfig/cron.v2"
 )
 
+var (
+	Bot *discordgo.Session
+)
+
 func main() {
 	conf, err := config.ReadConfig("../../../config.toml")
 	if err != nil {
 		log.Panic(err)
 	}
 
-	Bot, _ := discordgo.New("Bot " + config.BotConf.Discord)
+	Bot, _ = discordgo.New("Bot " + config.BotConf.Discord)
 	err = Bot.Open()
 	if err != nil {
 		log.Panic(err)

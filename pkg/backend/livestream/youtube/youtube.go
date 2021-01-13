@@ -121,7 +121,7 @@ func CheckPrivate() {
 				"VideoID": Youtube.VideoID,
 			}).Info("Member only video")
 			Youtube.UpdateYt("past")
-			err := RemoveEmbed(Youtube.VideoID)
+			err := engine.RemoveEmbed(Youtube.VideoID, Bot)
 			if err != nil {
 				log.Error(err)
 			}
@@ -130,7 +130,7 @@ func CheckPrivate() {
 				"VideoID": Youtube.VideoID,
 			}).Info("Member only video")
 			Youtube.UpdateYt("past")
-			err := RemoveEmbed(Youtube.VideoID)
+			err := engine.RemoveEmbed(Youtube.VideoID, Bot)
 			if err != nil {
 				log.Error(err)
 			}

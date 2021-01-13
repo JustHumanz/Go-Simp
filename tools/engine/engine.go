@@ -427,3 +427,18 @@ func NearestThousandFormat(num float64) string {
 	final := xNumSlice[0] + afterDecimal + xPart
 	return final
 }
+
+func RemoveEmbed(VideoID string, Bot *discordgo.Session) error {
+	ChannelState := database.GetLiveNotifMsg(VideoID)
+	for _, v := range ChannelState {
+		log.WithFields(log.Fields{
+			"VideoData ID": VideoID,
+			"Status":       "Past",
+		}).Info("Delete message from ", []string{v.TextMessageID, v.EmbedMessageID})
+		err := Bot.ChannelMessagesBulkDelete(v.ChannelID, []string{v.TextMessageID, v.EmbedMessageID})
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
