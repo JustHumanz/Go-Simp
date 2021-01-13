@@ -372,9 +372,9 @@ func GetChannelID(DiscordChannelID string, GroupID int64) int {
 }
 
 //Adduser form `tag me command`
-func (Data UserStruct) Adduser(MemberID int64) error {
-	ChannelID := GetChannelID(Data.Channel_ID, Data.GroupID)
-	tmp := CheckUser(Data.DiscordID, MemberID, ChannelID)
+func (Data *UserStruct) Adduser() error {
+	ChannelID := GetChannelID(Data.Channel_ID, Data.Group.ID)
+	tmp := CheckUser(Data.DiscordID, Data.Member.ID, ChannelID)
 	if tmp {
 		return errors.New("Already registered")
 	} else {
@@ -383,7 +383,7 @@ func (Data UserStruct) Adduser(MemberID int64) error {
 			return err
 		}
 		defer stmt.Close()
-		res, err := stmt.Exec(Data.DiscordID, Data.DiscordUserName, Data.Human, Data.Reminder, MemberID, ChannelID)
+		res, err := stmt.Exec(Data.DiscordID, Data.DiscordUserName, Data.Human, Data.Reminder, Data.Member.ID, ChannelID)
 		if err != nil {
 			return err
 		}
@@ -397,25 +397,47 @@ func (Data UserStruct) Adduser(MemberID int64) error {
 	}
 }
 
+func (Data *UserStruct) SendToCache(MessageID string) error {
+	ctx := context.Background()
+	err := GeneralCache.Set(ctx, MessageID, Data, -1).Err()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func GetChannelMessage(MessageID string) *UserStruct {
+	var (
+		ctx  = context.Background()
+		data UserStruct
+	)
+	val := GeneralCache.Get(ctx, MessageID).Val()
+	err := json.Unmarshal([]byte(val), &data)
+	if err != nil {
+		return nil
+	}
+	return &data
+}
+
 //UpdateReminder Update reminder time
-func (Data UserStruct) UpdateReminder(MemberID int64) error {
-	ChannelID := GetChannelID(Data.Channel_ID, Data.GroupID)
-	tmp := CheckUser(Data.DiscordID, MemberID, ChannelID)
+func (Data UserStruct) UpdateReminder() error {
+	ChannelID := GetChannelID(Data.Channel_ID, Data.Group.ID)
+	tmp := CheckUser(Data.DiscordID, Data.Member.ID, ChannelID)
 	if tmp {
-		_, err := DB.Exec(`Update User set Reminder=? where DiscordID=? And VtuberMember_id=? And Channel_id=?`, Data.Reminder, Data.DiscordID, MemberID, ChannelID)
+		_, err := DB.Exec(`Update User set Reminder=? where DiscordID=? And VtuberMember_id=? And Channel_id=?`, Data.Reminder, Data.DiscordID, Data.Member.ID, ChannelID)
 		if err != nil {
 			return err
 		}
 	} else {
-		return errors.New("User not tag " + strconv.Itoa(int(MemberID)))
+		return errors.New("User not tag " + strconv.Itoa(int(Data.Member.ID)))
 	}
 	return nil
 }
 
 //Deluser Delete user from `del` command
-func (Data UserStruct) Deluser(MemberID int64) error {
-	ChannelID := GetChannelID(Data.Channel_ID, Data.GroupID)
-	tmp := CheckUser(Data.DiscordID, MemberID, ChannelID)
+func (Data UserStruct) Deluser() error {
+	ChannelID := GetChannelID(Data.Channel_ID, Data.Group.ID)
+	tmp := CheckUser(Data.DiscordID, Data.Member.ID, ChannelID)
 	if tmp {
 		stmt, err := DB.Prepare(`DELETE From User WHERE DiscordID=? AND VtuberMember_id=? AND Channel_id=?`)
 		if err != nil {
@@ -423,10 +445,10 @@ func (Data UserStruct) Deluser(MemberID int64) error {
 		}
 		defer stmt.Close()
 
-		stmt.Exec(Data.DiscordID, MemberID, ChannelID)
+		stmt.Exec(Data.DiscordID, Data.Member.ID, ChannelID)
 		return nil
 	} else {
-		return errors.New("Already removed")
+		return errors.New("Already removed or you not in tag list")
 	}
 }
 
@@ -797,7 +819,7 @@ func ChannelTag(MemberID int64, typetag int, Options string) []DiscordChannel {
 
 func (Data *DiscordChannel) PushReddis() {
 	ctx := context.Background()
-	err := GeneralCache.LPush(ctx, Data.YoutubeVideoID, Data).Err()
+	err := GeneralCache.LPush(ctx, Data.VideoID, Data).Err()
 	if err != nil {
 		log.Error(err)
 	}

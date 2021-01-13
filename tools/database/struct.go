@@ -80,7 +80,8 @@ type YtDbData struct {
 
 type UserStruct struct {
 	DiscordID, DiscordUserName, Channel_ID string
-	GroupID                                int64
+	Group                                  Group
+	Member                                 Member
 	Reminder                               int
 	Human                                  bool
 }
@@ -100,8 +101,8 @@ func (Data *UserStruct) SetDiscordChannelID(new string) *UserStruct {
 	return Data
 }
 
-func (Data *UserStruct) SetGroupID(new int64) *UserStruct {
-	Data.GroupID = new
+func (Data *UserStruct) SetGroup(new Group) *UserStruct {
+	Data.Group = new
 	return Data
 }
 
@@ -112,6 +113,11 @@ func (Data *UserStruct) SetHuman(new bool) *UserStruct {
 
 func (Data *UserStruct) SetReminder(new int) *UserStruct {
 	Data.Reminder = new
+	return Data
+}
+
+func (Data *UserStruct) SetMember(new Member) *UserStruct {
+	Data.Member = new
 	return Data
 }
 
@@ -288,6 +294,10 @@ func (ac DiscordChannel) MarshalBinary() ([]byte, error) {
 	return json.Marshal(ac)
 }
 
+func (ac UserStruct) MarshalBinary() ([]byte, error) {
+	return json.Marshal(ac)
+}
+
 type DiscordChannel struct {
 	ID             int64
 	ChannelID      string
@@ -296,7 +306,7 @@ type DiscordChannel struct {
 	NewUpcoming    bool
 	Dynamic        bool
 	Group          Group
-	YoutubeVideoID string
+	VideoID        string
 	EmbedMessageID string
 	TextMessageID  string
 }
@@ -326,8 +336,8 @@ func (Data *DiscordChannel) SetDynamic(new bool) *DiscordChannel {
 	return Data
 }
 
-func (Data *DiscordChannel) SetYoutubeVideoID(new string) *DiscordChannel {
-	Data.YoutubeVideoID = new
+func (Data *DiscordChannel) SetVideoID(new string) *DiscordChannel {
+	Data.VideoID = new
 	return Data
 }
 

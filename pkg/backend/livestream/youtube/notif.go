@@ -28,6 +28,10 @@ func (PushData *NotifStruct) SendNude() {
 	var (
 		Timestart time.Time
 		GroupIcon string
+		User      = &database.UserStruct{
+			Human:    true,
+			Reminder: 0,
+		}
 	)
 
 	if match, _ := regexp.MatchString("404.jpg", PushData.Group.IconURL); match {
@@ -62,31 +66,32 @@ func (PushData *NotifStruct) SendNude() {
 				Group:     PushData.Group,
 			}
 			UserTagsList := database.GetUserList(Channel.ID, PushData.Member.ID)
-			if UserTagsList != nil {
-				msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
-					SetAuthor(VtuberName, Avatar, YtChannel).
-					SetTitle("New upcoming Livestream").
-					SetDescription(PushData.YtData.Title).
-					SetImage(PushData.YtData.Thumb).
-					SetThumbnail(GroupIcon).
-					SetURL(YtURL).
-					AddField("Type ", PushData.YtData.Type).
-					AddField("Start live in", durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(2).String()).
-					InlineAllFields().
-					AddField("Waiting", PushData.YtData.Viewers+" Simps in ChatRoom").
-					SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
-					SetColor(Color).MessageEmbed)
-				if err != nil {
-					log.Error(msg, err)
-					err = ChannelState.DelChannel(err.Error())
-					if err != nil {
-						log.Error(err)
-					}
-				}
-				msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` New upcoming Livestream\nUserTags: "+strings.Join(UserTagsList, " "))
+			if UserTagsList == nil {
+				UserTagsList = []string{"_"}
+			}
+			msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
+				SetAuthor(VtuberName, Avatar, YtChannel).
+				SetTitle("New upcoming Livestream").
+				SetDescription(PushData.YtData.Title).
+				SetImage(PushData.YtData.Thumb).
+				SetThumbnail(GroupIcon).
+				SetURL(YtURL).
+				AddField("Type ", PushData.YtData.Type).
+				AddField("Start live in", durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(2).String()).
+				InlineAllFields().
+				AddField("Waiting", PushData.YtData.Viewers+" Simps in ChatRoom").
+				SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
+				SetColor(Color).MessageEmbed)
+			if err != nil {
+				log.Error(msg, err)
+				err = ChannelState.DelChannel(err.Error())
 				if err != nil {
 					log.Error(err)
 				}
+			}
+			msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` New upcoming Livestream\nUserTags: "+strings.Join(UserTagsList, " "))
+			if err != nil {
+				log.Error(err)
 			}
 		}
 
@@ -114,57 +119,73 @@ func (PushData *NotifStruct) SendNude() {
 				Group:     PushData.Group,
 			}
 			UserTagsList := database.GetUserList(Channel.ID, PushData.Member.ID)
-			if UserTagsList != nil {
-				MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
-					SetAuthor(VtuberName, Avatar, YtChannel).
-					SetTitle("Live right now").
-					SetDescription(PushData.YtData.Title).
-					SetImage(PushData.YtData.Thumb).
-					SetThumbnail(GroupIcon).
-					SetURL(YtURL).
-					AddField("Type ", PushData.YtData.Type).
-					AddField("Start live", durafmt.Parse(expiresAt.Sub(Timestart.In(loc))).LimitFirstN(2).String()+" Ago").
-					InlineAllFields().
-					AddField("Viewers", PushData.YtData.Viewers+" simps").
-					SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
-					SetColor(Color).MessageEmbed)
+			if UserTagsList == nil {
+				UserTagsList = []string{"_"}
+			}
+			MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
+				SetAuthor(VtuberName, Avatar, YtChannel).
+				SetTitle("Live right now").
+				SetDescription(PushData.YtData.Title).
+				SetImage(PushData.YtData.Thumb).
+				SetThumbnail(GroupIcon).
+				SetURL(YtURL).
+				AddField("Type ", PushData.YtData.Type).
+				AddField("Start live", durafmt.Parse(expiresAt.Sub(Timestart.In(loc))).LimitFirstN(2).String()+" Ago").
+				InlineAllFields().
+				AddField("Viewers", PushData.YtData.Viewers+" simps").
+				SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
+				SetColor(Color).MessageEmbed)
+			if err != nil {
+				log.Error(MsgEmbed, err)
+				err = ChannelState.DelChannel(err.Error())
 				if err != nil {
-					log.Error(MsgEmbed, err)
-					err = ChannelState.DelChannel(err.Error())
-					if err != nil {
-						log.Error(err)
-					}
+					log.Error(err)
+				}
+			}
+			if Channel.Dynamic {
+				log.WithFields(log.Fields{
+					"DiscordChannel": Channel.ChannelID,
+					"VtuberGroupID":  PushData.Group.ID,
+					"YoutubeID":      PushData.YtData.ID,
+				}).Info("Set dynamic mode")
+				ChannelState.SetVideoID(PushData.YtData.VideoID).
+					SetMsgEmbedID(MsgEmbed.ID)
+			}
+			if Bili {
+				msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Live right now at BiliBili And Youtube\nUserTags: "+strings.Join(UserTagsList, " "))
+				if err != nil {
+					log.Error(err)
 				}
 				if Channel.Dynamic {
-					log.WithFields(log.Fields{
-						"DiscordChannel": Channel.ChannelID,
-						"VtuberGroupID":  PushData.Group.ID,
-						"YoutubeID":      PushData.YtData.ID,
-					}).Info("Set dynamic mode")
-					ChannelState.SetYoutubeVideoID(PushData.YtData.VideoID).
-						SetMsgEmbedID(MsgEmbed.ID)
+					ChannelState.SetMsgTextID(msg.ID).PushReddis()
 				}
-				if Bili {
-					msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Live right now at BiliBili And Youtube\nUserTags: "+strings.Join(UserTagsList, " "))
-					if err != nil {
-						log.Error(err)
-					}
-					if Channel.Dynamic {
-						ChannelState.SetMsgTextID(msg.ID)
-					}
 
-				} else {
-					msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " "))
-					if err != nil {
-						log.Error(err)
-					}
-					if Channel.Dynamic {
-						ChannelState.SetMsgTextID(msg.ID)
-					}
+			} else {
+				msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " "))
+				if err != nil {
+					log.Error(err)
 				}
 				if Channel.Dynamic {
-					ChannelState.PushReddis()
+					ChannelState.SetMsgTextID(msg.ID).PushReddis()
 				}
+			}
+			msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "Push "+config.BotConf.Emoji.Livestream[0]+" to add you in `"+PushData.Member.Name+"` ping list\nPush "+config.BotConf.Emoji.Livestream[1]+" to remove you from ping list")
+			if err != nil {
+				log.Error(err)
+			}
+
+			User.SetDiscordChannelID(Channel.ChannelID).
+				SetGroup(PushData.Group).
+				SetMember(PushData.Member).
+				SendToCache(msg.ID)
+
+			err = engine.Reacting(map[string]string{
+				"ChannelID": Channel.ChannelID,
+				"State":     "Youtube",
+				"MessageID": msg.ID,
+			}, Bot)
+			if err != nil {
+				log.Error(err)
 			}
 		}
 
@@ -205,6 +226,9 @@ func (PushData *NotifStruct) SendNude() {
 					}
 				}
 				msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Uploaded a new video\nUserTags: "+strings.Join(UserTagsList, " "))
+				if err != nil {
+					log.Error(err)
+				}
 			}
 		}
 	} else if Status == "reminder" {
@@ -256,7 +280,7 @@ func (PushData *NotifStruct) SendNude() {
 								"VtuberGroupID":  PushData.Group.ID,
 								"YoutubeID":      PushData.YtData.ID,
 							}).Info("Set dynamic mode")
-							ChannelState.SetYoutubeVideoID(PushData.YtData.VideoID).
+							ChannelState.SetVideoID(PushData.YtData.VideoID).
 								SetMsgEmbedID(MsgEmbed.ID).
 								SetMsgTextID(MsgText.ID)
 						}

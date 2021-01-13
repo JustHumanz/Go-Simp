@@ -118,10 +118,8 @@ func FindName(MemberName string) NameStruct {
 		for _, Name := range database.GetMembers(Group.ID) {
 			if strings.ToLower(Name.Name) == MemberName || strings.ToLower(Name.JpName) == MemberName {
 				return NameStruct{
-					GroupName:  Group.GroupName,
-					GroupID:    Group.ID,
-					MemberName: Name.Name,
-					MemberID:   Name.ID,
+					Group:  Group,
+					Member: Name,
 				}
 			}
 		}
@@ -132,10 +130,8 @@ func FindName(MemberName string) NameStruct {
 
 //NameStruct struct
 type NameStruct struct {
-	GroupName  string
-	GroupID    int64
-	MemberName string
-	MemberID   int64
+	Group  database.Group
+	Member database.Member
 }
 
 //FindGropName Find a valid Vtuber Group from message handler

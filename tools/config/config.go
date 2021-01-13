@@ -64,10 +64,10 @@ const (
 	ChannelPermission = 16
 
 	//Crontab
-	TwitterFanart        = "@every 0h7m0s"
+	TwitterFanart        = "@every 0h3m0s"
 	BiliBiliFanart       = "@every 0h6m0s"
-	BiliBiliLive         = "@every 0h8m0s"
-	BiliBiliSpace        = "@every 0h10m0s"
+	BiliBiliLive         = "@every 0h7m0s"
+	BiliBiliSpace        = "@every 0h13m0s"
 	YoutubeCheckChannel  = "@every 0h5m0s"
 	YoutubePrivateSlayer = "@every 2h31m0s"
 	YoutubeSubscriber    = "@every 1h0m0s"

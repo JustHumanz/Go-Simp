@@ -194,56 +194,68 @@ func GetColor(filepath, url string) (int, error) {
 }
 
 func Reacting(Data map[string]string, s *discordgo.Session) error {
-	EmojiList := config.BotConf.Emoji.Fanart
 	ChannelID := Data["ChannelID"]
 	MessID, err := s.Channel(ChannelID)
 	if err != nil {
 		return errors.New(err.Error() + " ChannelID: " + ChannelID)
 	}
-	for l := 0; l < len(EmojiList); l++ {
-		if Data["Content"][len(Data["Prefix"]):] == "kanochi" {
-			err := s.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[0])
-			if err != nil {
-				return errors.New(err.Error() + " ChannelID: " + ChannelID)
-				//log.Error(err, ChannelID)
-			}
-			break
-		} else if Data["Content"][len(Data["Prefix"]):] == "cleaire" {
-			err := s.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[l])
-			if err != nil {
-				return errors.New(err.Error() + " ChannelID: " + ChannelID)
-				//log.Error(err, ChannelID)
-			}
-			if l == len(EmojiList)-1 {
-				err = s.MessageReactionAdd(ChannelID, MessID.LastMessageID, ":latom:767810745860751391")
-				if err != nil {
-					return errors.New(err.Error() + " ChannelID: " + ChannelID)
-					//log.Error(err, ChannelID)
-				}
-			}
-		} else if Data["Content"][len(Data["Prefix"]):] == "senchou" {
-			err := s.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[l])
-			if err != nil {
-				return errors.New(err.Error() + " ChannelID: " + ChannelID)
-				//log.Error(err, ChannelID)
-			}
 
-			if l == len(EmojiList)-1 {
-				err = s.MessageReactionAdd(ChannelID, MessID.LastMessageID, ":hormny:768700671750176790")
+	if Data["State"] == "Youtube" {
+		EmojiList := config.BotConf.Emoji.Livestream
+		for _, Emoji := range EmojiList {
+			err := s.MessageReactionAdd(ChannelID, Data["MessageID"], Emoji)
+			if err != nil {
+				return errors.New(err.Error() + " ChannelID: " + ChannelID)
+			}
+		}
+	} else {
+		EmojiList := config.BotConf.Emoji.Fanart
+		for l := 0; l < len(EmojiList); l++ {
+			if Data["Content"][len(Data["Prefix"]):] == "kanochi" {
+				err := s.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[0])
 				if err != nil {
 					return errors.New(err.Error() + " ChannelID: " + ChannelID)
 					//log.Error(err, ChannelID)
 				}
-			}
-		} else {
-			err := s.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[l])
-			if err != nil {
-				return errors.New(err.Error() + " ChannelID: " + ChannelID)
-				//log.Error(err, ChannelID)
-				//break
+				break
+			} else if Data["Content"][len(Data["Prefix"]):] == "cleaire" {
+				err := s.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[l])
+				if err != nil {
+					return errors.New(err.Error() + " ChannelID: " + ChannelID)
+					//log.Error(err, ChannelID)
+				}
+				if l == len(EmojiList)-1 {
+					err = s.MessageReactionAdd(ChannelID, MessID.LastMessageID, ":latom:767810745860751391")
+					if err != nil {
+						return errors.New(err.Error() + " ChannelID: " + ChannelID)
+						//log.Error(err, ChannelID)
+					}
+				}
+			} else if Data["Content"][len(Data["Prefix"]):] == "senchou" {
+				err := s.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[l])
+				if err != nil {
+					return errors.New(err.Error() + " ChannelID: " + ChannelID)
+					//log.Error(err, ChannelID)
+				}
+
+				if l == len(EmojiList)-1 {
+					err = s.MessageReactionAdd(ChannelID, MessID.LastMessageID, ":hormny:768700671750176790")
+					if err != nil {
+						return errors.New(err.Error() + " ChannelID: " + ChannelID)
+						//log.Error(err, ChannelID)
+					}
+				}
+			} else {
+				err := s.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[l])
+				if err != nil {
+					return errors.New(err.Error() + " ChannelID: " + ChannelID)
+					//log.Error(err, ChannelID)
+					//break
+				}
 			}
 		}
 	}
+
 	return nil
 }
 
@@ -414,4 +426,19 @@ func NearestThousandFormat(num float64) string {
 	}
 	final := xNumSlice[0] + afterDecimal + xPart
 	return final
+}
+
+func RemoveEmbed(VideoID string, Bot *discordgo.Session) error {
+	ChannelState := database.GetLiveNotifMsg(VideoID)
+	for _, v := range ChannelState {
+		log.WithFields(log.Fields{
+			"VideoData ID": VideoID,
+			"Status":       "Past",
+		}).Info("Delete message from ", []string{v.TextMessageID, v.EmbedMessageID})
+		err := Bot.ChannelMessagesBulkDelete(v.ChannelID, []string{v.TextMessageID, v.EmbedMessageID})
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

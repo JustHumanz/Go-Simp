@@ -842,6 +842,7 @@ type RoomID2 struct {
 type LiveBili struct {
 	RoomData *database.LiveBiliDB
 	Member   database.Member
+	Group    database.Group
 	Embed    *discordgo.MessageEmbed
 }
 
@@ -867,5 +868,10 @@ func (Data *LiveBili) UpdateOnline(new int) *LiveBili {
 
 func (Data *LiveBili) SetMember(new database.Member) *LiveBili {
 	Data.Member = new
+	return Data
+}
+
+func (Data *LiveBili) SetGroup(new database.Group) *LiveBili {
+	Data.Group = new
 	return Data
 }

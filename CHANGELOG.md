@@ -1,3 +1,7 @@
+v2.5.17
+- Add Register user via reacting
+- Add Dynamic mode on bilibili
+
 v1.5.16
 - Add Dynamic notif #83
 - Fix twitter fanart high cpu usage
