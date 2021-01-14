@@ -5,7 +5,7 @@ chardet==4.0.0
 Django==3.1.5
 idna==3.1
 isort==5.7.0
-lazy-object-proxy==1.5.2
+lazy-object-proxy==1.4.1
 mccabe==0.6.1
 pylint==2.6.0
 pytz==2020.5
