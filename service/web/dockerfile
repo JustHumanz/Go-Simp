@@ -1,11 +1,9 @@
-FROM python:alpine
+FROM python:3.9-alpine
 
 RUN apk add --update --no-cache git
 RUN mkdir /app
-WORKDIR /app
-RUN git clone --single-branch --branch main https://github.com/JustHumanz/Go-Simp
-WORKDIR Go-Simp/service/web
-RUN git checkout main
+COPY . /app
+WORKDIR /app/Go-Simp/service/web
 RUN pip install -r requirements.txt
 
 EXPOSE 8000
