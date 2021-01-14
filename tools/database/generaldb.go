@@ -143,7 +143,7 @@ func (Member Member) GetSubsCount() (*MemberSubs, error) {
 	)
 
 	val, err := GeneralCache.Get(ctx, Key).Result()
-	if err == redis.Nil {
+	if err == redis.Nil || err != nil {
 		rows, err := DB.Query(`SELECT * FROM Subscriber WHERE VtuberMember_id=?`, Member.ID)
 		if err != nil {
 			return nil, err
@@ -161,8 +161,6 @@ func (Member Member) GetSubsCount() (*MemberSubs, error) {
 			return nil, err
 		}
 
-	} else if err != nil {
-		return nil, err
 	} else {
 		err := json.Unmarshal([]byte(val), &Data)
 		if err != nil {
@@ -857,7 +855,7 @@ func GetUserList(ChannelIDDiscord int64, Member int64) []string {
 		Key           = strconv.Itoa(int(ChannelIDDiscord) * int(Member))
 	)
 	val2, err := LiveCache.Get(ctx, Key).Result()
-	if err == redis.Nil {
+	if err == redis.Nil || err != nil {
 		rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id=?`, ChannelIDDiscord, Member)
 		if err != nil {
 			log.Error(err)
@@ -879,8 +877,6 @@ func GetUserList(ChannelIDDiscord int64, Member int64) []string {
 		if err != nil {
 			log.Error(err)
 		}
-	} else if err != nil {
-		log.Error(err)
 	} else {
 		if val2 == "" {
 			UserTagsList = nil
