@@ -56,10 +56,17 @@
     <div class="text-center pb-3 pt-4">
       {% if Add %}
         {% for Member in Members %}
-            <a class="MemberInfo" href="/Member/{{Member.ID}}">
+          {% if Member.YoutubeAvatar != "" %}
+          <a class="MemberInfo" href="/Member/{{Member.ID}}">
             <figure class="figure p-1" name="{{Member.Region}}" id="{{Member.Name}}">
             <img src={{Member.YoutubeAvatar}} class="zoom figure-img img-fluid img-thumbnail" alt="" width="75" height="75">
-            <figcaption class="figure-caption">{{Member.Name}}</figcaption></figure></a>
+          <figcaption class="figure-caption">{{Member.Name}}</figcaption></figure></a>
+          {% else %}
+          <a class="MemberInfo" href="/Member/{{Member.ID}}">
+            <figure class="figure p-1" name="{{Member.Region}}" id="{{Member.Name}}">
+            <img src={{Member.BiliBiliAvatar}} class="zoom figure-img img-fluid img-thumbnail" alt="" width="75" height="75">
+          <figcaption class="figure-caption">{{Member.Name}}</figcaption></figure></a>
+          {% endif %}
         {% endfor %} 
         <br>
         <a class="btn btn-primary" href="/Add/" role="button">Add Vtubers</a>
@@ -68,7 +75,11 @@
         {% for Member in Members %}
         <div class="col mb-4">
           <div class="card" name="{{Member.Region}}" id="{{Member.Name}}">
+            {% if Member.YoutubeAvatar != "" %}
             <img class="card-img-top" src="{{Member.YoutubeAvatar}}" alt="Card image cap">
+            {% else %}
+            <img class="card-img-top" src="{{Member.BiliBiliAvatar}}" alt="Card image cap">
+            {% endif %}
             <div class="card-body">
               <h5 class="card-title">{{Member.Name}}</h5>
               <a href="/Member/{{Member.ID}}" class="btn btn-primary">Info</a>
