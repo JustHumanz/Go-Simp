@@ -92,7 +92,7 @@ func GetMembers(GroupID int64) []Member {
 		Key  = "VtuberMember" + strconv.Itoa(int(GroupID))
 	)
 	val := GeneralCache.LRange(ctx, Key, 0, -1).Val()
-	if len(val) < 180 {
+	if len(val) == 0 {
 		rederr := GeneralCache.Del(ctx, Key).Err()
 		if rederr != nil {
 			log.Error(rederr)
@@ -143,10 +143,10 @@ func (Member Member) GetSubsCount() (*MemberSubs, error) {
 	)
 
 	val, err := GeneralCache.Get(ctx, Key).Result()
-	if err == redis.Nil || err != nil {
-		if err != nil {
-			log.Error(err)
-		}
+	if err != nil {
+		log.Error(err)
+	}
+	if len(val) == 0 {
 		rows, err := DB.Query(`SELECT * FROM Subscriber WHERE VtuberMember_id=?`, Member.ID)
 		if err != nil {
 			return nil, err
@@ -858,7 +858,10 @@ func GetUserList(ChannelIDDiscord int64, Member int64) []string {
 		Key           = strconv.Itoa(int(ChannelIDDiscord) * int(Member))
 	)
 	val2, err := LiveCache.Get(ctx, Key).Result()
-	if err == redis.Nil || err != nil {
+	if err != nil {
+		log.Error(err)
+	}
+	if len(val2) == 0 {
 		if err != nil {
 			log.Error(err)
 		}
