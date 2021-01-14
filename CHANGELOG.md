@@ -1,6 +1,7 @@
 v2.5.18
 - Update help command
 - Fix redis error handling
+- Fix go-simp django
 
 v2.5.17
 - Add Register user via reacting
