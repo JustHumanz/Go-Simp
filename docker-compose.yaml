@@ -22,9 +22,13 @@ services:
       MYSQL_PASSWORD: kano2525
     restart: on-failure
     command: mysqld --sql_mode=""
+    networks:
+      - go_simp-net    
 
   multi_tor:
     image: tor_go_brrrrrrr
+    networks:
+      - go_simp-net
 
   db_migrate:
     image: mainbot
@@ -34,6 +38,8 @@ services:
     working_dir: /app/Go-Simp/service/migrate
     command: go run .
     restart: on-failure    
+    networks:
+      - go_simp-net
 
   fanart:
     image: mainbot
@@ -45,6 +51,8 @@ services:
     working_dir: /app/Go-Simp/pkg/backend/fanart/
     command: ./start.sh
     restart: on-failure
+    networks:
+      - go_simp-net
 
   livestream:
     image: mainbot
@@ -56,6 +64,8 @@ services:
     working_dir: /app/Go-Simp/pkg/backend/livestream/
     command: ./start.sh
     restart: on-failure
+    networks:
+      - go_simp-net
 
   subscriber:
     image: mainbot
@@ -67,6 +77,8 @@ services:
     working_dir: /app/Go-Simp/pkg/backend/subscriber/
     command: ./start.sh
     restart: on-failure    
+    networks:
+      - go_simp-net
 
   utility:
     image: mainbot
@@ -78,6 +90,8 @@ services:
     working_dir: /app/Go-Simp/pkg/backend/utility/
     command: go run .
     restart: on-failure    
+    networks:
+      - go_simp-net
 
   frontend:
     image: mainbot
@@ -89,6 +103,8 @@ services:
     working_dir: /app/Go-Simp/pkg/frontend
     command: ./start.sh
     restart: on-failure
+    networks:
+      - go_simp-net
 
   guild:
     image: mainbot
@@ -100,26 +116,44 @@ services:
     working_dir: /app/Go-Simp/pkg/guild
     command: go run .
     restart: on-failure
+    networks:
+      - go_simp-net
 
   yotube-scrap:
     build: service/yt-scrap
     image: yt-scrap
     env_file:
       - ./.env
+    networks:
+      - go_simp-net         
 
-  rest_api:
-    build: service/rest-api
-    image: mainbot_rest-api
-    working_dir: /app/Go-Simp/service/rest-api    
-    depends_on:
-      - mysql
-      - db_migrate
-    env_file:
-      - ./.env
+  traefik:
+    image: traefik:2.3
+    restart: unless-stopped
     ports:
-      - "1107:2525"
-    command: go run . 
-    restart: on-failure
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./traefik.yml:/traefik.yml
+      - ./acme.json:/acme.json
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  static_page:
+    image: nginx:latest
+    volumes:
+    - ./Img/:/usr/share/nginx/html
+    networks:
+      - go_simp-proxy
+    labels:
+      - traefik.http.routers.static-http.rule=Host(`<YOUR_DOMAIN>`)
+      - traefik.http.routers.static-http.entrypoints=http
+      - traefik.http.routers.static-http.middlewares=redirect
+      - traefik.http.routers.static-https.rule=Host(`<YOUR_DOMAIN>`)
+      - traefik.http.routers.static-https.entrypoints=https
+      - traefik.http.routers.static-https.tls=true
+      - traefik.http.routers.static-https.tls.certresolver=letsencrypt
+      - traefik.http.services.static-service.loadbalancer.server.port=80
+      - traefik.http.middlewares.redirect.redirectscheme.scheme=https
 
   go_simp_web:
     image: go_simp_web
@@ -127,11 +161,60 @@ services:
       - ./.env    
     depends_on:
     - rest_api
-    ports:
-    - "1337:8000"
     restart: on-failure    
+    networks:
+      - go_simp-proxy
+    labels:
+      # Traefik configuration, Hostname needs to be changed
+      - traefik.http.routers.go_simp_web-http.rule=Host(`<YOUR_DOMAIN>`)
+      - traefik.http.routers.go_simp_web-http.entrypoints=http
+      - traefik.http.routers.go_simp_web-http.middlewares=redirect
+      - traefik.http.routers.go_simp_web-https.rule=Host(`<YOUR_DOMAIN>`)
+      - traefik.http.routers.go_simp_web-https.entrypoints=https
+      - traefik.http.routers.go_simp_web-https.tls=true
+      - traefik.http.routers.go_simp_web-https.tls.certresolver=letsencrypt
+      - traefik.http.services.go_simp_web.loadbalancer.server.port=8000
+      - traefik.http.middlewares.redirect.redirectscheme.scheme=https
+
+
+  rest_api:
+    build: service/rest-api
+    image: mainbot_rest-api
+    working_dir: /app/Go-Simp/service/rest-api    
+    depends_on:
+      - build_mainbot
+      - redis
+    command: go run . 
+    restart: on-failure
+    networks:
+      - go_simp-proxy
+      - go_simp-net
+    labels:
+      # Traefik configuration, Hostname needs to be changed
+      - traefik.http.routers.rest_api-http.rule=Host(`<YOUR_DOMAIN>`)
+      - traefik.http.routers.rest_api-http.entrypoints=http
+      - traefik.http.routers.rest_api-http.middlewares=redirect
+      - traefik.http.routers.rest_api-https.rule=Host(`<YOUR_DOMAIN>`)
+      - traefik.http.routers.rest_api-https.entrypoints=https
+      - traefik.http.routers.rest_api-https.tls=true
+      - traefik.http.routers.rest_api-https.tls.certresolver=letsencrypt
+      - traefik.http.services.rest_api.loadbalancer.server.port=2525
+      - traefik.http.middlewares.redirect.redirectscheme.scheme=https
 
   redis:
     image: 'bitnami/redis:latest'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
+    volumes:  
+      - redis_data:bitnami/redis/data/
+    networks:
+      - go_simp-net
+
+networks:
+  go_simp-proxy:
+    external: true
+  go_simp-net:
+    external: false
+
+volumes:
+  redis_data:
