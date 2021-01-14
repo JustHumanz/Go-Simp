@@ -60,6 +60,7 @@ const (
 	Assalamu          = "https://cdn.human-z.tech/Assalamu.jpg"
 	Approaching       = "https://cdn.human-z.tech/approaching.jpg"
 	CommandURL        = "https://go-simp.human-z.tech/Exec/"
+	GuideURL          = "https://go-simp.human-z.tech/Guide/"
 	VtubersData       = "https://go-simp.human-z.tech"
 	ChannelPermission = 8208
 

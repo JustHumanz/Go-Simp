@@ -1672,36 +1672,17 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 			_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 				SetTitle("Help").
-				AddField("Support "+BotInfo.Username+" for improve bot performance", "[Ko-Fi]("+config.BotConf.DonationLink+")").
 				SetURL(config.CommandURL).
-				AddField("See at web site", config.CommandURL).
-				/*
-					AddField(Prefix+Enable+" {art/live/all} [Vtuber Group]", "This command will declare if [Vtuber Group] enable in this channel\nExample:\n`"+config.BotConf.BotPrefix.General+Enable+" all hanayori,hololive` so other users can use `"+config.BotConf.BotPrefix.General+TagMe+" kanochi` or "+"`"+config.BotConf.BotPrefix.General+TagMe+" gura`").
-					AddField(Prefix+Update+" {art/live/all} [Vtuber Group]", "Use this command if you want to change enable state").
-					AddField(Prefix+Disable+" [Vtuber Group]", "Just like enable but this disable command :3 ").
-					AddField(config.PFanart+"{Group/Member name}", "Show fanart with randomly with their fanart hashtag\nExample: \n`"+config.PFanart+"Kanochi` or `"+config.PFanart+"hololive`").
-					AddField(Prefix+TagMe+" [Group/Member name]", "This command will add you to tags list if any new fanart and livestream schedule\nExample: \n`"+config.BotConf.BotPrefix.General+TagMe+" Kanochi`,then you will get tagged when there is a new fanart and livestream schedule of kano").
-					AddField(Prefix+DelTag+" [Group/Member name]", "This command will remove you from tags list").
-					AddField(Prefix+MyTags, "Show all lists that you are subscribed on this channel").
-					AddField(Prefix+TagRoles+" [Roles name]", "Same like `tag me` but this will tag roles").
-					AddField(Prefix+DelRoles+" [Roles name]", "Remove roles from tags list").
-					AddField(Prefix+RolesTags+" [Roles name]", "Show all tags list that roles subscribed on this channel").
-					AddField(Prefix+ChannelState, "Show what is enable in this channel").
-					AddField(Prefix+VtuberData+" [Group] -Region {region}", "Show available Vtuber data ").
-					AddField(Prefix+Subscriber+" {Member name}", "Show Vtuber count of subscriber and followers ").
-					AddField(config.PYoutube+Upcoming+" [Vtuber Group/Member] -Region {region}", "This command will show Upcoming live streams on Youtube (*only 3 if use Group name*)").
-					AddField(config.PYoutube+Live+" [Vtuber Group/Member] -Region {region}", "This command will show all live streams right now on Youtube").
-					AddField(config.PYoutube+Past+" [Vtuber Group/Member] -Region {region}", "This command will show past streams on Youtube (*only 3 if use Group name*)").
-					AddField("~~"+config.PBilibili+Upcoming+" [Vtuber Group/Member]~~", "~~This command will show all Upcoming live streams on BiliBili~~").
-					AddField(config.PBilibili+Live+" [Vtuber Group/Member]", "This command will show all live streams right now on BiliBili (*only 3 if use Group name*)").
-					AddField(config.PBilibili+Past+" [Vtuber Group/Member]", "This command will show all past streams on BiliBili").
-					AddField("sp_"+config.PBilibili+"[Vtuber Group/Member]", "This command will show latest video on bilibili").
-					AddField(Prefix+"Help EN", "Well,you using it right now").
-					AddField(Prefix+"Help JP", "Like this but in Japanese").
-				*/
+				SetDescription("A simple VTuber bot to ping you or your roles if any new Fanart and Livestream").
+				AddField("Command list", "[Exec]("+config.CommandURL+")").
+				AddField("Guild", "[Guide]("+config.GuideURL+")").
+				AddField("Vtuber list", "[Vtubers]("+config.VtubersData+")").
+				AddField("Made by Golang", "[Go-Simp](https://github.com/JustHumanz/Go-Simp)").
+				AddField("Server count", strconv.Itoa(database.GetGuildsCount())).
+				AddField("Member count", strconv.Itoa(database.GetMemberCount())).
+				InlineAllFields().
 				SetThumbnail(config.BSD).
 				SetFooter(os.Getenv("VERSION")).
-				//SetFooter("Only user with permission \"Manage Channel or Higher\" can Enable/Disable/Update Vtuber Group").
 				SetColor(Color).MessageEmbed)
 			if err != nil {
 				log.Error(err)
