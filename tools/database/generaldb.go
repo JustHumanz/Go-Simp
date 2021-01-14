@@ -144,6 +144,9 @@ func (Member Member) GetSubsCount() (*MemberSubs, error) {
 
 	val, err := GeneralCache.Get(ctx, Key).Result()
 	if err == redis.Nil || err != nil {
+		if err != nil {
+			log.Error(err)
+		}
 		rows, err := DB.Query(`SELECT * FROM Subscriber WHERE VtuberMember_id=?`, Member.ID)
 		if err != nil {
 			return nil, err
@@ -856,6 +859,9 @@ func GetUserList(ChannelIDDiscord int64, Member int64) []string {
 	)
 	val2, err := LiveCache.Get(ctx, Key).Result()
 	if err == redis.Nil || err != nil {
+		if err != nil {
+			log.Error(err)
+		}
 		rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id=?`, ChannelIDDiscord, Member)
 		if err != nil {
 			log.Error(err)

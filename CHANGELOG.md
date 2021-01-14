@@ -1,3 +1,7 @@
+v2.5.18
+- Update help command
+- Fix redis error handling
+
 v2.5.17
 - Add Register user via reacting
 - Add Dynamic mode on bilibili
