@@ -63,7 +63,7 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 							SetThumbnail(config.GoSimpIMG).
 							SetImage(H3llcome[rand.Intn(len(H3llcome))]).
 							SetColor(14807034).
-							AddField("Setup", "You can watch [here](https://go-simp.human-z.tech/Guide/)").
+							AddField("Setup", "You can see [here](https://go-simp.human-z.tech/Guide/)").
 							AddField("Need support?", "Join [dev server](https://discord.com/invite/ydWC5knbJT)").
 							InlineAllFields().MessageEmbed)
 					} else {
@@ -73,7 +73,7 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 							SetThumbnail(config.GoSimpIMG).
 							SetImage(H3llcome[rand.Intn(len(H3llcome))]).
 							SetColor(14807034).
-							AddField("Setup", "You can watch [here](https://go-simp.human-z.tech/Guide/)").
+							AddField("Setup", "You can see [here](https://go-simp.human-z.tech/Guide/)").
 							AddField("Need support?", "Join [dev server](https://discord.com/invite/ydWC5knbJT)").
 							InlineAllFields().
 							AddField("Support "+BotID.Username, "[Ko-Fi]("+Donation+")").
