@@ -50,16 +50,14 @@ func Start(dbsession *sql.DB) {
 }
 
 func ModuleInfo(Name string) {
-	ctx := context.Background()
-	err := GeneralCache.LPush(ctx, "ModuleInfo", Name).Err()
+	err := GeneralCache.LPush(context.Background(), "ModuleInfo", Name).Err()
 	if err != nil {
 		log.Error(err)
 	}
 }
 
 func GetModule() []string {
-	ctx := context.Background()
-	return GeneralCache.LRange(ctx, "ModuleInfo", 0, -1).Val()
+	return GeneralCache.LRange(context.Background(), "ModuleInfo", 0, -1).Val()
 }
 
 //GetGroup Get all vtuber groupData
@@ -88,12 +86,11 @@ func GetMembers(GroupID int64) []Member {
 	var (
 		list Member
 		Data []Member
-		ctx  = context.Background()
 		Key  = "VtuberMember" + strconv.Itoa(int(GroupID))
 	)
-	val := GeneralCache.LRange(ctx, Key, 0, -1).Val()
+	val := GeneralCache.LRange(context.Background(), Key, 0, -1).Val()
 	if len(val) == 0 {
-		rederr := GeneralCache.Del(ctx, Key).Err()
+		rederr := GeneralCache.Del(context.Background(), Key).Err()
 		if rederr != nil {
 			log.Error(rederr)
 		}
@@ -107,13 +104,13 @@ func GetMembers(GroupID int64) []Member {
 			if err != nil {
 				log.Error(err)
 			}
-			err = GeneralCache.LPush(ctx, Key, list).Err()
+			err = GeneralCache.LPush(context.Background(), Key, list).Err()
 			if err != nil {
 				log.Error(err)
 			}
 			Data = append(Data, list)
 		}
-		err = LiveCache.Expire(ctx, Key, 3*time.Hour).Err()
+		err = LiveCache.Expire(context.Background(), Key, 3*time.Hour).Err()
 		if err != nil {
 			log.Error(err)
 		}
@@ -137,12 +134,11 @@ func gacha() bool {
 //GetSubsCount Get subs,follow,view,like data from Subscriber
 func (Member Member) GetSubsCount() (*MemberSubs, error) {
 	var (
-		ctx  = context.Background()
 		Data MemberSubs
 		Key  = strconv.Itoa(int(Member.ID)) + Member.Name
 	)
 
-	val, err := GeneralCache.Get(ctx, Key).Result()
+	val, err := GeneralCache.Get(context.Background(), Key).Result()
 	if err != nil {
 		log.Error(err)
 	}
@@ -159,7 +155,7 @@ func (Member Member) GetSubsCount() (*MemberSubs, error) {
 				return nil, err
 			}
 		}
-		err = GeneralCache.Set(ctx, Key, Data, 16*time.Minute).Err()
+		err = GeneralCache.Set(context.Background(), Key, Data, 16*time.Minute).Err()
 		if err != nil {
 			return nil, err
 		}
@@ -399,8 +395,7 @@ func (Data *UserStruct) Adduser() error {
 }
 
 func (Data *UserStruct) SendToCache(MessageID string) error {
-	ctx := context.Background()
-	err := GeneralCache.Set(ctx, MessageID, Data, -1).Err()
+	err := GeneralCache.Set(context.Background(), MessageID, Data, -1).Err()
 	if err != nil {
 		return err
 	}
@@ -409,10 +404,9 @@ func (Data *UserStruct) SendToCache(MessageID string) error {
 
 func GetChannelMessage(MessageID string) *UserStruct {
 	var (
-		ctx  = context.Background()
 		data UserStruct
 	)
-	val := GeneralCache.Get(ctx, MessageID).Val()
+	val := GeneralCache.Get(context.Background(), MessageID).Val()
 	err := json.Unmarshal([]byte(val), &data)
 	if err != nil {
 		return nil
@@ -819,8 +813,7 @@ func ChannelTag(MemberID int64, typetag int, Options string) []DiscordChannel {
 }
 
 func (Data *DiscordChannel) PushReddis() {
-	ctx := context.Background()
-	err := GeneralCache.LPush(ctx, Data.VideoID, Data).Err()
+	err := GeneralCache.LPush(context.Background(), Data.VideoID, Data).Err()
 	if err != nil {
 		log.Error(err)
 	}
@@ -828,10 +821,9 @@ func (Data *DiscordChannel) PushReddis() {
 
 func GetLiveNotifMsg(Key string) []DiscordChannel {
 	var (
-		ctx  = context.Background()
 		Data []DiscordChannel
 	)
-	val := GeneralCache.LRange(ctx, Key, 0, -1).Val()
+	val := GeneralCache.LRange(context.Background(), Key, 0, -1).Val()
 	for _, v := range val {
 		var ChannelData DiscordChannel
 		err := json.Unmarshal([]byte(v), &ChannelData)
@@ -840,7 +832,7 @@ func GetLiveNotifMsg(Key string) []DiscordChannel {
 		}
 		Data = append(Data, ChannelData)
 	}
-	rederr := GeneralCache.Del(ctx, Key).Err()
+	rederr := GeneralCache.Del(context.Background(), Key).Err()
 	if rederr != nil {
 		log.Error(rederr)
 	}
@@ -849,23 +841,19 @@ func GetLiveNotifMsg(Key string) []DiscordChannel {
 }
 
 //GetUserList GetUser tags
-func GetUserList(ChannelIDDiscord int64, Member int64) []string {
+func (Data *DiscordChannel) GetUserList(ctx context.Context) []string {
 	var (
-		UserTagsList  []string
+		DataUser      []string
 		DiscordUserID string
 		Type          bool
-		ctx           = context.Background()
-		Key           = strconv.Itoa(int(ChannelIDDiscord) * int(Member))
+		Key           = strconv.Itoa(int(Data.Member.ID) * int(Data.ID))
 	)
 	val2, err := LiveCache.Get(ctx, Key).Result()
 	if err != nil {
 		log.Error(err)
 	}
-	if len(val2) == 0 {
-		if err != nil {
-			log.Error(err)
-		}
-		rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id=?`, ChannelIDDiscord, Member)
+	if len(val2) == 0 || err != nil {
+		rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id=?`, Data.ID, Data.Member.ID)
 		if err != nil {
 			log.Error(err)
 		}
@@ -877,24 +865,23 @@ func GetUserList(ChannelIDDiscord int64, Member int64) []string {
 				log.Error(err)
 			}
 			if Type {
-				UserTagsList = append(UserTagsList, "<@"+DiscordUserID+">")
+				DataUser = append(DataUser, "<@"+DiscordUserID+">")
 			} else {
-				UserTagsList = append(UserTagsList, "<@&"+DiscordUserID+">")
+				DataUser = append(DataUser, "<@&"+DiscordUserID+">")
 			}
 		}
-		err = LiveCache.Set(ctx, Key, strings.Join(UserTagsList, ","), 12*time.Minute).Err()
+		err = LiveCache.Set(ctx, Key, strings.Join(DataUser, ","), 30*time.Minute).Err()
 		if err != nil {
 			log.Error(err)
 		}
 	} else {
 		if val2 == "" {
-			UserTagsList = nil
+			DataUser = nil
 		} else {
-			UserTagsList = strings.Split(val2, ",")
+			DataUser = strings.Split(val2, ",")
 		}
 	}
-
-	return UserTagsList
+	return DataUser
 }
 
 //get Reminder tags

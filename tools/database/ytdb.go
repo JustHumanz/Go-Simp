@@ -16,10 +16,9 @@ func YtGetStatus(Group, Member int64, Status, Region string) ([]YtDbData, error)
 		Data  []YtDbData
 		list  YtDbData
 		limit int
-		ctx   = context.Background()
 		Key   = strconv.Itoa(int(Group)) + strconv.Itoa(int(Member)) + Status + Region
 	)
-	val := LiveCache.LRange(ctx, Key, 0, -1).Val()
+	val := LiveCache.LRange(context.Background(), Key, 0, -1).Val()
 	if len(val) == 0 {
 		if (Group != 0 && Status != "live") || (Member != 0 && Status == "past") {
 			limit = 3
@@ -39,12 +38,12 @@ func YtGetStatus(Group, Member int64, Status, Region string) ([]YtDbData, error)
 			}
 			list.Status = Status
 			Data = append(Data, list)
-			err = LiveCache.LPush(ctx, Key, list).Err()
+			err = LiveCache.LPush(context.Background(), Key, list).Err()
 			if err != nil {
 				return nil, err
 			}
 		}
-		err = LiveCache.Expire(ctx, Key, 20*time.Minute).Err()
+		err = LiveCache.Expire(context.Background(), Key, 20*time.Minute).Err()
 		if err != nil {
 			return nil, err
 		}

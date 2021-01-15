@@ -1,6 +1,7 @@
 package twitter
 
 import (
+	"context"
 	"regexp"
 	"strconv"
 	"strings"
@@ -38,7 +39,7 @@ func SendFanart(Data []Fanart, Group database.Group) {
 			log.Error(err)
 		}
 
-		if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
+		if Group.GroupName == "Independen" {
 			GroupIcon = ""
 		} else {
 			GroupIcon = Group.IconURL
@@ -48,7 +49,7 @@ func SendFanart(Data []Fanart, Group database.Group) {
 				ChannelID: Channel.ChannelID,
 				Group:     Group,
 			}
-			UserTagsList := database.GetUserList(Channel.ID, MemberFanart.Member.ID)
+			UserTagsList := ChannelState.GetUserList(context.Background()) //database.GetUserList(Channel.ID, MemberFanart.Member.ID)
 			if UserTagsList != nil {
 				tags = strings.Join(UserTagsList, " ")
 			} else {

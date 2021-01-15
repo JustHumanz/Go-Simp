@@ -1345,7 +1345,9 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 						msgID = tmp.ID
 					}
 					MessagePinned, err := s.ChannelMessagesPinned(m.ChannelID)
-
+					if err != nil {
+						log.Error(err)
+					}
 					for _, Message := range MessagePinned {
 						if Message.Author.ID == BotInfo.ID {
 							err := s.ChannelMessageUnpin(m.ChannelID, Message.ID)
@@ -1622,7 +1624,9 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 						msgID = tmp.ID
 					}
 					MessagePinned, err := s.ChannelMessagesPinned(m.ChannelID)
-
+					if err != nil {
+						log.Error(err)
+					}
 					for _, Message := range MessagePinned {
 						if Message.Author.ID == BotInfo.ID {
 							err := s.ChannelMessageUnpin(m.ChannelID, Message.ID)
@@ -1675,7 +1679,7 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetURL(config.CommandURL).
 				SetDescription("A simple VTuber bot to ping you or your roles if any new Fanart and Livestream").
 				AddField("Command list", "[Exec]("+config.CommandURL+")").
-				AddField("Guild", "[Guide]("+config.GuideURL+")").
+				AddField("Guide", "[Guide]("+config.GuideURL+")").
 				AddField("Vtuber list", "[Vtubers]("+config.VtubersData+")").
 				AddField("Made by Golang", "[Go-Simp](https://github.com/JustHumanz/Go-Simp)").
 				AddField("Server count", strconv.Itoa(database.GetGuildsCount())).

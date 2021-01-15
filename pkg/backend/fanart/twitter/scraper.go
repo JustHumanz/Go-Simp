@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/JustHumanz/Go-simp/tools/database"
-	"github.com/go-redis/redis/v8"
 	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
@@ -21,18 +20,20 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 	)
 
 	CurlTwitter := func(Hashtags []string, GroupData database.Group) {
-		ctx := context.Background()
 		log.WithFields(log.Fields{
 			"Hashtag": strings.Join(Hashtags, " OR "),
 			"Group":   GroupData.GroupName,
 		}).Info("Start curl twitter")
-		for tweet := range Scraper.SearchTweets(ctx, "("+strings.Join(Hashtags, " OR ")+") AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)", Limit) {
+		for tweet := range Scraper.SearchTweets(context.Background(), "("+strings.Join(Hashtags, " OR ")+") AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)", Limit) {
 			if tweet.Error != nil {
 				log.Error(tweet.Error)
 			}
 			//Find hashtags members
-			_, err := rdb.Get(ctx, tweet.ID).Result()
-			if err == redis.Nil {
+			val, err := rdb.Get(context.Background(), tweet.ID).Result()
+			if err != nil {
+				log.Error(err)
+			}
+			if val == "" {
 				for _, MemberHashtag := range Data {
 					for _, TweetHashtag := range tweet.Hashtags {
 						if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) && !tweet.IsQuoted && !tweet.IsReply && MemberHashtag.Name != "Kaichou" {
@@ -50,15 +51,13 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 							if err != nil {
 								log.Error(err)
 							}
-							err = rdb.Set(ctx, tweet.ID, bit, 30*time.Minute).Err()
+							err = rdb.Set(context.Background(), tweet.ID, bit, 30*time.Minute).Err()
 							if err != nil {
 								log.Error(err)
 							}
 						}
 					}
 				}
-			} else if err != nil {
-				log.Error(err)
 			}
 		}
 	}

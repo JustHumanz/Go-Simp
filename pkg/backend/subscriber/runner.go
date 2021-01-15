@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"strings"
 
@@ -65,7 +66,7 @@ func main() {
 func SendNude(Embed *discordgo.MessageEmbed, Group database.Group, MemberID int64) {
 	ChannelData := Group.GetChannelByGroup()
 	for _, Channel := range ChannelData {
-		UserTagsList := database.GetUserList(Channel.ID, MemberID)
+		UserTagsList := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, MemberID)
 		msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, Embed)
 		if err != nil {
 			log.Error(msg, err)

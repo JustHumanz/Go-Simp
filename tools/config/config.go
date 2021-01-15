@@ -17,51 +17,33 @@ import (
 
 // Public variables
 var (
-	/*
-		Token          string
-		YtToken        []string
-		EmojiFanart    []string
-		EmojiStream    []string
-		PFanart        string
-		PYoutube       string
-		PBilibili      string
-		PGeneral       string
-		TwitterToken   []string
-		ImgurClient    string
-		BiliBiliSes    string
-		SauceAPI       string
-		Logging        string
-		DiscordWebHook string
-		MultiTOR       string
-		KoFiLink       string
-	*/
 	ModuleList  = []string{"LiveBiliBili", "SpaceBiliBili", "Youtube", "TwitterFanart", "BiliBiliFanart", "YoutubeSubscriber", "BiliBiliFollowers", "TwitterFollowers"}
 	BotConf     ConfigFile
 	TwitchToken string
+	NotFound    string
+	YoutubeIMG  string
+	BiliBiliIMG string
+	TwitterIMG  string
+	WorryIMG    string
+	GoSimpIMG   string
+	Longcatttt  = "https://cdn.ebaumsworld.com/2020/09/20/013235/86394200/longcat-pic.jpg"
+	Dead        string
+	BSD         string
+	Sleep       string
+	Bonjour     string
+	Howdy       string
+	Guten       string
+	Koni        string
+	Selamat     string
+	Assalamu    string
+	Approaching string
+	CommandURL  string
+	GuideURL    string
+	VtubersData string
 )
 
 const (
 	TmpDir            = "/tmp/tmp.img"
-	NotFound          = "https://cdn.human-z.tech/404.jpg"
-	YoutubeIMG        = "https://cdn.human-z.tech/youtube.png"
-	BiliBiliIMG       = "https://cdn.human-z.tech/bilibili.png"
-	TwitterIMG        = "https://cdn.human-z.tech/twitter.png"
-	WorryIMG          = "https://cdn.human-z.tech/parerunworry.png"
-	GoSimpIMG         = "https://cdn.human-z.tech/go-simp.png"
-	Longcatttt        = "https://cdn.ebaumsworld.com/2020/09/20/013235/86394200/longcat-pic.jpg"
-	Dead              = "https://cdn.human-z.tech/dead.jpg"
-	BSD               = "https://cdn.human-z.tech/bsd.png"
-	Sleep             = "https://cdn.human-z.tech/sleep.png"
-	Bonjour           = "https://cdn.human-z.tech/bonjour.png"
-	Howdy             = "https://cdn.human-z.tech/howdy.png"
-	Guten             = "https://cdn.human-z.tech/guten.png"
-	Koni              = "https://cdn.human-z.tech/koni.png"
-	Selamat           = "https://cdn.human-z.tech/selamat.jpg"
-	Assalamu          = "https://cdn.human-z.tech/Assalamu.jpg"
-	Approaching       = "https://cdn.human-z.tech/approaching.jpg"
-	CommandURL        = "https://go-simp.human-z.tech/Exec/"
-	GuideURL          = "https://go-simp.human-z.tech/Guide/"
-	VtubersData       = "https://go-simp.human-z.tech"
 	ChannelPermission = 8208
 
 	//Crontab
@@ -88,6 +70,7 @@ type ConfigFile struct {
 	MultiTOR       string   `toml:"Multitor"`
 	DonationLink   string   `toml:"DonationLink"`
 	TopGG          string   `toml:"TOPGG"`
+	Domain         string   `toml:"Domain"`
 	Twitch         struct {
 		ClientID     string `toml:"ClientID"`
 		ClientSecret string `toml:"ClientSecret"`
@@ -139,6 +122,26 @@ func ReadConfig(path string) (ConfigFile, error) {
 	if err != nil {
 		return ConfigFile{}, err
 	}
+
+	NotFound = fmt.Sprintf("https://cdn.%s/404.jpg", BotConf.Domain)
+	YoutubeIMG = fmt.Sprintf("https://cdn.%s/youtube.png", BotConf.Domain)
+	BiliBiliIMG = fmt.Sprintf("https://cdn.%s/bilibili.png", BotConf.Domain)
+	TwitterIMG = fmt.Sprintf("https://cdn.%s/twitter.png", BotConf.Domain)
+	WorryIMG = fmt.Sprintf("https://cdn.%s/parerunworry.png", BotConf.Domain)
+	GoSimpIMG = fmt.Sprintf("https://cdn.%s/go-simp.png", BotConf.Domain)
+	Dead = fmt.Sprintf("https://cdn.%s/dead.jpg", BotConf.Domain)
+	BSD = fmt.Sprintf("https://cdn.%s/bsd.png", BotConf.Domain)
+	Sleep = fmt.Sprintf("https://cdn.%s/sleep.png", BotConf.Domain)
+	Bonjour = fmt.Sprintf("https://cdn.%s/bonjour.png", BotConf.Domain)
+	Howdy = fmt.Sprintf("https://cdn.%s/howdy.png", BotConf.Domain)
+	Guten = fmt.Sprintf("https://cdn.%s/guten.png", BotConf.Domain)
+	Koni = fmt.Sprintf("https://cdn.%s/koni.png", BotConf.Domain)
+	Selamat = fmt.Sprintf("https://cdn.%s/selamat.jpg", BotConf.Domain)
+	Assalamu = fmt.Sprintf("https://cdn.%s/Assalamu.jpg", BotConf.Domain)
+	Approaching = fmt.Sprintf("https://cdn.%s/approaching.jpg", BotConf.Domain)
+	CommandURL = fmt.Sprintf("https://go-simp.%s/Exec/", BotConf.Domain)
+	GuideURL = fmt.Sprintf("https://go-simp.%s/Guide/", BotConf.Domain)
+	VtubersData = fmt.Sprintf("https://go-simp.%s", BotConf.Domain)
 
 	if BotConf.LimitConf.YoutubeLimit >= 15 {
 		BotConf.LimitConf.YoutubeLimit = 15

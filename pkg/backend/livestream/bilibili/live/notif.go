@@ -1,9 +1,11 @@
 package live
 
 import (
+	"context"
 	"errors"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	config "github.com/JustHumanz/Go-simp/tools/config"
@@ -47,52 +49,60 @@ func (Data *LiveBili) Crotttt() error {
 
 	MemberID := Data.Member.ID
 	//id, DiscordChannelID
-	ChannelData := database.ChannelTag(MemberID, 2, "")
-	for _, Channel := range ChannelData {
-		ChannelState := database.DiscordChannel{
-			ChannelID: Channel.ChannelID,
-			Group:     Data.Group,
-		}
-		UserTagsList := database.GetUserList(Channel.ID, MemberID)
-		if UserTagsList == nil {
-			UserTagsList = []string{"_"}
-		}
-		MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, Data.Embed)
-		if err != nil {
-			return err
-		}
-		Msg := "Push " + config.BotConf.Emoji.Livestream[0] + " to add you in `" + Data.Member.Name + "` ping list\nPush " + config.BotConf.Emoji.Livestream[1] + " to remove you from ping list"
-		MsgTxt, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " ")+"\n"+Msg)
-		if err != nil {
-			return err
-		}
-		if err != nil {
-			log.Error(err)
-		}
-		if Channel.Dynamic {
-			log.WithFields(log.Fields{
-				"DiscordChannel": Channel.ChannelID,
-				"VtuberGroupID":  Data.Group.ID,
-				"BiliBiliRoomID": BiliBiliRoomID,
-			}).Info("Set dynamic mode")
-			ChannelState.SetVideoID(BiliBiliRoomID).
-				SetMsgEmbedID(MsgEmbed.ID).
-				SetMsgTextID(MsgTxt.ID).
-				PushReddis()
-		}
-		User.SetDiscordChannelID(Channel.ChannelID).
-			SetGroup(Data.Group).
-			SetMember(Data.Member).
-			SendToCache(MsgTxt.ID)
-		err = engine.Reacting(map[string]string{
-			"ChannelID": Channel.ChannelID,
-			"State":     "Youtube",
-			"MessageID": MsgTxt.ID,
-		}, Bot)
-		if err != nil {
-			log.Error(err)
-		}
+	var (
+		wg          sync.WaitGroup
+		ChannelData = database.ChannelTag(MemberID, 2, "")
+	)
+	for _, v := range ChannelData {
+		wg.Add(1)
+		go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
+			defer wg.Done()
+			ChannelState := database.DiscordChannel{
+				ChannelID: Channel.ChannelID,
+				Group:     Data.Group,
+			}
+			UserTagsList := ChannelState.GetUserList(context.Background())
+			if UserTagsList == nil {
+				UserTagsList = []string{"_"}
+			}
+			MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, Data.Embed)
+			if err != nil {
+				log.Error(err)
+			}
+			Msg := "Push " + config.BotConf.Emoji.Livestream[0] + " to add you in `" + Data.Member.Name + "` ping list\nPush " + config.BotConf.Emoji.Livestream[1] + " to remove you from ping list"
+			MsgTxt, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " ")+"\n"+Msg)
+			if err != nil {
+				log.Error(err)
+			}
+			if err != nil {
+				log.Error(err)
+			}
+			if Channel.Dynamic {
+				log.WithFields(log.Fields{
+					"DiscordChannel": Channel.ChannelID,
+					"VtuberGroupID":  Data.Group.ID,
+					"BiliBiliRoomID": BiliBiliRoomID,
+				}).Info("Set dynamic mode")
+				ChannelState.SetVideoID(BiliBiliRoomID).
+					SetMsgEmbedID(MsgEmbed.ID).
+					SetMsgTextID(MsgTxt.ID).
+					PushReddis()
+			}
+			User.SetDiscordChannelID(Channel.ChannelID).
+				SetGroup(Data.Group).
+				SetMember(Data.Member).
+				SendToCache(MsgTxt.ID)
+			err = engine.Reacting(map[string]string{
+				"ChannelID": Channel.ChannelID,
+				"State":     "Youtube",
+				"MessageID": MsgTxt.ID,
+			}, Bot)
+			if err != nil {
+				log.Error(err)
+			}
+		}(v, &wg)
 	}
+	wg.Wait()
 
 	/* else if DataRoom.Status == "Upcoming" {
 		msg = "Start live in"

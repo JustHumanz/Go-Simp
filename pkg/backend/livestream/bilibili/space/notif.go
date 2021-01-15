@@ -1,6 +1,7 @@
 package space
 
 import (
+	"context"
 	"strings"
 	"time"
 
@@ -25,7 +26,7 @@ func (Data CheckSctruct) SendNude() {
 			//ID, DiscordChannelID
 			ChannelData := database.ChannelTag(Data.MemberID, 2, "LiveOnly")
 			for _, Channel := range ChannelData {
-				UserTagsList := database.GetUserList(Channel.ID, Data.MemberID)
+				UserTagsList := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, Data.MemberID)
 				if UserTagsList != nil {
 					msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 						SetAuthor(Data.MemberName, Data.MemberFace, Data.MemberUrl).

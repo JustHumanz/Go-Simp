@@ -3,6 +3,7 @@ BiliSess = "#BiliSess"
 DiscordWebHook = "#URL"
 Multitor = "#Http Proxy"
 DonationLink = "#DonationLink"
+Domain = "humanz.tech"
 
 YoutubeToken = [
   "#GoogleAPI",

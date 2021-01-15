@@ -171,13 +171,14 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 
 				if time.Now().Sub(Data.Items[i].LiveDetails.StartTime) > Data.Items[i].LiveDetails.StartTime.Sub(time.Now()) && Data.Items[i].LiveDetails.ActualStartTime.IsZero() {
 					if YoutubeData.YtData.Status == "upcoming" {
+						YoutubeData.ChangeYtStatus("live").UpdateYtDB()
+
+						log.Info("Send to notify")
+						YoutubeData.SendNude()
 						log.WithFields(log.Fields{
 							"VideoData ID": VideoID[i],
-							"Status":       "Live",
+							"Status":       YoutubeData.YtData.Status,
 						}).Info("Livestream schedule late,change video status to live")
-						YoutubeData.ChangeYtStatus("live").SendNude()
-						log.Info("send to db")
-						YoutubeData.UpdateYtDB()
 					}
 				}
 
@@ -285,13 +286,10 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 //Get data from youtube api
 func YtAPI(VideoID []string) (YtData, error) {
 	var (
-		Data    YtData
-		body    []byte
-		curlerr error
-		urls    = "https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id=" + strings.Join(VideoID, ",") + "&key=" + yttoken
+		Data YtData
 	)
 
-	body, curlerr = network.Curl(urls, nil)
+	body, curlerr := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id="+strings.Join(VideoID, ",")+"&key="+yttoken, nil)
 	if curlerr != nil {
 		return YtData{}, errors.New("Token out of limit")
 	}

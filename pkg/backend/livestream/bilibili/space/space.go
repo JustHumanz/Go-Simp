@@ -1,7 +1,6 @@
 package space
 
 import (
-	"regexp"
 	"strconv"
 	"sync"
 	"time"
@@ -43,16 +42,15 @@ func CheckSpaceVideo() {
 							"BiliBiliID": Member.BiliBiliID,
 						}).Info("Check Space")
 
-						GroupIcon := ""
-						if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
-							GroupIcon = ""
+						if Group.GroupName == "Independen" {
+							Group.IconURL = ""
 						} else {
-							GroupIcon = Group.IconURL
+							Group.IconURL = Group.IconURL
 						}
 						Data := &CheckSctruct{
 							SpaceID:    Member.BiliBiliID,
 							MemberID:   Member.ID,
-							GroupIcon:  GroupIcon,
+							GroupIcon:  Group.IconURL,
 							MemberName: engine.FixName(Member.JpName, Member.EnName),
 							MemberFace: Member.BiliBiliAvatar,
 							MemberUrl:  "https://space.bilibili.com/" + strconv.Itoa(Member.BiliBiliID),

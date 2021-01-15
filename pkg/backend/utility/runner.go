@@ -34,67 +34,58 @@ func main() {
 		log.Panic(err)
 	}
 	Bot.AddHandler(func(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
-		UserState := database.GetChannelMessage(m.MessageID)
-		if UserState != nil && m.UserID != BotInfo.ID {
-			if m.Emoji.MessageFormat() == config.BotConf.Emoji.Livestream[0] {
-				UserInfo, err := s.User(m.MessageReaction.UserID)
-				if err != nil {
-					log.Error(err)
-				}
-				log.WithFields(log.Fields{
-					"UserID":    UserInfo.ID,
-					"UserName":  UserInfo.Username,
-					"ChannelID": m.ChannelID,
-				}).Info("New user add from reac")
-				UserState.SetDiscordID(UserInfo.ID).
-					SetDiscordUserName(UserInfo.Username)
-				err = UserState.Adduser()
-				if err != nil {
-					_, err := s.ChannelMessageSend(m.ChannelID, "<@"+m.UserID+"> "+err.Error())
+		if (m.Emoji.MessageFormat() == config.BotConf.Emoji.Livestream[0] || m.Emoji.MessageFormat() == config.BotConf.Emoji.Livestream[1]) && m.UserID != BotInfo.ID {
+			UserState := database.GetChannelMessage(m.MessageID)
+			if UserState != nil {
+				if m.Emoji.MessageFormat() == config.BotConf.Emoji.Livestream[0] {
+					UserInfo, err := s.User(m.MessageReaction.UserID)
 					if err != nil {
 						log.Error(err)
 					}
-				} else {
-					_, err := s.ChannelMessageSend(m.ChannelID, "<@"+m.UserID+"> Just add "+UserState.Member.Name)
+					log.WithFields(log.Fields{
+						"UserID":    UserInfo.ID,
+						"UserName":  UserInfo.Username,
+						"ChannelID": m.ChannelID,
+					}).Info("New user add from reac")
+					UserState.SetDiscordID(UserInfo.ID).
+						SetDiscordUserName(UserInfo.Username)
+					err = UserState.Adduser()
+					if err != nil {
+						_, err := s.ChannelMessageSend(m.ChannelID, "<@"+m.UserID+"> "+err.Error())
+						if err != nil {
+							log.Error(err)
+						}
+					} else {
+						_, err := s.ChannelMessageSend(m.ChannelID, "<@"+m.UserID+"> Just add "+UserState.Member.Name)
+						if err != nil {
+							log.Error(err)
+						}
+					}
+				} else if m.Emoji.MessageFormat() == config.BotConf.Emoji.Livestream[1] {
+					UserInfo, err := s.User(m.MessageReaction.UserID)
 					if err != nil {
 						log.Error(err)
 					}
-				}
-			} else if m.Emoji.MessageFormat() == config.BotConf.Emoji.Livestream[1] {
-				UserInfo, err := s.User(m.MessageReaction.UserID)
-				if err != nil {
-					log.Error(err)
-				}
-				log.WithFields(log.Fields{
-					"UserID":    UserInfo.ID,
-					"UserName":  UserInfo.Username,
-					"ChannelID": m.ChannelID,
-				}).Info("New user del from reac")
-				UserState.SetDiscordID(UserInfo.ID).
-					SetDiscordUserName(UserInfo.Username)
-				err = UserState.Deluser()
-				if err != nil {
-					_, err := s.ChannelMessageSend(m.ChannelID, "<@"+m.UserID+"> "+err.Error())
+					log.WithFields(log.Fields{
+						"UserID":    UserInfo.ID,
+						"UserName":  UserInfo.Username,
+						"ChannelID": m.ChannelID,
+					}).Info("New user del from reac")
+					UserState.SetDiscordID(UserInfo.ID).
+						SetDiscordUserName(UserInfo.Username)
+					err = UserState.Deluser()
 					if err != nil {
-						log.Error(err)
-					}
-				} else {
-					_, err := s.ChannelMessageSend(m.ChannelID, "<@"+m.UserID+"> Just remove "+UserState.Member.Name)
-					if err != nil {
-						log.Error(err)
+						_, err := s.ChannelMessageSend(m.ChannelID, "<@"+m.UserID+"> "+err.Error())
+						if err != nil {
+							log.Error(err)
+						}
+					} else {
+						_, err := s.ChannelMessageSend(m.ChannelID, "<@"+m.UserID+"> Just remove "+UserState.Member.Name)
+						if err != nil {
+							log.Error(err)
+						}
 					}
 				}
-			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "Invalid emoji")
-				if err != nil {
-					log.Error(err)
-				}
-			}
-		} else {
-			if m.UserID != BotInfo.ID {
-				log.WithFields(log.Fields{
-					"ChannelID": m.ChannelID,
-				}).Info("User state nill")
 			}
 		}
 	})

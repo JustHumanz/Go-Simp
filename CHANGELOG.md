@@ -1,3 +1,9 @@
+v2.5.19
+- Fix duplicate notif
+- Fix users not pinged
+- Add context to get userlist
+- Fix typo in help
+
 v2.5.18
 - Update help command
 - Fix redis error handling

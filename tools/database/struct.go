@@ -306,6 +306,7 @@ type DiscordChannel struct {
 	NewUpcoming    bool
 	Dynamic        bool
 	Group          Group
+	Member         Member
 	VideoID        string
 	EmbedMessageID string
 	TextMessageID  string
