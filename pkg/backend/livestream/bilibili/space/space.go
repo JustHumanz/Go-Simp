@@ -48,12 +48,8 @@ func CheckSpaceVideo() {
 							Group.IconURL = Group.IconURL
 						}
 						Data := &CheckSctruct{
-							SpaceID:    Member.BiliBiliID,
-							MemberID:   Member.ID,
-							GroupIcon:  Group.IconURL,
-							MemberName: engine.FixName(Member.JpName, Member.EnName),
-							MemberFace: Member.BiliBiliAvatar,
-							MemberUrl:  "https://space.bilibili.com/" + strconv.Itoa(Member.BiliBiliID),
+							Member: Member,
+							Group:  Group,
 						}
 						Data.Check(strconv.Itoa(config.BotConf.LimitConf.SpaceBiliBili)).SendNude()
 

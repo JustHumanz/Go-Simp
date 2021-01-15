@@ -96,7 +96,7 @@ func CheckNew() {
 											Group:       Group,
 											PhotosCount: STB.Item.PicturesCount,
 											PhotosImgur: link,
-											MemberID:    Member.ID,
+											Member:      Member,
 										}
 										Data.TBiliData.InputTBiliBili(Member.ID)
 										Data.PushNotif(color)

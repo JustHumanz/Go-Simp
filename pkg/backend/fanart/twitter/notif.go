@@ -48,6 +48,7 @@ func SendFanart(Data []Fanart, Group database.Group) {
 			ChannelState := database.DiscordChannel{
 				ChannelID: Channel.ChannelID,
 				Group:     Group,
+				Member:    MemberFanart.Member,
 			}
 			UserTagsList := ChannelState.GetUserList(context.Background()) //database.GetUserList(Channel.ID, MemberFanart.Member.ID)
 			if UserTagsList != nil {

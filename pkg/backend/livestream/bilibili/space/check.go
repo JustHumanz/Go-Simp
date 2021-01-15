@@ -50,7 +50,7 @@ func (Space *CheckSctruct) Check(limit string) *CheckSctruct {
 				Update:   time.Unix(int64(video.Created), 0).In(loc),
 				Viewers:  video.Play,
 				Length:   video.Length,
-				MemberID: Space.MemberID,
+				MemberID: Space.Member.ID,
 			}
 			new, id := Data.CheckVideo()
 			if new {
@@ -61,7 +61,7 @@ func (Space *CheckSctruct) Check(limit string) *CheckSctruct {
 			} else {
 				Data.UpdateView(id)
 			}
-			err := rdb.Set(ctx, video.Bvid, Space.MemberName, 6*time.Hour).Err()
+			err := rdb.Set(ctx, video.Bvid, video, 6*time.Hour).Err()
 			if err != nil {
 				log.Error(err)
 			}

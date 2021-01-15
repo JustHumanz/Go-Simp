@@ -17,20 +17,21 @@ type Notif struct {
 	Group       database.Group
 	PhotosImgur string
 	PhotosCount int
-	MemberID    int64
+	Member      database.Member
 }
 
 //PushNotif Push Data to discord channel
 func (NotifData Notif) PushNotif(Color int) {
 	Data := NotifData.TBiliData
 	Group := NotifData.Group
-	ChannelData := database.ChannelTag(NotifData.MemberID, 1, "")
+	ChannelData := database.ChannelTag(NotifData.Member.ID, 1, "")
 	GroupIcon := ""
 	tags := ""
 	for _, Channel := range ChannelData {
 		ChannelState := database.DiscordChannel{
 			ChannelID: Channel.ChannelID,
 			Group:     Group,
+			Member:    NotifData.Member,
 		}
 		UserTagsList := ChannelState.GetUserList(context.Background())
 		if UserTagsList != nil {

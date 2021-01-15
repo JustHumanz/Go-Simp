@@ -134,6 +134,7 @@ func (PushData *NotifStruct) SendNude() {
 				ChannelState := &database.DiscordChannel{
 					ChannelID: Channel.ChannelID,
 					Group:     PushData.Group,
+					Member:    PushData.Member,
 				}
 				UserTagsList := ChannelState.GetUserList(context.Background()) //database.GetUserList(Channel.ID, PushData.Member.ID)
 				if UserTagsList == nil {
@@ -225,6 +226,7 @@ func (PushData *NotifStruct) SendNude() {
 				ChannelState := &database.DiscordChannel{
 					ChannelID: Channel.ChannelID,
 					Group:     PushData.Group,
+					Member:    PushData.Member,
 				}
 				UserTagsList := ChannelState.GetUserList(context.Background()) //database.GetUserList(Channel.ID, PushData.Member.ID)
 				if UserTagsList != nil {
@@ -268,6 +270,7 @@ func (PushData *NotifStruct) SendNude() {
 			ChannelState := &database.DiscordChannel{
 				ChannelID: Channel.ChannelID,
 				Group:     PushData.Group,
+				Member:    PushData.Member,
 			}
 			for ii := 10; ii < 70; ii += 5 {
 				k := ii - 6

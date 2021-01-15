@@ -60,6 +60,7 @@ func (Data *LiveBili) Crotttt() error {
 			ChannelState := database.DiscordChannel{
 				ChannelID: Channel.ChannelID,
 				Group:     Data.Group,
+				Member:    Data.Member,
 			}
 			UserTagsList := ChannelState.GetUserList(context.Background())
 			if UserTagsList == nil {

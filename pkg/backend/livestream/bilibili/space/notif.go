@@ -2,6 +2,7 @@ package space
 
 import (
 	"context"
+	"strconv"
 	"strings"
 	"time"
 
@@ -14,26 +15,31 @@ import (
 
 func (Data CheckSctruct) SendNude() {
 	if Data.VideoList != nil {
-		Color, err := engine.GetColor(config.TmpDir, Data.MemberFace)
+		Color, err := engine.GetColor(config.TmpDir, Data.Member.BiliBiliAvatar)
 		if err != nil {
 			log.Error(err)
 		}
 		log.WithFields(log.Fields{
-			"Vtuber": Data.MemberName,
+			"Vtuber": Data.Member.Name,
 		}).Info("New video uploaded")
 
 		for _, video := range Data.VideoList {
 			//ID, DiscordChannelID
-			ChannelData := database.ChannelTag(Data.MemberID, 2, "LiveOnly")
+			ChannelData := database.ChannelTag(Data.Member.ID, 2, "LiveOnly")
 			for _, Channel := range ChannelData {
-				UserTagsList := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, Data.MemberID)
+				ChannelState := database.DiscordChannel{
+					ChannelID: Channel.ChannelID,
+					Group:     Data.Group,
+					Member:    Data.Member,
+				}
+				UserTagsList := ChannelState.GetUserList(context.Background()) //database.GetUserList(Channel.ID, Data.MemberID)
 				if UserTagsList != nil {
 					msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
-						SetAuthor(Data.MemberName, Data.MemberFace, Data.MemberUrl).
+						SetAuthor(Data.Member.Name, Data.Member.BiliBiliAvatar, "https://space.bilibili/"+strconv.Itoa(Data.Member.BiliBiliID)).
 						SetTitle("Uploaded new video").
 						SetDescription(video.Title).
 						SetImage(video.Pic).
-						SetThumbnail(Data.GroupIcon).
+						SetThumbnail(Data.Group.IconURL).
 						SetURL("https://www.bilibili.com/video/"+video.Bvid).
 						AddField("Type ", video.VideoType).
 						AddField("Duration ", video.Length).
