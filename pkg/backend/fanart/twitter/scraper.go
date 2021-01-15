@@ -30,10 +30,7 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 			}
 			//Find hashtags members
 			val, err := rdb.Get(context.Background(), tweet.ID).Result()
-			if err != nil {
-				log.Error(err)
-			}
-			if val == "" {
+			if val == "" || err != nil {
 				for _, MemberHashtag := range Data {
 					for _, TweetHashtag := range tweet.Hashtags {
 						if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) && !tweet.IsQuoted && !tweet.IsReply && MemberHashtag.Name != "Kaichou" {
