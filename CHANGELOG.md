@@ -3,6 +3,7 @@ v2.5.19
 - Fix users not pinged
 - Add context to get userlist
 - Fix typo in help
+- Add async to get userlist
 
 v2.5.18
 - Update help command

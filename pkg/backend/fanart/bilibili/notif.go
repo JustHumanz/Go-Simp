@@ -1,6 +1,7 @@
 package bilibili
 
 import (
+	"context"
 	"strconv"
 	"strings"
 
@@ -31,7 +32,7 @@ func (NotifData Notif) PushNotif(Color int) {
 			ChannelID: Channel.ChannelID,
 			Group:     Group,
 		}
-		UserTagsList := database.GetUserList(Channel.ID, NotifData.MemberID)
+		UserTagsList := ChannelState.GetUserList(context.Background())
 		if UserTagsList != nil {
 			tags = strings.Join(UserTagsList, " ")
 		} else {
