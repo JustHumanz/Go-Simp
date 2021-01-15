@@ -139,10 +139,7 @@ func (Member Member) GetSubsCount() (*MemberSubs, error) {
 	)
 
 	val, err := GeneralCache.Get(context.Background(), Key).Result()
-	if err != nil {
-		log.Error(err)
-	}
-	if len(val) == 0 {
+	if len(val) == 0 || err != nil {
 		rows, err := DB.Query(`SELECT * FROM Subscriber WHERE VtuberMember_id=?`, Member.ID)
 		if err != nil {
 			return nil, err
