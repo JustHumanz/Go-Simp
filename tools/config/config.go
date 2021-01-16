@@ -45,6 +45,7 @@ var (
 const (
 	TmpDir            = "/tmp/tmp.img"
 	ChannelPermission = 8208
+	GuildSupport      = "https://discord.com/invite/ydWC5knbJT"
 
 	//Crontab
 	TwitterFanart        = "@every 0h3m0s"

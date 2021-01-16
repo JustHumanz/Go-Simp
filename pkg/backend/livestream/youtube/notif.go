@@ -65,7 +65,7 @@ func (PushData *NotifStruct) SendNude() {
 			wg          sync.WaitGroup
 			ChannelData = database.ChannelTag(PushData.Member.ID, 2, "NewUpcoming")
 		)
-		for _, v := range ChannelData {
+		for i, v := range ChannelData {
 			wg.Add(1)
 			go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
 				defer wg.Done()
@@ -98,6 +98,10 @@ func (PushData *NotifStruct) SendNude() {
 					log.Error(err)
 				}
 			}(v, &wg)
+			//Wait every ge 10 discord channel
+			if i%10 == 0 {
+				wg.Wait()
+			}
 		}
 		wg.Wait()
 
@@ -122,7 +126,7 @@ func (PushData *NotifStruct) SendNude() {
 			wg          sync.WaitGroup
 			ChannelData = database.ChannelTag(PushData.Member.ID, 2, "")
 		)
-		for _, v := range ChannelData {
+		for i, v := range ChannelData {
 			wg.Add(1)
 			go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
 				defer wg.Done()
@@ -196,6 +200,10 @@ func (PushData *NotifStruct) SendNude() {
 					}
 				}
 			}(v, &wg)
+			//Wait every ge 10 discord channel
+			if i%10 == 0 {
+				wg.Wait()
+			}
 		}
 		wg.Wait()
 
@@ -210,7 +218,7 @@ func (PushData *NotifStruct) SendNude() {
 			wg          sync.WaitGroup
 			ChannelData = database.ChannelTag(PushData.Member.ID, 2, "NotLiveOnly")
 		)
-		for _, v := range ChannelData {
+		for i, v := range ChannelData {
 			wg.Add(1)
 			go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
 				defer wg.Done()
@@ -243,6 +251,10 @@ func (PushData *NotifStruct) SendNude() {
 					}
 				}
 			}(v, &wg)
+			//Wait every ge 10 discord channel
+			if i%10 == 0 {
+				wg.Wait()
+			}
 		}
 	} else if Status == "reminder" {
 		Color, err := engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
@@ -253,11 +265,6 @@ func (PushData *NotifStruct) SendNude() {
 		//id, DiscordChannelID
 		ChanelData := database.ChannelTag(PushData.Member.ID, 2, "")
 		for _, Channel := range ChanelData {
-			ChannelState := &database.DiscordChannel{
-				ChannelID: Channel.ChannelID,
-				Group:     PushData.Group,
-				Member:    PushData.Member,
-			}
 			for ii := 10; ii < 70; ii += 5 {
 				k := ii - 6
 				if UpcominginMinutes <= ii && UpcominginMinutes >= k {
@@ -279,7 +286,7 @@ func (PushData *NotifStruct) SendNude() {
 							SetColor(Color).MessageEmbed)
 						if err != nil {
 							log.Error(MsgEmbed, err)
-							err = ChannelState.DelChannel(err.Error())
+							err = Channel.DelChannel(err.Error())
 							if err != nil {
 								log.Error(err)
 							}
@@ -294,7 +301,7 @@ func (PushData *NotifStruct) SendNude() {
 								"VtuberGroupID":  PushData.Group.ID,
 								"YoutubeID":      PushData.YtData.ID,
 							}).Info("Set dynamic mode")
-							ChannelState.SetVideoID(PushData.YtData.VideoID).
+							Channel.SetVideoID(PushData.YtData.VideoID).
 								SetMsgEmbedID(MsgEmbed.ID).
 								SetMsgTextID(MsgText.ID)
 						}

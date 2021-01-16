@@ -139,7 +139,7 @@ func (Member Member) GetSubsCount() (*MemberSubs, error) {
 	)
 
 	val, err := GeneralCache.Get(context.Background(), Key).Result()
-	if len(val) == 0 || err != nil {
+	if len(val) == 0 || err == redis.Nil {
 		rows, err := DB.Query(`SELECT * FROM Subscriber WHERE VtuberMember_id=?`, Member.ID)
 		if err != nil {
 			return nil, err
@@ -820,7 +820,7 @@ func (Data *DiscordChannel) GetUserList(ctx context.Context) []string {
 		Key           = strconv.Itoa(int(Data.Member.ID) * int(Data.ID))
 	)
 	val2, err := LiveCache.Get(ctx, Key).Result()
-	if len(val2) == 0 || err != nil {
+	if len(val2) == 0 || err == redis.Nil {
 		rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id=?`, Data.ID, Data.Member.ID)
 		if err != nil {
 			log.Error(err)
@@ -838,9 +838,11 @@ func (Data *DiscordChannel) GetUserList(ctx context.Context) []string {
 				DataUser = append(DataUser, "<@&"+DiscordUserID+">")
 			}
 		}
-		err = LiveCache.Set(ctx, Key, strings.Join(DataUser, ","), 30*time.Minute).Err()
-		if err != nil {
-			log.Error(err)
+		if len(DataUser) > 0 {
+			err = LiveCache.Set(ctx, Key, strings.Join(DataUser, ","), 17*time.Minute).Err()
+			if err != nil {
+				log.Error(err)
+			}
 		}
 	} else {
 		if val2 == "" {

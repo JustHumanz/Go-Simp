@@ -59,26 +59,26 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 					if Donation == "" {
 						s.ChannelMessageSendEmbed(Channel.ID, engine.NewEmbed().
 							SetTitle("Thx for invite me to this server <3 ").
-							SetURL("https://go-simp.human-z.tech/Guide/").
+							SetURL(config.GuideURL).
 							SetThumbnail(config.GoSimpIMG).
 							SetImage(H3llcome[rand.Intn(len(H3llcome))]).
 							SetColor(14807034).
-							AddField("Setup", "You can see [here](https://go-simp.human-z.tech/Guide/)").
-							AddField("Need support?", "Join [dev server](https://discord.com/invite/ydWC5knbJT)").
+							AddField("Setup", "You can see [here]("+config.GuideURL+")").
+							AddField("Need support?", "Join [dev server]("+config.GuildSupport+")").
 							InlineAllFields().MessageEmbed)
 					} else {
 						s.ChannelMessageSendEmbed(Channel.ID, engine.NewEmbed().
 							SetTitle("Thx for invite me to this server <3 ").
-							SetURL("https://go-simp.human-z.tech/Guide/").
+							SetURL(config.GuideURL).
 							SetThumbnail(config.GoSimpIMG).
 							SetImage(H3llcome[rand.Intn(len(H3llcome))]).
 							SetColor(14807034).
-							AddField("Setup", "You can see [here](https://go-simp.human-z.tech/Guide/)").
-							AddField("Need support?", "Join [dev server](https://discord.com/invite/ydWC5knbJT)").
+							AddField("Setup", "You can see [here]("+config.GuideURL+")").
+							AddField("Need support?", "Join [dev server]("+config.GuildSupport+")").
 							InlineAllFields().
 							AddField("Support "+BotID.Username, "[Ko-Fi]("+Donation+")").
 							AddField("if you a broke gang,you can upvote "+BotID.Username, "[top.gg]("+config.BotConf.TopGG+")").
-							AddField("give some star on github", "[Github](https://github.com/JustHumanz/Go-Simp)").MessageEmbed)
+							AddField("give some star on github", "[Github]("+config.GuildSupport+")").MessageEmbed)
 					}
 
 					//Save discord name to database

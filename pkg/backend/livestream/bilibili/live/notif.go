@@ -53,7 +53,7 @@ func (Data *LiveBili) Crotttt() error {
 		wg          sync.WaitGroup
 		ChannelData = database.ChannelTag(MemberID, 2, "")
 	)
-	for _, v := range ChannelData {
+	for i, v := range ChannelData {
 		wg.Add(1)
 		go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
 			defer wg.Done()
@@ -97,6 +97,10 @@ func (Data *LiveBili) Crotttt() error {
 				log.Error(err)
 			}
 		}(v, &wg)
+		//Wait every ge 10 discord channel
+		if i%10 == 0 {
+			wg.Wait()
+		}
 	}
 	wg.Wait()
 
