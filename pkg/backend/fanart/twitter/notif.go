@@ -45,12 +45,7 @@ func SendFanart(Data []Fanart, Group database.Group) {
 			GroupIcon = Group.IconURL
 		}
 		for _, Channel := range ChannelData {
-			ChannelState := database.DiscordChannel{
-				ChannelID: Channel.ChannelID,
-				Group:     Group,
-				Member:    MemberFanart.Member,
-			}
-			UserTagsList := ChannelState.GetUserList(context.Background()) //database.GetUserList(Channel.ID, MemberFanart.Member.ID)
+			UserTagsList := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, MemberFanart.Member.ID)
 			if UserTagsList != nil {
 				tags = strings.Join(UserTagsList, " ")
 			} else {
@@ -71,7 +66,7 @@ func SendFanart(Data []Fanart, Group database.Group) {
 					SetFooter(Msg, config.TwitterIMG).MessageEmbed)
 				if err != nil {
 					log.Error(msg, err)
-					err = ChannelState.DelChannel(err.Error())
+					err = Channel.DelChannel(err.Error())
 					if err != nil {
 						log.Error(err)
 					}

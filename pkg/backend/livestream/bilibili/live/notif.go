@@ -57,12 +57,7 @@ func (Data *LiveBili) Crotttt() error {
 		wg.Add(1)
 		go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
 			defer wg.Done()
-			ChannelState := database.DiscordChannel{
-				ChannelID: Channel.ChannelID,
-				Group:     Data.Group,
-				Member:    Data.Member,
-			}
-			UserTagsList := ChannelState.GetUserList(context.Background())
+			UserTagsList := Channel.GetUserList(context.Background())
 			if UserTagsList == nil {
 				UserTagsList = []string{"_"}
 			}
@@ -84,7 +79,7 @@ func (Data *LiveBili) Crotttt() error {
 					"VtuberGroupID":  Data.Group.ID,
 					"BiliBiliRoomID": BiliBiliRoomID,
 				}).Info("Set dynamic mode")
-				ChannelState.SetVideoID(BiliBiliRoomID).
+				Channel.SetVideoID(BiliBiliRoomID).
 					SetMsgEmbedID(MsgEmbed.ID).
 					SetMsgTextID(MsgTxt.ID).
 					PushReddis()

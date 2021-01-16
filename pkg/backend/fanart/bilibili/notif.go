@@ -25,29 +25,23 @@ func (NotifData Notif) PushNotif(Color int) {
 	Data := NotifData.TBiliData
 	Group := NotifData.Group
 	ChannelData := database.ChannelTag(NotifData.Member.ID, 1, "")
-	GroupIcon := ""
 	tags := ""
 	for _, Channel := range ChannelData {
-		ChannelState := database.DiscordChannel{
-			ChannelID: Channel.ChannelID,
-			Group:     Group,
-			Member:    NotifData.Member,
-		}
-		UserTagsList := ChannelState.GetUserList(context.Background())
+		UserTagsList := Channel.GetUserList(context.Background())
 		if UserTagsList != nil {
 			tags = strings.Join(UserTagsList, " ")
 		} else {
 			tags = "_"
 		}
 
-		if Group.GroupName != "Independen" {
-			GroupIcon = Group.IconURL
+		if Group.GroupName == "Independen" {
+			Group.IconURL = ""
 		}
 		if tags == "_" && Group.GroupName == "Independen" {
 			//do nothing,like my life
 		} else {
 			tmp, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
-				SetAuthor(strings.Title(Group.GroupName), GroupIcon).
+				SetAuthor(strings.Title(Group.GroupName), Group.IconURL).
 				SetTitle(Data.Author).
 				SetURL(Data.URL).
 				SetThumbnail(Data.Avatar).
@@ -60,7 +54,7 @@ func (NotifData Notif) PushNotif(Color int) {
 				SetColor(Color).MessageEmbed)
 			if err != nil {
 				log.Error(tmp, err.Error())
-				err = ChannelState.DelChannel(err.Error())
+				err = Channel.DelChannel(err.Error())
 				if err != nil {
 					log.Error(err)
 				}

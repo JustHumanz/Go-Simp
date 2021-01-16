@@ -53,7 +53,7 @@ func Start() {
 func GetYtToken() string {
 	FreshToken := config.BotConf.YtToken[0]
 	for _, Token := range config.BotConf.YtToken {
-		_, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UCfuz6xYbYFGsWWBi3SpJI1w&key="+Token, nil)
+		_, err := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id=GNkPJvVEm0s&key="+Token, nil)
 		if err == nil {
 			return Token
 		}

@@ -27,12 +27,7 @@ func (Data CheckSctruct) SendNude() {
 			//ID, DiscordChannelID
 			ChannelData := database.ChannelTag(Data.Member.ID, 2, "LiveOnly")
 			for _, Channel := range ChannelData {
-				ChannelState := database.DiscordChannel{
-					ChannelID: Channel.ChannelID,
-					Group:     Data.Group,
-					Member:    Data.Member,
-				}
-				UserTagsList := ChannelState.GetUserList(context.Background()) //database.GetUserList(Channel.ID, Data.MemberID)
+				UserTagsList := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, Data.MemberID)
 				if UserTagsList != nil {
 					msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 						SetAuthor(Data.Member.Name, Data.Member.BiliBiliAvatar, "https://space.bilibili/"+strconv.Itoa(Data.Member.BiliBiliID)).

@@ -68,13 +68,8 @@ func (PushData *NotifStruct) SendNude() {
 		for _, v := range ChannelData {
 			wg.Add(1)
 			go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
-				ChannelState := database.DiscordChannel{
-					ChannelID: Channel.ChannelID,
-					Group:     PushData.Group,
-					Member:    PushData.Member,
-				}
 				defer wg.Done()
-				UserTagsList := ChannelState.GetUserList(context.Background()) //database.GetUserList(Channel.ID, PushData.Member.ID)
+				UserTagsList := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, PushData.Member.ID)
 				if UserTagsList == nil {
 					UserTagsList = []string{"_"}
 				}
@@ -93,7 +88,7 @@ func (PushData *NotifStruct) SendNude() {
 					SetColor(Color).MessageEmbed)
 				if err != nil {
 					log.Error(msg, err)
-					err = ChannelState.DelChannel(err.Error())
+					err = Channel.DelChannel(err.Error())
 					if err != nil {
 						log.Error(err)
 					}
@@ -131,12 +126,7 @@ func (PushData *NotifStruct) SendNude() {
 			wg.Add(1)
 			go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
 				defer wg.Done()
-				ChannelState := &database.DiscordChannel{
-					ChannelID: Channel.ChannelID,
-					Group:     PushData.Group,
-					Member:    PushData.Member,
-				}
-				UserTagsList := ChannelState.GetUserList(context.Background()) //database.GetUserList(Channel.ID, PushData.Member.ID)
+				UserTagsList := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, PushData.Member.ID)
 				if UserTagsList == nil {
 					UserTagsList = []string{"_"}
 				}
@@ -155,7 +145,7 @@ func (PushData *NotifStruct) SendNude() {
 					SetColor(Color).MessageEmbed)
 				if err != nil {
 					log.Error(MsgEmbed, err)
-					err = ChannelState.DelChannel(err.Error())
+					err = Channel.DelChannel(err.Error())
 					if err != nil {
 						log.Error(err)
 					}
@@ -166,7 +156,7 @@ func (PushData *NotifStruct) SendNude() {
 							"VtuberGroupID":  PushData.Group.ID,
 							"YoutubeID":      PushData.YtData.ID,
 						}).Info("Set dynamic mode")
-						ChannelState.SetVideoID(PushData.YtData.VideoID).
+						Channel.SetVideoID(PushData.YtData.VideoID).
 							SetMsgEmbedID(MsgEmbed.ID)
 					}
 					Msg := "Push " + config.BotConf.Emoji.Livestream[0] + " to add you in `" + PushData.Member.Name + "` ping list\nPush " + config.BotConf.Emoji.Livestream[1] + " to remove you from ping list"
@@ -177,7 +167,7 @@ func (PushData *NotifStruct) SendNude() {
 							log.Error(err)
 						}
 						if Channel.Dynamic {
-							ChannelState.SetMsgTextID(msg.ID).PushReddis()
+							Channel.SetMsgTextID(msg.ID).PushReddis()
 						}
 						MsgID = msg.ID
 
@@ -187,7 +177,7 @@ func (PushData *NotifStruct) SendNude() {
 							log.Error(err)
 						}
 						if Channel.Dynamic {
-							ChannelState.SetMsgTextID(msg.ID).PushReddis()
+							Channel.SetMsgTextID(msg.ID).PushReddis()
 						}
 						MsgID = msg.ID
 					}
@@ -221,14 +211,10 @@ func (PushData *NotifStruct) SendNude() {
 			ChannelData = database.ChannelTag(PushData.Member.ID, 2, "NotLiveOnly")
 		)
 		for _, v := range ChannelData {
+			wg.Add(1)
 			go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
 				defer wg.Done()
-				ChannelState := &database.DiscordChannel{
-					ChannelID: Channel.ChannelID,
-					Group:     PushData.Group,
-					Member:    PushData.Member,
-				}
-				UserTagsList := ChannelState.GetUserList(context.Background()) //database.GetUserList(Channel.ID, PushData.Member.ID)
+				UserTagsList := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, PushData.Member.ID)
 				if UserTagsList != nil {
 					msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 						SetAuthor(VtuberName, Avatar, YtChannel).
@@ -246,7 +232,7 @@ func (PushData *NotifStruct) SendNude() {
 						SetColor(Color).MessageEmbed)
 					if err != nil {
 						log.Error(msg, err)
-						err = ChannelState.DelChannel(err.Error())
+						err = Channel.DelChannel(err.Error())
 						if err != nil {
 							log.Error(err)
 						}

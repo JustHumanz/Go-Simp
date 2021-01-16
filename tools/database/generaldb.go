@@ -735,76 +735,50 @@ func ChannelStatus(ChannelID string) []DiscordChannel {
 //ChannelTag get channel tags from `channel tags` command
 func ChannelTag(MemberID int64, typetag int, Options string) []DiscordChannel {
 	var (
-		Data []DiscordChannel
+		Data    []DiscordChannel
+		tmp     int64
+		tmp2    string
+		tmp3    bool
+		GroupID int64
+		rows    *sql.Rows
+		err     error
 	)
 	if Options == "NotLiveOnly" {
-		rows, err := DB.Query(`Select Channel.id,DiscordChannelID,Dynamic FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND LiveOnly=0`, MemberID)
+		rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND LiveOnly=0`, MemberID)
 		if err != nil {
 			log.Error(err)
 		}
 		defer rows.Close()
-		for rows.Next() {
-			var (
-				tmp  int64
-				tmp2 string
-				tmp3 bool
-			)
-			err = rows.Scan(&tmp, &tmp2, &tmp3)
-			if err != nil {
-				log.Error(err)
-			}
-			Data = append(Data, DiscordChannel{
-				ID:        tmp,
-				ChannelID: tmp2,
-				Dynamic:   tmp3,
-			})
-		}
 
 	} else if Options == "NewUpcoming" {
-		rows, err := DB.Query(`Select Channel.id,DiscordChannelID,Dynamic FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND NewUpcoming=1`, MemberID)
+		rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND NewUpcoming=1`, MemberID)
 		if err != nil {
 			log.Error(err)
 		}
 		defer rows.Close()
-		for rows.Next() {
-			var (
-				tmp  int64
-				tmp2 string
-				tmp3 bool
-			)
-			err = rows.Scan(&tmp, &tmp2, &tmp3)
-			if err != nil {
-				log.Error(err)
-			}
-			Data = append(Data, DiscordChannel{
-				ID:        tmp,
-				ChannelID: tmp2,
-				Dynamic:   tmp3,
-			})
-		}
-
 	} else {
-		rows, err := DB.Query(`Select Channel.id,DiscordChannelID,Dynamic FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=? OR Channel.type=3)`, MemberID, typetag)
+		rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=? OR Channel.type=3)`, MemberID, typetag)
 		if err != nil {
 			log.Error(err)
 		}
 		defer rows.Close()
-		for rows.Next() {
-			var (
-				tmp  int64
-				tmp2 string
-				tmp3 bool
-			)
-			err = rows.Scan(&tmp, &tmp2, &tmp3)
-			if err != nil {
-				log.Error(err)
-			}
-			Data = append(Data, DiscordChannel{
-				ID:        tmp,
-				ChannelID: tmp2,
-				Dynamic:   tmp3,
-			})
+	}
+	for rows.Next() {
+		err = rows.Scan(&tmp, &tmp2, &tmp3, &GroupID)
+		if err != nil {
+			log.Error(err)
 		}
+		Data = append(Data, DiscordChannel{
+			ID:        tmp,
+			ChannelID: tmp2,
+			Dynamic:   tmp3,
+			Member: Member{
+				ID: MemberID,
+			},
+			Group: Group{
+				ID: GroupID,
+			},
+		})
 	}
 	return Data
 }
@@ -846,9 +820,6 @@ func (Data *DiscordChannel) GetUserList(ctx context.Context) []string {
 		Key           = strconv.Itoa(int(Data.Member.ID) * int(Data.ID))
 	)
 	val2, err := LiveCache.Get(ctx, Key).Result()
-	if err != nil {
-		log.Error(err)
-	}
 	if len(val2) == 0 || err != nil {
 		rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id=?`, Data.ID, Data.Member.ID)
 		if err != nil {
