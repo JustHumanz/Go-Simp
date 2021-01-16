@@ -4,6 +4,7 @@ v2.5.19
 - Add context to get userlist
 - Fix typo in help
 - Add async to get userlist
+- Add wait when get userlist
 
 v2.5.18
 - Update help command
