@@ -10,18 +10,19 @@ Vtubers = GetVtubers()
 Vtubers.ResizeImg("512")
 Groups = Vtubers.GetGroups()
 regex = r"^(?:(http|https):\/\/[a-zA-Z-]*\.{0,1}[a-zA-Z-]{3,}\.[a-z]{2,})\/channel\/([a-zA-Z0-9_]{3,})$"
+DOMAIN = os.environ['CDN']
 
 def GetChannelID(url):
     matches = re.finditer(regex, url, re.MULTILINE)
-    for matchNum, match in enumerate(matches, start=1):
+    for _, match in enumerate(matches, start=1):
         return match.group(2)
 
 def go_simps_index(request):
-    return render(request, 'index.html', {'Groups':Groups})
+    return render(request, 'index.html', {'Groups':Groups,'Domain':DOMAIN})
 
 def go_simps_group(request, GroupID):
     Members = Vtubers.GetMemberGroups(GroupID)
-    return render(request, 'group.html',{'Members':Members,'Region':GetRegList(Members),'Add':False})
+    return render(request, 'group.html',{'Members':Members,'Region':GetRegList(Members),'Add':False,'Domain':DOMAIN})
 
 def go_simps_members(request):
     Members = Vtubers.Members
@@ -42,18 +43,18 @@ def go_simps_add(request):
         POSTData = request.POST.copy()
 
         if ChannelID is None:
-            Payload = {"State":"Error","URL":"https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum)}
+            Payload = {"State":"Error","URL":"https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum),'Domain':DOMAIN}
             return render(request,'done.html',Payload)
         else:
             POSTData["Youtube"] = ChannelID
 
         if issuenum is None:
             issuenum = git.PushNewIssues(POSTData,Title)
-            Payload = {"State":"New","URL":"https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum)}
+            Payload = {"State":"New","URL":"https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum),'Domain':DOMAIN}
             return render(request,'done.html',Payload)
         else:
             git.UpdateIssues(POSTData,issuenum,Title)
-            Payload = {"State":"Duplicate","URL":"https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum)}
+            Payload = {"State":"Duplicate","URL":"https://github.com/JustHumanz/Go-Simp/issues/"+str(issuenum),'Domain':DOMAIN}
             return render(request,'done.html',Payload)
 
     else:
@@ -62,7 +63,7 @@ def go_simps_add(request):
 
 def go_simps_member(request,MemberID):
     Member,Subs = Vtubers.GetMemberSubs(MemberID)
-    return render(request, 'member.html',{'Member': Member,'SubsInfo':Subs})
+    return render(request, 'member.html',{'Member': Member,'SubsInfo':Subs,'Domain':DOMAIN})
 
 
 def go_simps_support(request,Type):
@@ -72,9 +73,9 @@ def go_simps_support(request,Type):
     elif Type == "airforceone":
         Payload = "https://img-comment-fun.9cache.com/media/a2NgKoZ/azaXgVx4_700w_0.jpg"
     else:
-        Payload = "https://cdn.human-z.tech/404.jpg"    
+        Payload = f"https://cdn.{DOMAIN}/404.jpg"    
 
-    return render(request, 'support.html',{'Data': Payload})
+    return render(request, 'support.html',{'Data': Payload,'Domain':DOMAIN})
 
 def go_simps_guide(request):
     return render(request,'guide.html')   
