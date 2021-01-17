@@ -69,33 +69,36 @@ func (Data *LiveBili) Crotttt() error {
 			MsgTxt, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " ")+"\n"+Msg)
 			if err != nil {
 				log.Error(err)
+			} else {
+				if Channel.Dynamic {
+					log.WithFields(log.Fields{
+						"DiscordChannel": Channel.ChannelID,
+						"VtuberGroupID":  Data.Group.ID,
+						"BiliBiliRoomID": BiliBiliRoomID,
+					}).Info("Set dynamic mode")
+					Channel.SetVideoID(BiliBiliRoomID).
+						SetMsgEmbedID(MsgEmbed.ID).
+						SetMsgTextID(MsgTxt.ID).
+						PushReddis()
+				}
+
+				User.SetDiscordChannelID(Channel.ChannelID).
+					SetGroup(Data.Group).
+					SetMember(Data.Member)
+				err = User.SendToCache(MsgTxt.ID)
+				if err != nil {
+					log.Error(err)
+				}
+				err = engine.Reacting(map[string]string{
+					"ChannelID": Channel.ChannelID,
+					"State":     "Youtube",
+					"MessageID": MsgTxt.ID,
+				}, Bot)
+				if err != nil {
+					log.Error(err)
+				}
 			}
-			if err != nil {
-				log.Error(err)
-			}
-			if Channel.Dynamic {
-				log.WithFields(log.Fields{
-					"DiscordChannel": Channel.ChannelID,
-					"VtuberGroupID":  Data.Group.ID,
-					"BiliBiliRoomID": BiliBiliRoomID,
-				}).Info("Set dynamic mode")
-				Channel.SetVideoID(BiliBiliRoomID).
-					SetMsgEmbedID(MsgEmbed.ID).
-					SetMsgTextID(MsgTxt.ID).
-					PushReddis()
-			}
-			User.SetDiscordChannelID(Channel.ChannelID).
-				SetGroup(Data.Group).
-				SetMember(Data.Member).
-				SendToCache(MsgTxt.ID)
-			err = engine.Reacting(map[string]string{
-				"ChannelID": Channel.ChannelID,
-				"State":     "Youtube",
-				"MessageID": MsgTxt.ID,
-			}, Bot)
-			if err != nil {
-				log.Error(err)
-			}
+
 		}(v, &wg)
 		//Wait every ge 10 discord channel
 		if i%10 == 0 {

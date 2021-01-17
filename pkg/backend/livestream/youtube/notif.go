@@ -187,8 +187,11 @@ func (PushData *NotifStruct) SendNude() {
 					}
 					User.SetDiscordChannelID(Channel.ChannelID).
 						SetGroup(PushData.Group).
-						SetMember(PushData.Member).
-						SendToCache(MsgID)
+						SetMember(PushData.Member)
+					err = User.SendToCache(MsgID)
+					if err != nil {
+						log.Error(err)
+					}
 
 					err = engine.Reacting(map[string]string{
 						"ChannelID": Channel.ChannelID,
