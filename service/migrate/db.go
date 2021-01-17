@@ -597,21 +597,21 @@ func AddData(Data Vtuber) {
 
 				defer stmt.Close()
 
-				for j, Channel := range Channels {
+				for k, Channel := range Channels {
 					msg, err := Bot.ChannelMessageSendEmbed(Channel, NewVtuber{
 						Group: database.Group{
 							ID:        GroupID,
 							GroupName: Group.GroupName,
 							IconURL:   Group.GroupIcon,
 						},
-						Member: Group.Members[j],
+						Member: Group.Members[k],
 					}.SendNotif())
 					if err != nil {
 						log.Error(msg, err)
 						match, _ := regexp.MatchString("Unknown Channel", err.Error())
 						if match {
 							log.Info("Delete Discord Channel ", Channel)
-							DeleteChannel(ChannelsID[j])
+							DeleteChannel(ChannelsID[k])
 						}
 					}
 				}
