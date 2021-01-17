@@ -604,7 +604,7 @@ func AddData(Data Vtuber) {
 							GroupName: Group.GroupName,
 							IconURL:   Group.GroupIcon,
 						},
-						Member: Group.Members[k],
+						Member: Group.Members[j],
 					}.SendNotif())
 					if err != nil {
 						log.Error(msg, err)
