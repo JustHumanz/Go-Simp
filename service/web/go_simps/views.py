@@ -26,7 +26,7 @@ def go_simps_group(request, GroupID):
 
 def go_simps_members(request):
     Members = Vtubers.Members
-    return render(request, 'group.html',{'Members':Members,'Region':GetRegList(Members),'Add':True})
+    return render(request, 'group.html',{'Members':Members,'Region':GetRegList(Members),'Add':True,'Domain':DOMAIN})
 
 def go_simps_command(request):
     return render(request,'exec.html')
@@ -78,7 +78,7 @@ def go_simps_support(request,Type):
     return render(request, 'support.html',{'Data': Payload,'Domain':DOMAIN})
 
 def go_simps_guide(request):
-    return render(request,'guide.html')   
+    return render(request,'guide.html',{'Domain':DOMAIN})   
 
 def go_simps_discord_login(request):
     return redirect(LOGINURL)
@@ -104,7 +104,7 @@ def go_simps_discord_cp(request):
     for i in range(len(Guilds)):
         Guilds[i]['Channels'] = Discord.GetChannels(Guilds[i]['id'])
 
-    return render(request,'Pilot/guild.html',{'Guilds':Guilds})
+    return render(request,'Pilot/guild.html',{'Guilds':Guilds,'Domain':DOMAIN})
 
 
 def go_simps_discord_channel(request,ChannelID):
@@ -122,4 +122,4 @@ def go_simps_discord_channel(request,ChannelID):
                     Groups[i]["Enable"] = False                
     except:
         print("Not enable any groups")
-    return render(request,'Pilot/channel.html',{'ChannelName':ChannelInfo,'Groups':Groups})
+    return render(request,'Pilot/channel.html',{'ChannelName':ChannelInfo,'Groups':Groups,'Domain':DOMAIN})

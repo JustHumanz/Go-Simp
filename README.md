@@ -1,13 +1,13 @@
 # Vtuber DiscordBot
 
-![alt text](https://raw.githubusercontent.com/JustHumanz/Go-Simp/main/Img/go-simp.png "Go-Simp")  
+![alt text](https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/go-simp.png "Go-Simp")  
 ##### [Original Source](https://twitter.com/any_star_/status/1288184424320790528)
 ![Inline docs](https://github.com/JustHumanz/Go-Simp/workflows/Go-Simp/badge.svg)
 ----
 
 ## Introduction
 A simple VTuber bot to serve notification Fanart(Twitter,Bilibili) and Livestream(Youtube,Bilibili)  
-for setup see at [Guide](https://github.com/JustHumanz/Go-Simp/blob/main/Guide.md)
+for setup see at [Guide](https://github.com/JustHumanz/Go-Simp/blob/master/Guide.md)
 
 ## Simple Setup
 ##### Livestream notification
@@ -32,37 +32,37 @@ See at [Exec](https://go-simp.human-z.tech/Exec/)
 
 #### Add User to tag list
 <p align="center">
-  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/AddUser.png" alt="New Upcoming live stream"/>
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/AddUser.png" alt="New Upcoming live stream"/>
 </p>
 
 #### New Upcoming live stream  
 <p align="center">
-  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/New%20Upcoming.png" alt="New Upcoming live stream"/>
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/New%20Upcoming.png" alt="New Upcoming live stream"/>
 </p>
 
 
 #### Reminder  
 Reminder 30 minutes before livestream start
 <p align="center">
-  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/Reminder.png" alt="Reminder"/>
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Reminder.png" alt="Reminder"/>
 </p>
 
 
 ##### Upcoming command
 <p align="center">
-  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/Youtube%20Upcoming.png" alt="Upcoming command"/>
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Youtube%20Upcoming.png" alt="Upcoming command"/>
 </p>
 
 
 ##### New Fanart
 <p align="center">
-  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/New%20Fanart.png" alt="New fanart"/>
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/New%20Fanart.png" alt="New fanart"/>
 </p>
 
 
 ##### Subscriber count
 <p align="center">
-  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/Subscount.png" alt="Subscriber count"/>
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Subscount.png" alt="Subscriber count"/>
 </p>
 
 

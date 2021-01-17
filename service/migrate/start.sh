@@ -2,12 +2,11 @@
 
 while true
 do
-    if ping -c 1 db_migrate &> /dev/null
+    if ping -c 1 livestream &> /dev/null || ping -c 1 fanart &> /dev/null
     then
-        echo "Main bot still up"
+        echo "Some module still up"
         exit 0 
     else
-        echo "mainbot is down,let's fvcking goooooo!!!!!"
         go run .
 
     fi
