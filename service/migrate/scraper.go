@@ -226,7 +226,7 @@ func (Data Member) BliBiliFace() (string, error) {
 	}
 }
 
-func CheckYT() {
+func CheckYoutube() {
 	Data := database.GetGroups()
 	for i := 0; i < len(Data); i++ {
 		var wg sync.WaitGroup
@@ -248,7 +248,7 @@ func CheckYT() {
 	}
 }
 
-func CheckTBili() {
+func CheckTBiliBili() {
 	DataGroup := database.GetGroups()
 	for k := 0; k < len(DataGroup); k++ {
 		DataMember := database.GetMembers(DataGroup[k].ID)
@@ -326,7 +326,7 @@ func CheckTBili() {
 	}
 }
 
-func CheckSchedule() {
+func CheckLiveBiliBili() {
 	log.Info("Start check BiliBili room")
 	for _, Group := range database.GetGroups() {
 		for _, Member := range database.GetMembers(Group.ID) {
@@ -440,7 +440,7 @@ func CheckTwitch() {
 	}
 }
 
-func CheckVideoSpace() {
+func CheckSpaceBiliBili() {
 	Group := database.GetGroups()
 	loc, _ := time.LoadLocation("Asia/Shanghai")
 	for z := 0; z < len(Group); z++ {

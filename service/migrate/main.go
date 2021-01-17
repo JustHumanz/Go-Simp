@@ -78,15 +78,18 @@ func init() {
 func main() {
 	database.Start(db)
 	AddData(JsonData)
-	go CheckYT()
-	go CheckSchedule()
-	go CheckVideoSpace()
-	go CheckTBili()
+	go CheckYoutube()
+	go CheckLiveBiliBili()
+	time.Sleep(10 * time.Minute)
+
+	go CheckSpaceBiliBili()
+	go CheckTBiliBili()
+	time.Sleep(10 * time.Minute)
+
 	go youtube.CheckPrivate()
 	go TwitterFanart()
-
+	time.Sleep(10 * time.Minute)
 	log.Info("Done")
-	time.Sleep(15 * time.Minute)
 	os.Exit(0)
 }
 
