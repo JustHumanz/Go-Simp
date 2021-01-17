@@ -217,7 +217,7 @@
         "Group":[
         {
             "GroupName": "Hanayori",
-            "GroupIcon": "https://cdn.human-z.tech/hana.png",
+            "GroupIcon": "https://cdn.humanz.moe/hana.png",
             "Members" : [
                 {
                     "Name":"Kanochi",
@@ -279,7 +279,7 @@
         },
         {
             "GroupName": "774.inc",
-            "GroupIcon": "https://cdn.human-z.tech/774.png",
+            "GroupIcon": "https://cdn.humanz.moe/774.png",
             "Members" : [
                 {
                     "Name":"Patra",
@@ -523,7 +523,7 @@
         },
         {
             "GroupName": "Hololive",
-            "GroupIcon": "https://cdn.human-z.tech/holo.png",
+            "GroupIcon": "https://cdn.humanz.moe/holo.png",
             "Members" : [
                 {
                     "Name":"Risu",
@@ -1132,7 +1132,7 @@
             
         },{
             "GroupName": "Holostars",
-            "GroupIcon": "https://cdn.human-z.tech/holostars.png",
+            "GroupIcon": "https://cdn.humanz.moe/holostars.png",
             "Members" :[
                 {
                     "Name":"Izu-Izu",
@@ -1277,7 +1277,7 @@
             ]
         },{
             "GroupName": "Nijisanji",
-            "GroupIcon": "https://cdn.human-z.tech/niji.png",
+            "GroupIcon": "https://cdn.humanz.moe/niji.png",
             "Members" :[
                 {
                     "Name":"Konlulu",
@@ -2179,7 +2179,7 @@
             ]
         },{
             "GroupName": "Kizuna_AI",
-            "GroupIcon": "https://cdn.human-z.tech/kizuna.png",
+            "GroupIcon": "https://cdn.humanz.moe/kizuna.png",
             "Members" :[
                 {
                     "Name":"Ai-chan",
@@ -2212,7 +2212,7 @@
             ]
         },{
             "GroupName": "ENTUM",
-            "GroupIcon": "https://cdn.human-z.tech/entum.png",
+            "GroupIcon": "https://cdn.humanz.moe/entum.png",
             "Members" :[
                 {
                     "Name":"hina-chan",
@@ -2245,7 +2245,7 @@
             ]
         },{
             "GroupName": "sos_ev",
-            "GroupIcon": "https://cdn.human-z.tech/404.jpg",
+            "GroupIcon": "https://cdn.humanz.moe/404.jpg",
             "Members" :[
                 {
                     "Name":"Evelyn",
@@ -2307,7 +2307,7 @@
         }
         ,{
             "GroupName": "VOMS",
-            "GroupIcon": "https://cdn.human-z.tech/vox.png",
+            "GroupIcon": "https://cdn.humanz.moe/vox.png",
             "Members" :[
                 {
                     "Name":"Pikamee",
@@ -2354,7 +2354,7 @@
         },
         {
             "GroupName": "MAHA5",
-            "GroupIcon": "https://cdn.human-z.tech/MAHA5.png",
+            "GroupIcon": "https://cdn.humanz.moe/MAHA5.png",
             "Members" :[
                 {
                     "Name":"Adelia",
@@ -2430,7 +2430,7 @@
         },
         {
             "GroupName": "NoriPro",
-            "GroupIcon": "https://cdn.human-z.tech/noripro.png",
+            "GroupIcon": "https://cdn.humanz.moe/noripro.png",
             "Members" :[
                 {
                     "Name":"Tamakin",
@@ -2505,7 +2505,7 @@
             ]
         },{
             "GroupName": "ArkNET",
-            "GroupIcon": "https://cdn.human-z.tech/ArkNet.png",
+            "GroupIcon": "https://cdn.humanz.moe/ArkNet.png",
             "Members" :[
                 {
                     "Name":"Enji_NC",
@@ -2534,6 +2534,222 @@
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "raska_malendra",
                     "Region":"ID"
+                }
+            ]
+        },
+        {
+            "GroupName": "Brave",
+            "GroupIcon": "https://cdn.humanz.moe/brave.png",
+            "Members" : [
+                {
+                    "Name":"Buchou",
+                    "EN_Name":"Yumesaki Kaede",
+                    "JP_Name":"夢咲楓",
+                    "Hashtag": {
+                        "Twitter": "#夢咲美術展",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCvi7XDiewenqdMvamLJNMGg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Kaede_Yumesaki_",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Ahopink",
+                    "EN_Name":"Sakuragi Miria",
+                    "JP_Name":"桜樹みりあ",
+                    "Hashtag": {
+                        "Twitter": "#本日のみりアート",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCWq6L3iY4hGK4LmylvQtj-g",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Miria_Sakuragi_",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Ryo-kun",
+                    "EN_Name":"Kazami Ryo",
+                    "JP_Name":"風見涼",
+                    "Hashtag": {
+                        "Twitter": "#風見涼",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCuAkSIfWmGJ1Mw8BtB_iZzA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Ryo_Kazami_",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Harukasu",
+                    "EN_Name":"Domyoji Haruto",
+                    "JP_Name":"道明寺晴翔",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCjhb6SKya3hvowPr1gtwfPw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Haruto_Domyoji_",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Kokoa",
+                    "EN_Name":"Domyoji Cocoa",
+                    "JP_Name":"道明寺ここあ",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UC5Xse6X7vB_nUL5HvEFVo_g",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "cocoa_domyoji",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Ashizawa",
+                    "EN_Name":"Saki ashizawa",
+                    "JP_Name":"芦澤サキ",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCPZgBtMYoFKypEG2SCvBN9A",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "saki_ashizawa",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Matsunaga",
+                    "EN_Name":"Iori matsunaga",
+                    "JP_Name":"松永依織",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC--zuEfONeFXPvLqX0Kvbuw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "iori_m_RIOT",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Yuka",
+                    "EN_Name":"Yuka nagase",
+                    "JP_Name":"長瀬有花",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCf-PcSHzYAtfcoiBr5C9DZA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "yuka_n_RIOT",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Nagihara",
+                    "EN_Name":"Suzuna nagihara",
+                    "JP_Name":"凪原涼菜",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UClqZm49qdCGaV96s2ZN9--Q",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "suzuna_n_RIOT",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Tamako",
+                    "EN_Name":"Otodama Tamako",
+                    "JP_Name":"音霊魂子",
+                    "Hashtag": {
+                        "Twitter": "#あおぎり高校美術部",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCt7_srJeiw55kTcK7M9ID6g",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "tamako_aogiri",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Natsuki",
+                    "EN_Name":"Minazuki Natsuki",
+                    "JP_Name":"水菜月夏希",
+                    "Hashtag": {
+                        "Twitter": "#あおぎり高校美術部",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCnBy6-RlccNksKDpM7oZ52w",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "natsuki_aogiri",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Akari",
+                    "EN_Name":"Ishikari Akari",
+                    "JP_Name":"石狩あかり",
+                    "Hashtag": {
+                        "Twitter": "#あおぎり高校美術部",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC7wZb5INldbGweowOhBIs8Q",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "ishikari_akari",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Mashiro",
+                    "EN_Name":"Oshiro Mashiro",
+                    "JP_Name":"大代真白",
+                    "Hashtag": {
+                        "Twitter": "#あおぎり高校美術部",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCFG6teapZaN6J1oVXl7MYPA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "oshiro_mashiro",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Claire-sensei",
+                    "EN_Name":"Claire",
+                    "JP_Name":"クレア英会話",
+                    "Hashtag": {
+                        "Twitter": "#クレアート",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UChMPicpTxVNAMOmz7fQEVpA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Claire_sensei",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Yuika",
+                    "EN_Name":"Kazami Yuika",
+                    "JP_Name":"風見唯花",
+                    "Hashtag": {
+                        "Twitter": "#ゆいかアート",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC5Oe-wG53cRHkpV3aHXfLUQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Yuika_Kazami",
+                    "Region":"JP"
                 }
             ]
         }

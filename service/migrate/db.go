@@ -392,7 +392,7 @@ func AddData(Data Vtuber) {
 	var (
 		GroupIDIndependen        int64
 		GroupName                = "Independen"
-		GroupIcon                = "https://cdn.human-z.tech/404.jpg"
+		GroupIcon                = "https://cdn." + config.BotConf.Domain + "/404.jpg"
 		NewVtuberNamesIndependen []string
 	)
 	row := db.QueryRow("SELECT id FROM VtuberGroup WHERE VtuberGroupName=?", GroupName)
