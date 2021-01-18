@@ -57,7 +57,7 @@ func CheckYoutube() {
 							AddField("Videos", engine.NearestThousandFormat(float64(VideoCount))).
 							InlineAllFields().
 							SetURL("https://www.youtube.com/channel/"+Member.YoutubeID+"?sub_confirmation=1").
-							SetColor(Color).MessageEmbed, Group, Member.ID)
+							SetColor(Color).MessageEmbed, Group, Member)
 					}
 					if YtSubsDB.YtSubs != YTSubscriberCount {
 						if YTSubscriberCount >= 1000000 {

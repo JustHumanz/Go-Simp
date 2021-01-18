@@ -63,7 +63,7 @@ func main() {
 	runfunc.Run()
 }
 
-func SendNude(Embed *discordgo.MessageEmbed, Group database.Group, MemberID int64) {
+func SendNude(Embed *discordgo.MessageEmbed, Group database.Group, Member database.Member) {
 	ChannelData := Group.GetChannelByGroup()
 	for _, Channel := range ChannelData {
 		UserTagsList := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, MemberID)

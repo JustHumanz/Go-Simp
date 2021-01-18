@@ -92,7 +92,7 @@ func CheckBiliBili() {
 										AddField("Videos", strconv.Itoa(bilistate.Videos)).
 										SetURL("https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
 										InlineAllFields().
-										SetColor(Color).MessageEmbed, Group, Name.ID)
+										SetColor(Color).MessageEmbed, Group, Name)
 								}
 							}
 						} else {
@@ -113,7 +113,7 @@ func CheckBiliBili() {
 										AddField("Videos", engine.NearestThousandFormat(float64(bilistate.Videos))).
 										SetURL("https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
 										InlineAllFields().
-										SetColor(Color).MessageEmbed, Group, Name.ID)
+										SetColor(Color).MessageEmbed, Group, Name)
 								}
 							}
 						}
