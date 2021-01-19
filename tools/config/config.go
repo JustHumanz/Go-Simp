@@ -48,30 +48,29 @@ const (
 	GuildSupport      = "https://discord.com/invite/ydWC5knbJT"
 
 	//Crontab
-	TwitterFanart        = "@every 0h3m0s"
-	BiliBiliFanart       = "@every 0h6m0s"
-	BiliBiliLive         = "@every 0h7m0s"
-	BiliBiliSpace        = "@every 0h13m0s"
-	YoutubeCheckChannel  = "@every 0h5m0s"
-	YoutubePrivateSlayer = "@every 2h31m0s"
-	YoutubeSubscriber    = "@every 1h0m0s"
-	BiliBiliFollowers    = "@every 0h30m0s"
-	TwitterFollowers     = "@every 0h17m0s"
-	DonationMsg          = "@every 0h30m0s"
-	CheckServerCount     = "@every 0h1m0s"
+	TwitterFanart              = "@every 0h3m0s"
+	BiliBiliFanart             = "@every 0h6m0s"
+	BiliBiliLive               = "@every 0h7m0s"
+	BiliBiliSpace              = "@every 0h13m0s"
+	YoutubeCheckChannel        = "@every 0h15m0s"
+	YoutubeCheckUpcomingByTime = "@every 0h1m0s"
+	YoutubePrivateSlayer       = "@every 2h31m0s"
+	YoutubeSubscriber          = "@every 1h0m0s"
+	BiliBiliFollowers          = "@every 0h30m0s"
+	TwitterFollowers           = "@every 0h17m0s"
+	DonationMsg                = "@every 0h30m0s"
+	CheckServerCount           = "@every 0h1m0s"
 )
 
 type ConfigFile struct {
-	Discord        string   `toml:"Discord"`
-	TwitterBearer  []string `toml:"TwitterBearer"`
-	ImgurClinet    string   `toml:"ImgurClinet"`
-	BiliSess       string   `toml:"BiliSess"`
-	SauceAPI       string   `toml:"SauceAPI"`
-	DiscordWebHook string   `toml:"DiscordWebHook"`
-	MultiTOR       string   `toml:"Multitor"`
-	DonationLink   string   `toml:"DonationLink"`
-	TopGG          string   `toml:"TOPGG"`
-	Domain         string   `toml:"Domain"`
+	Discord        string `toml:"Discord"`
+	BiliSess       string `toml:"BiliSess"`
+	SauceAPI       string `toml:"SauceAPI"`
+	DiscordWebHook string `toml:"DiscordWebHook"`
+	MultiTOR       string `toml:"Multitor"`
+	DonationLink   string `toml:"DonationLink"`
+	TopGG          string `toml:"TOPGG"`
+	Domain         string `toml:"Domain"`
 	Twitch         struct {
 		ClientID     string `toml:"ClientID"`
 		ClientSecret string `toml:"ClientSecret"`
