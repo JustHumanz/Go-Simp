@@ -77,6 +77,7 @@ func CheckYtByTime() {
 						YtData: &v,
 					}
 					if time.Now().Sub(v.Schedul) > v.Schedul.Sub(time.Now()) {
+						yttoken = engine.GetYtToken()
 						Data, err := YtAPI([]string{v.VideoID})
 						if err != nil {
 							log.Error(err)

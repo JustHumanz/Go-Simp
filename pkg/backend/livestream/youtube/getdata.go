@@ -3,7 +3,6 @@ package youtube
 import (
 	"encoding/json"
 	"encoding/xml"
-	"errors"
 	"regexp"
 	"strconv"
 	"strings"
@@ -287,22 +286,12 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 //YtAPI Get data from youtube api
 func YtAPI(VideoID []string) (YtData, error) {
 	var (
-		Data    YtData
-		body    []byte
-		curlerr error
-		counter int
+		Data YtData
 	)
 
-	for {
-		counter++
-		body, curlerr = network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id="+strings.Join(VideoID, ",")+"&key="+yttoken, nil)
-		if curlerr != nil {
-			log.Warn("Token exhausted,trying get new token")
-			yttoken = engine.GetYtToken()
-		}
-		if counter == 5 {
-			return Data, errors.New("Token exhausted")
-		}
+	body, curlerr := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id="+strings.Join(VideoID, ",")+"&key="+yttoken, nil)
+	if curlerr != nil {
+		log.Error(curlerr)
 	}
 	err := json.Unmarshal(body, &Data)
 	if err != nil {
