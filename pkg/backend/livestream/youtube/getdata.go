@@ -106,6 +106,7 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 				if err != nil {
 					log.Error(err)
 				}
+
 			} else if Data.Items[i].Snippet.VideoStatus == "live" && YoutubeData.YtData.Status == "upcoming" {
 				log.WithFields(log.Fields{
 					"VideoData ID": VideoID[i],
@@ -132,11 +133,12 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 				}
 
 			} else if Data.Items[i].Snippet.VideoStatus == "upcoming" && YoutubeData.YtData.Status == "past" {
-				log.Info("maybe yt error or human error")
-				YoutubeData.ChangeYtStatus("upcoming").UpdateYtDB()
+				log.WithFields(log.Fields{
+					"VideoData ID": VideoID[i],
+					"Status":       Data.Items[i].Snippet.VideoStatus,
+				}).Info("maybe yt error or human error")
 
-				log.Info("Send to notify")
-				YoutubeData.SendNude()
+				YoutubeData.ChangeYtStatus("upcoming").UpdateYtDB().SendNude()
 
 			} else if Data.Items[i].Snippet.VideoStatus == "none" && YoutubeData.YtData.Viewers != Data.Items[i].Statistics.ViewCount {
 				log.WithFields(log.Fields{
@@ -181,9 +183,8 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 						}).Info("Livestream schedule late,change video status to live")
 					}
 				}
-
 				//send to reminder
-				YoutubeData.ChangeYtStatus("reminder").SendNude()
+				//YoutubeData.ChangeYtStatus("reminder").SendNude()
 
 			} else {
 				YoutubeData.YtData.UpdateYt(YoutubeData.YtData.Status)
@@ -283,25 +284,35 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 	return nil
 }
 
-//Get data from youtube api
+//YtAPI Get data from youtube api
 func YtAPI(VideoID []string) (YtData, error) {
 	var (
-		Data YtData
+		Data    YtData
+		body    []byte
+		curlerr error
+		counter int
 	)
 
-	body, curlerr := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id="+strings.Join(VideoID, ",")+"&key="+yttoken, nil)
-	if curlerr != nil {
-		return YtData{}, errors.New("Token out of limit")
+	for {
+		counter++
+		body, curlerr = network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id="+strings.Join(VideoID, ",")+"&key="+yttoken, nil)
+		if curlerr != nil {
+			log.Warn("Token exhausted,trying get new token")
+			yttoken = engine.GetYtToken()
+		}
+		if counter == 5 {
+			return Data, errors.New("Token exhausted")
+		}
 	}
 	err := json.Unmarshal(body, &Data)
 	if err != nil {
-		log.Error(err)
+		return Data, err
 	}
 
 	return Data, nil
 }
 
-//Parse video duration
+//ParseDuration Parse video duration
 func ParseDuration(str string) time.Duration {
 	durationRegex := regexp.MustCompile(`P(?P<years>\d+Y)?(?P<months>\d+M)?(?P<days>\d+D)?T?(?P<hours>\d+H)?(?P<minutes>\d+M)?(?P<seconds>\d+S)?`)
 	matches := durationRegex.FindStringSubmatch(str)

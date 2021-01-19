@@ -3,7 +3,6 @@ package youtube
 import (
 	"context"
 	"math"
-	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -29,17 +28,14 @@ func (PushData *NotifStruct) SendNude() {
 
 	var (
 		Timestart time.Time
-		GroupIcon string
 		User      = &database.UserStruct{
 			Human:    true,
 			Reminder: 0,
 		}
 	)
 
-	if match, _ := regexp.MatchString("404.jpg", PushData.Group.IconURL); match {
-		GroupIcon = ""
-	} else {
-		GroupIcon = PushData.Group.IconURL
+	if PushData.Group.GroupName == "Independen" {
+		PushData.Group.IconURL = ""
 	}
 
 	if !PushData.YtData.Schedul.IsZero() {
@@ -78,7 +74,7 @@ func (PushData *NotifStruct) SendNude() {
 					SetTitle("New upcoming Livestream").
 					SetDescription(PushData.YtData.Title).
 					SetImage(PushData.YtData.Thumb).
-					SetThumbnail(GroupIcon).
+					SetThumbnail(PushData.Group.IconURL).
 					SetURL(YtURL).
 					AddField("Type ", PushData.YtData.Type).
 					AddField("Start live in", durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(2).String()).
@@ -139,7 +135,7 @@ func (PushData *NotifStruct) SendNude() {
 					SetTitle("Live right now").
 					SetDescription(PushData.YtData.Title).
 					SetImage(PushData.YtData.Thumb).
-					SetThumbnail(GroupIcon).
+					SetThumbnail(PushData.Group.IconURL).
 					SetURL(YtURL).
 					AddField("Type ", PushData.YtData.Type).
 					AddField("Start live", durafmt.Parse(expiresAt.Sub(Timestart.In(loc))).LimitFirstN(2).String()+" Ago").
@@ -232,7 +228,7 @@ func (PushData *NotifStruct) SendNude() {
 						SetTitle("Uploaded a new video").
 						SetDescription(PushData.YtData.Title).
 						SetImage(PushData.YtData.Thumb).
-						SetThumbnail(GroupIcon).
+						SetThumbnail(PushData.Group.IconURL).
 						SetURL(YtURL).
 						AddField("Type ", PushData.YtData.Type).
 						AddField("Upload", durafmt.Parse(expiresAt.Sub(Timestart.In(loc))).LimitFirstN(2).String()+" Ago").
@@ -260,17 +256,21 @@ func (PushData *NotifStruct) SendNude() {
 			}
 		}
 	} else if Status == "reminder" {
-		Color, err := engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
-		if err != nil {
-			log.Error(err)
-		}
 		UpcominginMinutes := int(math.Round(Timestart.In(loc).Sub(time.Now().In(loc)).Minutes()))
 		//id, DiscordChannelID
+		var Color int
 		ChanelData := database.ChannelTag(PushData.Member.ID, 2, "")
 		for _, Channel := range ChanelData {
 			for ii := 10; ii < 70; ii += 5 {
 				k := ii - 6
 				if UpcominginMinutes <= ii && UpcominginMinutes >= k {
+					if Color != 0 {
+						Color, err = engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
+						if err != nil {
+							log.Error(err)
+						}
+					}
+
 					UserTagsList := database.GetUserReminderList(int(Channel.ID), PushData.Member.ID, ii)
 					LiveCount := durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(1).String()
 					if UserTagsList != nil {
@@ -279,7 +279,7 @@ func (PushData *NotifStruct) SendNude() {
 							SetTitle(PushData.Member.EnName+" Live in "+LiveCount).
 							SetDescription(PushData.YtData.Title).
 							SetImage(PushData.YtData.Thumb).
-							SetThumbnail(GroupIcon).
+							SetThumbnail(PushData.Group.IconURL).
 							SetURL(YtURL).
 							AddField("Type ", PushData.YtData.Type).
 							AddField("Start live in", durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(2).String()).

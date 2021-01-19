@@ -138,8 +138,9 @@ func (Data *NotifStruct) SetActuallyStart(new time.Time) *NotifStruct {
 	return Data
 }
 
-func (Data *NotifStruct) UpdateYtDB() {
+func (Data *NotifStruct) UpdateYtDB() *NotifStruct {
 	Data.YtData.UpdateYt(Data.YtData.Status)
+	return Data
 }
 
 func (Data *NotifStruct) UpYtView(new string) *NotifStruct {

@@ -1,8 +1,10 @@
 package youtube
 
 import (
+	"context"
 	"math"
 	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -27,6 +29,7 @@ var (
 func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
 	Bot = BotInit
 	cronInit.AddFunc(config.YoutubeCheckChannel, CheckYtSchedule)
+	cronInit.AddFunc(config.YoutubeCheckUpcomingByTime, CheckYtByTime)
 	cronInit.AddFunc(config.YoutubePrivateSlayer, CheckPrivate)
 	log.Info("Enable youtube module")
 	//CheckYtScheduleTest("Hololive")
@@ -40,11 +43,10 @@ func CheckYtSchedule() {
 			if Member.YoutubeID != "" {
 				wg.Add(1)
 				log.WithFields(log.Fields{
-					"Vtuber":        Member.EnName,
-					"Group":         Group.GroupName,
-					"Youtube ID":    Member.YoutubeID,
-					"Vtuber Region": Member.Region,
-				}).Info("Checking Youtube")
+					"Vtuber":     Member.EnName,
+					"Group":      Group.GroupName,
+					"Youtube ID": Member.YoutubeID,
+				}).Info("Checking Vtuber channel")
 				go StartCheckYT(Member, Group, &wg)
 			}
 			if i%10 == 0 {
@@ -52,6 +54,62 @@ func CheckYtSchedule() {
 			}
 		}
 		wg.Wait()
+	}
+}
+
+func CheckYtByTime() {
+	for _, Group := range engine.GroupData {
+		for _, Member := range database.GetMembers(Group.ID) {
+			if Member.YoutubeID != "" {
+				log.WithFields(log.Fields{
+					"Vtuber": Member.EnName,
+					"Group":  Group.GroupName,
+				}).Info("Checking Upcoming schedule")
+				YoutubeStatus, err := database.YtGetStatus(0, Member.ID, "upcoming", "")
+				if err != nil {
+					log.Error(err)
+				}
+
+				for _, v := range YoutubeStatus {
+					YoutubeData := &NotifStruct{
+						Member: Member,
+						Group:  Group,
+						YtData: &v,
+					}
+					if time.Now().Sub(v.Schedul) > v.Schedul.Sub(time.Now()) {
+						Data, err := YtAPI([]string{v.VideoID})
+						if err != nil {
+							log.Error(err)
+						}
+						if len(Data.Items) > 0 {
+							if Data.Items[0].Snippet.VideoStatus != "none" {
+								if Data.Items[0].Statistics.ViewCount != "" {
+									YoutubeData.UpYtView(Data.Items[0].Statistics.ViewCount)
+								}
+
+								if !Data.Items[0].LiveDetails.ActualStartTime.IsZero() {
+									YoutubeData.UpYtSchedul(Data.Items[0].LiveDetails.ActualStartTime)
+								}
+
+								log.WithFields(log.Fields{
+									"Vtuber":  Member.EnName,
+									"Group":   Group.GroupName,
+									"VideoID": v.VideoID,
+								}).Info("Vtuber upcoming schedule deadline,force change to live")
+								YoutubeData.ChangeYtStatus("live").UpdateYtDB().SendNude()
+
+								Key := "0" + strconv.Itoa(int(Member.ID)) + "upcoming" + ""
+								err = database.RemoveYtCache(Key, context.Background())
+								if err != nil {
+									log.Error(err)
+								}
+								YoutubeData.ChangeYtStatus("reminder").SendNude()
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -93,11 +151,6 @@ func GetWaiting(VideoID string) (string, error) {
 		bit, curlerr = network.CoolerCurl(urls, nil)
 		if curlerr != nil {
 			return Ytwaiting, curlerr
-		} else {
-			log.WithFields(log.Fields{
-				"Request": VideoID,
-				"Func":    "YtGetWaiting",
-			}).Info("Successfully use multi tor")
 		}
 	}
 	reg, err := regexp.Compile("[^a-zA-Z0-9]+")
@@ -114,7 +167,7 @@ func GetWaiting(VideoID string) (string, error) {
 }
 
 func CheckPrivate() {
-	log.Info("Start Youtube checker")
+	log.Info("Start Video private slayer")
 	Check := func(Youtube database.YtDbData) {
 		if Youtube.Status == "upcoming" && time.Now().Sub(Youtube.Schedul) > Youtube.Schedul.Sub(time.Now()) {
 			log.WithFields(log.Fields{

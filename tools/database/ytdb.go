@@ -32,7 +32,7 @@ func YtGetStatus(Group, Member int64, Status, Region string) ([]YtDbData, error)
 		defer rows.Close()
 
 		for rows.Next() {
-			err = rows.Scan(&list.ID, &list.Group, &list.ChannelID, &list.NameEN, &list.NameJP, &list.YoutubeAvatar, &list.VideoID, &list.Title, &list.Thumb, &list.Desc, &list.Schedul, &list.End, &list.Region, &list.Viewers, &list.MemberID, &list.GroupID)
+			err = rows.Scan(&list.ID, &list.Group, &list.ChannelID, &list.NameEN, &list.NameJP, &list.YoutubeAvatar, &list.VideoID, &list.Title, &list.Type, &list.Thumb, &list.Desc, &list.Schedul, &list.End, &list.Region, &list.Viewers, &list.MemberID, &list.GroupID)
 			if err != nil {
 				return nil, err
 			}
@@ -59,6 +59,18 @@ func YtGetStatus(Group, Member int64, Status, Region string) ([]YtDbData, error)
 
 	return Data, nil
 
+}
+
+func RemoveYtCache(Key string, ctx context.Context) error {
+	log.WithFields(log.Fields{
+		"Key": Key,
+	}).Info("Drop cache")
+
+	err := LiveCache.Del(ctx, Key).Err()
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 //Input youtube new video
