@@ -351,3 +351,13 @@ func (Data *DiscordChannel) SetMsgTextID(new string) *DiscordChannel {
 	Data.TextMessageID = new
 	return Data
 }
+
+func (Data *DiscordChannel) SetMember(new Member) *DiscordChannel {
+	Data.Member = new
+	return Data
+}
+
+func (Data *DiscordChannel) SetGroup(new Group) *DiscordChannel {
+	Data.Group = new
+	return Data
+}

@@ -1,3 +1,7 @@
+v2.6.20
+- Youtube checker livestream by count time
+- Fix User not taged when vtuber got a milestone subs/followers
+
 v2.5.19
 - Fix duplicate notif
 - Fix users not pinged
@@ -15,6 +19,7 @@ v2.5.17
 - Add Register user via reacting
 - Add Dynamic mode on bilibili
 
+----------------------------------------------------------------------------------
 v1.5.16
 - Add Dynamic notif #83
 - Fix twitter fanart high cpu usage

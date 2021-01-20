@@ -3,6 +3,7 @@ package youtube
 import (
 	"context"
 	"math"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -34,7 +35,7 @@ func (PushData *NotifStruct) SendNude() {
 		}
 	)
 
-	if PushData.Group.GroupName == "Independen" {
+	if match, _ := regexp.MatchString("404.jpg", PushData.Group.IconURL); match {
 		PushData.Group.IconURL = ""
 	}
 

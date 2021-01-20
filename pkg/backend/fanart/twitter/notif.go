@@ -17,10 +17,9 @@ func SendFanart(Data []Fanart, Group database.Group) {
 		url := MemberFanart.Tweet.PermanentURL
 		ChannelData := database.ChannelTag(MemberFanart.Member.ID, 1, "")
 		var (
-			tags      string
-			GroupIcon string
-			Media     string
-			Msg       string
+			tags  string
+			Media string
+			Msg   string
 		)
 
 		if len(MemberFanart.Tweet.Videos) > 0 {
@@ -39,10 +38,8 @@ func SendFanart(Data []Fanart, Group database.Group) {
 			log.Error(err)
 		}
 
-		if Group.GroupName == "Independen" {
-			GroupIcon = ""
-		} else {
-			GroupIcon = Group.IconURL
+		if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
+			Group.IconURL = ""
 		}
 		for _, Channel := range ChannelData {
 			UserTagsList := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, MemberFanart.Member.ID)
@@ -55,7 +52,7 @@ func SendFanart(Data []Fanart, Group database.Group) {
 				//do nothing,like my life
 			} else {
 				msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
-					SetAuthor(strings.Title(Group.GroupName), GroupIcon).
+					SetAuthor(strings.Title(Group.GroupName), Group.IconURL).
 					SetTitle("@"+MemberFanart.Tweet.Username).
 					SetURL(url).
 					SetThumbnail(engine.GetAuthorAvatar(MemberFanart.Tweet.Username)).
