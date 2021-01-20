@@ -1,6 +1,7 @@
 v2.6.20
 - Youtube checker livestream by count time
 - Fix User not taged when vtuber got a milestone subs/followers
+- Fix livestream viewers always 0
 
 v2.5.19
 - Fix duplicate notif
