@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"log"
 
 	"github.com/JustHumanz/Go-simp/pkg/backend/livestream/bilibili/live"
 	"github.com/JustHumanz/Go-simp/pkg/backend/livestream/bilibili/space"
@@ -12,6 +11,7 @@ import (
 	"github.com/JustHumanz/Go-simp/tools/database"
 	"github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"
+	log "github.com/sirupsen/logrus"
 	"gopkg.in/robfig/cron.v2"
 )
 
@@ -27,7 +27,10 @@ func main() {
 		log.Panic(err)
 	}
 
-	Bot, _ := discordgo.New("Bot " + config.BotConf.Discord)
+	Bot, err := discordgo.New("Bot " + config.BotConf.Discord)
+	if err != nil {
+		log.Error(err)
+	}
 	err = Bot.Open()
 	if err != nil {
 		log.Panic(err)
