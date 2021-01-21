@@ -1784,6 +1784,20 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Kaederon",
+                    "EN_Name":"Higuchi Kaede",
+                    "JP_Name":"樋口 楓",
+                    "Hashtag": {
+                        "Twitter": "#でろあーと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCsg-YqdqQ-KFF0LNk23BY4A",
+                    "BiliBili_ID": 410455162,
+                    "BiliRoom_ID": 21449061,
+                    "Twitter_Username": "HiguchiKaede",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Hanamaki",
                     "EN_Name":"Hana Macchia",
                     "JP_Name":"ハナ・マキア",

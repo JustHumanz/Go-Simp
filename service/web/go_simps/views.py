@@ -58,7 +58,7 @@ def go_simps_add(request):
             return render(request,'done.html',Payload)
 
     else:
-        Payload = {'Groups':Vtubers.GetGroups()}
+        Payload = {'Groups':Vtubers.GetGroups(),'Domain':DOMAIN}
         return render(request,'add.html',Payload)
 
 def go_simps_member(request,MemberID):
