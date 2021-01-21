@@ -29,7 +29,7 @@ func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
 
 func CheckLiveSchedule() {
 	loc, _ = time.LoadLocation("Asia/Shanghai")
-	log.Info("Start check Schedule")
+	log.Info("Start Checking Schedule")
 	for _, GroupData := range engine.GroupData {
 		var wg sync.WaitGroup
 		for i, MemberData := range database.GetMembers(GroupData.ID) {
@@ -111,7 +111,7 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 			log.WithFields(log.Fields{
 				"Group":  Group.GroupName,
 				"Vtuber": Member.EnName,
-			}).Info("Check LiveBiliBili")
+			}).Info("Checking LiveBiliBili")
 
 			Data.UpdateOnline(Status.Data.RoomInfo.Online)
 			Data.RoomData.UpdateLiveBili(Member.ID)

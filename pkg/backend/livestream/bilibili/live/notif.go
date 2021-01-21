@@ -58,9 +58,12 @@ func (Data *LiveBili) Crotttt() error {
 		go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
 			defer wg.Done()
 			UserTagsList := Channel.GetUserList(context.Background())
-			if UserTagsList == nil {
+			if UserTagsList == nil && Data.Group.GroupName != "Independen" {
 				UserTagsList = []string{"_"}
+			} else if UserTagsList == nil && Data.Group.GroupName == "Independen" {
+				return
 			}
+
 			MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, Data.Embed)
 			if err != nil {
 				log.Error(err)

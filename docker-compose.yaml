@@ -206,7 +206,7 @@ services:
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     volumes:  
-      - redis_data:bitnami/redis/data/
+      - redis_data:/bitnami/redis/data/
     networks:
       - go_simp-net
 

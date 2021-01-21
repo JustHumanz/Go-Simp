@@ -67,8 +67,10 @@ func (PushData *NotifStruct) SendNude() {
 			go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
 				defer wg.Done()
 				UserTagsList := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, PushData.Member.ID)
-				if UserTagsList == nil {
+				if UserTagsList == nil && PushData.Group.GroupName != "Independen" {
 					UserTagsList = []string{"_"}
+				} else if UserTagsList == nil && PushData.Group.GroupName == "Independen" {
+					return
 				}
 				msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 					SetAuthor(VtuberName, Avatar, YtChannel).
@@ -128,8 +130,10 @@ func (PushData *NotifStruct) SendNude() {
 			go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
 				defer wg.Done()
 				UserTagsList := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, PushData.Member.ID)
-				if UserTagsList == nil {
+				if UserTagsList == nil && PushData.Group.GroupName != "Independen" {
 					UserTagsList = []string{"_"}
+				} else if UserTagsList == nil && PushData.Group.GroupName == "Independen" {
+					return
 				}
 				MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 					SetAuthor(VtuberName, Avatar, YtChannel).
@@ -200,8 +204,8 @@ func (PushData *NotifStruct) SendNude() {
 					}
 				}
 			}(v, &wg)
-			//Wait every ge 10 discord channel
-			if i%10 == 0 {
+			//Wait every ge 15 discord channel
+			if i%15 == 0 {
 				wg.Wait()
 			}
 		}
