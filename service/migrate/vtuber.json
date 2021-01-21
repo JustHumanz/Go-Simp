@@ -1770,6 +1770,20 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Vamp-san",
+                    "EN_Name":"Kuzuha",
+                    "JP_Name":"葛葉",
+                    "Hashtag": {
+                        "Twitter": "#KuzuArt",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCSFCh5NL4qXrAy9u-u2lX3g",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Vamp_Kuzu",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Hanamaki",
                     "EN_Name":"Hana Macchia",
                     "JP_Name":"ハナ・マキア",
