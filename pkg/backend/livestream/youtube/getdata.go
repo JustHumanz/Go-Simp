@@ -111,14 +111,16 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 					"VideoData ID": VideoID[i],
 					"Status":       "Live",
 				}).Info("Update video status from " + YoutubeData.YtData.Status + " to live")
-				YoutubeData.ChangeYtStatus("live").UpdateYtDB()
+				YoutubeData.ChangeYtStatus("live")
 
 				log.Info("Send to notify")
 				if !Data.Items[i].LiveDetails.ActualStartTime.IsZero() {
-					YoutubeData.SetActuallyStart(Data.Items[i].LiveDetails.ActualStartTime).SendNude()
+					YoutubeData.SetActuallyStart(Data.Items[i].LiveDetails.ActualStartTime)
 				} else {
-					YoutubeData.SendNude()
+					//YoutubeData.SendNude()
 				}
+
+				YoutubeData.UpdateYtDB()
 
 			} else if (!Data.Items[i].LiveDetails.EndTime.IsZero() && YoutubeData.YtData.Status == "upcoming") || (YoutubeData.YtData.Status == "upcoming" && Data.Items[i].Snippet.VideoStatus == "none") {
 				log.WithFields(log.Fields{
@@ -170,18 +172,20 @@ func StartCheckYT(Member database.Member, Group database.Group, wg *sync.WaitGro
 						UpdateYtDB()
 				}
 
-				if time.Now().Sub(Data.Items[i].LiveDetails.StartTime) > Data.Items[i].LiveDetails.StartTime.Sub(time.Now()) && Data.Items[i].LiveDetails.ActualStartTime.IsZero() {
-					if YoutubeData.YtData.Status == "upcoming" {
-						YoutubeData.ChangeYtStatus("live").UpdateYtDB()
+				/*
+					if time.Now().Sub(Data.Items[i].LiveDetails.StartTime) > Data.Items[i].LiveDetails.StartTime.Sub(time.Now()) && Data.Items[i].LiveDetails.ActualStartTime.IsZero() {
+						if YoutubeData.YtData.Status == "upcoming" {
+							YoutubeData.ChangeYtStatus("live").UpdateYtDB()
 
-						log.Info("Send to notify")
-						YoutubeData.SendNude()
-						log.WithFields(log.Fields{
-							"VideoData ID": VideoID[i],
-							"Status":       YoutubeData.YtData.Status,
-						}).Info("Livestream schedule late,change video status to live")
+							log.Info("Send to notify")
+							YoutubeData.SendNude()
+							log.WithFields(log.Fields{
+								"VideoData ID": VideoID[i],
+								"Status":       YoutubeData.YtData.Status,
+							}).Info("Livestream schedule late,change video status to live")
+						}
 					}
-				}
+				*/
 				//send to reminder
 				//YoutubeData.ChangeYtStatus("reminder").SendNude()
 

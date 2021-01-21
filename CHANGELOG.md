@@ -2,6 +2,9 @@ v2.6.20
 - Youtube checker livestream by count time
 - Fix User not taged when vtuber got a milestone subs/followers
 - Specially for Independent livestream will not be send if there no one user/role tagged
+- Add Higuchi Kaede
+- Disable youtube checker send notif
+- Fix add in go-simp-web
 
 v2.5.19
 - Fix duplicate notif
