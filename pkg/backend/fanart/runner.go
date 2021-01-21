@@ -20,7 +20,7 @@ func main() {
 	BiliBili := flag.Bool("BiliBiliFanart", false, "Enable bilibili fanart module")
 	flag.Parse()
 
-	conf, err := config.ReadConfig("../../../config.toml")
+	conf, err := config.ReadConfig("./config.toml")
 	if err != nil {
 		log.Panic(err)
 	}

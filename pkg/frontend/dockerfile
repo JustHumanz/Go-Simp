@@ -1,9 +1,9 @@
 FROM golang:alpine
+
 RUN apk add git
 RUN export CGO_ENABLED=1
 RUN mkdir /app
-COPY . /app/api
-EXPOSE 2525
-WORKDIR /app/api
+COPY . /app/frontend
+WORKDIR /app/frontend
 
 #CMD ["go","run","."]

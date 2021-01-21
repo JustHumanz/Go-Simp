@@ -1,14 +1,6 @@
 version: "3.7"
 
 services:
-  build_mainbot:
-    build: .
-    image: mainbot
-  
-  build_go_simp_web:
-    build: service/web
-    image: go_simp_web
-
   build_multitor:
     build: service/multitor
     image: tor_go_brrrrrrr
@@ -31,93 +23,93 @@ services:
       - go_simp-net
 
   db_migrate:
-    image: mainbot
+    build: ./service/migrate
     depends_on:
       - mysql  
-      - build_mainbot
-    working_dir: /app/Go-Simp/service/migrate
     command: ./start.sh
     restart: on-failure    
     networks:
       - go_simp-net
+    volumes:
+      - ./config.toml:/app/migrate/config.toml  
 
   fanart:
-    image: mainbot
+    build: ./pkg/backend/fanart/
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
-      - build_mainbot
-    working_dir: /app/Go-Simp/pkg/backend/fanart/
     command: ./start.sh
     restart: on-failure
     networks:
       - go_simp-net
+    volumes:
+      - ./config.toml:/app/fanart/config.toml  
 
   livestream:
-    image: mainbot
+    build: ./pkg/backend/livestream/
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
-      - build_mainbot
-    working_dir: /app/Go-Simp/pkg/backend/livestream/
     command: ./start.sh
     restart: on-failure
     networks:
       - go_simp-net
+    volumes:
+      - ./config.toml:/app/livestream/config.toml  
 
   subscriber:
-    image: mainbot
+    build: ./pkg/backend/subscriber/
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
-      - build_mainbot
-    working_dir: /app/Go-Simp/pkg/backend/subscriber/
     command: ./start.sh
     restart: on-failure    
     networks:
       - go_simp-net
+    volumes:
+      - ./config.toml:/app/subscriber/config.toml        
 
   utility:
-    image: mainbot
+    build: ./pkg/backend/utility/
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
-      - build_mainbot
-    working_dir: /app/Go-Simp/pkg/backend/utility/
     command: go run .
     restart: on-failure    
     networks:
       - go_simp-net
-
-  frontend:
-    image: mainbot
-    depends_on:
-      - mysql
-      - db_migrate
-      - multi_tor
-      - build_mainbot
-    working_dir: /app/Go-Simp/pkg/frontend
-    command: ./start.sh
-    restart: on-failure
-    networks:
-      - go_simp-net
+    volumes:
+      - ./config.toml:/app/utility/config.toml           
 
   guild:
-    image: mainbot
+    build: ./pkg/guild/
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
-      - build_mainbot
-    working_dir: /app/Go-Simp/pkg/guild
     command: go run .
     restart: on-failure
     networks:
       - go_simp-net
+    volumes:
+      - ./config.toml:/app/guild/config.toml           
+
+  frontend:
+    build: ./pkg/frontend
+    depends_on:
+      - mysql
+      - db_migrate
+      - multi_tor
+    command: ./start.sh
+    restart: on-failure
+    networks:
+      - go_simp-net
+    volumes:
+      - ./config.toml:/app/frontend/config.toml           
 
   yotube-scrap:
     build: service/yt-scrap
@@ -156,7 +148,7 @@ services:
       - traefik.http.middlewares.redirect.redirectscheme.scheme=https
 
   go_simp_web:
-    image: go_simp_web
+    build: service/web
     env_file:
       - ./.env    
     depends_on:
@@ -176,13 +168,9 @@ services:
       - traefik.http.services.go_simp_web.loadbalancer.server.port=8000
       - traefik.http.middlewares.redirect.redirectscheme.scheme=https
 
-
   rest_api:
     build: service/rest-api
-    image: mainbot_rest-api
-    working_dir: /app/Go-Simp/service/rest-api    
     depends_on:
-      - build_mainbot
       - redis
     command: go run . 
     restart: on-failure
@@ -200,13 +188,15 @@ services:
       - traefik.http.routers.rest_api-https.tls.certresolver=letsencrypt
       - traefik.http.services.rest_api.loadbalancer.server.port=2525
       - traefik.http.middlewares.redirect.redirectscheme.scheme=https
-
+    volumes:
+      - ./config.toml:/app/api/config.toml           
+      
   redis:
     image: 'bitnami/redis:latest'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     volumes:  
-      - redis_data:bitnami/redis/data/
+      - redis_data:/bitnami/redis/data/
     networks:
       - go_simp-net
 

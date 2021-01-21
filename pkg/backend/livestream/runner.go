@@ -22,7 +22,7 @@ func main() {
 
 	flag.Parse()
 
-	conf, err := config.ReadConfig("../../../config.toml")
+	conf, err := config.ReadConfig("./config.toml")
 	if err != nil {
 		log.Panic(err)
 	}

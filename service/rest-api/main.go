@@ -19,7 +19,7 @@ var (
 )
 
 func init() {
-	config, err := config.ReadConfig("../../config.toml")
+	config, err := config.ReadConfig("./config.toml")
 	if err != nil {
 		log.Error(err)
 	}

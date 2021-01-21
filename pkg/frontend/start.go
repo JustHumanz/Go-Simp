@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	discordhandler.StartInit("../../config.toml")
+	discordhandler.StartInit("./config.toml")
 	log.Info("Frontend ready.......")
 
 	runfunc.Run()

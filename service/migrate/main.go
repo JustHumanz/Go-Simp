@@ -52,7 +52,7 @@ func init() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	config, err := config.ReadConfig("../../config.toml")
+	config, err := config.ReadConfig("./config.toml")
 	if err != nil {
 		log.Error(err)
 	}
