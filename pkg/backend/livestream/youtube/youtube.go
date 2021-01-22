@@ -111,10 +111,10 @@ func CheckYtByTime() {
 								if err != nil {
 									log.Error(err)
 								}
-								YoutubeData.ChangeYtStatus("reminder").SendNude()
 							}
 						}
 					}
+					YoutubeData.ChangeYtStatus("reminder").SendNude()
 				}
 			}
 		}

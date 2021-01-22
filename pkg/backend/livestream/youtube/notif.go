@@ -2,7 +2,6 @@ package youtube
 
 import (
 	"context"
-	"math"
 	"regexp"
 	"strconv"
 	"strings"
@@ -275,7 +274,7 @@ func (PushData *NotifStruct) SendNude() error {
 			}
 		}
 	} else if Status == "reminder" {
-		UpcominginMinutes := int(math.Round(Timestart.In(loc).Sub(time.Now().In(loc)).Minutes()))
+		UpcominginMinutes := int(Timestart.Sub(time.Now()).Minutes())
 		//id, DiscordChannelID
 		var Color int
 		ChanelData := database.ChannelTag(PushData.Member.ID, 2, "")

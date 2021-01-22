@@ -3,6 +3,7 @@ v2.6.21
 - Update cronjob to v.3
 - Force retrun when failed send message
 - Add Discord session Close 
+- Fix reminder
 
 v2.6.20
 - Youtube checker livestream by count time
