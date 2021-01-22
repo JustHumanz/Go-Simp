@@ -11,8 +11,8 @@ import (
 	"github.com/JustHumanz/Go-simp/tools/database"
 	"github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"
+	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
-	"gopkg.in/robfig/cron.v2"
 )
 
 func main() {
@@ -56,5 +56,5 @@ func main() {
 		live.Start(Bot, c)
 		database.ModuleInfo("LiveBiliBili")
 	}
-	runfunc.Run()
+	runfunc.Run(Bot)
 }

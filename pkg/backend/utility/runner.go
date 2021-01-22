@@ -8,9 +8,9 @@ import (
 	"github.com/JustHumanz/Go-simp/tools/database"
 	"github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"
+	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 	"github.com/top-gg/go-dbl"
-	"gopkg.in/robfig/cron.v2"
 )
 
 var (
@@ -125,5 +125,5 @@ func main() {
 		}
 	})
 
-	runfunc.Run()
+	runfunc.Run(Bot)
 }

@@ -3,22 +3,31 @@ package runfunc
 import (
 	"os"
 	"os/signal"
-	"runtime/pprof"
+	"syscall"
 
+	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
 )
 
-func Run() {
-	chain := make(chan os.Signal, 0)
-	signal.Notify(chain, os.Interrupt)
+func Run(Bot *discordgo.Session) {
+	shutdown := make(chan int)
+	//create a notification channel to shutdown
+	sigChan := make(chan os.Signal, 1)
+
+	//register for interupt (Ctrl+C) and SIGTERM (docker)
+	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
 	go func() {
-		for sig := range chain {
-			log.Warn("captured ", sig, ", stopping profiler and exiting..")
-			pprof.StopCPUProfile()
-			os.Exit(0)
+		<-sigChan
+		log.Info("Shutting down...")
+		if Bot != nil {
+			log.Info("Close bot wss session")
+			err := Bot.Close()
+			if err != nil {
+				log.Error(err)
+			}
 		}
+		shutdown <- 1
 	}()
 
-	<-make(chan struct{})
-	return
+	<-shutdown
 }

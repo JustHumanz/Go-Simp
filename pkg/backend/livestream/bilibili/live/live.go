@@ -10,8 +10,8 @@ import (
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"
+	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
-	"gopkg.in/robfig/cron.v2"
 )
 
 var (
@@ -24,16 +24,18 @@ func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
 	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
 	Bot = BotInit
 	cronInit.AddFunc(config.BiliBiliLive, CheckLiveSchedule)
-	log.Info("Enable live bilibili module")
+	log.Info("Enable Live BiliBili module")
 }
 
 func CheckLiveSchedule() {
-	loc, _ = time.LoadLocation("Asia/Shanghai")
-	log.Info("Start Checking Schedule")
 	for _, GroupData := range engine.GroupData {
 		var wg sync.WaitGroup
 		for i, MemberData := range database.GetMembers(GroupData.ID) {
 			wg.Add(1)
+			log.WithFields(log.Fields{
+				"Group":  GroupData.GroupName,
+				"Vtuber": MemberData.EnName,
+			}).Info("Checking LiveBiliBili")
 			go CheckBili(GroupData, MemberData, &wg)
 			if i%10 == 0 {
 				wg.Wait()
@@ -56,7 +58,6 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 		Status, err := GetRoomStatus(Member.BiliRoomID)
 		if err != nil {
 			log.Error(err)
-			return
 		}
 
 		Data.AddData(DataDB)
@@ -108,11 +109,6 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 			Data.RoomData.UpdateLiveBili(Member.ID)
 		} else {
 			//update online
-			log.WithFields(log.Fields{
-				"Group":  Group.GroupName,
-				"Vtuber": Member.EnName,
-			}).Info("Checking LiveBiliBili")
-
 			Data.UpdateOnline(Status.Data.RoomInfo.Online)
 			Data.RoomData.UpdateLiveBili(Member.ID)
 		}

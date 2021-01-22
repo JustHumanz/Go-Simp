@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"gopkg.in/robfig/cron.v2"
+	"github.com/robfig/cron/v3"
 
 	"github.com/JustHumanz/Go-simp/pkg/backend/utility/runfunc"
 	config "github.com/JustHumanz/Go-simp/tools/config"
@@ -64,7 +64,7 @@ func main() {
 		log.Info("Add twitter followers to cronjob")
 		database.ModuleInfo("TwitterFollowers")
 	}
-	runfunc.Run()
+	runfunc.Run(Bot)
 }
 
 func SendNude(Embed *discordgo.MessageEmbed, Group database.Group, Member database.Member) {

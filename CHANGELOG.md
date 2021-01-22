@@ -1,3 +1,9 @@
+v2.6.21
+- Update redis
+- Update cronjob to v.3
+- Force retrun when failed send message
+- Add Discord session Close 
+
 v2.6.20
 - Youtube checker livestream by count time
 - Fix User not taged when vtuber got a milestone subs/followers

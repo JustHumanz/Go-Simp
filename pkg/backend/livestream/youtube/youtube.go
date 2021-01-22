@@ -14,7 +14,7 @@ import (
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	network "github.com/JustHumanz/Go-simp/tools/network"
 	"github.com/bwmarrin/discordgo"
-	"gopkg.in/robfig/cron.v2"
+	"github.com/robfig/cron/v3"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -77,6 +77,12 @@ func CheckYtByTime() {
 						YtData: &v,
 					}
 					if time.Now().Sub(v.Schedul) > v.Schedul.Sub(time.Now()) {
+						log.WithFields(log.Fields{
+							"Vtuber":  Member.EnName,
+							"Group":   Group.GroupName,
+							"VideoID": v.VideoID,
+						}).Info("Vtuber upcoming schedule deadline,force change to live")
+
 						yttoken = engine.GetYtToken()
 						Data, err := YtAPI([]string{v.VideoID})
 						if err != nil {
@@ -98,11 +104,6 @@ func CheckYtByTime() {
 									YoutubeData.UpYtSchedul(Data.Items[0].LiveDetails.ActualStartTime)
 								}
 
-								log.WithFields(log.Fields{
-									"Vtuber":  Member.EnName,
-									"Group":   Group.GroupName,
-									"VideoID": v.VideoID,
-								}).Info("Vtuber upcoming schedule deadline,force change to live")
 								YoutubeData.ChangeYtStatus("live").UpdateYtDB().SendNude()
 
 								Key := "0" + strconv.Itoa(int(Member.ID)) + "upcoming" + ""

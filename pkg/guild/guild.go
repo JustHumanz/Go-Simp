@@ -7,7 +7,6 @@ import (
 	"github.com/JustHumanz/Go-simp/pkg/backend/utility/runfunc"
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
-	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
 )
@@ -41,7 +40,6 @@ func main() {
 	}
 
 	database.Start(conf.CheckSQL())
-	engine.Start()
 
 	for _, GuildID := range Bot.State.Guilds {
 		GuildList = append(GuildList, GuildID.ID)
@@ -50,5 +48,5 @@ func main() {
 	Bot.AddHandler(GuildJoin)
 	log.Info("Guild handler ready.......")
 
-	runfunc.Run()
+	runfunc.Run(Bot)
 }

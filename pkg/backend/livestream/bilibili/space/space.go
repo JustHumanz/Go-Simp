@@ -7,7 +7,7 @@ import (
 
 	"github.com/JustHumanz/Go-simp/tools/config"
 	"github.com/bwmarrin/discordgo"
-	"gopkg.in/robfig/cron.v2"
+	"github.com/robfig/cron/v3"
 
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
@@ -40,11 +40,12 @@ func CheckSpaceVideo() {
 							"Group":      Group.GroupName,
 							"Vtuber":     Member.EnName,
 							"BiliBiliID": Member.BiliBiliID,
-						}).Info("Checking Space")
+						}).Info("Checking Space BiliBili")
 
 						if Group.GroupName == "Independen" {
 							Group.IconURL = ""
 						}
+
 						Data := &CheckSctruct{
 							Member: Member,
 							Group:  Group,
@@ -54,7 +55,7 @@ func CheckSpaceVideo() {
 					}
 				}(GroupData, MemberData, wg)
 				if i%5 == 0 {
-					time.Sleep(3 * time.Second)
+					wg.Wait()
 				}
 			}
 			wg.Wait()

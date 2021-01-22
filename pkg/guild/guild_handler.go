@@ -35,7 +35,6 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 		timejoin, err := g.Guild.JoinedAt.Parse()
 		if err != nil {
 			log.Error(err)
-			return
 		}
 		DataGuild := database.Guild{
 			ID:   g.Guild.ID,
@@ -52,7 +51,6 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 				BotPermission, err := s.UserChannelPermissions(BotID.ID, Channel.ID)
 				if err != nil {
 					log.Error(err)
-					return
 				}
 				if Channel.Type == 0 && BotPermission&2048 != 0 {
 					Donation := config.BotConf.DonationLink
@@ -85,7 +83,6 @@ func GuildJoin(s *discordgo.Session, g *discordgo.GuildCreate) {
 					err := DataGuild.InputGuild()
 					if err != nil {
 						log.Error(err)
-						return
 					}
 
 					PayloadBytes, err := json.Marshal(map[string]interface{}{

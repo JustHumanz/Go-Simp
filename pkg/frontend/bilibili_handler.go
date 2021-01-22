@@ -1,4 +1,4 @@
-package discordhandler
+package main
 
 import (
 	"strconv"

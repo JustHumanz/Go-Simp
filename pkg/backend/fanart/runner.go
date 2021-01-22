@@ -12,7 +12,7 @@ import (
 	"github.com/JustHumanz/Go-simp/tools/database"
 	"github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"
-	"gopkg.in/robfig/cron.v2"
+	"github.com/robfig/cron/v3"
 )
 
 func main() {
@@ -49,5 +49,5 @@ func main() {
 		bilibili.Start(Bot, c)
 		database.ModuleInfo("BiliBiliFanart")
 	}
-	runfunc.Run()
+	runfunc.Run(Bot)
 }

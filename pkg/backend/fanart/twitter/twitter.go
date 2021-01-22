@@ -8,8 +8,8 @@ import (
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
 	"github.com/bwmarrin/discordgo"
 	twitterscraper "github.com/n0madic/twitter-scraper"
+	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
-	"gopkg.in/robfig/cron.v2"
 )
 
 //Public variable

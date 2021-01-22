@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"encoding/json"
 	"errors"
 	"image"
 	_ "image/jpeg"
@@ -51,14 +52,24 @@ func Start() {
 
 //GetYtToken Get a valid token
 func GetYtToken() string {
-	FreshToken := config.BotConf.YtToken[0]
 	for _, Token := range config.BotConf.YtToken {
-		_, err := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id=GNkPJvVEm0s&key="+Token, nil)
-		if err == nil {
+		body, err := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id=GNkPJvVEm0s&key="+Token, nil)
+		if err == nil && body != nil {
 			return Token
 		}
 	}
-	return FreshToken
+	PayloadBytes, err := json.Marshal(map[string]interface{}{
+		"embeds": []interface{}{
+			map[string]interface{}{
+				"description": "Youtube Token out of limit",
+			},
+		},
+	})
+	err = network.CurlPost(config.BotConf.DiscordWebHook, PayloadBytes)
+	if err != nil {
+		log.Error(err)
+	}
+	return ""
 }
 
 //FixName change to Title format
@@ -431,8 +442,8 @@ func RemoveEmbed(VideoID string, Bot *discordgo.Session) error {
 	ChannelState := database.GetLiveNotifMsg(VideoID)
 	for _, v := range ChannelState {
 		log.WithFields(log.Fields{
-			"VideoData ID": VideoID,
-			"Status":       "Past",
+			"VideoID": VideoID,
+			"Status":  "Past",
 		}).Info("Delete message from ", []string{v.TextMessageID, v.EmbedMessageID})
 		err := Bot.ChannelMessagesBulkDelete(v.ChannelID, []string{v.TextMessageID, v.EmbedMessageID})
 		if err != nil {

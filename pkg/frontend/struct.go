@@ -1,4 +1,4 @@
-package discordhandler
+package main
 
 import database "github.com/JustHumanz/Go-simp/tools/database"
 

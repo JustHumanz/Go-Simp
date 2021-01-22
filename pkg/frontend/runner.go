@@ -1,10 +1,11 @@
-package discordhandler
+package main
 
 import (
 	"errors"
 	"regexp"
 	"strings"
 
+	"github.com/JustHumanz/Go-simp/pkg/backend/utility/runfunc"
 	config "github.com/JustHumanz/Go-simp/tools/config"
 	database "github.com/JustHumanz/Go-simp/tools/database"
 	engine "github.com/JustHumanz/Go-simp/tools/engine"
@@ -39,10 +40,10 @@ const (
 )
 
 //StartInit running the fe
-func StartInit(path string) error {
-	conf, err := config.ReadConfig(path)
+func main() {
+	conf, err := config.ReadConfig("../../config.toml")
 	if err != nil {
-		return err
+		log.Error(err)
 	}
 	db := conf.CheckSQL()
 
@@ -52,7 +53,7 @@ func StartInit(path string) error {
 	}
 	err = Bot.Open()
 	if err != nil {
-		return err
+		log.Error(err)
 	}
 	BotInfo, err = Bot.User("@me")
 	if err != nil {
@@ -73,7 +74,7 @@ func StartInit(path string) error {
 	Bot.AddHandler(SubsMessage)
 	Bot.AddHandler(Module)
 
-	return nil
+	runfunc.Run(Bot)
 }
 
 func Module(s *discordgo.Session, m *discordgo.MessageCreate) {
