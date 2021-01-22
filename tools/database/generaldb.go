@@ -486,7 +486,7 @@ func (Data *DiscordChannel) AddChannel() error {
 
 //delete discord channel from `disable` command
 func (Data *DiscordChannel) DelChannel(errmsg string) error {
-	match, err := regexp.MatchString("Unknown Channel|HTTP 403 Forbidden|Delete|Missing Permissions|Missing Access", errmsg)
+	match, err := regexp.MatchString("Unknown|403|Delete|Missing", errmsg)
 	if err != nil {
 		return err
 	}

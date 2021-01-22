@@ -40,12 +40,10 @@ func CheckSpaceVideo() {
 							"Group":      Group.GroupName,
 							"Vtuber":     Member.EnName,
 							"BiliBiliID": Member.BiliBiliID,
-						}).Info("Check Space")
+						}).Info("Checking Space")
 
 						if Group.GroupName == "Independen" {
 							Group.IconURL = ""
-						} else {
-							Group.IconURL = Group.IconURL
 						}
 						Data := &CheckSctruct{
 							Member: Member,
