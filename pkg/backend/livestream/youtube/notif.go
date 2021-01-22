@@ -280,7 +280,7 @@ func (PushData *NotifStruct) SendNude() error {
 		ChanelData := database.ChannelTag(PushData.Member.ID, 2, "")
 		for _, Channel := range ChanelData {
 			for ii := 0; ii < 70; ii++ {
-				if UpcominginMinutes == ii {
+				if UpcominginMinutes == ii && UpcominginMinutes > 10 {
 					if Color != 0 {
 						Color, err = engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
 						if err != nil {
