@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/JustHumanz/Go-simp/tools/config"
-	"github.com/JustHumanz/Go-simp/tools/database"
+	"github.com/JustHumanz/Go-Simp/pkg/config"
+	"github.com/JustHumanz/Go-Simp/pkg/database"
 
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"

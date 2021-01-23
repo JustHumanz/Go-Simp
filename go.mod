@@ -1,4 +1,4 @@
-module github.com/JustHumanz/Go-simp
+module github.com/JustHumanz/Go-Simp
 
 go 1.15
 

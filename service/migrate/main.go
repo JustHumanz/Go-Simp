@@ -11,10 +11,10 @@ import (
 	"strings"
 	"time"
 
-	youtube "github.com/JustHumanz/Go-simp/pkg/backend/livestream/youtube"
-	"github.com/JustHumanz/Go-simp/tools/config"
-	database "github.com/JustHumanz/Go-simp/tools/database"
-	engine "github.com/JustHumanz/Go-simp/tools/engine"
+	"github.com/JustHumanz/Go-Simp/pkg/config"
+	database "github.com/JustHumanz/Go-Simp/pkg/database"
+	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
+	youtube "github.com/JustHumanz/Go-Simp/service/backend/livestream/youtube"
 
 	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"

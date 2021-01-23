@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/JustHumanz/Go-simp/tools/config"
-	"github.com/JustHumanz/Go-simp/tools/database"
+	"github.com/JustHumanz/Go-Simp/pkg/config"
+	"github.com/JustHumanz/Go-Simp/pkg/database"
 	_ "github.com/go-sql-driver/mysql"
 	log "github.com/sirupsen/logrus"
 )

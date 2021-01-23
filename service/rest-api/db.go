@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"strings"
 
-	"github.com/JustHumanz/Go-simp/tools/database"
+	"github.com/JustHumanz/Go-Simp/pkg/database"
 	log "github.com/sirupsen/logrus"
 )
 
