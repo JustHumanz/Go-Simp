@@ -103,14 +103,13 @@ func CheckYtByTime() {
 								if !Data.Items[0].LiveDetails.ActualStartTime.IsZero() {
 									YoutubeData.UpYtSchedul(Data.Items[0].LiveDetails.ActualStartTime)
 								}
-
-								YoutubeData.ChangeYtStatus("live").UpdateYtDB().SendNude()
-
 								Key := "0" + strconv.Itoa(int(Member.ID)) + "upcoming" + ""
 								err = database.RemoveYtCache(Key, context.Background())
 								if err != nil {
 									log.Error(err)
 								}
+
+								YoutubeData.ChangeYtStatus("live").UpdateYtDB().SendNude()
 							}
 						}
 					}
