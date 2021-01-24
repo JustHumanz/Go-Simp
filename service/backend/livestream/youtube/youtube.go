@@ -92,7 +92,7 @@ func CheckYtByTime() {
 							if Data.Items[0].Snippet.VideoStatus != "none" {
 								if Data.Items[0].Statistics.ViewCount != "" {
 									YoutubeData.UpYtView(Data.Items[0].Statistics.ViewCount)
-								} else if Data.Items[0].Statistics.ViewCount == "0" && v.Viewers != "0" {
+								} else if Data.Items[0].Statistics.ViewCount == "0" && v.Viewers == "0" {
 									Viewers, err := GetWaiting(v.VideoID)
 									if err != nil {
 										log.Error(err)
