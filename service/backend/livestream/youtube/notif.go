@@ -46,11 +46,16 @@ func (PushData *NotifStruct) SendNude() error {
 		Timestart = time.Now()
 	}
 
-	Views, err := strconv.Atoi(PushData.YtData.Viewers)
-	if err != nil {
-		log.Error(err)
+	if PushData.YtData.Viewers == "0" {
+		PushData.YtData.Viewers = "???"
+	} else {
+		Views, err := strconv.Atoi(PushData.YtData.Viewers)
+		if err != nil {
+			log.Error(err)
+		}
+		PushData.YtData.Viewers = engine.NearestThousandFormat(float64(Views))
 	}
-	PushData.YtData.Viewers = engine.NearestThousandFormat(float64(Views))
+
 	if Status == "upcoming" {
 		Color, err := engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
 		if err != nil {
@@ -282,10 +287,7 @@ func (PushData *NotifStruct) SendNude() error {
 			for ii := 0; ii < 70; ii++ {
 				if UpcominginMinutes == ii && UpcominginMinutes > 10 {
 					if Color != 0 {
-						Color, err = engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
-						if err != nil {
-							log.Error(err)
-						}
+						Color, _ = engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
 					}
 
 					UserTagsList := database.GetUserReminderList(int(Channel.ID), PushData.Member.ID, ii)
