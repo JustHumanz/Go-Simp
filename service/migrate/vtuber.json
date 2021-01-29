@@ -2669,6 +2669,48 @@
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "KUMAgaya_taKUMA",
                     "Region":"JP"
+                },
+                {
+                    "Name":"Warabe",
+                    "EN_Name":"Hoozuki Warabe",
+                    "JP_Name":"鬼灯わらべ",
+                    "Hashtag": {
+                        "Twitter": "#ばあちゃんこれ見て",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCLyTXfCZtl7dyhta9Jg3pZg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "hoozukiwarabe",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Lilith",
+                    "EN_Name":"Yumeno Lilith",
+                    "JP_Name":"夢乃リリス",
+                    "Hashtag": {
+                        "Twitter": "#夢の中絵",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCH11P1Hq4PXdznyw1Hhr3qw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "yumenolilith",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Lilith",
+                    "EN_Name":"Yumeno Lilith",
+                    "JP_Name":"夢乃リリス",
+                    "Hashtag": {
+                        "Twitter": "#夢の中絵",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCH11P1Hq4PXdznyw1Hhr3qw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "yumenolilith",
+                    "Region":"JP"
                 }
             ]
         },{
