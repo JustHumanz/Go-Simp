@@ -2711,6 +2711,34 @@
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "yumenolilith",
                     "Region":"JP"
+                },
+                {
+                    "Name":"Kirara",
+                    "EN_Name":"Ouma Kirara",
+                    "JP_Name":"逢魔きらら",
+                    "Hashtag": {
+                        "Twitter": "#あくまびじゅつかん",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCBAeKqEIugv69Q2GIgcH7oA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "oumakirara",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Momo",
+                    "EN_Name":"Kurumizawa Momo",
+                    "JP_Name":"胡桃澤もも",
+                    "Hashtag": {
+                        "Twitter": "#魔法少女活動報告書",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCBAeKqEIugv69Q2GIgcH7oA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "kurumizawamomo",
+                    "Region":"JP"
                 }
             ]
         },{
