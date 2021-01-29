@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"regexp"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -68,6 +69,9 @@ func main() {
 }
 
 func SendNude(Embed *discordgo.MessageEmbed, Group database.Group, Member database.Member) {
+	if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
+		Group.IconURL = ""
+	}
 	ChannelData := Group.GetChannelByGroup()
 	for _, Channel := range ChannelData {
 		Tmp := &Channel
