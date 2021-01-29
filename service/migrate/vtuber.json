@@ -2092,6 +2092,146 @@
                     "Region":"KR"
                 },
                 {
+                    "Name":"Chiho",
+                    "EN_Name":"Chiho Han",
+                    "JP_Name":"ハン·チホ",
+                    "Hashtag": {
+                        "Twitter": "#ChihoArt",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCJ6LH4jMNy0JN9RSThz1mMQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "ChihoHan2434",
+                    "Region":"KR"
+                },
+                {
+                    "Name":"Gaon",
+                    "EN_Name":"Gaon",
+                    "JP_Name":"ガオン",
+                    "Hashtag": {
+                        "Twitter": "#GaonArt",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCpRXCTyNNa-MnjhK6gisnRw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Gaon2434",
+                    "Region":"KR"
+                },
+                {
+                    "Name":"Ara",
+                    "EN_Name":"Ara Chae",
+                    "JP_Name":"チェ・アラ",
+                    "Hashtag": {
+                        "Twitter": "#Ara_Art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCmWqYB6y8gSfPONWGspuOWQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "AraChae2434",
+                    "Region":"KR"
+                },
+                {
+                    "Name":"Siu",
+                    "EN_Name":"Siu Lee",
+                    "JP_Name":"イ・シウ",
+                    "Hashtag": {
+                        "Twitter": "#Siu_Art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCSlv7Z-4q7_7NRkzJB10A5Q",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "SiuLee2434",
+                    "Region":"KR"
+                },
+                {
+                    "Name":"Nagi",
+                    "EN_Name":"Nagi So",
+                    "JP_Name":"ソ・ナギ",
+                    "Hashtag": {
+                        "Twitter": "#nagiart",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC5ek2GWKvUKFgnKSHuuCFrw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "NagiSo2434",
+                    "Region":"KR"
+                },
+                {
+                    "Name":"Roha",
+                    "EN_Name":"Roha Lee",
+                    "JP_Name":"イ・ロハ",
+                    "Hashtag": {
+                        "Twitter": "#Roha_Art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCClwIqTUn5LDpFucHyaAhHg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "RohaLee2434",
+                    "Region":"KR"
+                },
+                {
+                    "Name":"Nari",
+                    "EN_Name":"Nari Yang",
+                    "JP_Name":"ヤン・ナリ",
+                    "Hashtag": {
+                        "Twitter": "#Nari_Art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCCHH0nWYXFZmtDS_4tvMxHQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "NariYang2434",
+                    "Region":"KR"
+                },
+                {
+                    "Name":"Hari",
+                    "EN_Name":"Hari Ryu",
+                    "JP_Name":"ヤン・ナリ",
+                    "Hashtag": {
+                        "Twitter": "#hari_art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UClS6k3w1sPwlVFqK3-yID5A",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "HariRyu2434",
+                    "Region":"KR"
+                },
+                {
+                    "Name":"Kiru",
+                    "EN_Name":"Kiru Shin",
+                    "JP_Name":"シン・ギル",
+                    "Hashtag": {
+                        "Twitter": "#kiru_art",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCi6nV5Z2dzFuXBzLG3P9zqQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "KiruShin2434",
+                    "Region":"KR"
+                },
+                {
+                    "Name":"Jiyu",
+                    "EN_Name":"Jiyu Oh",
+                    "JP_Name":"オ・ジユ",
+                    "Hashtag": {
+                        "Twitter": "#PREEART",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCnzZmBOSrQf2wDBbnsDajVw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "JiyuOh2434",
+                    "Region":"KR"
+                },
+                {
                     "Name":"Aadya",
                     "EN_Name":"Aadya",
                     "JP_Name":"アディア",
