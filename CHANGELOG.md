@@ -1,3 +1,10 @@
+v2.7.22
+- Add Twitch support
+- Add Ririsya #112
+- Add Yayanehi #111
+- Change Lofi to Iofi
+- Fix 404.jpg
+
 v2.6.21
 - Update redis
 - Update cronjob to v.3

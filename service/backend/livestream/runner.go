@@ -8,6 +8,7 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/JustHumanz/Go-Simp/service/backend/livestream/bilibili/live"
 	"github.com/JustHumanz/Go-Simp/service/backend/livestream/bilibili/space"
+	"github.com/JustHumanz/Go-Simp/service/backend/livestream/twitch"
 	"github.com/JustHumanz/Go-Simp/service/backend/livestream/youtube"
 	"github.com/JustHumanz/Go-Simp/service/backend/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
@@ -17,8 +18,9 @@ import (
 
 func main() {
 	Youtube := flag.Bool("Youtube", false, "Enable youtube module")
-	SpaceBiliBili := flag.Bool("SpaceBiliBili", false, "Enable space.bilibili  module")
-	LiveBiliBili := flag.Bool("LiveBiliBili", false, "Enable live.bilibili  module")
+	SpaceBiliBili := flag.Bool("SpaceBiliBili", false, "Enable Space.bilibili module")
+	LiveBiliBili := flag.Bool("LiveBiliBili", false, "Enable Live.bilibili module")
+	Twitch := flag.Bool("Twitch", false, "Enable Twitch module")
 
 	flag.Parse()
 
@@ -56,5 +58,11 @@ func main() {
 		live.Start(Bot, c)
 		database.ModuleInfo("LiveBiliBili")
 	}
+
+	if *Twitch {
+		twitch.Start(Bot, c)
+		database.ModuleInfo("Twitch")
+	}
+
 	runfunc.Run(Bot)
 }

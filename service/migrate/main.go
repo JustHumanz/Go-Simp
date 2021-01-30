@@ -11,7 +11,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/JustHumanz/Go-Simp/pkg/config"
+	"github.com/nicklaw5/helix"
+
+	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	youtube "github.com/JustHumanz/Go-Simp/service/backend/livestream/youtube"
@@ -29,6 +31,7 @@ var (
 	Roomstatus      string
 	BiliBiliSession []string
 	Bot             *discordgo.Session
+	TwitchClient    *helix.Client
 	TwitchToken     string
 )
 
@@ -72,6 +75,15 @@ func init() {
 		log.Error(err)
 		os.Exit(1)
 	}
+	TwitchClient, err = helix.NewClient(&helix.Options{
+		ClientID:     config.Twitch.ClientID,
+		ClientSecret: config.Twitch.ClientSecret,
+	})
+	if err != nil {
+		log.Error(err)
+	}
+	TwitchClient.SetUserAccessToken(TwitchToken)
+
 	Bot.AddHandler(Dead)
 }
 
@@ -80,6 +92,7 @@ func main() {
 	AddData(JsonData)
 	go CheckYoutube()
 	go CheckLiveBiliBili()
+	go CheckTwitch()
 	time.Sleep(10 * time.Minute)
 
 	go CheckSpaceBiliBili()
@@ -98,6 +111,7 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		Twitterfanart  string
 		Bilibilifanart string
 		Bilibili       string
+		Twitch         string
 		Youtube        string
 		URL            string
 		Color          int
@@ -146,11 +160,16 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		Bilibili = "✘"
 	}
 
+	if Data.Member.TwitchName != "" {
+		Twitch = "✓"
+	} else {
+		Twitch = "✘"
+	}
+
 	return engine.NewEmbed().
 		SetAuthor(Data.Group.GroupName, Data.Group.IconURL).
 		SetTitle(engine.FixName(Data.Member.ENName, Data.Member.JPName)).
 		SetImage(Avatar).
-		SetThumbnail("https://justhumanz.me/update.png").
 		SetDescription("New Vtuber has been added to list").
 		AddField("Nickname", Data.Member.Name).
 		AddField("Region", Data.Member.Region).
@@ -158,6 +177,7 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		AddField("BiliBili Fanart", Bilibilifanart).
 		AddField("Youtube Notif", Youtube).
 		AddField("BiliBili Notif", Bilibili).
+		AddField("Twitch Notif", Twitch).
 		InlineAllFields().
 		SetURL(URL).
 		SetColor(Color).MessageEmbed
@@ -180,7 +200,7 @@ func Dead(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetTitle("Bot update new Vtubers").
 				SetURL("https://github.com/JustHumanz/Go-Simp/blob/master/CHANGELOG.md").
 				SetDescription("Still Processing new data,Comeback when i ready to bang you (around 10-20 minutes or more,~~idk i don't fvcking count~~)").
-				AddField("See update at", "[Changelog](https://github.com/JustHumanz/Go-Simp/blob/main/CHANGELOG.md)").
+				AddField("See update at", "[Changelog](https://github.com/JustHumanz/Go-Simp/blob/master/CHANGELOG.md)").
 				SetThumbnail(config.Sleep).
 				SetImage(config.Dead).
 				SetColor(Color).

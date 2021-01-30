@@ -56,6 +56,7 @@ type Member struct {
 	BiliBiliID  int    `json:"BiliBili_ID"`
 	BiliRoomID  int    `json:"BiliRoom_ID"`
 	TwitterName string `json:"Twitter_Username"`
+	TwitchName  string `json:"Twitch_Username"`
 	Region      string `json:"Region"`
 }
 

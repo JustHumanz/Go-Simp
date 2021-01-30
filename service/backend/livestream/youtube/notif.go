@@ -47,7 +47,7 @@ func (PushData *NotifStruct) SendNude() error {
 	}
 
 	if PushData.YtData.Viewers == "0" {
-		PushData.YtData.Viewers = "???"
+		PushData.YtData.Viewers = Ytwaiting
 	} else {
 		Views, err := strconv.Atoi(PushData.YtData.Viewers)
 		if err != nil {
@@ -84,7 +84,7 @@ func (PushData *NotifStruct) SendNude() error {
 					SetThumbnail(PushData.Group.IconURL).
 					SetURL(YtURL).
 					AddField("Type ", PushData.YtData.Type).
-					AddField("Start live in", durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(2).String()).
+					AddField("Start live in", durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(1).String()).
 					InlineAllFields().
 					AddField("Waiting", PushData.YtData.Viewers+" Simps in ChatRoom").
 					SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
@@ -152,7 +152,7 @@ func (PushData *NotifStruct) SendNude() error {
 					SetThumbnail(PushData.Group.IconURL).
 					SetURL(YtURL).
 					AddField("Type ", PushData.YtData.Type).
-					AddField("Start live", durafmt.Parse(expiresAt.Sub(Timestart.In(loc))).LimitFirstN(2).String()+" Ago").
+					AddField("Start live", durafmt.Parse(expiresAt.Sub(Timestart.In(loc))).LimitFirstN(1).String()+" Ago").
 					InlineAllFields().
 					AddField("Viewers", PushData.YtData.Viewers+" simps").
 					SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
@@ -167,6 +167,7 @@ func (PushData *NotifStruct) SendNude() error {
 					if err != nil {
 						return err
 					}
+					return err
 				}
 				if Channel.Dynamic {
 					log.WithFields(log.Fields{
@@ -249,7 +250,7 @@ func (PushData *NotifStruct) SendNude() error {
 						SetThumbnail(PushData.Group.IconURL).
 						SetURL(YtURL).
 						AddField("Type ", PushData.YtData.Type).
-						AddField("Upload", durafmt.Parse(expiresAt.Sub(Timestart.In(loc))).LimitFirstN(2).String()+" Ago").
+						AddField("Upload", durafmt.Parse(expiresAt.Sub(Timestart.In(loc))).LimitFirstN(1).String()+" Ago").
 						AddField("Viewers", PushData.YtData.Viewers).
 						AddField("Duration", PushData.YtData.Length).
 						InlineAllFields().
@@ -281,17 +282,17 @@ func (PushData *NotifStruct) SendNude() error {
 	} else if Status == "reminder" {
 		UpcominginMinutes := int(Timestart.Sub(time.Now()).Minutes())
 		//id, DiscordChannelID
-		var Color int
+		Color, err := engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
+		if err != nil {
+			return err
+		}
 		ChanelData := database.ChannelTag(PushData.Member.ID, 2, "")
-		for _, Channel := range ChanelData {
-			for ii := 0; ii < 70; ii++ {
-				if UpcominginMinutes == ii && UpcominginMinutes > 10 {
-					if Color != 0 {
-						Color, _ = engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
-					}
+		LiveCount := durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(1).String()
 
-					UserTagsList := database.GetUserReminderList(int(Channel.ID), PushData.Member.ID, ii)
-					LiveCount := durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(1).String()
+		for ii := 0; ii < 70; ii++ {
+			if UpcominginMinutes == ii && UpcominginMinutes > 10 {
+				for _, Channel := range ChanelData {
+					UserTagsList := database.GetUserReminderList(Channel.ID, PushData.Member.ID, ii)
 					if UserTagsList != nil {
 						MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 							SetAuthor(VtuberName, Avatar, YtChannel).
@@ -300,8 +301,8 @@ func (PushData *NotifStruct) SendNude() error {
 							SetImage(PushData.YtData.Thumb).
 							SetThumbnail(PushData.Group.IconURL).
 							SetURL(YtURL).
-							AddField("Type ", PushData.YtData.Type).
-							AddField("Start live in", durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(2).String()).
+							AddField("Type", PushData.YtData.Type).
+							AddField("Start live in", LiveCount).
 							InlineAllFields().
 							AddField("Waiting", PushData.YtData.Viewers+" Simps in ChatRoom").
 							SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
@@ -313,11 +314,13 @@ func (PushData *NotifStruct) SendNude() error {
 								"DiscordChannelID": Channel.ChannelID,
 							}).Error(err)
 							err = Channel.DelChannel(err.Error())
-							return err
+							log.Error(err)
+							break
 						}
 						MsgText, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Live in "+LiveCount+"\nUserTags: "+strings.Join(UserTagsList, " "))
 						if err != nil {
-							return err
+							log.Error(err)
+							break
 						}
 						if Channel.Dynamic {
 							log.WithFields(log.Fields{

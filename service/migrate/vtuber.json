@@ -14,6 +14,7 @@
                     "BiliBili_ID": 386900246,
                     "BiliRoom_ID": 21304638,
                     "Twitter_Username": "nana_kaguraaa",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -28,6 +29,7 @@
                     "BiliBili_ID": 2601367,
                     "BiliRoom_ID": 9389401,
                     "Twitter_Username": "ui_shig",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -42,6 +44,7 @@
                     "BiliBili_ID": 360221708,
                     "BiliRoom_ID": 13744134,
                     "Twitter_Username": "kotonegami",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -56,6 +59,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "uni_mafumafu",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -70,6 +74,7 @@
                     "BiliBili_ID": 623441612,
                     "BiliRoom_ID": 22347054,
                     "Twitter_Username": "ShiinaNanoha78",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -84,6 +89,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "quon01tama",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -98,6 +104,37 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "amatsukauto",
+                    "Twitch_Username": "",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Ririsya",
+                    "EN_Name":"Ririsya",
+                    "JP_Name":"凛々咲",
+                    "Hashtag": {
+                        "Twitter": "#りりしゃーと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UC1ucgoC_sGww_Euu5iMqpQw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Ririsya_music",
+                    "Twitch_Username": "",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Yayanehi",
+                    "EN_Name":"Yayanehi",
+                    "JP_Name":"ヤヤネヒ",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UCKkOMATKIlZAnOvNf1fBgfw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "ya_ya_ne_hi",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -112,6 +149,7 @@
                     "BiliBili_ID": 511613155,
                     "BiliRoom_ID": 21908196,
                     "Twitter_Username": "Artia_OW",
+                    "Twitch_Username": "",
                     "Region":"CN"
                 },
                 {
@@ -126,6 +164,7 @@
                     "BiliBili_ID": 354411419,
                     "BiliRoom_ID": 21618138,
                     "Twitter_Username": "_Civia",
+                    "Twitch_Username": "",
                     "Region":"CN"
                 },
                 {
@@ -140,6 +179,7 @@
                     "BiliBili_ID": 427061218,
                     "BiliRoom_ID": 21618129,
                     "Twitter_Username": "_YOGiRi_owo",
+                    "Twitch_Username": "",
                     "Region":"CN"
                 },
                 {
@@ -154,6 +194,7 @@
                     "BiliBili_ID": 456368455,
                     "BiliRoom_ID": 21641569,
                     "Twitter_Username": "SpadeEcho",
+                    "Twitch_Username": "",
                     "Region":"CN"
                 },
                 {
@@ -168,6 +209,7 @@
                     "BiliBili_ID": 511613156,
                     "BiliRoom_ID": 21908209,
                     "Twitter_Username": "Doris_Hololive",
+                    "Twitch_Username": "",
                     "Region":"CN"
                 },
                 {
@@ -182,6 +224,7 @@
                     "BiliBili_ID": 511613157,
                     "BiliRoom_ID": 21908222,
                     "Twitter_Username": "Rosalyn_holoCN",
+                    "Twitch_Username": "",
                     "Region":"CN"
                 },
                 {
@@ -196,6 +239,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "kannatamachi",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -210,6 +254,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "jaretghosty",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 }
             ]
@@ -231,6 +276,7 @@
                     "BiliBili_ID": 316381099,
                     "BiliRoom_ID": 15152878,
                     "Twitter_Username": "kano_hanayori",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -245,6 +291,7 @@
                     "BiliBili_ID": 441381282,
                     "BiliRoom_ID": 21547895,
                     "Twitter_Username": "hanamaruhareru",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -259,6 +306,7 @@
                     "BiliBili_ID": 441382432,
                     "BiliRoom_ID": 21547904,
                     "Twitter_Username": "kohigashihitona",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -273,6 +321,7 @@
                     "BiliBili_ID": 441403698,
                     "BiliRoom_ID": 21671418,
                     "Twitter_Username": "nonomiyanonono",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 }
             ]
@@ -293,6 +342,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Patra_HNST",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -307,6 +357,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Charlotte_HNST",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -321,6 +372,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Mary_HNST",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -335,6 +387,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Mico_HNST",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -349,6 +402,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Ichika_Souya",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -363,6 +417,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Ran_Hinokuma",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -377,6 +432,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Kuku_Kazami",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -391,6 +447,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Izumi_Yunohara",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -405,6 +462,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "shiromiya_mimi",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -419,6 +477,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Uge_And",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -433,6 +492,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "_kanade_kanon",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -447,6 +507,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Anko_Kisaki",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -461,6 +522,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Met_Komori",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -475,6 +537,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Wat_Huma",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -489,6 +552,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "ChrisShishio",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -503,6 +567,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Rene_Ryugasaki",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -517,6 +582,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Rene_Ryugasaki",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 }
             ]
@@ -537,6 +603,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "ayunda_risu",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -551,10 +618,11 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "moonahoshinova",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
-                    "Name":"Lofi",
+                    "Name":"Iofi",
                     "EN_Name":"Airani Iofifteen",
                     "JP_Name":"アイラニ・イオフィフティーン",
                     "Hashtag": {
@@ -565,6 +633,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "airaniiofifteen",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -579,6 +648,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "kureijiollie",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -593,6 +663,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "anyamelfissa",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -607,6 +678,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "pavoliareine",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -621,6 +693,7 @@
                     "BiliBili_ID": 332704117,
                     "BiliRoom_ID": 11588230,
                     "Twitter_Username": "shirakamifubuki",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
         
@@ -636,6 +709,7 @@
                     "BiliBili_ID": 412135619,
                     "BiliRoom_ID": 21421141,
                     "Twitter_Username": "inugamikorone",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -650,6 +724,7 @@
                     "BiliBili_ID": 336731767,
                     "BiliRoom_ID": 13946381,
                     "Twitter_Username": "natsuiromatsuri",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -664,6 +739,7 @@
                     "BiliBili_ID": 375504219,
                     "BiliRoom_ID": 14917277,
                     "Twitter_Username": "minatoaqua",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -678,6 +754,7 @@
                     "BiliBili_ID": 443305053,
                     "BiliRoom_ID": 21560356,
                     "Twitter_Username": "usadapekora",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -692,6 +769,7 @@
                     "BiliBili_ID": 454733056,
                     "BiliRoom_ID": 21583736,
                     "Twitter_Username": "shiroganenoel",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -706,6 +784,7 @@
                     "BiliBili_ID": 454955503,
                     "BiliRoom_ID": 21584153,
                     "Twitter_Username": "houshoumarine",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -720,6 +799,7 @@
                     "BiliBili_ID": 339567211,
                     "BiliRoom_ID": 14275133,
                     "Twitter_Username": "akaihaato",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -734,6 +814,7 @@
                     "BiliBili_ID": 491474050,
                     "BiliRoom_ID": 21752694,
                     "Twitter_Username": "tsunomakiwatame",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -748,6 +829,7 @@
                     "BiliBili_ID": 491474049,
                     "BiliRoom_ID": 21752686,
                     "Twitter_Username": "kiryucoco",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -762,6 +844,7 @@
                     "BiliBili_ID": 389858754,
                     "BiliRoom_ID": 21107534,
                     "Twitter_Username": "yuzukichococh",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -776,6 +859,7 @@
                     "BiliBili_ID": 412135222,
                     "BiliRoom_ID": 21420932,
                     "Twitter_Username": "nekomataokayu",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -790,6 +874,7 @@
                     "BiliBili_ID": 491474048,
                     "BiliRoom_ID": 21752681,
                     "Twitter_Username": "amanekanatach",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -804,6 +889,7 @@
                     "BiliBili_ID": 389859190,
                     "BiliRoom_ID": 21129632,
                     "Twitter_Username": "oozorasubaru",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -818,6 +904,7 @@
                     "BiliBili_ID": 286179206,
                     "BiliRoom_ID": 8899503,
                     "Twitter_Username": "tokino_sora",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -832,6 +919,7 @@
                     "BiliBili_ID": 366690056,
                     "BiliRoom_ID": 21144047,
                     "Twitter_Username": "sakuramiko35",
+                    "Twitch_Username": "sakuramiko_hololive",
                     "Region":"JP"
                 },
                 {
@@ -846,6 +934,7 @@
                     "BiliBili_ID": 389862071,
                     "BiliRoom_ID": 21133979,
                     "Twitter_Username": "ookamimio",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -860,6 +949,7 @@
                     "BiliBili_ID": 624252710,
                     "BiliRoom_ID": 22349494,
                     "Twitter_Username": "shishirobotan",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -874,6 +964,7 @@
                     "BiliBili_ID": 624252712,
                     "BiliRoom_ID": 22349506,
                     "Twitter_Username": "omarupolka",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -888,6 +979,7 @@
                     "BiliBili_ID": 624252706,
                     "BiliRoom_ID": 22349508,
                     "Twitter_Username": "yukihanalamy",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -902,6 +994,7 @@
                     "BiliBili_ID": 624252709,
                     "BiliRoom_ID": 22349492,
                     "Twitter_Username": "momosuzunene",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },{
                     "Name":"Sui-chan",
@@ -915,6 +1008,7 @@
                     "BiliBili_ID": 9034870,
                     "BiliRoom_ID": 4131,
                     "Twitter_Username": "suisei_hosimati",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -929,6 +1023,7 @@
                     "BiliBili_ID": 389856447,
                     "BiliRoom_ID": 21131813,
                     "Twitter_Username": "yozoramel",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -943,6 +1038,7 @@
                     "BiliBili_ID": 389857131,
                     "BiliRoom_ID": 21219990,
                     "Twitter_Username": "akirosenthal",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -957,6 +1053,7 @@
                     "BiliBili_ID": 389858027,
                     "BiliRoom_ID": 21130785,
                     "Twitter_Username": "nakiriayame",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -971,6 +1068,7 @@
                     "BiliBili_ID": 389857640,
                     "BiliRoom_ID": 21132965,
                     "Twitter_Username": "murasakishionch",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -985,6 +1083,7 @@
                     "BiliBili_ID": 491474052,
                     "BiliRoom_ID": 21752719,
                     "Twitter_Username": "himemoriluna",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -999,6 +1098,7 @@
                     "BiliBili_ID": 454737600,
                     "BiliRoom_ID": 21572617,
                     "Twitter_Username": "shiranuiflare",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1013,6 +1113,7 @@
                     "BiliBili_ID": 491474051,
                     "BiliRoom_ID": 21752710,
                     "Twitter_Username": "tokoyamitowa",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1027,6 +1128,7 @@
                     "BiliBili_ID": 20813493,
                     "BiliRoom_ID": 4664126,
                     "Twitter_Username": "robocosan",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1041,6 +1143,7 @@
                     "BiliBili_ID": 389056211,
                     "BiliRoom_ID": 21267062,
                     "Twitter_Username": "AZKi_VDiVA",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1055,6 +1158,7 @@
                     "BiliBili_ID": 674600648,
                     "BiliRoom_ID": 22503372,
                     "Twitter_Username": "gawrgura",
+                    "Twitch_Username": "",
                     "Region":"EN"
                 },
                 {
@@ -1069,6 +1173,7 @@
                     "BiliBili_ID": 674600649,
                     "BiliRoom_ID": 22503378,
                     "Twitter_Username": "watsonameliaEN",
+                    "Twitch_Username": "",
                     "Region":"EN"
                 },
                 {
@@ -1083,6 +1188,7 @@
                     "BiliBili_ID": 674600645,
                     "BiliRoom_ID": 22503360,
                     "Twitter_Username": "moricalliope",
+                    "Twitch_Username": "",
                     "Region":"EN"
                 },
                 {
@@ -1097,6 +1203,7 @@
                     "BiliBili_ID": 674600646,
                     "BiliRoom_ID": 22503364,
                     "Twitter_Username": "takanashikiara",
+                    "Twitch_Username": "",
                     "Region":"EN"
                 },
                 {
@@ -1111,6 +1218,7 @@
                     "BiliBili_ID": 674600647,
                     "BiliRoom_ID": 22503367,
                     "Twitter_Username": "ninomaeinanis",
+                    "Twitch_Username": "",
                     "Region":"EN"
                 },
                 {
@@ -1125,12 +1233,13 @@
                     "BiliBili_ID": 443300418,
                     "BiliRoom_ID": 21545232,
                     "Twitter_Username": "uruharushia",
+                    "Twitch_Username": "",
                     "Region":"JP"
-                }
-                
+                }            
             ]
             
-        },{
+        },
+        {
             "GroupName": "Holostars",
             "GroupIcon": "https://cdn.humanz.moe/holostars.png",
             "Members" :[
@@ -1146,6 +1255,7 @@
                     "BiliBili_ID": 456232604,
                     "BiliRoom_ID": 21749477,
                     "Twitter_Username": "kanadeizuru",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1160,6 +1270,7 @@
                     "BiliBili_ID": 647375262,
                     "BiliRoom_ID": 22422987,
                     "Twitter_Username": "miyabihanasaki",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1174,6 +1285,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "kagamikirach",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1188,6 +1300,7 @@
                     "BiliBili_ID": 551114700,
                     "BiliRoom_ID": 22171183,
                     "Twitter_Username": "arurandeisu",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1202,6 +1315,7 @@
                     "BiliBili_ID": 350631685,
                     "BiliRoom_ID": 13009645,
                     "Twitter_Username": "rikkaroid",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1216,6 +1330,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "yukokuroberu",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1230,6 +1345,7 @@
                     "BiliBili_ID": 647375261,
                     "BiliRoom_ID": 22423010,
                     "Twitter_Username": "kishidotemma",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1244,6 +1360,7 @@
                     "BiliBili_ID": 551114698,
                     "BiliRoom_ID": 22171189,
                     "Twitter_Username": "astelleda",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1258,6 +1375,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "aragamioga",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1272,10 +1390,12 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "kageyamashien",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 }
             ]
-        },{
+        },
+        {
             "GroupName": "Nijisanji",
             "GroupIcon": "https://cdn.humanz.moe/niji.png",
             "Members" :[
@@ -1291,6 +1411,7 @@
                     "BiliBili_ID": 666726794,
                     "BiliRoom_ID": 22470215,
                     "Twitter_Username": "lulu_suzuhara",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1305,6 +1426,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "SisterCleaire",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1319,6 +1441,7 @@
                     "BiliBili_ID": 441666968,
                     "BiliRoom_ID": 21501731,
                     "Twitter_Username": "debidebiru_sama",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1333,6 +1456,7 @@
                     "BiliBili_ID": 434565011,
                     "BiliRoom_ID": 21449083,
                     "Twitter_Username": "AliceMononobe",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1347,6 +1471,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "nekokan_chu",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1361,6 +1486,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "MitoTsukino",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1375,6 +1501,7 @@
                     "BiliBili_ID": 403921378,
                     "BiliRoom_ID": 21302352,
                     "Twitter_Username": "ShizuRin23",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1389,6 +1516,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Yuuhi_Riri",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1403,6 +1531,7 @@
                     "BiliBili_ID": 403928672,
                     "BiliRoom_ID": 21302477,
                     "Twitter_Username": "honmahimawari",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1417,6 +1546,7 @@
                     "BiliBili_ID": 436596840,
                     "BiliRoom_ID": 21463247,
                     "Twitter_Username": "TakamiyaRion",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1431,6 +1561,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "BlackShiba_chan",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1445,6 +1576,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Sara_Hoshikawa",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1459,6 +1591,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "KataribeTsumugu",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1473,6 +1606,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "ars_almal",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1487,6 +1621,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "yuika_siina",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1501,6 +1636,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "rindoumikoto",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1515,6 +1651,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "warabeda_meiji",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1529,6 +1666,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "kirame_2434",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1543,6 +1681,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "rei_Toya_rei",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1557,6 +1696,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "inui_toko",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1571,6 +1711,7 @@
                     "BiliBili_ID": 434563934,
                     "BiliRoom_ID": 21449068,
                     "Twitter_Username": "Kanae_2434",
+                    "Twitch_Username": "kanae_2434",
                     "Region":"JP"
                 },
                 {
@@ -1585,6 +1726,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "saku_sasaki",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1599,6 +1741,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "joerikiichi",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1613,6 +1756,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "maimoto_k",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1627,6 +1771,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "ange_katrina_",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1641,6 +1786,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "ZulmIhP1nlMOT5y",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1655,6 +1801,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "846kizuQ",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1669,6 +1816,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Tomoe_Shirayuki",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1683,6 +1831,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "sukosuko_sukoya",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1697,6 +1846,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Darkness_Eater",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1711,6 +1861,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "rena_yorumi",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1725,6 +1876,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Kanda_Shoichi",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1739,6 +1891,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Lize_Helesta",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1753,6 +1906,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "yuzuki_roa",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1767,6 +1921,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "g9v9g_mirei",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1781,6 +1936,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Vamp_Kuzu",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1795,6 +1951,7 @@
                     "BiliBili_ID": 410455162,
                     "BiliRoom_ID": 21449061,
                     "Twitter_Username": "HiguchiKaede",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -1809,6 +1966,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Hana_Macchia",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -1823,6 +1981,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "MiyuOttavia",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -1837,6 +1996,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "ZEA_Cornelia",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -1851,6 +2011,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Taka_Radjiman",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -1865,6 +2026,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "RiksaDhirendra",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -1879,6 +2041,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "AmiciaMichella",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -1893,6 +2056,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Rai_Galilei",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -1907,6 +2071,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Azura_Cecillia",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -1921,6 +2086,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "LaylaAlstro2434",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -1935,6 +2101,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Nara_Haramaung",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -1949,6 +2116,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "bobon_pranaja",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -1963,6 +2131,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Etna_Crimson",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -1977,6 +2146,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "SiskaLeontyne",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -1991,6 +2161,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "NagisaArcinia",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -2005,6 +2176,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "DeremKado",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -2019,6 +2191,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "RezaAvanluna",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -2033,6 +2206,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "YuyaShin2434",
+                    "Twitch_Username": "yuyashin2434",
                     "Region":"KR"
                 },
                 {
@@ -2047,6 +2221,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Wiffy2434",
+                    "Twitch_Username": "wiffy2434",
                     "Region":"KR"
                 },
                 {
@@ -2061,6 +2236,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "SuhaMin2434",
+                    "Twitch_Username": "suhamin2434",
                     "Region":"KR"
                 },
                 {
@@ -2075,6 +2251,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "RayAkira2434",
+                    "Twitch_Username": "",
                     "Region":"KR"
                 },
                 {
@@ -2089,6 +2266,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "BoraNun2434",
+                    "Twitch_Username": "",
                     "Region":"KR"
                 },
                 {
@@ -2103,6 +2281,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "ChihoHan2434",
+                    "Twitch_Username": "chihorahao",
                     "Region":"KR"
                 },
                 {
@@ -2117,6 +2296,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Gaon2434",
+                    "Twitch_Username": "gaon_2434",
                     "Region":"KR"
                 },
                 {
@@ -2131,6 +2311,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "AraChae2434",
+                    "Twitch_Username": "arachae2434",
                     "Region":"KR"
                 },
                 {
@@ -2145,6 +2326,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "SiuLee2434",
+                    "Twitch_Username": "siulee2434",
                     "Region":"KR"
                 },
                 {
@@ -2159,6 +2341,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "NagiSo2434",
+                    "Twitch_Username": "",
                     "Region":"KR"
                 },
                 {
@@ -2173,6 +2356,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "RohaLee2434",
+                    "Twitch_Username": "rohalee2434",
                     "Region":"KR"
                 },
                 {
@@ -2187,6 +2371,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "NariYang2434",
+                    "Twitch_Username": "",
                     "Region":"KR"
                 },
                 {
@@ -2201,6 +2386,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "HariRyu2434",
+                    "Twitch_Username": "hariryu2434",
                     "Region":"KR"
                 },
                 {
@@ -2215,6 +2401,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "KiruShin2434",
+                    "Twitch_Username": "",
                     "Region":"KR"
                 },
                 {
@@ -2229,6 +2416,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "JiyuOh2434",
+                    "Twitch_Username": "",
                     "Region":"KR"
                 },
                 {
@@ -2243,6 +2431,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Aadya_VTuber",
+                    "Twitch_Username": "",
                     "Region":"IN"
                 },
                 {
@@ -2257,6 +2446,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Noor_VTuber",
+                    "Twitch_Username": "",
                     "Region":"IN"
                 },
                 {
@@ -2271,6 +2461,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Vihaan_VTuber",
+                    "Twitch_Username": "",
                     "Region":"IN"
                 },
                 {
@@ -2285,6 +2476,7 @@
                     "BiliBili_ID": 56748733,
                     "BiliRoom_ID": 21756924,
                     "Twitter_Username": "",
+                    "Twitch_Username": "",
                     "Region":"CN"
                 },
                 {
@@ -2299,6 +2491,7 @@
                     "BiliBili_ID": 434334701,
                     "BiliRoom_ID": 21452505,
                     "Twitter_Username": "NanamiVr",
+                    "Twitch_Username": "",
                     "Region":"CN"
                 },
                 {
@@ -2313,6 +2506,7 @@
                     "BiliBili_ID": 420249427,
                     "BiliRoom_ID": 21403609,
                     "Twitter_Username": "",
+                    "Twitch_Username": "",
                     "Region":"CN"
                 },
                 {
@@ -2327,6 +2521,7 @@
                     "BiliBili_ID": 477342747,
                     "BiliRoom_ID": 21672022,
                     "Twitter_Username": "",
+                    "Twitch_Username": "",
                     "Region":"CN"
                 },
                 {
@@ -2341,11 +2536,13 @@
                     "BiliBili_ID": 558070433,
                     "BiliRoom_ID": 22389319,
                     "Twitter_Username": "",
+                    "Twitch_Username": "",
                     "Region":"CN"
                 }
                 
             ]
-        },{
+        },
+        {
             "GroupName": "Kizuna_AI",
             "GroupIcon": "https://cdn.humanz.moe/kizuna.png",
             "Members" :[
@@ -2361,6 +2558,7 @@
                     "BiliBili_ID": 1473830,
                     "BiliRoom_ID": 1485080,
                     "Twitter_Username": "aichan_nel",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2375,10 +2573,12 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "lovechan_lp",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 }
             ]
-        },{
+        },
+        {
             "GroupName": "ENTUM",
             "GroupIcon": "https://cdn.humanz.moe/entum.png",
             "Members" :[
@@ -2394,6 +2594,7 @@
                     "BiliBili_ID": 291296062,
                     "BiliRoom_ID": 9286381,
                     "Twitter_Username": "nekomiya_hinata",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2408,10 +2609,12 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "miraiakari_prj",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 }
             ]
-        },{
+        },
+        {
             "GroupName": "sos_ev",
             "GroupIcon": "https://cdn.humanz.moe/404.jpg",
             "Members" :[
@@ -2427,6 +2630,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "EvelynVtuber",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -2441,6 +2645,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "ChloePawapua",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -2455,6 +2660,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "ReynardBlanc",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -2469,11 +2675,12 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "LilyIfeta",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 }
             ]
-        }
-        ,{
+        },
+        {
             "GroupName": "VOMS",
             "GroupIcon": "https://cdn.humanz.moe/vox.png",
             "Members" :[
@@ -2489,8 +2696,10 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "amanopikamee",
+                    "Twitch_Username": "",
                     "Region":"JP"
-                },{
+                },
+                {
                     "Name":"Tomoshika",
                     "EN_Name":"Hikasa Tomoshika",
                     "JP_Name":"緋笠トモシカ",
@@ -2502,6 +2711,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Tomoshika_H",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2516,6 +2726,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Jitomi_Monoe",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 }
             ]
@@ -2536,6 +2747,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "aliaadelia_v",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -2550,6 +2762,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "andiadinata_id",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -2564,6 +2777,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "LumiCelestia",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -2578,6 +2792,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "ZenGunawan",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -2592,6 +2807,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "NiaRedalion",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 }
             ]
@@ -2612,6 +2828,7 @@
                     "BiliBili_ID": 12362451,
                     "BiliRoom_ID": 4634167,
                     "Twitter_Username": "norioo_",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2626,6 +2843,7 @@
                     "BiliBili_ID": 419429042,
                     "BiliRoom_ID": 22111399,
                     "Twitter_Username": "Enomiya_MILK",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2640,6 +2858,7 @@
                     "BiliBili_ID": 405981431,
                     "BiliRoom_ID": 21708004,
                     "Twitter_Username": "mishiro_seiso",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2654,6 +2873,7 @@
                     "BiliBili_ID": 493724848,
                     "BiliRoom_ID": 22534525,
                     "Twitter_Username": "Himesaki_yuzuru",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2668,6 +2888,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "KUMAgaya_taKUMA",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2682,6 +2903,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "hoozukiwarabe",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2696,6 +2918,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "yumenolilith",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2710,6 +2933,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "yumenolilith",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2724,6 +2948,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "oumakirara",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2734,14 +2959,16 @@
                         "Twitter": "#魔法少女活動報告書",
                         "BiliBili": ""
                     },
-                    "Yt_ID": "UCBAeKqEIugv69Q2GIgcH7oA",
+                    "Yt_ID": "UCxrmkJf_X1Yhte_a4devFzA",
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "kurumizawamomo",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 }
             ]
-        },{
+        },
+        {
             "GroupName": "ArkNET",
             "GroupIcon": "https://cdn.humanz.moe/ArkNet.png",
             "Members" :[
@@ -2757,6 +2984,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Enji_NC",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 },
                 {
@@ -2771,6 +2999,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "raska_malendra",
+                    "Twitch_Username": "",
                     "Region":"ID"
                 }
             ]
@@ -2791,6 +3020,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Kaede_Yumesaki_",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2805,6 +3035,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Miria_Sakuragi_",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2819,6 +3050,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Ryo_Kazami_",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2833,6 +3065,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Haruto_Domyoji_",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2847,6 +3080,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "cocoa_domyoji",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2861,6 +3095,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "saki_ashizawa",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2875,6 +3110,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "iori_m_RIOT",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2889,6 +3125,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "yuka_n_RIOT",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2903,6 +3140,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "suzuna_n_RIOT",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2917,6 +3155,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "tamako_aogiri",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2931,6 +3170,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "natsuki_aogiri",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2945,6 +3185,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "ishikari_akari",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2959,6 +3200,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "oshiro_mashiro",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2973,6 +3215,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Claire_sensei",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 },
                 {
@@ -2987,6 +3230,7 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Yuika_Kazami",
+                    "Twitch_Username": "",
                     "Region":"JP"
                 }
             ]
