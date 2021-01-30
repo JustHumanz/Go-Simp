@@ -1,0 +1,4 @@
+FROM mainbot
+WORKDIR /app/Go-Simp/pkg/guild/
+RUN go build -o guild
+CMD ["./guild"]

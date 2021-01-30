@@ -1,0 +1,4 @@
+FROM mainbot
+WORKDIR /app/Go-Simp/pkg/backend/livestream/
+RUN go build -o livestream
+CMD ["./livestream","-Youtube","-LiveBiliBili","-SpaceBiliBili","-Twitch"]

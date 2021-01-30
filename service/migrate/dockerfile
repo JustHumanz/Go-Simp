@@ -1,0 +1,3 @@
+FROM mainbot
+WORKDIR /app/Go-Simp/pkg/migrate/
+CMD ["go","run","."]
