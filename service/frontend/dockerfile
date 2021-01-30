@@ -1,4 +1,4 @@
 FROM mainbot
-WORKDIR /app/Go-Simp/pkg/frontend/
+WORKDIR /app/Go-Simp/service/frontend/
 RUN go build -o frontend
 CMD ["./frontend"]

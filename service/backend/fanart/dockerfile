@@ -1,4 +1,4 @@
 FROM mainbot
-WORKDIR /app/Go-Simp/pkg/backend/fanart/
+WORKDIR /app/Go-Simp/service/backend/fanart/
 RUN go build -o fanart
 CMD ["./fanart","-TwitterFanart","-BiliBiliFanart"]
