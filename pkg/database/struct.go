@@ -50,7 +50,7 @@ type Member struct {
 	TwitterName      string
 	BiliBiliHashtags string
 	BiliBiliAvatar   string
-	TwitchUserName   string
+	TwitchName       string
 	Region           string
 	GroupID          int64
 }
@@ -359,5 +359,45 @@ func (Data *DiscordChannel) SetMember(new Member) *DiscordChannel {
 
 func (Data *DiscordChannel) SetGroup(new Group) *DiscordChannel {
 	Data.Group = new
+	return Data
+}
+
+type TwitchDB struct {
+	ID             int64
+	Game           string
+	Status         string
+	Title          string
+	Thumbnails     string
+	ScheduledStart time.Time
+	Viewers        int
+}
+
+func (Data *TwitchDB) UpdateViewers(new int) *TwitchDB {
+	Data.Viewers = new
+	return Data
+}
+
+func (Data *TwitchDB) UpdateStatus(new string) *TwitchDB {
+	Data.Status = new
+	return Data
+}
+
+func (Data *TwitchDB) UpdateTitle(new string) *TwitchDB {
+	Data.Title = new
+	return Data
+}
+
+func (Data *TwitchDB) UpdateThumbnails(new string) *TwitchDB {
+	Data.Thumbnails = new
+	return Data
+}
+
+func (Data *TwitchDB) UpdateSchedule(new time.Time) *TwitchDB {
+	Data.ScheduledStart = new
+	return Data
+}
+
+func (Data *TwitchDB) UpdateGame(new string) *TwitchDB {
+	Data.Game = new
 	return Data
 }

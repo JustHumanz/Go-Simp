@@ -37,7 +37,7 @@ func (Data *LiveBili) Crotttt() error {
 			SetDescription(Data.RoomData.Description).
 			SetImage(Data.RoomData.Thumbnail).
 			SetURL(BiliBiliURL).
-			AddField("Start live", durafmt.Parse(time.Now().In(loc).Sub(Data.RoomData.ScheduledStart.In(loc))).LimitFirstN(2).String()+" Ago").
+			AddField("Start live", durafmt.Parse(time.Now().In(loc).Sub(Data.RoomData.ScheduledStart.In(loc))).LimitFirstN(1).String()+" Ago").
 			AddField("Online", engine.NearestThousandFormat(float64(Data.RoomData.Online))).
 			InlineAllFields().
 			//AddField("Rank",Data).

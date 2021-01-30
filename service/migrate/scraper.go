@@ -198,7 +198,7 @@ func (Data Member) GetTwitterFollow() (int, error) {
 	if Data.TwitterName != "" {
 		profile, err := twitterscraper.GetProfile(Data.TwitterName)
 		if err != nil {
-			return 0, nil
+			return 0, err
 		}
 		return profile.FollowersCount, nil
 	} else {
@@ -224,6 +224,21 @@ func (Data Member) BliBiliFace() (string, error) {
 
 		return strings.Replace(Info.Data.Face, "http", "https", -1), nil
 	}
+}
+
+func (Data Member) GetTwitchAvatar() (string, error) {
+	if Data.TwitchName != "" {
+		resp, err := TwitchClient.GetUsers(&helix.UsersParams{
+			Logins: []string{Data.TwitchName},
+		})
+		if err != nil {
+			return "", err
+		}
+		for _, v := range resp.Data.Users {
+			return v.ProfileImageURL, nil
+		}
+	}
+	return "", nil
 }
 
 func CheckYoutube() {
@@ -396,44 +411,57 @@ func CheckLiveBiliBili() {
 
 func CheckTwitch() {
 	log.Info("Start check Twitch")
-	client, err := helix.NewClient(&helix.Options{
-		ClientID:     config.BotConf.Twitch.ClientID,
-		ClientSecret: config.BotConf.Twitch.ClientSecret,
-	})
-	if err != nil {
-		log.Error(err)
-	}
-	client.SetUserAccessToken(TwitchToken)
 	for _, Group := range database.GetGroups() {
 		for _, Member := range database.GetMembers(Group.ID) {
-			if Member.TwitchUserName != "" {
-				result, err := client.GetStreams(&helix.StreamsParams{
-					UserLogins: []string{Member.TwitchUserName},
+			if Member.TwitchName != "" {
+				result, err := TwitchClient.GetStreams(&helix.StreamsParams{
+					UserLogins: []string{Member.TwitchName},
 				})
 				if err != nil {
 					log.Error(err)
 				}
-				for _, Stream := range result.Data.Streams {
-					if strings.ToLower(Stream.UserName) == strings.ToLower(Member.TwitchUserName) {
-						result, err := client.GetGames(&helix.GamesParams{
-							IDs: []string{Stream.GameID},
-						})
-						if err != nil {
-							log.Error(err)
+				if len(result.Data.Streams) > 0 {
+					for _, Stream := range result.Data.Streams {
+						if strings.ToLower(Stream.UserName) == strings.ToLower(Member.TwitchName) {
+							GameResult, err := TwitchClient.GetGames(&helix.GamesParams{
+								IDs: []string{Stream.GameID},
+							})
+							if err != nil {
+								log.Error(err)
+							}
+							Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{width}", "1280", -1)
+							Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{height}", "720", -1)
+							Data := map[string]interface{}{
+								"MemberID":       Member.ID,
+								"Status":         Stream.Type,
+								"Title":          Stream.Title,
+								"Viewers":        Stream.ViewerCount,
+								"ScheduledStart": Stream.StartedAt,
+								"Thumbnails":     Stream.ThumbnailURL,
+								"Game":           GameResult.Data.Games[0].Name,
+							}
+							log.WithFields(log.Fields{
+								"Group":      Group.GroupName,
+								"VtuberName": Member.Name,
+								"Status":     Stream.Type,
+							}).Info("Twitch status live")
+							AddTwitchInfo(Data)
 						}
-						Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{width}", "1280", -1)
-						Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{height}", "720", -1)
-						Data := map[string]interface{}{
-							"MemberID":       Member.ID,
-							"Status":         Stream.Type,
-							"Title":          Stream.Title,
-							"Viewers":        Stream.ViewerCount,
-							"ScheduledStart": Stream.StartedAt,
-							"Thumbnails":     Stream.ThumbnailURL,
-							"Game":           result.Data.Games[0].Name,
-						}
-						AddTwitchInfo(Data)
 					}
+				} else {
+					log.WithFields(log.Fields{
+						"Group":      Group.GroupName,
+						"VtuberName": Member.Name,
+					}).Info("Twitch status nill")
+					AddTwitchInfo(map[string]interface{}{
+						"MemberID":       Member.ID,
+						"Status":         "Past",
+						"Title":          "",
+						"Viewers":        0,
+						"ScheduledStart": time.Time{},
+						"Thumbnails":     "",
+						"Game":           "",
+					})
 				}
 			}
 		}
@@ -461,7 +489,7 @@ func CheckSpaceBiliBili() {
 				for f := 0; f < len(url); f++ {
 					body, err := network.Curl(url[f], nil)
 					if err != nil {
-						log.Error(err, string(body))
+						log.Error(err)
 					}
 					var tmp SpaceVideo
 					err = json.Unmarshal(body, &tmp)

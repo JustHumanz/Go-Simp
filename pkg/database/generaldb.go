@@ -100,7 +100,7 @@ func GetMembers(GroupID int64) []Member {
 		}
 		defer rows.Close()
 		for rows.Next() {
-			err = rows.Scan(&list.ID, &list.Name, &list.EnName, &list.JpName, &list.YoutubeID, &list.BiliBiliID, &list.BiliRoomID, &list.Region, &list.TwitterHashtags, &list.BiliBiliHashtags, &list.BiliBiliAvatar, &list.TwitterName, &list.YoutubeAvatar)
+			err = rows.Scan(&list.ID, &list.Name, &list.EnName, &list.JpName, &list.YoutubeID, &list.BiliBiliID, &list.BiliRoomID, &list.Region, &list.TwitterHashtags, &list.BiliBiliHashtags, &list.BiliBiliAvatar, &list.TwitterName, &list.TwitchName, &list.YoutubeAvatar)
 			if err != nil {
 				log.Error(err)
 			}
@@ -858,7 +858,7 @@ func (Data *DiscordChannel) GetUserList(ctx context.Context) []string {
 }
 
 //get Reminder tags
-func GetUserReminderList(ChannelIDDiscord int, Member int64, Reminder int) []string {
+func GetUserReminderList(ChannelIDDiscord int64, Member int64, Reminder int) []string {
 	var (
 		UserTagsList  []string
 		DiscordUserID string

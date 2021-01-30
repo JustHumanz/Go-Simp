@@ -121,6 +121,8 @@ func CreateDB(Data config.ConfigFile) error {
 		BiliBili_RoomID INT(11) DEFAULT NULL,
 		BiliBili_Avatar varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 		Twitter_Username varchar(24) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+		Twitch_Username varchar(24) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+		Twitch_Avatar varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 		Region varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 		VtuberGroup_id int(11) NOT NULL,
 		PRIMARY KEY (id)
@@ -293,7 +295,7 @@ func CreateDB(Data config.ConfigFile) error {
 		)
 		BEGIN
 			SELECT id,VtuberName,VtuberName_EN,VtuberName_JP,Youtube_ID,BiliBili_SpaceID,BiliBili_RoomID,
-			Region,Hashtag,BiliBili_Hashtag,BiliBili_Avatar,Twitter_Username,Youtube_Avatar 
+			Region,Hashtag,BiliBili_Hashtag,BiliBili_Avatar,Twitter_Username,Twitch_Username,Youtube_Avatar 
 			FROM Vtuber.VtuberMember WHERE VtuberGroup_id=GroupID 
 			Order by Region,VtuberGroup_id;
 		END`)
@@ -388,7 +390,6 @@ func CreateDB(Data config.ConfigFile) error {
 }
 
 func AddData(Data Vtuber) {
-
 	var (
 		GroupIDIndependen        int64
 		GroupName                = "Independen"
@@ -435,7 +436,7 @@ func AddData(Data Vtuber) {
 		row := db.QueryRow("SELECT id FROM VtuberMember WHERE VtuberName=? AND VtuberName_EN=? AND (Youtube_ID=? OR  BiliBili_SpaceID=? OR BiliBili_RoomID=?)", VtuberMember.Name, VtuberMember.ENName, VtuberMember.YtID, VtuberMember.BiliBiliID, VtuberMember.BiliRoomID)
 		err := row.Scan(&tmp)
 		if err == sql.ErrNoRows {
-			stmt, err := db.Prepare("INSERT INTO VtuberMember (VtuberName,VtuberName_EN,VtuberName_JP,Hashtag,BiliBili_Hashtag,Youtube_ID,Youtube_Avatar,VtuberGroup_id,Region,BiliBili_SpaceID,BiliBili_RoomID,BiliBili_Avatar,Twitter_Username) values(?,?,?,?,?,?,?,?,?,?,?,?,?)")
+			stmt, err := db.Prepare("INSERT INTO VtuberMember (VtuberName,VtuberName_EN,VtuberName_JP,Hashtag,BiliBili_Hashtag,Youtube_ID,Youtube_Avatar,VtuberGroup_id,Region,BiliBili_SpaceID,BiliBili_RoomID,BiliBili_Avatar,Twitter_Username,Twitch_Username,Twitch_Avatar) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
 			if err != nil {
 				log.Error(err)
 			}
@@ -443,7 +444,12 @@ func AddData(Data Vtuber) {
 			if err != nil {
 				log.Error(err)
 			}
-			res, err := stmt.Exec(VtuberMember.Name, VtuberMember.ENName, VtuberMember.JPName, VtuberMember.Hashtag.Twitter, VtuberMember.Hashtag.BiliBili, VtuberMember.YtID, VtuberMember.YtAvatar(), GroupIDIndependen, VtuberMember.Region, VtuberMember.BiliBiliID, VtuberMember.BiliRoomID, BiliFace, VtuberMember.TwitterName)
+
+			TwitchAvatar, err := VtuberMember.GetTwitchAvatar()
+			if err != nil {
+				log.Error(err)
+			}
+			res, err := stmt.Exec(VtuberMember.Name, VtuberMember.ENName, VtuberMember.JPName, VtuberMember.Hashtag.Twitter, VtuberMember.Hashtag.BiliBili, VtuberMember.YtID, VtuberMember.YtAvatar(), GroupIDIndependen, VtuberMember.Region, VtuberMember.BiliBiliID, VtuberMember.BiliRoomID, BiliFace, VtuberMember.TwitterName, VtuberMember.TwitchName, TwitchAvatar)
 			if err != nil {
 				log.Error(err)
 			}
@@ -460,7 +466,7 @@ func AddData(Data Vtuber) {
 					Group: database.Group{
 						ID:        GroupIDIndependen,
 						GroupName: "Independen",
-						IconURL:   "https://raw.githubusercontent.com/JustHumanz/Go-simp/main/Img/independen.png",
+						IconURL:   "https://raw.githubusercontent.com/JustHumanz/Go-simp/Master/Img/independen.png",
 					},
 					Member: VtuberMember,
 				}.SendNotif())
@@ -480,6 +486,10 @@ func AddData(Data Vtuber) {
 		} else if err != nil {
 			log.Error(err)
 		} else {
+			TwitchAvatar, err := VtuberMember.GetTwitchAvatar()
+			if err != nil {
+				log.Error(err)
+			}
 			BiliFace, err := VtuberMember.BliBiliFace()
 			if err != nil {
 				log.Error(err)
@@ -488,7 +498,7 @@ func AddData(Data Vtuber) {
 					"VtuberGroup": "Independen",
 					"Vtuber":      VtuberMember.ENName,
 				}).Info("Update member")
-				_, err = db.Exec(`Update VtuberMember set VtuberName=?, VtuberName_EN=?, VtuberName_JP=? ,Hashtag=? ,BiliBili_Hashtag=? ,Region=? ,Youtube_ID=? ,BiliBili_SpaceID=?,BiliBili_RoomID=?, BiliBili_Avatar=? ,Youtube_Avatar=?, Twitter_Username=?  Where id=?`, VtuberMember.Name, VtuberMember.ENName, VtuberMember.JPName, VtuberMember.Hashtag.Twitter, VtuberMember.Hashtag.BiliBili, VtuberMember.Region, VtuberMember.YtID, VtuberMember.BiliBiliID, VtuberMember.BiliRoomID, BiliFace, VtuberMember.YtAvatar(), VtuberMember.TwitterName, tmp)
+				_, err = db.Exec(`Update VtuberMember set VtuberName=?, VtuberName_EN=?, VtuberName_JP=? ,Hashtag=? ,BiliBili_Hashtag=? ,Region=? ,Youtube_ID=? ,BiliBili_SpaceID=?,BiliBili_RoomID=?, BiliBili_Avatar=? ,Youtube_Avatar=?, Twitter_Username=?,Twitch_Username=?,Twitch_Avatar=?  Where id=?`, VtuberMember.Name, VtuberMember.ENName, VtuberMember.JPName, VtuberMember.Hashtag.Twitter, VtuberMember.Hashtag.BiliBili, VtuberMember.Region, VtuberMember.YtID, VtuberMember.BiliBiliID, VtuberMember.BiliRoomID, BiliFace, VtuberMember.YtAvatar(), VtuberMember.TwitterName, VtuberMember.TwitchName, TwitchAvatar, tmp)
 				if err != nil {
 					log.Error(err)
 				}
@@ -537,7 +547,7 @@ func AddData(Data Vtuber) {
 
 		row := db.QueryRow("SELECT id FROM VtuberGroup WHERE VtuberGroupName=? ", Group.GroupName)
 		err := row.Scan(&GroupID)
-		if err != nil || err == sql.ErrNoRows {
+		if err == sql.ErrNoRows {
 			stmt, err := db.Prepare("INSERT INTO VtuberGroup (VtuberGroupName,VtuberGroupIcon) values(?,?)")
 			if err != nil {
 				log.Error(err)
@@ -554,6 +564,8 @@ func AddData(Data Vtuber) {
 			}
 
 			defer stmt.Close()
+		} else if err != nil {
+			log.Error(err)
 		} else {
 			log.WithFields(log.Fields{
 				"VtuberGroup":     Group.GroupName,
@@ -572,10 +584,10 @@ func AddData(Data Vtuber) {
 				Add Member
 			*/
 			var tmp int64
-			row := db.QueryRow("SELECT id FROM VtuberMember WHERE VtuberName=? AND (Youtube_ID=? OR  BiliBili_SpaceID=? OR BiliBili_RoomID=?)", Group.Members[j].Name, Group.Members[j].YtID, Group.Members[j].BiliBiliID, Group.Members[j].BiliRoomID)
+			row := db.QueryRow("SELECT id FROM VtuberMember WHERE VtuberName=? AND (Youtube_ID=? OR BiliBili_SpaceID=? OR BiliBili_RoomID=?)", Group.Members[j].Name, Group.Members[j].YtID, Group.Members[j].BiliBiliID, Group.Members[j].BiliRoomID)
 			err := row.Scan(&tmp)
 			if err == sql.ErrNoRows {
-				stmt, err := db.Prepare("INSERT INTO VtuberMember (VtuberName,VtuberName_EN,VtuberName_JP,Hashtag,BiliBili_Hashtag,Youtube_ID,Youtube_Avatar,VtuberGroup_id,Region,BiliBili_SpaceID,BiliBili_RoomID,BiliBili_Avatar,Twitter_Username) values(?,?,?,?,?,?,?,?,?,?,?,?,?)")
+				stmt, err := db.Prepare("INSERT INTO VtuberMember (VtuberName,VtuberName_EN,VtuberName_JP,Hashtag,BiliBili_Hashtag,Youtube_ID,Youtube_Avatar,VtuberGroup_id,Region,BiliBili_SpaceID,BiliBili_RoomID,BiliBili_Avatar,Twitter_Username,Twitch_Username,Twitch_Avatar) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
 				if err != nil {
 					log.Error(err)
 				}
@@ -585,7 +597,12 @@ func AddData(Data Vtuber) {
 					log.Error(err)
 				}
 
-				res, err := stmt.Exec(Group.Members[j].Name, Group.Members[j].ENName, Group.Members[j].JPName, Group.Members[j].Hashtag.Twitter, Group.Members[j].Hashtag.BiliBili, Group.Members[j].YtID, Group.Members[j].YtAvatar(), GroupID, Group.Members[j].Region, Group.Members[j].BiliBiliID, Group.Members[j].BiliRoomID, BiliFace, Group.Members[j].TwitterName)
+				TwitchAvatar, err := Group.Members[j].GetTwitchAvatar()
+				if err != nil {
+					log.Error(err)
+				}
+
+				res, err := stmt.Exec(Group.Members[j].Name, Group.Members[j].ENName, Group.Members[j].JPName, Group.Members[j].Hashtag.Twitter, Group.Members[j].Hashtag.BiliBili, Group.Members[j].YtID, Group.Members[j].YtAvatar(), GroupID, Group.Members[j].Region, Group.Members[j].BiliBiliID, Group.Members[j].BiliRoomID, BiliFace, Group.Members[j].TwitterName, Group.Members[j].TwitchName, TwitchAvatar)
 				if err != nil {
 					log.Error(err)
 				}
@@ -625,11 +642,16 @@ func AddData(Data Vtuber) {
 					"VtuberGroup": Group.GroupName,
 					"Vtuber":      Group.Members[j].ENName,
 				}).Info("Update member")
+				TwitchAvatar, err := Group.Members[j].GetTwitchAvatar()
+				if err != nil {
+					log.Error(err)
+				}
+
 				BiliFace, err := Group.Members[j].BliBiliFace()
 				if err != nil {
 					log.Error(err)
 				} else {
-					_, err = db.Exec(`Update VtuberMember set VtuberName=?, VtuberName_EN=?, VtuberName_JP=? ,Hashtag=? ,BiliBili_Hashtag=? ,Region=? ,Youtube_ID=? ,BiliBili_SpaceID=?,BiliBili_RoomID=?, BiliBili_Avatar=? ,Youtube_Avatar=?, Twitter_Username=?  Where id=?`, Group.Members[j].Name, Group.Members[j].ENName, Group.Members[j].JPName, Group.Members[j].Hashtag.Twitter, Group.Members[j].Hashtag.BiliBili, Group.Members[j].Region, Group.Members[j].YtID, Group.Members[j].BiliBiliID, Group.Members[j].BiliRoomID, BiliFace, Group.Members[j].YtAvatar(), Group.Members[j].TwitterName, tmp)
+					_, err = db.Exec(`Update VtuberMember set VtuberName=?, VtuberName_EN=?, VtuberName_JP=? ,Hashtag=? ,BiliBili_Hashtag=? ,Region=? ,Youtube_ID=? ,BiliBili_SpaceID=?,BiliBili_RoomID=?, BiliBili_Avatar=? ,Youtube_Avatar=?, Twitter_Username=?,Twitch_Username=?,Twitch_Avatar=? Where id=?`, Group.Members[j].Name, Group.Members[j].ENName, Group.Members[j].JPName, Group.Members[j].Hashtag.Twitter, Group.Members[j].Hashtag.BiliBili, Group.Members[j].Region, Group.Members[j].YtID, Group.Members[j].BiliBiliID, Group.Members[j].BiliRoomID, BiliFace, Group.Members[j].YtAvatar(), Group.Members[j].TwitterName, Group.Members[j].TwitchName, TwitchAvatar, tmp)
 					if err != nil {
 						log.Error(err)
 					}
@@ -843,7 +865,7 @@ func AddTwitchInfo(Data map[string]interface{}) error {
 		}
 		defer stmt.Close()
 	} else if err != nil {
-		log.Error(err)
+		return err
 	}
 	return nil
 }
