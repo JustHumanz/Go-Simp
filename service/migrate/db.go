@@ -850,6 +850,11 @@ func AddTwitchInfo(Data map[string]interface{}) error {
 	row := db.QueryRow("SELECT id FROM Twitch WHERE VtuberMember_id=?", Data["MemberID"])
 	err := row.Scan(&tmp)
 	if err == sql.ErrNoRows {
+		log.WithFields(log.Fields{
+			"Group":      Data["GroupName"],
+			"VtuberName": Data["MemberName"],
+		}).Info("New Member Twitch")
+
 		stmt, err := db.Prepare("INSERT INTO Twitch (Game,Status,Title,Thumbnails,ScheduledStart,Viewers,VtuberMember_id) values(?,?,?,?,?,?,?)")
 		if err != nil {
 			return err
@@ -866,6 +871,16 @@ func AddTwitchInfo(Data map[string]interface{}) error {
 		defer stmt.Close()
 	} else if err != nil {
 		return err
+	} else {
+		log.WithFields(log.Fields{
+			"Group":      Data["GroupName"],
+			"VtuberName": Data["MemberName"],
+		}).Info("Update Member Twitch")
+		_, err := db.Exec(`Update Twitch set Game=?,Status=?,Thumbnails=?,ScheduledStart=?,Viewers=? Where id=? AND VtuberMember_id=?`, tmp, Data["Game"], Data["Status"], Data["Title"], Data["Thumbnails"], Data["ScheduledStart"], Data["Viewers"], Data["MemberID"])
+		if err != nil {
+			return err
+		}
+		return nil
 	}
 	return nil
 }

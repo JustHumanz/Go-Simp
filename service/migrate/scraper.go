@@ -431,7 +431,12 @@ func CheckTwitch() {
 							}
 							Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{width}", "1280", -1)
 							Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{height}", "720", -1)
-							Data := map[string]interface{}{
+							log.WithFields(log.Fields{
+								"Group":      Group.GroupName,
+								"VtuberName": Member.Name,
+								"Status":     Stream.Type,
+							}).Info("Twitch status live")
+							AddTwitchInfo(map[string]interface{}{
 								"MemberID":       Member.ID,
 								"Status":         Stream.Type,
 								"Title":          Stream.Title,
@@ -439,13 +444,9 @@ func CheckTwitch() {
 								"ScheduledStart": Stream.StartedAt,
 								"Thumbnails":     Stream.ThumbnailURL,
 								"Game":           GameResult.Data.Games[0].Name,
-							}
-							log.WithFields(log.Fields{
-								"Group":      Group.GroupName,
-								"VtuberName": Member.Name,
-								"Status":     Stream.Type,
-							}).Info("Twitch status live")
-							AddTwitchInfo(Data)
+								"MemberName":     Member.Name,
+								"GroupName":      Group.GroupName,
+							})
 						}
 					}
 				} else {
@@ -461,6 +462,8 @@ func CheckTwitch() {
 						"ScheduledStart": time.Time{},
 						"Thumbnails":     "",
 						"Game":           "",
+						"MemberName":     Member.Name,
+						"GroupName":      Group.GroupName,
 					})
 				}
 			}
