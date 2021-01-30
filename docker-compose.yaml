@@ -48,7 +48,6 @@ services:
       - go_simp-net
 
   livestream:
-    image: mainbot
     build: ./service/backend/livestream/
     depends_on:
       - mysql
