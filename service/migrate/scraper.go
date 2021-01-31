@@ -245,7 +245,7 @@ func CheckYoutube() {
 	Data := database.GetGroups()
 	for i := 0; i < len(Data); i++ {
 		var wg sync.WaitGroup
-		for _, Name := range database.GetMembers(Data[i].ID) {
+		for i, NameData := range database.GetMembers(Data[i].ID) {
 			wg.Add(1)
 			go func(Name database.Member) {
 				if Name.YoutubeID != "" {
@@ -257,7 +257,10 @@ func CheckYoutube() {
 					FilterYt(Name, &wg)
 				}
 
-			}(Name)
+			}(NameData)
+			if i%10 == 0 {
+				wg.Wait()
+			}
 		}
 		wg.Wait()
 	}
