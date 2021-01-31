@@ -281,58 +281,56 @@ func (PushData *NotifStruct) SendNude() error {
 		}
 	} else if Status == "reminder" {
 		UpcominginMinutes := int(Timestart.Sub(time.Now()).Minutes())
-		//id, DiscordChannelID
-		Color, err := engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
-		if err != nil {
-			return err
-		}
-		ChanelData := database.ChannelTag(PushData.Member.ID, 2, "")
-		LiveCount := durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(1).String()
-
-		for ii := 0; ii < 70; ii++ {
-			if UpcominginMinutes == ii && UpcominginMinutes > 10 {
-				for _, Channel := range ChanelData {
-					UserTagsList := database.GetUserReminderList(Channel.ID, PushData.Member.ID, ii)
-					if UserTagsList != nil {
-						MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
-							SetAuthor(VtuberName, Avatar, YtChannel).
-							SetTitle(PushData.Member.EnName+" Live in "+LiveCount).
-							SetDescription(PushData.YtData.Title).
-							SetImage(PushData.YtData.Thumb).
-							SetThumbnail(PushData.Group.IconURL).
-							SetURL(YtURL).
-							AddField("Type", PushData.YtData.Type).
-							AddField("Start live in", LiveCount).
-							InlineAllFields().
-							AddField("Waiting", PushData.YtData.Viewers+" Simps in ChatRoom").
-							SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
-							SetColor(Color).MessageEmbed)
-						if err != nil {
-							log.WithFields(log.Fields{
-								"Message":          MsgEmbed,
-								"ChannelID":        Channel.ID,
-								"DiscordChannelID": Channel.ChannelID,
-							}).Error(err)
-							err = Channel.DelChannel(err.Error())
-							log.Error(err)
-							break
-						}
-						MsgText, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Live in "+LiveCount+"\nUserTags: "+strings.Join(UserTagsList, " "))
-						if err != nil {
-							log.Error(err)
-							break
-						}
-						if Channel.Dynamic {
-							log.WithFields(log.Fields{
-								"DiscordChannel": Channel.ChannelID,
-								"VtuberGroupID":  PushData.Group.ID,
-								"YoutubeID":      PushData.YtData.ID,
-							}).Info("Set dynamic mode")
-							Channel.SetVideoID(PushData.YtData.VideoID).
-								SetMsgEmbedID(MsgEmbed.ID).
-								SetMsgTextID(MsgText.ID)
-						}
+		if UpcominginMinutes > 10 && UpcominginMinutes < 70 {
+			ChanelData := database.ChannelTag(PushData.Member.ID, 2, "")
+			Color, err := engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
+			if err != nil {
+				return err
+			}
+			LiveCount := durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(1).String()
+			for _, Channel := range ChanelData {
+				UserTagsList := database.GetUserReminderList(Channel.ID, PushData.Member.ID, UpcominginMinutes)
+				if UserTagsList != nil {
+					MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
+						SetAuthor(VtuberName, Avatar, YtChannel).
+						SetTitle(PushData.Member.EnName+" Live in "+LiveCount).
+						SetDescription(PushData.YtData.Title).
+						SetImage(PushData.YtData.Thumb).
+						SetThumbnail(PushData.Group.IconURL).
+						SetURL(YtURL).
+						AddField("Type", PushData.YtData.Type).
+						AddField("Start live in", LiveCount).
+						InlineAllFields().
+						AddField("Waiting", PushData.YtData.Viewers+" Simps in ChatRoom").
+						SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
+						SetColor(Color).MessageEmbed)
+					if err != nil {
+						log.WithFields(log.Fields{
+							"Message":          MsgEmbed,
+							"ChannelID":        Channel.ID,
+							"DiscordChannelID": Channel.ChannelID,
+						}).Error(err)
+						err = Channel.DelChannel(err.Error())
+						log.Error(err)
+						break
 					}
+					MsgText, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Live in "+LiveCount+"\nUserTags: "+strings.Join(UserTagsList, " "))
+					if err != nil {
+						log.Error(err)
+						break
+					}
+					if Channel.Dynamic {
+						log.WithFields(log.Fields{
+							"DiscordChannel": Channel.ChannelID,
+							"VtuberGroupID":  PushData.Group.ID,
+							"YoutubeID":      PushData.YtData.ID,
+						}).Info("Set dynamic mode")
+						Channel.SetVideoID(PushData.YtData.VideoID).
+							SetMsgEmbedID(MsgEmbed.ID).
+							SetMsgTextID(MsgText.ID)
+					}
+				} else {
+					break
 				}
 			}
 		}

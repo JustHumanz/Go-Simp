@@ -60,57 +60,60 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 			log.Error(err)
 		}
 
-		Data.AddData(DataDB)
-		if Status.CheckScheduleLive() && DataDB.Status != "Live" {
-			//Live
-			if Status.Data.RoomInfo.LiveStartTime != 0 {
-				ScheduledStart = time.Unix(int64(Status.Data.RoomInfo.LiveStartTime), 0).In(loc)
+		if DataDB != nil {
+			Data.AddData(DataDB)
+			if Status.CheckScheduleLive() && DataDB.Status != "Live" {
+				//Live
+				if Status.Data.RoomInfo.LiveStartTime != 0 {
+					ScheduledStart = time.Unix(int64(Status.Data.RoomInfo.LiveStartTime), 0).In(loc)
+				} else {
+					ScheduledStart = time.Now().In(loc)
+				}
+
+				if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
+					Group.IconURL = ""
+				}
+
+				log.WithFields(log.Fields{
+					"Group":  Group.GroupName,
+					"Vtuber": Member.EnName,
+					"Start":  ScheduledStart,
+				}).Info("Start live right now")
+
+				Data.SetStatus("Live").
+					UpdateSchdule(ScheduledStart).
+					UpdateOnline(Status.Data.RoomInfo.Online).
+					SetMember(Member).
+					SetGroup(Group)
+
+				err = Data.Crotttt()
+				if err != nil {
+					log.Error(err)
+				}
+
+				Data.RoomData.UpdateLiveBili(Member.ID)
+
+			} else if !Status.CheckScheduleLive() && DataDB.Status == "Live" {
+				//prob past
+				log.WithFields(log.Fields{
+					"Group":  Group.GroupName,
+					"Vtuber": Member.EnName,
+					"Start":  ScheduledStart,
+				}).Info("Past live stream")
+				err := engine.RemoveEmbed(strconv.Itoa(DataDB.LiveRoomID), Bot)
+				if err != nil {
+					log.Error(err)
+				}
+				Data.SetStatus("Past").
+					UpdateOnline(Status.Data.RoomInfo.Online)
+
+				Data.RoomData.UpdateLiveBili(Member.ID)
 			} else {
-				ScheduledStart = time.Now().In(loc)
+				//update online
+				Data.UpdateOnline(Status.Data.RoomInfo.Online)
+				Data.RoomData.UpdateLiveBili(Member.ID)
 			}
-
-			if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
-				Group.IconURL = ""
-			}
-
-			log.WithFields(log.Fields{
-				"Group":  Group.GroupName,
-				"Vtuber": Member.EnName,
-				"Start":  ScheduledStart,
-			}).Info("Start live right now")
-
-			Data.SetStatus("Live").
-				UpdateSchdule(ScheduledStart).
-				UpdateOnline(Status.Data.RoomInfo.Online).
-				SetMember(Member).
-				SetGroup(Group)
-
-			err = Data.Crotttt()
-			if err != nil {
-				log.Error(err)
-			}
-
-			Data.RoomData.UpdateLiveBili(Member.ID)
-
-		} else if !Status.CheckScheduleLive() && DataDB.Status == "Live" {
-			//prob past
-			log.WithFields(log.Fields{
-				"Group":  Group.GroupName,
-				"Vtuber": Member.EnName,
-				"Start":  ScheduledStart,
-			}).Info("Past live stream")
-			err := engine.RemoveEmbed(strconv.Itoa(DataDB.LiveRoomID), Bot)
-			if err != nil {
-				log.Error(err)
-			}
-			Data.SetStatus("Past").
-				UpdateOnline(Status.Data.RoomInfo.Online)
-
-			Data.RoomData.UpdateLiveBili(Member.ID)
-		} else {
-			//update online
-			Data.UpdateOnline(Status.Data.RoomInfo.Online)
-			Data.RoomData.UpdateLiveBili(Member.ID)
 		}
+
 	}
 }
