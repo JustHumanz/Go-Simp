@@ -13,17 +13,16 @@ import (
 	"github.com/top-gg/go-dbl"
 )
 
-var (
-	Bot *discordgo.Session
-)
-
 func main() {
 	conf, err := config.ReadConfig("../../../config.toml")
 	if err != nil {
 		log.Panic(err)
 	}
 
-	Bot, _ = discordgo.New("Bot " + config.BotConf.Discord)
+	Bot, err := discordgo.New("Bot " + config.BotConf.Discord)
+	if err != nil {
+		log.Error(err)
+	}
 	err = Bot.Open()
 	if err != nil {
 		log.Panic(err)

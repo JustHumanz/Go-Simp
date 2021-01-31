@@ -311,13 +311,11 @@ func (PushData *NotifStruct) SendNude() error {
 							"DiscordChannelID": Channel.ChannelID,
 						}).Error(err)
 						err = Channel.DelChannel(err.Error())
-						log.Error(err)
-						break
+						return err
 					}
 					MsgText, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Live in "+LiveCount+"\nUserTags: "+strings.Join(UserTagsList, " "))
 					if err != nil {
-						log.Error(err)
-						break
+						return err
 					}
 					if Channel.Dynamic {
 						log.WithFields(log.Fields{
