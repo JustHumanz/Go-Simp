@@ -84,7 +84,7 @@ func init() {
 	}
 	TwitchClient.SetUserAccessToken(TwitchToken)
 
-	Bot.AddHandler(Dead)
+	//Bot.AddHandler(Dead)
 }
 
 func main() {

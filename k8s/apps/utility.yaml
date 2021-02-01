@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-simp-utility
+  labels:           
+    app: go-simp
+    tier: backend
+spec:
+  selector:
+    matchLabels:    
+      app: utility
+      tier: backend
+  template:         
+    metadata:
+      labels:       
+        app: utility
+        tier: backend
+    spec:           
+      containers:
+        - name: go-simp-utility
+          image: go-simp_utility
+          imagePullPolicy: IfNotPresent

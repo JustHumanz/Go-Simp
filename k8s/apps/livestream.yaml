@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-simp-live
+  labels:           
+    app: go-simp
+    tier: backend
+spec:
+  selector:
+    matchLabels:    
+      app: live
+      tier: backend
+  template:         
+    metadata:
+      labels:       
+        app: live
+        tier: backend
+    spec:           
+      containers:
+        - name: go-simp-livestream
+          image: go-simp_livestream
+          imagePullPolicy: IfNotPresent

@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: multitor
+  labels:           
+    app: multitor
+    tier: backend
+spec:
+  ports:
+  - port: 16379      
+    targetPort: 16379
+  selector:         
+    app: multitor
+    tier: backend
+  type: LoadBalancer  
+
+---
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: multitor
+  labels:
+    app: multitor      
+spec:
+  selector:
+    matchLabels:    
+      app: multitor
+      tier: backend
+  replicas: 2       
+  template:         
+    metadata:
+      labels:       
+        app: multitor
+        tier: backend
+    spec:           
+      containers:
+      - name: multitor
+        image: tor_go_brrrrrrr
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 16379
