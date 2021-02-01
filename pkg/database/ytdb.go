@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"errors"
 	"strconv"
@@ -130,4 +131,15 @@ func (Data *YtDbData) UpdateYt(Status string) {
 	if err != nil {
 		log.Error(err)
 	}
+}
+
+func CheckReminder(Num int) bool {
+	var count int
+	err := DB.QueryRow(`SELECT id FROM Vtuber.Reminder where Reminder=?`, Num).Scan(&count)
+	if err != nil {
+		log.Error(err)
+	} else if err == sql.ErrNoRows {
+		return false
+	}
+	return true
 }

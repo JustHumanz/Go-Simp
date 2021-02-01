@@ -60,7 +60,7 @@ func (Data CheckSctruct) SendNude() {
 					}
 				}(v, &wg)
 				//Wait every ge 10 discord channel
-				if i%10 == 0 {
+				if i%5 == 0 {
 					wg.Wait()
 				}
 			}

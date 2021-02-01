@@ -91,7 +91,6 @@ func main() {
 
 	Donation := config.BotConf.DonationLink
 	database.Start(conf.CheckSQL())
-	engine.Start()
 
 	c := cron.New()
 	c.Start()

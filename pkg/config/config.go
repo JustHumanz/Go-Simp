@@ -60,7 +60,7 @@ const (
 	BiliBiliFollowers          = "@every 0h30m0s"
 	TwitterFollowers           = "@every 0h17m0s"
 	DonationMsg                = "@every 0h30m0s"
-	CheckServerCount           = "@every 0h1m0s"
+	CheckServerCount           = "@every 0h10m0s"
 )
 
 type ConfigFile struct {
