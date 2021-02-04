@@ -135,7 +135,7 @@ func (Data *YtDbData) UpdateYt(Status string) {
 
 func CheckReminder(Num int) bool {
 	var count int
-	err := DB.QueryRow(`SELECT id FROM Vtuber.Reminder where Reminder=?`, Num).Scan(&count)
+	err := DB.QueryRow(`SELECT id FROM User.Reminder where Reminder=?`, Num).Scan(&count)
 	if err != nil {
 		log.Error(err)
 	} else if err == sql.ErrNoRows {
