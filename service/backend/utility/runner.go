@@ -45,6 +45,8 @@ func main() {
 						"UserID":    UserInfo.ID,
 						"UserName":  UserInfo.Username,
 						"ChannelID": m.ChannelID,
+						"Group":     UserState.Group.GroupName,
+						"Vtuber":    UserState.Member.Name,
 					}).Info("New user add from reac")
 					UserState.SetDiscordID(UserInfo.ID).
 						SetDiscordUserName(UserInfo.Username)
@@ -69,6 +71,8 @@ func main() {
 						"UserID":    UserInfo.ID,
 						"UserName":  UserInfo.Username,
 						"ChannelID": m.ChannelID,
+						"Group":     UserState.Group.GroupName,
+						"Vtuber":    UserState.Member.Name,
 					}).Info("New user del from reac")
 					UserState.SetDiscordID(UserInfo.ID).
 						SetDiscordUserName(UserInfo.Username)
