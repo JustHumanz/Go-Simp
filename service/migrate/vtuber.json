@@ -327,7 +327,7 @@
             ]
         },
         {
-            "GroupName": "774.inc",
+            "GroupName": "774inc",
             "GroupIcon": "https://cdn.humanz.moe/774.png",
             "Members" : [
                 {
@@ -387,6 +387,21 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "Mico_HNST",
+                    "Twitch_Username": "",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Neru",
+                    "EN_Name":"Inaba Haneru",
+                    "JP_Name":"因幡はねる",
+                    "Hashtag": {
+                        "Twitter": "#はねるあーと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC0Owc36U9lOyi9Gx9Ic-4qg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Haneru_Inaba",
                     "Twitch_Username": "",
                     "Region":"JP"
                 },
@@ -462,6 +477,51 @@
                     "BiliBili_ID": 0,
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "shiromiya_mimi",
+                    "Twitch_Username": "",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Natsumi",
+                    "EN_Name":"Hashiba Natsumi",
+                    "JP_Name":"羽柴なつみ",
+                    "Hashtag": {
+                        "Twitter": "#羽柴手配絵",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC_BlXOQe5OcRC7o0GX8kp8A",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Natsumi_Hashiba",
+                    "Twitch_Username": "",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Hikari",
+                    "EN_Name":"Hira Hikari",
+                    "JP_Name":"飛良ひかり",
+                    "Hashtag": {
+                        "Twitter": "#ひら画な",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCFsWaTQ7kT76jNNGeGIKNSA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Hikari_Hira",
+                    "Twitch_Username": "",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Rui",
+                    "EN_Name":"Seshima Rui",
+                    "JP_Name":"瀬島るい",
+                    "Hashtag": {
+                        "Twitter": "#あとるい絵",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC_WOBIopwUih0rytRnr_1Ag",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Rui_Seshima",
                     "Twitch_Username": "",
                     "Region":"JP"
                 },
