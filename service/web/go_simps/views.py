@@ -5,8 +5,6 @@ from backend.engine import *
 
 git = GitGood(os.environ['GITKEY'])
 DOMAIN = os.environ['DOMAIN']
-if DOMAIN == None or os.environ['REST_API'] == None:
-    os._exit(1)
 
 """
 LOGINURL = "https://discord.com/api/oauth2/authorize?client_id=719540207552167936&permissions=522304&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2FDiscord%2Flanding&response_type=code&scope=bot%20guilds%20identify"
