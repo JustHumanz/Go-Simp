@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -46,11 +47,12 @@ func GetTBiliBili(DynamicID string) bool {
 	var tmp int64
 	row := DB.QueryRow("SELECT id FROM Vtuber.TBiliBili where Dynamic_id=?", DynamicID)
 	err := row.Scan(&tmp)
-	if err != nil || err == sql.ErrNoRows {
+	if err == sql.ErrNoRows || tmp == 0 {
 		return true
-	} else {
-		return false
+	} else if err != nil {
+		log.Error(err)
 	}
+	return false
 }
 
 //BilGet Get LiveBiliBili by Status (live,past)
@@ -156,21 +158,21 @@ func (Data InputBiliBili) UpdateView(id int) {
 }
 
 //InputTBiliBili Input TBiliBili data
-func (Data InputTBiliBili) InputTBiliBili(MemberID int64) {
+func (Data TBiliBili) InputTBiliBili() error {
 	stmt, err := DB.Prepare(`INSERT INTO TBiliBili (PermanentURL,Author,Likes,Photos,Videos,Text,Dynamic_id,VtuberMember_id) values(?,?,?,?,?,?,?,?)`)
 	if err != nil {
-		log.Error(err)
+		return err
 	}
 	defer stmt.Close()
 
-	res, err := stmt.Exec(Data.URL, Data.Author, Data.Like, Data.Photos, Data.Videos, Data.Text, Data.Dynamic_id, MemberID)
+	res, err := stmt.Exec(Data.URL, Data.Author, Data.Like, strings.Join(Data.Photos, "\n"), Data.Videos, Data.Text, Data.Dynamic_id, Data.Member.ID)
 	if err != nil {
-		log.Error(err)
+		return err
 	}
 
 	_, err = res.LastInsertId()
 	if err != nil {
-		log.Error(err)
+		return err
 	}
-
+	return nil
 }

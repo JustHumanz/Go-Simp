@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
@@ -41,7 +42,7 @@ func SendFanart(Data []Fanart, Group database.Group) {
 		if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
 			Group.IconURL = ""
 		}
-		for _, Channel := range ChannelData {
+		for i, Channel := range ChannelData {
 			UserTagsList := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, MemberFanart.Member.ID)
 			if UserTagsList != nil {
 				tags = strings.Join(UserTagsList, " ")
@@ -71,6 +72,12 @@ func SendFanart(Data []Fanart, Group database.Group) {
 				engine.Reacting(map[string]string{
 					"ChannelID": Channel.ChannelID,
 				}, Bot)
+			}
+			if i%config.Waiting == 0 && config.BotConf.LowResources {
+				log.WithFields(log.Fields{
+					"Func": "Twitter Fanart",
+				}).Warn("Sleep for 100 Millisecond")
+				time.Sleep(100 * time.Millisecond)
 			}
 		}
 	}

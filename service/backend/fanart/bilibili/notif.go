@@ -4,6 +4,7 @@ import (
 	"context"
 	"strconv"
 	"strings"
+	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
@@ -11,22 +12,16 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//Notif struct
-type Notif struct {
-	TBiliData   database.InputTBiliBili
-	Group       database.Group
-	PhotosImgur string
-	PhotosCount int
-	Member      database.Member
-}
-
 //PushNotif Push Data to discord channel
-func (NotifData Notif) PushNotif(Color int) {
-	Data := NotifData.TBiliData
-	Group := NotifData.Group
-	ChannelData := database.ChannelTag(NotifData.Member.ID, 1, "")
+func PushNotif(Data database.TBiliBili) error {
+	Group := Data.Group
+	ChannelData := database.ChannelTag(Data.Member.ID, 1, "")
+	Color, err := engine.GetColor(config.TmpDir, Data.Photos[0])
+	if err != nil {
+		return err
+	}
 	tags := ""
-	for _, Channel := range ChannelData {
+	for i, Channel := range ChannelData {
 		UserTagsList := Channel.GetUserList(context.Background())
 		if UserTagsList != nil {
 			tags = strings.Join(UserTagsList, " ")
@@ -46,25 +41,32 @@ func (NotifData Notif) PushNotif(Color int) {
 				SetURL(Data.URL).
 				SetThumbnail(Data.Avatar).
 				SetDescription(Data.Text).
-				SetImage(NotifData.PhotosImgur).
+				SetImage(Data.Photos[0]).
 				AddField("User Tags", tags).
 				//AddField("Similar art", msg).
-				SetFooter("1/"+strconv.Itoa(NotifData.PhotosCount)+" photos", config.BiliBiliIMG).
+				SetFooter("1/"+strconv.Itoa(len(Data.Photos))+" photos", config.BiliBiliIMG).
 				InlineAllFields().
 				SetColor(Color).MessageEmbed)
 			if err != nil {
 				log.Error(tmp, err.Error())
 				err = Channel.DelChannel(err.Error())
 				if err != nil {
-					log.Error(err)
+					return err
 				}
+				return err
 			}
 			err = engine.Reacting(map[string]string{
 				"ChannelID": Channel.ChannelID,
 			}, Bot)
 			if err != nil {
-				log.Error(err)
+				return err
 			}
+		}
+		if i%config.Waiting == 0 && config.BotConf.LowResources {
+			log.WithFields(log.Fields{
+				"Func": "BiliBili Fanart",
+			}).Warn("Sleep for 100 Millisecond")
+			time.Sleep(100 * time.Millisecond)
 		}
 	}
 	/*
@@ -87,4 +89,5 @@ func (NotifData Notif) PushNotif(Color int) {
 			msg = "_"
 		}
 	*/
+	return nil
 }

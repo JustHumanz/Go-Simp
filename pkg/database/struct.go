@@ -163,15 +163,17 @@ type InputBiliBili struct {
 	Length   string
 }
 
-type InputTBiliBili struct {
+type TBiliBili struct {
 	URL        string
 	Author     string
 	Avatar     string
 	Like       int
-	Photos     string
+	Photos     []string
 	Videos     string
 	Text       string
 	Dynamic_id string
+	Member     Member
+	Group      Group
 }
 
 type TwitterUser struct {

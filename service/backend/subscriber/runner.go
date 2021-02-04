@@ -5,6 +5,7 @@ import (
 	"flag"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
@@ -73,7 +74,7 @@ func SendNude(Embed *discordgo.MessageEmbed, Group database.Group, Member databa
 		Embed.Author.IconURL = ""
 	}
 	ChannelData := Group.GetChannelByGroup()
-	for _, Channel := range ChannelData {
+	for i, Channel := range ChannelData {
 		Tmp := &Channel
 		UserTagsList := Tmp.SetMember(Member).SetGroup(Group).GetUserList(context.Background()) //database.GetUserList(Channel.ID, MemberID)
 		msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, Embed)
@@ -85,6 +86,13 @@ func SendNude(Embed *discordgo.MessageEmbed, Group database.Group, Member databa
 			if err != nil {
 				log.Error(msg, err)
 			}
+		}
+		if i%config.Waiting == 0 && config.BotConf.LowResources {
+			log.WithFields(log.Fields{
+				"Func":  "Subscriber",
+				"Value": config.Waiting,
+			}).Warn("Waiting send message")
+			time.Sleep(100 * time.Millisecond)
 		}
 	}
 }

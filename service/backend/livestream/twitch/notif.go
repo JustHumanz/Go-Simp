@@ -109,8 +109,12 @@ func (Data TwitchNotif) SendNotif() error {
 
 			return nil
 		}(v, &wg)
-		//Wait every ge 15 discord channel
-		if i%15 == 0 {
+		//Wait every ge 5 discord channel
+		if i%config.Waiting == 0 && config.BotConf.LowResources {
+			log.WithFields(log.Fields{
+				"Func":  "Twitch",
+				"Value": config.Waiting,
+			}).Warn("Waiting send message")
 			wg.Wait()
 		}
 	}

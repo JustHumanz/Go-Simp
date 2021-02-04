@@ -4,6 +4,7 @@ DiscordWebHook = "#URL"
 Multitor = "#Http Proxy"
 DonationLink = "#DonationLink"
 Domain = "humanz.tech"
+LowResources = true 
 
 YoutubeToken = [
   "#GoogleAPI",

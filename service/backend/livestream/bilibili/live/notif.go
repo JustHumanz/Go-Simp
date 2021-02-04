@@ -103,8 +103,12 @@ func (Data *LiveBili) Crotttt() error {
 			}
 
 		}(v, &wg)
-		//Wait every ge 10 discord channel
-		if i%5 == 0 {
+		//Wait every ge 5 discord channel
+		if i%config.Waiting == 0 && config.BotConf.LowResources {
+			log.WithFields(log.Fields{
+				"Func":  "BiliBili Live",
+				"Value": config.Waiting,
+			}).Warn("Waiting send message")
 			wg.Wait()
 		}
 	}

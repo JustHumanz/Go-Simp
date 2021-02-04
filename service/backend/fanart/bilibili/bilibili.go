@@ -4,8 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"net/url"
-	"regexp"
-	"strings"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -53,57 +51,54 @@ func CheckNew() {
 				if len(TB.Data.Cards) > 0 {
 					for i := 0; i < len(TB.Data.Cards); i++ {
 						var (
-							STB  SubTbili
-							img  []string
-							nope bool
+							STB SubTbili
+							img []string
 						)
-						_ = json.Unmarshal([]byte(TB.Data.Cards[i].Card), &STB)
+						err := json.Unmarshal([]byte(TB.Data.Cards[i].Card), &STB)
+						if err != nil {
+							log.Error(err)
+						}
 						if STB.Item.Pictures != nil && TB.Data.Cards[i].Desc.Type == 2 { //type 2 is picture post (prob,heheheh)
 							_, err := rdb.Get(ctx, TB.Data.Cards[i].Desc.DynamicIDStr).Result()
 							if err == redis.Nil {
-								niggerlist := []string{"解锁专属粉丝卡片", "twitter", "咖啡厅", "cd", "专辑", "pixiv", "遇", "marshmallow", "saucenao", "pid", "twi"}
-								nope, _ = regexp.MatchString("(?m)("+strings.Join(niggerlist, "|")+")", strings.ToLower(STB.Item.Description))
 								New := database.GetTBiliBili(TB.Data.Cards[i].Desc.DynamicIDStr)
-								if New && !nope {
-									link, color, err := STB.Mirroring()
-									if err != nil {
-										log.WithFields(log.Fields{
-											"Group":  Group.GroupName,
-											"Vtuber": Member.EnName,
-										}).Error(err)
-										break
-									}
-									if link != "" {
-										log.WithFields(log.Fields{
-											"Vtuber": Member.EnName,
-											"Img":    link,
-										}).Info("New Fanart")
-										for l := 0; l < len(STB.Item.Pictures); l++ {
-											img = append(img, STB.Item.Pictures[l].ImgSrc)
-										}
+								if New {
+									if len(STB.Item.Pictures) > 0 {
+										if STB.Item.Pictures[0].ImgSrc != "" {
+											log.WithFields(log.Fields{
+												"Vtuber": Member.EnName,
+												"Img":    STB.Item.Pictures[0].ImgSrc,
+											}).Info("New Fanart")
+											for l := 0; l < len(STB.Item.Pictures); l++ {
+												img = append(img, STB.Item.Pictures[l].ImgSrc)
+											}
 
-										log.WithFields(log.Fields{"Group": Group.GroupName, "Vtuber": Member.EnName}).Info("Push to notif")
-										Data := Notif{
-											TBiliData: database.InputTBiliBili{
+											log.WithFields(log.Fields{"Group": Group.GroupName, "Vtuber": Member.EnName}).Info("Push to notif")
+											Data := database.TBiliBili{
 												URL:        "https://t.bilibili.com/" + TB.Data.Cards[i].Desc.DynamicIDStr + "?tab=2",
 												Author:     TB.Data.Cards[i].Desc.UserProfile.Info.Uname,
 												Avatar:     TB.Data.Cards[i].Desc.UserProfile.Info.Face,
 												Like:       TB.Data.Cards[i].Desc.Like,
-												Photos:     strings.Join(img, "\n"),
+												Photos:     img,
 												Dynamic_id: TB.Data.Cards[i].Desc.DynamicIDStr,
 												Text:       STB.Item.Description,
-											},
-											Group:       Group,
-											PhotosCount: STB.Item.PicturesCount,
-											PhotosImgur: link,
-											Member:      Member,
+												Member:     Member,
+												Group:      Group,
+											}
+											err := Data.InputTBiliBili()
+											if err != nil {
+												log.Error(err)
+											} else {
+												err := PushNotif(Data)
+												if err != nil {
+													log.Error(err)
+												}
+											}
 										}
-										Data.TBiliData.InputTBiliBili(Member.ID)
-										Data.PushNotif(color)
-									}
-									err = rdb.Set(ctx, TB.Data.Cards[i].Desc.DynamicIDStr, Member.Name, 30*time.Minute).Err()
-									if err != nil {
-										log.Error(err)
+										err = rdb.Set(ctx, TB.Data.Cards[i].Desc.DynamicIDStr, Member.Name, 30*time.Minute).Err()
+										if err != nil {
+											log.Error(err)
+										}
 									}
 								}
 							}
@@ -115,10 +110,10 @@ func CheckNew() {
 	}
 }
 
+/*
 //Mirroring fanart to imgur *sometime discord fail to load image because bilibili CDN(prob)*
 func (Data SubTbili) Mirroring() (string, int, error) {
 	link := Data.Item.Pictures[0].ImgSrc
-	/*
 		buf := &bytes.Buffer{}
 		writer := multipart.NewWriter(buf)
 		err := writer.WriteField("image", link)
@@ -128,12 +123,10 @@ func (Data SubTbili) Mirroring() (string, int, error) {
 		if err != nil {
 			log.Error(err)
 		}
-	*/
 	color, err := engine.GetColor(config.TmpDir, link)
 	if err != nil {
 		log.Error(err)
 	}
-	/*
 		req, err := http.NewRequest("POST", "https://api.imgur.com/3/image", buf)
 		if err != nil {
 			return "", 0, err
@@ -179,9 +172,9 @@ func (Data SubTbili) Mirroring() (string, int, error) {
 			return "", 0, err
 		}
 
-	*/
 	return link, color, nil
 }
+*/
 
 //Imgur struct
 type Imgur struct {

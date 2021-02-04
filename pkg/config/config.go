@@ -46,6 +46,7 @@ const (
 	TmpDir            = "/tmp/tmp.img"
 	ChannelPermission = 8208
 	GuildSupport      = "https://discord.com/invite/ydWC5knbJT"
+	Waiting           = 5
 
 	//Crontab
 	TwitterFanart              = "@every 0h3m0s"
@@ -72,6 +73,7 @@ type ConfigFile struct {
 	DonationLink   string `toml:"DonationLink"`
 	TopGG          string `toml:"TOPGG"`
 	Domain         string `toml:"Domain"`
+	LowResources   bool   `toml:"LowResources"` //Disable update like fanart & set wait every 5 counter
 	Twitch         struct {
 		ClientID     string `toml:"ClientID"`
 		ClientSecret string `toml:"ClientSecret"`
