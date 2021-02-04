@@ -7,3 +7,4 @@ spec:
     - name: go-simp-migrate
       image: go-simp_db_migrate
       imagePullPolicy: IfNotPresent
+  restartPolicy: OnFailure    

@@ -1,11 +1,11 @@
 from github import Github
 import requests,os,json,re
 
-GroupURL = "http://rest_api:2525/Groups/"
-MemberURL = "http://rest_api:2525/Members/"
-SubscriberURL = "http://rest_api:2525/Subscribe/"
-ChannelURL = "http://rest_api:2525/channel/"
-Youtube = "http://rest_api:2525/Youtube/"
+GroupURL = "http://"+os.environ['REST_API']+":2525/Groups/"
+MemberURL = "http://"+os.environ['REST_API']+":2525/Members/"
+SubscriberURL = "http://"+os.environ['REST_API']+":2525/Subscribe/"
+ChannelURL = "http://"+os.environ['REST_API']+":2525/channel/"
+Youtube = "http://"+os.environ['REST_API']+":2525/Youtube/"
 API_ENDPOINT = 'https://discord.com/api/v6'
 
 class GetVtubers:
@@ -86,6 +86,7 @@ class GitGood:
         issue = self.repo.get_issue(Number)
         issue.edit(title=Title,body=PayloadStr,assignee="JustHumanz")
 
+"""
 class Discortttt:
     def __init__(self):
         self.CLIENT_ID = os.environ['CLIENT_ID']
@@ -145,3 +146,5 @@ class Discortttt:
             'Authorization': 'Bot '+self.DisocrdBot
         })
         return Result.json()
+
+"""        

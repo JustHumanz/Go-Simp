@@ -27,9 +27,11 @@ urlpatterns = [
     path('Support/<Type>/',views.go_simps_support,name="Support"),
     path('Add/',views.go_simps_add,name="Add"),
     path('Guide/',views.go_simps_guide,name="Guide"),
+    """
     path('Discord/login',views.go_simps_discord_login,name="discord_login"),
     path('Discord/landing',views.go_simps_discord_landing,name="discord_landing"),
     path('Discord/cp',views.go_simps_discord_cp,name="discord_cp"),
     path('Discord/channel/<ChannelID>',views.go_simps_discord_channel,name="discord_channel"),
     #path('admin/', admin.site.urls),
+    """
 ]

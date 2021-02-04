@@ -14,6 +14,7 @@ spec:
     app: redis
     role: master
     tier: backend
+    
 ---
 apiVersion: apps/v1 
 kind: Deployment
@@ -27,7 +28,7 @@ spec:
       app: redis
       role: master
       tier: backend
-  replicas: 1       
+  replicas: 1         
   template:         
     metadata:
       labels:       
@@ -47,3 +48,12 @@ spec:
             memory: 100Mi
         ports:
         - containerPort: 6379
+        volumeMounts:
+        - name: redis-persistent-storage
+          mountPath: /bitnami/redis/data    
+      volumes:
+      - name: redis-persistent-storage
+        persistentVolumeClaim:
+          claimName: redis-pv-claim              
+      securityContext:
+        runAsUser: 0          
