@@ -4,13 +4,18 @@ from django.shortcuts import render,redirect
 from backend.engine import *
 
 git = GitGood(os.environ['GITKEY'])
+DOMAIN = os.environ['DOMAIN']
+if DOMAIN == None or os.environ['REST_API'] == None:
+    os._exit(1)
+
+"""
 LOGINURL = "https://discord.com/api/oauth2/authorize?client_id=719540207552167936&permissions=522304&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2FDiscord%2Flanding&response_type=code&scope=bot%20guilds%20identify"
 Discord = Discortttt()
+"""
 Vtubers = GetVtubers()
 Vtubers.ResizeImg("512")
 Groups = Vtubers.GetGroups()
 regex = r"^(?:(http|https):\/\/[a-zA-Z-]*\.{0,1}[a-zA-Z-]{3,}\.[a-z]{2,})\/channel\/([a-zA-Z0-9_]{3,})$"
-DOMAIN = os.environ['CDN']
 
 def GetChannelID(url):
     matches = re.finditer(regex, url, re.MULTILINE)
@@ -80,6 +85,7 @@ def go_simps_support(request,Type):
 def go_simps_guide(request):
     return render(request,'guide.html',{'Domain':DOMAIN})   
 
+"""
 def go_simps_discord_login(request):
     return redirect(LOGINURL)
 
@@ -123,3 +129,4 @@ def go_simps_discord_channel(request,ChannelID):
     except:
         print("Not enable any groups")
     return render(request,'Pilot/channel.html',{'ChannelName':ChannelInfo,'Groups':Groups,'Domain':DOMAIN})
+"""    
