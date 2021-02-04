@@ -1,3 +1,9 @@
+v2.7.23
+- Change 774.inc to 774inc
+- Update 774inc
+- Add k8s mainfest
+- Fix go-simp-web debug env
+
 v2.7.22
 - Add Twitch support
 - Add Ririsya #112
