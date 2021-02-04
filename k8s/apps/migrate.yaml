@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: migrate
+spec:
+  containers:
+    - name: go-simp-migrate
+      image: go-simp_db_migrate
+      imagePullPolicy: IfNotPresent
+  restartPolicy: OnFailure    

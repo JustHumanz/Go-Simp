@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-simp-fanart
+  labels:           
+    app: go-simp
+    tier: backend
+spec:
+  selector:
+    matchLabels:    
+      app: fanart
+      tier: backend
+  template:         
+    metadata:
+      labels:       
+        app: fanart
+        tier: backend
+    spec:
+      containers:
+        - name: go-simp-fanart
+          image: go-simp_fanart
+          imagePullPolicy: IfNotPresent  

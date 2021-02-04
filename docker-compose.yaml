@@ -103,13 +103,13 @@ services:
     networks:
       - go_simp-net
 
-  yotube-scrap:
-    build: service/yt-scrap
-    image: yt-scrap
-    env_file:
-      - ./.env
-    networks:
-      - go_simp-net         
+#  yotube-scrap:
+#    build: service/yt-scrap
+#    image: yt-scrap
+#    env_file:
+#      - ./.env
+#    networks:
+#      - go_simp-net         
 
   traefik:
     image: traefik:2.3
@@ -123,9 +123,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   static_page:
-    image: nginx:latest
-    volumes:
-    - ./Img/:/usr/share/nginx/html
+    build: ./Img/
     networks:
       - go_simp-proxy
     labels:

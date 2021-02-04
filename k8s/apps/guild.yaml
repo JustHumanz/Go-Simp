@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-simp-guild
+  labels:           
+    app: go-simp
+    tier: frontend
+spec:
+  selector:
+    matchLabels:    
+      app: guild
+      tier: backend
+  template:         
+    metadata:
+      labels:       
+        app: guild
+        tier: backend
+    spec:           
+      containers:
+        - name: go-simp-guild
+          image: go-simp_guild
+          imagePullPolicy: IfNotPresent
