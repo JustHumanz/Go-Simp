@@ -1,6 +1,7 @@
 v2.7.24
 - Fix guild channel notif
 - Change Tbilibili fanart workflow
+- Add LowResources options
 
 v2.7.23
 - Change 774.inc to 774inc
