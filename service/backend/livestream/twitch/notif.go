@@ -116,6 +116,7 @@ func (Data TwitchNotif) SendNotif() error {
 				"Value": config.Waiting,
 			}).Warn("Waiting send message")
 			wg.Wait()
+			expiresAt = time.Now().In(loc)
 		}
 	}
 	wg.Wait()

@@ -20,6 +20,7 @@ func (Data *LiveBili) Crotttt() error {
 	BiliBiliAccount := "https://space.bilibili.com/" + strconv.Itoa(Data.Member.BiliBiliID)
 	BiliBiliURL := "https://live.bilibili.com/" + strconv.Itoa(Data.RoomData.LiveRoomID)
 	Color, err := engine.GetColor(config.TmpDir, Data.RoomData.Thumbnail)
+	expiresAt := time.Now().In(loc)
 	if err != nil {
 		return err
 	}
@@ -37,7 +38,7 @@ func (Data *LiveBili) Crotttt() error {
 			SetDescription(Data.RoomData.Description).
 			SetImage(Data.RoomData.Thumbnail).
 			SetURL(BiliBiliURL).
-			AddField("Start live", durafmt.Parse(time.Now().In(loc).Sub(Data.RoomData.ScheduledStart.In(loc))).LimitFirstN(1).String()+" Ago").
+			AddField("Start live", durafmt.Parse(expiresAt.Sub(Data.RoomData.ScheduledStart.In(loc))).LimitFirstN(1).String()+" Ago").
 			AddField("Online", engine.NearestThousandFormat(float64(Data.RoomData.Online))).
 			InlineAllFields().
 			//AddField("Rank",Data).
@@ -110,6 +111,7 @@ func (Data *LiveBili) Crotttt() error {
 				"Value": config.Waiting,
 			}).Warn("Waiting send message")
 			wg.Wait()
+			expiresAt = time.Now().In(loc)
 		}
 	}
 	wg.Wait()

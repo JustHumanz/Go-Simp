@@ -20,6 +20,7 @@ func (Data CheckSctruct) SendNude() {
 		if err != nil {
 			log.Error(err)
 		}
+		expiresAt := time.Now().In(loc)
 		log.WithFields(log.Fields{
 			"Vtuber": Data.Member.Name,
 		}).Info("New video uploaded")
@@ -47,7 +48,7 @@ func (Data CheckSctruct) SendNude() {
 							AddField("Duration ", video.Length).
 							InlineAllFields().
 							AddField("Viwers ", engine.NearestThousandFormat(float64(video.Play))).
-							SetFooter(durafmt.Parse(time.Now().In(loc).Sub(time.Unix(int64(video.Created), 0).In(loc))).LimitFirstN(2).String()+" Ago", config.BiliBiliIMG).
+							SetFooter(durafmt.Parse(expiresAt.Sub(time.Unix(int64(video.Created), 0).In(loc))).LimitFirstN(2).String()+" Ago", config.BiliBiliIMG).
 							SetColor(Color).MessageEmbed)
 						if err != nil {
 							log.Error(msg, err)
@@ -66,6 +67,7 @@ func (Data CheckSctruct) SendNude() {
 						"Value": config.Waiting,
 					}).Warn("Waiting send message")
 					wg.Wait()
+					expiresAt = time.Now().In(loc)
 				}
 			}
 			wg.Wait()

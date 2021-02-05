@@ -113,6 +113,7 @@ func (PushData *NotifStruct) SendNude() error {
 					"Value": config.Waiting,
 				}).Warn("Waiting send message")
 				wg.Wait()
+				expiresAt = time.Now().In(loc)
 			}
 		}
 		wg.Wait()
@@ -229,6 +230,7 @@ func (PushData *NotifStruct) SendNude() error {
 					"Value": config.Waiting,
 				}).Warn("Waiting send message")
 				wg.Wait()
+				expiresAt = time.Now().In(loc)
 			}
 		}
 		wg.Wait()
@@ -289,6 +291,7 @@ func (PushData *NotifStruct) SendNude() error {
 					"Value": config.Waiting,
 				}).Warn("Waiting send message")
 				wg.Wait()
+				expiresAt = time.Now().In(loc)
 			}
 		}
 	} else if Status == "reminder" {
