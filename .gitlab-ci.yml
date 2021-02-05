@@ -6,6 +6,7 @@ include:
   - template: Code-Quality.gitlab-ci.yml
 
 code_quality:
+  stage: build  
   artifacts:
     paths: [gl-code-quality-report.json]
 
@@ -68,5 +69,3 @@ build go-simp 10/10:
   stage: build
   script:
     - docker build -t rest-api ./service/rest-api
-
-    
