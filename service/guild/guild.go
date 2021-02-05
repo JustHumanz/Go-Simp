@@ -169,6 +169,7 @@ func Guild(s *discordgo.Session, g *discordgo.GuildCreate) {
 						log.Error(err)
 					}
 				}
+				break
 			}
 		}
 	}
