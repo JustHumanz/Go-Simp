@@ -2,11 +2,12 @@ stages:
   - build
   - deploy
   
+include:
+  - template: Code-Quality.gitlab-ci.yml
+
 build go-simp 1/10:
   image: docker:latest
   stage: build
-  include:
-    - template: Code-Quality.gitlab-ci.yml
   script:
     - docker build -t mainbot .
 
