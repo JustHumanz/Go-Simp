@@ -132,7 +132,7 @@ type SubTbili struct {
 			ImgSrc    string `json:"img_src"`
 			ImgWidth  int    `json:"img_width"`
 			ImgHeight int    `json:"img_height"`
-			ImgSize   int    `json:"img_size"`
+			ImgSize   string `json:"img_size"`
 		} `json:"pictures"`
 		PicturesCount int    `json:"pictures_count"`
 		UploadTime    int    `json:"upload_time"`
