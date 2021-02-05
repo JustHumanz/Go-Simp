@@ -3,7 +3,10 @@ image: docker:19.03.12
 stages:
   - build
   - deploy
-  
+
+before_script:
+  - docker info
+    
 include:
   - template: Code-Quality.gitlab-ci.yml
 
