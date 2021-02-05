@@ -5,6 +5,10 @@ stages:
 include:
   - template: Code-Quality.gitlab-ci.yml
 
+code_quality:
+  artifacts:
+    paths: [gl-code-quality-report.json]
+
 build go-simp 1/10:
   image: docker:latest
   stage: build
