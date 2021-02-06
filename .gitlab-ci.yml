@@ -31,8 +31,6 @@ before_script:
 include:
   - template: Code-Quality.gitlab-ci.yml
 
-variables:
-  TAG_LATEST: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:latest
   
 code_quality:
   stage: build  
@@ -43,6 +41,7 @@ build go-simp image:
   stage: build
   script:
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
 
 build go-simp migrate service:
   stage: build
@@ -51,6 +50,7 @@ build go-simp migrate service:
     - docker tag "$CI_REGISTRY_IMAGE" go-simp
   script:
     - docker build --pull -t $CI_REGISTRY_IMAGE-migrate ./service/db_migrate
+    - docker push $CI_REGISTRY_IMAGE-migrate    
 
 build go-simp fanart service:
   stage: build
@@ -59,6 +59,7 @@ build go-simp fanart service:
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
     - docker build --pull -t $CI_REGISTRY_IMAGE-fanart ./service/fanart    
+    - docker push $CI_REGISTRY_IMAGE-fanart    
 
 build go-simp livestream service:
   stage: build
@@ -67,6 +68,7 @@ build go-simp livestream service:
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
     - docker build --pull -t $CI_REGISTRY_IMAGE-livestream ./service/livestream
+    - docker push $CI_REGISTRY_IMAGE-livestream        
 
 build go-simp subscriber service:
   stage: build
@@ -75,6 +77,7 @@ build go-simp subscriber service:
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
     - docker build --pull -t $CI_REGISTRY_IMAGE-subscriber ./service/subscriber
+    - docker push $CI_REGISTRY_IMAGE-subscriber    
 
 build go-simp utility service:
   stage: build
@@ -83,6 +86,7 @@ build go-simp utility service:
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
     - docker build --pull -t $CI_REGISTRY_IMAGE-utility ./service/utility
+    - docker push $CI_REGISTRY_IMAGE-utility    
 
 build go-simp frontend service:
   stage: build
@@ -91,6 +95,7 @@ build go-simp frontend service:
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
     - docker build --pull -t $CI_REGISTRY_IMAGE-frontend ./service/frontend
+    - docker push $CI_REGISTRY_IMAGE-frontend    
 
 build go-simp guild service:
   stage: build
@@ -99,6 +104,7 @@ build go-simp guild service:
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
     - docker build --pull -t $CI_REGISTRY_IMAGE-guild ./service/guild
+    - docker push $CI_REGISTRY_IMAGE-guild    
 
 build go-simp web service:
   stage: build
@@ -107,6 +113,7 @@ build go-simp web service:
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
     - docker build --pull -t $CI_REGISTRY_IMAGE-web ./service/web
+    - docker push $CI_REGISTRY_IMAGE-web    
 
 build go-simp rest-api service:
   stage: build
@@ -115,3 +122,4 @@ build go-simp rest-api service:
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
     - docker build --pull -t $CI_REGISTRY_IMAGE-rest-api ./service/rest-api
+    - docker push $CI_REGISTRY_IMAGE-rest-api    
