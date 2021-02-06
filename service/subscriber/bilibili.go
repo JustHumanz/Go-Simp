@@ -10,7 +10,7 @@ import (
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
-	"github.com/JustHumanz/Go-Simp/service/backend/livestream/bilibili/space"
+	"github.com/JustHumanz/Go-Simp/service/livestream/bilibili/space"
 	log "github.com/sirupsen/logrus"
 )
 

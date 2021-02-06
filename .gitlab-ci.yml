@@ -43,27 +43,27 @@ build go-simp 1/10:
 build go-simp 2/10:
   stage: build
   script:
-    - docker build -t migrate ./service/backend/db_migrate
+    - docker build -t migrate ./service/db_migrate
 
 build go-simp 3/10:
   stage: build
   script:
-    - docker build -t fanart ./service/backend/fanart    
+    - docker build -t fanart ./service/fanart    
 
 build go-simp 4/10:
   stage: build
   script:
-    - docker build -t livestream ./service/backend/livestream
+    - docker build -t livestream ./service/livestream
 
 build go-simp 5/10:
   stage: build
   script:
-    - docker build -t subscriber ./service/backend/subscriber
+    - docker build -t subscriber ./service/subscriber
 
 build go-simp 6/10:
   stage: build
   script:
-    - docker build -t utility ./service/backend/utility
+    - docker build -t utility ./service/utility
 
 build go-simp 7/10:
   stage: build

@@ -1,4 +1,4 @@
 FROM mainbot
-WORKDIR /app/Go-Simp/service/backend/subscriber/
+WORKDIR /app/Go-Simp/service/subscriber/
 RUN go build -o subscriber
 CMD ["./subscriber","-Youtube","-BiliBili","-Twitter"]

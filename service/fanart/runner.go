@@ -8,9 +8,9 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/engine"
-	"github.com/JustHumanz/Go-Simp/service/backend/fanart/bilibili"
-	"github.com/JustHumanz/Go-Simp/service/backend/fanart/twitter"
-	"github.com/JustHumanz/Go-Simp/service/backend/utility/runfunc"
+	"github.com/JustHumanz/Go-Simp/service/fanart/bilibili"
+	"github.com/JustHumanz/Go-Simp/service/fanart/twitter"
+	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
 )

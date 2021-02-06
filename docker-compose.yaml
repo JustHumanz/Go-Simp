@@ -33,44 +33,52 @@ services:
       - build_mainbot
     command: ./start.sh
     restart: on-failure    
+    volumes:
+      - ./config.toml:/app/Go-Simp
     networks:
       - go_simp-net
 
   fanart:
-    build: ./service/backend/fanart
+    build: ./service/fanart
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
       - build_mainbot
     restart: on-failure
+    volumes:
+      - ./config.toml:/app/Go-Simp    
     networks:
       - go_simp-net
 
   livestream:
-    build: ./service/backend/livestream/
+    build: ./service/livestream/
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
       - build_mainbot
     restart: on-failure
+    volumes:
+      - ./config.toml:/app/Go-Simp    
     networks:
       - go_simp-net
 
   subscriber:
-    build: ./service/backend/subscriber/
+    build: ./service/subscriber/
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
       - build_mainbot
     restart: on-failure    
+    volumes:
+      - ./config.toml:/app/Go-Simp    
     networks:
       - go_simp-net
 
   utility:
-    build: ./service/backend/utility/
+    build: ./service/utility/
     depends_on:
       - mysql
       - db_migrate
@@ -78,6 +86,8 @@ services:
       - build_mainbot
     command: go run .
     restart: on-failure    
+    volumes:
+      - ./config.toml:/app/Go-Simp    
     networks:
       - go_simp-net
 
@@ -89,6 +99,8 @@ services:
       - multi_tor
       - build_mainbot
     restart: on-failure
+    volumes:
+      - ./config.toml:/app/Go-Simp    
     networks:
       - go_simp-net
 
@@ -100,6 +112,8 @@ services:
       - multi_tor
       - build_mainbot
     restart: on-failure
+    volumes:
+      - ./config.toml:/app/Go-Simp    
     networks:
       - go_simp-net
 
@@ -168,6 +182,8 @@ services:
       - redis
     command: go run . 
     restart: on-failure
+    volumes:
+      - ./config.toml:/app/Go-Simp    
     networks:
       - go_simp-proxy
       - go_simp-net

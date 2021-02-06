@@ -13,7 +13,7 @@ import (
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
-	"github.com/JustHumanz/Go-Simp/service/backend/utility/runfunc"
+	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	log "github.com/sirupsen/logrus"
 )
 

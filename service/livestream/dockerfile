@@ -1,4 +1,4 @@
 FROM mainbot
-WORKDIR /app/Go-Simp/service/backend/livestream/
+WORKDIR /app/Go-Simp/service/livestream/
 RUN go build -o livestream
 CMD ["./livestream","-Youtube","-LiveBiliBili","-SpaceBiliBili","-Twitch"]

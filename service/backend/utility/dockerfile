@@ -1,3 +1,0 @@
-FROM mainbot
-WORKDIR /app/Go-Simp/service/backend/utility/
-CMD ["go","run","."]

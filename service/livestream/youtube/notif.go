@@ -11,7 +11,7 @@ import (
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
-	"github.com/JustHumanz/Go-Simp/service/backend/livestream/bilibili/live"
+	"github.com/JustHumanz/Go-Simp/service/livestream/bilibili/live"
 
 	"github.com/hako/durafmt"
 	log "github.com/sirupsen/logrus"
