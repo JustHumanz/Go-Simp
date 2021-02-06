@@ -42,6 +42,7 @@ code_quality:
 build go-simp migrate service:
   stage: build
   before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp
   script:
@@ -51,6 +52,7 @@ build go-simp migrate service:
 build go-simp fanart service:
   stage: build
   before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
@@ -60,6 +62,7 @@ build go-simp fanart service:
 build go-simp livestream service:
   stage: build
   before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
@@ -69,6 +72,7 @@ build go-simp livestream service:
 build go-simp subscriber service:
   stage: build
   before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
@@ -78,6 +82,7 @@ build go-simp subscriber service:
 build go-simp utility service:
   stage: build
   before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
@@ -87,6 +92,7 @@ build go-simp utility service:
 build go-simp frontend service:
   stage: build
   before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
@@ -96,6 +102,7 @@ build go-simp frontend service:
 build go-simp guild service:
   stage: build
   before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
@@ -105,6 +112,7 @@ build go-simp guild service:
 build go-simp web service:
   stage: build
   before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
@@ -114,6 +122,7 @@ build go-simp web service:
 build go-simp rest-api service:
   stage: build
   before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
