@@ -39,12 +39,12 @@ code_quality:
   artifacts:
     paths: [gl-code-quality-report.json]
 
-build go-simp 1/10:
+build go-simp image:
   stage: build
   script:
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
 
-build go-simp 2/10:
+build go-simp migrate service:
   stage: build
   before_script:
     - docker pull "$CI_REGISTRY_IMAGE"
@@ -52,7 +52,7 @@ build go-simp 2/10:
   script:
     - docker build --pull -t $CI_REGISTRY_IMAGE-migrate ./service/db_migrate
 
-build go-simp 3/10:
+build go-simp fanart service:
   stage: build
   before_script:
     - docker pull "$CI_REGISTRY_IMAGE"
@@ -60,7 +60,7 @@ build go-simp 3/10:
   script:
     - docker build --pull -t $CI_REGISTRY_IMAGE-fanart ./service/fanart    
 
-build go-simp 4/10:
+build go-simp livestream service:
   stage: build
   before_script:
     - docker pull "$CI_REGISTRY_IMAGE"
@@ -68,7 +68,7 @@ build go-simp 4/10:
   script:
     - docker build --pull -t $CI_REGISTRY_IMAGE-livestream ./service/livestream
 
-build go-simp 5/10:
+build go-simp subscriber service:
   stage: build
   before_script:
     - docker pull "$CI_REGISTRY_IMAGE"
@@ -76,7 +76,7 @@ build go-simp 5/10:
   script:
     - docker build --pull -t $CI_REGISTRY_IMAGE-subscriber ./service/subscriber
 
-build go-simp 6/10:
+build go-simp utility service:
   stage: build
   before_script:
     - docker pull "$CI_REGISTRY_IMAGE"
@@ -84,7 +84,7 @@ build go-simp 6/10:
   script:
     - docker build --pull -t $CI_REGISTRY_IMAGE-utility ./service/utility
 
-build go-simp 7/10:
+build go-simp frontend service:
   stage: build
   before_script:
     - docker pull "$CI_REGISTRY_IMAGE"
@@ -92,7 +92,7 @@ build go-simp 7/10:
   script:
     - docker build --pull -t $CI_REGISTRY_IMAGE-frontend ./service/frontend
 
-build go-simp 8/10:
+build go-simp guild service:
   stage: build
   before_script:
     - docker pull "$CI_REGISTRY_IMAGE"
@@ -100,7 +100,7 @@ build go-simp 8/10:
   script:
     - docker build --pull -t $CI_REGISTRY_IMAGE-guild ./service/guild
 
-build go-simp 9/10:
+build go-simp web service:
   stage: build
   before_script:
     - docker pull "$CI_REGISTRY_IMAGE"
@@ -108,7 +108,7 @@ build go-simp 9/10:
   script:
     - docker build --pull -t $CI_REGISTRY_IMAGE-web ./service/web
 
-build go-simp 10/10:
+build go-simp rest-api service:
   stage: build
   before_script:
     - docker pull "$CI_REGISTRY_IMAGE"
