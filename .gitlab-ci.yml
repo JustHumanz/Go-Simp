@@ -5,20 +5,6 @@ stages:
   - deploy
 
 variables:
-  # When using dind service, we need to instruct docker to talk with
-  # the daemon started inside of the service. The daemon is available
-  # with a network connection instead of the default
-  # /var/run/docker.sock socket. Docker 19.03 does this automatically
-  # by setting the DOCKER_HOST in
-  # https://github.com/docker-library/docker/blob/d45051476babc297257df490d22cbd806f1b11e4/19.03/docker-entrypoint.sh#L23-L29
-  #
-  # The 'docker' hostname is the alias of the service container as described at
-  # https://docs.gitlab.com/ee/ci/docker/using_docker_images.html#accessing-the-services.
-  #
-  # Specify to Docker where to create the certificates, Docker will
-  # create them automatically on boot, and will create
-  # `/certs/client` that will be shared between the service and job
-  # container, thanks to volume mount from config.toml
   DOCKER_TLS_CERTDIR: "/certs"
 
 services:
@@ -26,7 +12,8 @@ services:
 
 before_script:
   - docker info
-  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  - mkdir -p $HOME/.docker
+  - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   - docker build --pull -t "$CI_REGISTRY_IMAGE" .
   - docker push "$CI_REGISTRY_IMAGE"
   
@@ -42,10 +29,11 @@ code_quality:
 build go-simp migrate service:
   stage: build
   before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json  
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp
   script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY  
     - docker build -t $CI_REGISTRY_IMAGE-migrate ./service/db_migrate
     - docker push $CI_REGISTRY_IMAGE-migrate    
 
@@ -55,7 +43,7 @@ build go-simp fanart service:
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY  
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_TOKEN" $CI_REGISTRY  
     - docker build -t $CI_REGISTRY_IMAGE-fanart ./service/fanart    
     - docker push $CI_REGISTRY_IMAGE-fanart    
 
@@ -127,4 +115,4 @@ build go-simp rest-api service:
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY  
     - docker build -t $CI_REGISTRY_IMAGE-rest-api ./service/rest-api
-    - docker push $CI_REGISTRY_IMAGE-rest-api    
+    - docker push $CI_REGISTRY_IMAGE-rest-api       
