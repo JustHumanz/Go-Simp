@@ -45,7 +45,7 @@ build go-simp migrate service:
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp
   script:
-    - docker build --pull -t $CI_REGISTRY_IMAGE-migrate ./service/db_migrate
+    - docker build -t $CI_REGISTRY_IMAGE-migrate ./service/db_migrate
     - docker push $CI_REGISTRY_IMAGE-migrate    
 
 build go-simp fanart service:
@@ -54,7 +54,7 @@ build go-simp fanart service:
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
-    - docker build --pull -t $CI_REGISTRY_IMAGE-fanart ./service/fanart    
+    - docker build -t $CI_REGISTRY_IMAGE-fanart ./service/fanart    
     - docker push $CI_REGISTRY_IMAGE-fanart    
 
 build go-simp livestream service:
@@ -63,7 +63,7 @@ build go-simp livestream service:
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
-    - docker build --pull -t $CI_REGISTRY_IMAGE-livestream ./service/livestream
+    - docker build -t $CI_REGISTRY_IMAGE-livestream ./service/livestream
     - docker push $CI_REGISTRY_IMAGE-livestream        
 
 build go-simp subscriber service:
@@ -72,7 +72,7 @@ build go-simp subscriber service:
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
-    - docker build --pull -t $CI_REGISTRY_IMAGE-subscriber ./service/subscriber
+    - docker build -t $CI_REGISTRY_IMAGE-subscriber ./service/subscriber
     - docker push $CI_REGISTRY_IMAGE-subscriber    
 
 build go-simp utility service:
@@ -81,7 +81,7 @@ build go-simp utility service:
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
-    - docker build --pull -t $CI_REGISTRY_IMAGE-utility ./service/utility
+    - docker build -t $CI_REGISTRY_IMAGE-utility ./service/utility
     - docker push $CI_REGISTRY_IMAGE-utility    
 
 build go-simp frontend service:
@@ -90,7 +90,7 @@ build go-simp frontend service:
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
-    - docker build --pull -t $CI_REGISTRY_IMAGE-frontend ./service/frontend
+    - docker build -t $CI_REGISTRY_IMAGE-frontend ./service/frontend
     - docker push $CI_REGISTRY_IMAGE-frontend    
 
 build go-simp guild service:
@@ -99,7 +99,7 @@ build go-simp guild service:
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
-    - docker build --pull -t $CI_REGISTRY_IMAGE-guild ./service/guild
+    - docker build -t $CI_REGISTRY_IMAGE-guild ./service/guild
     - docker push $CI_REGISTRY_IMAGE-guild    
 
 build go-simp web service:
@@ -108,7 +108,7 @@ build go-simp web service:
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
-    - docker build --pull -t $CI_REGISTRY_IMAGE-web ./service/web
+    - docker build -t $CI_REGISTRY_IMAGE-web ./service/web
     - docker push $CI_REGISTRY_IMAGE-web    
 
 build go-simp rest-api service:
@@ -117,5 +117,5 @@ build go-simp rest-api service:
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp  
   script:
-    - docker build --pull -t $CI_REGISTRY_IMAGE-rest-api ./service/rest-api
+    - docker build -t $CI_REGISTRY_IMAGE-rest-api ./service/rest-api
     - docker push $CI_REGISTRY_IMAGE-rest-api    
