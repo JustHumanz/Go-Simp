@@ -40,3 +40,11 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 2525
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/Go-Simp
+          
+      volumes:
+        - name: config-volume
+          configMap:
+            name: Go-Simp_config_file        

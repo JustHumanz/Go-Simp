@@ -30,6 +30,9 @@ before_script:
 include:
   - template: Code-Quality.gitlab-ci.yml
 
+variables:
+  TAG_LATEST: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:latest
+  
 code_quality:
   stage: build  
   artifacts:
@@ -38,7 +41,9 @@ code_quality:
 build go-simp 1/10:
   stage: build
   script:
-    - docker build -t mainbot .
+    - docker build -t mainbot  .
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker push mainbot
 
 build go-simp 2/10:
   stage: build

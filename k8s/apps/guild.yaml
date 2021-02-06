@@ -20,3 +20,10 @@ spec:
         - name: go-simp-guild
           image: go-simp_guild
           imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - name: config-volume
+            mountPath: /app/Go-Simp
+      volumes:
+        - name: config-volume
+          configMap:
+            name: Go-Simp_config_file          

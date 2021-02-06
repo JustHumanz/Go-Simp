@@ -7,4 +7,11 @@ spec:
     - name: go-simp-migrate
       image: go-simp_db_migrate
       imagePullPolicy: IfNotPresent
+      volumeMounts:
+      - name: config-volume
+        mountPath: /app/Go-Simp
+    volumes:
+      - name: config-volume
+        configMap:
+          name: Go-Simp_config_file      
   restartPolicy: OnFailure    
