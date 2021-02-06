@@ -34,7 +34,7 @@ build go-simp migrate service:
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp
   script:
-    - docker build -t $CI_REGISTRY_IMAGE-migrate ./service/db_migrate
+    - docker build -t $CI_REGISTRY_IMAGE-migrate ./service/migrate
     - docker push $CI_REGISTRY_IMAGE-migrate    
 
 build go-simp fanart service:
