@@ -26,6 +26,7 @@ services:
 
 before_script:
   - docker info
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
 
 include:
   - template: Code-Quality.gitlab-ci.yml
@@ -41,9 +42,7 @@ code_quality:
 build go-simp 1/10:
   stage: build
   script:
-    - docker build -t mainbot  .
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-    - docker push mainbot
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
 
 build go-simp 2/10:
   stage: build

@@ -1,3 +1,3 @@
-FROM mainbot
+FROM go-simp
 WORKDIR /app/Go-Simp/service/migrate/
 CMD ["go","run","."]

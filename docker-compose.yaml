@@ -1,9 +1,9 @@
 version: "3.7"
 
 services:
-  build_mainbot:
+  build_go-simp:
     build: .
-    image: mainbot
+    image: go-simp
 
   build_multitor:
     build: service/multitor
@@ -30,7 +30,7 @@ services:
     build: ./service/migrate
     depends_on:
       - mysql  
-      - build_mainbot
+      - build_build_go-simp
     command: ./start.sh
     restart: on-failure    
     volumes:
@@ -44,7 +44,7 @@ services:
       - mysql
       - db_migrate
       - multi_tor
-      - build_mainbot
+      - build_build_go-simp
     restart: on-failure
     volumes:
       - ./config.toml:/app/Go-Simp    
@@ -57,7 +57,7 @@ services:
       - mysql
       - db_migrate
       - multi_tor
-      - build_mainbot
+      - build_build_go-simp
     restart: on-failure
     volumes:
       - ./config.toml:/app/Go-Simp    
@@ -70,7 +70,7 @@ services:
       - mysql
       - db_migrate
       - multi_tor
-      - build_mainbot
+      - build_build_go-simp
     restart: on-failure    
     volumes:
       - ./config.toml:/app/Go-Simp    
@@ -83,7 +83,7 @@ services:
       - mysql
       - db_migrate
       - multi_tor
-      - build_mainbot
+      - build_build_go-simp
     command: go run .
     restart: on-failure    
     volumes:
@@ -97,7 +97,7 @@ services:
       - mysql
       - db_migrate
       - multi_tor
-      - build_mainbot
+      - build_build_go-simp
     restart: on-failure
     volumes:
       - ./config.toml:/app/Go-Simp    
@@ -110,7 +110,7 @@ services:
       - mysql
       - db_migrate
       - multi_tor
-      - build_mainbot
+      - build_build_go-simp
     restart: on-failure
     volumes:
       - ./config.toml:/app/Go-Simp    
@@ -175,10 +175,10 @@ services:
 
   rest_api:
     build: service/rest-api
-    image: mainbot_rest-api
+    image: build_go-simp_rest-api
     working_dir: /app/Go-Simp/service/rest-api    
     depends_on:
-      - build_mainbot
+      - build_build_go-simp
       - redis
     command: go run . 
     restart: on-failure
