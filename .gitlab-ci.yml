@@ -21,10 +21,9 @@ build go-simp service:
   stage: build
   before_script:
     - apk add --no-cache docker-compose
-    - echo $COMPOSE > $CI_PROJECT_DIR/docker-compose.prod.yaml
-    - echo $CONFIG > $CI_PROJECT_DIR/config.toml
-    - echo $env > $CI_PROJECT_DIR/.env
-    - cat $CI_PROJECT_DIR/docker-compose.prod.yaml $CI_PROJECT_DIR/config.toml $CI_PROJECT_DIR/.env
+    - cp /data/docker-compose-prod.yaml $CI_PROJECT_DIR/docker-compose.prod.yaml
+    - cp /data/config.toml $CI_PROJECT_DIR/config.toml
+    - cp /data/.env > $CI_PROJECT_DIR/.env
     - docker-compose -f docker-compose.prod.yaml build
   script:
     - docker-compose build
