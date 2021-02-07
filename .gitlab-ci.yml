@@ -21,10 +21,11 @@ build go-simp service:
   stage: build
   before_script:
     - apk add --no-cache docker-compose
-    - echo $COMPOSE > $CI_PROJECT_DIR/docker-compose.yaml
+    - echo $COMPOSE > $CI_PROJECT_DIR/docker-compose.prod.yaml
     - echo $CONFIG > $CI_PROJECT_DIR/config.toml
     - echo $env > $CI_PROJECT_DIR/.env
-    - docker-compose build
+    - cat $CI_PROJECT_DIR/docker-compose.prod.yaml $CI_PROJECT_DIR/config.toml $CI_PROJECT_DIR/.env
+    - docker-compose -f docker-compose.prod.yaml build
   script:
     - docker-compose build
   
@@ -40,8 +41,8 @@ deploy go-simp:
   script:
     - >
       if [ "$MIGRATE" == "true" ]; then
-        docker-compose up db_migrate livestream && docker-compose up -d && docker-compose stop db_migrate
+        docker-compose -f docker-compose.prod.yaml up db_migrate livestream && docker-compose -f docker-compose.prod.yaml up -d && docker-compose -f docker-compose.prod.yaml stop db_migrate
       else
-        docker-compose up -d && docker-compose stop db_migrate
+        docker-compose -f docker-compose.prod.yaml up -d && docker-compose -f docker-compose.prod.yaml stop db_migrate
       fi      
   when: manual
