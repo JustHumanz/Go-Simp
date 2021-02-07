@@ -4,12 +4,8 @@ stages:
   - build
   - deploy
 
-code_quality:
-  stage: build  
-  tags:
-    - gitlab-org-docker   
-  artifacts:
-    paths: [gl-code-quality-report.json]
+include:
+  - template: Code-Quality.gitlab-ci.yml
     
 before_script:
   - docker info
@@ -17,8 +13,14 @@ before_script:
   - cp /data/docker-compose-prod.yaml $CI_PROJECT_DIR/docker-compose.prod.yaml
   - cp /data/config.toml $CI_PROJECT_DIR/config.toml
   - cp /data/.env $CI_PROJECT_DIR/.env
-include:
-  - template: Code-Quality.gitlab-ci.yml
+
+code_quality:
+  stage: build  
+  tags:
+    - gitlab-org-docker   
+  before_script: []    
+  artifacts:
+    paths: [gl-code-quality-report.json]
 
 build go-simp service:
   stage: build
