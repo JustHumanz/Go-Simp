@@ -4,6 +4,13 @@ stages:
   - build
   - deploy
 
+code_quality:
+  stage: build  
+  tags:
+    - gitlab-org-docker   
+  artifacts:
+    paths: [gl-code-quality-report.json]
+    
 before_script:
   - docker info
   - apk add --no-cache docker-compose  
@@ -19,13 +26,6 @@ build go-simp service:
     - build
   script:
     - docker-compose -f docker-compose.prod.yaml build
-  
-code_quality:
-  stage: build  
-  tags:
-    - gitlab-org-docker   
-  artifacts:
-    paths: [gl-code-quality-report.json]
 
 deploy go-simp:
   stage: deploy
