@@ -4,13 +4,6 @@ stages:
   - build
   - deploy
 
-variables:
-  DOCKER_TLS_CERTDIR: "/certs"
-  DOCKER_DRIVER: overlay2
-
-services:
-  - docker:19.03.12-dind
-
 before_script:
   - docker info
 
@@ -19,14 +12,15 @@ include:
 
 build go-simp service:
   stage: build
+  tags:
+    - build
   before_script:
     - apk add --no-cache docker-compose
     - cp /data/docker-compose-prod.yaml $CI_PROJECT_DIR/docker-compose.prod.yaml
     - cp /data/config.toml $CI_PROJECT_DIR/config.toml
-    - cp /data/.env > $CI_PROJECT_DIR/.env
-    - docker-compose -f docker-compose.prod.yaml build
+    - cp /data/.env $CI_PROJECT_DIR/.env
   script:
-    - docker-compose build
+    - docker-compose -f docker-compose.prod.yaml build
   
 code_quality:
   stage: build  
@@ -35,6 +29,8 @@ code_quality:
 
 deploy go-simp:
   stage: deploy
+  tags:
+    - deploy  
   before_script:
     - apk add --no-cache docker-compose
   script:
