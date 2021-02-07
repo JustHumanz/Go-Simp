@@ -25,7 +25,7 @@ build go-simp service:
 code_quality:
   stage: build  
   tags:
-    - build  
+    - gitlab-org-docker   
   artifacts:
     paths: [gl-code-quality-report.json]
 
