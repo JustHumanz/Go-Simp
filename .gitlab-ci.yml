@@ -20,10 +20,7 @@ include:
 build go-simp service:
   stage: build
   before_script:
-    - apk update
-    - apk upgrade
-    - apk add python python-dev py-pip build-base
-    - pip install docker-compose  
+    - apk add --no-cache docker-compose
     - echo $COMPOSE > $CI_PROJECT_DIR/docker-compose.yaml
     - echo $CONFIG > $CI_PROJECT_DIR/config.toml
     - echo $env > $CI_PROJECT_DIR/.env
@@ -39,10 +36,7 @@ code_quality:
 deploy go-simp:
   stage: deploy
   before_script:
-    - apk update
-    - apk upgrade
-    - apk add python python-dev py-pip build-base
-    - pip install docker-compose  
+    - apk add --no-cache docker-compose
   script:
     - >
       if [ "$MIGRATE" == "true" ]; then
