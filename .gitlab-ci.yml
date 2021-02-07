@@ -24,6 +24,8 @@ build go-simp service:
   
 code_quality:
   stage: build  
+  tags:
+    - build  
   artifacts:
     paths: [gl-code-quality-report.json]
 
