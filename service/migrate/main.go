@@ -16,7 +16,7 @@ import (
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
-	youtube "github.com/JustHumanz/Go-Simp/service/backend/livestream/youtube"
+	youtube "github.com/JustHumanz/Go-Simp/service/livestream/youtube"
 
 	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
