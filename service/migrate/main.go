@@ -75,7 +75,7 @@ func init() {
 		os.Exit(1)
 	}
 
-	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC("pilot"))
+	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 	RequestPay("Start migrate new vtuber")
 
 	Bot, err = discordgo.New("Bot " + configfile.Discord)

@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC("pilot"))
+	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 
 	var (
 		H3llcome   = []string{config.Bonjour, config.Howdy, config.Guten, config.Koni, config.Selamat, config.Assalamu, config.Approaching}

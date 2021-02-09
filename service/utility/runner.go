@@ -18,7 +18,7 @@ import (
 )
 
 func main() {
-	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC("localhost"))
+	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 	var (
 		configfile config.ConfigFile
 	)

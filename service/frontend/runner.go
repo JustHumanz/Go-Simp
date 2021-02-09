@@ -56,7 +56,7 @@ func init() {
 
 //StartInit running the fe
 func main() {
-	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC("pilot"))
+	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 
 	var (
 		Bot         *discordgo.Session

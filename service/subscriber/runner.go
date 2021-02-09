@@ -35,7 +35,7 @@ func main() {
 	Twitter := flag.Bool("Twitter", false, "Enable twitter module")
 	flag.Parse()
 
-	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC("pilot"))
+	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 
 	RequestPay := func() {
 		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{

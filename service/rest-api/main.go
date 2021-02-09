@@ -22,7 +22,7 @@ var (
 )
 
 func init() {
-	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC("pilot"))
+	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
 
 	var (

@@ -47,6 +47,7 @@ const (
 	ChannelPermission = 8208
 	GuildSupport      = "https://discord.com/invite/ydWC5knbJT"
 	Waiting           = 5
+	Pilot             = "pilot"
 
 	//Crontab
 	TwitterFanart              = "@every 0h3m0s"

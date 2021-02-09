@@ -27,7 +27,7 @@ func main() {
 	BiliBili := flag.Bool("BiliBiliFanart", false, "Enable bilibili fanart module")
 	flag.Parse()
 
-	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC("pilot"))
+	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 
 	var (
 		configfile config.ConfigFile
