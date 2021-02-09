@@ -21,9 +21,6 @@ code_quality:
   before_script: []    
   artifacts:
     paths: [gl-code-quality-report.json]
-  only:
-    - master
-    - tags
 
 build go-simp service:
   stage: build
@@ -42,7 +39,7 @@ deploy go-simp:
   script:
     - >
       if [ "$MIGRATE" == "true" ]; then
-        docker-compose -f docker-compose.prod.yaml up db_migrate livestream && docker-compose -f docker-compose.prod.yaml up -d && docker-compose -f docker-compose.prod.yaml stop db_migrate
+        docker-compose -f docker-compose.prod.yaml up -d
       else
         docker-compose -f docker-compose.prod.yaml up -d && docker-compose -f docker-compose.prod.yaml stop db_migrate
       fi      
