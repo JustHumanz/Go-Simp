@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"fmt"
@@ -16,7 +17,9 @@ import (
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
+	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	youtube "github.com/JustHumanz/Go-Simp/service/livestream/youtube"
+	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 
 	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
@@ -33,11 +36,27 @@ var (
 	Bot             *discordgo.Session
 	TwitchClient    *helix.Client
 	TwitchToken     string
+	configfile      config.ConfigFile
+	gRCPconn        pilot.PilotServiceClient
 )
 
 type NewVtuber struct {
 	Member Member
 	Group  database.Group
+}
+
+func RequestPay(Message string) {
+	res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+		Message: Message,
+		Service: "Migrate",
+	})
+	if err != nil {
+		log.Fatalf("Error when request payload: %s", err)
+	}
+	err = json.Unmarshal(res.ConfigFile, &configfile)
+	if err != nil {
+		log.Panic(err)
+	}
 }
 
 func init() {
@@ -55,54 +74,61 @@ func init() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	config, err := config.ReadConfig("../../config.toml")
+
+	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC("pilot"))
+	RequestPay("Start migrate new vtuber")
+
+	Bot, err = discordgo.New("Bot " + configfile.Discord)
 	if err != nil {
 		log.Error(err)
 	}
+
+	db = configfile.CheckSQL()
+	database.DB = db
+	config.GoSimpConf = configfile
+
 	YoutubeToken = engine.GetYtToken()
-	BiliBiliSession = []string{"Cookie", "SESSDATA=" + config.BiliSess}
+	BiliBiliSession = []string{"Cookie", "SESSDATA=" + configfile.BiliSess}
 	Limit = 100
-	Bot, _ = discordgo.New("Bot " + config.Discord)
-	db = config.CheckSQL()
-	TwitchToken = config.GetTwitchAccessToken()
+	TwitchToken = configfile.GetTwitchAccessToken()
 	err = Bot.Open()
 	if err != nil {
 		log.Error(err)
 		os.Exit(1)
 	}
-	err = CreateDB(config)
+	err = CreateDB(configfile)
 	if err != nil {
 		log.Error(err)
 		os.Exit(1)
 	}
 	TwitchClient, err = helix.NewClient(&helix.Options{
-		ClientID:     config.Twitch.ClientID,
-		ClientSecret: config.Twitch.ClientSecret,
+		ClientID:     configfile.Twitch.ClientID,
+		ClientSecret: configfile.Twitch.ClientSecret,
 	})
 	if err != nil {
 		log.Error(err)
 	}
 	TwitchClient.SetUserAccessToken(TwitchToken)
 
-	//Bot.AddHandler(Dead)
+	Bot.AddHandler(Dead)
 }
 
 func main() {
-	database.Start(db)
 	AddData(JsonData)
 	go CheckYoutube()
 	go CheckLiveBiliBili()
 	go CheckTwitch()
-	time.Sleep(10 * time.Minute)
+	time.Sleep(5 * time.Minute)
 
 	go CheckSpaceBiliBili()
 	go CheckTBiliBili()
-	time.Sleep(10 * time.Minute)
+	time.Sleep(5 * time.Minute)
 
 	go youtube.CheckPrivate()
 	go TwitterFanart()
-	time.Sleep(10 * time.Minute)
+	time.Sleep(5 * time.Minute)
 	log.Info("Done")
+	RequestPay("Done migrate new vtuber")
 	os.Exit(0)
 }
 
@@ -184,10 +210,10 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 }
 
 func Dead(s *discordgo.Session, m *discordgo.MessageCreate) {
-	General := config.BotConf.BotPrefix.General
-	Fanart := config.BotConf.BotPrefix.Fanart
-	BiliBili := config.BotConf.BotPrefix.Bilibili
-	Youtube := config.BotConf.BotPrefix.Youtube
+	General := configfile.BotPrefix.General
+	Fanart := configfile.BotPrefix.Fanart
+	BiliBili := configfile.BotPrefix.Bilibili
+	Youtube := configfile.BotPrefix.Youtube
 	m.Content = strings.ToLower(m.Content)
 	Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 	if err != nil {

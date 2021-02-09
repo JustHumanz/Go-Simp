@@ -20,26 +20,30 @@ import (
 )
 
 var (
-	yttoken   string
-	Ytwaiting = "???"
-	Bot       *discordgo.Session
+	yttoken     string
+	Ytwaiting   = "???"
+	Bot         *discordgo.Session
+	VtubersData database.VtubersPayload
+	configfile  config.ConfigFile
 )
 
 //Start start twitter module
-func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
-	Bot = BotInit
-	cronInit.AddFunc(config.YoutubeCheckChannel, CheckYtSchedule)
-	cronInit.AddFunc(config.YoutubeCheckUpcomingByTime, CheckYtByTime)
-	cronInit.AddFunc(config.YoutubePrivateSlayer, CheckPrivate)
+func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile) {
+	Bot = a
+	configfile = d
+	b.AddFunc(config.YoutubeCheckChannel, CheckYtSchedule)
+	b.AddFunc(config.YoutubeCheckUpcomingByTime, CheckYtByTime)
+	b.AddFunc(config.YoutubePrivateSlayer, CheckPrivate)
+	VtubersData = c
 	log.Info("Enable youtube module")
 	//CheckYtScheduleTest("Hololive")
 }
 
 func CheckYtSchedule() {
 	yttoken = engine.GetYtToken()
-	for _, Group := range engine.GroupData {
+	for _, Group := range VtubersData.VtuberData {
 		var wg sync.WaitGroup
-		for i, Member := range database.GetMembers(Group.ID) {
+		for i, Member := range Group.Members {
 			if Member.YoutubeID != "" {
 				wg.Add(1)
 				log.WithFields(log.Fields{
@@ -58,8 +62,8 @@ func CheckYtSchedule() {
 }
 
 func CheckYtByTime() {
-	for _, Group := range engine.GroupData {
-		for _, Member := range database.GetMembers(Group.ID) {
+	for _, Group := range VtubersData.VtuberData {
+		for _, Member := range Group.Members {
 			if Member.YoutubeID != "" {
 				log.WithFields(log.Fields{
 					"Vtuber": Member.EnName,
@@ -216,8 +220,8 @@ func CheckPrivate() {
 
 	log.Info("Start Check Private video")
 	for _, Status := range []string{"upcoming", "past", "live", "private"} {
-		for _, Group := range engine.GroupData {
-			for _, Member := range database.GetMembers(Group.ID) {
+		for _, Group := range VtubersData.VtuberData {
+			for _, Member := range Group.Members {
 				YtData, err := database.YtGetStatus(0, Member.ID, Status, "")
 				if err != nil {
 					log.Error(err)

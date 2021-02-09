@@ -20,7 +20,7 @@ import (
 //Fanart discord message handler
 func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
-	Prefix := config.BotConf.BotPrefix.Fanart
+	Prefix := configfile.BotPrefix.Fanart
 	var (
 		Member      bool
 		Group       bool
@@ -74,7 +74,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 			return true
 		}
-		for _, GroupData := range engine.GroupData {
+		for _, GroupData := range Payload.VtuberData {
 			if m.Content == strings.ToLower(Prefix+GroupData.GroupName) {
 				Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 				if err != nil {
@@ -109,7 +109,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					break
 				}
 			}
-			for _, MemberData := range database.GetMembers(GroupData.ID) {
+			for _, MemberData := range GroupData.Members {
 				if m.Content == strings.ToLower(Prefix+MemberData.Name) || m.Content == strings.ToLower(Prefix+MemberData.JpName) {
 					Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 					if err != nil {
@@ -157,13 +157,13 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 //Tags command message handler
 func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
-	Prefix := config.BotConf.BotPrefix.General
+	Prefix := configfile.BotPrefix.General
 	m.Content = strings.ToLower(m.Content)
 	if strings.HasPrefix(m.Content, Prefix) {
 		var (
 			Already     []string
 			Done        []string
-			MemberTag   []NameStruct
+			MemberTag   []*NameStruct
 			ReminderInt = 0
 		)
 		User := &database.UserStruct{
@@ -228,7 +228,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							User.SetGroup(VTuberGroup).
 								SetReminder(ReminderUser)
 
-							for _, Member := range database.GetMembers(VTuberGroup.ID) {
+							for _, Member := range VTuberGroup.Members {
 								err := User.SetMember(Member).Adduser()
 								if err != nil {
 									Already = append(Already, "`"+Member.Name+"`")
@@ -378,7 +378,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						if database.CheckChannelEnable(m.ChannelID, Name, VTuberGroup.ID) {
 							User.SetGroup(VTuberGroup).
 								SetReminder(ReminderUser)
-							for _, Member := range database.GetMembers(VTuberGroup.ID) {
+							for _, Member := range VTuberGroup.Members {
 								User.SetMember(Member)
 								err = User.UpdateReminder()
 								if err != nil {
@@ -508,7 +508,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				tmp := strings.Split(VtuberName, ",")
 				for _, Name := range tmp {
 					Data := FindName(Name)
-					if Data == (NameStruct{}) {
+					if Data == nil {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
 							_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
@@ -519,7 +519,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 						if database.CheckChannelEnable(m.ChannelID, Name, VTuberGroup.ID) {
 							User.SetGroup(VTuberGroup)
-							for _, Member := range database.GetMembers(VTuberGroup.ID) {
+							for _, Member := range VTuberGroup.Members {
 								err := User.SetMember(Member).Deluser()
 								if err != nil {
 									Already = append(Already, "`"+Member.Name+"`")
@@ -684,7 +684,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								for _, Role := range guild.Roles {
 									for _, UserRole := range VtuberName {
 										if UserRole == Role.Mention() {
-											for _, Member := range database.GetMembers(VTuberGroup.ID) {
+											for _, Member := range VTuberGroup.Members {
 												User := database.UserStruct{
 													DiscordID:       Role.ID,
 													DiscordUserName: Role.Name,
@@ -848,7 +848,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								for _, Role := range guild.Roles {
 									for _, UserRole := range VtuberName {
 										if UserRole == Role.Mention() {
-											for _, Member := range database.GetMembers(VTuberGroup.ID) {
+											for _, Member := range VTuberGroup.Members {
 												User := database.UserStruct{
 													DiscordID:       Role.ID,
 													DiscordUserName: Role.Name,
@@ -1028,7 +1028,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								for _, Role := range guild.Roles {
 									for _, UserRole := range VtuberName {
 										if UserRole == Role.Mention() {
-											for _, Member := range database.GetMembers(VTuberGroup.ID) {
+											for _, Member := range VTuberGroup.Members {
 												User := database.UserStruct{
 													DiscordID:       Role.ID,
 													DiscordUserName: Role.Name,
@@ -1177,7 +1177,7 @@ func CheckPermission(User, Channel string, bot *discordgo.Session) bool {
 //EnableState Enable command message handler
 func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
-	Prefix := config.BotConf.BotPrefix.General
+	Prefix := configfile.BotPrefix.General
 	if strings.HasPrefix(m.Content, Prefix) {
 		Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 		if err != nil {
@@ -1216,7 +1216,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 				SetTitle("Donate").
 				SetDescription("Buy dev a coffie to improve bot performance and make dev happy or if you a broke gang you can upvote this bot").
-				SetURL(config.BotConf.DonationLink).
+				SetURL(configfile.DonationLink).
 				SetThumbnail(config.GoSimpIMG).
 				SetColor(Color)
 		)
@@ -1360,7 +1360,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						log.Error(err)
 					}
-					if rand.Float32() < 0.5 && config.BotConf.DonationLink != "" {
+					if rand.Float32() < 0.5 && configfile.DonationLink != "" {
 						_, err := s.ChannelMessageSendEmbed(m.ChannelID, msg4.MessageEmbed)
 						if err != nil {
 							log.Error(err)
@@ -1639,7 +1639,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						log.Error(err)
 					}
-					if rand.Float32() < 0.5 && config.BotConf.DonationLink != "" {
+					if rand.Float32() < 0.5 && configfile.DonationLink != "" {
 						_, err := s.ChannelMessageSendEmbed(m.ChannelID, msg4.MessageEmbed)
 						if err != nil {
 							log.Error(err)
@@ -1666,7 +1666,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 //Help helmp command message handler
 func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
-	Prefix := config.BotConf.BotPrefix.General
+	Prefix := configfile.BotPrefix.General
 	if strings.HasPrefix(m.Content, Prefix) {
 		Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 		if err != nil {
@@ -1711,7 +1711,7 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 //Status command message handler
 func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
-	Prefix := config.BotConf.BotPrefix.General
+	Prefix := configfile.BotPrefix.General
 
 	if strings.HasPrefix(m.Content, Prefix) {
 		Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
@@ -1900,10 +1900,10 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 					}
 				}
-				for _, Group := range engine.GroupData {
+				for _, Group := range Payload.VtuberData {
 					for _, Grp := range GroupInput {
 						if Grp == strings.ToLower(Group.GroupName) {
-							for _, Member := range database.GetMembers(Group.ID) {
+							for _, Member := range Group.Members {
 								yt := ""
 								bl := ""
 								if Member.YoutubeID != "" {
@@ -1956,7 +1956,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 						SetThumbnail(config.GoSimpIMG).
 						SetTitle("List of Vtuber Groups").
 						SetURL(config.VtubersData).
-						SetDescription("```"+strings.Join(engine.GroupsName, "\t")+"```For more detail see at "+config.VtubersData).
+						SetDescription("```"+strings.Join(GroupsName, "\t")+"```For more detail see at "+config.VtubersData).
 						SetColor(Color).
 						SetFooter("Use Name of group to show vtuber members").MessageEmbed)
 					if err != nil {

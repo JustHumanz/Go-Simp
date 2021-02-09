@@ -107,7 +107,7 @@ func (PushData *NotifStruct) SendNude() error {
 				return nil
 			}(v, &wg)
 			//Wait every ge 10 discord channel
-			if i%config.Waiting == 0 && config.BotConf.LowResources {
+			if i%config.Waiting == 0 && configfile.LowResources {
 				log.WithFields(log.Fields{
 					"Func":  "Youtube",
 					"Value": config.Waiting,
@@ -174,6 +174,21 @@ func (PushData *NotifStruct) SendNude() error {
 					}
 					return err
 				}
+
+				Msg := "Push " + configfile.Emoji.Livestream[0] + " to add you in `" + PushData.Member.Name + "` ping list\nPush " + configfile.Emoji.Livestream[1] + " to remove you from ping list"
+				MsgFinal := ""
+
+				if Bili {
+					MsgFinal = "`" + PushData.Member.Name + "` Live right now at BiliBili And Youtube\nUserTags: " + strings.Join(UserTagsList, " ") + "\n" + Msg
+				} else {
+					MsgFinal = "`" + PushData.Member.Name + "` Live right now\nUserTags: " + strings.Join(UserTagsList, " ") + "\n" + Msg
+				}
+
+				msgText, err := Bot.ChannelMessageSend(Channel.ChannelID, MsgFinal)
+				if err != nil {
+					return err
+				}
+
 				if Channel.Dynamic {
 					log.WithFields(log.Fields{
 						"DiscordChannel": Channel.ChannelID,
@@ -181,34 +196,15 @@ func (PushData *NotifStruct) SendNude() error {
 						"YoutubeID":      PushData.YtData.ID,
 					}).Info("Set dynamic mode")
 					Channel.SetVideoID(PushData.YtData.VideoID).
-						SetMsgEmbedID(MsgEmbed.ID)
+						SetMsgEmbedID(MsgEmbed.ID).
+						SetMsgTextID(msgText.ID).
+						PushReddis()
 				}
-				Msg := "Push " + config.BotConf.Emoji.Livestream[0] + " to add you in `" + PushData.Member.Name + "` ping list\nPush " + config.BotConf.Emoji.Livestream[1] + " to remove you from ping list"
-				MsgID := ""
-				if Bili {
-					msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Live right now at BiliBili And Youtube\nUserTags: "+strings.Join(UserTagsList, " ")+"\n"+Msg)
-					if err != nil {
-						return err
-					}
-					if Channel.Dynamic {
-						Channel.SetMsgTextID(msg.ID).PushReddis()
-					}
-					MsgID = msg.ID
 
-				} else {
-					msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " ")+"\n"+Msg)
-					if err != nil {
-						return err
-					}
-					if Channel.Dynamic {
-						Channel.SetMsgTextID(msg.ID).PushReddis()
-					}
-					MsgID = msg.ID
-				}
 				User.SetDiscordChannelID(Channel.ChannelID).
 					SetGroup(PushData.Group).
 					SetMember(PushData.Member)
-				err = User.SendToCache(MsgID)
+				err = User.SendToCache(msgText.ID)
 				if err != nil {
 					return err
 				}
@@ -216,7 +212,7 @@ func (PushData *NotifStruct) SendNude() error {
 				err = engine.Reacting(map[string]string{
 					"ChannelID": Channel.ChannelID,
 					"State":     "Youtube",
-					"MessageID": MsgID,
+					"MessageID": msgText.ID,
 				}, Bot)
 				if err != nil {
 					return err
@@ -224,7 +220,7 @@ func (PushData *NotifStruct) SendNude() error {
 				return nil
 			}(v, &wg)
 			//Wait every ge 5 discord channel
-			if i%config.Waiting == 0 && config.BotConf.LowResources {
+			if i%config.Waiting == 0 && configfile.LowResources {
 				log.WithFields(log.Fields{
 					"Func":  "Youtube",
 					"Value": config.Waiting,
@@ -285,7 +281,7 @@ func (PushData *NotifStruct) SendNude() error {
 				return nil
 			}(v, &wg)
 			//Wait every ge 5 discord channel
-			if i%config.Waiting == 0 && config.BotConf.LowResources {
+			if i%config.Waiting == 0 && configfile.LowResources {
 				log.WithFields(log.Fields{
 					"Func":  "Youtube",
 					"Value": config.Waiting,
@@ -328,20 +324,6 @@ func (PushData *NotifStruct) SendNude() error {
 							}).Error(err)
 							err = Channel.DelChannel(err.Error())
 							return err
-						}
-						MsgText, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Live in "+LiveCount+"\nUserTags: "+strings.Join(UserTagsList, " "))
-						if err != nil {
-							return err
-						}
-						if Channel.Dynamic {
-							log.WithFields(log.Fields{
-								"DiscordChannel": Channel.ChannelID,
-								"VtuberGroupID":  PushData.Group.ID,
-								"YoutubeID":      PushData.YtData.ID,
-							}).Info("Set dynamic mode")
-							Channel.SetVideoID(PushData.YtData.VideoID).
-								SetMsgEmbedID(MsgEmbed.ID).
-								SetMsgTextID(MsgText.ID)
 						}
 					} else {
 						break

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"flag"
 	"regexp"
 	"strings"
@@ -12,39 +13,62 @@ import (
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
-	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
+	network "github.com/JustHumanz/Go-Simp/pkg/network"
+	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	log "github.com/sirupsen/logrus"
 )
 
 var (
-	Bot *discordgo.Session
+	Bot        *discordgo.Session
+	configfile config.ConfigFile
+	Payload    database.VtubersPayload
 )
+
+func init() {
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
+}
 
 func main() {
 	Youtube := flag.Bool("Youtube", false, "Enable youtube module")
 	BiliBili := flag.Bool("BiliBili", false, "Enable bilibili module")
 	Twitter := flag.Bool("Twitter", false, "Enable twitter module")
-
 	flag.Parse()
 
-	conf, err := config.ReadConfig("../../config.toml")
-	if err != nil {
-		log.Panic(err)
-	}
+	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC("pilot"))
 
-	Bot, err = discordgo.New("Bot " + config.BotConf.Discord)
+	RequestPay := func() {
+		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+			Message: "Send me nude",
+			Service: "Subscriber",
+		})
+		if err != nil {
+			log.Fatalf("Error when request payload: %s", err)
+		}
+		err = json.Unmarshal(res.ConfigFile, &configfile)
+		if err != nil {
+			log.Panic(err)
+		}
+
+		err = json.Unmarshal(res.VtuberPayload, &Payload)
+		if err != nil {
+			log.Panic(err)
+		}
+	}
+	RequestPay()
+
+	Bot, err := discordgo.New("Bot " + configfile.Discord)
 	if err != nil {
 		log.Error(err)
 	}
+
+	config.GoSimpConf = configfile
+	database.Start(configfile)
 
 	err = Bot.Open()
 	if err != nil {
 		log.Panic(err)
 	}
-
-	database.Start(conf.CheckSQL())
-	engine.Start()
 
 	c := cron.New()
 	c.Start()
@@ -52,20 +76,41 @@ func main() {
 	if *Youtube {
 		c.AddFunc(config.YoutubeSubscriber, CheckYoutube)
 		log.Info("Add youtube subscriber to cronjob")
-		database.ModuleInfo("YoutubeSubscriber")
 	}
 
 	if *BiliBili {
 		c.AddFunc(config.BiliBiliFollowers, CheckBiliBili)
 		log.Info("Add bilibili followers to cronjob")
-		database.ModuleInfo("BiliBiliFollowers")
 	}
 
 	if *Twitter {
 		c.AddFunc(config.TwitterFollowers, CheckTwitter)
 		log.Info("Add twitter followers to cronjob")
-		database.ModuleInfo("TwitterFollowers")
 	}
+
+	_, err = gRCPconn.ModuleList(context.Background(), &pilot.ModuleData{
+		Module:  "YoutubeSubscriber",
+		Enabled: *Youtube,
+	})
+	if err != nil {
+		log.Error(err)
+	}
+	_, err = gRCPconn.ModuleList(context.Background(), &pilot.ModuleData{
+		Module:  "BiliBiliFollowers",
+		Enabled: *BiliBili,
+	})
+	if err != nil {
+		log.Error(err)
+	}
+	_, err = gRCPconn.ModuleList(context.Background(), &pilot.ModuleData{
+		Module:  "TwitterFollowers",
+		Enabled: *Twitter,
+	})
+	if err != nil {
+		log.Error(err)
+	}
+
+	go pilot.RunHeartBeat(gRCPconn, "Subscriber")
 	runfunc.Run(Bot)
 }
 
@@ -87,7 +132,7 @@ func SendNude(Embed *discordgo.MessageEmbed, Group database.Group, Member databa
 				log.Error(msg, err)
 			}
 		}
-		if i%config.Waiting == 0 && config.BotConf.LowResources {
+		if i%config.Waiting == 0 && configfile.LowResources {
 			log.WithFields(log.Fields{
 				"Func":  "Subscriber",
 				"Value": config.Waiting,

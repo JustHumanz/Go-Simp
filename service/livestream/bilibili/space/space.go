@@ -10,28 +10,31 @@ import (
 	"github.com/robfig/cron/v3"
 
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
-	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	log "github.com/sirupsen/logrus"
 )
 
 var (
-	loc *time.Location
-	Bot *discordgo.Session
+	loc         *time.Location
+	Bot         *discordgo.Session
+	VtubersData database.VtubersPayload
+	configfile  config.ConfigFile
 )
 
 //Start start twitter module
-func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
+func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile) {
 	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
-	Bot = BotInit
-	cronInit.AddFunc(config.BiliBiliSpace, CheckSpaceVideo)
+	Bot = a
+	configfile = d
+	VtubersData = c
+	b.AddFunc(config.BiliBiliSpace, CheckSpaceVideo)
 	log.Info("Enable space bilibili module")
 }
 
 func CheckSpaceVideo() {
-	for _, GroupData := range engine.GroupData {
+	for _, GroupData := range VtubersData.VtuberData {
 		if GroupData.GroupName != "Hololive" {
 			wg := new(sync.WaitGroup)
-			for i, MemberData := range database.GetMembers(GroupData.ID) {
+			for i, MemberData := range GroupData.Members {
 				wg.Add(1)
 				go func(Group database.Group, Member database.Member, wg *sync.WaitGroup) {
 					defer wg.Done()
@@ -50,11 +53,11 @@ func CheckSpaceVideo() {
 							Member: Member,
 							Group:  Group,
 						}
-						Data.Check(strconv.Itoa(config.BotConf.LimitConf.SpaceBiliBili)).SendNude()
+						Data.Check(strconv.Itoa(configfile.LimitConf.SpaceBiliBili)).SendNude()
 
 					}
 				}(GroupData, MemberData, wg)
-				if i%5 == 0 {
+				if i%config.Waiting == 0 {
 					wg.Wait()
 				}
 			}

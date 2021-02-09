@@ -12,7 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitterscraper.Scraper, Limit int) ([]Fanart, error) {
+func CreatePayload(Group database.Group, Scraper *twitterscraper.Scraper, Limit int) ([]Fanart, error) {
 	var (
 		Hashtags []string
 		Fanarts  []Fanart
@@ -31,7 +31,7 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 			//Find hashtags members
 			val, err := rdb.Get(context.Background(), tweet.ID).Result()
 			if val == "" || err != nil {
-				for _, MemberHashtag := range Data {
+				for _, MemberHashtag := range Group.Members {
 					for _, TweetHashtag := range tweet.Hashtags {
 						if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) && !tweet.IsQuoted && !tweet.IsReply && MemberHashtag.Name != "Kaichou" {
 							New, err := MemberHashtag.CheckMemberFanart(tweet)
@@ -59,18 +59,18 @@ func CreatePayload(Data []database.Member, Group database.Group, Scraper *twitte
 		}
 	}
 
-	if len(Data) > 7 {
-		for i, Member := range Data {
+	if len(Group.Members) > 7 {
+		for i, Member := range Group.Members {
 			if Member.TwitterHashtags != "" {
 				Hashtags = append(Hashtags, Member.TwitterHashtags)
-				if (i%5 == 0) || (i == len(Data)-1) {
+				if (i%5 == 0) || (i == len(Group.Members)-1) {
 					CurlTwitter(Hashtags, Group)
 					Hashtags = nil
 				}
 			}
 		}
 	} else {
-		for _, Member := range Data {
+		for _, Member := range Group.Members {
 			if Member.TwitterHashtags != "" {
 				Hashtags = append(Hashtags, Member.TwitterHashtags)
 			}

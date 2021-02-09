@@ -69,7 +69,7 @@ func (Data *LiveBili) Crotttt() error {
 			if err != nil {
 				log.Error(err)
 			}
-			Msg := "Push " + config.BotConf.Emoji.Livestream[0] + " to add you in `" + Data.Member.Name + "` ping list\nPush " + config.BotConf.Emoji.Livestream[1] + " to remove you from ping list"
+			Msg := "Push " + configfile.Emoji.Livestream[0] + " to add you in `" + Data.Member.Name + "` ping list\nPush " + configfile.Emoji.Livestream[1] + " to remove you from ping list"
 			MsgTxt, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " ")+"\n"+Msg)
 			if err != nil {
 				log.Error(err)
@@ -105,7 +105,7 @@ func (Data *LiveBili) Crotttt() error {
 
 		}(v, &wg)
 		//Wait every ge 5 discord channel
-		if i%config.Waiting == 0 && config.BotConf.LowResources {
+		if i%config.Waiting == 0 && configfile.LowResources {
 			log.WithFields(log.Fields{
 				"Func":  "BiliBili Live",
 				"Value": config.Waiting,

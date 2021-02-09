@@ -61,7 +61,7 @@ func (Data CheckSctruct) SendNude() {
 					}
 				}(v, &wg)
 				//Wait every ge 5 discord channel
-				if i%config.Waiting == 0 && config.BotConf.LowResources {
+				if i%config.Waiting == 0 && configfile.LowResources {
 					log.WithFields(log.Fields{
 						"Func":  "BiliBili space",
 						"Value": config.Waiting,

@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	config "github.com/JustHumanz/Go-Simp/pkg/config"
+	"github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	"github.com/bwmarrin/discordgo"
@@ -25,39 +25,15 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//Public variable
-var (
-	GroupData  []database.Group
-	GroupsName []string
-	RegList    = make(map[string]string)
-)
-
-//Start module
-func Start() {
-	GroupData = database.GetGroups()
-	for _, Group := range GroupData {
-		GroupsName = append(GroupsName, Group.GroupName)
-		list := []string{}
-		keys := make(map[string]bool)
-		for _, Member := range database.GetMembers(Group.ID) {
-			if _, value := keys[Member.Region]; !value {
-				keys[Member.Region] = true
-				list = append(list, Member.Region)
-			}
-		}
-		RegList[Group.GroupName] = strings.Join(list, ",")
-	}
-	log.Info("Engine module ready")
-}
-
 //GetYtToken Get a valid token
 func GetYtToken() string {
-	for _, Token := range config.BotConf.YtToken {
+	for _, Token := range config.GoSimpConf.YtToken {
 		body, err := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id=GNkPJvVEm0s&key="+Token, nil)
 		if err == nil && body != nil {
 			return Token
 		}
 	}
+	log.Error("Youtube Token out of limit")
 	PayloadBytes, err := json.Marshal(map[string]interface{}{
 		"embeds": []interface{}{
 			map[string]interface{}{
@@ -65,7 +41,11 @@ func GetYtToken() string {
 			},
 		},
 	})
-	err = network.CurlPost(config.BotConf.DiscordWebHook, PayloadBytes)
+	if err != nil {
+		log.Error(err)
+	}
+
+	err = network.CurlPost(config.GoSimpConf.DiscordWebHook, PayloadBytes)
 	if err != nil {
 		log.Error(err)
 	}
@@ -207,7 +187,7 @@ func GetColor(filepath, url string) (int, error) {
 func Reacting(Data map[string]string, s *discordgo.Session) error {
 	ChannelID := Data["ChannelID"]
 	if Data["State"] == "Youtube" {
-		EmojiList := config.BotConf.Emoji.Livestream
+		EmojiList := config.GoSimpConf.Emoji.Livestream
 		for _, Emoji := range EmojiList {
 			err := s.MessageReactionAdd(ChannelID, Data["MessageID"], Emoji)
 			if err != nil {
@@ -219,7 +199,7 @@ func Reacting(Data map[string]string, s *discordgo.Session) error {
 		if err != nil {
 			return err
 		}
-		EmojiList := config.BotConf.Emoji.Fanart
+		EmojiList := config.GoSimpConf.Emoji.Fanart
 		for l := 0; l < len(EmojiList); l++ {
 			if Data["Content"][len(Data["Prefix"]):] == "kanochi" {
 				err := s.MessageReactionAdd(ChannelID, MessID.LastMessageID, EmojiList[0])
@@ -265,7 +245,6 @@ func Reacting(Data map[string]string, s *discordgo.Session) error {
 			}
 		}
 	}
-
 	return nil
 }
 
@@ -306,7 +285,7 @@ func YtFindType(title string) string {
 //GetAuthorAvatar Get twitter avatar
 func GetAuthorAvatar(username string) string {
 	scraper := twitterscraper.New()
-	scraper.SetProxy(config.BotConf.MultiTOR)
+	scraper.SetProxy(config.GoSimpConf.MultiTOR)
 	profile, err := scraper.GetProfile(username)
 	if err != nil {
 		log.Error(err)

@@ -73,7 +73,7 @@ func SendFanart(Data []Fanart, Group database.Group) {
 					"ChannelID": Channel.ChannelID,
 				}, Bot)
 			}
-			if i%config.Waiting == 0 && config.BotConf.LowResources {
+			if i%config.Waiting == 0 && configfile.LowResources {
 				log.WithFields(log.Fields{
 					"Func": "Twitter Fanart",
 				}).Warn("Sleep for 100 Millisecond")

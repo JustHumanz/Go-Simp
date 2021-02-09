@@ -26,9 +26,9 @@ var (
 )
 
 //Start Database session
-func Start(dbsession *sql.DB) {
-	DB = dbsession
-	RedisHost := config.BotConf.Cached.Host + ":" + config.BotConf.Cached.Port
+func Start(configfile config.ConfigFile) {
+	DB = configfile.CheckSQL()
+	RedisHost := configfile.Cached.Host + ":" + configfile.Cached.Port
 	FanartCache = redis.NewClient(&redis.Options{
 		Addr:     RedisHost,
 		Password: "",
@@ -47,13 +47,6 @@ func Start(dbsession *sql.DB) {
 		DB:       2,
 	})
 	log.Info("Database module ready")
-}
-
-func ModuleInfo(Name string) {
-	err := GeneralCache.LPush(context.Background(), "ModuleInfo", Name).Err()
-	if err != nil {
-		log.Error(err)
-	}
 }
 
 func GetModule() []string {
@@ -86,42 +79,21 @@ func GetMembers(GroupID int64) []Member {
 	var (
 		list Member
 		Data []Member
-		Key  = "VtuberMember" + strconv.Itoa(int(GroupID))
 	)
-	val := GeneralCache.LRange(context.Background(), Key, 0, -1).Val()
-	if len(val) == 0 {
-		rederr := GeneralCache.Del(context.Background(), Key).Err()
-		if rederr != nil {
-			log.Error(rederr)
-		}
-		rows, err := DB.Query(`call GetVtuberName(?)`, GroupID)
+	rows, err := DB.Query(`call GetVtuberName(?)`, GroupID)
+	if err != nil {
+		log.Error(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		err = rows.Scan(&list.ID, &list.Name, &list.EnName, &list.JpName, &list.YoutubeID, &list.BiliBiliID, &list.BiliRoomID, &list.Region, &list.TwitterHashtags, &list.BiliBiliHashtags, &list.BiliBiliAvatar, &list.TwitterName, &list.TwitchName, &list.YoutubeAvatar)
 		if err != nil {
 			log.Error(err)
 		}
-		defer rows.Close()
-		for rows.Next() {
-			err = rows.Scan(&list.ID, &list.Name, &list.EnName, &list.JpName, &list.YoutubeID, &list.BiliBiliID, &list.BiliRoomID, &list.Region, &list.TwitterHashtags, &list.BiliBiliHashtags, &list.BiliBiliAvatar, &list.TwitterName, &list.TwitchName, &list.YoutubeAvatar)
-			if err != nil {
-				log.Error(err)
-			}
-			err = GeneralCache.LPush(context.Background(), Key, list).Err()
-			if err != nil {
-				log.Error(err)
-			}
-			Data = append(Data, list)
-		}
-		err = LiveCache.Expire(context.Background(), Key, 3*time.Hour).Err()
 		if err != nil {
 			log.Error(err)
 		}
-	} else {
-		for _, result := range val {
-			err := json.Unmarshal([]byte(result), &list)
-			if err != nil {
-				log.Error(err)
-			}
-			Data = append(Data, list)
-		}
+		Data = append(Data, list)
 	}
 	return Data
 }
@@ -341,7 +313,7 @@ func (Member Member) CheckMemberFanart(Data *twitterscraper.Result) (bool, error
 		}
 		return true, nil
 	} else {
-		if !config.BotConf.LowResources {
+		if !config.GoSimpConf.LowResources {
 			//update like
 			log.WithFields(log.Fields{
 				"Name":    Member.EnName,
@@ -888,7 +860,7 @@ func GetUserReminderList(ChannelIDDiscord int64, Member int64, Reminder int) []s
 
 //Scrapping twitter followers
 func (Data Member) GetTwitterFollow() (twitterscraper.Profile, error) {
-	twitterscraper.SetProxy(config.BotConf.MultiTOR)
+	twitterscraper.SetProxy(config.GoSimpConf.MultiTOR)
 	profile, err := twitterscraper.GetProfile(Data.TwitterName)
 	if err != nil {
 		return twitterscraper.Profile{}, err

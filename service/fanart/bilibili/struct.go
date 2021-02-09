@@ -129,10 +129,10 @@ type SubTbili struct {
 		Role        []interface{} `json:"role"`
 		Source      []interface{} `json:"source"`
 		Pictures    []struct {
-			ImgSrc    string `json:"img_src"`
-			ImgWidth  int    `json:"img_width"`
-			ImgHeight int    `json:"img_height"`
-			ImgSize   string `json:"img_size"`
+			ImgSrc    string      `json:"img_src"`
+			ImgWidth  int         `json:"img_width"`
+			ImgHeight int         `json:"img_height"`
+			ImgSize   interface{} `json:"img_size"`
 		} `json:"pictures"`
 		PicturesCount int    `json:"pictures_count"`
 		UploadTime    int    `json:"upload_time"`

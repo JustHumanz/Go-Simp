@@ -8,6 +8,7 @@ require (
 	github.com/cenkalti/dominantcolor v0.0.0-20171020061837-df772e8dd39e
 	github.com/go-redis/redis/v8 v8.4.9
 	github.com/go-sql-driver/mysql v1.5.0
+	github.com/golang/protobuf v1.4.2
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hako/durafmt v0.0.0-20200710122514-c0fb7b4da026
@@ -23,5 +24,6 @@ require (
 	golang.org/x/sys v0.0.0-20210105210732-16f7687f5001 // indirect
 	golang.org/x/time v0.0.0-20201208040808-7e3f01d25324 // indirect
 	google.golang.org/grpc v1.35.0
+	google.golang.org/protobuf v1.25.0
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 )

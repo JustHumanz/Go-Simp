@@ -77,7 +77,7 @@ func (Data TwitchNotif) SendNotif() error {
 					SetMsgEmbedID(MsgEmbed.ID)
 			}
 
-			Msg := "Push " + config.BotConf.Emoji.Livestream[0] + " to add you in `" + Data.Member.Name + "` ping list\nPush " + config.BotConf.Emoji.Livestream[1] + " to remove you from ping list"
+			Msg := "Push " + configfile.Emoji.Livestream[0] + " to add you in `" + Data.Member.Name + "` ping list\nPush " + configfile.Emoji.Livestream[1] + " to remove you from ping list"
 			MsgID := ""
 			msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " ")+"\n"+Msg)
 			if err != nil {
@@ -110,7 +110,7 @@ func (Data TwitchNotif) SendNotif() error {
 			return nil
 		}(v, &wg)
 		//Wait every ge 5 discord channel
-		if i%config.Waiting == 0 && config.BotConf.LowResources {
+		if i%config.Waiting == 0 && configfile.LowResources {
 			log.WithFields(log.Fields{
 				"Func":  "Twitch",
 				"Value": config.Waiting,

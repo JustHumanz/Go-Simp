@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
-	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	log "github.com/sirupsen/logrus"
@@ -14,8 +13,8 @@ import (
 func CheckYoutube() {
 	var YTstate Subs
 	Token := engine.GetYtToken()
-	for _, Group := range engine.GroupData {
-		for _, Member := range database.GetMembers(Group.ID) {
+	for _, Group := range Payload.VtuberData {
+		for _, Member := range Group.Members {
 			body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+Member.YoutubeID+"&key="+Token, nil)
 			if err != nil {
 				log.Error(err, string(body))

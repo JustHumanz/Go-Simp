@@ -13,6 +13,7 @@ import (
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	log "github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
 )
 
 //Curl make a http request
@@ -64,7 +65,7 @@ func CoolerCurl(urls string, addheader []string) ([]byte, error) {
 		counter++
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
-		proxyURL, err := url.Parse(config.BotConf.MultiTOR)
+		proxyURL, err := url.Parse(config.GoSimpConf.MultiTOR)
 		if err != nil || counter == 3 {
 			return nil, err
 		}
@@ -140,4 +141,21 @@ func CurlPost(url string, payload []byte) error {
 	}
 	defer resp.Body.Close()
 	return nil
+}
+
+func InitNet() net.Listener {
+	listen, err := net.Listen("tcp", ":9000")
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	return listen
+}
+
+func InitgRPC(server string) *grpc.ClientConn {
+	var conn *grpc.ClientConn
+	conn, err := grpc.Dial(server+":9000", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %s", err)
+	}
+	return conn
 }

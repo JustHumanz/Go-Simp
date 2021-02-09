@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
-	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
@@ -18,15 +17,15 @@ func gacha() bool {
 
 //SubsMessage subscriber message handler
 func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
-	Prefix := config.BotConf.BotPrefix.General
+	Prefix := configfile.BotPrefix.General
 	m.Content = strings.ToLower(m.Content)
 	if strings.HasPrefix(m.Content, Prefix) {
 		CommandArray := strings.Split(m.Content, " ")
 		if len(CommandArray) > 0 {
 			if CommandArray[0] == Prefix+Info {
-				for _, Group := range engine.GroupData {
+				for _, Group := range Payload.VtuberData {
 					for _, Mem := range strings.Split(CommandArray[1], ",") {
-						for _, Member := range database.GetMembers(Group.ID) {
+						for _, Member := range Group.Members {
 							if Mem == strings.ToLower(Member.Name) {
 								var (
 									Avatar    string

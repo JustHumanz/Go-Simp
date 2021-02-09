@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -9,30 +10,51 @@ import (
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
+	"github.com/JustHumanz/Go-Simp/pkg/network"
+	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 )
 
 var (
-	Groups []database.Group
+	Payload database.VtubersPayload
 )
 
 func init() {
-	config, err := config.ReadConfig("../../config.toml")
+	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC("pilot"))
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
+
+	var (
+		configfile config.ConfigFile
+	)
+
+	res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+		Message: "Send me nude",
+		Service: "Rest_API",
+	})
 	if err != nil {
-		log.Error(err)
+		log.Fatalf("Error when request payload: %s", err)
 	}
-	database.Start(config.CheckSQL())
-	Groups = database.GetGroups()
+	err = json.Unmarshal(res.ConfigFile, &configfile)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	err = json.Unmarshal(res.VtuberPayload, &Payload)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	config.GoSimpConf = configfile
+	database.Start(configfile)
+	go pilot.RunHeartBeat(gRCPconn, "Rest_API")
 }
 
 func main() {
 	router := mux.NewRouter()
-	router.HandleFunc("/Groups/", getGroup).Methods("GET")
+	router.HandleFunc("/All", getGroup).Methods("GET")
 	router.HandleFunc("/Groups/{GroupID}", getGroup).Methods("GET")
-
-	router.HandleFunc("/Members/", getMembers).Methods("GET")
 	router.HandleFunc("/Members/{MemberID}", getMembers).Methods("GET")
 
 	router.HandleFunc("/Youtube/{Status}", getYoutube).Methods("GET")
@@ -43,17 +65,17 @@ func main() {
 	router.HandleFunc("/Bilibili/Group/{GroupID}/{Status}", getBilibili).Methods("GET")
 	router.HandleFunc("/Bilibili/Member/{MemberID}/{Status}", getBilibili).Methods("GET")
 
-	router.HandleFunc("/Twitter/", getFanart).Methods("GET")
+	router.HandleFunc("/Twitter", getFanart).Methods("GET")
 	router.HandleFunc("/Twitter/Group/{GroupID}", getFanart).Methods("GET")
 	router.HandleFunc("/Twitter/Member/{MemberID}", getFanart).Methods("GET")
 
-	router.HandleFunc("/Tbilibili/", getFanart).Methods("GET")
+	router.HandleFunc("/Tbilibili", getFanart).Methods("GET")
 	router.HandleFunc("/Tbilibili/Group/{GroupID}", getFanart).Methods("GET")
 	router.HandleFunc("/Tbilibili/Member/{MemberID}", getFanart).Methods("GET")
 
-	router.HandleFunc("/Subscribe/", getSubs).Methods("GET")
-	router.HandleFunc("/Subscribe/Group/{GroupID}", getSubs).Methods("GET")
-	router.HandleFunc("/Subscribe/Member/{MemberID}", getSubs).Methods("GET")
+	router.HandleFunc("/Subscriber", getSubs).Methods("GET")
+	router.HandleFunc("/Subscriber/Group/{GroupID}", getSubs).Methods("GET")
+	router.HandleFunc("/Subscriber/Member/{MemberID}", getSubs).Methods("GET")
 
 	http.ListenAndServe(":2525", router)
 }
@@ -67,7 +89,7 @@ func getFanart(w http.ResponseWriter, r *http.Request) {
 
 	if Vars["GroupID"] != "" {
 		key := strings.Split(Vars["GroupID"], ",")
-		for _, Group := range Groups {
+		for _, Group := range Payload.VtuberData {
 			for _, GroupIDstr := range key {
 				GroupIDint, err := strconv.Atoi(GroupIDstr)
 				if err != nil {
@@ -92,8 +114,8 @@ func getFanart(w http.ResponseWriter, r *http.Request) {
 		}
 	} else if Vars["MemberID"] != "" {
 		key := strings.Split(Vars["MemberID"], ",")
-		for _, Group := range Groups {
-			for _, Member := range database.GetMembers(Group.ID) {
+		for _, Group := range Payload.VtuberData {
+			for _, Member := range Group.Members {
 				for _, MemberIDstr := range key {
 					MemberIDint, err := strconv.Atoi(MemberIDstr)
 					if err != nil {
@@ -118,7 +140,7 @@ func getFanart(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	} else {
-		for _, Group := range Groups {
+		for _, Group := range Payload.VtuberData {
 			State := ""
 			if Twitter {
 				State = "Twitter"
@@ -160,7 +182,7 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 	}
 	if Vars["GroupID"] != "" {
 		key := strings.Split(Vars["GroupID"], ",")
-		for _, Group := range Groups {
+		for _, Group := range Payload.VtuberData {
 			for _, GroupIDstr := range key {
 				GroupIDint, err := strconv.Atoi(GroupIDstr)
 				if err != nil {
@@ -183,8 +205,8 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 		}
 	} else if Vars["MemberID"] != "" {
 		key := strings.Split(Vars["MemberID"], ",")
-		for _, Group := range Groups {
-			for _, Member := range database.GetMembers(Group.ID) {
+		for _, Group := range Payload.VtuberData {
+			for _, Member := range Group.Members {
 				for _, MemberIDstr := range key {
 					MemberIDint, err := strconv.Atoi(MemberIDstr)
 					if err != nil {
@@ -207,7 +229,7 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	} else {
-		for _, Group := range Groups {
+		for _, Group := range Payload.VtuberData {
 			YTData, err := database.YtGetStatus(Group.ID, 0, Status, Region)
 			if err != nil {
 				log.Error(err)
@@ -247,7 +269,7 @@ func getBilibili(w http.ResponseWriter, r *http.Request) {
 	}
 	if Vars["GroupID"] != "" {
 		key := strings.Split(Vars["GroupID"], ",")
-		for _, Group := range Groups {
+		for _, Group := range Payload.VtuberData {
 			for _, GroupIDstr := range key {
 				GroupIDint, err := strconv.Atoi(GroupIDstr)
 				if err != nil {
@@ -266,8 +288,8 @@ func getBilibili(w http.ResponseWriter, r *http.Request) {
 		}
 	} else if Vars["MemberID"] != "" {
 		key := strings.Split(Vars["MemberID"], ",")
-		for _, Group := range Groups {
-			for _, Member := range database.GetMembers(Group.ID) {
+		for _, Group := range Payload.VtuberData {
+			for _, Member := range Group.Members {
 				for _, MemberIDstr := range key {
 					MemberIDint, err := strconv.Atoi(MemberIDstr)
 					if err != nil {
@@ -286,7 +308,7 @@ func getBilibili(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	} else {
-		for _, Group := range Groups {
+		for _, Group := range Payload.VtuberData {
 			BiliBiliData = append(BiliBiliData, database.BilGet(Group.ID, 0, Status)...)
 		}
 	}
@@ -307,11 +329,10 @@ func getBilibili(w http.ResponseWriter, r *http.Request) {
 
 func getGroup(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)["GroupID"]
-	Groups = database.GetGroups()
 	if vars != "" {
 		key := strings.Split(vars, ",")
 		var GroupsTMP []database.Group
-		for _, Group := range Groups {
+		for _, Group := range Payload.VtuberData {
 			for _, GroupIDstr := range key {
 				GroupIDint, err := strconv.Atoi(GroupIDstr)
 				if err != nil {
@@ -343,7 +364,7 @@ func getGroup(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(Groups)
+		json.NewEncoder(w).Encode(Payload.VtuberData)
 	}
 }
 
@@ -352,10 +373,10 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 	idstr := mux.Vars(r)["MemberID"]
 	Members := []database.Member{}
 
-	for _, Group := range database.GetGroups() {
+	for _, Group := range Payload.VtuberData {
 		if idstr != "" {
 			key := strings.Split(idstr, ",")
-			for _, Member := range database.GetMembers(Group.ID) {
+			for _, Member := range Group.Members {
 				Member.GroupID = Group.ID
 				for _, MemberStr := range key {
 					MemberInt, err := strconv.Atoi(MemberStr)
@@ -379,17 +400,6 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 					}
 				}
 			}
-		} else {
-			for _, Member := range database.GetMembers(Group.ID) {
-				Member.GroupID = Group.ID
-				if region != "" {
-					if strings.ToLower(region) == strings.ToLower(Member.Region) {
-						Members = append(Members, Member)
-					}
-				} else {
-					Members = append(Members, Member)
-				}
-			}
 		}
 	}
 	if len(Members) > 0 {
@@ -409,6 +419,9 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 func getSubs(w http.ResponseWriter, r *http.Request) {
 	type SubsJson struct {
 		MemberID          int64
+		Name              string
+		EnName            string
+		JpName            string
 		YoutubeSubscribe  int
 		YoutubeVideos     int
 		YoutubeViews      int
@@ -423,7 +436,7 @@ func getSubs(w http.ResponseWriter, r *http.Request) {
 	)
 	if Vars["GroupID"] != "" {
 		key := strings.Split(Vars["GroupID"], ",")
-		for _, Group := range Groups {
+		for _, Group := range Payload.VtuberData {
 			for _, GroupIDstr := range key {
 				GroupIDint, err := strconv.Atoi(GroupIDstr)
 				if err != nil {
@@ -436,13 +449,16 @@ func getSubs(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				if GroupIDint == int(Group.ID) {
-					for _, Member := range database.GetMembers(Group.ID) {
+					for _, Member := range Group.Members {
 						tmp, err := Member.GetSubsCount()
 						if err != nil {
 							log.Error(err)
 						}
 						SubsData = append(SubsData, SubsJson{
 							MemberID:          tmp.MemberID,
+							Name:              Member.Name,
+							EnName:            Member.EnName,
+							JpName:            Member.JpName,
 							YoutubeSubscribe:  tmp.YtSubs,
 							YoutubeVideos:     tmp.YtVideos,
 							YoutubeViews:      tmp.YtViews,
@@ -457,8 +473,8 @@ func getSubs(w http.ResponseWriter, r *http.Request) {
 		}
 	} else if Vars["MemberID"] != "" {
 		key := strings.Split(Vars["MemberID"], ",")
-		for _, Group := range Groups {
-			for _, Member := range database.GetMembers(Group.ID) {
+		for _, Group := range Payload.VtuberData {
+			for _, Member := range Group.Members {
 				for _, MemberIDstr := range key {
 					MemberIDint, err := strconv.Atoi(MemberIDstr)
 					if err != nil {
@@ -477,6 +493,9 @@ func getSubs(w http.ResponseWriter, r *http.Request) {
 						}
 						SubsData = append(SubsData, SubsJson{
 							MemberID:          tmp.MemberID,
+							Name:              Member.Name,
+							EnName:            Member.EnName,
+							JpName:            Member.JpName,
 							YoutubeSubscribe:  tmp.YtSubs,
 							YoutubeVideos:     tmp.YtVideos,
 							YoutubeViews:      tmp.YtViews,
@@ -490,14 +509,17 @@ func getSubs(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	} else {
-		for _, Group := range Groups {
-			for _, Member := range database.GetMembers(Group.ID) {
+		for _, Group := range Payload.VtuberData {
+			for _, Member := range Group.Members {
 				tmp, err := Member.GetSubsCount()
 				if err != nil {
 					log.Error(err)
 				}
 				SubsData = append(SubsData, SubsJson{
 					MemberID:          tmp.MemberID,
+					Name:              Member.Name,
+					EnName:            Member.EnName,
+					JpName:            Member.JpName,
 					YoutubeSubscribe:  tmp.YtSubs,
 					YoutubeVideos:     tmp.YtVideos,
 					YoutubeViews:      tmp.YtViews,

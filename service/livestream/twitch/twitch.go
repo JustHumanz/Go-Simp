@@ -15,27 +15,31 @@ import (
 var (
 	Bot          *discordgo.Session
 	TwitchClient *helix.Client
+	VtubersData  database.VtubersPayload
+	configfile   config.ConfigFile
 )
 
 //Start start twitter module
-func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
-	Bot = BotInit
-	cronInit.AddFunc(config.Twitch, CheckTwitch)
+func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile) {
+	Bot = a
+	VtubersData = c
+	configfile = d
+	b.AddFunc(config.Twitch, CheckTwitch)
 	var err error
 	TwitchClient, err = helix.NewClient(&helix.Options{
-		ClientID:     config.BotConf.Twitch.ClientID,
-		ClientSecret: config.BotConf.Twitch.ClientSecret,
+		ClientID:     config.GoSimpConf.Twitch.ClientID,
+		ClientSecret: config.GoSimpConf.Twitch.ClientSecret,
 	})
 	if err != nil {
 		log.Error(err)
 	}
-	TwitchClient.SetUserAccessToken(config.BotConf.GetTwitchAccessToken())
+	TwitchClient.SetUserAccessToken(config.GoSimpConf.GetTwitchAccessToken())
 	log.Info("Enable twitch module")
 }
 
 func CheckTwitch() {
-	for _, Group := range database.GetGroups() {
-		for _, Member := range database.GetMembers(Group.ID) {
+	for _, Group := range VtubersData.VtuberData {
+		for _, Member := range Group.Members {
 			if Member.TwitchName != "" {
 				log.WithFields(log.Fields{
 					"Group":      Group.GroupName,

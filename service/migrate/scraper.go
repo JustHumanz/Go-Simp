@@ -9,7 +9,6 @@ import (
 	"sync"
 	"time"
 
-	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	"github.com/JustHumanz/Go-Simp/service/fanart/twitter"
@@ -22,10 +21,10 @@ import (
 
 func TwitterFanart() {
 	scraper := twitterscraper.New()
-	scraper.SetProxy(config.BotConf.MultiTOR)
+	scraper.SetProxy(configfile.MultiTOR)
 	scraper.SetSearchMode(twitterscraper.SearchLatest)
 	for _, Group := range database.GetGroups() {
-		_, err := twitter.CreatePayload(database.GetMembers(Group.ID), Group, scraper, 100)
+		_, err := twitter.CreatePayload(Group, scraper, 100)
 		if err != nil {
 			log.WithFields(log.Fields{
 				"Group": Group.GroupName,

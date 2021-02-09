@@ -1,20 +1,30 @@
 package main
 
 import (
+	"context"
+	"encoding/json"
 	"errors"
 	"regexp"
 	"strings"
+	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
+	network "github.com/JustHumanz/Go-Simp/pkg/network"
+	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
+	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 )
 
 var (
-	BotInfo *discordgo.User
+	BotInfo    *discordgo.User
+	RegList    = make(map[string]string)
+	GroupsName []string
+	Payload    database.VtubersPayload
+	configfile config.ConfigFile
 )
 
 //Prefix command
@@ -39,47 +49,105 @@ const (
 	ModuleInfo    = "module"
 )
 
+func init() {
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
+	time.Sleep(5 * time.Minute)
+}
+
 //StartInit running the fe
 func main() {
-	conf, err := config.ReadConfig("../../config.toml")
-	if err != nil {
-		log.Error(err)
-	}
-	db := conf.CheckSQL()
+	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC("pilot"))
 
-	Bot, err := discordgo.New("Bot " + config.BotConf.Discord)
-	if err != nil {
-		log.Error(err)
+	var (
+		Bot         *discordgo.Session
+		WaitMigrate = true
+	)
+	c := cron.New()
+	c.Start()
+
+	StartBot := func() {
+		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+			Message: "Send me nude",
+			Service: "Frontend",
+		})
+
+		WaitMigrate = res.WaitMigrate
+		if err != nil {
+			log.Fatalf("Error when request payload: %s", err)
+		}
+		err = json.Unmarshal(res.ConfigFile, &configfile)
+		if err != nil {
+			log.Panic(err)
+		}
+
+		err = json.Unmarshal(res.VtuberPayload, &Payload)
+		if err != nil {
+			log.Panic(err)
+		}
+
+		for _, Group := range Payload.VtuberData {
+			GroupsName = append(GroupsName, Group.GroupName)
+			list := []string{}
+			keys := make(map[string]bool)
+			for _, Member := range Group.Members {
+				if _, value := keys[Member.Region]; !value {
+					keys[Member.Region] = true
+					list = append(list, Member.Region)
+				}
+			}
+			RegList[Group.GroupName] = strings.Join(list, ",")
+		}
+
+		if !res.WaitMigrate {
+			log.Info("Start Frontend")
+			var err error
+			Bot, err = discordgo.New("Bot " + configfile.Discord)
+			if err != nil {
+				log.Error(err)
+			}
+
+			err = Bot.Open()
+			if err != nil {
+				log.Error(err)
+			}
+
+			BotInfo, err = Bot.User("@me")
+			if err != nil {
+				log.Error(err)
+			}
+
+			config.GoSimpConf = configfile
+			database.Start(configfile)
+
+			Bot.AddHandler(Fanart)
+			Bot.AddHandler(Tags)
+			Bot.AddHandler(EnableState)
+			Bot.AddHandler(Status)
+			Bot.AddHandler(Help)
+			Bot.AddHandler(BiliBiliMessage)
+			Bot.AddHandler(BiliBiliSpace)
+			Bot.AddHandler(YoutubeMessage)
+			Bot.AddHandler(SubsMessage)
+			Bot.AddHandler(Module)
+		} else {
+			log.Info("Waiting migrate done")
+		}
 	}
-	err = Bot.Open()
-	if err != nil {
-		log.Error(err)
-	}
-	BotInfo, err = Bot.User("@me")
-	if err != nil {
-		log.Error(err)
+	StartBot()
+
+	if WaitMigrate {
+		c.AddFunc("@every 0h10m0s", StartBot)
+	} else {
+		c.Stop()
 	}
 
-	database.Start(db)
-	engine.Start()
-
-	Bot.AddHandler(Fanart)
-	Bot.AddHandler(Tags)
-	Bot.AddHandler(EnableState)
-	Bot.AddHandler(Status)
-	Bot.AddHandler(Help)
-	Bot.AddHandler(BiliBiliMessage)
-	Bot.AddHandler(BiliBiliSpace)
-	Bot.AddHandler(YoutubeMessage)
-	Bot.AddHandler(SubsMessage)
-	Bot.AddHandler(Module)
-
+	go pilot.RunHeartBeat(gRCPconn, "Frontend")
 	runfunc.Run(Bot)
 }
 
 func Module(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
-	Prefix := config.BotConf.BotPrefix.General
+	Prefix := configfile.BotPrefix.General
 	if strings.HasPrefix(m.Content, Prefix) {
 		if m.Content == Prefix+ModuleInfo {
 			list := []string{}
@@ -100,8 +168,8 @@ func Module(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 //ValidName Find a valid name from user input
 func ValidName(Name string) Memberst {
-	for _, Group := range engine.GroupData {
-		for _, Member := range database.GetMembers(Group.ID) {
+	for _, Group := range Payload.VtuberData {
+		for _, Member := range Group.Members {
 			if Name == strings.ToLower(Member.Name) || Name == strings.ToLower(Member.JpName) {
 				return Memberst{
 					VTName:     engine.FixName(Member.EnName, Member.JpName),
@@ -117,18 +185,18 @@ func ValidName(Name string) Memberst {
 }
 
 //FindName Find a valid Vtuber name from message handler
-func FindName(MemberName string) NameStruct {
-	for _, Group := range engine.GroupData {
-		for _, Name := range database.GetMembers(Group.ID) {
+func FindName(MemberName string) *NameStruct {
+	for _, Group := range Payload.VtuberData {
+		for _, Name := range Group.Members {
 			if strings.ToLower(Name.Name) == MemberName || strings.ToLower(Name.JpName) == MemberName {
-				return NameStruct{
+				return &NameStruct{
 					Group:  Group,
 					Member: Name,
 				}
 			}
 		}
 	}
-	return NameStruct{}
+	return nil
 
 }
 
@@ -140,7 +208,7 @@ type NameStruct struct {
 
 //FindGropName Find a valid Vtuber Group from message handler
 func FindGropName(GroupName string) (database.Group, error) {
-	for _, Group := range engine.GroupData {
+	for _, Group := range Payload.VtuberData {
 		if strings.ToLower(Group.GroupName) == strings.ToLower(GroupName) {
 			return Group, nil
 		}
@@ -160,7 +228,7 @@ func (Data DynamicSvr) GetUserAvatar() string {
 
 //CheckReg Check available region
 func CheckReg(GroupName, Reg string) bool {
-	for Key, Val := range engine.RegList {
+	for Key, Val := range RegList {
 		if strings.ToLower(Key) == strings.ToLower(GroupName) {
 			for _, Region := range strings.Split(strings.ToLower(Val), ",") {
 				if Region == Reg {

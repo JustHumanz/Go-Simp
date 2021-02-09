@@ -35,6 +35,11 @@ type Group struct {
 	ID        int64
 	IconURL   string
 	GroupName string
+	Members   []Member
+}
+
+type VtubersPayload struct {
+	VtuberData []Group
 }
 
 type Member struct {

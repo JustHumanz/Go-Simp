@@ -1,20 +1,32 @@
 from github import Github
 import requests,os,json,re
 
-GroupURL = "http://"+os.environ['REST_API']+":2525/Groups/"
-MemberURL = "http://"+os.environ['REST_API']+":2525/Members/"
-SubscriberURL = "http://"+os.environ['REST_API']+":2525/Subscribe/"
+GroupURL = "http://"+os.environ['REST_API']+":2525/Groups"
+AllURL = "http://"+os.environ['REST_API']+":2525/All"
+SubscriberURL = "http://"+os.environ['REST_API']+":2525/Subscriber"
 ChannelURL = "http://"+os.environ['REST_API']+":2525/channel/"
 Youtube = "http://"+os.environ['REST_API']+":2525/Youtube/"
 API_ENDPOINT = 'https://discord.com/api/v6'
 
 class GetVtubers:
-    def __init__(self):
-        response = requests.get(MemberURL)
-        self.Members = response.json()
+    def __init__(self):        
+        Members = []
+        response = requests.get(AllURL)
+        self.BaseData = response.json()
+        for Data in response.json():
+            if Data["Members"] is not None:
+                for Member in Data["Members"]:
+                        Members.append(Member)
+        
+        self.Members = Members
 
     def GetGroups(self):
-        return requests.get(GroupURL).json()
+        self.Groups = []
+        for Group in self.BaseData:
+            GroupTMP = Group.copy()
+            del GroupTMP["Members"]
+            self.Groups.append(GroupTMP)
+        return self.Groups
         
     def GetMemberSubs(self,ID):
         for Member in self.Members:
@@ -25,15 +37,20 @@ class GetVtubers:
 
     def GetMemberGroups(self,GroupID):
         GroupMember = []
-        LiveInfo = CheckLive(GroupID)
-        for MemberData in self.Members:
-            if int(MemberData["GroupID"]) == int(GroupID):
+        for Group in self.BaseData:
+            if int(Group["ID"]) == int(GroupID):
+                for Member in Group["Members"]:
+                    if MemberCheckLive(Member["ID"]) is not None:
+                        Member["YtLive"] = True
+                """
                 MemberData["YtLive"] = False
                 if LiveInfo is not None:
                     for Live in LiveInfo:
                         if int(Live["MemberID"]) == int(MemberData["ID"]):
                             MemberData["YtLive"] = True
-                GroupMember.append(MemberData)
+                """
+                GroupMember = Group["Members"]            
+                #GroupMember.append(MemberData)
 
         return GroupMember
 
@@ -48,8 +65,8 @@ def GetRegList(Members):
             Region.append(Member['Region'])
     return Region    
 
-def CheckLive(GroupID):
-    response = requests.get(Youtube+"Group/"+GroupID+"/Live")
+def MemberCheckLive(MemberID):
+    response = requests.get(Youtube+"Member/"+str(MemberID)+"/Live")
     if response.ok:
         return response.json()
     else:
