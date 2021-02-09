@@ -43,7 +43,10 @@ func SendFanart(Data []Fanart, Group database.Group) {
 			Group.IconURL = ""
 		}
 		for i, Channel := range ChannelData {
-			UserTagsList := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, MemberFanart.Member.ID)
+			UserTagsList, err := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, MemberFanart.Member.ID)
+			if err != nil {
+				log.Error(err)
+			}
 			if UserTagsList != nil {
 				tags = strings.Join(UserTagsList, " ")
 			} else {

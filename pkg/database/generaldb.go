@@ -789,25 +789,25 @@ func GetLiveNotifMsg(Key string) []DiscordChannel {
 }
 
 //GetUserList GetUser tags
-func (Data *DiscordChannel) GetUserList(ctx context.Context) []string {
+func (Data *DiscordChannel) GetUserList(ctx context.Context) ([]string, error) {
 	var (
 		DataUser      []string
 		DiscordUserID string
 		Type          bool
-		Key           = strconv.Itoa(int(Data.Member.ID) * int(Data.ID))
+		Key           = Data.Member.Name + strconv.Itoa(int(Data.ID))
 	)
 	val2, err := LiveCache.Get(ctx, Key).Result()
-	if len(val2) == 0 || err == redis.Nil {
+	if err == redis.Nil {
 		rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id=?`, Data.ID, Data.Member.ID)
 		if err != nil {
-			log.Error(err)
+			return nil, err
 		}
 		defer rows.Close()
 
 		for rows.Next() {
 			err = rows.Scan(&DiscordUserID, &Type)
 			if err != nil {
-				log.Error(err)
+				return nil, err
 			}
 			if Type {
 				DataUser = append(DataUser, "<@"+DiscordUserID+">")
@@ -818,9 +818,11 @@ func (Data *DiscordChannel) GetUserList(ctx context.Context) []string {
 		if len(DataUser) > 0 {
 			err = LiveCache.Set(ctx, Key, strings.Join(DataUser, ","), 17*time.Minute).Err()
 			if err != nil {
-				log.Error(err)
+				return nil, err
 			}
 		}
+	} else if err != nil {
+		return nil, err
 	} else {
 		if val2 == "" {
 			DataUser = nil
@@ -828,7 +830,7 @@ func (Data *DiscordChannel) GetUserList(ctx context.Context) []string {
 			DataUser = strings.Split(val2, ",")
 		}
 	}
-	return DataUser
+	return DataUser, nil
 }
 
 //get Reminder tags

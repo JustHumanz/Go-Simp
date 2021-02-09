@@ -35,7 +35,10 @@ func (Data CheckSctruct) SendNude() {
 				wg.Add(1)
 				go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
 					defer wg.Done()
-					UserTagsList := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, Data.MemberID)
+					UserTagsList, err := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, Data.MemberID)
+					if err != nil {
+						log.Error(err)
+					}
 					if UserTagsList != nil {
 						msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 							SetAuthor(Data.Member.Name, Data.Member.BiliBiliAvatar, "https://space.bilibili/"+strconv.Itoa(Data.Member.BiliBiliID)).

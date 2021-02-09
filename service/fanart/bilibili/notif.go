@@ -22,7 +22,10 @@ func PushNotif(Data database.TBiliBili) error {
 	}
 	tags := ""
 	for i, Channel := range ChannelData {
-		UserTagsList := Channel.GetUserList(context.Background())
+		UserTagsList, err := Channel.GetUserList(context.Background())
+		if err != nil {
+			log.Error(err)
+		}
 		if UserTagsList != nil {
 			tags = strings.Join(UserTagsList, " ")
 		} else {

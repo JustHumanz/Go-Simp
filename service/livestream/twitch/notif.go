@@ -36,7 +36,10 @@ func (Data TwitchNotif) SendNotif() error {
 		wg.Add(1)
 		go func(Channel database.DiscordChannel, wg *sync.WaitGroup) error {
 			defer wg.Done()
-			UserTagsList := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, PushData.Member.ID)
+			UserTagsList, err := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, PushData.Member.ID)
+			if err != nil {
+				log.Error(err)
+			}
 			if UserTagsList == nil && Data.Group.GroupName != "Independen" {
 				UserTagsList = []string{"_"}
 			} else if UserTagsList == nil && Data.Group.GroupName == "Independen" {
