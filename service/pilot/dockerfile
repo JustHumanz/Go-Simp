@@ -1,3 +1,4 @@
 FROM go-simp
 WORKDIR /app/Go-Simp/service/pilot/
-CMD ["go","run","."]
+RUN go build -o pilot
+CMD ["./pilot"]
