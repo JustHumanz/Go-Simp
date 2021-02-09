@@ -21,6 +21,9 @@ code_quality:
   before_script: []    
   artifacts:
     paths: [gl-code-quality-report.json]
+  only:
+    - master
+    - tags
 
 build go-simp service:
   stage: build
@@ -28,6 +31,9 @@ build go-simp service:
     - build
   script:
     - docker-compose -f docker-compose.prod.yaml build
+  only:
+    - master
+    - tags
 
 deploy go-simp:
   stage: deploy
@@ -41,3 +47,6 @@ deploy go-simp:
         docker-compose -f docker-compose.prod.yaml up -d && docker-compose -f docker-compose.prod.yaml stop db_migrate
       fi      
   when: manual
+  only:
+    - master
+    - tags
