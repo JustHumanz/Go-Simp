@@ -4,14 +4,13 @@ import (
 	"strings"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
-	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	log "github.com/sirupsen/logrus"
 )
 
 func CheckTwitter() {
-	for _, Group := range engine.GroupData {
-		for _, Name := range database.GetMembers(Group.ID) {
+	for _, Group := range Payload.VtuberData {
+		for _, Name := range Group.Members {
 			if Name.TwitterName != "" {
 				Twitter, err := Name.GetTwitterFollow()
 				if err != nil {

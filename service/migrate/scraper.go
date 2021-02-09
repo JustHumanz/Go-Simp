@@ -9,12 +9,11 @@ import (
 	"sync"
 	"time"
 
-	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
-	"github.com/JustHumanz/Go-Simp/service/backend/fanart/twitter"
-	bilibili "github.com/JustHumanz/Go-Simp/service/backend/livestream/bilibili/live"
-	youtube "github.com/JustHumanz/Go-Simp/service/backend/livestream/youtube"
+	"github.com/JustHumanz/Go-Simp/service/fanart/twitter"
+	bilibili "github.com/JustHumanz/Go-Simp/service/livestream/bilibili/live"
+	youtube "github.com/JustHumanz/Go-Simp/service/livestream/youtube"
 	twitterscraper "github.com/n0madic/twitter-scraper"
 	"github.com/nicklaw5/helix"
 	log "github.com/sirupsen/logrus"
@@ -22,10 +21,10 @@ import (
 
 func TwitterFanart() {
 	scraper := twitterscraper.New()
-	scraper.SetProxy(config.BotConf.MultiTOR)
+	scraper.SetProxy(configfile.MultiTOR)
 	scraper.SetSearchMode(twitterscraper.SearchLatest)
 	for _, Group := range database.GetGroups() {
-		_, err := twitter.CreatePayload(database.GetMembers(Group.ID), Group, scraper, 100)
+		_, err := twitter.CreatePayload(Group, scraper, 100)
 		if err != nil {
 			log.WithFields(log.Fields{
 				"Group": Group.GroupName,
@@ -313,17 +312,19 @@ func CheckTBiliBili() {
 									img = append(img, STB.Item.Pictures[l].ImgSrc)
 								}
 
-								Data := database.InputTBiliBili{
+								Data := database.TBiliBili{
 									URL:        "https://t.bilibili.com/" + TB.Data.Cards[i].Desc.DynamicIDStr + "?tab=2",
 									Author:     TB.Data.Cards[i].Desc.UserProfile.Info.Uname,
 									Avatar:     TB.Data.Cards[i].Desc.UserProfile.Info.Face,
 									Like:       TB.Data.Cards[i].Desc.Like,
-									Photos:     strings.Join(img, "\n"),
+									Photos:     img,
 									Dynamic_id: TB.Data.Cards[i].Desc.DynamicIDStr,
 									Text:       STB.Item.Description,
+									Member:     DataMember[z],
+									Group:      DataGroup[k],
 								}
 								log.Info("Send to database")
-								Data.InputTBiliBili(DataMember[z].ID)
+								Data.InputTBiliBili()
 							} else {
 								log.WithFields(log.Fields{
 									"Group":  DataGroup[k].GroupName,

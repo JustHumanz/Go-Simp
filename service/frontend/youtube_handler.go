@@ -18,7 +18,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
 	var (
 		Region    string
-		Prefix    = config.BotConf.BotPrefix.Youtube
+		Prefix    = configfile.BotPrefix.Youtube
 		SendEmbed = func(Data Memberst) {
 			if !Data.YtData.IsEmpty() {
 				YTData := Data.YtData

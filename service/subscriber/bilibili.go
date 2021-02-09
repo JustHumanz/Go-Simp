@@ -7,7 +7,6 @@ import (
 	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
-	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	"github.com/JustHumanz/Go-Simp/service/livestream/bilibili/space"
@@ -15,9 +14,9 @@ import (
 )
 
 func CheckBiliBili() {
-	BiliBiliSession := []string{"Cookie", "SESSDATA=" + config.BotConf.BiliSess}
-	for _, Group := range engine.GroupData {
-		Names := database.GetMembers(Group.ID)
+	BiliBiliSession := []string{"Cookie", "SESSDATA=" + configfile.BiliSess}
+	for _, Group := range Payload.VtuberData {
+		Names := Group.Members
 		for i, Name := range Names {
 			if Name.BiliBiliID != 0 {
 				var (

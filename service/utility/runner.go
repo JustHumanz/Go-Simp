@@ -1,11 +1,15 @@
 package main
 
 import (
+	"context"
+	"encoding/json"
 	"os"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/engine"
+	"github.com/JustHumanz/Go-Simp/pkg/network"
+	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
@@ -14,12 +18,26 @@ import (
 )
 
 func main() {
-	conf, err := config.ReadConfig("../../config.toml")
-	if err != nil {
-		log.Panic(err)
+	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC("localhost"))
+	var (
+		configfile config.ConfigFile
+	)
+	RequestPay := func() {
+		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+			Message: "Send me nude",
+			Service: "Livestream",
+		})
+		if err != nil {
+			log.Fatalf("Error when request payload: %s", err)
+		}
+		err = json.Unmarshal(res.ConfigFile, &configfile)
+		if err != nil {
+			log.Panic(err)
+		}
 	}
+	RequestPay()
 
-	Bot, err := discordgo.New("Bot " + config.BotConf.Discord)
+	Bot, err := discordgo.New("Bot " + configfile.Discord)
 	if err != nil {
 		log.Error(err)
 	}
@@ -33,10 +51,10 @@ func main() {
 		log.Panic(err)
 	}
 	Bot.AddHandler(func(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
-		if (m.Emoji.MessageFormat() == config.BotConf.Emoji.Livestream[0] || m.Emoji.MessageFormat() == config.BotConf.Emoji.Livestream[1]) && m.UserID != BotInfo.ID {
+		if (m.Emoji.MessageFormat() == configfile.Emoji.Livestream[0] || m.Emoji.MessageFormat() == configfile.Emoji.Livestream[1]) && m.UserID != BotInfo.ID {
 			UserState := database.GetChannelMessage(m.MessageID)
 			if UserState != nil {
-				if m.Emoji.MessageFormat() == config.BotConf.Emoji.Livestream[0] {
+				if m.Emoji.MessageFormat() == configfile.Emoji.Livestream[0] {
 					UserInfo, err := s.User(m.MessageReaction.UserID)
 					if err != nil {
 						log.Error(err)
@@ -62,7 +80,7 @@ func main() {
 							log.Error(err)
 						}
 					}
-				} else if m.Emoji.MessageFormat() == config.BotConf.Emoji.Livestream[1] {
+				} else if m.Emoji.MessageFormat() == configfile.Emoji.Livestream[1] {
 					UserInfo, err := s.User(m.MessageReaction.UserID)
 					if err != nil {
 						log.Error(err)
@@ -93,12 +111,13 @@ func main() {
 		}
 	})
 
-	Donation := config.BotConf.DonationLink
-	database.Start(conf.CheckSQL())
+	Donation := configfile.DonationLink
+	config.GoSimpConf = configfile
+	database.Start(configfile)
 
 	c := cron.New()
 	c.Start()
-	if config.BotConf.DonationLink != "" {
+	if configfile.DonationLink != "" {
 		c.AddFunc(config.DonationMsg, func() {
 			Bot.ChannelMessageSendEmbed(database.GetRanChannel(), engine.NewEmbed().
 				SetTitle("Donate").
@@ -108,7 +127,7 @@ func main() {
 				SetColor(14807034).
 				SetDescription("Enjoy the bot?\ndon't forget to support this bot and dev").
 				AddField("Ko-Fi", "[Link]("+Donation+")").
-				AddField("if you a broke gang,you can upvote "+BotInfo.Username, "[Top.gg]("+config.BotConf.TopGG+")").
+				AddField("if you a broke gang,you can upvote "+BotInfo.Username, "[Top.gg]("+configfile.TopGG+")").
 				AddField("or give some star on github", "[Github](https://github.com/JustHumanz/Go-Simp)").MessageEmbed)
 		})
 	}
@@ -127,5 +146,6 @@ func main() {
 		}
 	})
 
+	go pilot.RunHeartBeat(gRCPconn, "Utility")
 	runfunc.Run(Bot)
 }

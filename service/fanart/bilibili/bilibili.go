@@ -13,26 +13,29 @@ import (
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
-	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 )
 
 //Public variable
 var (
-	Bot *discordgo.Session
+	Bot         *discordgo.Session
+	VtubersData database.VtubersPayload
+	configfile  config.ConfigFile
 )
 
 //Start start twitter module
-func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
-	Bot = BotInit
-	cronInit.AddFunc(config.BiliBiliFanart, CheckNew)
+func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile) {
+	Bot = a
+	VtubersData = c
+	configfile = d
+	b.AddFunc(config.BiliBiliFanart, CheckNew)
 	log.Info("Enable bilibili fanart module")
 }
 
 //CheckNew Start Check new fanart
 func CheckNew() {
-	for _, Group := range engine.GroupData {
-		for _, Member := range database.GetMembers(Group.ID) {
+	for _, Group := range VtubersData.VtuberData {
+		for _, Member := range Group.Members {
 			if Member.BiliBiliHashtags != "" {
 				log.WithFields(log.Fields{
 					"Group":  Group.GroupName,

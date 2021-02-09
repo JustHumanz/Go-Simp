@@ -15,22 +15,26 @@ import (
 )
 
 var (
-	loc *time.Location
-	Bot *discordgo.Session
+	loc         *time.Location
+	Bot         *discordgo.Session
+	VtubersData database.VtubersPayload
+	configfile  config.ConfigFile
 )
 
 //Start start twitter module
-func Start(BotInit *discordgo.Session, cronInit *cron.Cron) {
+func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile) {
 	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
-	Bot = BotInit
-	cronInit.AddFunc(config.BiliBiliLive, CheckLiveSchedule)
+	Bot = a
+	configfile = d
+	b.AddFunc(config.BiliBiliLive, CheckLiveSchedule)
+	VtubersData = c
 	log.Info("Enable Live BiliBili module")
 }
 
 func CheckLiveSchedule() {
-	for _, GroupData := range engine.GroupData {
+	for _, GroupData := range VtubersData.VtuberData {
 		var wg sync.WaitGroup
-		for i, MemberData := range database.GetMembers(GroupData.ID) {
+		for i, MemberData := range GroupData.Members {
 			wg.Add(1)
 			log.WithFields(log.Fields{
 				"Group":  GroupData.GroupName,

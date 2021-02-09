@@ -18,7 +18,7 @@ import (
 // Public variables
 var (
 	ModuleList  = []string{"LiveBiliBili", "SpaceBiliBili", "Youtube", "TwitterFanart", "BiliBiliFanart", "YoutubeSubscriber", "BiliBiliFollowers", "TwitterFollowers"}
-	BotConf     ConfigFile
+	GoSimpConf  ConfigFile
 	TwitchToken string
 	NotFound    string
 	YoutubeIMG  string
@@ -62,6 +62,7 @@ const (
 	TwitterFollowers           = "@every 0h17m0s"
 	DonationMsg                = "@every 0h30m0s"
 	CheckServerCount           = "@every 0h10m0s"
+	CheckPayload               = "@every 2h0m0s"
 )
 
 type ConfigFile struct {
@@ -121,35 +122,35 @@ func ReadConfig(path string) (ConfigFile, error) {
 
 	fmt.Println(string(file))
 
-	_, err = toml.Decode(string(file), &BotConf)
+	_, err = toml.Decode(string(file), &GoSimpConf)
 	if err != nil {
 		return ConfigFile{}, err
 	}
 
-	NotFound = fmt.Sprintf("https://cdn.%s/404.jpg", BotConf.Domain)
-	YoutubeIMG = fmt.Sprintf("https://cdn.%s/youtube.png", BotConf.Domain)
-	BiliBiliIMG = fmt.Sprintf("https://cdn.%s/bilibili.png", BotConf.Domain)
-	TwitterIMG = fmt.Sprintf("https://cdn.%s/twitter.png", BotConf.Domain)
-	WorryIMG = fmt.Sprintf("https://cdn.%s/parerunworry.png", BotConf.Domain)
-	GoSimpIMG = fmt.Sprintf("https://cdn.%s/go-simp.png", BotConf.Domain)
-	Dead = fmt.Sprintf("https://cdn.%s/dead.jpg", BotConf.Domain)
-	BSD = fmt.Sprintf("https://cdn.%s/bsd.png", BotConf.Domain)
-	Sleep = fmt.Sprintf("https://cdn.%s/sleep.png", BotConf.Domain)
-	Bonjour = fmt.Sprintf("https://cdn.%s/bonjour.png", BotConf.Domain)
-	Howdy = fmt.Sprintf("https://cdn.%s/howdy.png", BotConf.Domain)
-	Guten = fmt.Sprintf("https://cdn.%s/guten.png", BotConf.Domain)
-	Koni = fmt.Sprintf("https://cdn.%s/koni.png", BotConf.Domain)
-	Selamat = fmt.Sprintf("https://cdn.%s/selamat.jpg", BotConf.Domain)
-	Assalamu = fmt.Sprintf("https://cdn.%s/Assalamu.jpg", BotConf.Domain)
-	Approaching = fmt.Sprintf("https://cdn.%s/approaching.jpg", BotConf.Domain)
-	CommandURL = fmt.Sprintf("https://go-simp.%s/Exec/", BotConf.Domain)
-	GuideURL = fmt.Sprintf("https://go-simp.%s/Guide/", BotConf.Domain)
-	VtubersData = fmt.Sprintf("https://go-simp.%s", BotConf.Domain)
+	NotFound = fmt.Sprintf("https://cdn.%s/404.jpg", GoSimpConf.Domain)
+	YoutubeIMG = fmt.Sprintf("https://cdn.%s/youtube.png", GoSimpConf.Domain)
+	BiliBiliIMG = fmt.Sprintf("https://cdn.%s/bilibili.png", GoSimpConf.Domain)
+	TwitterIMG = fmt.Sprintf("https://cdn.%s/twitter.png", GoSimpConf.Domain)
+	WorryIMG = fmt.Sprintf("https://cdn.%s/parerunworry.png", GoSimpConf.Domain)
+	GoSimpIMG = fmt.Sprintf("https://cdn.%s/go-simp.png", GoSimpConf.Domain)
+	Dead = fmt.Sprintf("https://cdn.%s/dead.jpg", GoSimpConf.Domain)
+	BSD = fmt.Sprintf("https://cdn.%s/bsd.png", GoSimpConf.Domain)
+	Sleep = fmt.Sprintf("https://cdn.%s/sleep.png", GoSimpConf.Domain)
+	Bonjour = fmt.Sprintf("https://cdn.%s/bonjour.png", GoSimpConf.Domain)
+	Howdy = fmt.Sprintf("https://cdn.%s/howdy.png", GoSimpConf.Domain)
+	Guten = fmt.Sprintf("https://cdn.%s/guten.png", GoSimpConf.Domain)
+	Koni = fmt.Sprintf("https://cdn.%s/koni.png", GoSimpConf.Domain)
+	Selamat = fmt.Sprintf("https://cdn.%s/selamat.jpg", GoSimpConf.Domain)
+	Assalamu = fmt.Sprintf("https://cdn.%s/Assalamu.jpg", GoSimpConf.Domain)
+	Approaching = fmt.Sprintf("https://cdn.%s/approaching.jpg", GoSimpConf.Domain)
+	CommandURL = fmt.Sprintf("https://go-simp.%s/Exec/", GoSimpConf.Domain)
+	GuideURL = fmt.Sprintf("https://go-simp.%s/Guide/", GoSimpConf.Domain)
+	VtubersData = fmt.Sprintf("https://go-simp.%s", GoSimpConf.Domain)
 
-	if BotConf.LimitConf.YoutubeLimit >= 15 {
-		BotConf.LimitConf.YoutubeLimit = 15
+	if GoSimpConf.LimitConf.YoutubeLimit >= 15 {
+		GoSimpConf.LimitConf.YoutubeLimit = 15
 	}
-	return BotConf, nil
+	return GoSimpConf, nil
 }
 
 func (Data ConfigFile) CheckSQL() *sql.DB {

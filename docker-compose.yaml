@@ -33,8 +33,6 @@ services:
       - build_build_go-simp
     command: ./start.sh
     restart: on-failure    
-    volumes:
-      - ./config.toml:/app/Go-Simp
     networks:
       - go_simp-net
 
@@ -46,8 +44,6 @@ services:
       - multi_tor
       - build_build_go-simp
     restart: on-failure
-    volumes:
-      - ./config.toml:/app/Go-Simp    
     networks:
       - go_simp-net
 
@@ -59,8 +55,6 @@ services:
       - multi_tor
       - build_build_go-simp
     restart: on-failure
-    volumes:
-      - ./config.toml:/app/Go-Simp    
     networks:
       - go_simp-net
 
@@ -72,8 +66,6 @@ services:
       - multi_tor
       - build_build_go-simp
     restart: on-failure    
-    volumes:
-      - ./config.toml:/app/Go-Simp    
     networks:
       - go_simp-net
 
@@ -86,8 +78,6 @@ services:
       - build_build_go-simp
     command: go run .
     restart: on-failure    
-    volumes:
-      - ./config.toml:/app/Go-Simp    
     networks:
       - go_simp-net
 
@@ -99,8 +89,6 @@ services:
       - multi_tor
       - build_build_go-simp
     restart: on-failure
-    volumes:
-      - ./config.toml:/app/Go-Simp    
     networks:
       - go_simp-net
 
@@ -112,10 +100,21 @@ services:
       - multi_tor
       - build_build_go-simp
     restart: on-failure
-    volumes:
-      - ./config.toml:/app/Go-Simp    
     networks:
       - go_simp-net
+
+  pilot:
+    build: ./service/pilot/
+    depends_on:
+      - mysql
+      - db_migrate
+      - multi_tor
+      - build_build_go-simp
+    restart: on-failure
+    volumes:
+      - ./config.toml:/app/Go-Simp/config.toml    
+    networks:
+      - go_simp-net      
 
 #  yotube-scrap:
 #    build: service/yt-scrap

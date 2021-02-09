@@ -1,3 +1,6 @@
+v2.10.24
+- Add gRPC for for service communicate
+
 v2.7.24
 - Fix guild channel notif
 - Change Tbilibili fanart workflow
