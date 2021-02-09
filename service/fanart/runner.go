@@ -59,7 +59,7 @@ func main() {
 		log.Error(err)
 	}
 
-	config.GoSimpConf = configfile
+	configfile.InitConf()
 	database.Start(configfile)
 
 	c := cron.New()

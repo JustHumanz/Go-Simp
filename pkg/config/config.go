@@ -128,29 +128,6 @@ func ReadConfig(path string) (ConfigFile, error) {
 		return ConfigFile{}, err
 	}
 
-	NotFound = fmt.Sprintf("https://cdn.%s/404.jpg", GoSimpConf.Domain)
-	YoutubeIMG = fmt.Sprintf("https://cdn.%s/youtube.png", GoSimpConf.Domain)
-	BiliBiliIMG = fmt.Sprintf("https://cdn.%s/bilibili.png", GoSimpConf.Domain)
-	TwitterIMG = fmt.Sprintf("https://cdn.%s/twitter.png", GoSimpConf.Domain)
-	WorryIMG = fmt.Sprintf("https://cdn.%s/parerunworry.png", GoSimpConf.Domain)
-	GoSimpIMG = fmt.Sprintf("https://cdn.%s/go-simp.png", GoSimpConf.Domain)
-	Dead = fmt.Sprintf("https://cdn.%s/dead.jpg", GoSimpConf.Domain)
-	BSD = fmt.Sprintf("https://cdn.%s/bsd.png", GoSimpConf.Domain)
-	Sleep = fmt.Sprintf("https://cdn.%s/sleep.png", GoSimpConf.Domain)
-	Bonjour = fmt.Sprintf("https://cdn.%s/bonjour.png", GoSimpConf.Domain)
-	Howdy = fmt.Sprintf("https://cdn.%s/howdy.png", GoSimpConf.Domain)
-	Guten = fmt.Sprintf("https://cdn.%s/guten.png", GoSimpConf.Domain)
-	Koni = fmt.Sprintf("https://cdn.%s/koni.png", GoSimpConf.Domain)
-	Selamat = fmt.Sprintf("https://cdn.%s/selamat.jpg", GoSimpConf.Domain)
-	Assalamu = fmt.Sprintf("https://cdn.%s/Assalamu.jpg", GoSimpConf.Domain)
-	Approaching = fmt.Sprintf("https://cdn.%s/approaching.jpg", GoSimpConf.Domain)
-	CommandURL = fmt.Sprintf("https://go-simp.%s/Exec/", GoSimpConf.Domain)
-	GuideURL = fmt.Sprintf("https://go-simp.%s/Guide/", GoSimpConf.Domain)
-	VtubersData = fmt.Sprintf("https://go-simp.%s", GoSimpConf.Domain)
-
-	if GoSimpConf.LimitConf.YoutubeLimit >= 15 {
-		GoSimpConf.LimitConf.YoutubeLimit = 15
-	}
 	return GoSimpConf, nil
 }
 
@@ -220,5 +197,32 @@ func (Data ConfigFile) GetTwitchAccessToken() string {
 		}
 		TwitchToken = result["access_token"].(string)
 		return TwitchToken
+	}
+}
+
+func (Data ConfigFile) InitConf() {
+	GoSimpConf = Data
+	NotFound = fmt.Sprintf("https://cdn.%s/404.jpg", Data.Domain)
+	YoutubeIMG = fmt.Sprintf("https://cdn.%s/youtube.png", Data.Domain)
+	BiliBiliIMG = fmt.Sprintf("https://cdn.%s/bilibili.png", Data.Domain)
+	TwitterIMG = fmt.Sprintf("https://cdn.%s/twitter.png", Data.Domain)
+	WorryIMG = fmt.Sprintf("https://cdn.%s/parerunworry.png", Data.Domain)
+	GoSimpIMG = fmt.Sprintf("https://cdn.%s/go-simp.png", Data.Domain)
+	Dead = fmt.Sprintf("https://cdn.%s/dead.jpg", Data.Domain)
+	BSD = fmt.Sprintf("https://cdn.%s/bsd.png", Data.Domain)
+	Sleep = fmt.Sprintf("https://cdn.%s/sleep.png", Data.Domain)
+	Bonjour = fmt.Sprintf("https://cdn.%s/bonjour.png", Data.Domain)
+	Howdy = fmt.Sprintf("https://cdn.%s/howdy.png", Data.Domain)
+	Guten = fmt.Sprintf("https://cdn.%s/guten.png", Data.Domain)
+	Koni = fmt.Sprintf("https://cdn.%s/koni.png", Data.Domain)
+	Selamat = fmt.Sprintf("https://cdn.%s/selamat.jpg", Data.Domain)
+	Assalamu = fmt.Sprintf("https://cdn.%s/Assalamu.jpg", Data.Domain)
+	Approaching = fmt.Sprintf("https://cdn.%s/approaching.jpg", Data.Domain)
+	CommandURL = fmt.Sprintf("https://go-simp.%s/Exec/", Data.Domain)
+	GuideURL = fmt.Sprintf("https://go-simp.%s/Guide/", Data.Domain)
+	VtubersData = fmt.Sprintf("https://go-simp.%s", Data.Domain)
+
+	if Data.LimitConf.YoutubeLimit >= 15 {
+		GoSimpConf.LimitConf.YoutubeLimit = 15
 	}
 }

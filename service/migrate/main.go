@@ -85,7 +85,7 @@ func init() {
 
 	db = configfile.CheckSQL()
 	database.DB = db
-	config.GoSimpConf = configfile
+	configfile.InitConf()
 
 	YoutubeToken = engine.GetYtToken()
 	BiliBiliSession = []string{"Cookie", "SESSDATA=" + configfile.BiliSess}

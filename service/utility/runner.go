@@ -112,7 +112,7 @@ func main() {
 	})
 
 	Donation := configfile.DonationLink
-	config.GoSimpConf = configfile
+	configfile.InitConf()
 	database.Start(configfile)
 
 	c := cron.New()
