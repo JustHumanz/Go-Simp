@@ -7,9 +7,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/signal"
 	"regexp"
 	"strconv"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/nicklaw5/helix"
@@ -114,6 +116,24 @@ func init() {
 }
 
 func main() {
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-sigChan
+		log.Info("Shutting down...")
+		if Bot != nil {
+			log.Info("Close bot wss session")
+			err := Bot.Close()
+			if err != nil {
+				log.Error(err)
+			}
+
+			log.Info("Migrate killed")
+			RequestPay("Done migrate new vtuber")
+			os.Exit(1)
+		}
+	}()
+
 	AddData(JsonData)
 	go CheckYoutube()
 	go CheckLiveBiliBili()

@@ -51,7 +51,7 @@ const (
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
-	time.Sleep(5 * time.Minute)
+	time.Sleep(1 * time.Minute)
 }
 
 //StartInit running the fe
@@ -61,6 +61,7 @@ func main() {
 	var (
 		Bot         *discordgo.Session
 		WaitMigrate = true
+		Counter     int
 	)
 	c := cron.New()
 	c.Start()
@@ -131,13 +132,14 @@ func main() {
 			Bot.AddHandler(Module)
 		} else {
 			log.Info("Waiting migrate done")
+			Counter++
 		}
 	}
 	StartBot()
 
 	if WaitMigrate {
 		c.AddFunc("@every 0h10m0s", StartBot)
-	} else {
+	} else if Counter == 3 || !WaitMigrate {
 		c.Stop()
 	}
 
