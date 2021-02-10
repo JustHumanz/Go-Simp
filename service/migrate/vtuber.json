@@ -526,6 +526,51 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Rukako",
+                    "EN_Name":"Oura Rukako",
+                    "JP_Name":"大浦るかこ",
+                    "Hashtag": {
+                        "Twitter": "#絵ーじぇんと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC3xG1XWzAKt5dxSxktJvtxg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Rukako_Oura",
+                    "Twitch_Username": "",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Mia",
+                    "EN_Name":"Konan Mia",
+                    "JP_Name":"湖南みあ",
+                    "Hashtag": {
+                        "Twitter": "#みーあぱれっと",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC4PrHgUcAtOoj_LKmUL-uLQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Rukako_Oura",
+                    "Twitch_Username": "",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Tirol",
+                    "EN_Name":"Tsukinoki Tirol",
+                    "JP_Name":"月野木ちろる",
+                    "Hashtag": {
+                        "Twitter": "#月野木美術館",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCqskJ0nmw-_eweWfsKvbrzQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "tirol0_0lorit",
+                    "Twitch_Username": "",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Uge",
                     "EN_Name":"And Uge",
                     "JP_Name":"杏戸ゆげ",
