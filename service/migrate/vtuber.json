@@ -256,6 +256,36 @@
                     "Twitter_Username": "jaretghosty",
                     "Twitch_Username": "",
                     "Region":"ID"
+                },
+                {
+                    "Name":"Ameka",
+                    "EN_Name":"Yasumu Ameka",
+                    "JP_Name":"安無雨過",
+                    "Hashtag": {
+                        "Twitter": "#Artmeka",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC-6uUtD08dBVbnX8gnHUFow",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "YasumuAmeka",
+                    "Twitch_Username": "",
+                    "Region":"EN"
+                },
+                {
+                    "Name":"Lili",
+                    "EN_Name":"Liliana Vampaia",
+                    "JP_Name":"吸血鬼 リリアナ",
+                    "Hashtag": {
+                        "Twitter": "#lilisuu",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCHz3PeU1RRcY9vJDSqsigIA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "lilianavampaia",
+                    "Twitch_Username": "",
+                    "Region":"EN"
                 }
             ]
         },

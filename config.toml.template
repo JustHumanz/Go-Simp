@@ -1,6 +1,7 @@
 Discord = "#Discord token"
 BiliSess = "#BiliSess"
 DiscordWebHook = "#URL"
+PilotReporting = "#URLWebhook2"
 Multitor = "#Http Proxy"
 DonationLink = "#DonationLink"
 Domain = "humanz.tech"

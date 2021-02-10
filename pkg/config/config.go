@@ -71,6 +71,7 @@ type ConfigFile struct {
 	BiliSess       string `toml:"BiliSess"`
 	SauceAPI       string `toml:"SauceAPI"`
 	DiscordWebHook string `toml:"DiscordWebHook"`
+	PilotReporting string `toml:"PilotReporting"`
 	MultiTOR       string `toml:"Multitor"`
 	DonationLink   string `toml:"DonationLink"`
 	TopGG          string `toml:"TOPGG"`

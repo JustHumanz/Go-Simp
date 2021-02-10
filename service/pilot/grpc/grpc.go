@@ -54,7 +54,7 @@ func Start() {
 		log.Error(err)
 	}
 
-	WeebHookURL = configfile.DiscordWebHook
+	WeebHookURL = configfile.PilotReporting
 	confByte, err = json.Marshal(configfile)
 	if err != nil {
 		log.Error(err)
