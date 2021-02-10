@@ -16,8 +16,6 @@ YoutubeToken = [
 TwitterFanart = int
 SpaceBiliBili = int
 YoutubeLimit = int
-MaxOpenConns = 66
-MaxIdleConns = 66
 
 [Sql]
 User = "humanz"
