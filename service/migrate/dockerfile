@@ -1,3 +1,4 @@
 FROM go-simp
 WORKDIR /app/Go-Simp/service/migrate/
-CMD ["go","run","."]
+RUN go build -o migrate
+CMD ["./migrate"]
