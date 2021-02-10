@@ -1,5 +1,8 @@
 v2.10.24
 - Add gRPC for for service communicate
+- Update 774inc
+- Add Ameka&Lili
+- Separate invite log with pilot log
 
 v2.7.24
 - Fix guild channel notif
