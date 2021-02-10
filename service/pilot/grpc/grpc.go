@@ -8,6 +8,7 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
+	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -17,6 +18,7 @@ var (
 	dbByte      []byte
 	confByte    []byte
 	WeebHookURL string
+	Groups      []database.Group
 )
 
 func Start() {
@@ -25,13 +27,21 @@ func Start() {
 		log.Panic(err)
 	}
 
+	c := cron.New()
+	c.Start()
 	configfile.InitConf()
 	database.Start(configfile)
 
-	Groups := database.GetGroups()
-	for i, _ := range Groups {
-		Groups[i].Members = database.GetMembers(Groups[i].ID)
+	GetGroups := func() {
+		log.Info("Start get groups from database")
+		Groups := database.GetGroups()
+		for i, _ := range Groups {
+			Groups[i].Members = database.GetMembers(Groups[i].ID)
+		}
 	}
+	GetGroups()
+
+	c.AddFunc(config.PilotGetGroups, GetGroups)
 
 	/*
 			Bot, err := discordgo.New("Bot " + config.GoSimpConf.Discord)
@@ -59,7 +69,6 @@ func Start() {
 	if err != nil {
 		log.Error(err)
 	}
-
 }
 
 type Server struct {
