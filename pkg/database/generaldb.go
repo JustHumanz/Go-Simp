@@ -423,8 +423,11 @@ func CheckUser(DiscordID string, MemberID int64, ChannelChannelID int) bool {
 	var tmp int
 	row := DB.QueryRow("SELECT id FROM User WHERE DiscordID=? AND VtuberMember_id=? AND Channel_id=?", DiscordID, MemberID, ChannelChannelID)
 	err := row.Scan(&tmp)
-	if err != nil || err == sql.ErrNoRows {
+	if err == sql.ErrNoRows {
 		return false
+	} else if err != nil {
+		log.Error(err)
+		return true
 	} else {
 		return true
 	}

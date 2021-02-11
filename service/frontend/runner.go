@@ -99,7 +99,7 @@ func main() {
 			RegList[Group.GroupName] = strings.Join(list, ",")
 		}
 
-		if !res.WaitMigrate {
+		if !res.WaitMigrate || Counter == 3 {
 			log.Info("Start Frontend")
 			var err error
 			Bot, err = discordgo.New("Bot " + configfile.Discord)
@@ -139,7 +139,7 @@ func main() {
 
 	if WaitMigrate {
 		c.AddFunc("@every 0h10m0s", StartBot)
-	} else if Counter == 3 || !WaitMigrate {
+	} else if !WaitMigrate || Counter == 3 {
 		c.Stop()
 	}
 
