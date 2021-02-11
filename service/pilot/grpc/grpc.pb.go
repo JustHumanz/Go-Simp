@@ -270,18 +270,18 @@ var file_grpc_proto_rawDesc = []byte{
 	0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x4d, 0x6f, 0x64, 0x75, 0x6c, 0x65, 0x12, 0x18, 0x0a, 0x07,
 	0x45, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x45,
 	0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x22, 0x07, 0x0a, 0x05, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x32,
-	0xaf, 0x01, 0x0a, 0x0c, 0x50, 0x69, 0x6c, 0x6f, 0x74, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
+	0xad, 0x01, 0x0a, 0x0c, 0x50, 0x69, 0x6c, 0x6f, 0x74, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
 	0x12, 0x36, 0x0a, 0x07, 0x52, 0x65, 0x71, 0x44, 0x61, 0x74, 0x61, 0x12, 0x15, 0x2e, 0x70, 0x69,
 	0x6c, 0x6f, 0x74, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x4d, 0x65, 0x73, 0x73, 0x61,
 	0x67, 0x65, 0x1a, 0x12, 0x2e, 0x70, 0x69, 0x6c, 0x6f, 0x74, 0x2e, 0x56, 0x74, 0x75, 0x62, 0x65,
 	0x72, 0x73, 0x44, 0x61, 0x74, 0x61, 0x22, 0x00, 0x12, 0x2f, 0x0a, 0x0a, 0x4d, 0x6f, 0x64, 0x75,
 	0x6c, 0x65, 0x4c, 0x69, 0x73, 0x74, 0x12, 0x11, 0x2e, 0x70, 0x69, 0x6c, 0x6f, 0x74, 0x2e, 0x4d,
 	0x6f, 0x64, 0x75, 0x6c, 0x65, 0x44, 0x61, 0x74, 0x61, 0x1a, 0x0c, 0x2e, 0x70, 0x69, 0x6c, 0x6f,
-	0x74, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x12, 0x36, 0x0a, 0x09, 0x48, 0x65, 0x61,
+	0x74, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x12, 0x34, 0x0a, 0x09, 0x48, 0x65, 0x61,
 	0x72, 0x74, 0x42, 0x65, 0x61, 0x74, 0x12, 0x15, 0x2e, 0x70, 0x69, 0x6c, 0x6f, 0x74, 0x2e, 0x53,
 	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x1a, 0x0c, 0x2e,
-	0x70, 0x69, 0x6c, 0x6f, 0x74, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x28, 0x01, 0x30,
-	0x01, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x70, 0x69, 0x6c, 0x6f, 0x74, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x30, 0x01, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -406,7 +406,7 @@ const _ = grpc.SupportPackageIsVersion6
 type PilotServiceClient interface {
 	ReqData(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*VtubersData, error)
 	ModuleList(ctx context.Context, in *ModuleData, opts ...grpc.CallOption) (*Empty, error)
-	HeartBeat(ctx context.Context, opts ...grpc.CallOption) (PilotService_HeartBeatClient, error)
+	HeartBeat(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (PilotService_HeartBeatClient, error)
 }
 
 type pilotServiceClient struct {
@@ -435,27 +435,28 @@ func (c *pilotServiceClient) ModuleList(ctx context.Context, in *ModuleData, opt
 	return out, nil
 }
 
-func (c *pilotServiceClient) HeartBeat(ctx context.Context, opts ...grpc.CallOption) (PilotService_HeartBeatClient, error) {
+func (c *pilotServiceClient) HeartBeat(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (PilotService_HeartBeatClient, error) {
 	stream, err := c.cc.NewStream(ctx, &_PilotService_serviceDesc.Streams[0], "/pilot.PilotService/HeartBeat", opts...)
 	if err != nil {
 		return nil, err
 	}
 	x := &pilotServiceHeartBeatClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
 	return x, nil
 }
 
 type PilotService_HeartBeatClient interface {
-	Send(*ServiceMessage) error
 	Recv() (*Empty, error)
 	grpc.ClientStream
 }
 
 type pilotServiceHeartBeatClient struct {
 	grpc.ClientStream
-}
-
-func (x *pilotServiceHeartBeatClient) Send(m *ServiceMessage) error {
-	return x.ClientStream.SendMsg(m)
 }
 
 func (x *pilotServiceHeartBeatClient) Recv() (*Empty, error) {
@@ -470,7 +471,7 @@ func (x *pilotServiceHeartBeatClient) Recv() (*Empty, error) {
 type PilotServiceServer interface {
 	ReqData(context.Context, *ServiceMessage) (*VtubersData, error)
 	ModuleList(context.Context, *ModuleData) (*Empty, error)
-	HeartBeat(PilotService_HeartBeatServer) error
+	HeartBeat(*ServiceMessage, PilotService_HeartBeatServer) error
 }
 
 // UnimplementedPilotServiceServer can be embedded to have forward compatible implementations.
@@ -483,7 +484,7 @@ func (*UnimplementedPilotServiceServer) ReqData(context.Context, *ServiceMessage
 func (*UnimplementedPilotServiceServer) ModuleList(context.Context, *ModuleData) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ModuleList not implemented")
 }
-func (*UnimplementedPilotServiceServer) HeartBeat(PilotService_HeartBeatServer) error {
+func (*UnimplementedPilotServiceServer) HeartBeat(*ServiceMessage, PilotService_HeartBeatServer) error {
 	return status.Errorf(codes.Unimplemented, "method HeartBeat not implemented")
 }
 
@@ -528,12 +529,15 @@ func _PilotService_ModuleList_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 func _PilotService_HeartBeat_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(PilotServiceServer).HeartBeat(&pilotServiceHeartBeatServer{stream})
+	m := new(ServiceMessage)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(PilotServiceServer).HeartBeat(m, &pilotServiceHeartBeatServer{stream})
 }
 
 type PilotService_HeartBeatServer interface {
 	Send(*Empty) error
-	Recv() (*ServiceMessage, error)
 	grpc.ServerStream
 }
 
@@ -543,14 +547,6 @@ type pilotServiceHeartBeatServer struct {
 
 func (x *pilotServiceHeartBeatServer) Send(m *Empty) error {
 	return x.ServerStream.SendMsg(m)
-}
-
-func (x *pilotServiceHeartBeatServer) Recv() (*ServiceMessage, error) {
-	m := new(ServiceMessage)
-	if err := x.ServerStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
 }
 
 var _PilotService_serviceDesc = grpc.ServiceDesc{
@@ -571,7 +567,6 @@ var _PilotService_serviceDesc = grpc.ServiceDesc{
 			StreamName:    "HeartBeat",
 			Handler:       _PilotService_HeartBeat_Handler,
 			ServerStreams: true,
-			ClientStreams: true,
 		},
 	},
 	Metadata: "grpc.proto",

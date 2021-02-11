@@ -74,6 +74,9 @@ func main() {
 
 		WaitMigrate = res.WaitMigrate
 		if err != nil {
+			if configfile.Discord != "" {
+				pilot.ReportDeadService(err.Error())
+			}
 			log.Fatalf("Error when request payload: %s", err)
 		}
 		err = json.Unmarshal(res.ConfigFile, &configfile)

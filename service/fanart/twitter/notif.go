@@ -46,6 +46,7 @@ func SendFanart(Data []Fanart, Group database.Group) {
 			UserTagsList, err := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, MemberFanart.Member.ID)
 			if err != nil {
 				log.Error(err)
+				break
 			}
 			if UserTagsList != nil {
 				tags = strings.Join(UserTagsList, " ")

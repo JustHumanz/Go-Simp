@@ -25,5 +25,5 @@ message Empty {
 service PilotService {
   rpc ReqData(ServiceMessage) returns (VtubersData) {}
   rpc ModuleList(ModuleData) returns (Empty){}
-  rpc HeartBeat(stream ServiceMessage) returns (stream Empty){}
+  rpc HeartBeat(ServiceMessage) returns (stream Empty){}
 }

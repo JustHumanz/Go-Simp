@@ -139,7 +139,7 @@ type SubTbili struct {
 		AtControl     string `json:"at_control"`
 		Reply         int    `json:"reply"`
 		Settings      struct {
-			CopyForbidden int `json:"copy_forbidden"`
+			CopyForbidden interface{} `json:"copy_forbidden"`
 		} `json:"settings"`
 		IsFav int `json:"is_fav"`
 	} `json:"item"`

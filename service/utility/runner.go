@@ -17,6 +17,10 @@ import (
 	"github.com/top-gg/go-dbl"
 )
 
+func init() {
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
+}
+
 func main() {
 	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 	var (
@@ -28,6 +32,9 @@ func main() {
 			Service: "Livestream",
 		})
 		if err != nil {
+			if configfile.Discord != "" {
+				pilot.ReportDeadService(err.Error())
+			}
 			log.Fatalf("Error when request payload: %s", err)
 		}
 		err = json.Unmarshal(res.ConfigFile, &configfile)

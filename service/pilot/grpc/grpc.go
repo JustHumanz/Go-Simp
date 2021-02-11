@@ -120,49 +120,35 @@ func (s *Server) ModuleList(ctx context.Context, in *ModuleData) (*Empty, error)
 	return &Empty{}, nil
 }
 
-func (s *Server) HeartBeat(stream PilotService_HeartBeatServer) error {
+func (s *Server) HeartBeat(in *ServiceMessage, stream PilotService_HeartBeatServer) error {
 	for {
-		err := stream.Send(&Empty{})
-		if err != nil {
-			/*
-				Service die,Send notif via discord webhook
-			*/
-			ReportDeadService(err.Error())
-			return err
-		}
-		client, err := stream.Recv()
-		if err != nil {
-			ReportDeadService(err.Error())
-			return err
-		}
-
-		if client.Alive {
+		if in.Alive {
 			log.WithFields(log.Fields{
-				"Service":  client.Service,
-				"Messsage": client.Message,
+				"Service":  in.Service,
+				"Messsage": in.Message,
 				"Status":   "Running",
 			}).Info("HeartBeat")
 		}
-		time.Sleep(2 * time.Second)
+
+		err := stream.Send(&Empty{})
+		if err != nil {
+			ReportDeadService(err.Error())
+			return err
+		}
+		time.Sleep(5 * time.Second)
 	}
 	return nil
 }
 
 func RunHeartBeat(client PilotServiceClient, Service string) {
-	for {
-		stream, err := client.HeartBeat(context.Background())
-		if err != nil {
-			log.Fatalf("%v.RecordRoute(_) = _, %v", client, err)
-		}
-		err = stream.Send(&ServiceMessage{
-			Service: Service,
-			Message: "Service 200 daijoubu",
-			Alive:   true,
-		})
-		if err != nil {
-			log.Error(err)
-		}
-		time.Sleep(5 * time.Second)
+	_, err := client.HeartBeat(context.Background(), &ServiceMessage{
+		Service: Service,
+		Message: "Service 200 daijoubu",
+		Alive:   true,
+	})
+	if err != nil {
+		ReportDeadService("Pilot down")
+		log.Fatal(err)
 	}
 }
 

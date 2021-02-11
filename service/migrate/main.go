@@ -86,7 +86,7 @@ func init() {
 	}
 
 	db = configfile.CheckSQL()
-	database.DB = db
+	database.Start(configfile)
 	configfile.InitConf()
 
 	YoutubeToken = engine.GetYtToken()
@@ -164,6 +164,10 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		Avatar         string
 		err            error
 	)
+
+	if match, _ := regexp.MatchString("404.jpg", Data.Group.IconURL); match {
+		Data.Group.IconURL = ""
+	}
 
 	if Data.Member.YtID != "" {
 		Youtube = "✓"

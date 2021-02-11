@@ -218,7 +218,7 @@ func (Data Member) BliBiliFace() (string, error) {
 		}
 		err := json.Unmarshal(body, &Info)
 		if err != nil {
-			return "", errcurl
+			return "", err
 		}
 
 		return strings.Replace(Info.Data.Face, "http", "https", -1), nil

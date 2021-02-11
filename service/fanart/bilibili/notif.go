@@ -25,6 +25,7 @@ func PushNotif(Data database.TBiliBili) error {
 		UserTagsList, err := Channel.GetUserList(context.Background())
 		if err != nil {
 			log.Error(err)
+			break
 		}
 		if UserTagsList != nil {
 			tags = strings.Join(UserTagsList, " ")
