@@ -1,3 +1,7 @@
+v2.10.25
+- Change HeartBeat workflow
+- Add register emoji when a new vtuber added
+
 v2.10.24
 - Add gRPC for for service communicate
 - Update 774inc
