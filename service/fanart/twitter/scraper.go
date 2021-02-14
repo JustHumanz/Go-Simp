@@ -2,10 +2,8 @@ package twitter
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"strings"
-	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	twitterscraper "github.com/n0madic/twitter-scraper"
@@ -16,7 +14,6 @@ func CreatePayload(Group database.Group, Scraper *twitterscraper.Scraper, Limit 
 	var (
 		Hashtags []string
 		Fanarts  []Fanart
-		rdb      = database.FanartCache
 	)
 
 	CurlTwitter := func(Hashtags []string, GroupData database.Group) {
@@ -28,30 +25,18 @@ func CreatePayload(Group database.Group, Scraper *twitterscraper.Scraper, Limit 
 			if tweet.Error != nil {
 				log.Error(tweet.Error)
 			}
-			//Find hashtags members
-			val, err := rdb.Get(context.Background(), tweet.ID).Result()
-			if val == "" || err != nil {
-				for _, MemberHashtag := range Group.Members {
-					for _, TweetHashtag := range tweet.Hashtags {
-						if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) && !tweet.IsQuoted && !tweet.IsReply && MemberHashtag.Name != "Kaichou" {
-							New, err := MemberHashtag.CheckMemberFanart(tweet)
-							if err != nil {
-								log.Error(err)
-							}
-							if New {
-								Fanarts = append(Fanarts, Fanart{
-									Member: MemberHashtag,
-									Tweet:  tweet,
-								})
-							}
-							bit, err := json.Marshal(tweet)
-							if err != nil {
-								log.Error(err)
-							}
-							err = rdb.Set(context.Background(), tweet.ID, bit, 30*time.Minute).Err()
-							if err != nil {
-								log.Error(err)
-							}
+			for _, MemberHashtag := range Group.Members {
+				for _, TweetHashtag := range tweet.Hashtags {
+					if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) && !tweet.IsQuoted && !tweet.IsReply && MemberHashtag.Name != "Kaichou" {
+						New, err := MemberHashtag.CheckMemberFanart(tweet)
+						if err != nil {
+							log.Error(err)
+						}
+						if New {
+							Fanarts = append(Fanarts, Fanart{
+								Member: MemberHashtag,
+								Tweet:  tweet,
+							})
 						}
 					}
 				}

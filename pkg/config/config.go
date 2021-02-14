@@ -51,6 +51,7 @@ const (
 
 	//Crontab
 	TwitterFanart              = "@every 0h3m0s"
+	TwitterFanartPushDB        = "@every 0h20m0s"
 	BiliBiliFanart             = "@every 0h6m0s"
 	BiliBiliLive               = "@every 0h7m0s"
 	BiliBiliSpace              = "@every 0h13m0s"
@@ -65,6 +66,16 @@ const (
 	CheckServerCount           = "@every 0h10m0s"
 	CheckPayload               = "@every 2h0m0s"
 	PilotGetGroups             = "@every 1h30m0s"
+	MessageIDTTL               = 2 * time.Hour
+
+	//Unicode
+	Ok    = "✅"
+	No    = "❎"
+	One   = "1️⃣"
+	Two   = "2️⃣"
+	Three = "3️⃣"
+	Art   = "🎨"
+	Live  = "🎥"
 )
 
 type ConfigFile struct {

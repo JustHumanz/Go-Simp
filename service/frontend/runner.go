@@ -6,7 +6,6 @@ import (
 	"errors"
 	"regexp"
 	"strings"
-	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
@@ -25,6 +24,7 @@ var (
 	GroupsName []string
 	Payload    database.VtubersPayload
 	configfile config.ConfigFile
+	Bot        *discordgo.Session
 )
 
 //Prefix command
@@ -51,7 +51,7 @@ const (
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
-	time.Sleep(1 * time.Minute)
+	//	time.Sleep(1 * time.Minute)
 }
 
 //StartInit running the fe
@@ -59,7 +59,6 @@ func main() {
 	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 
 	var (
-		Bot         *discordgo.Session
 		WaitMigrate = true
 		Counter     int
 	)
@@ -133,6 +132,9 @@ func main() {
 			Bot.AddHandler(YoutubeMessage)
 			Bot.AddHandler(SubsMessage)
 			Bot.AddHandler(Module)
+			Bot.AddHandler(Register)
+			Bot.AddHandler(Answer)
+
 		} else {
 			log.Info("Waiting migrate done")
 			Counter++
@@ -190,19 +192,25 @@ func ValidName(Name string) Memberst {
 }
 
 //FindName Find a valid Vtuber name from message handler
-func FindName(MemberName string) *NameStruct {
+func FindName(MemberName string) NameStruct {
 	for _, Group := range Payload.VtuberData {
 		for _, Name := range Group.Members {
 			if strings.ToLower(Name.Name) == MemberName || strings.ToLower(Name.JpName) == MemberName {
-				return &NameStruct{
+				return NameStruct{
 					Group:  Group,
 					Member: Name,
 				}
 			}
 		}
 	}
-	return nil
+	return NameStruct{}
+}
 
+func (Data NameStruct) IsNull() bool {
+	if Data.Group.ID == 0 {
+		return true
+	}
+	return false
 }
 
 //NameStruct struct

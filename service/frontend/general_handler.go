@@ -163,7 +163,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 		var (
 			Already     []string
 			Done        []string
-			MemberTag   []*NameStruct
+			MemberTag   []NameStruct
 			ReminderInt = 0
 		)
 		User := &database.UserStruct{
@@ -218,7 +218,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				tmp := strings.Split(VtuberName, ",")
 				for _, Name := range tmp {
 					Data := FindName(Name)
-					if Data.Group.ID == 0 {
+					if Data.IsNull() {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
 							s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
@@ -366,7 +366,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				tmp := strings.Split(FindInt[1], ",")
 				for _, Name := range tmp {
 					Data := FindName(Name)
-					if Data.Group.ID == 0 {
+					if Data.IsNull() {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
 							_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
@@ -508,7 +508,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				tmp := strings.Split(VtuberName, ",")
 				for _, Name := range tmp {
 					Data := FindName(Name)
-					if Data == nil {
+					if Data.IsNull() {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
 							_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
@@ -669,7 +669,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					tmp := strings.Split(VtuberName[len(VtuberName)-1:][0], ",")
 					for _, Name := range tmp {
 						Data := FindName(Name)
-						if Data.Group.ID == 0 {
+						if Data.IsNull() {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)
@@ -833,7 +833,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 					for _, Name := range tmp {
 						Data := FindName(Name)
-						if Data.Group.ID == 0 {
+						if Data.IsNull() {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)
@@ -1013,7 +1013,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					tmp := strings.Split(VtuberName[len(VtuberName)-2:][0], ",")
 					for _, Name := range tmp {
 						Data := FindName(Name)
-						if Data.Group.ID == 0 {
+						if Data.IsNull() {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)
@@ -1816,7 +1816,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				var (
 					Typestr string
 				)
-				table.SetHeader([]string{"Group", "Type", "LiveOnly", "Dynamic", "NewUpcoming"})
+				table.SetHeader([]string{"Group", "Type", "LiveOnly", "Dynamic", "NewUpcoming", "Region"})
 				for i := 0; i < len(ChannelData); i++ {
 					if ChannelData[i].TypeTag == 1 {
 						Typestr = "Art"
@@ -1825,30 +1825,25 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					} else {
 						Typestr = "All"
 					}
-					LiveOnly := "Disabled"
-					NewUpcoming := "Disabled"
-					Dynamic := "Disabled"
+					LiveOnly := config.No
+					NewUpcoming := config.No
+					Dynamic := config.No
 
 					if ChannelData[i].LiveOnly {
-						LiveOnly = "Enabled"
+						LiveOnly = config.Ok
 					}
 
 					if ChannelData[i].NewUpcoming {
-						NewUpcoming = "Enabled"
+						NewUpcoming = config.Ok
 					}
 
 					if ChannelData[i].Dynamic {
-						Dynamic = "Enabled"
+						Dynamic = config.Ok
 					}
-					table.Append([]string{ChannelData[i].Group.GroupName, Typestr, LiveOnly, Dynamic, NewUpcoming})
+					table.Append([]string{ChannelData[i].Group.GroupName, Typestr, LiveOnly, Dynamic, NewUpcoming, ChannelData[i].Region})
 				}
 				table.Render()
-
-				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-					SetDescription("```"+tableString.String()+"```").
-					SetColor(Color).
-					SetFooter("Use `update` command to change type of channel").MessageEmbed)
+				_, err = s.ChannelMessageSend(m.ChannelID, "```"+tableString.String()+"```")
 				if err != nil {
 					log.Error(err)
 				}
