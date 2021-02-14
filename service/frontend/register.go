@@ -472,7 +472,8 @@ func (Data *Regis) AddRegion(s *discordgo.Session) {
 
 	Register.UpdateState("AddReg")
 	RegEmoji := []string{}
-	for _, v := range strings.Split(Register.ChannelState.Region, ",") {
+	ChannelRegion := strings.Split(Register.ChannelState.Region, ",")
+	for _, v := range ChannelRegion {
 		RegEmoji = append(RegEmoji, engine.CountryCodetoUniCode(v))
 		Register.RegionTMP = append(Register.RegionTMP, v)
 	}
@@ -489,7 +490,7 @@ func (Data *Regis) AddRegion(s *discordgo.Session) {
 	Register.UpdateMessageID(MsgTxt2.ID)
 	for Key, Val := range RegList {
 		if Key == GroupName {
-			if len(Register.RegionTMP) == len(strings.Split(Val, ",")) {
+			if len(ChannelRegion) == len(strings.Split(Val, ",")) {
 				_, err := s.ChannelMessageSend(ChannelID, "You already enable all region")
 				if err != nil {
 					log.Error(err)
@@ -499,12 +500,17 @@ func (Data *Regis) AddRegion(s *discordgo.Session) {
 
 			Register.Stop()
 			for _, v2 := range strings.Split(Val, ",") {
-				for _, v := range Register.RegionTMP {
-					if v != v2 {
-						err := s.MessageReactionAdd(ChannelID, MsgTxt2.ID, engine.CountryCodetoUniCode(v2))
-						if err != nil {
-							log.Error(err)
-						}
+				skip := false
+				for _, v := range ChannelRegion {
+					if v == v2 {
+						skip = true
+						break
+					}
+				}
+				if !skip {
+					err := s.MessageReactionAdd(ChannelID, MsgTxt2.ID, engine.CountryCodetoUniCode(v2))
+					if err != nil {
+						log.Error(err)
 					}
 				}
 			}
@@ -519,6 +525,7 @@ func (Data *Regis) AddRegion(s *discordgo.Session) {
 	if err != nil {
 		log.Error(err)
 	}
+	Register.Clear()
 	return
 }
 
@@ -567,6 +574,7 @@ func (Data *Regis) DelRegion(s *discordgo.Session) {
 	if err != nil {
 		log.Error(err)
 	}
+	Register.Clear()
 	return
 }
 
@@ -606,24 +614,31 @@ func (Data *Regis) SetGroup(new database.Group) *Regis {
 }
 
 func (Data *Regis) FixRegion(s string) {
+	list := []string{}
+	keys := make(map[string]bool)
+	for _, Reg := range Data.RegionTMP {
+		if _, value := keys[Reg]; !value {
+			keys[Reg] = true
+			list = append(list, Reg)
+		}
+	}
 	if s == "add" {
-		Data.ChannelState.Region = strings.Join(Data.RegionTMP, ",")
+		Data.ChannelState.Region = strings.Join(list, ",")
 	} else {
-		for i := 0; i < len(Data.RegionTMP); {
-			exist := false
-			for _, b := range Data.DelRegionVal {
-				if b == Data.RegionTMP[i] {
-					exist = true
+		tmp := []string{}
+		for _, v := range list {
+			skip := false
+			for _, v2 := range Data.DelRegionVal {
+				if v2 == v {
+					skip = true
 					break
 				}
 			}
-			if !exist {
-				Data.RegionTMP = append(Data.RegionTMP[:i], Data.RegionTMP[i+1:]...)
-			} else {
-				i++
+			if !skip {
+				tmp = append(tmp, v)
 			}
 		}
-		Data.ChannelState.Region = strings.Join(Data.RegionTMP, ",")
+		Data.ChannelState.Region = strings.Join(tmp, ",")
 	}
 }
 
