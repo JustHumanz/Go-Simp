@@ -406,7 +406,7 @@ func AddData(Data Vtuber) {
 			}
 		)
 		defer wg.Done()
-		row := db.QueryRow("SELECT id FROM VtuberGroup WHERE VtuberGroupName=?", GroupData.ID)
+		row := db.QueryRow("SELECT id FROM VtuberGroup WHERE VtuberGroupName=?", GroupData.GroupName)
 		err := row.Scan(&GroupData.ID)
 		if err == sql.ErrNoRows {
 			log.Error(err)
