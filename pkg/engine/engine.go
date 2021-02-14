@@ -194,6 +194,30 @@ func Reacting(Data map[string]string, s *discordgo.Session) error {
 				return err
 			}
 		}
+	} else if Data["State"] == "SelectType" {
+		EmojiList := []string{config.Ok, config.No}
+		for _, Emoji := range EmojiList {
+			err := s.MessageReactionAdd(ChannelID, Data["MessageID"], Emoji)
+			if err != nil {
+				return err
+			}
+		}
+	} else if Data["State"] == "Menu" {
+		EmojiList := []string{config.One, config.Two, config.Three}
+		for _, Emoji := range EmojiList {
+			err := s.MessageReactionAdd(ChannelID, Data["MessageID"], Emoji)
+			if err != nil {
+				return err
+			}
+		}
+	} else if Data["State"] == "TypeChannel" {
+		EmojiList := []string{config.Art, config.Live}
+		for _, Emoji := range EmojiList {
+			err := s.MessageReactionAdd(ChannelID, Data["MessageID"], Emoji)
+			if err != nil {
+				return err
+			}
+		}
 	} else {
 		MessID, err := s.Channel(ChannelID)
 		if err != nil {
@@ -261,12 +285,54 @@ func Zawarudo(Region string) *time.Location {
 	} else if Region == "KR" {
 		loc, _ := time.LoadLocation("Asia/Seoul")
 		return loc
+	} else if Region == "MY" {
+		loc, _ := time.LoadLocation("Asia/Kuala_Lumpur")
+		return loc
+	} else if Region == "IN" {
+		loc, _ := time.LoadLocation("Asia/Dhaka")
+		return loc
 	} else {
 		loc, _ := time.LoadLocation("UTC")
 		return loc
 	}
 }
 
+func CountryCodetoUniCode(Region string) string {
+	if Region == "ID" {
+		return "🇮🇩"
+	} else if Region == "JP" {
+		return "🇯🇵"
+	} else if Region == "CN" {
+		return "🇨🇳"
+	} else if Region == "KR" {
+		return "🇰🇷"
+	} else if Region == "MY" {
+		return "🇲🇾"
+	} else if Region == "IN" {
+		return "🇮🇳"
+	} else {
+		return "🇪🇺"
+	}
+}
+
+func UniCodetoCountryCode(Region string) string {
+	if Region == "🇮🇩" {
+		return "ID"
+	} else if Region == "🇯🇵" {
+		return "JP"
+	} else if Region == "🇨🇳" {
+		return "CN"
+	} else if Region == "🇰🇷" {
+		return "KR"
+	} else if Region == "🇲🇾" {
+		return "MY"
+	} else if Region == "🇪🇺" {
+		return "EN"
+	} else if Region == "🇮🇳" {
+		return "IN"
+	}
+	return ""
+}
 func YtFindType(title string) string {
 	yttype := ""
 	title = strings.ToLower(title)

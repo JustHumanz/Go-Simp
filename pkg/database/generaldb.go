@@ -285,7 +285,7 @@ func (Member Member) CheckMemberFanart(Data *twitterscraper.Result) (bool, error
 		id     int
 		videos string
 	)
-	err := DB.QueryRow(`SELECT id FROM Twitter WHERE PermanentURL=?`, Data.PermanentURL).Scan(&id)
+	err := DB.QueryRow(`SELECT id FROM Twitter WHERE TweetID=?`, Data.ID).Scan(&id)
 	if err == sql.ErrNoRows {
 		log.WithFields(log.Fields{
 			"Name":    Member.EnName,
@@ -312,6 +312,8 @@ func (Member Member) CheckMemberFanart(Data *twitterscraper.Result) (bool, error
 			return false, err
 		}
 		return true, nil
+	} else if err != nil {
+		return false, err
 	} else {
 		if !config.GoSimpConf.LowResources {
 			//update like
@@ -438,13 +440,13 @@ func (Data *DiscordChannel) AddChannel() error {
 	if Data.Dynamic {
 		Data.SetNewUpcoming(false).SetLiveOnly(true)
 	}
-	stmt, err := DB.Prepare(`INSERT INTO Channel (DiscordChannelID,Type,LiveOnly,NewUpcoming,Dynamic,VtuberGroup_id) values(?,?,?,?,?,?)`)
+	stmt, err := DB.Prepare(`INSERT INTO Channel (DiscordChannelID,Type,LiveOnly,NewUpcoming,Dynamic,Region,VtuberGroup_id) values(?,?,?,?,?,?,?)`)
 	if err != nil {
 		return err
 	}
 
 	defer stmt.Close()
-	res, err := stmt.Exec(Data.ChannelID, Data.TypeTag, Data.LiveOnly, Data.NewUpcoming, Data.Dynamic, Data.Group.ID)
+	res, err := stmt.Exec(Data.ChannelID, Data.TypeTag, Data.LiveOnly, Data.NewUpcoming, Data.Dynamic, Data.Region, Data.Group.ID)
 	if err != nil {
 		return err
 	}
@@ -567,6 +569,11 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 				return err
 			}
 		}
+	} else if UpdateType == "Region" {
+		_, err := DB.Exec(`Update Channel set Region=? Where VtuberGroup_id=? AND DiscordChannelID=?`, Data.Region, Data.Group.ID, Data.ChannelID)
+		if err != nil {
+			return err
+		}
 	} else {
 		if newupcoming == Data.NewUpcoming {
 			return errors.New("Already set NewUpcoming on this channel")
@@ -611,7 +618,25 @@ func (Data *DiscordChannel) ChannelCheck() bool {
 	var tmp int
 	row := DB.QueryRow("SELECT id FROM Channel WHERE VtuberGroup_id=? AND DiscordChannelID=?", Data.Group.ID, Data.ChannelID)
 	err := row.Scan(&tmp)
-	if err != nil || err == sql.ErrNoRows {
+	if err == sql.ErrNoRows {
+		return false
+	} else if err != nil {
+		log.Error(err)
+		return true
+	} else {
+		return true
+	}
+}
+
+//Check Discord Channel from VtuberGroup
+func CheckIfNewChannel(ChannelID string) bool {
+	var tmp int
+	row := DB.QueryRow("SELECT id FROM Channel WHERE DiscordChannelID=?", ChannelID)
+	err := row.Scan(&tmp)
+	if err == sql.ErrNoRows {
+		return false
+	} else if err != nil {
+		log.Error(err)
 		return false
 	} else {
 		return true
@@ -623,7 +648,10 @@ func CheckChannelEnable(ChannelID, VtuberName string, GroupID int64) bool {
 	var DiscordChannelID string
 	row := DB.QueryRow("Select DiscordChannelID FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where Channel.DiscordChannelID=? AND (VtuberMember.VtuberName_EN=? OR VtuberMember.VtuberName_JP=? OR VtuberGroup.id=?) group by Channel.id", ChannelID, VtuberName, VtuberName, GroupID)
 	err := row.Scan(&DiscordChannelID)
-	if err != nil || err == sql.ErrNoRows {
+	if err == sql.ErrNoRows {
+		return false
+	} else if err != nil {
+		log.Error(err)
 		return false
 	} else {
 		return true
@@ -667,7 +695,7 @@ func ChannelStatus(ChannelID string) []DiscordChannel {
 	var (
 		Data []DiscordChannel
 	)
-	rows, err := DB.Query(`SELECT Channel.id,VtuberGroupName,Channel.Type,Channel.LiveOnly,Channel.NewUpcoming,Channel.Dynamic FROM Channel INNER JOIn VtuberGroup on VtuberGroup.id=Channel.VtuberGroup_id WHERE DiscordChannelID=?`, ChannelID)
+	rows, err := DB.Query(`SELECT Channel.id,VtuberGroup.id,VtuberGroupName,Channel.Type,Channel.LiveOnly,Channel.NewUpcoming,Channel.Dynamic,Channel.Region FROM Channel INNER JOIn VtuberGroup on VtuberGroup.id=Channel.VtuberGroup_id WHERE DiscordChannelID=?`, ChannelID)
 	if err != nil {
 		log.Error(err)
 	}
@@ -675,14 +703,16 @@ func ChannelStatus(ChannelID string) []DiscordChannel {
 
 	for rows.Next() {
 		var (
-			id   int64
-			tmp  string
-			tmp2 int
-			tmp3 bool
-			tmp4 bool
-			tmp5 bool
+			id      int64
+			GroupID int64
+			tmp     string
+			tmp2    int
+			tmp3    bool
+			tmp4    bool
+			tmp5    bool
+			tmp6    string
 		)
-		err = rows.Scan(&id, &tmp, &tmp2, &tmp3, &tmp4, &tmp5)
+		err = rows.Scan(&id, &GroupID, &tmp, &tmp2, &tmp3, &tmp4, &tmp5, &tmp6)
 		if err != nil {
 			log.Error(err)
 		}
@@ -701,19 +731,21 @@ func ChannelStatus(ChannelID string) []DiscordChannel {
 		Data = append(Data, DiscordChannel{
 			ID: id,
 			Group: Group{
+				ID:        GroupID,
 				GroupName: tmp,
 			},
 			TypeTag:     tmp2,
 			LiveOnly:    tmp3,
 			NewUpcoming: tmp4,
 			Dynamic:     tmp5,
+			Region:      strings.ToUpper(tmp6),
 		})
 	}
 	return Data
 }
 
 //ChannelTag get channel tags from `channel tags` command
-func ChannelTag(MemberID int64, typetag int, Options string) []DiscordChannel {
+func ChannelTag(MemberID int64, typetag int, Options string, Reg string) []DiscordChannel {
 	var (
 		Data    []DiscordChannel
 		tmp     int64
@@ -724,20 +756,20 @@ func ChannelTag(MemberID int64, typetag int, Options string) []DiscordChannel {
 		err     error
 	)
 	if Options == "NotLiveOnly" {
-		rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND LiveOnly=0`, MemberID)
+		rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND LiveOnly=0 AND (Channel.Region like ? OR Channel.Region='')`, MemberID, "%"+Reg+"%")
 		if err != nil {
 			log.Error(err)
 		}
 		defer rows.Close()
 
 	} else if Options == "NewUpcoming" {
-		rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND NewUpcoming=1`, MemberID)
+		rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND NewUpcoming=1 AND (Channel.Region like ? OR Channel.Region='')`, MemberID, "%"+Reg+"%")
 		if err != nil {
 			log.Error(err)
 		}
 		defer rows.Close()
 	} else {
-		rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=? OR Channel.type=3)`, MemberID, typetag)
+		rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=? OR Channel.type=3) AND (Channel.Region like ? OR Channel.Region='')`, MemberID, typetag, "%"+Reg+"%")
 		if err != nil {
 			log.Error(err)
 		}
@@ -755,6 +787,7 @@ func ChannelTag(MemberID int64, typetag int, Options string) []DiscordChannel {
 			Member: Member{
 				ID: MemberID,
 			},
+			Region: Reg,
 			Group: Group{
 				ID: GroupID,
 			},

@@ -38,6 +38,13 @@ type Group struct {
 	Members   []Member
 }
 
+func (Data Group) IsNull() bool {
+	if Data.ID == 0 {
+		return true
+	}
+	return false
+}
+
 type VtubersPayload struct {
 	VtuberData []Group
 }
@@ -317,6 +324,12 @@ type DiscordChannel struct {
 	VideoID        string
 	EmbedMessageID string
 	TextMessageID  string
+	Region         string
+}
+
+func (Data *DiscordChannel) SetChannel(new string) *DiscordChannel {
+	Data.ChannelID = new
+	return Data
 }
 
 func (Data *DiscordChannel) SetTypeTag(new int) *DiscordChannel {
