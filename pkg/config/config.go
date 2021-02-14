@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/BurntSushi/toml"
@@ -67,7 +66,7 @@ const (
 	CheckPayload               = "@every 2h0m0s"
 	PilotGetGroups             = "@every 1h30m0s"
 	AddUserTTL                 = 5 * time.Hour
-  
+
 	//Unicode
 	Ok    = "✅"
 	No    = "❎"
@@ -149,8 +148,7 @@ func (Data ConfigFile) CheckSQL() *sql.DB {
 
 	db, err := sql.Open("mysql", Data.SQL.User+":"+Data.SQL.Pass+"@tcp("+Data.SQL.Host+":"+Data.SQL.Port+")/Vtuber?parseTime=true")
 	if err != nil {
-		log.Error(err, " Something worng with database,make sure you create Vtuber database first")
-		os.Exit(1)
+		log.Panic(err, " Something worng with database,make sure you create Vtuber database first")
 	}
 	db.SetConnMaxLifetime(time.Minute * 1)
 	db.SetMaxOpenConns(Data.SQL.MaxOpenConns)
@@ -159,8 +157,7 @@ func (Data ConfigFile) CheckSQL() *sql.DB {
 	//make sure can access database
 	_, err = db.Exec(`SELECT NOW()`)
 	if err != nil {
-		log.Error(err, " Something worng with database,make sure you create Vtuber database first")
-		os.Exit(1)
+		log.Panic(err, " Something worng with database,make sure you create Vtuber database first")
 	}
 	return db
 }
