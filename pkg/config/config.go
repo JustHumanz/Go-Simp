@@ -65,6 +65,7 @@ const (
 	CheckServerCount           = "@every 0h10m0s"
 	CheckPayload               = "@every 2h0m0s"
 	PilotGetGroups             = "@every 1h30m0s"
+	AddUserTTL                 = 5 * time.Hour
 )
 
 type ConfigFile struct {
