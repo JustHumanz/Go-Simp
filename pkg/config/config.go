@@ -66,8 +66,8 @@ const (
 	CheckServerCount           = "@every 0h10m0s"
 	CheckPayload               = "@every 2h0m0s"
 	PilotGetGroups             = "@every 1h30m0s"
-	MessageIDTTL               = 2 * time.Hour
-
+	AddUserTTL                 = 5 * time.Hour
+  
 	//Unicode
 	Ok    = "✅"
 	No    = "❎"

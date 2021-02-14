@@ -368,7 +368,7 @@ func (Data *UserStruct) Adduser() error {
 }
 
 func (Data *UserStruct) SendToCache(MessageID string) error {
-	err := GeneralCache.Set(context.Background(), MessageID, Data, config.MessageIDTTL).Err()
+	err := GeneralCache.Set(context.Background(), MessageID, Data, config.AddUserTTL).Err()
 	if err != nil {
 		return err
 	}
