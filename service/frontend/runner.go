@@ -132,7 +132,7 @@ func main() {
 			Bot.AddHandler(YoutubeMessage)
 			Bot.AddHandler(SubsMessage)
 			Bot.AddHandler(Module)
-			Bot.AddHandler(Register)
+			Bot.AddHandler(RegisterFunc)
 			Bot.AddHandler(Answer)
 
 		} else {

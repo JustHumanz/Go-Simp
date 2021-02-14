@@ -13,56 +13,65 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+type Regis struct {
+	Admin         string
+	State         string
+	MessageID     string
+	RegionTMP     []string
+	Gass          bool
+	ChannelState  database.DiscordChannel
+	ChannelStates []database.DiscordChannel
+}
+
 var (
-	RegisterValue = &Regis{}
-	OK            = false
+	Register = &Regis{}
 )
 
 func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
-	if m.UserID == RegisterValue.Admin && m.MessageID == RegisterValue.MessageID {
-		OK = true
+	if m.UserID == Register.Admin && m.MessageID == Register.MessageID {
+		Register.Start()
 		if m.Emoji.MessageFormat() == config.Ok {
-			if RegisterValue.State == "LiveOnly" {
-				RegisterValue.SetLiveOnly(true)
-			} else if RegisterValue.State == "NewUpcoming" {
-				RegisterValue.SetNewUpcoming(true)
-			} else if RegisterValue.State == "Dynamic" {
-				RegisterValue.SetDynamic(true)
+			if Register.State == "LiveOnly" {
+				Register.SetLiveOnly(true)
+			} else if Register.State == "NewUpcoming" {
+				Register.SetNewUpcoming(true)
+			} else if Register.State == "Dynamic" {
+				Register.SetDynamic(true)
 			}
 		} else if m.Emoji.MessageFormat() == config.No {
-			if RegisterValue.State == "LiveOnly" {
-				RegisterValue.SetLiveOnly(false)
-			} else if RegisterValue.State == "NewUpcoming" {
-				RegisterValue.SetNewUpcoming(false)
-			} else if RegisterValue.State == "Dynamic" {
-				RegisterValue.SetDynamic(false)
+			if Register.State == "LiveOnly" {
+				Register.SetLiveOnly(false)
+			} else if Register.State == "NewUpcoming" {
+				Register.SetNewUpcoming(false)
+			} else if Register.State == "Dynamic" {
+				Register.SetDynamic(false)
 			}
 		}
 
 		if m.Emoji.MessageFormat() == config.Art {
-			if RegisterValue.ChannelState.TypeTag == 2 {
-				RegisterValue.UpdateType(3)
+			if Register.ChannelState.TypeTag == 2 {
+				Register.UpdateType(3)
 			} else {
-				RegisterValue.UpdateType(1)
+				Register.UpdateType(1)
 			}
 		} else if m.Emoji.MessageFormat() == config.Live {
-			if RegisterValue.ChannelState.TypeTag == 1 {
-				RegisterValue.UpdateType(3)
+			if Register.ChannelState.TypeTag == 1 {
+				Register.UpdateType(3)
 			} else {
-				RegisterValue.UpdateType(2)
+				Register.UpdateType(2)
 			}
 		}
 
 		if m.Emoji.MessageFormat() == config.One {
-			RegisterValue.LiveOnly(s)
+			Register.LiveOnly(s)
 
-			if !RegisterValue.ChannelState.LiveOnly {
-				RegisterValue.NewUpcoming(s)
+			if !Register.ChannelState.LiveOnly {
+				Register.NewUpcoming(s)
 			}
 
-			RegisterValue.Dynamic(s)
+			Register.Dynamic(s)
 
-			RegisterValue.UpdateChannel()
+			Register.UpdateChannel()
 			_, err := s.ChannelMessageSend(m.ChannelID, "Done")
 			if err != nil {
 				log.Error(err)
@@ -70,28 +79,28 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 			return
 
 		} else if m.Emoji.MessageFormat() == config.Two {
-			RegisterValue.AddRegion(s)
+			Register.AddRegion(s)
 
 		} else if m.Emoji.MessageFormat() == config.Three {
-			RegisterValue.DelRegion(s)
+			Register.DelRegion(s)
 		}
 
-		if RegisterValue.State == "AddReg" {
+		if Register.State == "AddReg" {
 			Region := engine.UniCodetoCountryCode(m.Emoji.MessageFormat())
 			if Region != "" {
-				RegisterValue.AddNewRegion(Region)
+				Register.AddNewRegion(Region)
 			}
-		} else if RegisterValue.State == "DelReg" {
+		} else if Register.State == "DelReg" {
 			Region := engine.UniCodetoCountryCode(m.Emoji.MessageFormat())
 			if Region != "" {
-				RegisterValue.RemoveRegion(Region)
+				Register.RemoveRegion(Region)
 			}
 
 		}
 	}
 }
 
-func Register(s *discordgo.Session, m *discordgo.MessageCreate) {
+func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
 	tableString := &strings.Builder{}
 	table := tablewriter.NewWriter(tableString)
@@ -104,7 +113,7 @@ func Register(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if err != nil {
 			log.Error(err)
 		}
-		RegisterValue.Clear()
+		Register.Clear()
 	}
 
 	if strings.HasPrefix(m.Content, Prefix) {
@@ -115,7 +124,7 @@ func Register(s *discordgo.Session, m *discordgo.MessageCreate) {
 					log.Error(err)
 				}
 				if database.CheckIfNewChannel(m.ChannelID) {
-					RegisterValue.SetAdmin(m.Author.ID).SetChannel(m.ChannelID)
+					Register.SetAdmin(m.Author.ID).SetChannel(m.ChannelID)
 					_, err := s.ChannelMessageSend(m.ChannelID, "Select ID of Vtuber group/agency you want to enable (Only one)")
 					if err != nil {
 						log.Error(err)
@@ -130,7 +139,7 @@ func Register(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						log.Error(err)
 					}
-					RegisterValue.UpdateState("Group")
+					Register.UpdateState("Group")
 
 				}
 
@@ -144,9 +153,9 @@ func Register(s *discordgo.Session, m *discordgo.MessageCreate) {
 					var (
 						Typestr string
 					)
-					RegisterValue.SetAdmin(m.Author.ID).SetChannel(m.ChannelID)
+					Register.SetAdmin(m.Author.ID).SetChannel(m.ChannelID)
 
-					RegisterValue.ChannelStates = ChannelData
+					Register.ChannelStates = ChannelData
 					table.SetHeader([]string{"ID", "Group", "Type", "LiveOnly", "Dynamic", "NewUpcoming", "Region"})
 					for i := 0; i < len(ChannelData); i++ {
 						if ChannelData[i].TypeTag == 1 {
@@ -187,7 +196,7 @@ func Register(s *discordgo.Session, m *discordgo.MessageCreate) {
 						log.Error(err)
 					}
 				}
-				RegisterValue.UpdateState("SelectChannel")
+				Register.UpdateState("SelectChannel")
 				_, err = s.ChannelMessageSend(m.ChannelID, "Select ID of Channel state: ")
 				if err != nil {
 					log.Error(err)
@@ -198,15 +207,15 @@ func Register(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if err != nil {
 				log.Error(err)
 			}
-			RegisterValue.Clear()
+			Register.Clear()
 			return
 		}
-	} else if m.Author.ID == RegisterValue.Admin && m.ChannelID == RegisterValue.ChannelState.ChannelID {
+	} else if m.Author.ID == Register.Admin && m.ChannelID == Register.ChannelState.ChannelID {
 		if m.Content == "exit" {
 			Out()
 			return
 		}
-		if RegisterValue.State == "SelectChannel" {
+		if Register.State == "SelectChannel" {
 			tmp, err := strconv.Atoi(m.Content)
 			if err != nil {
 				_, err := s.ChannelMessageSend(m.ChannelID, "Worng input ID")
@@ -216,14 +225,14 @@ func Register(s *discordgo.Session, m *discordgo.MessageCreate) {
 				Out()
 				return
 			} else {
-				for _, ChannelState := range RegisterValue.ChannelStates {
+				for _, ChannelState := range Register.ChannelStates {
 					if int(ChannelState.ID) == tmp {
-						RegisterValue.ChannelState = ChannelState
+						Register.ChannelState = ChannelState
 					}
 				}
-				if RegisterValue.ChannelState.ID != 0 {
-					RegisterValue.SetChannel(m.ChannelID)
-					_, err := s.ChannelMessageSend(m.ChannelID, "You select `"+RegisterValue.ChannelState.Group.GroupName+"` with ID `"+strconv.Itoa(int(RegisterValue.ChannelState.ID))+"`")
+				if Register.ChannelState.ID != 0 {
+					Register.SetChannel(m.ChannelID)
+					_, err := s.ChannelMessageSend(m.ChannelID, "You select `"+Register.ChannelState.Group.GroupName+"` with ID `"+strconv.Itoa(int(Register.ChannelState.ID))+"`")
 					if err != nil {
 						log.Error(err)
 					}
@@ -244,7 +253,7 @@ func Register(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						log.Error(err)
 					}
-					RegisterValue.UpdateMessageID(MsgText.ID)
+					Register.UpdateMessageID(MsgText.ID)
 
 				} else {
 					_, err := s.ChannelMessageSend(m.ChannelID, "Channel ID not found")
@@ -256,7 +265,7 @@ func Register(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			}
 		}
-		if RegisterValue.State == "Group" {
+		if Register.State == "Group" {
 			GroupID := 0
 			tmp, err := strconv.Atoi(m.Content)
 			if err != nil {
@@ -275,12 +284,12 @@ func Register(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						log.Error(err)
 					}
-					RegisterValue.SetGroup(v)
+					Register.SetGroup(v)
 					break
 				}
 			}
-			//RegisterValue.ChannelState.ChannelCheck()
-			if RegisterValue.ChannelState.Group.IsNull() {
+			//Register.ChannelState.ChannelCheck()
+			if Register.ChannelState.Group.IsNull() {
 				_, err := s.ChannelMessageSend(m.ChannelID, "Invalid ID,Group not found")
 				if err != nil {
 					log.Error(err)
@@ -288,30 +297,35 @@ func Register(s *discordgo.Session, m *discordgo.MessageCreate) {
 				Out()
 				return
 			}
+
+			Register.Stop()
 			for Key, Val := range RegList {
-				if Key == RegisterValue.ChannelState.Group.GroupName {
+				if Key == Register.ChannelState.Group.GroupName {
 					MsgTxt, err := s.ChannelMessageSend(m.ChannelID, "Select `"+Key+"` region")
 					if err != nil {
 						log.Error(err)
 					}
+					Register.UpdateState("AddReg")
 					for _, v := range strings.Split(Val, ",") {
 						err := s.MessageReactionAdd(m.ChannelID, MsgTxt.ID, engine.CountryCodetoUniCode(v))
 						if err != nil {
 							log.Error(err)
 						}
 					}
-					RegisterValue.UpdateMessageID(MsgTxt.ID)
-					OK = false
+					Register.UpdateMessageID(MsgTxt.ID)
+					Register.BreakPoint()
 
-					RegisterValue.FixRegion()
-					if RegisterValue.ChannelState.ChannelCheck() {
-						_, err := s.ChannelMessageSend(m.ChannelID, "Already setup `"+RegisterValue.ChannelState.Group.GroupName+"`,for add/del region use `Update` command")
+					Register.FixRegion()
+					if Register.ChannelState.ChannelCheck() {
+						_, err := s.ChannelMessageSend(m.ChannelID, "Already setup `"+Register.ChannelState.Group.GroupName+"`,for add/del region use `Update` command")
 						if err != nil {
 							log.Error(err)
 						}
 						Out()
 						return
 					}
+
+					Register.Stop()
 					_, err = s.ChannelMessageSend(m.ChannelID, "Select Channel Type: ")
 					if err != nil {
 						log.Error(err)
@@ -333,63 +347,39 @@ func Register(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						log.Error(err)
 					}
-					RegisterValue.UpdateMessageID(MsgText.ID)
-					for i := 0; i < 100; i++ {
-						if OK {
-							break
-						}
-						time.Sleep(1 * time.Second)
-					}
-					if RegisterValue.ChannelState.TypeTag != 1 {
-						RegisterValue.LiveOnly(s)
-						for i := 0; i < 100; i++ {
-							if OK {
-								break
-							}
-							time.Sleep(1 * time.Second)
+
+					Register.UpdateMessageID(MsgText.ID)
+					Register.BreakPoint()
+
+					if Register.ChannelState.TypeTag != 1 {
+						Register.Stop()
+						Register.LiveOnly(s)
+						Register.BreakPoint()
+
+						if !Register.ChannelState.LiveOnly {
+							Register.Stop()
+							Register.NewUpcoming(s)
+							Register.BreakPoint()
 						}
 
-						if !RegisterValue.ChannelState.LiveOnly {
-							RegisterValue.NewUpcoming(s)
-							for i := 0; i < 100; i++ {
-								if OK {
-									break
-								}
-								time.Sleep(1 * time.Second)
-							}
-						}
-
-						RegisterValue.Dynamic(s)
-						for i := 0; i < 100; i++ {
-							if OK {
-								break
-							}
-							time.Sleep(1 * time.Second)
-						}
+						Register.Stop()
+						Register.Dynamic(s)
+						Register.BreakPoint()
 					}
-					err = RegisterValue.ChannelState.AddChannel()
+					err = Register.ChannelState.AddChannel()
 					if err != nil {
 						log.Error(err)
 					}
-					_, err = s.ChannelMessageSend(m.ChannelID, "Done,you add `"+RegisterValue.ChannelState.Group.GroupName+"` in this channel")
+					_, err = s.ChannelMessageSend(m.ChannelID, "Done,you add `"+Register.ChannelState.Group.GroupName+"` in this channel")
 					if err != nil {
 						log.Error(err)
 					}
-					RegisterValue.Clear()
+					Register.Clear()
 					return
 				}
 			}
 		}
 	}
-}
-
-type Regis struct {
-	Admin         string
-	State         string
-	MessageID     string
-	RegionTMP     []string
-	ChannelState  database.DiscordChannel
-	ChannelStates []database.DiscordChannel
 }
 
 func (Data *Regis) LiveOnly(s *discordgo.Session) *Regis {
@@ -473,14 +463,14 @@ func (Data *Regis) UpdateChannel() error {
 }
 
 func (Data *Regis) AddRegion(s *discordgo.Session) {
-	GroupName := RegisterValue.ChannelState.Group.GroupName
-	ChannelID := RegisterValue.ChannelState.ChannelID
+	GroupName := Register.ChannelState.Group.GroupName
+	ChannelID := Register.ChannelState.ChannelID
 
-	RegisterValue.UpdateState("AddReg")
+	Register.UpdateState("AddReg")
 	RegEmoji := []string{}
-	for _, v := range strings.Split(RegisterValue.ChannelState.Region, ",") {
+	for _, v := range strings.Split(Register.ChannelState.Region, ",") {
 		RegEmoji = append(RegEmoji, engine.CountryCodetoUniCode(v))
-		RegisterValue.RegionTMP = append(RegisterValue.RegionTMP, v)
+		Register.RegionTMP = append(Register.RegionTMP, v)
 	}
 	_, err := s.ChannelMessageSend(ChannelID, "`"+GroupName+"` Region you already enabled in here "+strings.Join(RegEmoji, "  "))
 	if err != nil {
@@ -492,10 +482,10 @@ func (Data *Regis) AddRegion(s *discordgo.Session) {
 		log.Error(err)
 	}
 
-	RegisterValue.UpdateMessageID(MsgTxt2.ID)
+	Register.UpdateMessageID(MsgTxt2.ID)
 	for Key, Val := range RegList {
 		if Key == GroupName {
-			if len(RegisterValue.RegionTMP) == len(strings.Split(Val, ",")) {
+			if len(Register.RegionTMP) == len(strings.Split(Val, ",")) {
 				_, err := s.ChannelMessageSend(ChannelID, "You already enable all region")
 				if err != nil {
 					log.Error(err)
@@ -503,7 +493,8 @@ func (Data *Regis) AddRegion(s *discordgo.Session) {
 				return
 			}
 
-			for _, v := range RegisterValue.RegionTMP {
+			Register.Stop()
+			for _, v := range Register.RegionTMP {
 				for _, v2 := range strings.Split(Val, ",") {
 					if v != v2 {
 						err := s.MessageReactionAdd(ChannelID, MsgTxt2.ID, engine.CountryCodetoUniCode(v2))
@@ -513,20 +504,14 @@ func (Data *Regis) AddRegion(s *discordgo.Session) {
 					}
 				}
 			}
-			OK = false
 		}
 	}
 
-	for i := 100 - 1; i >= 0; i-- {
-		if OK {
-			break
-		}
-		time.Sleep(1 * time.Second)
-	}
-	RegisterValue.FixRegion()
-	RegisterValue.ChannelState.UpdateChannel("Region")
+	Register.BreakPoint()
+	Register.FixRegion()
+	Register.ChannelState.UpdateChannel("Region")
 
-	_, err = s.ChannelMessageSend(ChannelID, "Done,you adding "+RegisterValue.ChannelState.Region)
+	_, err = s.ChannelMessageSend(ChannelID, "Done,you adding "+Register.ChannelState.Region)
 	if err != nil {
 		log.Error(err)
 	}
@@ -534,18 +519,18 @@ func (Data *Regis) AddRegion(s *discordgo.Session) {
 }
 
 func (Data *Regis) DelRegion(s *discordgo.Session) {
-	GroupName := RegisterValue.ChannelState.Group.GroupName
-	ChannelID := RegisterValue.ChannelState.ChannelID
+	GroupName := Register.ChannelState.Group.GroupName
+	ChannelID := Register.ChannelState.ChannelID
 
-	RegisterValue.UpdateState("DelReg")
+	Register.UpdateState("DelReg")
 	RegEmoji := []string{}
 	for Key, Val := range RegList {
 		if Key == GroupName {
-			for _, v := range strings.Split(RegisterValue.ChannelState.Region, ",") {
+			for _, v := range strings.Split(Register.ChannelState.Region, ",") {
 				for _, v2 := range strings.Split(Val, ",") {
 					if v == v2 {
 						RegEmoji = append(RegEmoji, engine.CountryCodetoUniCode(v2))
-						RegisterValue.RegionTMP = append(RegisterValue.RegionTMP, v2)
+						Register.RegionTMP = append(Register.RegionTMP, v2)
 					}
 				}
 			}
@@ -561,25 +546,20 @@ func (Data *Regis) DelRegion(s *discordgo.Session) {
 	if err != nil {
 		log.Error(err)
 	}
-	for _, v := range RegisterValue.RegionTMP {
+
+	Register.Stop()
+	for _, v := range Register.RegionTMP {
 		err := s.MessageReactionAdd(ChannelID, MsgTxt2.ID, engine.CountryCodetoUniCode(v))
 		if err != nil {
 			log.Error(err)
 		}
 	}
-	OK = false
-	RegisterValue.UpdateMessageID(MsgTxt2.ID)
+	Register.UpdateMessageID(MsgTxt2.ID)
+	Register.BreakPoint()
+	Register.FixRegion()
+	Register.ChannelState.UpdateChannel("Region")
 
-	for i := 100 - 1; i >= 0; i-- {
-		if OK {
-			break
-		}
-		time.Sleep(1 * time.Second)
-	}
-	RegisterValue.FixRegion()
-	RegisterValue.ChannelState.UpdateChannel("Region")
-
-	_, err = s.ChannelMessageSend(ChannelID, "Done,you remove "+RegisterValue.ChannelState.Region)
+	_, err = s.ChannelMessageSend(ChannelID, "Done,you remove "+Register.ChannelState.Region)
 	if err != nil {
 		log.Error(err)
 	}
@@ -650,6 +630,23 @@ func (Data *Regis) UpdateMessageID(new string) *Regis {
 }
 
 func (Data *Regis) Clear() {
-	RegisterValue = &Regis{}
+	Register = &Regis{}
 	Data = &Regis{}
+}
+
+func (Data *Regis) Stop() {
+	Data.Gass = false
+}
+
+func (Data *Regis) Start() {
+	Data.Gass = true
+}
+
+func (Data *Regis) BreakPoint() {
+	for i := 0; i < 100; i++ {
+		if Data.Gass {
+			break
+		}
+		time.Sleep(1 * time.Second)
+	}
 }
