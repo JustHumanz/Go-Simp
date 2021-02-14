@@ -285,7 +285,37 @@
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "lilianavampaia",
                     "Twitch_Username": "",
-                    "Region":"MYT"
+                    "Region":"MY"
+                },
+                {
+                    "Name":"Lyri",
+                    "EN_Name":"Eine Lyrica",
+                    "JP_Name":"永音リリカ",
+                    "Hashtag": {
+                        "Twitter": "#LyricaArt",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCc5H1WmEARIj2R16mvut0ZA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Lyrica_ch",
+                    "Twitch_Username": "lyrica_ch",
+                    "Region":"PH"
+                },
+                {
+                    "Name":"Kira",
+                    "EN_Name":"Omori Kira",
+                    "JP_Name":"おもりキラ",
+                    "Hashtag": {
+                        "Twitter": "#kirart",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCrlV1Iy0clxpfBADND4ONIQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "KiraOmori_CH",
+                    "Twitch_Username": "kiraomori",
+                    "Region":"PH"
                 }
             ]
         },
