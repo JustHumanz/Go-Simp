@@ -299,9 +299,9 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 
 			Register.Stop()
-			if len(Register.ChannelState.Region) > 3 {
-				for Key, Val := range RegList {
-					if Key == Register.ChannelState.Group.GroupName {
+			for Key, Val := range RegList {
+				if Key == Register.ChannelState.Group.GroupName {
+					if len(Val) > 3 {
 						MsgTxt, err := s.ChannelMessageSend(m.ChannelID, "Select `"+Key+"` region")
 						if err != nil {
 							log.Error(err)
@@ -326,10 +326,10 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 							return
 						}
 						Register.Stop()
+					} else {
+						Register.RegionTMP = strings.Split(Register.ChannelState.Region, ",")
 					}
 				}
-			} else {
-				Register.RegionTMP = strings.Split(Register.ChannelState.Region, ",")
 			}
 
 			_, err = s.ChannelMessageSend(m.ChannelID, "Select Channel Type: ")
