@@ -49,11 +49,7 @@ func Start(configfile config.ConfigFile) {
 	log.Info("Database module ready")
 }
 
-func GetModule() []string {
-	return GeneralCache.LRange(context.Background(), "ModuleInfo", 0, -1).Val()
-}
-
-//GetGroup Get all vtuber groupData
+//GetGroups Get all vtuber groupData
 func GetGroups() []Group {
 	rows, err := DB.Query(`SELECT id,VtuberGroupName,VtuberGroupIcon FROM VtuberGroup`)
 	if err != nil {
@@ -74,7 +70,7 @@ func GetGroups() []Group {
 	return Data
 }
 
-//GetMember Get data of Vtuber member
+//GetMembers Get data of Vtuber member
 func GetMembers(GroupID int64) []Member {
 	var (
 		list Member
@@ -258,6 +254,7 @@ func GetFanart(GroupID, MemberID int64) DataFanart {
 
 }
 
+//DeleteFanart Delete fanart when get 404 error status
 func (Data DataFanart) DeleteFanart() error {
 	if Data.State == "Twitter" {
 		stmt, err := DB.Prepare(`DELETE From Twitter WHERE id=?`)
@@ -280,6 +277,7 @@ func (Data DataFanart) DeleteFanart() error {
 	}
 }
 
+//CheckMemberFanart Check if `that` was a new fanart
 func (Member Member) CheckMemberFanart(Data *twitterscraper.Result) (bool, error) {
 	var (
 		id     int
@@ -367,6 +365,7 @@ func (Data *UserStruct) Adduser() error {
 	}
 }
 
+//SendToCache send messageID to reddis
 func (Data *UserStruct) SendToCache(MessageID string) error {
 	err := GeneralCache.Set(context.Background(), MessageID, Data, config.AddUserTTL).Err()
 	if err != nil {
@@ -375,6 +374,7 @@ func (Data *UserStruct) SendToCache(MessageID string) error {
 	return nil
 }
 
+//GetChannelMessage get messageID from redis
 func GetChannelMessage(MessageID string) *UserStruct {
 	var (
 		data UserStruct
@@ -435,7 +435,7 @@ func CheckUser(DiscordID string, MemberID int64, ChannelChannelID int) bool {
 	}
 }
 
-//Add new discord channel from `enable` command
+//AddChannel Add new discord channel from `enable` command
 func (Data *DiscordChannel) AddChannel() error {
 	if Data.Dynamic {
 		Data.SetNewUpcoming(false).SetLiveOnly(true)
@@ -463,7 +463,7 @@ func (Data *DiscordChannel) AddChannel() error {
 	return nil
 }
 
-//delete discord channel from `disable` command
+//DelChannel delete discord channel from `disable` command
 func (Data *DiscordChannel) DelChannel(errmsg string) error {
 	match, err := regexp.MatchString("Unknown|403|Delete|Missing", errmsg)
 	if err != nil {
@@ -513,7 +513,7 @@ func (Data *DiscordChannel) DelChannel(errmsg string) error {
 	return nil
 }
 
-//update discord channel type from `update` command
+//UpdateChannel update discord channel type from `update` command
 func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 	var (
 		channeltype int
@@ -587,7 +587,7 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 	return nil
 }
 
-//Get DiscordChannelID from VtuberGroup
+//GetChannelByGroup Get DiscordChannelID from VtuberGroup
 func (Data Group) GetChannelByGroup() []DiscordChannel {
 	var (
 		list        string
@@ -613,7 +613,7 @@ func (Data Group) GetChannelByGroup() []DiscordChannel {
 	return ChannelData
 }
 
-//Check Discord Channel from VtuberGroup
+//ChannelCheck Check Discord Channel from VtuberGroup
 func (Data *DiscordChannel) ChannelCheck() bool {
 	var tmp int
 	row := DB.QueryRow("SELECT id FROM Channel WHERE VtuberGroup_id=? AND DiscordChannelID=?", Data.Group.ID, Data.ChannelID)
@@ -628,7 +628,7 @@ func (Data *DiscordChannel) ChannelCheck() bool {
 	}
 }
 
-//Check Discord Channel from VtuberGroup
+//CheckIfNewChannel Check Discord Channel from VtuberGroup
 func CheckIfNewChannel(ChannelID string) bool {
 	var tmp int
 	row := DB.QueryRow("SELECT id FROM Channel WHERE DiscordChannelID=?", ChannelID)
@@ -643,7 +643,7 @@ func CheckIfNewChannel(ChannelID string) bool {
 	}
 }
 
-//Check enable or disable discord channel from `tag,del` command
+//CheckChannelEnable Check enable or disable discord channel from `tag,del` command
 func CheckChannelEnable(ChannelID, VtuberName string, GroupID int64) bool {
 	var DiscordChannelID string
 	row := DB.QueryRow("Select DiscordChannelID FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where Channel.DiscordChannelID=? AND (VtuberMember.VtuberName_EN=? OR VtuberMember.VtuberName_JP=? OR VtuberGroup.id=?) group by Channel.id", ChannelID, VtuberName, VtuberName, GroupID)
@@ -658,7 +658,7 @@ func CheckChannelEnable(ChannelID, VtuberName string, GroupID int64) bool {
 	}
 }
 
-//Get userinfo(tags) from discord channel
+//UserStatus Get userinfo(tags) from discord channel
 func UserStatus(UserID, Channel string) [][]string {
 	var (
 		GroupName  string
@@ -690,7 +690,7 @@ func UserStatus(UserID, Channel string) [][]string {
 	return taglist
 }
 
-//Get Discord channel status
+//ChannelStatus Get Discord channel status
 func ChannelStatus(ChannelID string) []DiscordChannel {
 	var (
 		Data []DiscordChannel
@@ -796,6 +796,7 @@ func ChannelTag(MemberID int64, typetag int, Options string, Reg string) []Disco
 	return Data
 }
 
+//PushReddis Push DiscordChannel state to reddis
 func (Data *DiscordChannel) PushReddis() {
 	err := GeneralCache.LPush(context.Background(), Data.VideoID, Data).Err()
 	if err != nil {
@@ -803,6 +804,7 @@ func (Data *DiscordChannel) PushReddis() {
 	}
 }
 
+//GetLiveNotifMsg get MessageID with live status
 func GetLiveNotifMsg(Key string) []DiscordChannel {
 	var (
 		Data []DiscordChannel
@@ -869,7 +871,7 @@ func (Data *DiscordChannel) GetUserList(ctx context.Context) ([]string, error) {
 	return DataUser, nil
 }
 
-//get Reminder tags
+//GetUserReminderList get Reminder tags
 func GetUserReminderList(ChannelIDDiscord int64, Member int64, Reminder int) []string {
 	var (
 		UserTagsList  []string
@@ -896,7 +898,7 @@ func GetUserReminderList(ChannelIDDiscord int64, Member int64, Reminder int) []s
 	return UserTagsList
 }
 
-//Scrapping twitter followers
+//GetTwitterFollow Scrapping twitter followers
 func (Data Member) GetTwitterFollow() (twitterscraper.Profile, error) {
 	twitterscraper.SetProxy(config.GoSimpConf.MultiTOR)
 	profile, err := twitterscraper.GetProfile(Data.TwitterName)

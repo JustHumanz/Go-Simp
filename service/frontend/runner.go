@@ -6,7 +6,6 @@ import (
 	"errors"
 	"regexp"
 	"strings"
-	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
@@ -52,7 +51,6 @@ const (
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
-	time.Sleep(1 * time.Minute)
 }
 
 //StartInit running the fe
@@ -132,7 +130,7 @@ func main() {
 			Bot.AddHandler(BiliBiliSpace)
 			Bot.AddHandler(YoutubeMessage)
 			Bot.AddHandler(SubsMessage)
-			Bot.AddHandler(Module)
+			//Bot.AddHandler(Module)
 			Bot.AddHandler(RegisterFunc)
 			Bot.AddHandler(Answer)
 
@@ -144,7 +142,7 @@ func main() {
 	StartBot()
 
 	if WaitMigrate {
-		c.AddFunc("@every 0h10m0s", StartBot)
+		c.AddFunc("@every 0h5m0s", StartBot)
 	} else if !WaitMigrate || Counter == 3 {
 		c.Stop()
 	}
@@ -153,6 +151,7 @@ func main() {
 	runfunc.Run(Bot)
 }
 
+/*
 func Module(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
 	Prefix := configfile.BotPrefix.General
@@ -173,6 +172,7 @@ func Module(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 	}
 }
+*/
 
 //ValidName Find a valid name from user input
 func ValidName(Name string) Memberst {

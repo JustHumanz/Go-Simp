@@ -69,8 +69,8 @@ func PushNotif(Data database.TBiliBili) error {
 		if i%config.Waiting == 0 && config.GoSimpConf.LowResources {
 			log.WithFields(log.Fields{
 				"Func": "BiliBili Fanart",
-			}).Warn("Sleep for 100 Millisecond")
-			time.Sleep(100 * time.Millisecond)
+			}).Warn(config.FanartSleep)
+			time.Sleep(config.FanartSleep)
 		}
 	}
 	/*

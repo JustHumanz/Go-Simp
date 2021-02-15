@@ -41,6 +41,7 @@ var (
 	VtubersData string
 )
 
+//Const config
 const (
 	TmpDir            = "/tmp/tmp.img"
 	ChannelPermission = 8208
@@ -66,6 +67,7 @@ const (
 	CheckPayload               = "@every 2h0m0s"
 	PilotGetGroups             = "@every 1h30m0s"
 	AddUserTTL                 = 5 * time.Hour
+	FanartSleep                = 5 * time.Second
 
 	//Unicode
 	Ok    = "✅"
@@ -77,6 +79,7 @@ const (
 	Live  = "🎥"
 )
 
+//ConfigFile config file struct for config.toml
 type ConfigFile struct {
 	Discord        string `toml:"Discord"`
 	BiliSess       string `toml:"BiliSess"`
@@ -122,7 +125,7 @@ type ConfigFile struct {
 	YtToken []string `toml:"YoutubeToken"`
 }
 
-//read from config file
+//ReadConfig read from config file
 func ReadConfig(path string) (ConfigFile, error) {
 	fmt.Println("Reading config file...")
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
@@ -143,6 +146,7 @@ func ReadConfig(path string) (ConfigFile, error) {
 	return GoSimpConf, nil
 }
 
+//CheckSQL check if database conn is daijobou
 func (Data ConfigFile) CheckSQL() *sql.DB {
 	log.Info("Open DB")
 
@@ -162,6 +166,7 @@ func (Data ConfigFile) CheckSQL() *sql.DB {
 	return db
 }
 
+//GetTwitchAccessToken get twitch access token
 func (Data ConfigFile) GetTwitchAccessToken() string {
 	if TwitchToken != "" {
 		return TwitchToken
@@ -210,6 +215,7 @@ func (Data ConfigFile) GetTwitchAccessToken() string {
 	}
 }
 
+//InitConf initializing config file
 func (Data ConfigFile) InitConf() {
 	GoSimpConf = Data
 	NotFound = fmt.Sprintf("https://cdn.%s/404.jpg", Data.Domain)

@@ -6,6 +6,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+//CheckGuild Check guild in database
 func (Data Guild) CheckGuild() int {
 	var (
 		id int
@@ -18,6 +19,7 @@ func (Data Guild) CheckGuild() int {
 	}
 }
 
+//UpdateJoin update guild join
 func (Data Guild) UpdateJoin(id int) error {
 	stmt, err := DB.Prepare("UPDATE GuildList set JoinDate=? where id=?")
 	if err != nil {
@@ -30,6 +32,7 @@ func (Data Guild) UpdateJoin(id int) error {
 	return nil
 }
 
+//InputGuild add new guild
 func (Data Guild) InputGuild() error {
 	stmt, err := DB.Prepare("INSERT INTO GuildList(GuildName, GuildID,JoinDate) values(?,?,?)")
 	if err != nil {
@@ -42,6 +45,7 @@ func (Data Guild) InputGuild() error {
 	return nil
 }
 
+//GetGuildsCount get count of guild
 func GetGuildsCount() int {
 	var count int
 	err := DB.QueryRow(`SELECT Count(*) FROM Vtuber.GuildList`).Scan(&count)
@@ -51,6 +55,7 @@ func GetGuildsCount() int {
 	return count
 }
 
+//GetMemberCount get count of member
 func GetMemberCount() int {
 	var count int
 	err := DB.QueryRow(`SELECT Count(*) from (Select COUNT(id) FROM Vtuber.User Group by DiscordID) t`).Scan(&count)

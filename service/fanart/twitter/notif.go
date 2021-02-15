@@ -80,8 +80,8 @@ func SendFanart(Data []Fanart, Group database.Group) {
 			if i%config.Waiting == 0 && configfile.LowResources {
 				log.WithFields(log.Fields{
 					"Func": "Twitter Fanart",
-				}).Warn("Sleep for 100 Millisecond")
-				time.Sleep(100 * time.Millisecond)
+				}).Warn(config.FanartSleep)
+				time.Sleep(config.FanartSleep)
 			}
 		}
 	}

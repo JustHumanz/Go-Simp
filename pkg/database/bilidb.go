@@ -35,6 +35,7 @@ func (Data *LiveBiliDB) UpdateLiveBili(MemberID int64) {
 	}
 }
 
+//SetRoomToLive force bilibili room status to live
 func SetRoomToLive(MemberID int64) {
 	_, err := DB.Exec(`Update LiveBiliBili set Status='Live' Where VtuberMember_id=?`, MemberID)
 	if err != nil {
