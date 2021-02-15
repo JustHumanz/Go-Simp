@@ -236,7 +236,7 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						log.Error(err)
 					}
-					table.SetHeader([]string{"Func"})
+					table.SetHeader([]string{"Menu"})
 					table.Append([]string{"Update Channel state"})
 					table.Append([]string{"Add region in this channel"})
 					table.Append([]string{"Delete region in this channel"})
@@ -475,8 +475,10 @@ func (Data *Regis) AddRegion(s *discordgo.Session) {
 	RegEmoji := []string{}
 	ChannelRegion := strings.Split(Register.ChannelState.Region, ",")
 	for _, v := range ChannelRegion {
-		RegEmoji = append(RegEmoji, engine.CountryCodetoUniCode(v))
-		Register.RegionTMP = append(Register.RegionTMP, v)
+		if v != "" {
+			RegEmoji = append(RegEmoji, engine.CountryCodetoUniCode(v))
+			Register.RegionTMP = append(Register.RegionTMP, v)
+		}
 	}
 	_, err := s.ChannelMessageSend(ChannelID, "`"+GroupName+"` Region you already enabled in here "+strings.Join(RegEmoji, "  "))
 	if err != nil {
@@ -490,8 +492,10 @@ func (Data *Regis) AddRegion(s *discordgo.Session) {
 
 	Register.UpdateMessageID(MsgTxt2.ID)
 	for Key, Val := range RegList {
+		GroupRegList := strings.Split(Val, ",")
+
 		if Key == GroupName {
-			if len(ChannelRegion) == len(strings.Split(Val, ",")) {
+			if len(ChannelRegion) == len(GroupRegList) {
 				_, err := s.ChannelMessageSend(ChannelID, "You already enable all region")
 				if err != nil {
 					log.Error(err)
@@ -500,7 +504,7 @@ func (Data *Regis) AddRegion(s *discordgo.Session) {
 			}
 
 			Register.Stop()
-			for _, v2 := range strings.Split(Val, ",") {
+			for _, v2 := range GroupRegList {
 				skip := false
 				for _, v := range ChannelRegion {
 					if v == v2 {
@@ -554,19 +558,29 @@ func (Data *Regis) DelRegion(s *discordgo.Session) {
 		log.Error(err)
 	}
 
-	MsgTxt2, err := s.ChannelMessageSend(ChannelID, "`"+GroupName+"` Select region you want to delete : ")
-	if err != nil {
-		log.Error(err)
+	MsgID := ""
+	if len(RegEmoji) == 0 {
+		_, err := s.ChannelMessageSend(ChannelID, "`"+GroupName+"` Region 404,add first")
+		if err != nil {
+			log.Error(err)
+		}
+		return
+	} else {
+		MsgTxt2, err := s.ChannelMessageSend(ChannelID, "`"+GroupName+"` Select region you want to delete : ")
+		if err != nil {
+			log.Error(err)
+		}
+		MsgID = MsgTxt2.ID
 	}
 
 	Register.Stop()
 	for _, v := range RegEmoji {
-		err := s.MessageReactionAdd(ChannelID, MsgTxt2.ID, v)
+		err := s.MessageReactionAdd(ChannelID, MsgID, v)
 		if err != nil {
 			log.Error(err)
 		}
 	}
-	Register.UpdateMessageID(MsgTxt2.ID)
+	Register.UpdateMessageID(MsgID)
 	Register.BreakPoint(4)
 	Register.FixRegion("del")
 	Register.ChannelState.UpdateChannel("Region")
