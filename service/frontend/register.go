@@ -236,10 +236,10 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						log.Error(err)
 					}
-					table.SetHeader([]string{"ID", "Func"})
-					table.Append([]string{"1", "Update Channel state"})
-					table.Append([]string{"2", "Add region in this channel"})
-					table.Append([]string{"3", "Delete region in this channel"})
+					table.SetHeader([]string{"Func"})
+					table.Append([]string{"Update Channel state"})
+					table.Append([]string{"Add region in this channel"})
+					table.Append([]string{"Delete region in this channel"})
 					table.Render()
 					MsgText, err := s.ChannelMessageSend(m.ChannelID, "`"+tableString.String()+"`")
 					if err != nil {
@@ -327,7 +327,8 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 						Register.Stop()
 					} else {
-						Register.RegionTMP = strings.Split(Register.ChannelState.Region, ",")
+						Register.RegionTMP = strings.Split(Val, ",")
+						Register.FixRegion("add")
 					}
 				}
 			}
