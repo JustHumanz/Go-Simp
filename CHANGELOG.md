@@ -1,3 +1,9 @@
+v2.10.26
+- Change fe wait workflow
+- Enhance `updatev2` to `update`
+- Add Support region
+- Move time config to config package
+
 v2.10.25
 - Change HeartBeat workflow
 - Add register emoji when a new vtuber added

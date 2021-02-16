@@ -10,15 +10,25 @@ A simple VTuber bot to serve notification Fanart(Twitter,Bilibili) and Livestrea
 for setup see at [Guide](https://github.com/JustHumanz/Go-Simp/blob/master/Guide.md)
 
 ## Simple Setup
-##### Livestream notification
-First create a channel for this bot,Example `holosimps_channel`  
-then execute `vtbot>enable live hololive` command,after that you can wait until hololive member going live and got notification  
-And if you want ping some roles you can execute `vtbot>tag roles <Rolename> hololive` In other case if you want to remind before livestream started you can add `-setreminder {Minutes}`  
-Example : `vtbot>tag roles @holosimp hololive -setreminder 20`
+First create a channel for this bot,Example `holosimps_channel`
+then execute `vtbot>setup`
+<p align="center">
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/RemakeSetup.png" alt="Setup"/>
+</p>
 
-##### Fanart notification
-First create a channel for this bot,Example `nijisimps`  
-then execute `vtbot>enable art nijisanji` command,after that you can wait until new fanart from twitter appear
+
+##### Deprecated
+~~##### Livestream notification~~
+~~First create a channel for this bot,Example `holosimps_channel`~~
+~~then execute `vtbot>enable live hololive` command,after that you can wait until hololive member going live and got notification~~  
+~~And if you want ping some roles you can execute `vtbot>tag roles <Rolename> hololive` In other case if you want to remind before~~ ~~livestream started you can add `-setreminder {Minutes}`~~  
+~~Example : `vtbot>tag roles @holosimp hololive -setreminder 20`~~
+
+~~##### Fanart notification~~
+~~First create a channel for this bot,Example `nijisimps`~~  
+~~then execute `vtbot>enable art nijisanji` command,after that you can wait until new fanart from twitter appear~~
+
+
 
 ## Current notification support
 See at [Web](https://go-simp.human-z.tech)
