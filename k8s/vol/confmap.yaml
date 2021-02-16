@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: Go-Simp_config_file
+  name: go-simp-configfile
 data:
   conf.toml: |
       Discord = "#Discord token"

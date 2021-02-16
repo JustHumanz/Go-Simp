@@ -22,11 +22,11 @@ spec:
           #imagePullPolicy: IfNotPresent  
           volumeMounts:
           - name: config-volume
-            mountPath: /app/Go-Simp
+            mountPath: /app/Go-Simp/config.toml
           workingDir: /app/Go-Simp/service/pilot/
-          command: go build -o pilot && ./pilot            
+          command: ["./pilot"]
       volumes:
         - name: config-volume
           configMap:
-            name: Go-Simp_config_file             
-      restartPolicy: OnFailure            
+            name: go-simp-configfile             
+      restartPolicy: Always           

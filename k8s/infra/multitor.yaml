@@ -35,7 +35,7 @@ spec:
     spec:           
       containers:
       - name: multitor
-        image: tor_go_brrrrrrr
+        image: evait/multitor
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 16379
