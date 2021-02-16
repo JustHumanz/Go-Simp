@@ -33,7 +33,7 @@ func (Data *LiveBili) Crotttt() error {
 	if Data.RoomData.Status == "Live" {
 		Data.Embed = engine.NewEmbed().
 			SetAuthor(engine.FixName(Data.Member.EnName, Data.Member.JpName), Data.Member.BiliBiliAvatar, BiliBiliAccount).
-			SetTitle("Live right now").
+			SetTitle(Data.RoomData.Title).
 			SetThumbnail(Data.Group.IconURL).
 			SetDescription(Data.RoomData.Description).
 			SetImage(Data.RoomData.Thumbnail).
