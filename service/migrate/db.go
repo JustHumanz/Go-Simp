@@ -438,8 +438,8 @@ func AddData(Data Vtuber) {
 			Update.Exec(GroupData.GroupName, GroupData.IconURL, GroupData.ID)
 		}
 
-		DiscordChannel := GroupData.GetChannelByGroup()
 		for _, VtuberMember := range Data.Vtuber.Independen.Members {
+			DiscordChannel := GroupData.GetChannelByGroup(VtuberMember.Region)
 			/*
 				Add Member
 			*/
@@ -548,7 +548,7 @@ func AddData(Data Vtuber) {
 
 		if NewVtuberNamesIndependen != nil {
 			Vtubers := strings.Join(NewVtuberNamesIndependen, ",")
-			DiscordChannel := GroupData.GetChannelByGroup()
+			DiscordChannel := GroupData.GetChannelByGroup("")
 			for _, Channel := range DiscordChannel {
 				msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "New Update!!!! "+Vtubers)
 				if err != nil {
@@ -623,7 +623,7 @@ func AddData(Data Vtuber) {
 				Update.Exec(GroupData.GroupName, GroupData.IconURL, GroupData.ID)
 			}
 
-			DiscordChannel := GroupData.GetChannelByGroup()
+			DiscordChannel := GroupData.GetChannelByGroup("")
 			for _, v := range GroupRaw.Members {
 				/*
 					Add Member
@@ -731,7 +731,7 @@ func AddData(Data Vtuber) {
 			}
 			if NewVtuberNames != nil {
 				Vtubers := strings.Join(NewVtuberNames, ",")
-				DiscordChannel := GroupData.GetChannelByGroup()
+				DiscordChannel := GroupData.GetChannelByGroup("")
 				for _, Channel := range DiscordChannel {
 					msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "New Update!!!! @here "+Vtubers)
 					if err != nil {

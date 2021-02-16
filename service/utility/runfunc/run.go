@@ -5,6 +5,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
 )
@@ -25,6 +26,8 @@ func Run(Bot *discordgo.Session) {
 			if err != nil {
 				log.Error(err)
 			}
+			log.Info("Close database session")
+			database.DbStop()
 		}
 		shutdown <- 1
 	}()

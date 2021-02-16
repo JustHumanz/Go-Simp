@@ -588,13 +588,13 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 }
 
 //GetChannelByGroup Get DiscordChannelID from VtuberGroup
-func (Data Group) GetChannelByGroup() []DiscordChannel {
+func (Data Group) GetChannelByGroup(Region string) []DiscordChannel {
 	var (
 		list        string
 		id          int64
 		ChannelData []DiscordChannel
 	)
-	rows, err := DB.Query(`SELECT id,DiscordChannelID FROM Channel WHERE VtuberGroup_id=? group by DiscordChannelID`, Data.ID)
+	rows, err := DB.Query(`SELECT id,DiscordChannelID FROM Channel WHERE VtuberGroup_id=? AND (Channel.Region like ? OR Channel.Region='') group by DiscordChannelID`, Data.ID, "%"+Region+"%")
 	if err != nil {
 		log.Error(err)
 	}
@@ -917,4 +917,11 @@ func GetRanChannel() string {
 		log.Error(err)
 	}
 	return tmp
+}
+
+func DbStop() {
+	err := DB.Close()
+	if err != nil {
+		log.Error(err)
+	}
 }

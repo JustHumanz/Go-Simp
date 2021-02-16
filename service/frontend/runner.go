@@ -133,6 +133,7 @@ func main() {
 			//Bot.AddHandler(Module)
 			Bot.AddHandler(RegisterFunc)
 			Bot.AddHandler(Answer)
+			c.Stop()
 
 		} else {
 			log.Info("Waiting migrate done")

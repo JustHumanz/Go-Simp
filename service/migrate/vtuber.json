@@ -3,6 +3,66 @@
         "Independen":{
             "Members":[
                 {
+                    "Name":"Kanochi",
+                    "EN_Name":"Kano",
+                    "JP_Name":"鹿乃",
+                    "Hashtag": {
+                        "Twitter": "#鹿乃art",
+                        "BiliBili": "鹿乃絵"
+                    },
+                    "Yt_ID":  "UCfuz6xYbYFGsWWBi3SpJI1w",
+                    "BiliBili_ID": 316381099,
+                    "BiliRoom_ID": 15152878,
+                    "Twitter_Username": "kano_hanayori",
+                    "Twitch_Username": "",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Parerun",
+                    "EN_Name":"Hanamaru Hareru",
+                    "JP_Name":"花丸はれる",
+                    "Hashtag": {
+                        "Twitter": "#はなまるお絵かき",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCyIcOCH-VWaRKH9IkR8hz7Q",
+                    "BiliBili_ID": 441381282,
+                    "BiliRoom_ID": 21547895,
+                    "Twitter_Username": "hanamaruhareru",
+                    "Twitch_Username": "",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Kohi",
+                    "EN_Name":"Kohigashi Hitona",
+                    "JP_Name":"小東ひとな",
+                    "Hashtag": {
+                        "Twitter": "#ひとなーと",
+                        "BiliBili": "小東ひとな"
+                    },
+                    "Yt_ID": "UCV2m2UifDGr3ebjSnDv5rUA",
+                    "BiliBili_ID": 441382432,
+                    "BiliRoom_ID": 21547904,
+                    "Twitter_Username": "kohigashihitona",
+                    "Twitch_Username": "",
+                    "Region":"JP"
+                },
+                {
+                    "Name":"Nononon",
+                    "EN_Name":"Nonomiya Nonono",
+                    "JP_Name":"野々宮ののの",
+                    "Hashtag": {
+                        "Twitter": "#ののののえ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCiexEBp7-D46FXUtQ-BpgWg",
+                    "BiliBili_ID": 441403698,
+                    "BiliRoom_ID": 21671418,
+                    "Twitter_Username": "nonomiyanonono",
+                    "Twitch_Username": "",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Nana",
                     "EN_Name":"Kagura Nana",
                     "JP_Name":"かぐらなな",
@@ -320,72 +380,6 @@
             ]
         },
         "Group":[
-        {
-            "GroupName": "Hanayori",
-            "GroupIcon": "https://cdn.humanz.moe/hana.png",
-            "Members" : [
-                {
-                    "Name":"Kanochi",
-                    "EN_Name":"Kano",
-                    "JP_Name":"鹿乃",
-                    "Hashtag": {
-                        "Twitter": "#鹿乃art",
-                        "BiliBili": "鹿乃絵"
-                    },
-                    "Yt_ID":  "UCfuz6xYbYFGsWWBi3SpJI1w",
-                    "BiliBili_ID": 316381099,
-                    "BiliRoom_ID": 15152878,
-                    "Twitter_Username": "kano_hanayori",
-                    "Twitch_Username": "",
-                    "Region":"JP"
-                },
-                {
-                    "Name":"Parerun",
-                    "EN_Name":"Hanamaru Hareru",
-                    "JP_Name":"花丸はれる",
-                    "Hashtag": {
-                        "Twitter": "#はなまるお絵かき",
-                        "BiliBili": ""
-                    },
-                    "Yt_ID": "UCyIcOCH-VWaRKH9IkR8hz7Q",
-                    "BiliBili_ID": 441381282,
-                    "BiliRoom_ID": 21547895,
-                    "Twitter_Username": "hanamaruhareru",
-                    "Twitch_Username": "",
-                    "Region":"JP"
-                },
-                {
-                    "Name":"Kohi",
-                    "EN_Name":"Kohigashi Hitona",
-                    "JP_Name":"小東ひとな",
-                    "Hashtag": {
-                        "Twitter": "#ひとなーと",
-                        "BiliBili": "小東ひとな"
-                    },
-                    "Yt_ID": "UCV2m2UifDGr3ebjSnDv5rUA",
-                    "BiliBili_ID": 441382432,
-                    "BiliRoom_ID": 21547904,
-                    "Twitter_Username": "kohigashihitona",
-                    "Twitch_Username": "",
-                    "Region":"JP"
-                },
-                {
-                    "Name":"Nononon",
-                    "EN_Name":"Nonomiya Nonono",
-                    "JP_Name":"野々宮ののの",
-                    "Hashtag": {
-                        "Twitter": "#ののののえ",
-                        "BiliBili": ""
-                    },
-                    "Yt_ID": "UCiexEBp7-D46FXUtQ-BpgWg",
-                    "BiliBili_ID": 441403698,
-                    "BiliRoom_ID": 21671418,
-                    "Twitter_Username": "nonomiyanonono",
-                    "Twitch_Username": "",
-                    "Region":"JP"
-                }
-            ]
-        },
         {
             "GroupName": "774inc",
             "GroupIcon": "https://cdn.humanz.moe/774.png",
