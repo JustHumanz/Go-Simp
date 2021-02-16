@@ -36,15 +36,8 @@ spec:
     spec:           
       containers:
       - name: rest-api
-        image: mainbot_rest-api
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 2525
-        volumeMounts:
-        - name: config-volume
-          mountPath: /app/Go-Simp
-          
-      volumes:
-        - name: config-volume
-          configMap:
-            name: Go-Simp_config_file        
+        image: justhumanz/go-simp
+        #imagePullPolicy: IfNotPresent  
+        workingDir: /app/Go-Simp/service/rest-api/
+        command: go build -o api && ./api
+      restartPolicy: OnFailure        

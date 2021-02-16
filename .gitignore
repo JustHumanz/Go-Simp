@@ -13,3 +13,4 @@ vendor
 *.db
 *.mp4
 dockerfile-devel
+*prod*

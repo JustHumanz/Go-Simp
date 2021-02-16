@@ -37,7 +37,7 @@ spec:
     spec:           
       containers:
       - name: static-files
-        image: go-simp_static_page
+        image: justhumanz/go-simp-static
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80

@@ -18,12 +18,8 @@ spec:
     spec:           
       containers:
         - name: go-simp-subscriber
-          image: go-simp_subscriber
-          imagePullPolicy: IfNotPresent
-          volumeMounts:
-          - name: config-volume
-            mountPath: /app/Go-Simp
-      volumes:
-        - name: config-volume
-          configMap:
-            name: Go-Simp_config_file          
+          image: justhumanz/go-simp
+          #imagePullPolicy: IfNotPresent  
+          workingDir: /app/Go-Simp/service/subscriber/
+          command: go build -o subscriber && ./subscriber -Youtube -BiliBili -Twitter         
+      restartPolicy: OnFailure          
