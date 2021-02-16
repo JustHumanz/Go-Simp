@@ -18,12 +18,8 @@ spec:
     spec:
       containers:
         - name: go-simp-frontend
-          image: go-simp_frontend
-          imagePullPolicy: IfNotPresent
-          volumeMounts:
-          - name: config-volume
-            mountPath: /app/Go-Simp
-      volumes:
-        - name: config-volume
-          configMap:
-            name: Go-Simp_config_file          
+          image: justhumanz/go-simp
+          #imagePullPolicy: IfNotPresent  
+          workingDir: /app/Go-Simp/service/frontend/
+          command: go build -o frontend && ./frontend
+      restartPolicy: OnFailure          

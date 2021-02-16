@@ -36,10 +36,11 @@ spec:
     spec:           
       containers:
       - name: go-simp-web
-        image: go-simp_go_simp_web
-        imagePullPolicy: IfNotPresent
+        image: justhumanz/go-simp-web
+        #imagePullPolicy: IfNotPresent
         envFrom:
         - configMapRef:
             name: go-simp-web-env             
         ports:
         - containerPort: 8000
+      restartPolicy: OnFailure        

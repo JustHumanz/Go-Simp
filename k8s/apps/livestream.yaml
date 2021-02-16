@@ -18,12 +18,8 @@ spec:
     spec:           
       containers:
         - name: go-simp-livestream
-          image: go-simp_livestream
-          imagePullPolicy: IfNotPresent
-          volumeMounts:
-          - name: config-volume
-            mountPath: /app/Go-Simp
-      volumes:
-        - name: config-volume
-          configMap:
-            name: Go-Simp_config_file          
+          image: justhumanz/go-simp
+          #imagePullPolicy: IfNotPresent  
+          workingDir: /app/Go-Simp/service/livestream/
+          command: go build -o livestream && ./livestream -Youtube -LiveBiliBili -SpaceBiliBili -Twitch
+      restartPolicy: OnFailure          
