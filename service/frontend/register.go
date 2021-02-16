@@ -120,7 +120,7 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if strings.HasPrefix(m.Content, Prefix) {
 		if CheckPermission(m.Author.ID, m.ChannelID, s) {
-			if m.Content == Prefix+"setup" {
+			if m.Content == Prefix+Setup {
 				_, err := s.ChannelMessageSend(m.ChannelID, "Wellcome to setup mode\ntype `exit` to exit this mode")
 				if err != nil {
 					log.Error(err)
@@ -143,7 +143,7 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 				Register.UpdateState("Group")
 
-			} else if m.Content == Prefix+"update_v2" {
+			} else if m.Content == Prefix+Update2 {
 				_, err := s.ChannelMessageSend(m.ChannelID, "Wellcome to update mode\ntype `exit` to exit this mode")
 				if err != nil {
 					log.Error(err)

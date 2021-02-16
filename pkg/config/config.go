@@ -66,8 +66,12 @@ const (
 	CheckServerCount           = "@every 0h10m0s"
 	CheckPayload               = "@every 2h0m0s"
 	PilotGetGroups             = "@every 1h30m0s"
-	AddUserTTL                 = 5 * time.Hour
-	FanartSleep                = 5 * time.Second
+
+	//Time
+	AddUserTTL      = 5 * time.Hour
+	FanartSleep     = 5 * time.Second
+	GetSubsCountTTL = 20 * time.Minute
+	GetUserListTTL  = 30 * time.Minute
 
 	//Unicode
 	Ok    = "✅"

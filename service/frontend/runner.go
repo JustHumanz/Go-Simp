@@ -31,7 +31,8 @@ var (
 const (
 	Enable        = "enable"
 	Disable       = "disable"
-	Update        = "update"
+	Update        = "update_v1"
+	Update2       = "update"
 	TagMe         = "tag me"
 	SetReminder   = "set reminder"
 	DelTag        = "del tag"
@@ -47,6 +48,7 @@ const (
 	Past          = "past"
 	Live          = "live"
 	ModuleInfo    = "module"
+	Setup         = "setup"
 )
 
 func init() {

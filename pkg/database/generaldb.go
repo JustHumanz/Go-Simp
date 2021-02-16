@@ -9,7 +9,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/go-redis/redis/v8"
@@ -120,7 +119,7 @@ func (Member Member) GetSubsCount() (*MemberSubs, error) {
 				return nil, err
 			}
 		}
-		err = GeneralCache.Set(context.Background(), Key, Data, 16*time.Minute).Err()
+		err = GeneralCache.Set(context.Background(), Key, Data, config.GetSubsCountTTL).Err()
 		if err != nil {
 			return nil, err
 		}
@@ -834,7 +833,7 @@ func (Data *DiscordChannel) GetUserList(ctx context.Context) ([]string, error) {
 		Type          bool
 		Key           = Data.Member.Name + strconv.Itoa(int(Data.ID))
 	)
-	val2, err := LiveCache.Get(ctx, Key).Result()
+	val2, err := GeneralCache.Get(ctx, Key).Result()
 	if err == redis.Nil {
 		rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id=?`, Data.ID, Data.Member.ID)
 		if err != nil {
@@ -854,7 +853,7 @@ func (Data *DiscordChannel) GetUserList(ctx context.Context) ([]string, error) {
 			}
 		}
 		if len(DataUser) > 0 {
-			err = LiveCache.Set(ctx, Key, strings.Join(DataUser, ","), 17*time.Minute).Err()
+			err = GeneralCache.Set(ctx, Key, strings.Join(DataUser, ","), config.GetUserListTTL).Err()
 			if err != nil {
 				return nil, err
 			}

@@ -137,9 +137,11 @@ func (Data InputBiliBili) CheckVideo() (bool, int) {
 	var tmp int
 	row := DB.QueryRow("SELECT id FROM Vtuber.BiliBili WHERE VideoID=? AND VtuberMember_id=?;", Data.VideoID, Data.MemberID)
 	err := row.Scan(&tmp)
-	if err != nil || err == sql.ErrNoRows {
-		log.Error(err)
+	if err == sql.ErrNoRows {
 		return true, 0
+	} else if err != nil {
+		log.Error(err)
+		return false, 0
 	} else {
 		return false, tmp
 	}
@@ -155,7 +157,6 @@ func (Data InputBiliBili) UpdateView(id int) {
 	if err != nil {
 		log.Error(err)
 	}
-
 }
 
 //InputTBiliBili Input TBiliBili data
