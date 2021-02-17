@@ -6,8 +6,8 @@ import (
 	"encoding/json"
 	"errors"
 	"strconv"
-	"time"
 
+	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -44,7 +44,7 @@ func YtGetStatus(Group, Member int64, Status, Region string) ([]YtDbData, error)
 				return nil, err
 			}
 		}
-		err = LiveCache.Expire(context.Background(), Key, 20*time.Minute).Err()
+		err = LiveCache.Expire(context.Background(), Key, config.YtGetStatusTTL).Err()
 		if err != nil {
 			return nil, err
 		}

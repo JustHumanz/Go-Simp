@@ -72,6 +72,8 @@ const (
 	FanartSleep     = 5 * time.Second
 	GetSubsCountTTL = 20 * time.Minute
 	GetUserListTTL  = 30 * time.Minute
+	ChannelTagTTL   = 35 * time.Minute
+	YtGetStatusTTL  = 20 * time.Minute
 
 	//Unicode
 	Ok    = "✅"

@@ -746,51 +746,62 @@ func ChannelStatus(ChannelID string) []DiscordChannel {
 //ChannelTag get channel tags from `channel tags` command
 func ChannelTag(MemberID int64, typetag int, Options string, Reg string) []DiscordChannel {
 	var (
-		Data    []DiscordChannel
-		tmp     int64
-		tmp2    string
-		tmp3    bool
-		GroupID int64
-		rows    *sql.Rows
-		err     error
-	)
-	if Options == "NotLiveOnly" {
-		rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND LiveOnly=0 AND (Channel.Region like ? OR Channel.Region='')`, MemberID, "%"+Reg+"%")
-		if err != nil {
-			log.Error(err)
-		}
-		defer rows.Close()
-
-	} else if Options == "NewUpcoming" {
-		rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND NewUpcoming=1 AND (Channel.Region like ? OR Channel.Region='')`, MemberID, "%"+Reg+"%")
-		if err != nil {
-			log.Error(err)
-		}
-		defer rows.Close()
-	} else {
-		rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=? OR Channel.type=3) AND (Channel.Region like ? OR Channel.Region='')`, MemberID, typetag, "%"+Reg+"%")
-		if err != nil {
-			log.Error(err)
-		}
-		defer rows.Close()
-	}
-	for rows.Next() {
-		err = rows.Scan(&tmp, &tmp2, &tmp3, &GroupID)
-		if err != nil {
-			log.Error(err)
-		}
-		Data = append(Data, DiscordChannel{
-			ID:        tmp,
-			ChannelID: tmp2,
-			Dynamic:   tmp3,
+		Data        []DiscordChannel
+		rows        *sql.Rows
+		err         error
+		Key         = strconv.Itoa(int(MemberID)) + strconv.Itoa(typetag) + Options + Reg
+		DiscordChan = DiscordChannel{
 			Member: Member{
 				ID: MemberID,
 			},
 			Region: Reg,
-			Group: Group{
-				ID: GroupID,
-			},
-		})
+		}
+	)
+	val := GeneralCache.LRange(context.Background(), Key, 0, -1).Val()
+	if len(val) == 0 {
+		if Options == "NotLiveOnly" {
+			rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND LiveOnly=0 AND (Channel.Region like ? OR Channel.Region='')`, MemberID, "%"+Reg+"%")
+			if err != nil {
+				log.Error(err)
+			}
+			defer rows.Close()
+
+		} else if Options == "NewUpcoming" {
+			rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND NewUpcoming=1 AND (Channel.Region like ? OR Channel.Region='')`, MemberID, "%"+Reg+"%")
+			if err != nil {
+				log.Error(err)
+			}
+			defer rows.Close()
+		} else {
+			rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=? OR Channel.type=3) AND (Channel.Region like ? OR Channel.Region='')`, MemberID, typetag, "%"+Reg+"%")
+			if err != nil {
+				log.Error(err)
+			}
+			defer rows.Close()
+		}
+		for rows.Next() {
+			err = rows.Scan(&DiscordChan.ID, &DiscordChan.ChannelID, &DiscordChan.Dynamic, &DiscordChan.Group.ID)
+			if err != nil {
+				log.Error(err)
+			}
+			Data = append(Data, DiscordChan)
+			err = GeneralCache.LPush(context.Background(), Key, DiscordChan).Err()
+			if err != nil {
+				log.Error(err)
+			}
+		}
+		err = GeneralCache.Expire(context.Background(), Key, config.ChannelTagTTL).Err()
+		if err != nil {
+			log.Error(err)
+		}
+	} else {
+		for _, result := range val {
+			err := json.Unmarshal([]byte(result), &DiscordChan)
+			if err != nil {
+				log.Error(err)
+			}
+			Data = append(Data, DiscordChan)
+		}
 	}
 	return Data
 }
