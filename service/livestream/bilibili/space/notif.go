@@ -35,7 +35,8 @@ func (Data CheckSctruct) SendNude() {
 				wg.Add(1)
 				go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
 					defer wg.Done()
-					UserTagsList, err := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, Data.MemberID)
+					ctx := context.Background()
+					UserTagsList, err := Channel.GetUserList(ctx)
 					if err != nil {
 						log.Error(err)
 					}

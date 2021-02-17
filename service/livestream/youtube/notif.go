@@ -70,7 +70,8 @@ func (PushData *NotifStruct) SendNude() error {
 			wg.Add(1)
 			go func(Channel database.DiscordChannel, wg *sync.WaitGroup) error {
 				defer wg.Done()
-				UserTagsList, err := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, PushData.Member.ID)
+				ctx := context.Background()
+				UserTagsList, err := Channel.GetUserList(ctx) //database.GetUserList(Channel.ID, PushData.Member.ID)
 				if err != nil {
 					log.Error(err)
 				}
@@ -146,7 +147,8 @@ func (PushData *NotifStruct) SendNude() error {
 			wg.Add(1)
 			go func(Channel database.DiscordChannel, wg *sync.WaitGroup) error {
 				defer wg.Done()
-				UserTagsList, err := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, PushData.Member.ID)
+				ctx := context.Background()
+				UserTagsList, err := Channel.GetUserList(ctx)
 				if err != nil {
 					log.Error(err)
 				}
@@ -252,7 +254,8 @@ func (PushData *NotifStruct) SendNude() error {
 			wg.Add(1)
 			go func(Channel database.DiscordChannel, wg *sync.WaitGroup) error {
 				defer wg.Done()
-				UserTagsList, err := Channel.GetUserList(context.Background()) //database.GetUserList(Channel.ID, PushData.Member.ID)
+				ctx := context.Background()
+				UserTagsList, err := Channel.GetUserList(ctx)
 				if err != nil {
 					log.Error(err)
 				}

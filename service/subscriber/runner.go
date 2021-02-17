@@ -122,7 +122,8 @@ func SendNude(Embed *discordgo.MessageEmbed, Group database.Group, Member databa
 	ChannelData := Group.GetChannelByGroup(Member.Region)
 	for i, Channel := range ChannelData {
 		Tmp := &Channel
-		UserTagsList, err := Tmp.SetMember(Member).SetGroup(Group).GetUserList(context.Background()) //database.GetUserList(Channel.ID, MemberID)
+		ctx := context.Background()
+		UserTagsList, err := Tmp.SetMember(Member).SetGroup(Group).GetUserList(ctx)
 		if err != nil {
 			log.Error(err)
 		}

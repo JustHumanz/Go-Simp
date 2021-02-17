@@ -22,7 +22,8 @@ func PushNotif(Data database.TBiliBili) error {
 	}
 	tags := ""
 	for i, Channel := range ChannelData {
-		UserTagsList, err := Channel.GetUserList(context.Background())
+		ctx := context.Background()
+		UserTagsList, err := Channel.GetUserList(ctx)
 		if err != nil {
 			log.Error(err)
 			break
