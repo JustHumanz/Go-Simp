@@ -87,6 +87,8 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 				Data.SetStatus("Live").
 					UpdateSchdule(ScheduledStart).
 					UpdateOnline(Status.Data.RoomInfo.Online).
+					UpdateThumbnail(Status.Data.RoomInfo.Cover).
+					UpdateTitle(Status.Data.RoomInfo.Title).
 					SetMember(Member).
 					SetGroup(Group)
 
@@ -95,7 +97,10 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 					log.Error(err)
 				}
 
-				Data.RoomData.UpdateLiveBili(Member.ID)
+				err := Data.UpdateDB()
+				if err != nil {
+					log.Error(err)
+				}
 
 			} else if !Status.CheckScheduleLive() && DataDB.Status == "Live" {
 				//prob past
@@ -111,11 +116,17 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 				Data.SetStatus("Past").
 					UpdateOnline(Status.Data.RoomInfo.Online)
 
-				Data.RoomData.UpdateLiveBili(Member.ID)
+				err = Data.UpdateDB()
+				if err != nil {
+					log.Error(err)
+				}
 			} else {
 				//update online
 				Data.UpdateOnline(Status.Data.RoomInfo.Online)
-				Data.RoomData.UpdateLiveBili(Member.ID)
+				err := Data.UpdateDB()
+				if err != nil {
+					log.Error(err)
+				}
 			}
 		}
 

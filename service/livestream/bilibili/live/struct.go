@@ -846,6 +846,14 @@ type LiveBili struct {
 	Embed    *discordgo.MessageEmbed
 }
 
+func (Data *LiveBili) UpdateDB() error {
+	err := Data.RoomData.UpdateLiveBili(Data.Member.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (Data *LiveBili) AddData(new *database.LiveBiliDB) *LiveBili {
 	Data.RoomData = new
 	return Data
@@ -853,6 +861,16 @@ func (Data *LiveBili) AddData(new *database.LiveBiliDB) *LiveBili {
 
 func (Data *LiveBili) UpdateSchdule(new time.Time) *LiveBili {
 	Data.RoomData.ScheduledStart = new
+	return Data
+}
+
+func (Data *LiveBili) UpdateThumbnail(new string) *LiveBili {
+	Data.RoomData.Thumbnail = new
+	return Data
+}
+
+func (Data *LiveBili) UpdateTitle(new string) *LiveBili {
+	Data.RoomData.Title = new
 	return Data
 }
 

@@ -28,11 +28,12 @@ func GetRoomData(MemberID int64, RoomID int) (*LiveBiliDB, error) {
 }
 
 //UpdateLiveBili Update LiveBiliBili Data
-func (Data *LiveBiliDB) UpdateLiveBili(MemberID int64) {
+func (Data *LiveBiliDB) UpdateLiveBili(MemberID int64) error {
 	_, err := DB.Exec(`Update LiveBiliBili set Status=? , Title=? ,Thumbnails=?, Description=?, Published=?, ScheduledStart=?, Viewers=? Where id=? AND VtuberMember_id=?`, Data.Status, Data.Title, Data.Thumbnail, Data.Description, Data.PublishedAt, Data.ScheduledStart, Data.Online, Data.ID, MemberID)
 	if err != nil {
-		log.Error(err)
+		return err
 	}
+	return nil
 }
 
 //SetRoomToLive force bilibili room status to live
