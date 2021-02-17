@@ -45,6 +45,7 @@ var (
 const (
 	TmpDir            = "/tmp/tmp.img"
 	ChannelPermission = 8208
+	BotPermission     = 452624
 	GuildSupport      = "https://discord.com/invite/ydWC5knbJT"
 	Waiting           = 5
 	Pilot             = "pilot"

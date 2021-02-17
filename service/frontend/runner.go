@@ -256,3 +256,29 @@ func CheckReg(GroupName, Reg string) bool {
 	}
 	return false
 }
+
+func MemberHasPermission(guildID string, userID string) (bool, error) {
+	member, err := Bot.State.Member(guildID, userID)
+	if err != nil {
+		if member, err = Bot.GuildMember(guildID, userID); err != nil {
+			return false, err
+		}
+	}
+
+	if len(member.Roles) == 0 {
+		return false, errors.New("You not enabled by any roles with administrator permissions")
+	}
+
+	for _, roleID := range member.Roles {
+		role, err := Bot.State.Role(guildID, roleID)
+		if err != nil {
+			return false, err
+		}
+
+		if role.Permissions&config.ChannelPermission != 0 {
+			return true, nil
+		}
+	}
+
+	return false, nil
+}

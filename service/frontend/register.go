@@ -119,8 +119,16 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	if strings.HasPrefix(m.Content, Prefix) {
-		if CheckPermission(m.Author.ID, m.ChannelID, s) {
-			if m.Content == Prefix+Setup {
+		if m.Content == Prefix+Setup {
+			Admin, err := MemberHasPermission(m.GuildID, m.Author.ID)
+			if err != nil {
+				_, err := s.ChannelMessageSend(m.ChannelID, err.Error())
+				if err != nil {
+					log.Error(err)
+				}
+			}
+
+			if Admin {
 				_, err := s.ChannelMessageSend(m.ChannelID, "Wellcome to setup mode\ntype `exit` to exit this mode")
 				if err != nil {
 					log.Error(err)
@@ -142,8 +150,24 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 					log.Error(err)
 				}
 				Register.UpdateState("Group")
+			} else {
+				_, err := s.ChannelMessageSend(m.ChannelID, "You don't have permission to enable/disable/update")
+				if err != nil {
+					log.Error(err)
+				}
+				Register.Clear()
+				return
+			}
 
-			} else if m.Content == Prefix+Update2 {
+		} else if m.Content == Prefix+Update2 {
+			Admin, err := MemberHasPermission(m.GuildID, m.Author.ID)
+			if err != nil {
+				_, err := s.ChannelMessageSend(m.ChannelID, err.Error())
+				if err != nil {
+					log.Error(err)
+				}
+			}
+			if Admin {
 				_, err := s.ChannelMessageSend(m.ChannelID, "Wellcome to update mode\ntype `exit` to exit this mode")
 				if err != nil {
 					log.Error(err)
@@ -201,14 +225,15 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 				if err != nil {
 					log.Error(err)
 				}
+			} else {
+				_, err := s.ChannelMessageSend(m.ChannelID, "You don't have permission to enable/disable/update")
+				if err != nil {
+					log.Error(err)
+				}
+				Register.Clear()
+				return
 			}
-		} else {
-			_, err := s.ChannelMessageSend(m.ChannelID, "You don't have permission to enable/disable/update")
-			if err != nil {
-				log.Error(err)
-			}
-			Register.Clear()
-			return
+
 		}
 	} else if m.Author.ID == Register.Admin && m.ChannelID == Register.ChannelState.ChannelID {
 		if m.Content == "exit" {

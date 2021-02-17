@@ -625,7 +625,11 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			}
 		} else if strings.HasPrefix(m.Content, Prefix+TagRoles) {
-			if CheckPermission(m.Author.ID, m.ChannelID, s) {
+			Admin, err := MemberHasPermission(m.GuildID, m.Author.ID)
+			if err != nil {
+				log.Error(err)
+			}
+			if Admin {
 				Already = nil
 				Done = nil
 				UserInput := strings.Replace(m.Content, Prefix+TagRoles, "", -1)
@@ -818,7 +822,11 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			}
 		} else if strings.HasPrefix(m.Content, Prefix+DelRoles) {
-			if CheckPermission(m.Author.ID, m.ChannelID, s) {
+			Admin, err := MemberHasPermission(m.GuildID, m.Author.ID)
+			if err != nil {
+				log.Error(err)
+			}
+			if Admin {
 				Already = nil
 				Done = nil
 				VtuberName := strings.Split(strings.TrimSpace(strings.Replace(m.Content, Prefix+TagRoles, "", -1)), " ")
@@ -978,7 +986,11 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			}
 		} else if strings.HasPrefix(m.Content, Prefix+RolesReminder) {
-			if CheckPermission(m.Author.ID, m.ChannelID, s) {
+			Admin, err := MemberHasPermission(m.GuildID, m.Author.ID)
+			if err != nil {
+				log.Error(err)
+			}
+			if Admin {
 				Already = nil
 				Done = nil
 				UserInput := strings.Replace(m.Content, Prefix+RolesReminder, "", -1)
@@ -1162,18 +1174,6 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 }
 
-//CheckPermission Check user permission
-func CheckPermission(User, Channel string, bot *discordgo.Session) bool {
-	a, err := bot.UserChannelPermissions(User, Channel)
-	if err != nil {
-		log.Error(err)
-	}
-	if a&config.ChannelPermission != 0 {
-		return true
-	}
-	return false
-}
-
 //EnableState Enable command message handler
 func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
@@ -1287,7 +1287,11 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 						return
 					}
-					if CheckPermission(m.Author.ID, m.ChannelID, s) {
+					Admin, err := MemberHasPermission(m.GuildID, m.Author.ID)
+					if err != nil {
+						log.Error(err)
+					}
+					if Admin {
 						ChannelState.SetVtuberGroupID(VTuberGroup.ID)
 						if ChannelState.ChannelCheck() {
 							already = append(already, "`"+VTuberGroup.GroupName+"`")
@@ -1390,7 +1394,11 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 						return
 					}
-					if CheckPermission(m.Author.ID, m.ChannelID, s) {
+					Admin, err := MemberHasPermission(m.GuildID, m.Author.ID)
+					if err != nil {
+						log.Error(err)
+					}
+					if Admin {
 						ChannelState.SetVtuberGroupID(VTuberGroup.ID)
 						if ChannelState.ChannelCheck() {
 							err := ChannelState.DelChannel("Delete")
@@ -1457,7 +1465,11 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 						return
 					}
-					if CheckPermission(m.Author.ID, m.ChannelID, s) {
+					Admin, err := MemberHasPermission(m.GuildID, m.Author.ID)
+					if err != nil {
+						log.Error(err)
+					}
+					if Admin {
 						ChannelState.SetVtuberGroupID(VTuberGroup.ID)
 						if ChannelState.ChannelCheck() {
 							if (ChannelState.TypeTag == 2 || ChannelState.TypeTag == 3) && len(CommandArray) >= 4 {
