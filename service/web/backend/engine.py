@@ -3,7 +3,7 @@ import requests,os,json,re
 
 GroupURL = "http://"+os.environ['REST_API']+":2525/Groups"
 AllURL = "http://"+os.environ['REST_API']+":2525/All"
-SubscriberURL = "http://"+os.environ['REST_API']+":2525/Subscriber"
+SubscriberURL = "http://"+os.environ['REST_API']+":2525/Subscriber/"
 ChannelURL = "http://"+os.environ['REST_API']+":2525/channel/"
 Youtube = "http://"+os.environ['REST_API']+":2525/Youtube/"
 API_ENDPOINT = 'https://discord.com/api/v6'
