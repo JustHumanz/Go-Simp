@@ -151,7 +151,7 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 				Register.UpdateState("Group")
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "You don't have permission to enable/disable/update")
+				_, err := s.ChannelMessageSend(m.ChannelID, "Your roles don't have permission to enable/disable/update,make sure your roles have `Manage Channels` permission")
 				if err != nil {
 					log.Error(err)
 				}
@@ -402,10 +402,19 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if err != nil {
 				log.Error(err)
 			}
-			_, err = s.ChannelMessageSend(m.ChannelID, "Done,you add `"+Register.ChannelState.Group.GroupName+"` in this channel")
-			if err != nil {
-				log.Error(err)
+
+			if Register.ChannelState.Group.GroupName == "Independen" {
+				_, err = s.ChannelMessageSend(m.ChannelID, "Done,you add `"+Register.ChannelState.Group.GroupName+"` in this channel\n**independent group have strict rule if no one user/roles tagged livestream notif will be not send**")
+				if err != nil {
+					log.Error(err)
+				}
+			} else {
+				_, err = s.ChannelMessageSend(m.ChannelID, "Done,you add `"+Register.ChannelState.Group.GroupName+"` in this channel")
+				if err != nil {
+					log.Error(err)
+				}
 			}
+
 			Register.Clear()
 			return
 		}

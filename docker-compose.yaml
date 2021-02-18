@@ -135,7 +135,7 @@ services:
       - ./acme.json:/acme.json
       - /var/run/docker.sock:/var/run/docker.sock
 
-  static_page:
+  static_files:
     build: ./Img/
     networks:
       - go_simp-proxy

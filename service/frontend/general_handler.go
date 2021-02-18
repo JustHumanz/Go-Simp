@@ -816,7 +816,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "You don't have enough permission to use this command,Only user with permission `Manage Channel or Higher` can use this commandYou don't have enough permission to use this command")
+				_, err := s.ChannelMessageSend(m.ChannelID, "Your roles don't have permission to enable/disable/update,make sure your roles have `Manage Channels` permission")
 				if err != nil {
 					log.Error(err)
 				}
@@ -980,7 +980,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "You don't have enough permission to use this command,Only user with permission `Manage Channel or Higher` can use this command")
+				_, err := s.ChannelMessageSend(m.ChannelID, "Your roles don't have permission to enable/disable/update,make sure your roles have `Manage Channels` permission")
 				if err != nil {
 					log.Error(err)
 				}
@@ -1165,7 +1165,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "You don't have enough permission to use this command,Only user with permission `Manage Channel or Higher` can use this commandYou don't have enough permission to use this command")
+				_, err := s.ChannelMessageSend(m.ChannelID, "Your roles don't have permission to enable/disable/update,make sure your roles have `Manage Channels` permission")
 				if err != nil {
 					log.Error(err)
 				}
@@ -1316,7 +1316,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 						}
 					} else {
-						_, err := s.ChannelMessageSend(m.ChannelID, "You don't have permission to enable/disable/update")
+						_, err := s.ChannelMessageSend(m.ChannelID, "Your roles don't have permission to enable/disable/update,make sure your roles have `Manage Channels` permission")
 						if err != nil {
 							log.Error(err)
 						}
@@ -1415,7 +1415,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 							already = append(already, "`"+VTuberGroup.GroupName+"`")
 						}
 					} else {
-						_, err := s.ChannelMessageSend(m.ChannelID, "You don't have permission to enable/disable/update")
+						_, err := s.ChannelMessageSend(m.ChannelID, "Your roles don't have permission to enable/disable/update,make sure your roles have `Manage Channels` permission")
 						if err != nil {
 							log.Error(err)
 						}
@@ -1602,7 +1602,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 							return
 						}
 					} else {
-						_, err := s.ChannelMessageSend(m.ChannelID, "You don't have permission to enable/disable/update")
+						_, err := s.ChannelMessageSend(m.ChannelID, "Your roles don't have permission to enable/disable/update,make sure your roles have `Manage Channels` permission")
 						if err != nil {
 							log.Error(err)
 						}
