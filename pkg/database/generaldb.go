@@ -694,7 +694,7 @@ func ChannelStatus(ChannelID string) []DiscordChannel {
 	var (
 		Data []DiscordChannel
 	)
-	rows, err := DB.Query(`SELECT Channel.id,VtuberGroup.id,VtuberGroupName,Channel.Type,Channel.LiveOnly,Channel.NewUpcoming,Channel.Dynamic,Channel.Region FROM Channel INNER JOIn VtuberGroup on VtuberGroup.id=Channel.VtuberGroup_id WHERE DiscordChannelID=?`, ChannelID)
+	rows, err := DB.Query(`SELECT Channel.id,VtuberGroup.id,VtuberGroupName,Channel.Type,Channel.LiveOnly,Channel.NewUpcoming,Channel.Dynamic,Channel.Region,Channel.Lite FROM Channel INNER JOIn VtuberGroup on VtuberGroup.id=Channel.VtuberGroup_id WHERE DiscordChannelID=?`, ChannelID)
 	if err != nil {
 		log.Error(err)
 	}
@@ -710,23 +710,12 @@ func ChannelStatus(ChannelID string) []DiscordChannel {
 			tmp4    bool
 			tmp5    bool
 			tmp6    string
+			tmp7    bool
 		)
-		err = rows.Scan(&id, &GroupID, &tmp, &tmp2, &tmp3, &tmp4, &tmp5, &tmp6)
+		err = rows.Scan(&id, &GroupID, &tmp, &tmp2, &tmp3, &tmp4, &tmp5, &tmp6, &tmp7)
 		if err != nil {
 			log.Error(err)
 		}
-		/*
-			if tmp3 {
-				LiveOnly = append(LiveOnly, "Enabled")
-			} else {
-				LiveOnly = append(LiveOnly, "Disabled")
-			}
-			if tmp4 {
-				NewUpcoming = append(NewUpcoming, "Enabled")
-			} else {
-				NewUpcoming = append(NewUpcoming, "Disabled")
-			}
-		*/
 		Data = append(Data, DiscordChannel{
 			ID: id,
 			Group: Group{
@@ -738,6 +727,7 @@ func ChannelStatus(ChannelID string) []DiscordChannel {
 			NewUpcoming: tmp4,
 			Dynamic:     tmp5,
 			Region:      strings.ToUpper(tmp6),
+			LiteMode:    tmp7,
 		})
 	}
 	return Data

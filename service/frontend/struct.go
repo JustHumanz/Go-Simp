@@ -1,6 +1,11 @@
 package main
 
-import database "github.com/JustHumanz/Go-Simp/pkg/database"
+import (
+	"strings"
+	"time"
+
+	database "github.com/JustHumanz/Go-Simp/pkg/database"
+)
 
 //DynamicSvr for bilibili author
 type DynamicSvr struct {
@@ -116,4 +121,128 @@ type Memberst struct {
 	Msg3       string
 	View       string
 	Length     string
+}
+
+type Regis struct {
+	Admin         string
+	State         string
+	MessageID     string
+	RegionTMP     []string
+	AddRegionVal  []string
+	DelRegionVal  []string
+	Gass          bool
+	ChannelState  database.DiscordChannel
+	ChannelStates []database.DiscordChannel
+}
+
+func (Data *Regis) SetLiveOnly(new bool) *Regis {
+	Data.ChannelState.LiveOnly = new
+	return Data
+}
+
+func (Data *Regis) SetNewUpcoming(new bool) *Regis {
+	Data.ChannelState.NewUpcoming = new
+	return Data
+}
+
+func (Data *Regis) SetDynamic(new bool) *Regis {
+	Data.ChannelState.Dynamic = new
+	return Data
+}
+
+func (Data *Regis) SetLite(new bool) *Regis {
+	Data.ChannelState.LiteMode = new
+	return Data
+}
+
+func (Data *Regis) SetChannel(new string) *Regis {
+	Data.ChannelState.ChannelID = new
+	return Data
+}
+
+func (Data *Regis) SetAdmin(new string) *Regis {
+	Data.Admin = new
+	return Data
+}
+
+func (Data *Regis) UpdateState(new string) *Regis {
+	Data.State = new
+	return Data
+}
+
+func (Data *Regis) SetGroup(new database.Group) *Regis {
+	Data.ChannelState.Group = new
+	return Data
+}
+
+func (Data *Regis) FixRegion(s string) {
+	list := []string{}
+	keys := make(map[string]bool)
+	for _, Reg := range Data.RegionTMP {
+		if _, value := keys[Reg]; !value {
+			keys[Reg] = true
+			list = append(list, Reg)
+		}
+	}
+	if s == "add" {
+		Data.ChannelState.Region = strings.Join(list, ",")
+	} else {
+		tmp := []string{}
+		for _, v := range list {
+			skip := false
+			for _, v2 := range Data.DelRegionVal {
+				if v2 == v {
+					skip = true
+					break
+				}
+			}
+			if !skip {
+				tmp = append(tmp, v)
+			}
+		}
+		Data.ChannelState.Region = strings.Join(tmp, ",")
+	}
+}
+
+func (Data *Regis) AddNewRegion(new string) *Regis {
+	Data.AddRegionVal = append(Data.AddRegionVal, new)
+	Data.RegionTMP = append(Data.RegionTMP, new)
+	return Data
+}
+
+func (Data *Regis) RemoveRegion(new string) *Regis {
+	Data.DelRegionVal = append(Data.DelRegionVal, new)
+	return Data
+}
+
+func (Data *Regis) UpdateType(new int) *Regis {
+	Data.ChannelState.TypeTag = new
+	return Data
+}
+
+func (Data *Regis) UpdateMessageID(new string) *Regis {
+	Data.MessageID = new
+	return Data
+}
+
+func (Data *Regis) Clear() {
+	Register = &Regis{}
+	Data = &Regis{}
+}
+
+func (Data *Regis) Stop() {
+	Data.Gass = false
+}
+
+func (Data *Regis) Start() {
+	Data.Gass = true
+}
+
+func (Data *Regis) BreakPoint(num time.Duration) {
+	for i := 0; i < 100; i++ {
+		if Data.Gass {
+			break
+		}
+		time.Sleep(num * time.Second)
+	}
 }
