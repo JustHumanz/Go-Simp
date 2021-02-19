@@ -744,7 +744,7 @@ func ChannelStatus(ChannelID string) []DiscordChannel {
 }
 
 //ChannelTag get channel tags from `channel tags` command
-func ChannelTag(MemberID int64, typetag int, Options string, Reg string) []DiscordChannel {
+func ChannelTag(MemberID int64, typetag int, Options string, Reg string) *[]DiscordChannel {
 	var (
 		Data        []DiscordChannel
 		rows        *sql.Rows
@@ -805,7 +805,7 @@ func ChannelTag(MemberID int64, typetag int, Options string, Reg string) []Disco
 			Data = append(Data, DiscordChan)
 		}
 	}
-	return Data
+	return &Data
 }
 
 //PushReddis Push DiscordChannel state to reddis
