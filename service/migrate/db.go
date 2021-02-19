@@ -37,6 +37,7 @@ func CreateDB(Data config.ConfigFile) error {
 		NewUpcoming TINYINT NOT NULL DEFAULT 1,
 		Dynamic TINYINT NOT NULL DEFAULT 0,
 		Region VARCHAR(45) NOT NULL ,
+		Lite TINYINT NOT NULL DEFAULT 0,
 		VtuberGroup_id int(11) NOT NULL,
 		PRIMARY KEY (id)
 	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`)

@@ -3,7 +3,6 @@ package main
 import (
 	"strconv"
 	"strings"
-	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
@@ -12,18 +11,6 @@ import (
 	"github.com/olekukonko/tablewriter"
 	log "github.com/sirupsen/logrus"
 )
-
-type Regis struct {
-	Admin         string
-	State         string
-	MessageID     string
-	RegionTMP     []string
-	AddRegionVal  []string
-	DelRegionVal  []string
-	Gass          bool
-	ChannelState  database.DiscordChannel
-	ChannelStates []database.DiscordChannel
-}
 
 var (
 	Register = &Regis{}
@@ -39,6 +26,8 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 				Register.SetNewUpcoming(true)
 			} else if Register.State == "Dynamic" {
 				Register.SetDynamic(true)
+			} else if Register.State == "LiteMode" {
+				Register.SetLite(true)
 			}
 		} else if m.Emoji.MessageFormat() == config.No {
 			if Register.State == "LiveOnly" {
@@ -47,6 +36,8 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 				Register.SetNewUpcoming(false)
 			} else if Register.State == "Dynamic" {
 				Register.SetDynamic(false)
+			} else if Register.State == "LiteMode" {
+				Register.SetLite(false)
 			}
 		}
 
@@ -65,13 +56,23 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 		}
 
 		if m.Emoji.MessageFormat() == config.One {
+			Register.Stop()
 			Register.LiveOnly(s)
+			Register.BreakPoint(1)
 
 			if !Register.ChannelState.LiveOnly {
+				Register.Stop()
 				Register.NewUpcoming(s)
+				Register.BreakPoint(1)
 			}
 
+			Register.Stop()
 			Register.Dynamic(s)
+			Register.BreakPoint(1)
+
+			Register.Stop()
+			Register.Lite(s)
+			Register.BreakPoint(1)
 
 			Register.UpdateChannel()
 			_, err := s.ChannelMessageSend(m.ChannelID, "Done")
@@ -97,7 +98,6 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 			if Region != "" {
 				Register.RemoveRegion(Region)
 			}
-
 		}
 	}
 }
@@ -180,7 +180,7 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 					Register.SetAdmin(m.Author.ID).SetChannel(m.ChannelID)
 
 					Register.ChannelStates = ChannelData
-					table.SetHeader([]string{"ID", "Group", "Type", "LiveOnly", "Dynamic", "NewUpcoming", "Region"})
+					table.SetHeader([]string{"ID", "Group", "Type", "LiveOnly", "Dynamic", "NewUpcoming", "LiteMode", "Region"})
 					for i := 0; i < len(ChannelData); i++ {
 						if ChannelData[i].TypeTag == 1 {
 							Typestr = "Art"
@@ -192,6 +192,7 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 						LiveOnly := config.No
 						NewUpcoming := config.No
 						Dynamic := config.No
+						LiteMode := config.No
 
 						if ChannelData[i].LiveOnly {
 							LiveOnly = config.Ok
@@ -204,7 +205,11 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 						if ChannelData[i].Dynamic {
 							Dynamic = config.Ok
 						}
-						table.Append([]string{strconv.Itoa(int(ChannelData[i].ID)), ChannelData[i].Group.GroupName, Typestr, LiveOnly, Dynamic, NewUpcoming, ChannelData[i].Region})
+
+						if ChannelData[i].LiteMode {
+							LiteMode = config.Ok
+						}
+						table.Append([]string{strconv.Itoa(int(ChannelData[i].ID)), ChannelData[i].Group.GroupName, Typestr, LiveOnly, Dynamic, NewUpcoming, LiteMode, ChannelData[i].Region})
 					}
 					table.Render()
 					_, err := s.ChannelMessageSend(m.ChannelID, "```"+tableString.String()+"```")
@@ -475,6 +480,24 @@ func (Data *Regis) Dynamic(s *discordgo.Session) *Regis {
 	return Data
 }
 
+func (Data *Regis) Lite(s *discordgo.Session) *Regis {
+	MsgTxt, err := s.ChannelMessageSend(Data.ChannelState.ChannelID, "Enable Lite mode? **Disabling register user from emoji and remove usertags function**")
+	if err != nil {
+		log.Error(err)
+	}
+	err = engine.Reacting(map[string]string{
+		"ChannelID": Data.ChannelState.ChannelID,
+		"State":     "SelectType",
+		"MessageID": MsgTxt.ID,
+	}, s)
+	if err != nil {
+		log.Error(err)
+	}
+	Data.UpdateMessageID(MsgTxt.ID)
+	Data.UpdateState("LiteMode")
+	return Data
+}
+
 func (Data *Regis) UpdateChannel() error {
 	err := Data.ChannelState.UpdateChannel("LiveOnly")
 	ChannelID := Data.ChannelState.ChannelID
@@ -484,6 +507,7 @@ func (Data *Regis) UpdateChannel() error {
 			log.Error(err)
 		}
 	}
+
 	err = Data.ChannelState.UpdateChannel("Dynamic")
 	if err != nil {
 		_, err := Bot.ChannelMessageSend(ChannelID, err.Error())
@@ -491,13 +515,25 @@ func (Data *Regis) UpdateChannel() error {
 			log.Error(err)
 		}
 	}
-	err = Data.ChannelState.UpdateChannel("NewUpcoming")
+
+	if !Register.ChannelState.LiveOnly {
+		err = Data.ChannelState.UpdateChannel("NewUpcoming")
+		if err != nil {
+			_, err := Bot.ChannelMessageSend(ChannelID, err.Error())
+			if err != nil {
+				log.Error(err)
+			}
+		}
+	}
+
+	err = Data.ChannelState.UpdateChannel("LiteMode")
 	if err != nil {
 		_, err := Bot.ChannelMessageSend(ChannelID, err.Error())
 		if err != nil {
 			log.Error(err)
 		}
 	}
+
 	return nil
 }
 
@@ -625,111 +661,4 @@ func (Data *Regis) DelRegion(s *discordgo.Session) {
 	}
 	Register.Clear()
 	return
-}
-
-func (Data *Regis) SetLiveOnly(new bool) *Regis {
-	Data.ChannelState.LiveOnly = new
-	return Data
-}
-
-func (Data *Regis) SetNewUpcoming(new bool) *Regis {
-	Data.ChannelState.NewUpcoming = new
-	return Data
-}
-
-func (Data *Regis) SetDynamic(new bool) *Regis {
-	Data.ChannelState.Dynamic = new
-	return Data
-}
-
-func (Data *Regis) SetChannel(new string) *Regis {
-	Data.ChannelState.ChannelID = new
-	return Data
-}
-
-func (Data *Regis) SetAdmin(new string) *Regis {
-	Data.Admin = new
-	return Data
-}
-
-func (Data *Regis) UpdateState(new string) *Regis {
-	Data.State = new
-	return Data
-}
-
-func (Data *Regis) SetGroup(new database.Group) *Regis {
-	Data.ChannelState.Group = new
-	return Data
-}
-
-func (Data *Regis) FixRegion(s string) {
-	list := []string{}
-	keys := make(map[string]bool)
-	for _, Reg := range Data.RegionTMP {
-		if _, value := keys[Reg]; !value {
-			keys[Reg] = true
-			list = append(list, Reg)
-		}
-	}
-	if s == "add" {
-		Data.ChannelState.Region = strings.Join(list, ",")
-	} else {
-		tmp := []string{}
-		for _, v := range list {
-			skip := false
-			for _, v2 := range Data.DelRegionVal {
-				if v2 == v {
-					skip = true
-					break
-				}
-			}
-			if !skip {
-				tmp = append(tmp, v)
-			}
-		}
-		Data.ChannelState.Region = strings.Join(tmp, ",")
-	}
-}
-
-func (Data *Regis) AddNewRegion(new string) *Regis {
-	Data.AddRegionVal = append(Data.AddRegionVal, new)
-	Data.RegionTMP = append(Data.RegionTMP, new)
-	return Data
-}
-
-func (Data *Regis) RemoveRegion(new string) *Regis {
-	Data.DelRegionVal = append(Data.DelRegionVal, new)
-	return Data
-}
-
-func (Data *Regis) UpdateType(new int) *Regis {
-	Data.ChannelState.TypeTag = new
-	return Data
-}
-
-func (Data *Regis) UpdateMessageID(new string) *Regis {
-	Data.MessageID = new
-	return Data
-}
-
-func (Data *Regis) Clear() {
-	Register = &Regis{}
-	Data = &Regis{}
-}
-
-func (Data *Regis) Stop() {
-	Data.Gass = false
-}
-
-func (Data *Regis) Start() {
-	Data.Gass = true
-}
-
-func (Data *Regis) BreakPoint(num time.Duration) {
-	for i := 0; i < 100; i++ {
-		if Data.Gass {
-			break
-		}
-		time.Sleep(num * time.Second)
-	}
 }

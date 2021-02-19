@@ -106,9 +106,11 @@ func (PushData *NotifStruct) SendNude() error {
 						return err
 					}
 				}
-				msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` New upcoming Livestream\nUserTags: "+strings.Join(UserTagsList, " "))
-				if err != nil {
-					return err
+				if !Channel.LiteMode {
+					msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` New upcoming Livestream\nUserTags: "+strings.Join(UserTagsList, " "))
+					if err != nil {
+						return err
+					}
 				}
 				return nil
 			}(v, &wg)
@@ -187,20 +189,6 @@ func (PushData *NotifStruct) SendNude() error {
 					return err
 				}
 
-				Msg := "Push " + configfile.Emoji.Livestream[0] + " to add you in `" + PushData.Member.Name + "` ping list\nPush " + configfile.Emoji.Livestream[1] + " to remove you from ping list"
-				MsgFinal := ""
-
-				if Bili {
-					MsgFinal = "`" + PushData.Member.Name + "` Live right now at BiliBili And Youtube\nUserTags: " + strings.Join(UserTagsList, " ") + "\n" + Msg
-				} else {
-					MsgFinal = "`" + PushData.Member.Name + "` Live right now\nUserTags: " + strings.Join(UserTagsList, " ") + "\n" + Msg
-				}
-
-				msgText, err := Bot.ChannelMessageSend(Channel.ChannelID, MsgFinal)
-				if err != nil {
-					return err
-				}
-
 				if Channel.Dynamic {
 					log.WithFields(log.Fields{
 						"DiscordChannel": Channel.ChannelID,
@@ -208,27 +196,46 @@ func (PushData *NotifStruct) SendNude() error {
 						"YoutubeID":      PushData.YtData.ID,
 					}).Info("Set dynamic mode")
 					Channel.SetVideoID(PushData.YtData.VideoID).
-						SetMsgEmbedID(MsgEmbed.ID).
-						SetMsgTextID(msgText.ID).
-						PushReddis()
+						SetMsgEmbedID(MsgEmbed.ID)
 				}
 
-				User.SetDiscordChannelID(Channel.ChannelID).
-					SetGroup(PushData.Group).
-					SetMember(PushData.Member)
-				err = User.SendToCache(msgText.ID)
-				if err != nil {
-					return err
+				if !Channel.LiteMode {
+					Msg := "Push " + configfile.Emoji.Livestream[0] + " to add you in `" + PushData.Member.Name + "` ping list\nPush " + configfile.Emoji.Livestream[1] + " to remove you from ping list"
+					MsgFinal := ""
+
+					if Bili {
+						MsgFinal = "`" + PushData.Member.Name + "` Live right now at BiliBili And Youtube\nUserTags: " + strings.Join(UserTagsList, " ") + "\n" + Msg
+					} else {
+						MsgFinal = "`" + PushData.Member.Name + "` Live right now\nUserTags: " + strings.Join(UserTagsList, " ") + "\n" + Msg
+					}
+
+					msgText, err := Bot.ChannelMessageSend(Channel.ChannelID, MsgFinal)
+					if err != nil {
+						return err
+					}
+
+					User.SetDiscordChannelID(Channel.ChannelID).
+						SetGroup(PushData.Group).
+						SetMember(PushData.Member)
+					err = User.SendToCache(msgText.ID)
+					if err != nil {
+						return err
+					}
+
+					Channel.SetMsgTextID(msgText.ID)
+
+					err = engine.Reacting(map[string]string{
+						"ChannelID": Channel.ChannelID,
+						"State":     "Youtube",
+						"MessageID": msgText.ID,
+					}, Bot)
+					if err != nil {
+						return err
+					}
 				}
 
-				err = engine.Reacting(map[string]string{
-					"ChannelID": Channel.ChannelID,
-					"State":     "Youtube",
-					"MessageID": msgText.ID,
-				}, Bot)
-				if err != nil {
-					return err
-				}
+				Channel.PushReddis()
+
 				return nil
 			}(v, &wg)
 			//Wait every ge 5 discord channel
@@ -291,9 +298,11 @@ func (PushData *NotifStruct) SendNude() error {
 							return err
 						}
 					}
-					msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Uploaded a new video\nUserTags: "+strings.Join(UserTagsList, " "))
-					if err != nil {
-						return err
+					if !Channel.LiteMode {
+						msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Uploaded a new video\nUserTags: "+strings.Join(UserTagsList, " "))
+						if err != nil {
+							return err
+						}
 					}
 				}
 				return nil

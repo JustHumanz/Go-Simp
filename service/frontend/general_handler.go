@@ -1828,7 +1828,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				var (
 					Typestr string
 				)
-				table.SetHeader([]string{"Group", "Type", "LiveOnly", "Dynamic", "NewUpcoming", "Region"})
+				table.SetHeader([]string{"Group", "Type", "LiveOnly", "Dynamic", "NewUpcoming", "Lite", "Region"})
 				for i := 0; i < len(ChannelData); i++ {
 					if ChannelData[i].TypeTag == 1 {
 						Typestr = "Art"
@@ -1840,6 +1840,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					LiveOnly := config.No
 					NewUpcoming := config.No
 					Dynamic := config.No
+					LiteMode := config.No
 
 					if ChannelData[i].LiveOnly {
 						LiveOnly = config.Ok
@@ -1852,7 +1853,12 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if ChannelData[i].Dynamic {
 						Dynamic = config.Ok
 					}
-					table.Append([]string{ChannelData[i].Group.GroupName, Typestr, LiveOnly, Dynamic, NewUpcoming, ChannelData[i].Region})
+
+					if ChannelData[i].LiteMode {
+						LiteMode = config.Ok
+					}
+
+					table.Append([]string{ChannelData[i].Group.GroupName, Typestr, LiveOnly, Dynamic, NewUpcoming, LiteMode, ChannelData[i].Region})
 				}
 				table.Render()
 				_, err = s.ChannelMessageSend(m.ChannelID, "```"+tableString.String()+"```")
