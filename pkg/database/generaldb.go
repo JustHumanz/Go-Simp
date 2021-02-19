@@ -847,8 +847,8 @@ func (Data *DiscordChannel) GetUserList(ctx context.Context) ([]string, error) {
 		Key           = Data.Member.Name + strconv.Itoa(int(Data.ID))
 		rds           = UserTagCache
 	)
-	val2, err := rds.Get(ctx, Key).Result()
-	if err == redis.Nil {
+	val2, err := rds.LRange(ctx, Key, 0, -1).Result()
+	if err == redis.Nil || len(val2) == 0 {
 		rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id=?`, Data.ID, Data.Member.ID)
 		if err != nil {
 			return nil, err
@@ -856,30 +856,34 @@ func (Data *DiscordChannel) GetUserList(ctx context.Context) ([]string, error) {
 		defer rows.Close()
 
 		for rows.Next() {
+			tmp := ""
 			err = rows.Scan(&DiscordUserID, &Type)
 			if err != nil {
 				return nil, err
 			}
+
 			if Type {
-				DataUser = append(DataUser, "<@"+DiscordUserID+">")
+				tmp = "<@" + DiscordUserID + ">"
 			} else {
-				DataUser = append(DataUser, "<@&"+DiscordUserID+">")
+				tmp = "<@&" + DiscordUserID + ">"
 			}
-		}
-		if len(DataUser) > 0 {
-			err = rds.Set(ctx, Key, strings.Join(DataUser, ","), config.GetUserListTTL).Err()
+
+			DataUser = append(DataUser, tmp)
+			err := rds.LPush(ctx, Key, tmp).Err()
 			if err != nil {
-				return nil, err
+				log.Error(err)
 			}
 		}
+
+		err = rds.Expire(ctx, Key, config.GetUserListTTL).Err()
+		if err != nil {
+			log.Error(err)
+		}
+
 	} else if err != nil {
 		return nil, err
 	} else {
-		if val2 == "" {
-			DataUser = nil
-		} else {
-			DataUser = strings.Split(val2, ",")
-		}
+		DataUser = val2
 	}
 	return DataUser, nil
 }
