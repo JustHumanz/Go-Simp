@@ -58,17 +58,21 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 		if m.Emoji.MessageFormat() == config.One {
 			Register.Stop()
 			Register.LiveOnly(s)
-			Register.BreakPoint(2)
+			Register.BreakPoint(1)
 
 			if !Register.ChannelState.LiveOnly {
 				Register.Stop()
 				Register.NewUpcoming(s)
-				Register.BreakPoint(2)
+				Register.BreakPoint(1)
 			}
 
 			Register.Stop()
 			Register.Dynamic(s)
-			Register.BreakPoint(2)
+			Register.BreakPoint(1)
+
+			Register.Stop()
+			Register.Lite(s)
+			Register.BreakPoint(1)
 
 			Register.UpdateChannel()
 			_, err := s.ChannelMessageSend(m.ChannelID, "Done")
@@ -94,7 +98,6 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 			if Region != "" {
 				Register.RemoveRegion(Region)
 			}
-
 		}
 	}
 }
@@ -520,6 +523,14 @@ func (Data *Regis) UpdateChannel() error {
 			if err != nil {
 				log.Error(err)
 			}
+		}
+	}
+
+	err = Data.ChannelState.UpdateChannel("LiteMode")
+	if err != nil {
+		_, err := Bot.ChannelMessageSend(ChannelID, err.Error())
+		if err != nil {
+			log.Error(err)
 		}
 	}
 

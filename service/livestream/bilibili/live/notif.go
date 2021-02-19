@@ -75,23 +75,24 @@ func (Data *LiveBili) Crotttt() error {
 			if err != nil {
 				log.Error(err)
 			}
-			Msg := "Push " + configfile.Emoji.Livestream[0] + " to add you in `" + Data.Member.Name + "` ping list\nPush " + configfile.Emoji.Livestream[1] + " to remove you from ping list"
-			MsgTxt, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " ")+"\n"+Msg)
-			if err != nil {
-				log.Error(err)
-			} else {
-				if Channel.Dynamic {
-					log.WithFields(log.Fields{
-						"DiscordChannel": Channel.ChannelID,
-						"VtuberGroupID":  Data.Group.ID,
-						"BiliBiliRoomID": BiliBiliRoomID,
-					}).Info("Set dynamic mode")
-					Channel.SetVideoID(BiliBiliRoomID).
-						SetMsgEmbedID(MsgEmbed.ID).
-						SetMsgTextID(MsgTxt.ID).
-						PushReddis()
-				}
 
+			if Channel.Dynamic {
+				log.WithFields(log.Fields{
+					"DiscordChannel": Channel.ChannelID,
+					"VtuberGroupID":  Data.Group.ID,
+					"BiliBiliRoomID": BiliBiliRoomID,
+				}).Info("Set dynamic mode")
+				Channel.SetVideoID(BiliBiliRoomID).
+					SetMsgEmbedID(MsgEmbed.ID)
+			}
+
+			if !Channel.LiteMode {
+				Msg := "Push " + configfile.Emoji.Livestream[0] + " to add you in `" + Data.Member.Name + "` ping list\nPush " + configfile.Emoji.Livestream[1] + " to remove you from ping list"
+				MsgTxt, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " ")+"\n"+Msg)
+				if err != nil {
+					log.Error(err)
+					return
+				}
 				User.SetDiscordChannelID(Channel.ChannelID).
 					SetGroup(Data.Group).
 					SetMember(Data.Member)
@@ -99,6 +100,8 @@ func (Data *LiveBili) Crotttt() error {
 				if err != nil {
 					log.Error(err)
 				}
+
+				Channel.SetMsgTextID(MsgTxt.ID)
 				err = engine.Reacting(map[string]string{
 					"ChannelID": Channel.ChannelID,
 					"State":     "Youtube",
@@ -108,6 +111,8 @@ func (Data *LiveBili) Crotttt() error {
 					log.Error(err)
 				}
 			}
+
+			Channel.PushReddis()
 
 		}(v, &wg)
 		//Wait every ge 5 discord channel

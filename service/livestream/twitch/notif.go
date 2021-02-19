@@ -83,35 +83,34 @@ func (Data TwitchNotif) SendNotif() error {
 					SetMsgEmbedID(MsgEmbed.ID)
 			}
 
-			Msg := "Push " + configfile.Emoji.Livestream[0] + " to add you in `" + Data.Member.Name + "` ping list\nPush " + configfile.Emoji.Livestream[1] + " to remove you from ping list"
-			MsgID := ""
-			msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " ")+"\n"+Msg)
-			if err != nil {
-				return err
+			if !Channel.LiteMode {
+				Msg := "Push " + configfile.Emoji.Livestream[0] + " to add you in `" + Data.Member.Name + "` ping list\nPush " + configfile.Emoji.Livestream[1] + " to remove you from ping list"
+				msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " ")+"\n"+Msg)
+				if err != nil {
+					return err
+				}
+				User.SetDiscordChannelID(Channel.ChannelID).
+					SetGroup(Data.Group).
+					SetMember(Data.Member)
+
+				err = User.SendToCache(msg.ID)
+				if err != nil {
+					return err
+				}
+
+				Channel.SetMsgTextID(msg.ID)
+
+				err = engine.Reacting(map[string]string{
+					"ChannelID": Channel.ChannelID,
+					"State":     "Twitch",
+					"MessageID": msg.ID,
+				}, Bot)
+				if err != nil {
+					return err
+				}
 			}
 
-			if Channel.Dynamic {
-				Channel.SetMsgTextID(msg.ID).PushReddis()
-			}
-
-			MsgID = msg.ID
-			User.SetDiscordChannelID(Channel.ChannelID).
-				SetGroup(Data.Group).
-				SetMember(Data.Member)
-
-			err = User.SendToCache(MsgID)
-			if err != nil {
-				return err
-			}
-
-			err = engine.Reacting(map[string]string{
-				"ChannelID": Channel.ChannelID,
-				"State":     "Twitch",
-				"MessageID": MsgID,
-			}, Bot)
-			if err != nil {
-				return err
-			}
+			Channel.PushReddis()
 
 			return nil
 		}(v, &wg)

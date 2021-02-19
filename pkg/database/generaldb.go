@@ -519,15 +519,16 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 		liveonly    bool
 		newupcoming bool
 		dynamic     bool
+		lite        bool
 	)
-	rows, err := DB.Query(`SELECT Type,LiveOnly,NewUpcoming,Dynamic FROM Channel WHERE VtuberGroup_id=? AND DiscordChannelID=?`, Data.Group.ID, Data.ChannelID)
+	rows, err := DB.Query(`SELECT Type,LiveOnly,NewUpcoming,Dynamic,Lite FROM Channel WHERE VtuberGroup_id=? AND DiscordChannelID=?`, Data.Group.ID, Data.ChannelID)
 	if err != nil {
 		log.Error(err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&channeltype, &liveonly, &newupcoming, &dynamic)
+		err = rows.Scan(&channeltype, &liveonly, &newupcoming, &dynamic, &lite)
 		if err != nil {
 			log.Error(err)
 		}
@@ -536,6 +537,7 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 		liveonly = false
 		newupcoming = false
 		dynamic = false
+		lite = false
 	}
 
 	if UpdateType == "Type" {
@@ -570,6 +572,11 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 		}
 	} else if UpdateType == "Region" {
 		_, err := DB.Exec(`Update Channel set Region=? Where VtuberGroup_id=? AND DiscordChannelID=?`, Data.Region, Data.Group.ID, Data.ChannelID)
+		if err != nil {
+			return err
+		}
+	} else if UpdateType == "LiteMode" {
+		_, err := DB.Exec(`Update Channel set Lite=? Where VtuberGroup_id=? AND DiscordChannelID=?`, Data.LiteMode, Data.Group.ID, Data.ChannelID)
 		if err != nil {
 			return err
 		}
