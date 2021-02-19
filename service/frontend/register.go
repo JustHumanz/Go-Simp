@@ -404,7 +404,7 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 
 			if Register.ChannelState.Group.GroupName == "Independen" {
-				_, err = s.ChannelMessageSend(m.ChannelID, "Done,you add `"+Register.ChannelState.Group.GroupName+"` in this channel\n**independent group have strict rule if no one user/roles tagged livestream notif will be not send**")
+				_, err = s.ChannelMessageSend(m.ChannelID, "Done,you add `"+Register.ChannelState.Group.GroupName+"` in this channel\n**independent group have strict rule if no one user/roles tagged livestream notif will be not send**\ntips: create a dummy role and tag that role use `"+configfile.BotPrefix.General+"tag roles` command")
 				if err != nil {
 					log.Error(err)
 				}
