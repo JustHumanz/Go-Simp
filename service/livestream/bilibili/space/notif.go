@@ -32,6 +32,8 @@ func (Data CheckSctruct) SendNude() {
 				ChannelData = database.ChannelTag(Data.Member.ID, 2, "NotLiveOnly", Data.Member.Region)
 			)
 			for i, v := range ChannelData {
+				v.SetMember(Data.Member)
+
 				wg.Add(1)
 				go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
 					defer wg.Done()

@@ -67,6 +67,8 @@ func (PushData *NotifStruct) SendNude() error {
 			ChannelData = database.ChannelTag(PushData.Member.ID, 2, "NewUpcoming", PushData.Member.Region)
 		)
 		for i, v := range ChannelData {
+			v.SetMember(PushData.Member)
+
 			wg.Add(1)
 			go func(Channel database.DiscordChannel, wg *sync.WaitGroup) error {
 				defer wg.Done()
@@ -144,6 +146,8 @@ func (PushData *NotifStruct) SendNude() error {
 			ChannelData = database.ChannelTag(PushData.Member.ID, 2, "", PushData.Member.Region)
 		)
 		for i, v := range ChannelData {
+			v.SetMember(PushData.Member)
+
 			wg.Add(1)
 			go func(Channel database.DiscordChannel, wg *sync.WaitGroup) error {
 				defer wg.Done()
@@ -251,6 +255,8 @@ func (PushData *NotifStruct) SendNude() error {
 			ChannelData = database.ChannelTag(PushData.Member.ID, 2, "NotLiveOnly", PushData.Member.Region)
 		)
 		for i, v := range ChannelData {
+			v.SetMember(PushData.Member)
+
 			wg.Add(1)
 			go func(Channel database.DiscordChannel, wg *sync.WaitGroup) error {
 				defer wg.Done()

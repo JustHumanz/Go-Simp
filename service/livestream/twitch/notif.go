@@ -33,6 +33,8 @@ func (Data TwitchNotif) SendNotif() error {
 		}
 	)
 	for i, v := range ChannelData {
+		v.SetMember(Data.Member)
+
 		wg.Add(1)
 		go func(Channel database.DiscordChannel, wg *sync.WaitGroup) error {
 			defer wg.Done()

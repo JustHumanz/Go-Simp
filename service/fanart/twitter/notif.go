@@ -42,7 +42,9 @@ func SendFanart(Data []Fanart, Group database.Group) {
 		if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
 			Group.IconURL = ""
 		}
+
 		for i, Channel := range ChannelData {
+			Channel.SetMember(MemberFanart.Member)
 			ctx := context.Background()
 			UserTagsList, err := Channel.GetUserList(ctx)
 			if err != nil {

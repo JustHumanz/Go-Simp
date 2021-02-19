@@ -2,6 +2,7 @@ package bilibili
 
 import (
 	"context"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -22,6 +23,7 @@ func PushNotif(Data database.TBiliBili) error {
 	}
 	tags := ""
 	for i, Channel := range ChannelData {
+		Channel.SetMember(Data.Member)
 		ctx := context.Background()
 		UserTagsList, err := Channel.GetUserList(ctx)
 		if err != nil {
@@ -34,9 +36,10 @@ func PushNotif(Data database.TBiliBili) error {
 			tags = "_"
 		}
 
-		if Group.GroupName == "Independen" {
+		if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
 			Group.IconURL = ""
 		}
+
 		if tags == "_" && Group.GroupName == "Independen" {
 			//do nothing,like my life
 		} else {
