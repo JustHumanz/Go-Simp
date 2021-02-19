@@ -481,7 +481,7 @@ func (Data *Regis) Dynamic(s *discordgo.Session) *Regis {
 }
 
 func (Data *Regis) Lite(s *discordgo.Session) *Regis {
-	MsgTxt, err := s.ChannelMessageSend(Data.ChannelState.ChannelID, "Enable Lite mode? **Disabling register user from emoji and remove usertags**")
+	MsgTxt, err := s.ChannelMessageSend(Data.ChannelState.ChannelID, "Enable Lite mode? **Disabling register user from emoji and remove usertags function**")
 	if err != nil {
 		log.Error(err)
 	}
