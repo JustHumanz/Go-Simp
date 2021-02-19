@@ -757,7 +757,8 @@ func ChannelTag(MemberID int64, typetag int, Options string, Reg string) []Disco
 			Region: Reg,
 		}
 	)
-	val := GeneralCache.LRange(context.Background(), Key, 0, -1).Val()
+	ctx := context.Background()
+	val := GeneralCache.LRange(ctx, Key, 0, -1).Val()
 	if len(val) == 0 {
 		if Options == "NotLiveOnly" {
 			rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND LiveOnly=0 AND (Channel.Region like ? OR Channel.Region='')`, MemberID, "%"+Reg+"%")

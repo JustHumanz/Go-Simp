@@ -14,17 +14,22 @@ First create a channel for this bot,Example `holosimps_channel`
 then execute `vtbot>setup`
 <p align="center">
   <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/RemakeSetup.png" alt="Setup"/>
-</p>
+</p>  
+
+And if you want ping some roles you can execute  
+`vtbot>tag roles <Rolename> hololive`
 
 
-##### Deprecated
-~~##### Livestream notification~~
+**Important rule**  
+independent group have strict rule if no one user/roles tagged live/fanart notif will be not send
+
+
+#### Deprecated
+##### ~~Livestream notification~~
 ~~First create a channel for this bot,Example `holosimps_channel`~~
 ~~then execute `vtbot>enable live hololive` command,after that you can wait until hololive member going live and got notification~~  
-~~And if you want ping some roles you can execute `vtbot>tag roles <Rolename> hololive` In other case if you want to remind before~~ ~~livestream started you can add `-setreminder {Minutes}`~~  
-~~Example : `vtbot>tag roles @holosimp hololive -setreminder 20`~~
 
-~~##### Fanart notification~~
+##### ~~Fanart notification~~
 ~~First create a channel for this bot,Example `nijisimps`~~  
 ~~then execute `vtbot>enable art nijisanji` command,after that you can wait until new fanart from twitter appear~~
 
