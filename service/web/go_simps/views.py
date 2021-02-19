@@ -32,7 +32,7 @@ def go_simps_members(request):
     return render(request, 'group.html',{'Members':Members,'Region':GetRegList(Members),'Add':True,'Domain':DOMAIN})
 
 def go_simps_command(request):
-    return render(request,'exec.html')
+    return render(request,'exec.html',{'Domain':DOMAIN})
 
 def go_simps_add(request):
     if request.method == "POST":
