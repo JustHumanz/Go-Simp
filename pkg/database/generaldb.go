@@ -19,7 +19,7 @@ import (
 //Public variable
 var (
 	DB           *sql.DB
-	FanartCache  *redis.Client
+	UserTagCache *redis.Client
 	LiveCache    *redis.Client
 	GeneralCache *redis.Client
 )
@@ -28,7 +28,7 @@ var (
 func Start(configfile config.ConfigFile) {
 	DB = configfile.CheckSQL()
 	RedisHost := configfile.Cached.Host + ":" + configfile.Cached.Port
-	FanartCache = redis.NewClient(&redis.Options{
+	UserTagCache = redis.NewClient(&redis.Options{
 		Addr:     RedisHost,
 		Password: "",
 		DB:       0,
@@ -750,6 +750,7 @@ func ChannelTag(MemberID int64, typetag int, Options string, Reg string) []Disco
 		rows        *sql.Rows
 		err         error
 		Key         = strconv.Itoa(int(MemberID)) + strconv.Itoa(typetag) + Options + Reg
+		rds         = UserTagCache
 		DiscordChan = DiscordChannel{
 			Member: Member{
 				ID: MemberID,
@@ -758,7 +759,7 @@ func ChannelTag(MemberID int64, typetag int, Options string, Reg string) []Disco
 		}
 	)
 	ctx := context.Background()
-	val := GeneralCache.LRange(ctx, Key, 0, -1).Val()
+	val := rds.LRange(ctx, Key, 0, -1).Val()
 	if len(val) == 0 {
 		if Options == "NotLiveOnly" {
 			rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND LiveOnly=0 AND (Channel.Region like ? OR Channel.Region='')`, MemberID, "%"+Reg+"%")
@@ -786,12 +787,12 @@ func ChannelTag(MemberID int64, typetag int, Options string, Reg string) []Disco
 				log.Error(err)
 			}
 			Data = append(Data, DiscordChan)
-			err = GeneralCache.LPush(context.Background(), Key, DiscordChan).Err()
+			err = rds.LPush(context.Background(), Key, DiscordChan).Err()
 			if err != nil {
 				log.Error(err)
 			}
 		}
-		err = GeneralCache.Expire(context.Background(), Key, config.ChannelTagTTL).Err()
+		err = rds.Expire(context.Background(), Key, config.ChannelTagTTL).Err()
 		if err != nil {
 			log.Error(err)
 		}
@@ -818,11 +819,11 @@ func (Data *DiscordChannel) PushReddis() {
 //GetLiveNotifMsg get MessageID with live status
 func GetLiveNotifMsg(Key string) []DiscordChannel {
 	var (
-		Data []DiscordChannel
+		Data        []DiscordChannel
+		ChannelData DiscordChannel
 	)
 	val := GeneralCache.LRange(context.Background(), Key, 0, -1).Val()
 	for _, v := range val {
-		var ChannelData DiscordChannel
 		err := json.Unmarshal([]byte(v), &ChannelData)
 		if err != nil {
 			log.Error(err)
@@ -844,8 +845,9 @@ func (Data *DiscordChannel) GetUserList(ctx context.Context) ([]string, error) {
 		DiscordUserID string
 		Type          bool
 		Key           = Data.Member.Name + strconv.Itoa(int(Data.ID))
+		rds           = UserTagCache
 	)
-	val2, err := GeneralCache.Get(ctx, Key).Result()
+	val2, err := rds.Get(ctx, Key).Result()
 	if err == redis.Nil {
 		rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id=?`, Data.ID, Data.Member.ID)
 		if err != nil {
@@ -865,7 +867,7 @@ func (Data *DiscordChannel) GetUserList(ctx context.Context) ([]string, error) {
 			}
 		}
 		if len(DataUser) > 0 {
-			err = GeneralCache.Set(ctx, Key, strings.Join(DataUser, ","), config.GetUserListTTL).Err()
+			err = rds.Set(ctx, Key, strings.Join(DataUser, ","), config.GetUserListTTL).Err()
 			if err != nil {
 				return nil, err
 			}

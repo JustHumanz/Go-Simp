@@ -1,13 +1,10 @@
 package bilibili
 
 import (
-	"context"
 	"encoding/json"
 	"net/url"
-	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/go-redis/redis/v8"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 
@@ -46,9 +43,7 @@ func CheckNew() {
 					log.Error(errcurl)
 				}
 				var (
-					TB  TBiliBili
-					ctx = context.Background()
-					rdb = database.FanartCache
+					TB TBiliBili
 				)
 				_ = json.Unmarshal(body, &TB)
 				if len(TB.Data.Cards) > 0 {
@@ -62,45 +57,38 @@ func CheckNew() {
 							log.Error(err)
 						}
 						if STB.Item.Pictures != nil && TB.Data.Cards[i].Desc.Type == 2 { //type 2 is picture post (prob,heheheh)
-							_, err := rdb.Get(ctx, TB.Data.Cards[i].Desc.DynamicIDStr).Result()
-							if err == redis.Nil {
-								New := database.GetTBiliBili(TB.Data.Cards[i].Desc.DynamicIDStr)
-								if New {
-									if len(STB.Item.Pictures) > 0 {
-										if STB.Item.Pictures[0].ImgSrc != "" {
-											log.WithFields(log.Fields{
-												"Vtuber": Member.EnName,
-												"Img":    STB.Item.Pictures[0].ImgSrc,
-											}).Info("New Fanart")
-											for l := 0; l < len(STB.Item.Pictures); l++ {
-												img = append(img, STB.Item.Pictures[l].ImgSrc)
-											}
-
-											log.WithFields(log.Fields{"Group": Group.GroupName, "Vtuber": Member.EnName}).Info("Push to notif")
-											Data := database.TBiliBili{
-												URL:        "https://t.bilibili.com/" + TB.Data.Cards[i].Desc.DynamicIDStr + "?tab=2",
-												Author:     TB.Data.Cards[i].Desc.UserProfile.Info.Uname,
-												Avatar:     TB.Data.Cards[i].Desc.UserProfile.Info.Face,
-												Like:       TB.Data.Cards[i].Desc.Like,
-												Photos:     img,
-												Dynamic_id: TB.Data.Cards[i].Desc.DynamicIDStr,
-												Text:       STB.Item.Description,
-												Member:     Member,
-												Group:      Group,
-											}
-											err := Data.InputTBiliBili()
-											if err != nil {
-												log.Error(err)
-											} else {
-												err := PushNotif(Data)
-												if err != nil {
-													log.Error(err)
-												}
-											}
+							New := database.GetTBiliBili(TB.Data.Cards[i].Desc.DynamicIDStr)
+							if New {
+								if len(STB.Item.Pictures) > 0 {
+									if STB.Item.Pictures[0].ImgSrc != "" {
+										log.WithFields(log.Fields{
+											"Vtuber": Member.EnName,
+											"Img":    STB.Item.Pictures[0].ImgSrc,
+										}).Info("New Fanart")
+										for l := 0; l < len(STB.Item.Pictures); l++ {
+											img = append(img, STB.Item.Pictures[l].ImgSrc)
 										}
-										err = rdb.Set(ctx, TB.Data.Cards[i].Desc.DynamicIDStr, Member.Name, 30*time.Minute).Err()
+
+										log.WithFields(log.Fields{"Group": Group.GroupName, "Vtuber": Member.EnName}).Info("Push to notif")
+										Data := database.TBiliBili{
+											URL:        "https://t.bilibili.com/" + TB.Data.Cards[i].Desc.DynamicIDStr + "?tab=2",
+											Author:     TB.Data.Cards[i].Desc.UserProfile.Info.Uname,
+											Avatar:     TB.Data.Cards[i].Desc.UserProfile.Info.Face,
+											Like:       TB.Data.Cards[i].Desc.Like,
+											Photos:     img,
+											Dynamic_id: TB.Data.Cards[i].Desc.DynamicIDStr,
+											Text:       STB.Item.Description,
+											Member:     Member,
+											Group:      Group,
+										}
+										err := Data.InputTBiliBili()
 										if err != nil {
 											log.Error(err)
+										} else {
+											err := PushNotif(Data)
+											if err != nil {
+												log.Error(err)
+											}
 										}
 									}
 								}
