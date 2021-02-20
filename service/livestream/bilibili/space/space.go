@@ -1,6 +1,7 @@
 package space
 
 import (
+	"regexp"
 	"strconv"
 	"sync"
 	"time"
@@ -45,7 +46,7 @@ func CheckSpaceVideo() {
 							"BiliBiliID": Member.BiliBiliID,
 						}).Info("Checking Space BiliBili")
 
-						if Group.GroupName == "Independen" {
+						if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
 							Group.IconURL = ""
 						}
 
@@ -53,7 +54,8 @@ func CheckSpaceVideo() {
 							Member: Member,
 							Group:  Group,
 						}
-						Data.Check(strconv.Itoa(configfile.LimitConf.SpaceBiliBili)).SendNude()
+						SpaceBiliLimit := strconv.Itoa(configfile.LimitConf.SpaceBiliBili)
+						Data.Check(SpaceBiliLimit).SendNude()
 
 					}
 				}(GroupData, MemberData, wg)
