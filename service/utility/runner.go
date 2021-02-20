@@ -25,6 +25,7 @@ func main() {
 	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 	var (
 		configfile config.ConfigFile
+		GuildList  []string
 	)
 	RequestPay := func() {
 		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
@@ -57,6 +58,15 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
+
+	GuildCount := func() int {
+		for _, GuildID := range Bot.State.Guilds {
+			GuildList = append(GuildList, GuildID.ID)
+		}
+		return len(Bot.State.Guilds)
+	}
+	GuildCount()
+
 	Bot.AddHandler(func(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 		if (m.Emoji.MessageFormat() == configfile.Emoji.Livestream[0] || m.Emoji.MessageFormat() == configfile.Emoji.Livestream[1]) && m.UserID != BotInfo.ID {
 			UserState := database.GetChannelMessage(m.MessageID)
@@ -146,7 +156,7 @@ func main() {
 		}
 
 		err = dblClient.PostBotStats(BotInfo.ID, &dbl.BotStatsPayload{
-			Shards: []int{database.GetGuildsCount()},
+			Shards: []int{GuildCount()},
 		})
 		if err != nil {
 			log.Error(err)

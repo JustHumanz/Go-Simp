@@ -45,7 +45,7 @@ func GetYtToken() string {
 		log.Error(err)
 	}
 
-	err = network.CurlPost(config.GoSimpConf.DiscordWebHook, PayloadBytes)
+	err = network.CurlPost(config.GoSimpConf.PilotReporting, PayloadBytes)
 	if err != nil {
 		log.Error(err)
 	}

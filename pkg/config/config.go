@@ -91,7 +91,7 @@ type ConfigFile struct {
 	Discord        string `toml:"Discord"`
 	BiliSess       string `toml:"BiliSess"`
 	SauceAPI       string `toml:"SauceAPI"`
-	DiscordWebHook string `toml:"DiscordWebHook"`
+	InviteLog      string `toml:"InviteLog"`
 	PilotReporting string `toml:"PilotReporting"`
 	MultiTOR       string `toml:"Multitor"`
 	DonationLink   string `toml:"DonationLink"`

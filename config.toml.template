@@ -1,6 +1,6 @@
 Discord = "#Discord token"
 BiliSess = "#BiliSess"
-DiscordWebHook = "#URL"
+InviteLog = "#Discord Channel ID"
 PilotReporting = "#URLWebhook2"
 Multitor = "#Http Proxy"
 DonationLink = "#DonationLink"
