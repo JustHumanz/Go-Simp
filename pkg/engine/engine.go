@@ -347,6 +347,10 @@ func UniCodetoCountryCode(Region string) string {
 		return "IN"
 	} else if Region == "🇵🇭" {
 		return "PH"
+	} else if Region == "🇦🇺" {
+		return "AU"
+	} else if Region == "🇺🇸" {
+		return "US"
 	}
 	return ""
 }
