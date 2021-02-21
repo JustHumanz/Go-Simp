@@ -543,7 +543,14 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 
 	if UpdateType == "Type" {
 		if channeltype == Data.TypeTag {
-			return errors.New("Already set that type on this channel")
+			if channeltype == 1 {
+				return errors.New("Already set fanart type on this channel")
+			} else if channeltype == 2 {
+				return errors.New("Already set livestream type on this channel")
+			} else {
+				return errors.New("Already set all type on this channel")
+			}
+
 		} else {
 			_, err := DB.Exec(`Update Channel set Type=?,LiveOnly=?,NewUpcoming=?,Dynamic=? Where VtuberGroup_id=? AND DiscordChannelID=?`, Data.TypeTag, liveonly, newupcoming, dynamic, Data.Group.ID, Data.ChannelID)
 			if err != nil {

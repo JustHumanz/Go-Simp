@@ -64,22 +64,28 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 
 		if m.Emoji.MessageFormat() == config.One {
 			Register.Stop()
-			Register.LiveOnly(s)
-			Register.BreakPoint(1)
+			Register.Fanart(s)
+			Register.BreakPoint(2)
 
-			if !Register.ChannelState.LiveOnly {
+			if Register.ChannelState.TypeTag != 1 {
 				Register.Stop()
-				Register.NewUpcoming(s)
+				Register.LiveOnly(s)
+				Register.BreakPoint(1)
+
+				if !Register.ChannelState.LiveOnly {
+					Register.Stop()
+					Register.NewUpcoming(s)
+					Register.BreakPoint(1)
+				}
+
+				Register.Stop()
+				Register.Dynamic(s)
+				Register.BreakPoint(1)
+
+				Register.Stop()
+				Register.Lite(s)
 				Register.BreakPoint(1)
 			}
-
-			Register.Stop()
-			Register.Dynamic(s)
-			Register.BreakPoint(1)
-
-			Register.Stop()
-			Register.Lite(s)
-			Register.BreakPoint(1)
 
 			if Register.ChannelState.Group.GroupName == "Independen" {
 				Register.Stop()
@@ -332,29 +338,7 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			}
 
-			_, err = s.ChannelMessageSend(m.ChannelID, "Select Channel Type: ")
-			if err != nil {
-				log.Error(err)
-			}
-			table.SetHeader([]string{"Type"})
-			table.Append([]string{"Fanart " + config.Art})
-			table.Append([]string{"Livestream " + config.Live})
-			table.Render()
-
-			MsgText, err := s.ChannelMessageSend(m.ChannelID, "`"+tableString.String()+"`")
-			if err != nil {
-				log.Error(err)
-			}
-			err = engine.Reacting(map[string]string{
-				"ChannelID": m.ChannelID,
-				"State":     "TypeChannel",
-				"MessageID": MsgText.ID,
-			}, s)
-			if err != nil {
-				log.Error(err)
-			}
-
-			Register.UpdateMessageID(MsgText.ID)
+			Register.Fanart(s)
 			Register.BreakPoint(3)
 
 			if Register.ChannelState.TypeTag != 1 {
@@ -393,6 +377,38 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 			return
 		}
 	}
+}
+
+func (Data *Regis) Fanart(s *discordgo.Session) *Regis {
+	tableString := &strings.Builder{}
+	table := tablewriter.NewWriter(tableString)
+	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+	table.SetCenterSeparator("|")
+
+	_, err := s.ChannelMessageSend(Data.ChannelState.ChannelID, "Select Channel Type: ")
+	if err != nil {
+		log.Error(err)
+	}
+	table.SetHeader([]string{"Type"})
+	table.Append([]string{"Fanart " + config.Art})
+	table.Append([]string{"Livestream " + config.Live})
+	table.Render()
+
+	MsgText, err := s.ChannelMessageSend(Data.ChannelState.ChannelID, "`"+tableString.String()+"`")
+	if err != nil {
+		log.Error(err)
+	}
+	err = engine.Reacting(map[string]string{
+		"ChannelID": Data.ChannelState.ChannelID,
+		"State":     "TypeChannel",
+		"MessageID": MsgText.ID,
+	}, s)
+	if err != nil {
+		log.Error(err)
+	}
+
+	Register.UpdateMessageID(MsgText.ID)
+	return Data
 }
 
 func (Data *Regis) LiveOnly(s *discordgo.Session) *Regis {
@@ -486,8 +502,20 @@ func (Data *Regis) IndieNotif(s *discordgo.Session) *Regis {
 }
 
 func (Data *Regis) UpdateChannel() error {
-	err := Data.ChannelState.UpdateChannel("LiveOnly")
 	ChannelID := Data.ChannelState.ChannelID
+
+	if Data.ChannelState.TypeTag == 1 {
+		err := Data.ChannelState.UpdateChannel("Type")
+		if err != nil {
+			_, err := Bot.ChannelMessageSend(ChannelID, err.Error())
+			if err != nil {
+				log.Error(err)
+			}
+		}
+		return nil
+	}
+
+	err := Data.ChannelState.UpdateChannel("LiveOnly")
 	if err != nil {
 		_, err := Bot.ChannelMessageSend(ChannelID, err.Error())
 		if err != nil {

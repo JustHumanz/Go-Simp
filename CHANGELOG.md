@@ -4,6 +4,7 @@ v2.11.27
 - Change webhook to channelID
 - Add `LiteMode`
 - Add `IndieNotif`
+- Update change state
 
 v2.10.26
 - Change fe wait workflow
