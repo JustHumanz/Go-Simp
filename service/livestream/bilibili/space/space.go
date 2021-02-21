@@ -31,6 +31,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 	log.Info("Enable space bilibili module")
 }
 
+//CheckSpaceVideo
 func CheckSpaceVideo() {
 	for _, GroupData := range VtubersData.VtuberData {
 		if GroupData.GroupName != "Hololive" {
