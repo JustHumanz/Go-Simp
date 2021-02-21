@@ -22,7 +22,6 @@ func main() {
 	var (
 		H3llcome   = []string{config.Bonjour, config.Howdy, config.Guten, config.Koni, config.Selamat, config.Assalamu, config.Approaching}
 		configfile config.ConfigFile
-		GuildList  []string
 	)
 	res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
 		Message: "Send me nude",
@@ -53,10 +52,6 @@ func main() {
 
 	configfile.InitConf()
 	database.Start(configfile)
-
-	for _, GuildID := range Bot.State.Guilds {
-		GuildList = append(GuildList, GuildID.ID)
-	}
 
 	Bot.AddHandler(func(s *discordgo.Session, g *discordgo.GuildCreate) {
 		if g.Unavailable {

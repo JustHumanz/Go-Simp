@@ -22,6 +22,7 @@ var (
 	BotInfo    *discordgo.User
 	RegList    = make(map[string]string)
 	GroupsName []string
+	GuildList  []string
 	Payload    database.VtubersPayload
 	configfile config.ConfigFile
 	Bot        *discordgo.Session
@@ -118,6 +119,10 @@ func main() {
 			BotInfo, err = Bot.User("@me")
 			if err != nil {
 				log.Error(err)
+			}
+
+			for _, GuildID := range Bot.State.Guilds {
+				GuildList = append(GuildList, GuildID.ID)
 			}
 
 			configfile.InitConf()

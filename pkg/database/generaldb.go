@@ -933,6 +933,16 @@ func GetRanChannel() string {
 	return tmp
 }
 
+//GetMemberCount get count of member
+func GetMemberCount() int {
+	var count int
+	err := DB.QueryRow(`SELECT Count(*) from (Select COUNT(id) FROM Vtuber.User Group by DiscordID) t`).Scan(&count)
+	if err != nil {
+		log.Error(err)
+	}
+	return count
+}
+
 func DbStop() {
 	err := DB.Close()
 	if err != nil {

@@ -1694,7 +1694,7 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 				AddField("Guide", "[Guide]("+config.GuideURL+")").
 				AddField("Vtuber list", "[Vtubers]("+config.VtubersData+")").
 				AddField("Made by Golang", "[Go-Simp](https://github.com/JustHumanz/Go-Simp)").
-				AddField("Server count", strconv.Itoa(database.GetGuildsCount())).
+				AddField("Server count", strconv.Itoa(len(GuildList))).
 				AddField("Member count", strconv.Itoa(database.GetMemberCount())).
 				InlineAllFields().
 				SetThumbnail(config.BSD).
