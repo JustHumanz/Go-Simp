@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"math/rand"
 	"strconv"
+	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
@@ -22,6 +23,7 @@ func main() {
 	var (
 		H3llcome   = []string{config.Bonjour, config.Howdy, config.Guten, config.Koni, config.Selamat, config.Assalamu, config.Approaching}
 		configfile config.ConfigFile
+		GuildList  []string
 	)
 	res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
 		Message: "Send me nude",
@@ -53,23 +55,41 @@ func main() {
 	configfile.InitConf()
 	database.Start(configfile)
 
+	for _, GuildID := range Bot.State.Guilds {
+		GuildList = append(GuildList, GuildID.ID)
+	}
+
 	Bot.AddHandler(func(s *discordgo.Session, g *discordgo.GuildCreate) {
 		if g.Unavailable {
 			log.Error("joined unavailable guild", g.Guild.ID)
 			return
 		}
 
+		for _, v := range GuildList {
+			if v == g.ID {
+				return
+			}
+		}
+
+		GuildList = append(GuildList, g.ID)
+
 		Join, err := g.JoinedAt.Parse()
 		if err != nil {
 			log.Error(err)
 		}
+
+		log.WithFields(log.Fields{
+			"GuildName": g.Name,
+			"OwnerID":   g.OwnerID,
+			"JoinDate":  Join.Format(time.RFC822),
+		}).Info("New invite")
 
 		_, err = s.ChannelMessageSendEmbed(configfile.InviteLog, engine.NewEmbed().
 			SetTitle("A Guild Invited "+BotInfo.Username).
 			SetColor(14807034).
 			AddField("GuildName", g.Name).
 			AddField("OwnerID", g.OwnerID).
-			AddField("JoinDate", Join.String()).
+			AddField("JoinDate", Join.Format(time.RFC822)).
 			AddField("Member Count", strconv.Itoa(len(g.Members))).
 			InlineAllFields().MessageEmbed)
 		if err != nil {
