@@ -333,21 +333,6 @@
                     "Region":"EN"
                 },
                 {
-                    "Name":"Lili",
-                    "EN_Name":"Liliana Vampaia",
-                    "JP_Name":"吸血鬼 リリアナ",
-                    "Hashtag": {
-                        "Twitter": "#lilisuu",
-                        "BiliBili": ""
-                    },
-                    "Yt_ID": "UCHz3PeU1RRcY9vJDSqsigIA",
-                    "BiliBili_ID": 0,
-                    "BiliRoom_ID": 0,
-                    "Twitter_Username": "lilianavampaia",
-                    "Twitch_Username": "",
-                    "Region":"MY"
-                },
-                {
                     "Name":"Lyri",
                     "EN_Name":"Eine Lyrica",
                     "JP_Name":"永音リリカ",
@@ -3391,6 +3376,72 @@
                     "Twitter_Username": "Yuika_Kazami",
                     "Twitch_Username": "",
                     "Region":"JP"
+                }
+            ]
+        },
+        {
+            "GroupName": "MyHolo",
+            "GroupIcon": "https://cdn.humanz.moe/MyHolo.png",
+            "Members" : [
+                {
+                    "Name":"Lili",
+                    "EN_Name":"Liliana Vampaia",
+                    "JP_Name":"吸血鬼 リリアナ",
+                    "Hashtag": {
+                        "Twitter": "#lilisuu",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCHz3PeU1RRcY9vJDSqsigIA",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "lilianavampaia",
+                    "Twitch_Username": "",
+                    "Region":"MY"
+                },
+                {
+                    "Name":"Mari",
+                    "EN_Name":"Marica Bellerose",
+                    "JP_Name":"ベレローセマリカ",
+                    "Hashtag": {
+                        "Twitter": "#MariCanvas",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC3TxjUjyzodZ35pWUFCL9wQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "maricabellerose",
+                    "Twitch_Username": "",
+                    "Region":"AU"
+                },
+                {
+                    "Name":"Mana",
+                    "EN_Name":"Manaka Umio",
+                    "JP_Name":"海音まなか",
+                    "Hashtag": {
+                        "Twitter": "#uminoart",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCvCJI3c40l9aZGpT8wIAX0w",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "manakaumio",
+                    "Twitch_Username": "",
+                    "Region":"MY"
+                },
+                {
+                    "Name":"Miori",
+                    "EN_Name":"Miori Celesta",
+                    "JP_Name":"セレスタミオリ",
+                    "Hashtag": {
+                        "Twitter": "#miorillust",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCyKsg-57XC9pyHbP7v3kCPQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "mioricelesta",
+                    "Twitch_Username": "",
+                    "Region":"US"
                 }
             ]
         }

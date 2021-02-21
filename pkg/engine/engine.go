@@ -294,6 +294,12 @@ func Zawarudo(Region string) *time.Location {
 	} else if Region == "PH" {
 		loc, _ := time.LoadLocation("Asia/Manila")
 		return loc
+	} else if Region == "AU" {
+		loc, _ := time.LoadLocation("Australia/Sydney")
+		return loc
+	} else if Region == "US" {
+		loc, _ := time.LoadLocation("UTC")
+		return loc
 	} else {
 		loc, _ := time.LoadLocation("UTC")
 		return loc
@@ -315,6 +321,10 @@ func CountryCodetoUniCode(Region string) string {
 		return "🇮🇳"
 	} else if Region == "PH" {
 		return "🇵🇭"
+	} else if Region == "AU" {
+		return "🇦🇺"
+	} else if Region == "US" {
+		return "🇺🇸"
 	} else {
 		return "🇪🇺"
 	}
