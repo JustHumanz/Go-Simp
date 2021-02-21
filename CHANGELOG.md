@@ -1,3 +1,10 @@
+v2.11.27
+- Remove add,update command
+- Fix guild invite log
+- Change webhook to channelID
+- Add `LiteMode`
+- Add `IndieNotif`
+
 v2.10.26
 - Change fe wait workflow
 - Enhance `updatev2` to `update`
