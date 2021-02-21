@@ -155,6 +155,11 @@ func (Data *Regis) SetLite(new bool) *Regis {
 	return Data
 }
 
+func (Data *Regis) SetIndieNotif(new bool) *Regis {
+	Data.ChannelState.IndieNotif = new
+	return Data
+}
+
 func (Data *Regis) SetChannel(new string) *Regis {
 	Data.ChannelState.ChannelID = new
 	return Data

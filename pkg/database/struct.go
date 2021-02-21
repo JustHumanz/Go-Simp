@@ -249,6 +249,7 @@ type DiscordChannel struct {
 	NewUpcoming    bool
 	Dynamic        bool
 	LiteMode       bool
+	IndieNotif     bool
 	Group          Group
 	Member         Member
 	VideoID        string
@@ -279,6 +280,11 @@ func (Data *DiscordChannel) SetNewUpcoming(new bool) *DiscordChannel {
 
 func (Data *DiscordChannel) SetLite(new bool) *DiscordChannel {
 	Data.LiteMode = new
+	return Data
+}
+
+func (Data *DiscordChannel) SetIndieNotif(new bool) *DiscordChannel {
+	Data.IndieNotif = new
 	return Data
 }
 

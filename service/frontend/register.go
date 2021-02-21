@@ -28,6 +28,8 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 				Register.SetDynamic(true)
 			} else if Register.State == "LiteMode" {
 				Register.SetLite(true)
+			} else if Register.State == "IndieNotif" {
+				Register.SetIndieNotif(true)
 			}
 		} else if m.Emoji.MessageFormat() == config.No {
 			if Register.State == "LiveOnly" {
@@ -38,6 +40,12 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 				Register.SetDynamic(false)
 			} else if Register.State == "LiteMode" {
 				Register.SetLite(false)
+			} else if Register.State == "IndieNotif" {
+				Register.SetIndieNotif(false)
+				_, err := s.ChannelMessageSend(m.ChannelID, "tips: create a dummy role and tag that role use `"+configfile.BotPrefix.General+"tag roles` command")
+				if err != nil {
+					log.Error(err)
+				}
 			}
 		}
 
@@ -73,6 +81,12 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 			Register.Stop()
 			Register.Lite(s)
 			Register.BreakPoint(1)
+
+			if Register.ChannelState.Group.GroupName == "Independen" {
+				Register.Stop()
+				Register.IndieNotif(s)
+				Register.BreakPoint(1)
+			}
 
 			Register.UpdateChannel()
 			_, err := s.ChannelMessageSend(m.ChannelID, "Done")
@@ -180,7 +194,7 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 					Register.SetAdmin(m.Author.ID).SetChannel(m.ChannelID)
 
 					Register.ChannelStates = ChannelData
-					table.SetHeader([]string{"ID", "Group", "Type", "LiveOnly", "Dynamic", "NewUpcoming", "LiteMode", "Region"})
+					table.SetHeader([]string{"ID", "Group", "Type", "LiveOnly", "Dynamic", "NewUpcoming", "LiteMode", "IndieNotif", "Region"})
 					for i := 0; i < len(ChannelData); i++ {
 						if ChannelData[i].TypeTag == 1 {
 							Typestr = "Art"
@@ -193,6 +207,7 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 						NewUpcoming := config.No
 						Dynamic := config.No
 						LiteMode := config.No
+						Indie := ""
 
 						if ChannelData[i].LiveOnly {
 							LiveOnly = config.Ok
@@ -209,7 +224,16 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 						if ChannelData[i].LiteMode {
 							LiteMode = config.Ok
 						}
-						table.Append([]string{strconv.Itoa(int(ChannelData[i].ID)), ChannelData[i].Group.GroupName, Typestr, LiveOnly, Dynamic, NewUpcoming, LiteMode, ChannelData[i].Region})
+
+						if ChannelData[i].IndieNotif && ChannelData[i].Group.GroupName == "Independen" {
+							Indie = config.Ok
+						} else if ChannelData[i].Group.GroupName != "Independen" {
+							Indie = "only for Indie vtuber"
+						} else {
+							Indie = config.No
+						}
+
+						table.Append([]string{strconv.Itoa(int(ChannelData[i].ID)), ChannelData[i].Group.GroupName, Typestr, LiveOnly, Dynamic, NewUpcoming, LiteMode, Indie, ChannelData[i].Region})
 					}
 					table.Render()
 					_, err := s.ChannelMessageSend(m.ChannelID, "```"+tableString.String()+"```")
@@ -402,22 +426,23 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 				Register.Stop()
 				Register.Dynamic(s)
 				Register.BreakPoint(1)
+
+				if Register.ChannelState.Group.GroupName == "Independen" {
+					Register.Stop()
+					Register.IndieNotif(s)
+					Register.BreakPoint(1)
+				}
 			}
+
+			Register.SetLite(false)
 			err = Register.ChannelState.AddChannel()
 			if err != nil {
 				log.Error(err)
 			}
 
-			if Register.ChannelState.Group.GroupName == "Independen" {
-				_, err = s.ChannelMessageSend(m.ChannelID, "Done,you add `"+Register.ChannelState.Group.GroupName+"` in this channel\n**independent group have strict rule if no one user/roles tagged livestream notif will be not send**\ntips: create a dummy role and tag that role use `"+configfile.BotPrefix.General+"tag roles` command")
-				if err != nil {
-					log.Error(err)
-				}
-			} else {
-				_, err = s.ChannelMessageSend(m.ChannelID, "Done,you add `"+Register.ChannelState.Group.GroupName+"` in this channel")
-				if err != nil {
-					log.Error(err)
-				}
+			_, err = s.ChannelMessageSend(m.ChannelID, "Done,you add `"+Register.ChannelState.Group.GroupName+"` in this channel")
+			if err != nil {
+				log.Error(err)
 			}
 
 			Register.Clear()
@@ -495,6 +520,24 @@ func (Data *Regis) Lite(s *discordgo.Session) *Regis {
 	}
 	Data.UpdateMessageID(MsgTxt.ID)
 	Data.UpdateState("LiteMode")
+	return Data
+}
+
+func (Data *Regis) IndieNotif(s *discordgo.Session) *Regis {
+	MsgTxt, err := s.ChannelMessageSend(Data.ChannelState.ChannelID, "Send all independent vtubers notification?")
+	if err != nil {
+		log.Error(err)
+	}
+	err = engine.Reacting(map[string]string{
+		"ChannelID": Data.ChannelState.ChannelID,
+		"State":     "SelectType",
+		"MessageID": MsgTxt.ID,
+	}, s)
+	if err != nil {
+		log.Error(err)
+	}
+	Data.UpdateMessageID(MsgTxt.ID)
+	Data.UpdateState("IndeNotif")
 	return Data
 }
 

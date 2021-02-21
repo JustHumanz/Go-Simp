@@ -79,7 +79,7 @@ func (PushData *NotifStruct) SendNude() error {
 				}
 				if UserTagsList == nil && PushData.Group.GroupName != "Independen" {
 					UserTagsList = []string{"_"}
-				} else if UserTagsList == nil && PushData.Group.GroupName == "Independen" {
+				} else if UserTagsList == nil && PushData.Group.GroupName == "Independen" && !Channel.IndieNotif {
 					return nil
 				}
 				msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
@@ -158,11 +158,13 @@ func (PushData *NotifStruct) SendNude() error {
 				if err != nil {
 					log.Error(err)
 				}
+
 				if UserTagsList == nil && PushData.Group.GroupName != "Independen" {
 					UserTagsList = []string{"_"}
-				} else if UserTagsList == nil && PushData.Group.GroupName == "Independen" {
+				} else if UserTagsList == nil && PushData.Group.GroupName == "Independen" && !Channel.IndieNotif {
 					return nil
 				}
+
 				MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 					SetAuthor(VtuberName, Avatar, YtChannel).
 					SetTitle("Live right now").
@@ -272,39 +274,45 @@ func (PushData *NotifStruct) SendNude() error {
 				if err != nil {
 					log.Error(err)
 				}
-				if UserTagsList != nil {
-					msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
-						SetAuthor(VtuberName, Avatar, YtChannel).
-						SetTitle("Uploaded a new video").
-						SetDescription(PushData.YtData.Title).
-						SetImage(PushData.YtData.Thumb).
-						SetThumbnail(PushData.Group.IconURL).
-						SetURL(YtURL).
-						AddField("Type ", PushData.YtData.Type).
-						AddField("Upload", durafmt.Parse(expiresAt.Sub(Timestart.In(loc))).LimitFirstN(1).String()+" Ago").
-						AddField("Viewers", PushData.YtData.Viewers).
-						AddField("Duration", PushData.YtData.Length).
-						InlineAllFields().
-						SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
-						SetColor(Color).MessageEmbed)
+
+				if UserTagsList == nil && PushData.Group.GroupName != "Independen" {
+					UserTagsList = []string{"_"}
+				} else if UserTagsList == nil && PushData.Group.GroupName == "Independen" && !Channel.IndieNotif {
+					return nil
+				}
+
+				msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
+					SetAuthor(VtuberName, Avatar, YtChannel).
+					SetTitle("Uploaded a new video").
+					SetDescription(PushData.YtData.Title).
+					SetImage(PushData.YtData.Thumb).
+					SetThumbnail(PushData.Group.IconURL).
+					SetURL(YtURL).
+					AddField("Type ", PushData.YtData.Type).
+					AddField("Upload", durafmt.Parse(expiresAt.Sub(Timestart.In(loc))).LimitFirstN(1).String()+" Ago").
+					AddField("Viewers", PushData.YtData.Viewers).
+					AddField("Duration", PushData.YtData.Length).
+					InlineAllFields().
+					SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
+					SetColor(Color).MessageEmbed)
+				if err != nil {
+					log.WithFields(log.Fields{
+						"Message":          msg,
+						"ChannelID":        Channel.ID,
+						"DiscordChannelID": Channel.ChannelID,
+					}).Error(err)
+					err = Channel.DelChannel(err.Error())
 					if err != nil {
-						log.WithFields(log.Fields{
-							"Message":          msg,
-							"ChannelID":        Channel.ID,
-							"DiscordChannelID": Channel.ChannelID,
-						}).Error(err)
-						err = Channel.DelChannel(err.Error())
-						if err != nil {
-							return err
-						}
-					}
-					if !Channel.LiteMode {
-						msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Uploaded a new video\nUserTags: "+strings.Join(UserTagsList, " "))
-						if err != nil {
-							return err
-						}
+						return err
 					}
 				}
+				if !Channel.LiteMode {
+					msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "`"+PushData.Member.Name+"` Uploaded a new video\nUserTags: "+strings.Join(UserTagsList, " "))
+					if err != nil {
+						return err
+					}
+				}
+
 				return nil
 			}(v, &wg)
 			//Wait every ge 5 discord channel

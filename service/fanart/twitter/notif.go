@@ -56,7 +56,7 @@ func SendFanart(Data []Fanart, Group database.Group) {
 			} else {
 				tags = "_"
 			}
-			if tags == "_" && Group.GroupName == "Independen" {
+			if tags == "_" && Group.GroupName == "Independen" && !Channel.IndieNotif {
 				//do nothing,like my life
 			} else {
 				msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().

@@ -45,7 +45,7 @@ func (Data TwitchNotif) SendNotif() error {
 			}
 			if UserTagsList == nil && Data.Group.GroupName != "Independen" {
 				UserTagsList = []string{"_"}
-			} else if UserTagsList == nil && Data.Group.GroupName == "Independen" {
+			} else if UserTagsList == nil && Data.Group.GroupName == "Independen" && !Channel.IndieNotif {
 				return nil
 			}
 

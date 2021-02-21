@@ -67,7 +67,7 @@ func (Data *LiveBili) Crotttt() error {
 			}
 			if UserTagsList == nil && Data.Group.GroupName != "Independen" {
 				UserTagsList = []string{"_"}
-			} else if UserTagsList == nil && Data.Group.GroupName == "Independen" {
+			} else if UserTagsList == nil && Data.Group.GroupName == "Independen" && !Channel.IndieNotif {
 				return
 			}
 

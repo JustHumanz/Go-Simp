@@ -701,7 +701,8 @@ func ChannelStatus(ChannelID string) []DiscordChannel {
 	var (
 		Data []DiscordChannel
 	)
-	rows, err := DB.Query(`SELECT Channel.id,VtuberGroup.id,VtuberGroupName,Channel.Type,Channel.LiveOnly,Channel.NewUpcoming,Channel.Dynamic,Channel.Region,Channel.Lite FROM Channel INNER JOIn VtuberGroup on VtuberGroup.id=Channel.VtuberGroup_id WHERE DiscordChannelID=?`, ChannelID)
+	//Channel.id,VtuberGroup.id,VtuberGroupName,Channel.Type,Channel.LiveOnly,Channel.NewUpcoming,Channel.Dynamic,Channel.Region,Channel.Lite
+	rows, err := DB.Query(`SELECT Channel.*,VtuberGroup.id FROM Channel INNER JOIn VtuberGroup on VtuberGroup.id=Channel.VtuberGroup_id WHERE DiscordChannelID=?`, ChannelID)
 	if err != nil {
 		log.Error(err)
 	}
@@ -718,8 +719,9 @@ func ChannelStatus(ChannelID string) []DiscordChannel {
 			tmp5    bool
 			tmp6    string
 			tmp7    bool
+			tmp8    bool
 		)
-		err = rows.Scan(&id, &GroupID, &tmp, &tmp2, &tmp3, &tmp4, &tmp5, &tmp6, &tmp7)
+		err = rows.Scan(&id, &tmp, &tmp2, &tmp3, &tmp4, &tmp5, &tmp6, &tmp7, &tmp8, &GroupID)
 		if err != nil {
 			log.Error(err)
 		}
@@ -735,6 +737,7 @@ func ChannelStatus(ChannelID string) []DiscordChannel {
 			Dynamic:     tmp5,
 			Region:      strings.ToUpper(tmp6),
 			LiteMode:    tmp7,
+			IndieNotif:  tmp8,
 		})
 	}
 	return Data
