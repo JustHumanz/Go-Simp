@@ -1387,10 +1387,11 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if CommandArray[0] == Prefix+Disable {
 			if len(CommandArray) > 1 {
 				FindGroupArry := strings.Split(strings.TrimSpace(CommandArray[1]), ",")
-				for i := 0; i < len(FindGroupArry); i++ {
-					VTuberGroup, err := FindGropName(FindGroupArry[i])
+
+				for _, cmd := range FindGroupArry {
+					VTuberGroup, err := FindGropName(cmd)
 					if err != nil {
-						_, err := s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry[i]+"`,Name of Vtuber Group was not valid")
+						_, err := s.ChannelMessageSend(m.ChannelID, "`"+cmd+"`,Name of Vtuber Group was not valid")
 						if err != nil {
 							log.Error(err)
 						}
@@ -1424,6 +1425,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 						return
 					}
 				}
+
 				if done != nil {
 					_, err := s.ChannelMessageSend(m.ChannelID, "done, <@"+m.Author.ID+"> is disable "+strings.Join(done, ",")+" from this channel")
 					if err != nil {
@@ -1828,49 +1830,8 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			}
 		} else if m.Content == Prefix+ChannelState {
-			ChannelData := database.ChannelStatus(m.ChannelID)
-			if len(ChannelData) > 0 {
-				var (
-					Typestr string
-				)
-				table.SetHeader([]string{"Group", "Type", "LiveOnly", "Dynamic", "NewUpcoming", "Lite", "Region"})
-				for i := 0; i < len(ChannelData); i++ {
-					if ChannelData[i].TypeTag == 1 {
-						Typestr = "Art"
-					} else if ChannelData[i].TypeTag == 2 {
-						Typestr = "Live"
-					} else {
-						Typestr = "All"
-					}
-					LiveOnly := config.No
-					NewUpcoming := config.No
-					Dynamic := config.No
-					LiteMode := config.No
-
-					if ChannelData[i].LiveOnly {
-						LiveOnly = config.Ok
-					}
-
-					if ChannelData[i].NewUpcoming {
-						NewUpcoming = config.Ok
-					}
-
-					if ChannelData[i].Dynamic {
-						Dynamic = config.Ok
-					}
-
-					if ChannelData[i].LiteMode {
-						LiteMode = config.Ok
-					}
-
-					table.Append([]string{ChannelData[i].Group.GroupName, Typestr, LiveOnly, Dynamic, NewUpcoming, LiteMode, ChannelData[i].Region})
-				}
-				table.Render()
-				_, err = s.ChannelMessageSend(m.ChannelID, "```"+tableString.String()+"```")
-				if err != nil {
-					log.Error(err)
-				}
-			} else {
+			_, tbl, err := GetChannelState(m.ChannelID)
+			if err != nil {
 				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 					SetTitle("404 Not found").
 					SetThumbnail(config.GoSimpIMG).
@@ -1879,6 +1840,12 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				if err != nil {
 					log.Error(err)
 				}
+				return
+			}
+
+			_, err = s.ChannelMessageSend(m.ChannelID, "```"+tbl+"```")
+			if err != nil {
+				log.Error(err)
 			}
 		} else if strings.HasPrefix(m.Content, Prefix+VtuberData) {
 			var (

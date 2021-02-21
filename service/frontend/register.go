@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
-	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/bwmarrin/discordgo"
 	"github.com/olekukonko/tablewriter"
@@ -186,61 +185,9 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 				if err != nil {
 					log.Error(err)
 				}
-				ChannelData := database.ChannelStatus(m.ChannelID)
-				if len(ChannelData) > 0 {
-					var (
-						Typestr string
-					)
-					Register.SetAdmin(m.Author.ID).SetChannel(m.ChannelID)
 
-					Register.ChannelStates = ChannelData
-					table.SetHeader([]string{"ID", "Group", "Type", "LiveOnly", "Dynamic", "NewUpcoming", "LiteMode", "IndieNotif", "Region"})
-					for i := 0; i < len(ChannelData); i++ {
-						if ChannelData[i].TypeTag == 1 {
-							Typestr = "Art"
-						} else if ChannelData[i].TypeTag == 2 {
-							Typestr = "Live"
-						} else {
-							Typestr = "All"
-						}
-						LiveOnly := config.No
-						NewUpcoming := config.No
-						Dynamic := config.No
-						LiteMode := config.No
-						Indie := ""
-
-						if ChannelData[i].LiveOnly {
-							LiveOnly = config.Ok
-						}
-
-						if ChannelData[i].NewUpcoming {
-							NewUpcoming = config.Ok
-						}
-
-						if ChannelData[i].Dynamic {
-							Dynamic = config.Ok
-						}
-
-						if ChannelData[i].LiteMode {
-							LiteMode = config.Ok
-						}
-
-						if ChannelData[i].IndieNotif && ChannelData[i].Group.GroupName == "Independen" {
-							Indie = config.Ok
-						} else if ChannelData[i].Group.GroupName != "Independen" {
-							Indie = "only for Indie vtuber"
-						} else {
-							Indie = config.No
-						}
-
-						table.Append([]string{strconv.Itoa(int(ChannelData[i].ID)), ChannelData[i].Group.GroupName, Typestr, LiveOnly, Dynamic, NewUpcoming, LiteMode, Indie, ChannelData[i].Region})
-					}
-					table.Render()
-					_, err := s.ChannelMessageSend(m.ChannelID, "```"+tableString.String()+"```")
-					if err != nil {
-						log.Error(err)
-					}
-				} else {
+				ChannelData, tbl, err := GetChannelState(m.ChannelID)
+				if err != nil {
 					_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 						SetTitle("404 Not found").
 						SetThumbnail(config.GoSimpIMG).
@@ -248,7 +195,17 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						log.Error(err)
 					}
+					return
 				}
+
+				Register.SetAdmin(m.Author.ID).SetChannel(m.ChannelID)
+				Register.ChannelStates = ChannelData
+
+				_, err = s.ChannelMessageSend(m.ChannelID, "```"+tbl+"```")
+				if err != nil {
+					log.Error(err)
+				}
+
 				Register.UpdateState("SelectChannel")
 				_, err = s.ChannelMessageSend(m.ChannelID, "Select ID of Channel state: ")
 				if err != nil {
@@ -320,28 +277,16 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 		}
 		if Register.State == "Group" {
-			GroupID := 0
-			tmp, err := strconv.Atoi(m.Content)
+			VTuberGroup, err := FindGropName(m.Content)
 			if err != nil {
-				_, err := s.ChannelMessageSend(m.ChannelID, "Worng input ID")
+				_, err := s.ChannelMessageSend(m.ChannelID, "`"+m.Content+"`,Name of Vtuber Group was not valid")
 				if err != nil {
 					log.Error(err)
 				}
-				Out()
 				return
-			} else {
-				GroupID = tmp
 			}
-			for _, v := range Payload.VtuberData {
-				if int(v.ID) == GroupID {
-					_, err := s.ChannelMessageSend(m.ChannelID, "Vtuber Group `"+v.GroupName+"`")
-					if err != nil {
-						log.Error(err)
-					}
-					Register.SetGroup(v)
-					break
-				}
-			}
+			Register.SetGroup(VTuberGroup)
+
 			//Register.ChannelState.ChannelCheck()
 			if Register.ChannelState.Group.IsNull() {
 				_, err := s.ChannelMessageSend(m.ChannelID, "Invalid ID,Group not found")
@@ -434,7 +379,6 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			}
 
-			Register.SetLite(false)
 			err = Register.ChannelState.AddChannel()
 			if err != nil {
 				log.Error(err)
@@ -506,7 +450,7 @@ func (Data *Regis) Dynamic(s *discordgo.Session) *Regis {
 }
 
 func (Data *Regis) Lite(s *discordgo.Session) *Regis {
-	MsgTxt, err := s.ChannelMessageSend(Data.ChannelState.ChannelID, "Enable Lite mode? **Disabling register user from emoji and remove usertags function**")
+	MsgTxt, err := s.ChannelMessageSend(Data.ChannelState.ChannelID, "Enable Lite mode? **Disabling ping user/role function**")
 	if err != nil {
 		log.Error(err)
 	}
@@ -537,7 +481,7 @@ func (Data *Regis) IndieNotif(s *discordgo.Session) *Regis {
 		log.Error(err)
 	}
 	Data.UpdateMessageID(MsgTxt.ID)
-	Data.UpdateState("IndeNotif")
+	Data.UpdateState("IndieNotif")
 	return Data
 }
 
@@ -574,6 +518,16 @@ func (Data *Regis) UpdateChannel() error {
 		_, err := Bot.ChannelMessageSend(ChannelID, err.Error())
 		if err != nil {
 			log.Error(err)
+		}
+	}
+
+	if Register.ChannelState.Group.GroupName == "Independen" {
+		err = Data.ChannelState.UpdateChannel("IndieNotif")
+		if err != nil {
+			_, err := Bot.ChannelMessageSend(ChannelID, err.Error())
+			if err != nil {
+				log.Error(err)
+			}
 		}
 	}
 

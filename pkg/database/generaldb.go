@@ -439,13 +439,13 @@ func (Data *DiscordChannel) AddChannel() error {
 	if Data.Dynamic {
 		Data.SetNewUpcoming(false).SetLiveOnly(true)
 	}
-	stmt, err := DB.Prepare(`INSERT INTO Channel (DiscordChannelID,Type,LiveOnly,NewUpcoming,Dynamic,Region,VtuberGroup_id) values(?,?,?,?,?,?,?)`)
+	stmt, err := DB.Prepare(`INSERT INTO Channel (DiscordChannelID,Type,LiveOnly,NewUpcoming,Dynamic,Region,IndieNotif,VtuberGroup_id) values(?,?,?,?,?,?,?,?)`)
 	if err != nil {
 		return err
 	}
 
 	defer stmt.Close()
-	res, err := stmt.Exec(Data.ChannelID, Data.TypeTag, Data.LiveOnly, Data.NewUpcoming, Data.Dynamic, Data.Region, Data.Group.ID)
+	res, err := stmt.Exec(Data.ChannelID, Data.TypeTag, Data.LiveOnly, Data.NewUpcoming, Data.Dynamic, Data.Region, Data.IndieNotif, Data.Group.ID)
 	if err != nil {
 		return err
 	}
@@ -520,15 +520,16 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 		newupcoming bool
 		dynamic     bool
 		lite        bool
+		indienotif  bool
 	)
-	rows, err := DB.Query(`SELECT Type,LiveOnly,NewUpcoming,Dynamic,Lite FROM Channel WHERE VtuberGroup_id=? AND DiscordChannelID=?`, Data.Group.ID, Data.ChannelID)
+	rows, err := DB.Query(`SELECT Type,LiveOnly,NewUpcoming,Dynamic,Lite,IndieNotif FROM Channel WHERE VtuberGroup_id=? AND DiscordChannelID=?`, Data.Group.ID, Data.ChannelID)
 	if err != nil {
 		log.Error(err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&channeltype, &liveonly, &newupcoming, &dynamic, &lite)
+		err = rows.Scan(&channeltype, &liveonly, &newupcoming, &dynamic, &lite, &indienotif)
 		if err != nil {
 			log.Error(err)
 		}
@@ -577,6 +578,11 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 		}
 	} else if UpdateType == "LiteMode" {
 		_, err := DB.Exec(`Update Channel set Lite=? Where VtuberGroup_id=? AND DiscordChannelID=?`, Data.LiteMode, Data.Group.ID, Data.ChannelID)
+		if err != nil {
+			return err
+		}
+	} else if UpdateType == "IndieNotif" {
+		_, err := DB.Exec(`Update Channel set IndieNotif=? Where VtuberGroup_id=? AND DiscordChannelID=?`, Data.IndieNotif, Data.Group.ID, Data.ChannelID)
 		if err != nil {
 			return err
 		}
@@ -702,7 +708,7 @@ func ChannelStatus(ChannelID string) []DiscordChannel {
 		Data []DiscordChannel
 	)
 	//Channel.id,VtuberGroup.id,VtuberGroupName,Channel.Type,Channel.LiveOnly,Channel.NewUpcoming,Channel.Dynamic,Channel.Region,Channel.Lite
-	rows, err := DB.Query(`SELECT Channel.*,VtuberGroup.id FROM Channel INNER JOIn VtuberGroup on VtuberGroup.id=Channel.VtuberGroup_id WHERE DiscordChannelID=?`, ChannelID)
+	rows, err := DB.Query(`SELECT Channel.*,VtuberGroup.VtuberGroupName FROM Channel INNER JOIn VtuberGroup on VtuberGroup.id=Channel.VtuberGroup_id WHERE DiscordChannelID=?`, ChannelID)
 	if err != nil {
 		log.Error(err)
 	}
@@ -710,18 +716,19 @@ func ChannelStatus(ChannelID string) []DiscordChannel {
 
 	for rows.Next() {
 		var (
-			id      int64
-			GroupID int64
-			tmp     string
-			tmp2    int
-			tmp3    bool
-			tmp4    bool
-			tmp5    bool
-			tmp6    string
-			tmp7    bool
-			tmp8    bool
+			id               int64
+			GroupID          int64
+			DiscordChannelID string
+			Type             int
+			LiveOnly         bool
+			NewUpcoming      bool
+			Dynamic          bool
+			Region           string
+			Lite             bool
+			IndieNotif       bool
+			GroupName        string
 		)
-		err = rows.Scan(&id, &tmp, &tmp2, &tmp3, &tmp4, &tmp5, &tmp6, &tmp7, &tmp8, &GroupID)
+		err = rows.Scan(&id, &DiscordChannelID, &Type, &LiveOnly, &NewUpcoming, &Dynamic, &Region, &Lite, &IndieNotif, &GroupID, &GroupName)
 		if err != nil {
 			log.Error(err)
 		}
@@ -729,15 +736,15 @@ func ChannelStatus(ChannelID string) []DiscordChannel {
 			ID: id,
 			Group: Group{
 				ID:        GroupID,
-				GroupName: tmp,
+				GroupName: GroupName,
 			},
-			TypeTag:     tmp2,
-			LiveOnly:    tmp3,
-			NewUpcoming: tmp4,
-			Dynamic:     tmp5,
-			Region:      strings.ToUpper(tmp6),
-			LiteMode:    tmp7,
-			IndieNotif:  tmp8,
+			TypeTag:     Type,
+			LiveOnly:    LiveOnly,
+			NewUpcoming: NewUpcoming,
+			Dynamic:     Dynamic,
+			Region:      strings.ToUpper(Region),
+			LiteMode:    Lite,
+			IndieNotif:  IndieNotif,
 		})
 	}
 	return Data
