@@ -5,7 +5,7 @@ stages:
   - build
 
 before_script:
-  - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" "$CI_REGISTRY" --password-stdin
+  - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" registry.gitlab.com --password-stdin
 
 services:
   - docker:dind
@@ -14,7 +14,7 @@ build go-simp:
   stage: init
   script:
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
-    - docker push "$CI_REGISTRY"/"$CI_REGISTRY_IMAGE"
+    - docker push registry.gitlab.com/"$CI_REGISTRY_IMAGE"
 
 build pilot:
   stage: build
@@ -23,7 +23,7 @@ build pilot:
     - docker tag "$CI_REGISTRY_IMAGE" go-simp
     - docker build -t pilot $CI_PROJECT_DIR/service/pilot
     - docker tag pilot "$CI_REGISTRY_IMAGE":pilot
-    - docker push "$CI_REGISTRY_IMAGE":pilot
+    - docker push registry.gitlab.com/"$CI_REGISTRY_IMAGE":pilot
 
 build migrate:
   stage: build
