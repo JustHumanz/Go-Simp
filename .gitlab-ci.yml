@@ -13,8 +13,8 @@ services:
 build go-simp:
   stage: init
   script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
-    - docker push registry.gitlab.com/"$CI_REGISTRY_IMAGE"
+    - docker build -t justhumanz/go-simp .
+    - docker push registry.gitlab.com/justhumanz/go-simp:"$CI_COMMIT_TAG"
 
 build pilot:
   stage: build
