@@ -10,7 +10,7 @@ services:
 build go-simp:
   stage: init
   before_script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" $CI_REGISTRY --password-stdin  
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" "$CI_REGISTRY" --password-stdin  
     - docker info
   script:
     - docker build -t $CI_REGISTRY_IMAGE .
