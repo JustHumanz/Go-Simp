@@ -164,7 +164,7 @@ if (document.forms['form'].Nickname.value === "" || document.forms['form'].Regio
   }
 } else if (document.forms['form'].Youtube.value !== "" && document.forms['form'].BiliBili.value === ""){
   document.forms['form'].BiliBili.value = 0;
-  if (!yt || (/((http|https):\/\/)?(www\.)?youtube\.com\/(channel|user)\/[a-zA-Z0-9\-]+/.test(document.forms['form'].Youtube.value))){
+  if (!yt){
     toastr.warning('Youtube URL is invalid')
     $('html, body').animate({
       scrollTop: $("#Youtube").offset().top-80
