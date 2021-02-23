@@ -1,0 +1,30 @@
+stages:
+  - init
+  - build
+
+build-master:
+  image: docker:latest
+  stage: init
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
+  only:
+    - master
+
+build pilot:
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY  
+  script:
+    - docker pull "$CI_REGISTRY_IMAGE"
+    - docker tag "$CI_REGISTRY_IMAGE" go-simp
+    - docker build -t pilot $CI_PROJECT_DIR/service/pilot
+    - docker tag pilot "$CI_REGISTRY_IMAGE":pilot
+    - docker push registry.gitlab.com/"$CI_REGISTRY_IMAGE":pilot    
