@@ -6,13 +6,11 @@ services:
 stages:
   - init
   - build
-
-before_script:
-  - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
   
 build go-simp:
   stage: init
   before_script:
+    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
     - docker info
   script:
     - docker build -t "$CI_REGISTRY_IMAGE" .
