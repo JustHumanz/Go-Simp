@@ -27,8 +27,8 @@ build pilot:
     - docker pull "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" go-simp
     - docker build -t pilot $CI_PROJECT_DIR/service/pilot
-    - docker tag pilot "$CI_REGISTRY_IMAGE":pilot
-    - docker push "$CI_REGISTRY_IMAGE":pilot
+    - docker tag pilot "$CI_REGISTRY_IMAGE"-pilot
+    - docker push "$CI_REGISTRY_IMAGE"-pilot
 
 build migrate:
   stage: build
