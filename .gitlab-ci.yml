@@ -4,17 +4,19 @@ stages:
   - init
   - build
 
-before_script:
-  - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" registry.gitlab.com --password-stdin
-
 services:
   - docker:dind
+  
+before_script:
+  - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" $CI_REGISTRY --password-stdin
 
 build go-simp:
   stage: init
+  before_script:
+    - docker info
   script:
-    - docker build -t justhumanz/go-simp .
-    - docker push registry.gitlab.com/justhumanz/go-simp:latest
+    - docker build -t $CI_REGISTRY_IMAGE .
+    - docker push $CI_REGISTRY_IMAGE
 
 build pilot:
   stage: build
