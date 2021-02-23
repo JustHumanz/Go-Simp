@@ -136,7 +136,7 @@ build static_files:
     - docker tag static_files "$CI_REGISTRY_IMAGE"/static_files
     - docker push "$CI_REGISTRY_IMAGE"/static_files      
 
-build static_files:
+build web:
   stage: build
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
