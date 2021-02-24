@@ -18,7 +18,7 @@ func GetTwitch(MemberID int64) (*TwitchDB, error) {
 }
 
 func (Data *TwitchDB) UpdateTwitch(MemberID int64) error {
-	_, err := DB.Exec(`Update Twitch set Game=?,Status=?,Thumbnails=?,ScheduledStart=?,Viewers=? Where id=? AND VtuberMember_id=?`, Data.ID, MemberID)
+	_, err := DB.Exec(`Update Twitch set Game=?,Status=?,Thumbnails=?,ScheduledStart=?,Viewers=? Where id=? AND VtuberMember_id=?`, Data.Game, Data.Status, Data.Thumbnails, Data.ScheduledStart, Data.Viewers, Data.ID, MemberID)
 	if err != nil {
 		return err
 	}
