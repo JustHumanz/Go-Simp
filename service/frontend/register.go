@@ -356,11 +356,15 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 				Register.Dynamic(s)
 				Register.BreakPoint(1)
 
-				if Register.ChannelState.Group.GroupName == "Independen" {
-					Register.Stop()
-					Register.IndieNotif(s)
-					Register.BreakPoint(1)
-				}
+				Register.Stop()
+				Register.Lite(s)
+				Register.BreakPoint(1)
+			}
+
+			if Register.ChannelState.Group.GroupName == "Independen" {
+				Register.Stop()
+				Register.IndieNotif(s)
+				Register.BreakPoint(1)
 			}
 
 			err = Register.ChannelState.AddChannel()
