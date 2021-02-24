@@ -22,6 +22,7 @@ var (
 	NotFound    string
 	YoutubeIMG  string
 	BiliBiliIMG string
+	TwitchIMG   string
 	TwitterIMG  string
 	WorryIMG    string
 	GoSimpIMG   string

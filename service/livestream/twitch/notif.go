@@ -58,7 +58,7 @@ func (Data TwitchNotif) SendNotif() error {
 				SetURL(ImgURL).
 				AddField("Start live", durafmt.Parse(expiresAt.Sub(Data.TwitchData.ScheduledStart.In(loc))).LimitFirstN(1).String()+" Ago").
 				AddField("Viewers", strconv.Itoa(Data.TwitchData.Viewers)+" simps").
-				SetFooter(Data.TwitchData.ScheduledStart.In(loc).Format(time.RFC822), config.YoutubeIMG).
+				SetFooter(Data.TwitchData.ScheduledStart.In(loc).Format(time.RFC822), config.TwitchIMG).
 				SetColor(Color).MessageEmbed)
 			if err != nil {
 				log.WithFields(log.Fields{
