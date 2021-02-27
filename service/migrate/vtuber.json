@@ -2099,6 +2099,21 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Hakase",
+                    "EN_Name":"Hakase Fuyuki",
+                    "JP_Name":"葉加瀬 冬雪",
+                    "Hashtag": {
+                        "Twitter": "#はかせレポート",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCGYAYLDE7TZiiC8U6teciDQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Hakase_Fuyuki",
+                    "Twitch_Username": "",
+                    "Region":"JP"
+                },
+                {
                     "Name":"Hanamaki",
                     "EN_Name":"Hana Macchia",
                     "JP_Name":"ハナ・マキア",
