@@ -153,7 +153,7 @@ func main() {
 
 	if WaitMigrate {
 		c.AddFunc("@every 0h5m0s", StartBot)
-	} else if !WaitMigrate || Counter == 3 {
+	} else if !WaitMigrate || Counter == 10 {
 		c.Stop()
 	}
 
