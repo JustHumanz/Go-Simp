@@ -15,7 +15,7 @@ require (
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/n0madic/twitter-scraper v0.0.0-20210106191912-6f9f1f94f606
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
-	github.com/nicklaw5/helix v1.4.0
+	github.com/nicklaw5/helix v1.6.0
 	github.com/olekukonko/tablewriter v0.0.4
 	github.com/robfig/cron/v3 v3.0.0
 	github.com/sirupsen/logrus v1.7.0
