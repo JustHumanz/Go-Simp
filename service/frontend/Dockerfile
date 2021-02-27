@@ -1,4 +1,0 @@
-FROM go-simp
-WORKDIR /app/Go-Simp/service/frontend/
-RUN go build -o frontend
-CMD ["./frontend"]
