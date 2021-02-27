@@ -1,0 +1,157 @@
+image: docker:19.03.12
+
+services:
+  - docker:19.03.12-dind
+
+stages:
+  - init
+  - build
+
+build go-simp:
+  stage: init
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker info
+  script:
+    - docker build -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
+  only:
+    - master  
+
+build pilot:
+  stage: build
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker info  
+  script:
+    - docker pull "$CI_REGISTRY_IMAGE"
+    - docker tag "$CI_REGISTRY_IMAGE" go-simp
+    - docker build -t pilot $CI_PROJECT_DIR/service/pilot
+    - docker tag pilot "$CI_REGISTRY_IMAGE"/pilot
+    - docker push "$CI_REGISTRY_IMAGE"/pilot
+
+build migrate:
+  stage: build
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker info  
+  script:
+    - docker pull "$CI_REGISTRY_IMAGE"
+    - docker tag "$CI_REGISTRY_IMAGE" go-simp
+    - docker build -t migrate $CI_PROJECT_DIR/service/migrate
+    - docker tag migrate "$CI_REGISTRY_IMAGE"/migrate
+    - docker push "$CI_REGISTRY_IMAGE"/migrate
+
+build fanart:
+  stage: build
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker info   
+  script:
+    - docker pull "$CI_REGISTRY_IMAGE"
+    - docker tag "$CI_REGISTRY_IMAGE" go-simp
+    - docker build -t fanart $CI_PROJECT_DIR/service/fanart
+    - docker tag fanart "$CI_REGISTRY_IMAGE"/fanart
+    - docker push "$CI_REGISTRY_IMAGE"/fanart
+
+build livestream:
+  stage: build
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker info   
+  script:
+    - docker pull "$CI_REGISTRY_IMAGE"
+    - docker tag "$CI_REGISTRY_IMAGE" go-simp
+    - docker build -t livestream $CI_PROJECT_DIR/service/livestream
+    - docker tag livestream "$CI_REGISTRY_IMAGE"/livestream
+    - docker push "$CI_REGISTRY_IMAGE"/livestream
+
+build subscriber:
+  stage: build
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker info   
+  script:
+    - docker pull "$CI_REGISTRY_IMAGE"
+    - docker tag "$CI_REGISTRY_IMAGE" go-simp
+    - docker build -t subscriber $CI_PROJECT_DIR/service/subscriber
+    - docker tag subscriber "$CI_REGISTRY_IMAGE"/subscriber
+    - docker push "$CI_REGISTRY_IMAGE"/subscriber   
+
+build utility:
+  stage: build
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker info   
+  script:
+    - docker pull "$CI_REGISTRY_IMAGE"
+    - docker tag "$CI_REGISTRY_IMAGE" go-simp
+    - docker build -t utility $CI_PROJECT_DIR/service/utility
+    - docker tag utility "$CI_REGISTRY_IMAGE"/utility
+    - docker push "$CI_REGISTRY_IMAGE"/utility       
+
+build frontend:
+  stage: build
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker info   
+  script:
+    - docker pull "$CI_REGISTRY_IMAGE"
+    - docker tag "$CI_REGISTRY_IMAGE" go-simp
+    - docker build -t frontend $CI_PROJECT_DIR/service/frontend
+    - docker tag frontend "$CI_REGISTRY_IMAGE"/frontend
+    - docker push "$CI_REGISTRY_IMAGE"/frontend        
+
+build guild:
+  stage: build
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker info   
+  script:
+    - docker pull "$CI_REGISTRY_IMAGE"
+    - docker tag "$CI_REGISTRY_IMAGE" go-simp
+    - docker build -t guild $CI_PROJECT_DIR/service/guild
+    - docker tag guild "$CI_REGISTRY_IMAGE"/guild
+    - docker push "$CI_REGISTRY_IMAGE"/guild  
+
+build rest_api:
+  stage: build
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker info   
+  script:
+    - docker pull "$CI_REGISTRY_IMAGE"
+    - docker tag "$CI_REGISTRY_IMAGE" go-simp    
+    - docker build -t api $CI_PROJECT_DIR/service/rest-api
+    - docker tag api "$CI_REGISTRY_IMAGE"/api
+    - docker push "$CI_REGISTRY_IMAGE"/api
+
+build static_files:
+  stage: build
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker info   
+  script:
+    - docker build -t static_files $CI_PROJECT_DIR/Img
+    - docker tag static_files "$CI_REGISTRY_IMAGE"/static_files
+    - docker push "$CI_REGISTRY_IMAGE"/static_files      
+
+build web:
+  stage: build
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker info   
+  script:
+    - docker build -t web $CI_PROJECT_DIR/service/web
+    - docker tag web "$CI_REGISTRY_IMAGE"/web
+    - docker push "$CI_REGISTRY_IMAGE"/web
+
+build multitor:
+  stage: build
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker info   
+  script:
+    - docker build -t multitor $CI_PROJECT_DIR/service/multitor/
+    - docker tag multitor "$CI_REGISTRY_IMAGE"/multitor
+    - docker push "$CI_REGISTRY_IMAGE"/multitor

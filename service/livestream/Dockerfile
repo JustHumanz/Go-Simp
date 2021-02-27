@@ -1,0 +1,4 @@
+FROM go-simp
+WORKDIR /app/Go-Simp/service/livestream/
+RUN go build -o livestream
+CMD ["./livestream","-Youtube","-LiveBiliBili","-SpaceBiliBili","-Twitch"]

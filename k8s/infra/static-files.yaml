@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: static-files
+  labels:           
+    app: static-files
+    tier: frontend
+spec:
+  ports:
+  - name: web
+    port: 80      
+    targetPort: 80
+
+  selector:         
+    app: static-files
+    tier: frontend
+  type: LoadBalancer  
+
+---
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: static-files
+  labels:
+    app: static-files      
+spec:
+  selector:
+    matchLabels:    
+      app: static-files
+      tier: frontend
+  replicas: 2       
+  template:         
+    metadata:
+      labels:       
+        app: static-files
+        tier: frontend
+    spec:           
+      containers:
+      - name: static-files
+        image: justhumanz/go-simp-static
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80

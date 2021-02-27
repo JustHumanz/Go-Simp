@@ -1,0 +1,29 @@
+syntax = "proto3";
+package pilot;
+
+message VtubersData {
+  bytes VtuberPayload = 1;
+  bytes ConfigFile = 2;
+  bool WaitMigrate = 3;
+}
+
+message ServiceMessage {
+    string Message = 1;
+    string Service = 2;
+    bool Alive = 3;
+}
+
+message ModuleData {
+  string Module = 1;
+  bool Enabled = 2;
+}
+
+message Empty {
+
+}
+    
+service PilotService {
+  rpc ReqData(ServiceMessage) returns (VtubersData) {}
+  rpc ModuleList(ModuleData) returns (Empty){}
+  rpc HeartBeat(ServiceMessage) returns (stream Empty){}
+}

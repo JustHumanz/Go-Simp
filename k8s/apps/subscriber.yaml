@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-simp-subscriber
+  labels:           
+    app: go-simp
+    tier: backend
+spec:
+  selector:
+    matchLabels:    
+      app: subscriber
+      tier: backend
+  template:         
+    metadata:
+      labels:       
+        app: subscriber
+        tier: backend
+    spec:           
+      containers:
+        - name: go-simp-subscriber
+          image: justhumanz/go-simp
+          #imagePullPolicy: IfNotPresent  
+          workingDir: /app/Go-Simp/service/subscriber/
+          command: go build -o subscriber && ./subscriber -Youtube -BiliBili -Twitter         
+      restartPolicy: OnFailure          

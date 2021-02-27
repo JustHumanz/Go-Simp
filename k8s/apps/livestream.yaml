@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-simp-live
+  labels:           
+    app: go-simp
+    tier: backend
+spec:
+  selector:
+    matchLabels:    
+      app: live
+      tier: backend
+  template:         
+    metadata:
+      labels:       
+        app: live
+        tier: backend
+    spec:           
+      containers:
+        - name: go-simp-livestream
+          image: justhumanz/go-simp
+          #imagePullPolicy: IfNotPresent  
+          workingDir: /app/Go-Simp/service/livestream/
+          command: go build -o livestream && ./livestream -Youtube -LiveBiliBili -SpaceBiliBili -Twitch
+      restartPolicy: OnFailure          
