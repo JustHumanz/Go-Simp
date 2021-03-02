@@ -34,7 +34,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 		log.Error(err)
 	}
 	TwitchClient.SetUserAccessToken(config.GoSimpConf.GetTwitchAccessToken())
-	log.Info("Enable twitch module")
+	log.Info("Enable Twitch module")
 }
 
 func CheckTwitch() {
@@ -44,7 +44,7 @@ func CheckTwitch() {
 				log.WithFields(log.Fields{
 					"Group":      Group.GroupName,
 					"VtuberName": Member.Name,
-				}).Info("Checking twitch")
+				}).Info("Checking Twitch")
 
 				result, err := TwitchClient.GetStreams(&helix.StreamsParams{
 					UserLogins: []string{Member.TwitchName},

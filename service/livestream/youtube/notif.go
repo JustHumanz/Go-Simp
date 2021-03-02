@@ -193,9 +193,9 @@ func (PushData *NotifStruct) SendNude() error {
 
 				if Channel.Dynamic {
 					log.WithFields(log.Fields{
-						"DiscordChannel": Channel.ChannelID,
-						"VtuberGroupID":  PushData.Group.ID,
-						"YoutubeID":      PushData.YtData.ID,
+						"DiscordChannel":  Channel.ChannelID,
+						"VtuberGroupName": PushData.Group.GroupName,
+						"YoutubeVideoID":  PushData.YtData.VideoID,
 					}).Info("Set dynamic mode")
 					Channel.SetVideoID(PushData.YtData.VideoID).
 						SetMsgEmbedID(MsgEmbed.ID)
