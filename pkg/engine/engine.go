@@ -1,7 +1,6 @@
 package engine
 
 import (
-	"encoding/json"
 	"errors"
 	"image"
 	_ "image/jpeg"
@@ -26,30 +25,15 @@ import (
 )
 
 //GetYtToken Get a valid token
-func GetYtToken() string {
+func GetYtToken() *string {
 	for _, Token := range config.GoSimpConf.YtToken {
 		body, err := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id=GNkPJvVEm0s&key="+Token, nil)
 		if err == nil && body != nil {
-			return Token
+			return &Token
 		}
 	}
 	log.Error("Youtube Token out of limit")
-	PayloadBytes, err := json.Marshal(map[string]interface{}{
-		"embeds": []interface{}{
-			map[string]interface{}{
-				"description": "Youtube Token out of limit",
-			},
-		},
-	})
-	if err != nil {
-		log.Error(err)
-	}
-
-	err = network.CurlPost(config.GoSimpConf.PilotReporting, PayloadBytes)
-	if err != nil {
-		log.Error(err)
-	}
-	return ""
+	return nil
 }
 
 //FixName change to Title format

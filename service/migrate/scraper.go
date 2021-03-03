@@ -36,7 +36,7 @@ func TwitterFanart() {
 func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 	VideoID := youtube.GetRSS(Dat.YoutubeID)
 	defer wg.Done()
-	body, err := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,actualEndTime),statistics(viewCount))&id="+strings.Join(VideoID, ",")+"&key="+YoutubeToken, nil)
+	body, err := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,actualEndTime),statistics(viewCount))&id="+strings.Join(VideoID, ",")+"&key="+*YoutubeToken, nil)
 	if err != nil {
 		log.Error(err, string(body))
 	}
@@ -102,7 +102,7 @@ func (Data Member) YtAvatar() string {
 		datasubs Subs
 	)
 	if Data.YtID != "" {
-		body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=snippet&id="+Data.YtID+"&key="+YoutubeToken, nil)
+		body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=snippet&id="+Data.YtID+"&key="+*YoutubeToken, nil)
 		if err != nil {
 			log.Error(err)
 		}
@@ -121,7 +121,7 @@ func (Data Member) GetYtSubs() Subs {
 		datasubs Subs
 	)
 	if Data.YtID != "" {
-		body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+Data.YtID+"&key="+YoutubeToken, nil)
+		body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+Data.YtID+"&key="+*YoutubeToken, nil)
 		if err != nil {
 			log.Error(err)
 		}

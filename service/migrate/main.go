@@ -31,7 +31,7 @@ var (
 	JsonData        Vtuber
 	Limit           int
 	db              *sql.DB
-	YoutubeToken    string
+	YoutubeToken    *string
 	Publish         time.Time
 	Roomstatus      string
 	BiliBiliSession []string

@@ -20,7 +20,7 @@ import (
 )
 
 var (
-	yttoken     string
+	yttoken     *string
 	Ytwaiting   = "???"
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
@@ -41,24 +41,13 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 
 func CheckYtSchedule() {
 	yttoken = engine.GetYtToken()
+	var (
+		wg sync.WaitGroup
+	)
 	for _, Group := range VtubersData.VtuberData {
-		var wg sync.WaitGroup
-		for i, Member := range Group.Members {
-			if Member.YoutubeID != "" {
-				wg.Add(1)
-				log.WithFields(log.Fields{
-					"Vtuber":     Member.EnName,
-					"Group":      Group.GroupName,
-					"Youtube ID": Member.YoutubeID,
-				}).Info("Checking Vtuber channel")
-				go StartCheckYT(Member, Group, &wg)
-			}
-			if i%10 == 0 {
-				wg.Wait()
-			}
-		}
-		wg.Wait()
+		go StartCheckYT(Group, &wg)
 	}
+	wg.Wait()
 }
 
 func CheckYtByTime() {
