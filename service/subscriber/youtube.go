@@ -15,7 +15,7 @@ func CheckYoutube() {
 	Token := engine.GetYtToken()
 	for _, Group := range Payload.VtuberData {
 		for _, Member := range Group.Members {
-			body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+Member.YoutubeID+"&key="+Token, nil)
+			body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+Member.YoutubeID+"&key="+*Token, nil)
 			if err != nil {
 				log.Error(err, string(body))
 			}

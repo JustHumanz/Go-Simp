@@ -198,6 +198,22 @@
                     "Region":"JP"
                 },
                 {
+                    "Name":"Hamu",
+                    "EN_Name":"Shibuya HAL",
+                    "JP_Name":"渋谷ハル",
+                    "Hashtag": {
+                        "Twitter": "#ハルアート",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID":  "UChLfthKoUV502J7gU9STArg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "ShibuyaHAL",
+                    "Twitch_Username": "shibuyahal",
+                    "Region":"JP"
+                },
+
+                {
                     "Name":"Artia",
                     "EN_Name":"Artia",
                     "JP_Name":"アティア",
