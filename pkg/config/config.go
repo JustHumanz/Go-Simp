@@ -85,6 +85,7 @@ const (
 	Three = "3️⃣"
 	Art   = "🎨"
 	Live  = "🎥"
+	Lewd  = "🔞"
 )
 
 //ConfigFile config file struct for config.toml

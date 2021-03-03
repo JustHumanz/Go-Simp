@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
+	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/bwmarrin/discordgo"
 	"github.com/olekukonko/tablewriter"
@@ -48,26 +49,48 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 			}
 		}
 
+		LewdLive := func(def int) {
+			_, err := s.ChannelMessageSend(m.ChannelID, "error,you can't add livestream with lewd in same channel,canceling lewd")
+			if err != nil {
+				log.Error(err)
+			}
+			Register.ChannelState.TypeTag = def
+		}
+
 		if m.Emoji.MessageFormat() == config.Art {
 			if Register.ChannelState.TypeTag == 2 {
 				Register.UpdateType(3)
+			} else if Register.ChannelState.TypeTag == 69 {
+				Register.UpdateType(70)
 			} else {
 				Register.UpdateType(1)
 			}
 		} else if m.Emoji.MessageFormat() == config.Live {
 			if Register.ChannelState.TypeTag == 1 {
 				Register.UpdateType(3)
+			} else if Register.ChannelState.TypeTag == 69 {
+				LewdLive(69)
 			} else {
 				Register.UpdateType(2)
+			}
+		} else if m.Emoji.MessageFormat() == config.Lewd {
+			if Register.ChannelState.TypeTag == 2 {
+				LewdLive(2)
+			} else if Register.ChannelState.TypeTag == 1 {
+				Register.UpdateType(70)
+			} else if Register.ChannelState.TypeTag == 3 {
+				LewdLive(3)
+			} else {
+				Register.UpdateType(69) //nice
 			}
 		}
 
 		if m.Emoji.MessageFormat() == config.One {
 			Register.Stop()
-			Register.Fanart(s)
+			Register.ChoiceType(s)
 			Register.BreakPoint(2)
 
-			if Register.ChannelState.TypeTag != 1 {
+			if Register.ChannelState.TypeTag == 2 || Register.ChannelState.TypeTag == 3 {
 				Register.Stop()
 				Register.LiveOnly(s)
 				Register.BreakPoint(1)
@@ -85,6 +108,10 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 				Register.Stop()
 				Register.Lite(s)
 				Register.BreakPoint(1)
+			} else if Register.ChannelState.TypeTag == 69 || Register.ChannelState.TypeTag == 70 {
+				if !Register.CheckNSFW(s) {
+					return
+				}
 			}
 
 			if Register.ChannelState.Group.GroupName == "Independen" {
@@ -192,10 +219,74 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 					log.Error(err)
 				}
 
-				ChannelData, tbl, err := GetChannelState(m.ChannelID)
-				if err != nil {
+				var (
+					Typestr     string
+					LiveOnly    = config.No
+					NewUpcoming = config.No
+					Dynamic     = config.No
+					LiteMode    = config.No
+					Indie       = ""
+				)
+				ChannelData := database.ChannelStatus(m.ChannelID)
+				if len(ChannelData) > 0 {
+					for _, Channel := range ChannelData {
+
+						if Channel.TypeTag == 1 {
+							Typestr = "Art"
+						} else if Channel.TypeTag == 2 {
+							Typestr = "Live"
+						} else if Channel.TypeTag == 3 {
+							Typestr = "FanArt & Livestream"
+						} else if Channel.TypeTag == 69 {
+							Typestr = "Lewd"
+						} else if Channel.TypeTag == 70 {
+							Typestr = "FanArt & Lewd"
+						}
+
+						if Channel.LiveOnly {
+							LiveOnly = config.Ok
+						}
+
+						if Channel.NewUpcoming {
+							NewUpcoming = config.Ok
+						}
+
+						if Channel.Dynamic {
+							Dynamic = config.Ok
+						}
+
+						if Channel.LiteMode {
+							LiteMode = config.Ok
+						}
+
+						if Channel.IndieNotif && Channel.Group.GroupName == "Independen" {
+							Indie = config.Ok
+						} else if Channel.Group.GroupName != "Independen" {
+							Indie = "-"
+						} else {
+							Indie = config.No
+						}
+
+						_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+							SetThumbnail(config.GoSimpIMG).
+							SetDescription("Channel States of "+Channel.Group.GroupName).
+							SetTitle("ID "+strconv.Itoa(int(Channel.ID))).
+							AddField("Type", Typestr).
+							AddField("LiveOnly", LiveOnly).
+							AddField("Dynamic", Dynamic).
+							AddField("Upcoming", NewUpcoming).
+							AddField("Lite", LiteMode).
+							AddField("Region", Channel.Region).
+							AddField("Independen notif", Indie).
+							InlineAllFields().MessageEmbed)
+						if err != nil {
+							log.Error(err)
+						}
+					}
+				} else {
 					_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-						SetTitle("404 Not found").
+						SetTitle("404 Not found,use `"+Prefix+Setup+"` first").
 						SetThumbnail(config.GoSimpIMG).
 						SetImage(config.NotFound).MessageEmbed)
 					if err != nil {
@@ -207,13 +298,8 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 				Register.SetAdmin(m.Author.ID).SetChannel(m.ChannelID)
 				Register.ChannelStates = ChannelData
 
-				_, err = s.ChannelMessageSend(m.ChannelID, "```"+tbl+"```")
-				if err != nil {
-					log.Error(err)
-				}
-
 				Register.UpdateState("SelectChannel")
-				_, err = s.ChannelMessageSend(m.ChannelID, "Select ID of Channel state: ")
+				_, err = s.ChannelMessageSend(m.ChannelID, "Select ID : ")
 				if err != nil {
 					log.Error(err)
 				}
@@ -293,7 +379,6 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 			Register.SetGroup(VTuberGroup)
 
-			//Register.ChannelState.ChannelCheck()
 			if Register.ChannelState.Group.IsNull() {
 				_, err := s.ChannelMessageSend(m.ChannelID, "Invalid ID,Group not found")
 				if err != nil {
@@ -338,10 +423,10 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			}
 
-			Register.Fanart(s)
+			Register.ChoiceType(s)
 			Register.BreakPoint(3)
 
-			if Register.ChannelState.TypeTag != 1 {
+			if Register.ChannelState.TypeTag == 3 || Register.ChannelState.TypeTag == 2 {
 				Register.Stop()
 				Register.LiveOnly(s)
 				Register.BreakPoint(1)
@@ -359,6 +444,11 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 				Register.Stop()
 				Register.Lite(s)
 				Register.BreakPoint(1)
+			} else if Register.ChannelState.TypeTag == 69 || Register.ChannelState.TypeTag == 70 {
+				if !Register.CheckNSFW(s) {
+					Out()
+					return
+				}
 			}
 
 			if Register.ChannelState.Group.GroupName == "Independen" {
@@ -367,14 +457,16 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 				Register.BreakPoint(1)
 			}
 
-			err = Register.ChannelState.AddChannel()
-			if err != nil {
-				log.Error(err)
-			}
+			if Register.ChannelState.Group.GroupName != "" {
+				err = Register.ChannelState.AddChannel()
+				if err != nil {
+					log.Error(err)
+				}
 
-			_, err = s.ChannelMessageSend(m.ChannelID, "Done,you add `"+Register.ChannelState.Group.GroupName+"` in this channel")
-			if err != nil {
-				log.Error(err)
+				_, err = s.ChannelMessageSend(m.ChannelID, "Done,you add `"+Register.ChannelState.Group.GroupName+"` in this channel")
+				if err != nil {
+					log.Error(err)
+				}
 			}
 
 			Register.Clear()
@@ -383,7 +475,7 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 }
 
-func (Data *Regis) Fanart(s *discordgo.Session) *Regis {
+func (Data *Regis) ChoiceType(s *discordgo.Session) *Regis {
 	tableString := &strings.Builder{}
 	table := tablewriter.NewWriter(tableString)
 	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
@@ -393,9 +485,10 @@ func (Data *Regis) Fanart(s *discordgo.Session) *Regis {
 	if err != nil {
 		log.Error(err)
 	}
-	table.SetHeader([]string{"Type"})
-	table.Append([]string{"Fanart " + config.Art})
-	table.Append([]string{"Livestream " + config.Live})
+	table.SetHeader([]string{"Type", "Select"})
+	table.Append([]string{"Fanart", config.Art})
+	table.Append([]string{"Livestream", config.Live})
+	table.Append([]string{"Lewd Fanart", config.Lewd})
 	table.Render()
 
 	MsgText, err := s.ChannelMessageSend(Data.ChannelState.ChannelID, "`"+tableString.String()+"`")
@@ -508,18 +601,15 @@ func (Data *Regis) IndieNotif(s *discordgo.Session) *Regis {
 func (Data *Regis) UpdateChannel() error {
 	ChannelID := Data.ChannelState.ChannelID
 
-	if Data.ChannelState.TypeTag == 1 {
-		err := Data.ChannelState.UpdateChannel("Type")
+	err := Data.ChannelState.UpdateChannel("Type")
+	if err != nil {
+		_, err := Bot.ChannelMessageSend(ChannelID, err.Error())
 		if err != nil {
-			_, err := Bot.ChannelMessageSend(ChannelID, err.Error())
-			if err != nil {
-				log.Error(err)
-			}
+			log.Error(err)
 		}
-		return nil
 	}
 
-	err := Data.ChannelState.UpdateChannel("LiveOnly")
+	err = Data.ChannelState.UpdateChannel("LiveOnly")
 	if err != nil {
 		_, err := Bot.ChannelMessageSend(ChannelID, err.Error())
 		if err != nil {
@@ -690,4 +780,29 @@ func (Data *Regis) DelRegion(s *discordgo.Session) {
 	}
 	Register.Clear()
 	return
+}
+
+func (Data *Regis) CheckNSFW(s *discordgo.Session) bool {
+	ChannelRaw, err := s.Channel(Data.ChannelState.ChannelID)
+	if err != nil {
+		log.Error(err)
+	}
+
+	if !ChannelRaw.NSFW {
+		if Register.ChannelState.TypeTag == 69 {
+			_, err := s.ChannelMessageSend(Data.ChannelState.ChannelID, "This Channel was not a NSFW channel")
+			if err != nil {
+				log.Error(err)
+			}
+			return false
+		} else {
+			_, err := s.ChannelMessageSend(Data.ChannelState.ChannelID, "This Channel was not a NSFW channel,change channel type to fanart")
+			if err != nil {
+				log.Error(err)
+			}
+			Register.ChannelState.TypeTag = 1
+		}
+
+	}
+	return true
 }

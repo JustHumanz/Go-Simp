@@ -98,11 +98,7 @@ func init() {
 		log.Error(err)
 		os.Exit(1)
 	}
-	err = CreateDB(configfile)
-	if err != nil {
-		log.Error(err)
-		os.Exit(1)
-	}
+
 	TwitchClient, err = helix.NewClient(&helix.Options{
 		ClientID:     configfile.Twitch.ClientID,
 		ClientSecret: configfile.Twitch.ClientSecret,

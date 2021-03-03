@@ -211,7 +211,7 @@ func Reacting(Data map[string]string, s *discordgo.Session) error {
 			}
 		}
 	} else if Data["State"] == "TypeChannel" {
-		EmojiList := []string{config.Art, config.Live}
+		EmojiList := []string{config.Art, config.Live, config.Lewd}
 		for _, Emoji := range EmojiList {
 			err := s.MessageReactionAdd(ChannelID, Data["MessageID"], Emoji)
 			if err != nil {

@@ -521,15 +521,16 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 		dynamic     bool
 		lite        bool
 		indienotif  bool
+		lewd        bool
 	)
-	rows, err := DB.Query(`SELECT Type,LiveOnly,NewUpcoming,Dynamic,Lite,IndieNotif FROM Channel WHERE VtuberGroup_id=? AND DiscordChannelID=?`, Data.Group.ID, Data.ChannelID)
+	rows, err := DB.Query(`SELECT Type,LiveOnly,NewUpcoming,Dynamic,Lite,IndieNotif,lewd FROM Channel WHERE VtuberGroup_id=? AND DiscordChannelID=?`, Data.Group.ID, Data.ChannelID)
 	if err != nil {
 		log.Error(err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&channeltype, &liveonly, &newupcoming, &dynamic, &lite, &indienotif)
+		err = rows.Scan(&channeltype, &liveonly, &newupcoming, &dynamic, &lite, &indienotif, &lewd)
 		if err != nil {
 			log.Error(err)
 		}
@@ -547,8 +548,12 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 				return errors.New("Already set fanart type on this channel")
 			} else if channeltype == 2 {
 				return errors.New("Already set livestream type on this channel")
-			} else {
-				return errors.New("Already set all type on this channel")
+			} else if channeltype == 3 {
+				return errors.New("Already set fanart & livestream type on this channel")
+			} else if channeltype == 69 {
+				return errors.New("Already set lewd type on this channel")
+			} else if channeltype == 70 {
+				return errors.New("Already set lewd & fanart type on this channel")
 			}
 
 		} else {

@@ -1830,8 +1830,106 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			}
 		} else if m.Content == Prefix+ChannelState {
-			_, tbl, err := GetChannelState(m.ChannelID)
-			if err != nil {
+			var (
+				Typestr     string
+				LiveOnly    = config.No
+				NewUpcoming = config.No
+				Dynamic     = config.No
+				LiteMode    = config.No
+				Indie       = ""
+			)
+			ChannelData := database.ChannelStatus(m.ChannelID)
+			if len(ChannelData) > 0 {
+				for _, Channel := range ChannelData {
+					ChannelRaw, err := s.Channel(m.ChannelID)
+					if err != nil {
+						log.Error(err)
+					}
+
+					if Channel.IndieNotif && Channel.Group.GroupName == "Independen" {
+						Indie = config.Ok
+					} else if Channel.Group.GroupName != "Independen" {
+						Indie = "-"
+					} else {
+						Indie = config.No
+					}
+
+					if Channel.TypeTag == 1 {
+						Typestr = "Art"
+						_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+							SetThumbnail(config.GoSimpIMG).
+							SetDescription("Channel States of "+Channel.Group.GroupName).
+							SetTitle(ChannelRaw.Name).
+							AddField("Type", Typestr).
+							AddField("Region", Channel.Region).
+							AddField("Independen notif", Indie).
+							InlineAllFields().
+							SetColor(Color).MessageEmbed)
+						if err != nil {
+							log.Error(err)
+						}
+						return
+
+					} else if Channel.TypeTag == 2 {
+						Typestr = "Live"
+					} else if Channel.TypeTag == 3 {
+						Typestr = "Fanart & Livestream"
+					} else if Channel.TypeTag == 69 {
+						Typestr = "Lewd"
+						_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+							SetThumbnail(config.GoSimpIMG).
+							SetDescription("Channel States of "+Channel.Group.GroupName).
+							SetTitle(ChannelRaw.Name).
+							AddField("Type", Typestr).
+							AddField("Region", Channel.Region).
+							AddField("Independen notif", Indie).
+							InlineAllFields().
+							SetColor(Color).MessageEmbed)
+						if err != nil {
+							log.Error(err)
+						}
+						return
+					} else if Channel.TypeTag == 70 {
+						Typestr = "Fanart & Lewd"
+					}
+
+					if Channel.LiveOnly {
+						LiveOnly = config.Ok
+					}
+
+					if Channel.NewUpcoming {
+						NewUpcoming = config.Ok
+					}
+
+					if Channel.Dynamic {
+						Dynamic = config.Ok
+					}
+
+					if Channel.LiteMode {
+						LiteMode = config.Ok
+					}
+
+					_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+						SetThumbnail(config.GoSimpIMG).
+						SetDescription("Channel States of "+Channel.Group.GroupName).
+						SetTitle(ChannelRaw.Name).
+						AddField("Type", Typestr).
+						AddField("LiveOnly", LiveOnly).
+						AddField("Dynamic", Dynamic).
+						AddField("Upcoming", NewUpcoming).
+						AddField("Lite", LiteMode).
+						AddField("Region", Channel.Region).
+						AddField("Independen notif", Indie).
+						InlineAllFields().
+						SetColor(Color).MessageEmbed)
+					if err != nil {
+						log.Error(err)
+					}
+				}
+			} else {
 				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 					SetTitle("404 Not found").
 					SetThumbnail(config.GoSimpIMG).
@@ -1841,11 +1939,6 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					log.Error(err)
 				}
 				return
-			}
-
-			_, err = s.ChannelMessageSend(m.ChannelID, "```"+tbl+"```")
-			if err != nil {
-				log.Error(err)
 			}
 		} else if strings.HasPrefix(m.Content, Prefix+VtuberData) {
 			var (

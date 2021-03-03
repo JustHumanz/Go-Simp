@@ -15,7 +15,6 @@ import (
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
-	"github.com/olekukonko/tablewriter"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 )
@@ -297,63 +296,4 @@ func MemberHasPermission(guildID string, userID string) (bool, error) {
 	}
 
 	return false, nil
-}
-
-func GetChannelState(ChannelID string) ([]database.DiscordChannel, string, error) {
-	tableString := &strings.Builder{}
-	table := tablewriter.NewWriter(tableString)
-
-	ChannelData := database.ChannelStatus(ChannelID)
-
-	if len(ChannelData) > 0 {
-		var (
-			Typestr string
-		)
-		table.SetHeader([]string{"ID", "Group", "Type", "LiveOnly", "Dynamic", "NewUpcoming", "LiteMode", "IndieNotif", "Region"})
-		for i := 0; i < len(ChannelData); i++ {
-			if ChannelData[i].TypeTag == 1 {
-				Typestr = "Art"
-			} else if ChannelData[i].TypeTag == 2 {
-				Typestr = "Live"
-			} else {
-				Typestr = "All"
-			}
-			LiveOnly := config.No
-			NewUpcoming := config.No
-			Dynamic := config.No
-			LiteMode := config.No
-			Indie := ""
-
-			if ChannelData[i].LiveOnly {
-				LiveOnly = config.Ok
-			}
-
-			if ChannelData[i].NewUpcoming {
-				NewUpcoming = config.Ok
-			}
-
-			if ChannelData[i].Dynamic {
-				Dynamic = config.Ok
-			}
-
-			if ChannelData[i].LiteMode {
-				LiteMode = config.Ok
-			}
-
-			if ChannelData[i].IndieNotif && ChannelData[i].Group.GroupName == "Independen" {
-				Indie = config.Ok
-			} else if ChannelData[i].Group.GroupName != "Independen" {
-				Indie = "-"
-			} else {
-				Indie = config.No
-			}
-
-			table.Append([]string{strconv.Itoa(int(ChannelData[i].ID)), ChannelData[i].Group.GroupName, Typestr, LiveOnly, Dynamic, NewUpcoming, LiteMode, Indie, ChannelData[i].Region})
-		}
-		table.Render()
-		return ChannelData, tableString.String(), nil
-
-	} else {
-		return nil, "", errors.New("404")
-	}
 }
