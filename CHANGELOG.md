@@ -1,3 +1,6 @@
+v2.12.27
+- Add danbooru fanart
+
 v2.11.27
 - Remove add,update command
 - Fix guild invite log
