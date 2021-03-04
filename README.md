@@ -36,10 +36,10 @@ independent group have strict rule if no one user/roles tagged live/fanart notif
 
 
 ## Current notification support
-See at [Web](https://go-simp.human-z.tech)
+See at [Web](https://go-simp.human-z.moe)
 
 ### Command
-See at [Exec](https://go-simp.human-z.tech/Exec/)
+See at [Exec](https://go-simp.human-z.moe/Exec/)
 
 
 ### Notification&Command 
