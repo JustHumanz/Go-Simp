@@ -45,6 +45,7 @@ func CheckYtSchedule() {
 		wg sync.WaitGroup
 	)
 	for _, Group := range VtubersData.VtuberData {
+		wg.Add(1)
 		go StartCheckYT(Group, &wg)
 	}
 	wg.Wait()
