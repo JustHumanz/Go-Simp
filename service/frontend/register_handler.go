@@ -62,6 +62,10 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 				Register.UpdateType(3)
 			} else if Register.ChannelState.TypeTag == 69 {
 				Register.UpdateType(70)
+			} else if Register.ChannelState.TypeTag == 1 {
+				Register.UpdateType(0)
+			} else if Register.ChannelState.TypeTag == 3 {
+				Register.UpdateType(2)
 			} else {
 				Register.UpdateType(1)
 			}
@@ -70,6 +74,10 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 				Register.UpdateType(3)
 			} else if Register.ChannelState.TypeTag == 69 {
 				LewdLive(69)
+			} else if Register.ChannelState.TypeTag == 2 {
+				Register.UpdateType(0)
+			} else if Register.ChannelState.TypeTag == 3 {
+				Register.UpdateType(1)
 			} else {
 				Register.UpdateType(2)
 			}
@@ -80,6 +88,10 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 				Register.UpdateType(70)
 			} else if Register.ChannelState.TypeTag == 3 {
 				LewdLive(3)
+			} else if Register.ChannelState.TypeTag == 69 {
+				Register.UpdateType(0)
+			} else if Register.ChannelState.TypeTag == 70 {
+				Register.UpdateType(1)
 			} else {
 				Register.UpdateType(69) //nice
 			}
