@@ -521,16 +521,15 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 		dynamic     bool
 		lite        bool
 		indienotif  bool
-		lewd        bool
 	)
-	rows, err := DB.Query(`SELECT Type,LiveOnly,NewUpcoming,Dynamic,Lite,IndieNotif,lewd FROM Channel WHERE VtuberGroup_id=? AND DiscordChannelID=?`, Data.Group.ID, Data.ChannelID)
+	rows, err := DB.Query(`SELECT Type,LiveOnly,NewUpcoming,Dynamic,Lite,IndieNotif FROM Channel WHERE VtuberGroup_id=? AND DiscordChannelID=?`, Data.Group.ID, Data.ChannelID)
 	if err != nil {
 		log.Error(err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&channeltype, &liveonly, &newupcoming, &dynamic, &lite, &indienotif, &lewd)
+		err = rows.Scan(&channeltype, &liveonly, &newupcoming, &dynamic, &lite, &indienotif)
 		if err != nil {
 			log.Error(err)
 		}
@@ -563,7 +562,7 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 			}
 		}
 	} else if UpdateType == "LiveOnly" {
-		if liveonly == Data.LiveOnly {
+		if liveonly == Data.LiveOnly && liveonly {
 			return errors.New("Already set LiveOnly on this channel")
 		} else {
 			_, err := DB.Exec(`Update Channel set Type=?,LiveOnly=?,NewUpcoming=?,Dynamic=? Where VtuberGroup_id=? AND DiscordChannelID=?`, channeltype, Data.LiveOnly, newupcoming, dynamic, Data.Group.ID, Data.ChannelID)
@@ -572,7 +571,7 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 			}
 		}
 	} else if UpdateType == "Dynamic" {
-		if dynamic == Data.Dynamic {
+		if dynamic == Data.Dynamic && dynamic {
 			return errors.New("Already set Dynamic on this channel")
 		} else if newupcoming && dynamic {
 			newupcoming = false
@@ -599,7 +598,7 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 			return err
 		}
 	} else {
-		if newupcoming == Data.NewUpcoming {
+		if newupcoming == Data.NewUpcoming && newupcoming {
 			return errors.New("Already set NewUpcoming on this channel")
 		} else {
 			_, err := DB.Exec(`Update Channel set Type=?,LiveOnly=?,NewUpcoming=?,Dynamic=? Where VtuberGroup_id=? AND DiscordChannelID=?`, channeltype, liveonly, Data.NewUpcoming, dynamic, Data.Group.ID, Data.ChannelID)
