@@ -107,10 +107,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 							"Status":       "Past",
 						}).Info("Update video status from " + Items.Snippet.VideoStatus + " to past")
 						YoutubeData.ChangeYtStatus("past").UpdateYtDB()
-						err := engine.RemoveEmbed(YtVideoID, Bot)
-						if err != nil {
-							log.Error(err)
-						}
+						engine.RemoveEmbed(YtVideoID, Bot)
 
 					} else if Items.Snippet.VideoStatus == "live" && YoutubeData.YtData.Status == "upcoming" {
 						log.WithFields(log.Fields{
@@ -134,10 +131,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 							"Status":       "Past",
 						}).Info("Update video status from " + Items.Snippet.VideoStatus + " to past,probably member only")
 						YoutubeData.ChangeYtStatus("past").UpdateYtDB()
-						err := engine.RemoveEmbed(YtVideoID, Bot)
-						if err != nil {
-							log.Error(err)
-						}
+						engine.RemoveEmbed(YtVideoID, Bot)
 
 					} else if Items.Snippet.VideoStatus == "upcoming" && YoutubeData.YtData.Status == "past" {
 						log.WithFields(log.Fields{

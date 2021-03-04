@@ -175,19 +175,13 @@ func CheckPrivate() {
 				"VideoID": Youtube.VideoID,
 			}).Info("Member only video")
 			Youtube.UpdateYt("past")
-			err := engine.RemoveEmbed(Youtube.VideoID, Bot)
-			if err != nil {
-				log.Error(err)
-			}
+			engine.RemoveEmbed(Youtube.VideoID, Bot)
 		} else if Youtube.Status == "live" && Youtube.Viewers == "" || Youtube.Status == "live" && int(math.Round(time.Now().Sub(Youtube.Schedul).Hours())) > 30 {
 			log.WithFields(log.Fields{
 				"VideoID": Youtube.VideoID,
 			}).Info("Member only video")
 			Youtube.UpdateYt("past")
-			err := engine.RemoveEmbed(Youtube.VideoID, Bot)
-			if err != nil {
-				log.Error(err)
-			}
+			engine.RemoveEmbed(Youtube.VideoID, Bot)
 		}
 
 		_, err := network.Curl("https://i3.ytimg.com/vi/"+Youtube.VideoID+"/hqdefault.jpg", nil)

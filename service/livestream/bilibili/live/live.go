@@ -109,10 +109,7 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 					"Vtuber": Member.EnName,
 					"Start":  ScheduledStart,
 				}).Info("Past live stream")
-				err := engine.RemoveEmbed(strconv.Itoa(DataDB.LiveRoomID), Bot)
-				if err != nil {
-					log.Error(err)
-				}
+				engine.RemoveEmbed(strconv.Itoa(DataDB.LiveRoomID), Bot)
 				Data.SetStatus("Past").
 					UpdateOnline(Status.Data.RoomInfo.Online)
 

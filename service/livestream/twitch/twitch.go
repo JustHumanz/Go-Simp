@@ -117,10 +117,7 @@ func CheckTwitch() {
 						"Group":      Group.GroupName,
 						"VtuberName": Member.Name,
 					}).Info("Change Twitch status to Past")
-					err := engine.RemoveEmbed("Twitch"+Member.TwitchName, Bot)
-					if err != nil {
-						log.Error(err)
-					}
+					engine.RemoveEmbed("Twitch"+Member.TwitchName, Bot)
 				}
 			}
 		}
