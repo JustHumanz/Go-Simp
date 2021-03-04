@@ -48,13 +48,14 @@ const (
 	ChannelPermission = 8208
 	BotPermission     = 452624
 	GuildSupport      = "https://discord.com/invite/ydWC5knbJT"
+	DanbooruEndPoint  = "https://danbooru.donmai.us/posts.json?tags=order:change%20"
 	Waiting           = 5
 	Pilot             = "pilot"
 
 	//Crontab
 	TwitterFanart              = "@every 0h3m0s"
-	TwitterFanartPushDB        = "@every 0h20m0s"
 	BiliBiliFanart             = "@every 0h6m0s"
+	DanbooruFanart             = "@every 0h4m0s"
 	BiliBiliLive               = "@every 0h7m0s"
 	BiliBiliSpace              = "@every 0h13m0s"
 	Twitch                     = "@every 0h7m0s"

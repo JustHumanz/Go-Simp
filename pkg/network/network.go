@@ -22,7 +22,10 @@ func Curl(url string, addheader []string) ([]byte, error) {
 	defer cancel()
 
 	var body []byte
-	spaceClient := http.Client{}
+	spaceClient := http.Client{Transport: &http.Transport{
+		MaxIdleConns:        20,
+		MaxIdleConnsPerHost: 20,
+	}}
 	request, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err

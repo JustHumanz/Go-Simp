@@ -19,10 +19,9 @@
 -- Table structure for table `BiliBili`
 --
 
-DROP TABLE IF EXISTS `BiliBili`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `BiliBili` (
+CREATE TABLE IF NOT EXISTS IF NOT EXISTS `BiliBili` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `VideoID` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Type` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -41,10 +40,9 @@ CREATE TABLE `BiliBili` (
 -- Table structure for table `Channel`
 --
 
-DROP TABLE IF EXISTS `Channel`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Channel` (
+CREATE TABLE IF NOT EXISTS `Channel` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `DiscordChannelID` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Type` int(11) NOT NULL,
@@ -63,10 +61,9 @@ CREATE TABLE `Channel` (
 -- Table structure for table `LiveBiliBili`
 --
 
-DROP TABLE IF EXISTS `LiveBiliBili`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `LiveBiliBili` (
+CREATE TABLE IF NOT EXISTS `LiveBiliBili` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `RoomID` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Status` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -86,10 +83,9 @@ CREATE TABLE `LiveBiliBili` (
 -- Table structure for table `Subscriber`
 --
 
-DROP TABLE IF EXISTS `Subscriber`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Subscriber` (
+CREATE TABLE IF NOT EXISTS `Subscriber` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `Youtube_Subscriber` int(11) DEFAULT NULL,
   `Youtube_Videos` int(11) DEFAULT NULL,
@@ -107,10 +103,9 @@ CREATE TABLE `Subscriber` (
 -- Table structure for table `TBiliBili`
 --
 
-DROP TABLE IF EXISTS `TBiliBili`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `TBiliBili` (
+CREATE TABLE IF NOT EXISTS `TBiliBili` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `PermanentURL` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Author` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -128,10 +123,9 @@ CREATE TABLE `TBiliBili` (
 -- Table structure for table `Twitch`
 --
 
-DROP TABLE IF EXISTS `Twitch`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Twitch` (
+CREATE TABLE IF NOT EXISTS `Twitch` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `Game` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Status` varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -148,10 +142,9 @@ CREATE TABLE `Twitch` (
 -- Table structure for table `Twitter`
 --
 
-DROP TABLE IF EXISTS `Twitter`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Twitter` (
+CREATE TABLE IF NOT EXISTS `Twitter` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `PermanentURL` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Author` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -169,10 +162,9 @@ CREATE TABLE `Twitter` (
 -- Table structure for table `User`
 --
 
-DROP TABLE IF EXISTS `User`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `User` (
+CREATE TABLE IF NOT EXISTS `User` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `DiscordID` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `DiscordUserName` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -188,10 +180,9 @@ CREATE TABLE `User` (
 -- Table structure for table `VtuberGroup`
 --
 
-DROP TABLE IF EXISTS `VtuberGroup`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `VtuberGroup` (
+CREATE TABLE IF NOT EXISTS `VtuberGroup` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `VtuberGroupName` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `VtuberGroupIcon` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -203,10 +194,9 @@ CREATE TABLE `VtuberGroup` (
 -- Table structure for table `VtuberMember`
 --
 
-DROP TABLE IF EXISTS `VtuberMember`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `VtuberMember` (
+CREATE TABLE IF NOT EXISTS `VtuberMember` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `VtuberName` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `VtuberName_EN` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -231,10 +221,9 @@ CREATE TABLE `VtuberMember` (
 -- Table structure for table `Youtube`
 --
 
-DROP TABLE IF EXISTS `Youtube`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Youtube` (
+CREATE TABLE IF NOT EXISTS `Youtube` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `VideoID` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Type` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
