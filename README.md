@@ -2,7 +2,7 @@
 
 ![alt text](https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/go-simp.png "Go-Simp")  
 ##### [Original Source](https://twitter.com/any_star_/status/1288184424320790528)
-![Inline docs](https://github.com/JustHumanz/Go-Simp/workflows/Go-Simp/badge.svg)
+![Inline docs](https://gitlab.com/JustHumanz/Go-Simp/badges/master/pipeline.svg)
 ----
 
 ## Introduction
