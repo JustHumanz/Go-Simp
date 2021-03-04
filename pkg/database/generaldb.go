@@ -521,15 +521,16 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 		dynamic     bool
 		lite        bool
 		indienotif  bool
+		lewd        bool
 	)
-	rows, err := DB.Query(`SELECT Type,LiveOnly,NewUpcoming,Dynamic,Lite,IndieNotif FROM Channel WHERE VtuberGroup_id=? AND DiscordChannelID=?`, Data.Group.ID, Data.ChannelID)
+	rows, err := DB.Query(`SELECT Type,LiveOnly,NewUpcoming,Dynamic,Lite,IndieNotif,lewd FROM Channel WHERE VtuberGroup_id=? AND DiscordChannelID=?`, Data.Group.ID, Data.ChannelID)
 	if err != nil {
 		log.Error(err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&channeltype, &liveonly, &newupcoming, &dynamic, &lite, &indienotif)
+		err = rows.Scan(&channeltype, &liveonly, &newupcoming, &dynamic, &lite, &indienotif, &lewd)
 		if err != nil {
 			log.Error(err)
 		}
@@ -547,8 +548,12 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 				return errors.New("Already set fanart type on this channel")
 			} else if channeltype == 2 {
 				return errors.New("Already set livestream type on this channel")
-			} else {
-				return errors.New("Already set all type on this channel")
+			} else if channeltype == 3 {
+				return errors.New("Already set fanart & livestream type on this channel")
+			} else if channeltype == 69 {
+				return errors.New("Already set lewd type on this channel")
+			} else if channeltype == 70 {
+				return errors.New("Already set lewd & fanart type on this channel")
 			}
 
 		} else {
@@ -784,6 +789,12 @@ func ChannelTag(MemberID int64, typetag int, Options string, Reg string) []Disco
 
 		} else if Options == "NewUpcoming" {
 			rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,Lite,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND NewUpcoming=1 AND (Channel.Region like ? OR Channel.Region='')`, MemberID, "%"+Reg+"%")
+			if err != nil {
+				log.Error(err)
+			}
+			defer rows.Close()
+		} else if Options == "Lewd" {
+			rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,Lite,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=69 OR Channel.type=70) AND (Channel.Region like ? OR Channel.Region='')`, MemberID, "%"+Reg+"%")
 			if err != nil {
 				log.Error(err)
 			}

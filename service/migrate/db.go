@@ -2,19 +2,18 @@ package main
 
 import (
 	"database/sql"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
 	"sync"
 
-	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	_ "github.com/go-sql-driver/mysql"
 	log "github.com/sirupsen/logrus"
 )
 
+/*
 func CreateDB(Data config.ConfigFile) error {
 	log.Info("Create Database")
 
@@ -81,7 +80,7 @@ func CreateDB(Data config.ConfigFile) error {
 		PermanentURL varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 		Author varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 		Likes int(11) DEFAULT NULL,
-		Photos TEXT COLLATE utf8mb4_unicode_ci DEFAULT NULL,  /*i'm not joking,they use sha1 hash for image identify,so the url very fucking long*/
+		Photos TEXT COLLATE utf8mb4_unicode_ci DEFAULT NULL,  //i'm not joking,they use sha1 hash for image identify,so the url very fucking long
 		Videos varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 		Text TEXT COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 		Dynamic_id varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -226,52 +225,52 @@ func CreateDB(Data config.ConfigFile) error {
 		IF reg != '' THEN
 				IF sts = 'upcoming' THEN
 				SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Type,
-				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id 
-				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
+				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id
+				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id
+				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id
 				Where VtuberGroup.id=grpid AND Status='upcoming' AND Region=reg Order by ScheduledStart DESC Limit 3;
 
-			ELSEIF sts = 'live' OR sts = 'private' THEN 
+			ELSEIF sts = 'live' OR sts = 'private' THEN
 				SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Type,
-				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id 
-				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
+				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id
+				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id
+				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id
 				Where VtuberGroup.id=grpid AND Status=sts AND Region=reg Limit 3;
-			ELSE 
+			ELSE
 				SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Type,
-				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id 
-				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
+				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id
+				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id
+				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id
 				Where VtuberGroup.id=grpid AND Status='past' AND Region=reg AND EndStream !='' order by EndStream DESC Limit 3;
-				
-			END if;	
+
+			END if;
 		ELSE
 			IF sts = 'upcoming' THEN
 				SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Type,
-				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id 
-				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-				Where (VtuberGroup.id=grpid or VtuberMember.id=memid) 
-				AND Status='upcoming' 
+				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id
+				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id
+				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id
+				Where (VtuberGroup.id=grpid or VtuberMember.id=memid)
+				AND Status='upcoming'
 				Order by ScheduledStart DESC Limit lmt;
-			ELSEIF sts = 'live' OR sts = 'private' THEN 
+			ELSEIF sts = 'live' OR sts = 'private' THEN
 				SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Type,
-				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id 
-				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-				Where (VtuberGroup.id=grpid or VtuberMember.id=memid) 
+				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id
+				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id
+				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id
+				Where (VtuberGroup.id=grpid or VtuberMember.id=memid)
 				AND Status=sts
 				Limit lmt;
-			ELSE 
+			ELSE
 				SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Type,
-				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id 
-				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-				Where (VtuberGroup.id=grpid or VtuberMember.id=memid) 
+				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id
+				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id
+				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id
+				Where (VtuberGroup.id=grpid or VtuberMember.id=memid)
 				AND Status='past'
 				AND EndStream !='' order by EndStream ASC Limit lmt;
-				
-			END if;	
+
+			END if;
 		END if;
 	END`)
 	if err != nil {
@@ -289,8 +288,8 @@ func CreateDB(Data config.ConfigFile) error {
 		)
 		BEGIN
 			SELECT id,VtuberName,VtuberName_EN,VtuberName_JP,Youtube_ID,BiliBili_SpaceID,BiliBili_RoomID,
-			Region,Hashtag,BiliBili_Hashtag,BiliBili_Avatar,Twitter_Username,Twitch_Username,Youtube_Avatar 
-			FROM Vtuber.VtuberMember WHERE VtuberGroup_id=GroupID 
+			Region,Hashtag,BiliBili_Hashtag,BiliBili_Avatar,Twitter_Username,Twitch_Username,Youtube_Avatar
+			FROM Vtuber.VtuberMember WHERE VtuberGroup_id=GroupID
 			Order by Region,VtuberGroup_id;
 		END`)
 	if err != nil {
@@ -310,10 +309,10 @@ func CreateDB(Data config.ConfigFile) error {
 		)
 		BEGIN
 			SELECT RoomID,Status,Title,Thumbnails,Description,ScheduledStart,Viewers,VtuberName_EN,
-			VtuberName_JP,BiliBili_Avatar FROM Vtuber.LiveBiliBili 
-			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where 
-			(VtuberGroup.id=GroupID or VtuberMember.id=MemberID) 
+			VtuberName_JP,BiliBili_Avatar FROM Vtuber.LiveBiliBili
+			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id
+			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where
+			(VtuberGroup.id=GroupID or VtuberMember.id=MemberID)
 			AND Status=Sts Order by ScheduledStart DESC Limit lmt;
 		END`)
 	if err != nil {
@@ -332,17 +331,17 @@ func CreateDB(Data config.ConfigFile) error {
 		)
 		BEGIN
 		IF GroupID > 0 THEN
-			SELECT VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM Vtuber.BiliBili 
-			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
+			SELECT VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM Vtuber.BiliBili
+			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id
+			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id
 			Where (VtuberGroup.id=GroupID or VtuberMember.id=MemberID) Order by UploadDate DESC limit 3;
-		Else 
-			SELECT VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM Vtuber.BiliBili 
-			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-			Where (VtuberGroup.id=GroupID or VtuberMember.id=MemberID) Order by UploadDate DESC limit 5;		
+		Else
+			SELECT VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM Vtuber.BiliBili
+			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id
+			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id
+			Where (VtuberGroup.id=GroupID or VtuberMember.id=MemberID) Order by UploadDate DESC limit 5;
 
-		end if;						
+		end if;
 		END`)
 	if err != nil {
 		return err
@@ -361,16 +360,16 @@ func CreateDB(Data config.ConfigFile) error {
 		)
 		BEGIN
 		IF State = 'twitter' THEN
-			SELECT Twitter.id,VtuberName_EN,VtuberName_JP,PermanentURL,Author,Photos,Videos,Text FROM Vtuber.Twitter 
-			Inner Join Vtuber.VtuberMember on VtuberMember.id = Twitter.VtuberMember_id 
-			Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id 
+			SELECT Twitter.id,VtuberName_EN,VtuberName_JP,PermanentURL,Author,Photos,Videos,Text FROM Vtuber.Twitter
+			Inner Join Vtuber.VtuberMember on VtuberMember.id = Twitter.VtuberMember_id
+			Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id
 			where (VtuberGroup.id=GroupID OR VtuberMember.id=MemberID)  ORDER by RAND() LIMIT 1;
 		else
-			SELECT TBiliBili.id,VtuberName_EN,VtuberName_JP,PermanentURL,Author,Photos,Videos,Text FROM Vtuber.TBiliBili  
-			Inner Join Vtuber.VtuberMember on VtuberMember.id = TBiliBili.VtuberMember_id 
-			Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id 
+			SELECT TBiliBili.id,VtuberName_EN,VtuberName_JP,PermanentURL,Author,Photos,Videos,Text FROM Vtuber.TBiliBili
+			Inner Join Vtuber.VtuberMember on VtuberMember.id = TBiliBili.VtuberMember_id
+			Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id
 			where (VtuberGroup.id=GroupID OR VtuberMember.id=MemberID)  ORDER by RAND() LIMIT 1;
-			
+
 		end if;
 		END`)
 
@@ -382,6 +381,7 @@ func CreateDB(Data config.ConfigFile) error {
 	db.Close()
 	return nil
 }
+*/
 
 func AddData(Data Vtuber) {
 	Independen := func(wg *sync.WaitGroup) {

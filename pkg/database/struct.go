@@ -5,18 +5,6 @@ import (
 	"time"
 )
 
-/*
-type MemberGroupID struct {
-	EnName          string
-	JpName          string
-	TwitterHashtags string
-	MemberID        int64
-	GroupID         int64
-	GroupName       string
-	GroupIcon       string
-}
-*/
-
 //DataFanart fanart struct
 type DataFanart struct {
 	ID           int64
