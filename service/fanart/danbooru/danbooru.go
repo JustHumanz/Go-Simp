@@ -14,8 +14,7 @@ var (
 	VtubersData database.VtubersPayload
 	configfile  config.ConfigFile
 	FistRunning *bool
-	DataStore   = make(map[string][]int)
-	LewdPics    []int
+	DataStore   = make(map[string][]string)
 )
 
 //Start start twitter module

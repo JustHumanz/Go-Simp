@@ -617,7 +617,7 @@ func (Data Group) GetChannelByGroup(Region string) []DiscordChannel {
 		id          int64
 		ChannelData []DiscordChannel
 	)
-	rows, err := DB.Query(`SELECT id,DiscordChannelID FROM Channel WHERE VtuberGroup_id=? AND (Channel.Region like ? OR Channel.Region='') group by DiscordChannelID`, Data.ID, "%"+Region+"%")
+	rows, err := DB.Query(`SELECT id,DiscordChannelID FROM Channel WHERE VtuberGroup_id=? AND (Type=1 OR Type=2 OR Type=3) AND (Channel.Region like ? OR Channel.Region='') group by DiscordChannelID`, Data.ID, "%"+Region+"%")
 	if err != nil {
 		log.Error(err)
 	}

@@ -29,7 +29,6 @@ func GetDan(Data database.Group) {
 
 			var (
 				DanPayload []Danbooru
-				//LewdIDs    []int
 			)
 			databyte, err := network.Curl(config.DanbooruEndPoint+strings.Replace(Member.EnName, " ", "_", -1)+"&limit=10", nil)
 			if err != nil {
@@ -42,8 +41,7 @@ func GetDan(Data database.Group) {
 			for _, Dan := range DanPayload {
 				if Dan.CheckLewd() {
 					if *FistRunning {
-						//LewdIDs = append(LewdIDs, Dan.ID)
-						DataStore[Member.Name] = append(DataStore[Member.Name], Dan.ID)
+						DataStore[Member.Name] = append(DataStore[Member.Name], Dan.Source)
 					} else {
 						if Dan.IsNew(Member) {
 							log.WithFields(log.Fields{
@@ -51,14 +49,12 @@ func GetDan(Data database.Group) {
 								"Vtubers":    Member.Name,
 								"DanbooruID": Dan.ID,
 							}).Info("New Lewd pic")
-							//LewdIDs = append(LewdIDs, Dan.ID)
-							DataStore[Member.Name] = append(DataStore[Member.Name], Dan.ID)
+							DataStore[Member.Name] = append(DataStore[Member.Name], Dan.Source)
 							Dan.SendNotif(Data, Member)
 						}
 					}
 				}
 			}
-			//DataStore[Member.Name] = LewdIDs
 		}(Mem, wg)
 	}
 	wg.Wait()
@@ -67,7 +63,7 @@ func GetDan(Data database.Group) {
 func (Data Danbooru) IsNew(Member database.Member) bool {
 	if DataStore != nil {
 		for _, v := range DataStore[Member.Name] {
-			if v == Data.ID {
+			if v == Data.Source {
 				return false
 			}
 		}
