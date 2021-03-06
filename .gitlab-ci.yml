@@ -246,3 +246,4 @@ deploy:
     - kubectl --record deployment.apps/go-simp-web set image deployment.v1.apps/go-simp-web go-simp-web=registry.gitlab.com/justhumanz/go-simp/web:"$CI_COMMIT_TAG" 
   tags:
     - k8s    
+  when: manual  
