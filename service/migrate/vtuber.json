@@ -212,7 +212,21 @@
                     "Twitch_Username": "shibuyahal",
                     "Region":"JP"
                 },
-
+                {
+                    "Name":"Mea",
+                    "EN_Name":"Kagura Mea",
+                    "JP_Name":"神楽めあ",
+                    "Hashtag": {
+                        "Twitter": "#めあArt",
+                        "BiliBili": "meart"
+                    },
+                    "Yt_ID":  "UCWCc8tO-uUl_7SJXIKJACMw",
+                    "BiliBili_ID": 349991143,
+                    "BiliRoom_ID": 12235923,
+                    "Twitter_Username": "KaguraMea_VoV",
+                    "Twitch_Username": "",
+                    "Region":"JP"
+                },
                 {
                     "Name":"Artia",
                     "EN_Name":"Artia",
