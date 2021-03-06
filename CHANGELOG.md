@@ -2,6 +2,7 @@ v2.12.29
 - Add Mea
 - Change hard config to variable config
 - Upgrade dependency
+- Fix nill channel & nill upcoming
 
 v2.12.28
 - Fix region nill in `channel state`
