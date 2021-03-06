@@ -1,17 +1,16 @@
-v2.12.30
+## v3.0.0
+
+v2.9.8
 - Add Mea
 - Change hard config to variable config
 - Upgrade dependency
 - Fix nill channel & nill upcoming
-
-v2.12.28
-- Fix region nill in `channel state`
-- Change danbooru stack from int to string
-
-v2.12.27
 - Add danbooru fanart
 
-v2.11.27
+v2.9.8-alpha
+- Add danbooru fanart
+
+v2.8.8
 - Remove add,update command
 - Fix guild invite log
 - Change webhook to channelID
@@ -19,48 +18,55 @@ v2.11.27
 - Add `IndieNotif`
 - Update change state
 
-v2.10.26
+v2.4.7
 - Change fe wait workflow
 - Enhance `updatev2` to `update`
 - Add Support region
 - Move time config to config package
 
-v2.10.25
+v2.4.7-beta
+- Add `updatev2`
+- Add Support region
+
+v2.3.7
 - Change HeartBeat workflow
 - Add register emoji when a new vtuber added
 
-v2.10.24
+v2.2.7
 - Add gRPC for for service communicate
 - Update 774inc
 - Add Ameka&Lili
 - Separate invite log with pilot log
 
-v2.7.24
+v2.2.7-beta
+- Add gRPC for for service communicate
+
+v2.1.7
 - Fix guild channel notif
 - Change Tbilibili fanart workflow
 - Add LowResources options
 
-v2.7.23
+v2.0.6
 - Change 774.inc to 774inc
 - Update 774inc
 - Add k8s mainfest
 - Fix go-simp-web debug env
 
-v2.7.22
+v2.0.5
 - Add Twitch support
 - Add Ririsya #112
 - Add Yayanehi #111
 - Change Lofi to Iofi
 - Fix 404.jpg
 
-v2.6.21
+v2.0.4
 - Update redis
 - Update cronjob to v.3
 - Force retrun when failed send message
 - Add Discord session Close 
 - Fix reminder
 
-v2.6.20
+v2.0.3
 - Youtube checker livestream by count time
 - Fix User not taged when vtuber got a milestone subs/followers
 - Specially for Independent livestream will not be send if there no one user/role tagged
@@ -68,7 +74,7 @@ v2.6.20
 - Disable youtube checker send notif
 - Fix add in go-simp-web
 
-v2.5.19
+v2.0.2
 - Fix duplicate notif
 - Fix users not pinged
 - Add context to get userlist
@@ -76,37 +82,37 @@ v2.5.19
 - Add async to get userlist
 - Add wait when get userlist
 
-v2.5.18
+v2.0.1
 - Update help command
 - Fix redis error handling
 - Fix go-simp django
 
-v2.5.17
+## v2.0.0
 - Add Register user via reacting
 - Add Dynamic mode on bilibili
 
 ----------------------------------------------------------------------------------
-v1.5.16
+v1.3.14
 - Add Dynamic notif #83
 - Fix twitter fanart high cpu usage
 - Add DiscordChannel struct
 
-v1.4.15
+v1.2.13
 - Fix subs milistone not send
 - Fix member cache
 - Fix reminder time
 
-v1.4.12
+v1.2.12
 - Add Top.gg server count
 - Remove async from bilibili fanart
 - Fix youtube notif
 
-v1.4.11
+v1.2.11
 - Bring back module info
 - Change reminder interval
 - Add Youtube live bilibili checker 
 
-v1.4.10
+v1.2.10
 - Update discordgo
 - Change `EnName` to `Name` in fanart scraper
 - Change fanart scraper logic
@@ -114,52 +120,52 @@ v1.4.10
 - Update twitter-scraper
 - Update youtube send notif format
 
-v1.4.9
+v1.2.9
 - Change Viwers/Online/Followers number to human readable
 - Change `subscribe` to `info`
 
-v1.3.8
+v1.1.9
 - Fix redis malfunction
 - Change bilibili-fanart logic
 - Add youtube changer status in user handler
 - Remove twitter with Quoted and Reply
 
-v1.3.7
+v1.1.7
 - Change backend to micro service
 - Fix & change redis TTL
 - Update reminder logic
 
-v1.3.6
+v1.1.6
 - Fix youtube not send notif
 - Fix migrate token out of limit
 
-v1.3.5
+v1.1.5
 - Add redis for cache
 - Set yt state to cache
 - Set fanart checker to cache
 
-v1.2.5
+v1.1.4
 - Change wg.wait to sleep
 - Change cronjob
 - Add kano bilibili hashtag
 
-v1.2.4
+v1.1.3
 - Add wg.wait() every 10 members
 - Change cron job
 
-v1.2.3
+v1.1.2
 - Change Go-Simp-Web to Web
 - Fix twitter search query
 - Change "/tmp" to const
 - Change Youtube scraper to offical API
 - Upgrade twitter-scraper
 
-v1.2.2
+v1.1.1
 - Add donation message
 - Move hardcode config to toml file
 - Change tmp dir
 
-v1.1.1
+## v1.0.0
 - Add modul info
 - Change tor node
 - Fix youtube avatar scraper
