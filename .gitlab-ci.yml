@@ -252,6 +252,6 @@ deploy:
   rules :
     - if: $CI_COMMIT_TAG != null
       when: on_success
+    - when: manual      
   tags:
     - k8s    
-  when: manual    
