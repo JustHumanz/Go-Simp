@@ -14,14 +14,13 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/nicklaw5/helix"
-
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	youtube "github.com/JustHumanz/Go-Simp/service/livestream/youtube"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
+	"github.com/nicklaw5/helix"
 
 	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
