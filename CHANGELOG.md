@@ -1,4 +1,4 @@
-v2.12.29
+v2.12.30
 - Add Mea
 - Change hard config to variable config
 - Upgrade dependency
