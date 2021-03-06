@@ -16,7 +16,10 @@ import (
 //PushNotif Push Data to discord channel
 func PushNotif(Data database.TBiliBili) error {
 	Group := Data.Group
-	ChannelData := database.ChannelTag(Data.Member.ID, 1, config.Default, Data.Member.Region)
+	ChannelData, err := database.ChannelTag(Data.Member.ID, 1, config.Default, Data.Member.Region)
+	if err != nil {
+		log.Error(err)
+	}
 	Color, err := engine.GetColor(config.TmpDir, Data.Photos[0])
 	if err != nil {
 		return err

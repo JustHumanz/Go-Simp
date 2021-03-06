@@ -21,17 +21,21 @@ func (Data TwitchNotif) SendNotif() error {
 	}
 	//id, DiscordChannelID
 	var (
-		wg          sync.WaitGroup
-		ChannelData = database.ChannelTag(Data.Member.ID, 2, config.Default, Data.Member.Region)
-		VtuberName  = engine.FixName(Data.Member.EnName, Data.Member.JpName)
-		ImgURL      = "https://www.twitch.tv/" + Data.Member.TwitchName
-		loc         = engine.Zawarudo(Data.Member.Region)
-		expiresAt   = time.Now().In(loc)
-		User        = &database.UserStruct{
+		wg         sync.WaitGroup
+		VtuberName = engine.FixName(Data.Member.EnName, Data.Member.JpName)
+		ImgURL     = "https://www.twitch.tv/" + Data.Member.TwitchName
+		loc        = engine.Zawarudo(Data.Member.Region)
+		expiresAt  = time.Now().In(loc)
+		User       = &database.UserStruct{
 			Human:    true,
 			Reminder: 0,
 		}
 	)
+
+	ChannelData, err := database.ChannelTag(Data.Member.ID, 2, config.Default, Data.Member.Region)
+	if err != nil {
+		log.Error(err)
+	}
 	for i, v := range ChannelData {
 		v.SetMember(Data.Member)
 

@@ -28,9 +28,13 @@ func (Data CheckSctruct) SendNude() {
 		for _, video := range Data.VideoList {
 			//ID, DiscordChannelID
 			var (
-				wg          sync.WaitGroup
-				ChannelData = database.ChannelTag(Data.Member.ID, 2, config.NotLiveOnly, Data.Member.Region)
+				wg sync.WaitGroup
 			)
+
+			ChannelData, err := database.ChannelTag(Data.Member.ID, 2, config.NotLiveOnly, Data.Member.Region)
+			if err != nil {
+				log.Error(err)
+			}
 			for i, v := range ChannelData {
 				v.SetMember(Data.Member)
 

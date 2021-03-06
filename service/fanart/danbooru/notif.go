@@ -17,7 +17,10 @@ func (Data Danbooru) SendNotif(Group database.Group, Member database.Member) {
 		Link = Data.Source
 	}
 
-	ChannelData := database.ChannelTag(Member.ID, 0, config.LewdChannel, Member.Region)
+	ChannelData, err := database.ChannelTag(Member.ID, 0, config.LewdChannel, Member.Region)
+	if err != nil {
+		log.Error(err)
+	}
 	for _, Channel := range ChannelData {
 		Msg, err := Bot.ChannelMessageSend(Channel.ChannelID, Link)
 		if err != nil {

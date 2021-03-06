@@ -762,7 +762,7 @@ func ChannelStatus(ChannelID string) []DiscordChannel {
 }
 
 //ChannelTag get channel tags from `channel tags` command
-func ChannelTag(MemberID int64, typetag int, Options string, Reg string) []DiscordChannel {
+func ChannelTag(MemberID int64, typetag int, Options string, Reg string) ([]DiscordChannel, error) {
 	var (
 		Data        []DiscordChannel
 		rows        *sql.Rows
@@ -782,54 +782,54 @@ func ChannelTag(MemberID int64, typetag int, Options string, Reg string) []Disco
 		if Options == "NotLiveOnly" {
 			rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,Lite,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND LiveOnly=0 AND (Channel.Region like ? OR Channel.Region='')`, MemberID, "%"+Reg+"%")
 			if err != nil {
-				log.Error(err)
+				return nil, err
 			}
 			defer rows.Close()
 
 		} else if Options == "NewUpcoming" {
 			rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,Lite,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND NewUpcoming=1 AND (Channel.Region like ? OR Channel.Region='')`, MemberID, "%"+Reg+"%")
 			if err != nil {
-				log.Error(err)
+				return nil, err
 			}
 			defer rows.Close()
 		} else if Options == "Lewd" {
 			rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,Lite,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=69 OR Channel.type=70) AND (Channel.Region like ? OR Channel.Region='')`, MemberID, "%"+Reg+"%")
 			if err != nil {
-				log.Error(err)
+				return nil, err
 			}
 			defer rows.Close()
 		} else if Options == "Default" {
 			rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,Lite,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=? OR Channel.type=3) AND (Channel.Region like ? OR Channel.Region='')`, MemberID, typetag, "%"+Reg+"%")
 			if err != nil {
-				log.Error(err)
+				return nil, err
 			}
 			defer rows.Close()
 		}
 		for rows.Next() {
 			err = rows.Scan(&DiscordChan.ID, &DiscordChan.ChannelID, &DiscordChan.Dynamic, &DiscordChan.LiteMode, &DiscordChan.Group.ID)
 			if err != nil {
-				log.Error(err)
+				return nil, err
 			}
 			Data = append(Data, DiscordChan)
 			err = rds.LPush(context.Background(), Key, DiscordChan).Err()
 			if err != nil {
-				log.Error(err)
+				return nil, err
 			}
 		}
 		err = rds.Expire(context.Background(), Key, config.ChannelTagTTL).Err()
 		if err != nil {
-			log.Error(err)
+			return nil, err
 		}
 	} else {
 		for _, result := range val {
 			err := json.Unmarshal([]byte(result), &DiscordChan)
 			if err != nil {
-				log.Error(err)
+				return nil, err
 			}
 			Data = append(Data, DiscordChan)
 		}
 	}
-	return Data
+	return Data, nil
 }
 
 //PushReddis Push DiscordChannel state to reddis

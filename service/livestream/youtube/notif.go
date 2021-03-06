@@ -63,9 +63,14 @@ func (PushData *NotifStruct) SendNude() error {
 		}
 		//id, DiscordChannelID
 		var (
-			wg          sync.WaitGroup
-			ChannelData = database.ChannelTag(PushData.Member.ID, 2, config.NewUpcoming, PushData.Member.Region)
+			wg sync.WaitGroup
 		)
+
+		ChannelData, err := database.ChannelTag(PushData.Member.ID, 2, config.NewUpcoming, PushData.Member.Region)
+		if err != nil {
+			log.Error(err)
+		}
+
 		for i, v := range ChannelData {
 			v.SetMember(PushData.Member)
 
@@ -144,9 +149,14 @@ func (PushData *NotifStruct) SendNude() error {
 		}
 		//id, DiscordChannelID
 		var (
-			wg          sync.WaitGroup
-			ChannelData = database.ChannelTag(PushData.Member.ID, 2, config.Default, PushData.Member.Region)
+			wg sync.WaitGroup
 		)
+
+		ChannelData, err := database.ChannelTag(PushData.Member.ID, 2, config.Default, PushData.Member.Region)
+		if err != nil {
+			log.Error(err)
+		}
+
 		for i, v := range ChannelData {
 			v.SetMember(PushData.Member)
 
@@ -260,9 +270,14 @@ func (PushData *NotifStruct) SendNude() error {
 
 		//id, DiscordChannelID
 		var (
-			wg          sync.WaitGroup
-			ChannelData = database.ChannelTag(PushData.Member.ID, 2, config.NotLiveOnly, PushData.Member.Region)
+			wg sync.WaitGroup
 		)
+
+		ChannelData, err := database.ChannelTag(PushData.Member.ID, 2, config.NotLiveOnly, PushData.Member.Region)
+		if err != nil {
+			log.Error(err)
+		}
+
 		for i, v := range ChannelData {
 			v.SetMember(PushData.Member)
 
@@ -329,7 +344,11 @@ func (PushData *NotifStruct) SendNude() error {
 		UpcominginMinutes := int(Timestart.Sub(time.Now()).Minutes())
 		if UpcominginMinutes > 10 && UpcominginMinutes < 70 {
 			if database.CheckReminder(UpcominginMinutes) {
-				ChanelData := database.ChannelTag(PushData.Member.ID, 2, config.Default, PushData.Member.Region)
+				ChanelData, err := database.ChannelTag(PushData.Member.ID, 2, config.Default, PushData.Member.Region)
+				if err != nil {
+					log.Error(err)
+				}
+
 				Color, err := engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
 				if err != nil {
 					return err
