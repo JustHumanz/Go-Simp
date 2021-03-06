@@ -1837,6 +1837,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				Dynamic     = config.No
 				LiteMode    = config.No
 				Indie       = ""
+				Region      = "All"
 			)
 			ChannelData := database.ChannelStatus(m.ChannelID)
 			if len(ChannelData) > 0 {
@@ -1846,6 +1847,9 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 						log.Error(err)
 					}
 
+					if Channel.Region != "" {
+						Region = Channel.Region
+					}
 					if Channel.IndieNotif && Channel.Group.GroupName == "Independen" {
 						Indie = config.Ok
 					} else if Channel.Group.GroupName != "Independen" {
@@ -1862,7 +1866,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 							SetDescription("Channel States of "+Channel.Group.GroupName).
 							SetTitle(ChannelRaw.Name).
 							AddField("Type", Typestr).
-							AddField("Region", Channel.Region).
+							AddField("Region", Region).
 							AddField("Independen notif", Indie).
 							InlineAllFields().
 							SetColor(Color).MessageEmbed)
@@ -1883,7 +1887,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 							SetDescription("Channel States of "+Channel.Group.GroupName).
 							SetTitle(ChannelRaw.Name).
 							AddField("Type", Typestr).
-							AddField("Region", Channel.Region).
+							AddField("Region", Region).
 							AddField("Independen notif", Indie).
 							InlineAllFields().
 							SetColor(Color).MessageEmbed)
@@ -1921,7 +1925,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 						AddField("Dynamic", Dynamic).
 						AddField("Upcoming", NewUpcoming).
 						AddField("Lite", LiteMode).
-						AddField("Region", Channel.Region).
+						AddField("Region", Region).
 						AddField("Independen notif", Indie).
 						InlineAllFields().
 						SetColor(Color).MessageEmbed)

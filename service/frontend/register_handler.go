@@ -238,10 +238,14 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 					Dynamic     = config.No
 					LiteMode    = config.No
 					Indie       = ""
+					Region      = "All"
 				)
 				ChannelData := database.ChannelStatus(m.ChannelID)
 				if len(ChannelData) > 0 {
 					for _, Channel := range ChannelData {
+						if Channel.Region != "" {
+							Region = Channel.Region
+						}
 
 						if Channel.TypeTag == 1 {
 							Typestr = "Art"
@@ -289,7 +293,7 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 							AddField("Dynamic", Dynamic).
 							AddField("Upcoming", NewUpcoming).
 							AddField("Lite", LiteMode).
-							AddField("Region", Channel.Region).
+							AddField("Region", Region).
 							AddField("Independen notif", Indie).
 							InlineAllFields().MessageEmbed)
 						if err != nil {
