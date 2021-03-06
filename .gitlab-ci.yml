@@ -19,6 +19,9 @@ build go-simp:
   script:
     - docker build -t $BASEIMAGE .
     - docker push $BASEIMAGE
+  tags:
+    - docker
+    - gce    
   rules :
     - if: $CI_COMMIT_TAG != null
       when: on_success
@@ -35,6 +38,9 @@ build pilot:
     - docker build -t pilot $CI_PROJECT_DIR/service/pilot
     - docker tag pilot "$CI_REGISTRY_IMAGE"/pilot:"$CI_COMMIT_TAG"
     - docker push "$CI_REGISTRY_IMAGE"/pilot:"$CI_COMMIT_TAG"
+  tags:
+    - docker
+    - gce    
   rules :
     - if: $CI_COMMIT_TAG != null
       when: on_success
@@ -50,6 +56,12 @@ build migrate:
     - docker build -t migrate $CI_PROJECT_DIR/service/migrate
     - docker tag migrate "$CI_REGISTRY_IMAGE"/migrate:"$CI_COMMIT_TAG"
     - docker push "$CI_REGISTRY_IMAGE"/migrate:"$CI_COMMIT_TAG"
+  tags:
+    - docker
+    - gce    
+  rules :
+    - if: $CI_COMMIT_TAG != null
+      when: on_success
 
 build fanart:
   stage: build
@@ -62,6 +74,9 @@ build fanart:
     - docker build -t fanart $CI_PROJECT_DIR/service/fanart
     - docker tag fanart "$CI_REGISTRY_IMAGE"/fanart:"$CI_COMMIT_TAG"
     - docker push "$CI_REGISTRY_IMAGE"/fanart:"$CI_COMMIT_TAG"
+  tags:
+    - docker
+    - gce        
   rules :
     - if: $CI_COMMIT_TAG != null
       when: on_success
@@ -77,6 +92,9 @@ build livestream:
     - docker build -t livestream $CI_PROJECT_DIR/service/livestream
     - docker tag livestream "$CI_REGISTRY_IMAGE"/livestream:"$CI_COMMIT_TAG"
     - docker push "$CI_REGISTRY_IMAGE"/livestream:"$CI_COMMIT_TAG"
+  tags:
+    - docker
+    - gce        
   rules :
     - if: $CI_COMMIT_TAG != null
       when: on_success
@@ -92,6 +110,9 @@ build subscriber:
     - docker build -t subscriber $CI_PROJECT_DIR/service/subscriber
     - docker tag subscriber "$CI_REGISTRY_IMAGE"/subscriber:"$CI_COMMIT_TAG"
     - docker push "$CI_REGISTRY_IMAGE"/subscriber:"$CI_COMMIT_TAG"   
+  tags:
+    - docker
+    - gce        
   rules :
     - if: $CI_COMMIT_TAG != null
       when: on_success
@@ -107,6 +128,9 @@ build utility:
     - docker build -t utility $CI_PROJECT_DIR/service/utility
     - docker tag utility "$CI_REGISTRY_IMAGE"/utility:"$CI_COMMIT_TAG"
     - docker push "$CI_REGISTRY_IMAGE"/utility:"$CI_COMMIT_TAG"       
+  tags:
+    - docker
+    - gce        
   rules :
     - if: $CI_COMMIT_TAG != null
       when: on_success
@@ -122,6 +146,9 @@ build frontend:
     - docker build -t frontend $CI_PROJECT_DIR/service/frontend
     - docker tag frontend "$CI_REGISTRY_IMAGE"/frontend:"$CI_COMMIT_TAG"
     - docker push "$CI_REGISTRY_IMAGE"/frontend:"$CI_COMMIT_TAG"        
+  tags:
+    - docker
+    - gce        
   rules :
     - if: $CI_COMMIT_TAG != null
       when: on_success
@@ -137,6 +164,9 @@ build guild:
     - docker build -t guild $CI_PROJECT_DIR/service/guild
     - docker tag guild "$CI_REGISTRY_IMAGE"/guild:"$CI_COMMIT_TAG"
     - docker push "$CI_REGISTRY_IMAGE"/guild:"$CI_COMMIT_TAG"  
+  tags:
+    - docker
+    - gce        
   rules :
     - if: $CI_COMMIT_TAG != null
       when: on_success
@@ -152,6 +182,9 @@ build rest_api:
     - docker build -t api $CI_PROJECT_DIR/service/rest-api
     - docker tag api "$CI_REGISTRY_IMAGE"/api:"$CI_COMMIT_TAG"
     - docker push "$CI_REGISTRY_IMAGE"/api:"$CI_COMMIT_TAG"
+  tags:
+    - docker
+    - gce        
   rules :
     - if: $CI_COMMIT_TAG != null
       when: on_success
@@ -163,11 +196,11 @@ build static_files:
     - docker info   
   script:
     - docker build -t static_files $CI_PROJECT_DIR/Img
-    - docker tag static_files "$CI_REGISTRY_IMAGE"/static_files:"$CI_COMMIT_TAG"
-    - docker push "$CI_REGISTRY_IMAGE"/static_files:"$CI_COMMIT_TAG"      
-  rules :
-    - if: $CI_COMMIT_TAG != null
-      when: on_success
+    - docker tag static_files "$CI_REGISTRY_IMAGE"/static_files
+    - docker push "$CI_REGISTRY_IMAGE"/static_files
+  tags:
+    - docker
+    - gce        
 
 build web:
   stage: build
@@ -178,6 +211,9 @@ build web:
     - docker build -t web $CI_PROJECT_DIR/service/web
     - docker tag web "$CI_REGISTRY_IMAGE"/web:"$CI_COMMIT_TAG"
     - docker push "$CI_REGISTRY_IMAGE"/web:"$CI_COMMIT_TAG"
+  tags:
+    - docker
+    - gce            
   rules :
     - if: $CI_COMMIT_TAG != null
       when: on_success
@@ -191,6 +227,9 @@ build multitor:
     - docker build -t multitor $CI_PROJECT_DIR/service/multitor/
     - docker tag multitor "$CI_REGISTRY_IMAGE"/multitor
     - docker push "$CI_REGISTRY_IMAGE"/multitor
+  tags:
+    - docker
+    - gce            
 
 
 deploy:
