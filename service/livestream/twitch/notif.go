@@ -22,7 +22,7 @@ func (Data TwitchNotif) SendNotif() error {
 	//id, DiscordChannelID
 	var (
 		wg          sync.WaitGroup
-		ChannelData = database.ChannelTag(Data.Member.ID, 2, "", Data.Member.Region)
+		ChannelData = database.ChannelTag(Data.Member.ID, 2, config.Default, Data.Member.Region)
 		VtuberName  = engine.FixName(Data.Member.EnName, Data.Member.JpName)
 		ImgURL      = "https://www.twitch.tv/" + Data.Member.TwitchName
 		loc         = engine.Zawarudo(Data.Member.Region)

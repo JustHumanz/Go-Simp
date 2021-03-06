@@ -52,7 +52,7 @@ func (Data *LiveBili) Crotttt() error {
 	//id, DiscordChannelID
 	var (
 		wg          sync.WaitGroup
-		ChannelData = database.ChannelTag(MemberID, 2, "", Data.Member.Region)
+		ChannelData = database.ChannelTag(MemberID, 2, config.Default, Data.Member.Region)
 	)
 	for i, v := range ChannelData {
 		v.SetMember(Data.Member)

@@ -16,7 +16,7 @@ import (
 //PushNotif Push Data to discord channel
 func PushNotif(Data database.TBiliBili) error {
 	Group := Data.Group
-	ChannelData := database.ChannelTag(Data.Member.ID, 1, "", Data.Member.Region)
+	ChannelData := database.ChannelTag(Data.Member.ID, 1, config.Default, Data.Member.Region)
 	Color, err := engine.GetColor(config.TmpDir, Data.Photos[0])
 	if err != nil {
 		return err

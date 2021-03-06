@@ -87,6 +87,20 @@ const (
 	Art   = "🎨"
 	Live  = "🎥"
 	Lewd  = "🔞"
+
+	//GetChannel
+	NotLiveOnly = "NotLiveOnly"
+	NewUpcoming = "NewUpcoming"
+	LewdChannel = "Lewd"
+	Default     = ""
+
+	//ChannelType
+	ArtType      = 1
+	LiveType     = 2
+	ArtNLiveType = 3
+	LewdType     = 69
+	LewdNArtType = 70
+	NillType     = 0
 )
 
 //ConfigFile config file struct for config.toml

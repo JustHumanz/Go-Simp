@@ -798,7 +798,7 @@ func ChannelTag(MemberID int64, typetag int, Options string, Reg string) []Disco
 				log.Error(err)
 			}
 			defer rows.Close()
-		} else {
+		} else if Options == "Default" {
 			rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,Lite,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=? OR Channel.type=3) AND (Channel.Region like ? OR Channel.Region='')`, MemberID, typetag, "%"+Reg+"%")
 			if err != nil {
 				log.Error(err)

@@ -16,7 +16,7 @@ import (
 func SendFanart(Data []Fanart, Group database.Group) {
 	for _, MemberFanart := range Data {
 		url := MemberFanart.Tweet.PermanentURL
-		ChannelData := database.ChannelTag(MemberFanart.Member.ID, 1, "", MemberFanart.Member.Region)
+		ChannelData := database.ChannelTag(MemberFanart.Member.ID, 1, config.Default, MemberFanart.Member.Region)
 		var (
 			tags  string
 			Media string
