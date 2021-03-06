@@ -1,3 +1,8 @@
+v2.12.29
+- Add Mea
+- Change hard config to variable config
+- Upgrade dependency
+
 v2.12.28
 - Fix region nill in `channel state`
 - Change danbooru stack from int to string
