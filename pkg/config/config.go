@@ -92,7 +92,7 @@ const (
 	NotLiveOnly = "NotLiveOnly"
 	NewUpcoming = "NewUpcoming"
 	LewdChannel = "Lewd"
-	Default     = ""
+	Default     = "Default"
 
 	//ChannelType
 	ArtType      = 1

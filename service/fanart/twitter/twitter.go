@@ -24,7 +24,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 	VtubersData = c
 	configfile = d
 	b.AddFunc(config.TwitterFanart, CheckNew)
-	log.Info("Enable twitter fanart module")
+	log.Info("Enable Twitter fanart module")
 }
 
 //CheckNew Check new fanart
