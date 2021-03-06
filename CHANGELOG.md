@@ -1,3 +1,7 @@
+v2.12.28
+- Fix region nill in `channel state`
+- Change danbooru stack from int to string
+
 v2.12.27
 - Add danbooru fanart
 
