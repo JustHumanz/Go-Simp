@@ -247,8 +247,9 @@ deploy:
     - kubectl --record deployment.apps/go-simp-live set image deployment.v1.apps/go-simp-live go-simp-live=registry.gitlab.com/justhumanz/go-simp/livestream:"$CI_COMMIT_TAG"
     - kubectl --record deployment.apps/go-simp-pilot set image deployment.v1.apps/go-simp-pilot go-simp-pilot=registry.gitlab.com/justhumanz/go-simp/pilot:"$CI_COMMIT_TAG"
     - kubectl --record deployment.apps/go-simp-subscriber set image deployment.v1.apps/go-simp-subscriber go-simp-subscriber=registry.gitlab.com/justhumanz/go-simp/subscriber:"$CI_COMMIT_TAG"
-    - kubectl --record deployment.apps/go-simp-utility set image deployment.v1.apps/go-simp-utility go-simp-utility=registry.gitlab.com/justhumanz/go-simp/utility:"$CI_COMMIT_TAG"          
+    - kubectl --record deployment.apps/go-simp-utility set image deployment.v1.apps/go-simp-utility go-simp-utility=registry.gitlab.com/justhumanz/go-simp/utility:"$CI_COMMIT_TAG"
     - kubectl --record deployment.apps/go-simp-web set image deployment.v1.apps/go-simp-web go-simp-web=registry.gitlab.com/justhumanz/go-simp/web:"$CI_COMMIT_TAG"
+  rules :
     - if: $CI_COMMIT_TAG != null
       when: on_success
     - when: manual      
