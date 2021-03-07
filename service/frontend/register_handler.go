@@ -42,15 +42,22 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 				Register.SetLite(false)
 			} else if Register.State == "IndieNotif" {
 				Register.SetIndieNotif(false)
-				_, err := s.ChannelMessageSend(m.ChannelID, "tips: create a dummy role and tag that role use `"+configfile.BotPrefix.General+"tag roles` command")
+				_, err := s.ChannelMessageSend(m.ChannelID, "[Tips] create a dummy role and tag that role use `"+configfile.BotPrefix.General+"tag roles` command")
 				if err != nil {
 					log.Error(err)
 				}
 			}
 		}
 
+		Message := func(msg string) {
+			_, err := s.ChannelMessageSend(m.ChannelID, msg)
+			if err != nil {
+				log.Error(err)
+			}
+		}
+
 		LewdLive := func(def int) {
-			_, err := s.ChannelMessageSend(m.ChannelID, "error,you can't add livestream with lewd in same channel,canceling lewd")
+			_, err := s.ChannelMessageSend(m.ChannelID, "[Error] you can't add livestream with lewd in same channel,canceling lewd")
 			if err != nil {
 				log.Error(err)
 			}
@@ -58,61 +65,14 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 		}
 
 		NillType := func() {
-			_, err := s.ChannelMessageSend(m.ChannelID, "error,you can't disable all type\nadios")
+			_, err := s.ChannelMessageSend(m.ChannelID, "[Error] you can't disable all type\nadios")
 			if err != nil {
 				log.Error(err)
 			}
 			Register.Clear()
 		}
 
-		if m.Emoji.MessageFormat() == config.Art {
-			if Register.ChannelState.TypeTag == config.LiveType {
-				Register.UpdateType(config.ArtNLiveType)
-			} else if Register.ChannelState.TypeTag == config.LewdType {
-				Register.UpdateType(config.LewdNArtType)
-			} else if Register.ChannelState.TypeTag == config.ArtType {
-				NillType()
-				return
-			} else if Register.ChannelState.TypeTag == config.ArtNLiveType {
-				Register.UpdateType(config.LiveType)
-			} else {
-				Register.UpdateType(config.ArtType)
-			}
-		} else if m.Emoji.MessageFormat() == config.Live {
-			if Register.ChannelState.TypeTag == config.ArtType {
-				Register.UpdateType(config.ArtNLiveType)
-			} else if Register.ChannelState.TypeTag == config.LewdType {
-				LewdLive(config.LewdType)
-			} else if Register.ChannelState.TypeTag == config.LiveType {
-				NillType()
-				return
-			} else if Register.ChannelState.TypeTag == config.ArtNLiveType {
-				Register.UpdateType(config.ArtType)
-			} else {
-				Register.UpdateType(config.LiveType)
-			}
-		} else if m.Emoji.MessageFormat() == config.Lewd {
-			if Register.ChannelState.TypeTag == config.LiveType {
-				LewdLive(config.LiveType)
-			} else if Register.ChannelState.TypeTag == config.ArtType {
-				Register.UpdateType(config.LewdNArtType)
-			} else if Register.ChannelState.TypeTag == config.ArtNLiveType {
-				LewdLive(config.ArtNLiveType)
-			} else if Register.ChannelState.TypeTag == config.LewdType {
-				NillType()
-				return
-			} else if Register.ChannelState.TypeTag == config.LewdNArtType {
-				Register.UpdateType(config.ArtType)
-			} else {
-				Register.UpdateType(config.LewdType) //nice
-			}
-		}
-
-		if m.Emoji.MessageFormat() == config.One {
-			Register.Stop()
-			Register.ChoiceType(s)
-			Register.BreakPoint(2)
-
+		LiveChange := func() {
 			if Register.ChannelState.TypeTag == config.LiveType || Register.ChannelState.TypeTag == config.ArtNLiveType {
 				Register.Stop()
 				Register.LiveOnly(s)
@@ -131,7 +91,62 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 				Register.Stop()
 				Register.Lite(s)
 				Register.BreakPoint(1)
-			} else if Register.ChannelState.TypeTag == config.LewdType || Register.ChannelState.TypeTag == config.LewdNArtType {
+			}
+		}
+
+		if m.Emoji.MessageFormat() == config.Art {
+			if Register.ChannelState.TypeTag == config.LiveType {
+				Register.UpdateType(config.ArtNLiveType)
+			} else if Register.ChannelState.TypeTag == config.LewdType {
+				Register.UpdateType(config.LewdNArtType)
+			} else if Register.ChannelState.TypeTag == config.ArtType {
+				NillType()
+				return
+			} else if Register.ChannelState.TypeTag == config.ArtNLiveType {
+				Message("[Info] you disable Art type on this channel")
+				Register.UpdateType(config.LiveType)
+			} else {
+				Register.UpdateType(config.ArtType)
+			}
+		} else if m.Emoji.MessageFormat() == config.Live {
+			if Register.ChannelState.TypeTag == config.ArtType {
+				Register.UpdateType(config.ArtNLiveType)
+			} else if Register.ChannelState.TypeTag == config.LewdType {
+				LewdLive(config.LewdType)
+			} else if Register.ChannelState.TypeTag == config.LiveType {
+				NillType()
+				return
+			} else if Register.ChannelState.TypeTag == config.ArtNLiveType {
+				Message("[Info] you disable Live type on this channel")
+				Register.UpdateType(config.ArtType)
+			} else {
+				Register.UpdateType(config.LiveType)
+			}
+		} else if m.Emoji.MessageFormat() == config.Lewd {
+			if Register.ChannelState.TypeTag == config.LiveType {
+				LewdLive(config.LiveType)
+			} else if Register.ChannelState.TypeTag == config.ArtType {
+				Register.UpdateType(config.LewdNArtType)
+			} else if Register.ChannelState.TypeTag == config.ArtNLiveType {
+				LewdLive(config.ArtNLiveType)
+			} else if Register.ChannelState.TypeTag == config.LewdType {
+				NillType()
+				return
+			} else if Register.ChannelState.TypeTag == config.LewdNArtType {
+				Message("[Info] you disable Lewd type on this channel")
+				Register.UpdateType(config.ArtType)
+			} else {
+				Register.UpdateType(config.LewdType) //nice
+			}
+		}
+
+		if m.Emoji.MessageFormat() == config.One {
+			Register.Stop()
+			Register.ChoiceType(s)
+			Register.BreakPoint(2)
+
+			LiveChange()
+			if Register.ChannelState.TypeTag == config.LewdType || Register.ChannelState.TypeTag == config.LewdNArtType {
 				if !Register.CheckNSFW(s) {
 					return
 				}
@@ -155,6 +170,14 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 
 		} else if m.Emoji.MessageFormat() == config.Three {
 			Register.DelRegion(s)
+		} else if m.Emoji.MessageFormat() == config.Four {
+			LiveChange()
+			Register.UpdateChannel()
+			_, err := s.ChannelMessageSend(m.ChannelID, "Done")
+			if err != nil {
+				log.Error(err)
+			}
+			return
 		}
 
 		if Register.State == "AddReg" {
@@ -258,15 +281,23 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 							Region = Channel.Region
 						}
 
-						if Channel.TypeTag == 1 {
-							Typestr = "Art"
-						} else if Channel.TypeTag == 2 {
+						if Channel.IsFanart() {
+							Typestr = "FanArt"
+						}
+
+						if Channel.IsLive() {
 							Typestr = "Live"
-						} else if Channel.TypeTag == 3 {
+						}
+
+						if Channel.IsFanart() && Channel.IsLive() {
 							Typestr = "FanArt & Livestream"
-						} else if Channel.TypeTag == 69 {
+						}
+
+						if Channel.IsLewd() {
 							Typestr = "Lewd"
-						} else if Channel.TypeTag == 70 {
+						}
+
+						if Channel.IsLewd() && Channel.IsFanart() {
 							Typestr = "FanArt & Lewd"
 						}
 
@@ -370,19 +401,37 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 					table.Append([]string{"Update Channel state"})
 					table.Append([]string{"Add region in this channel"})
 					table.Append([]string{"Delete region in this channel"})
+
+					if Register.ChannelState.TypeTag == 2 || Register.ChannelState.TypeTag == 3 {
+						table.Append([]string{"Change Livestream state"})
+					}
+
 					table.Render()
 					MsgText, err := s.ChannelMessageSend(m.ChannelID, "`"+tableString.String()+"`")
 					if err != nil {
 						log.Error(err)
 					}
-					err = engine.Reacting(map[string]string{
-						"ChannelID": m.ChannelID,
-						"State":     "Menu",
-						"MessageID": MsgText.ID,
-					}, s)
-					if err != nil {
-						log.Error(err)
+
+					if Register.ChannelState.TypeTag == 2 || Register.ChannelState.TypeTag == 3 {
+						err = engine.Reacting(map[string]string{
+							"ChannelID": m.ChannelID,
+							"State":     "Menu2",
+							"MessageID": MsgText.ID,
+						}, s)
+						if err != nil {
+							log.Error(err)
+						}
+					} else {
+						err = engine.Reacting(map[string]string{
+							"ChannelID": m.ChannelID,
+							"State":     "Menu",
+							"MessageID": MsgText.ID,
+						}, s)
+						if err != nil {
+							log.Error(err)
+						}
 					}
+
 					Register.UpdateMessageID(MsgText.ID)
 
 				} else {
@@ -512,10 +561,25 @@ func (Data *Regis) ChoiceType(s *discordgo.Session) *Regis {
 	if err != nil {
 		log.Error(err)
 	}
-	table.SetHeader([]string{"Type", "Select"})
-	table.Append([]string{"Fanart", config.Art})
-	table.Append([]string{"Livestream", config.Live})
-	table.Append([]string{"Lewd Fanart", config.Lewd})
+	Fanart := "Disabled"
+	Live := "Disabled"
+	Lewd := "Disabled"
+	if Data.ChannelState.IsFanart() {
+		Fanart = "Enabled"
+	}
+
+	if Data.ChannelState.IsLive() {
+		Live = "Enabled"
+	}
+
+	if Data.ChannelState.IsLewd() {
+		Lewd = "Enabled"
+	}
+
+	table.SetHeader([]string{"Type", "Select", "Status"})
+	table.Append([]string{"Fanart", config.Art, Fanart})
+	table.Append([]string{"Livestream", config.Live, Live})
+	table.Append([]string{"Lewd Fanart", config.Lewd, Lewd})
 	table.Render()
 
 	MsgText, err := s.ChannelMessageSend(Data.ChannelState.ChannelID, "`"+tableString.String()+"`")

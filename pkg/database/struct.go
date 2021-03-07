@@ -311,6 +311,27 @@ func (Data *DiscordChannel) SetGroup(new Group) *DiscordChannel {
 	return Data
 }
 
+func (Data *DiscordChannel) IsFanart() bool {
+	if Data.TypeTag == 1 || Data.TypeTag == 3 || Data.TypeTag == 70 {
+		return true
+	}
+	return false
+}
+
+func (Data *DiscordChannel) IsLive() bool {
+	if Data.TypeTag == 2 || Data.TypeTag == 3 {
+		return true
+	}
+	return false
+}
+
+func (Data *DiscordChannel) IsLewd() bool {
+	if Data.TypeTag == 69 || Data.TypeTag == 70 {
+		return true
+	}
+	return false
+}
+
 type TwitchDB struct {
 	ID             int64
 	Game           string

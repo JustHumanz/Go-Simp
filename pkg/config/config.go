@@ -84,6 +84,7 @@ const (
 	One   = "1️⃣"
 	Two   = "2️⃣"
 	Three = "3️⃣"
+	Four  = "4️⃣"
 	Art   = "🎨"
 	Live  = "🎥"
 	Lewd  = "🔞"

@@ -194,6 +194,14 @@ func Reacting(Data map[string]string, s *discordgo.Session) error {
 				return err
 			}
 		}
+	} else if Data["State"] == "Menu2" {
+		EmojiList := []string{config.One, config.Two, config.Three, config.Four}
+		for _, Emoji := range EmojiList {
+			err := s.MessageReactionAdd(ChannelID, Data["MessageID"], Emoji)
+			if err != nil {
+				return err
+			}
+		}
 	} else if Data["State"] == "TypeChannel" {
 		EmojiList := []string{config.Art, config.Live, config.Lewd}
 		for _, Emoji := range EmojiList {
