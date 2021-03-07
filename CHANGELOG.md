@@ -1,3 +1,7 @@
+v3.0.1
+- Add `Change Livestream state menu`
+- Remove parent in danbooru
+
 ## v3.0.0
 
 v2.9.8
