@@ -15,6 +15,8 @@ func (Data Danbooru) SendNotif(Group database.Group, Member database.Member) {
 		Link = "https://www.pixiv.net/en/artworks/" + strconv.Itoa(Data.PixivID)
 	} else if strings.HasPrefix(Data.Source, "https://twitter.com") {
 		Link = Data.Source
+	} else {
+		Link = Data.FileURL
 	}
 
 	ChannelData, err := database.ChannelTag(Member.ID, 0, config.LewdChannel, Member.Region)
