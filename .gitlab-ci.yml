@@ -239,6 +239,7 @@ deploy:
     - kubectl config get-contexts
     - kubectl --record deployment.apps/go-simp-fanart set image deployment.v1.apps/go-simp-fanart fanart=registry.gitlab.com/justhumanz/go-simp/fanart:"$CI_COMMIT_TAG"
     - kubectl --record deployment.apps/go-simp-frontend set image deployment.v1.apps/go-simp-frontend frontend=registry.gitlab.com/justhumanz/go-simp/frontend:"$CI_COMMIT_TAG"
+    - kubectl set env deployment.apps/go-simp-frontend VERSION="$CI_COMMIT_TAG" --record=true
     - kubectl --record deployment.apps/go-simp-guild set image deployment.v1.apps/go-simp-guild guild=registry.gitlab.com/justhumanz/go-simp/guild:"$CI_COMMIT_TAG"
     - kubectl --record deployment.apps/go-simp-live set image deployment.v1.apps/go-simp-live livestream=registry.gitlab.com/justhumanz/go-simp/livestream:"$CI_COMMIT_TAG"
     - kubectl --record deployment.apps/go-simp-pilot set image deployment.v1.apps/go-simp-pilot pilot=registry.gitlab.com/justhumanz/go-simp/pilot:"$CI_COMMIT_TAG"

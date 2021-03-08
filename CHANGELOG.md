@@ -1,3 +1,8 @@
+v3.1.1
+- Add caching in static files
+- send fanart from Pixvi use discord Embed
+- Show version info in help menu
+
 v3.0.1
 - Add `Change Livestream state menu`
 - Remove parent in danbooru
