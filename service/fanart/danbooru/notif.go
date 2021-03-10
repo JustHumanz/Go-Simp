@@ -67,4 +67,10 @@ func (Data Danbooru) SendNotif(Group database.Group, Member database.Member) {
 	} else {
 		Link = Data.FileURL
 	}
+	for _, Channel := range ChannelData {
+		Msg, err := Bot.ChannelMessageSend(Channel.ChannelID, Link)
+		if err != nil {
+			log.Error(err, Msg)
+		}
+	}
 }
