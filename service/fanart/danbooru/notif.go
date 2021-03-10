@@ -38,10 +38,6 @@ func (Data Danbooru) SendNotif(Group database.Group, Member database.Member) {
 		Tags := Body["tags"].(map[string]interface{})
 		Img := Body["urls"].(map[string]interface{})
 		FixImg := config.PixivProxy + Img["original"].(string)
-		Color, err := engine.GetColor(config.TmpDir, FixImg)
-		if err != nil {
-			log.Error(err)
-		}
 
 		usrbyte, err := network.Curl(config.PixivUserEnd+Tags["authorId"].(string), nil)
 		if err != nil {
@@ -60,8 +56,7 @@ func (Data Danbooru) SendNotif(Group database.Group, Member database.Member) {
 				SetURL(Link).
 				SetThumbnail(config.PixivProxy+User["imageBig"].(string)).
 				SetDescription(Body["title"].(string)).
-				SetImage(FixImg).
-				SetColor(Color).MessageEmbed)
+				SetImage(FixImg).MessageEmbed)
 			if err != nil {
 				log.Error(err, Msg)
 			}
