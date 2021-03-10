@@ -1,3 +1,6 @@
+v3.1.2
+- Remove get color in danbooru
+
 v3.1.1
 - Add caching in static files
 - send fanart from Pixvi use discord Embed
