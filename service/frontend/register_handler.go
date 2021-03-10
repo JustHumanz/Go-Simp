@@ -163,6 +163,7 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 			if err != nil {
 				log.Error(err)
 			}
+			Register.Clear()
 			return
 
 		} else if m.Emoji.MessageFormat() == config.Two {
@@ -584,7 +585,9 @@ func (Data *Regis) ChoiceType(s *discordgo.Session) *Regis {
 
 	MsgText, err := s.ChannelMessageSend(Data.ChannelState.ChannelID, "`"+tableString.String()+"`")
 	if err != nil {
+		s.ChannelMessageSend(Data.ChannelState.ChannelID, "Something error, "+err.Error())
 		log.Error(err)
+		return nil
 	}
 	err = engine.Reacting(map[string]string{
 		"ChannelID": Data.ChannelState.ChannelID,
