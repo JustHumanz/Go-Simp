@@ -363,6 +363,171 @@
                     "Region":"EN"
                 },
                 {
+                    "Name": "lolnani",
+                    "EN_Name": "lolnani",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#artforng",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCwC9sZy3NfQMU4JU7eXV9Iw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "lolnanii",
+                    "Twitch_Username": "lolnani",
+                    "Region":"EN"
+                },
+                {
+                    "Name": "Juniper",
+                    "EN_Name": "Juniper",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCkFRp9exPdF57IAAr81yTKw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "Egocider",
+                    "Twitch_Username": "juniperactias",
+                    "Region":"EN"
+                },
+                {
+                    "Name": "Haruchi",
+                    "EN_Name": "Haruka Karibu",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#HarukArt",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCsk_mKQyv_xdhahUBqoVhcg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "haruka_karibu",
+                    "Twitch_Username": "harukakaribu",
+                    "Region":"EN"
+                },
+                {
+                    "Name": "Artemis",
+                    "EN_Name": "Artemis of the Blue",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#HarukArt",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCWImOidHDmm0KK20bkF-rSQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "artemisvtuber",
+                    "Twitch_Username": "artemisoftheblue",
+                    "Region":"EN"
+                },
+                {
+                    "Name": "moenaomii",
+                    "EN_Name": "moenaomii",
+                    "JP_Name": "萌 ナオミ",
+                    "Hashtag": {
+                        "Twitter": "#moeillust",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCGAX1bhTzJb1T0jFLNAvZsg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "moenaomii",
+                    "Twitch_Username": "moenaomii",
+                    "Region":"EN"
+                },
+                {
+                    "Name": "Leaf",
+                    "EN_Name": "Leaflit",
+                    "JP_Name": "",
+                    "Hashtag": {
+                        "Twitter": "",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC69r9S_ZCtpJc06xAowcK2A",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "LeaflitVT",
+                    "Twitch_Username": "Leaflit",
+                    "Region":"EN"
+                },
+                {
+                    "Name": "Wolfychu",
+                    "EN_Name": "Wolfychu",
+                    "JP_Name": "",
+                    "Hashtag": {
+                        "Twitter": "#wolfychuart",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC_nEHeUEVNY5ZYLRWg8KoZQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "wolfychuuu",
+                    "Twitch_Username": "wolfychulive",
+                    "Region":"AU"
+                },
+                {
+                    "Name": "Lumi",
+                    "EN_Name": "Lumi",
+                    "JP_Name": "",
+                    "Hashtag": {
+                        "Twitter": "#lumiart",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC_nEHeUEVNY5ZYLRWg8KoZQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "lumituber",
+                    "Twitch_Username": "lumituber",
+                    "Region":"FI"
+                },
+                {
+                    "Name": "Moomoo",
+                    "EN_Name": "Carmen The Moomoo",
+                    "JP_Name": "かわいい牛",
+                    "Hashtag": {
+                        "Twitter": "#CarmenMooFanart",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC-N5fgKEKSZDMCQm8vbNYQw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "CarmenTheMoomoo",
+                    "Twitch_Username": "carmenthemoomoo",
+                    "Region":"UK"
+                },
+                {
+                    "Name": "Snuffy",
+                    "EN_Name": "Snuffy",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#snuffyart",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCvRihiQZiIO9RH2HOylfQ0Q",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "snuffyowo",
+                    "Twitch_Username": "snuffy",
+                    "Region":"US"
+                },
+                {
+                    "Name": "Bao",
+                    "EN_Name": "Carmen The Moomoo",
+                    "JP_Name": "海の幽霊",
+                    "Hashtag": {
+                        "Twitter": "#baort",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCZQ7nZ8Lc7pslBN0gN1Jg0w",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "hikarustation",
+                    "Twitch_Username": "hikarustation",
+                    "Region":"US"
+                },
+                {
                     "Name":"Lyri",
                     "EN_Name":"Eine Lyrica",
                     "JP_Name":"永音リリカ",
@@ -3486,6 +3651,117 @@
                     "BiliRoom_ID": 0,
                     "Twitter_Username": "mioricelesta",
                     "Twitch_Username": "",
+                    "Region":"US"
+                }
+            ]
+        },
+        {
+            "GroupName": "VShojo",
+            "GroupIcon": "https://cdn.humanz.moe/VShojo.png",
+            "Members" : [
+                {
+                    "Name":"Mel",
+                    "EN_Name":"Projekt Melody",
+                    "JP_Name":"メロディー",
+                    "Hashtag": {
+                        "Twitter": "#projektmelodyfanart ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UC1yoRdFoFJaCY-AGfD9W0wQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "ProjektMelody",
+                    "Twitch_Username": "projektmelody",
+                    "Region":"EN"
+                },
+                {
+                    "Name":"Nyaniki",
+                    "EN_Name":"Nyatasha Nyanners",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#nyanart",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCO5Jvsc_sKuZi3MhnJxrlzQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "nyannyanners",
+                    "Twitch_Username": "nyanners",
+                    "Region":"US"
+                },
+                {
+                    "Name":"Silver",
+                    "EN_Name":"Silvervale",
+                    "JP_Name":"シルバーベール",
+                    "Hashtag": {
+                        "Twitter": "#DoodleVale",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCm8Dj7dQ0oRHXNUXF31kjEw",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "_Silvervale_",
+                    "Twitch_Username": "silvervale",
+                    "Region":"US"
+                },
+                {
+                    "Name":"Ironmouse",
+                    "EN_Name":"Mousey",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#ironmouseart ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UChgPVLjqugDQpRLWvC7zzig",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "iron_mouse",
+                    "Twitch_Username": "ironmouse",
+                    "Region":"US"
+                },
+                {
+                    "Name":"Dragonqueen",
+                    "EN_Name":"Zentreya",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#zentreya_art ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCVLsPBwDtv7n7FZLiOsvhSQ",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "zentreya",
+                    "Twitch_Username": "zentreya",
+                    "Region":"EN"
+                },
+                {
+                    "Name":"Hime",
+                    "EN_Name":"Hime Hajime",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#HimeSketch",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCRfz2yOn8C7Jg5zq4Xi67-Q",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "HimeHajime_VSJ",
+                    "Twitch_Username": "hajime",
+                    "Region":"EN"
+                },
+                {
+                    "Name":"Froot",
+                    "EN_Name":"BSApricot",
+                    "JP_Name":"",
+                    "Hashtag": {
+                        "Twitter": "#Lichcraft ",
+                        "BiliBili": ""
+                    },
+                    "Yt_ID": "UCtNeQ8cUwvAAhBbVbwfGWpg",
+                    "BiliBili_ID": 0,
+                    "BiliRoom_ID": 0,
+                    "Twitter_Username": "LichVtuber",
+                    "Twitch_Username": "apricot",
                     "Region":"US"
                 }
             ]
