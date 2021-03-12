@@ -145,17 +145,17 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 			Register.ChoiceType(s)
 			Register.BreakPoint(2)
 
+			if Register.ChannelState.Group.GroupName == "Independen" {
+				Register.Stop()
+				Register.IndieNotif(s)
+				Register.BreakPoint(1)
+			}
+
 			LiveChange()
 			if Register.ChannelState.TypeTag == config.LewdType || Register.ChannelState.TypeTag == config.LewdNArtType {
 				if !Register.CheckNSFW(s) {
 					return
 				}
-			}
-
-			if Register.ChannelState.Group.GroupName == "Independen" {
-				Register.Stop()
-				Register.IndieNotif(s)
-				Register.BreakPoint(1)
 			}
 
 			Register.UpdateChannel()

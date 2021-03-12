@@ -1,6 +1,8 @@
 v3.1.2
 - Remove get color in danbooru
 - Fix danbooru not send lewd
+- Update dependency 
+- Fix Independen notif in update menu
 
 v3.1.1
 - Add caching in static files
