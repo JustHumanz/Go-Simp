@@ -17,7 +17,7 @@ require (
 	github.com/mattn/go-runewidth v0.0.10 // indirect
 	github.com/n0madic/twitter-scraper v0.0.0-20210301103805-e93b4bc2e6f1
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
-	github.com/nicklaw5/helix v1.6.0
+	github.com/nicklaw5/helix v1.7.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1
