@@ -1696,7 +1696,7 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 				SetTitle("Help").
 				SetURL(config.CommandURL).
-				SetDescription("A simple VTuber bot to ping you or your roles if any new Fanart and Livestream").
+				SetDescription("A simple VTuber bot which pings you or your roles if any new Videos, Fanarts, or Livestreams and Upcoming streams of VTubers are posted!").
 				AddField("Command list", "[Exec]("+config.CommandURL+")").
 				AddField("Guide", "[Guide]("+config.GuideURL+")").
 				AddField("Vtuber list", "[Vtubers]("+config.VtubersData+")").
