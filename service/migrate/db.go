@@ -7,6 +7,7 @@ import (
 	"strings"
 	"sync"
 
+	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	_ "github.com/go-sql-driver/mysql"
@@ -388,7 +389,7 @@ func AddData(Data Vtuber) {
 		var (
 			GroupData = database.Group{
 				ID:        0,
-				GroupName: "Independen",
+				GroupName: config.Indie,
 				IconURL:   "https://cdn." + configfile.Domain + "/404.jpg",
 			}
 			NewVtuberNamesIndependen []string
@@ -429,7 +430,7 @@ func AddData(Data Vtuber) {
 			Update.Exec(GroupData.GroupName, GroupData.IconURL, GroupData.ID)
 		}
 
-		for _, VtuberMember := range Data.Vtuber.Independen.Members {
+		for _, VtuberMember := range Data.Vtuber.Independent.Members {
 			DiscordChannel := GroupData.GetChannelByGroup(VtuberMember.Region)
 			/*
 				Add Member

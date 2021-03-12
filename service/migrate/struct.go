@@ -33,9 +33,9 @@ type YtData struct {
 
 type Vtuber struct {
 	Vtuber struct {
-		Independen struct {
+		Independent struct {
 			Members []Member `json:"Members"`
-		} `json:"Independen"`
+		} `json:"Independent"`
 		Group []struct {
 			GroupName string   `json:"GroupName"`
 			GroupIcon string   `json:"GroupIcon"`
