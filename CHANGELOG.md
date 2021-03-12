@@ -1,5 +1,6 @@
 v3.1.2
 - Remove get color in danbooru
+- Fix danbooru not send lewd
 
 v3.1.1
 - Add caching in static files

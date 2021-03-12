@@ -48,13 +48,14 @@ func (Data Danbooru) SendNotif(Group database.Group, Member database.Member) {
 		if err != nil {
 			log.Error(err)
 		}
+		UserBody := User["body"].(map[string]interface{})
 
 		for _, Channel := range ChannelData {
 			Msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 				SetAuthor(strings.Title(Group.GroupName), Group.IconURL).
-				SetTitle(User["name"].(string)).
+				SetTitle(UserBody["name"].(string)).
 				SetURL(Link).
-				SetThumbnail(config.PixivProxy+User["imageBig"].(string)).
+				SetThumbnail(config.PixivProxy+UserBody["imageBig"].(string)).
 				SetDescription(Body["title"].(string)).
 				SetImage(FixImg).MessageEmbed)
 			if err != nil {
