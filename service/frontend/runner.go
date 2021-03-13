@@ -129,6 +129,11 @@ func main() {
 			configfile.InitConf()
 			database.Start(configfile)
 
+			err = Bot.UpdateStreamingStatus(0, config.GoSimpConf.BotPrefix.General+"help", config.VtubersData)
+			if err != nil {
+				log.Error(err)
+			}
+
 			Bot.AddHandler(Fanart)
 			Bot.AddHandler(Tags)
 			Bot.AddHandler(EnableState)
