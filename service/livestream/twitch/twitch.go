@@ -101,7 +101,7 @@ func CheckTwitch() {
 									"VtuberName": Member.Name,
 								}).Info("Change Twitch status to Live")
 							}
-						} else if Stream.Type == "Live" && ResultDB.Status == "Live" {
+						} else if Stream.Type == "live" && ResultDB.Status == "Live" {
 							log.WithFields(log.Fields{
 								"Group":      Group.GroupName,
 								"VtuberName": Member.Name,
