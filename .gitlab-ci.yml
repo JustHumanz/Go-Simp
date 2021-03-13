@@ -54,8 +54,8 @@ build migrate:
     - docker pull $BASEIMAGE
     - docker tag $BASEIMAGE go-simp
     - docker build -t migrate $CI_PROJECT_DIR/service/migrate
-    - docker tag migrate "$CI_REGISTRY_IMAGE"/migrate:"$CI_COMMIT_TAG"
-    - docker push "$CI_REGISTRY_IMAGE"/migrate:"$CI_COMMIT_TAG"
+    - docker tag migrate "$CI_REGISTRY_IMAGE"/migrate
+    - docker push "$CI_REGISTRY_IMAGE"/migrate
   tags:
     - docker
     - gce    
