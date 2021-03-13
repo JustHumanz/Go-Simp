@@ -92,7 +92,7 @@ func main() {
 							log.Error(err)
 						}
 					} else {
-						_, err := s.ChannelMessageSend(m.ChannelID, "<@"+m.UserID+"> Just add "+UserState.Member.Name)
+						_, err := s.ChannelMessageSend(m.ChannelID, "<@"+m.UserID+"> just added "+UserState.Member.Name+" to their list.")
 						if err != nil {
 							log.Error(err)
 						}
@@ -118,7 +118,7 @@ func main() {
 							log.Error(err)
 						}
 					} else {
-						_, err := s.ChannelMessageSend(m.ChannelID, "<@"+m.UserID+"> Just remove "+UserState.Member.Name)
+						_, err := s.ChannelMessageSend(m.ChannelID, "<@"+m.UserID+"> just removed "+UserState.Member.Name+" from their list.")
 						if err != nil {
 							log.Error(err)
 						}

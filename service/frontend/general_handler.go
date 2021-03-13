@@ -721,7 +721,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 											if Done != nil {
 												_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-													SetDescription(Role.Mention()+"Add\n"+strings.Join(Done, " ")).
+													SetDescription(Role.Mention()+" notifications have been added to these members \n"+strings.Join(Done, " ")).
 													AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 													SetThumbnail(config.GoSimpIMG).
 													SetFooter("Use \""+Prefix+RolesTags+" @"+Role.Name+"\" to show role tags list").
@@ -887,7 +887,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 											} else if Done != nil {
 												_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-													SetDescription(Role.Mention()+" Remove\n"+strings.Join(Done, " ")+"\n from tag list").
+													SetDescription(Role.Mention()+" Remove\n"+strings.Join(Done, " ")+"\n notifications have been removed for these members.").
 													AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 													SetThumbnail(config.GoSimpIMG).
 													SetFooter("Use \""+Prefix+RolesTags+" @"+Role.Name+"\" to show role tags list").
