@@ -476,7 +476,9 @@ func AddData(Data Vtuber) {
 							log.Info("Delete Discord Channel ", Channel)
 							DeleteChannel(Channel.ID)
 						}
-					} else {
+					}
+
+					if msg != nil {
 						User.SetDiscordChannelID(Channel.ChannelID).
 							SetGroup(GroupData).
 							SetMember(database.Member{
