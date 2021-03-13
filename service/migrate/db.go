@@ -476,29 +476,29 @@ func AddData(Data Vtuber) {
 							log.Info("Delete Discord Channel ", Channel)
 							DeleteChannel(Channel.ID)
 						}
-					}
+					} else {
+						User.SetDiscordChannelID(Channel.ChannelID).
+							SetGroup(GroupData).
+							SetMember(database.Member{
+								ID:      MemberID,
+								Name:    VtuberMember.Name,
+								EnName:  VtuberMember.ENName,
+								JpName:  VtuberMember.JPName,
+								GroupID: GroupData.ID,
+							})
+						err = User.SendToCache(msg.ID)
+						if err != nil {
+							log.Error(err)
+						}
 
-					User.SetDiscordChannelID(Channel.ChannelID).
-						SetGroup(GroupData).
-						SetMember(database.Member{
-							ID:      MemberID,
-							Name:    VtuberMember.Name,
-							EnName:  VtuberMember.ENName,
-							JpName:  VtuberMember.JPName,
-							GroupID: GroupData.ID,
-						})
-					err = User.SendToCache(msg.ID)
-					if err != nil {
-						log.Error(err)
-					}
-
-					err = engine.Reacting(map[string]string{
-						"ChannelID": Channel.ChannelID,
-						"State":     "New Member",
-						"MessageID": msg.ID,
-					}, Bot)
-					if err != nil {
-						log.Error(err)
+						err = engine.Reacting(map[string]string{
+							"ChannelID": Channel.ChannelID,
+							"State":     "New Member",
+							"MessageID": msg.ID,
+						}, Bot)
+						if err != nil {
+							log.Error(err)
+						}
 					}
 				}
 
