@@ -290,7 +290,7 @@ func Zawarudo(Region string) *time.Location {
 		loc, _ := time.LoadLocation("Australia/Sydney")
 		return loc
 	} else if Region == "FI" {
-		loc, _ := time.LoadLocation("Helsinki/Finland")
+		loc, _ := time.LoadLocation("Europe/Helsinki")
 		return loc
 	} else {
 		loc, _ := time.LoadLocation("UTC")
