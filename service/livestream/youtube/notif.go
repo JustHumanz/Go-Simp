@@ -82,9 +82,9 @@ func (PushData *NotifStruct) SendNude() error {
 				if err != nil {
 					log.Error(err)
 				}
-				if UserTagsList == nil && PushData.Group.GroupName != "Independen" {
+				if UserTagsList == nil && PushData.Group.GroupName != config.Indie {
 					UserTagsList = []string{"_"}
-				} else if UserTagsList == nil && PushData.Group.GroupName == "Independen" && !Channel.IndieNotif {
+				} else if UserTagsList == nil && PushData.Group.GroupName == config.Indie && !Channel.IndieNotif {
 					return nil
 				}
 				msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
@@ -169,9 +169,9 @@ func (PushData *NotifStruct) SendNude() error {
 					log.Error(err)
 				}
 
-				if UserTagsList == nil && PushData.Group.GroupName != "Independen" {
+				if UserTagsList == nil && PushData.Group.GroupName != config.Indie {
 					UserTagsList = []string{"_"}
-				} else if UserTagsList == nil && PushData.Group.GroupName == "Independen" && !Channel.IndieNotif {
+				} else if UserTagsList == nil && PushData.Group.GroupName == config.Indie && !Channel.IndieNotif {
 					return nil
 				}
 
@@ -290,9 +290,9 @@ func (PushData *NotifStruct) SendNude() error {
 					log.Error(err)
 				}
 
-				if UserTagsList == nil && PushData.Group.GroupName != "Independen" {
+				if UserTagsList == nil && PushData.Group.GroupName != config.Indie {
 					UserTagsList = []string{"_"}
-				} else if UserTagsList == nil && PushData.Group.GroupName == "Independen" && !Channel.IndieNotif {
+				} else if UserTagsList == nil && PushData.Group.GroupName == config.Indie && !Channel.IndieNotif {
 					return nil
 				}
 

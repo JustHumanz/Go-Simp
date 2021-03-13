@@ -721,7 +721,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 											if Done != nil {
 												_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-													SetDescription(Role.Mention()+"Add\n"+strings.Join(Done, " ")).
+													SetDescription(Role.Mention()+" notifications have been added to these members \n"+strings.Join(Done, " ")).
 													AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 													SetThumbnail(config.GoSimpIMG).
 													SetFooter("Use \""+Prefix+RolesTags+" @"+Role.Name+"\" to show role tags list").
@@ -887,7 +887,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 											} else if Done != nil {
 												_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-													SetDescription(Role.Mention()+" Remove\n"+strings.Join(Done, " ")+"\n from tag list").
+													SetDescription(Role.Mention()+" Remove\n"+strings.Join(Done, " ")+"\n notifications have been removed for these members.").
 													AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 													SetThumbnail(config.GoSimpIMG).
 													SetFooter("Use \""+Prefix+RolesTags+" @"+Role.Name+"\" to show role tags list").
@@ -1696,7 +1696,7 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 				SetTitle("Help").
 				SetURL(config.CommandURL).
-				SetDescription("A simple VTuber bot to ping you or your roles if any new Fanart and Livestream").
+				SetDescription("A simple VTuber bot which pings you or your roles if any new Videos, Fanarts, or Livestreams and Upcoming streams of VTubers are posted!").
 				AddField("Command list", "[Exec]("+config.CommandURL+")").
 				AddField("Guide", "[Guide]("+config.GuideURL+")").
 				AddField("Vtuber list", "[Vtubers]("+config.VtubersData+")").
@@ -1850,9 +1850,9 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if Channel.Region != "" {
 						Region = Channel.Region
 					}
-					if Channel.IndieNotif && Channel.Group.GroupName == "Independen" {
+					if Channel.IndieNotif && Channel.Group.GroupName == config.Indie {
 						Indie = config.Ok
-					} else if Channel.Group.GroupName != "Independen" {
+					} else if Channel.Group.GroupName != config.Indie {
 						Indie = "-"
 					} else {
 						Indie = config.No
@@ -1867,7 +1867,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 							SetTitle(ChannelRaw.Name).
 							AddField("Type", Typestr).
 							AddField("Region", Region).
-							AddField("Independen notif", Indie).
+							AddField("Independent notif", Indie).
 							InlineAllFields().
 							SetColor(Color).MessageEmbed)
 						if err != nil {
@@ -1888,7 +1888,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 							SetTitle(ChannelRaw.Name).
 							AddField("Type", Typestr).
 							AddField("Region", Region).
-							AddField("Independen notif", Indie).
+							AddField("Independent notif", Indie).
 							InlineAllFields().
 							SetColor(Color).MessageEmbed)
 						if err != nil {
@@ -1926,7 +1926,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 						AddField("Upcoming", NewUpcoming).
 						AddField("Lite", LiteMode).
 						AddField("Region", Region).
-						AddField("Independen notif", Indie).
+						AddField("Independent notif", Indie).
 						InlineAllFields().
 						SetColor(Color).MessageEmbed)
 					if err != nil {

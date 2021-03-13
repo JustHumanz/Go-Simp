@@ -145,7 +145,7 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 			Register.ChoiceType(s)
 			Register.BreakPoint(2)
 
-			if Register.ChannelState.Group.GroupName == "Independen" {
+			if Register.ChannelState.Group.GroupName == config.Indie {
 				Register.Stop()
 				Register.IndieNotif(s)
 				Register.BreakPoint(1)
@@ -318,9 +318,9 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 							LiteMode = config.Ok
 						}
 
-						if Channel.IndieNotif && Channel.Group.GroupName == "Independen" {
+						if Channel.IndieNotif && Channel.Group.GroupName == config.Indie {
 							Indie = config.Ok
-						} else if Channel.Group.GroupName != "Independen" {
+						} else if Channel.Group.GroupName != config.Indie {
 							Indie = "-"
 						} else {
 							Indie = config.No
@@ -337,7 +337,7 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 							AddField("Upcoming", NewUpcoming).
 							AddField("Lite", LiteMode).
 							AddField("Region", Region).
-							AddField("Independen notif", Indie).
+							AddField("Independent notif", Indie).
 							InlineAllFields().MessageEmbed)
 						if err != nil {
 							log.Error(err)
@@ -528,7 +528,7 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			}
 
-			if Register.ChannelState.Group.GroupName == "Independen" {
+			if Register.ChannelState.Group.GroupName == config.Indie {
 				Register.Stop()
 				Register.IndieNotif(s)
 				Register.BreakPoint(1)
@@ -737,7 +737,7 @@ func (Data *Regis) UpdateChannel() error {
 		}
 	}
 
-	if Register.ChannelState.Group.GroupName == "Independen" {
+	if Register.ChannelState.Group.GroupName == config.Indie {
 		err = Data.ChannelState.UpdateChannel("IndieNotif")
 		if err != nil {
 			_, err := Bot.ChannelMessageSend(ChannelID, err.Error())

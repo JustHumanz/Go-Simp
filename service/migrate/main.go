@@ -108,6 +108,10 @@ func init() {
 	TwitchClient.SetUserAccessToken(TwitchToken)
 
 	Bot.AddHandler(Dead)
+	err = Bot.UpdateStreamingStatus(0, "Maintenance!!!!", config.VtubersData)
+	if err != nil {
+		log.Error(err)
+	}
 }
 
 func main() {
@@ -244,7 +248,7 @@ func Dead(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 				SetTitle("Bot update new Vtubers").
 				SetURL("https://github.com/JustHumanz/Go-Simp/blob/master/CHANGELOG.md").
-				SetDescription("Still Processing new data,Comeback when i ready to bang you (around 10-20 minutes or more,~~idk i don't fvcking count~~)").
+				SetDescription("Still Processing new data,Comeback when i ready to bang you (around 10-20 minutes or more)").
 				AddField("See update at", "[Changelog](https://github.com/JustHumanz/Go-Simp/blob/master/CHANGELOG.md)").
 				SetThumbnail(config.Sleep).
 				SetImage(config.Dead).

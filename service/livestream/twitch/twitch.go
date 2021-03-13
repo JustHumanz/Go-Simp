@@ -74,8 +74,11 @@ func CheckTwitch() {
 								ResultDB.UpdateStatus("Live").
 									UpdateViewers(Stream.ViewerCount).
 									UpdateThumbnails(Stream.ThumbnailURL).
-									UpdateSchedule(Stream.StartedAt).
-									UpdateGame(GameResult.Data.Games[0].Name)
+									UpdateSchedule(Stream.StartedAt)
+
+								if len(GameResult.Data.Games) > 0 {
+									ResultDB.UpdateGame(GameResult.Data.Games[0].Name)
+								}
 
 								err = ResultDB.UpdateTwitch(Member.ID)
 								if err != nil {
@@ -107,7 +110,7 @@ func CheckTwitch() {
 							ResultDB.UpdateViewers(Stream.ViewerCount).UpdateTwitch(Member.ID)
 						}
 					}
-				} else if ResultDB.Status == "live" && len(result.Data.Streams) == 0 {
+				} else if ResultDB.Status == "Live" && len(result.Data.Streams) == 0 {
 					ResultDB.UpdateStatus("Past")
 					err = ResultDB.UpdateTwitch(Member.ID)
 					if err != nil {

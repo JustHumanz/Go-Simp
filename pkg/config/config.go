@@ -54,6 +54,7 @@ const (
 	PixivProxy        = "https://cdn.humanz.moe/pixiv/?pixivURL="
 	Waiting           = 5
 	Pilot             = "pilot"
+	Indie             = "independent"
 
 	//Crontab
 	TwitterFanart              = "@every 0h3m0s"

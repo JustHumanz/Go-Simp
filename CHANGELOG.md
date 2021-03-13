@@ -3,6 +3,10 @@ v3.1.2
 - Fix danbooru not send lewd
 - Update dependency 
 - Fix Independen notif in update menu
+- Fix twitch live status
+- Change some grammar
+- Change bot desc
+- Add bot status
 
 v3.1.1
 - Add caching in static files

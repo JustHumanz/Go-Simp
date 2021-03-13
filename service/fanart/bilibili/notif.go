@@ -43,7 +43,7 @@ func PushNotif(Data database.TBiliBili) error {
 			Group.IconURL = ""
 		}
 
-		if tags == "_" && Group.GroupName == "Independen" && !Channel.IndieNotif {
+		if tags == "_" && Group.GroupName == config.Indie && !Channel.IndieNotif {
 			//do nothing,like my life
 		} else {
 			tmp, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
