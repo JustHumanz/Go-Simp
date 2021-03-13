@@ -1,5 +1,4 @@
-v3.1.2
-- Remove get color in danbooru
+v3.1.3
 - Fix danbooru not send lewd
 - Update dependency 
 - Fix Independen notif in update menu
@@ -8,6 +7,9 @@ v3.1.2
 - Change bot desc
 - Add bot status
 - Add VShojo group
+
+v3.1.2
+- Remove get color in danbooru
 
 v3.1.1
 - Add caching in static files
