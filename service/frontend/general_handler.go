@@ -1873,7 +1873,6 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 						if err != nil {
 							log.Error(err)
 						}
-						return
 
 					} else if Channel.TypeTag == 2 {
 						Typestr = "Live"
@@ -1894,7 +1893,6 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 						if err != nil {
 							log.Error(err)
 						}
-						return
 					} else if Channel.TypeTag == 70 {
 						Typestr = "Fanart & Lewd"
 					}
