@@ -7,6 +7,7 @@ v3.1.2
 - Change some grammar
 - Change bot desc
 - Add bot status
+- Add VShojo group
 
 v3.1.1
 - Add caching in static files
