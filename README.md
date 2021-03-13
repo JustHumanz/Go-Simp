@@ -6,7 +6,7 @@
 ----
 
 ## Introduction
-A simple VTuber bot to serve notification Fanart(Twitter,Bilibili) and Livestream(Youtube,Bilibili)  
+A simple VTuber bot which pings you or your roles if any new Videos, Fanarts, or Livestreams and Upcoming streams of VTubers are posted!   
 for setup see at [Guide](https://github.com/JustHumanz/Go-Simp/blob/master/Guide.md)
 
 ## Simple Setup
@@ -36,10 +36,10 @@ independent group have strict rule if no one user/roles tagged live/fanart notif
 
 
 ## Current notification support
-See at [Web](https://go-simp.human-z.moe)
+See at [Web](https://go-simp.humanz.moe)
 
 ### Command
-See at [Exec](https://go-simp.human-z.moe/Exec/)
+See at [Exec](https://go-simp.humanz.moe/Exec/)
 
 
 ### Notification&Command 
@@ -86,7 +86,7 @@ Reminder 30 minutes before livestream start
 
 ## TODO
 - Add hall of flame for contributor
-- Add twitch
+- ~~Add twitch~~
 - ~~Specially for Independent fan art will not be sent if there no one user/role tagged~~ (Done)
 - ~~Add -liveonly -newupcoming and -rm_liveonly -rm_newupcoming~~ (Done)
 - ~~Add ArkNET~~  (Done)
