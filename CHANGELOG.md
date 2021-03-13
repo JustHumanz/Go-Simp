@@ -7,6 +7,7 @@ v3.1.3
 - Change bot desc
 - Add bot status
 - Add VShojo group
+- Fix migrate can't send message
 
 v3.1.2
 - Remove get color in danbooru
