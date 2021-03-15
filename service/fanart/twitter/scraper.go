@@ -21,17 +21,18 @@ func CreatePayload(Group database.Group, Scraper *twitterscraper.Scraper, Limit 
 			"Hashtag": strings.Join(Hashtags, " OR "),
 			"Group":   GroupData.GroupName,
 		}).Info("Start curl twitter")
-		for tweet := range Scraper.SearchTweets(context.Background(), "("+strings.Join(Hashtags, " OR ")+") AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)", Limit) {
+		for tweet := range Scraper.SearchTweets(context.Background(), "("+strings.ReplaceAll(strings.Join(Hashtags, " OR "), " ", "")+") AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)", Limit) {
 			if tweet.Error != nil {
 				log.Error(tweet.Error)
 			}
 			for _, MemberHashtag := range Group.Members {
 				for _, TweetHashtag := range tweet.Hashtags {
-					if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) && !tweet.IsQuoted && !tweet.IsReply && MemberHashtag.Name != "Kaichou" {
+					if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) && !tweet.IsQuoted && !tweet.IsReply && MemberHashtag.Name != "Kaichou" && len(tweet.Photos) > 0 {
 						New, err := MemberHashtag.CheckMemberFanart(tweet)
 						if err != nil {
 							log.Error(err)
 						}
+
 						if New {
 							Fanarts = append(Fanarts, Fanart{
 								Member: MemberHashtag,

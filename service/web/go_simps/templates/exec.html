@@ -22,7 +22,7 @@
             <a class="nav-link" href="/Vtubers/">Vtubers</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/Exec/">Bot Command</a>
+            <a class="nav-link" href="/Exec/">Bot Commands</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/Guide/">Guide</a>
@@ -45,26 +45,42 @@
     <body>
        <div class="container" id="container">
          <h3><a id="Command_0"></a>Command of VTbot</h3>
-         <p><code>[]</code> =&gt; array,support multiple VtuberName/VtuberGroup (<em>separated by commas</em>)<br>
+         <h4>Info</h4><br>
+         <p><code>vtbot&gt;Help EN</code><br>
+            Shows the basic information's about the bot.
+         </p>
+         <p><code>vtbot&gt;Help JP</code><br>
+            Shows the basic information's about the bot but in Japanese.
+         </p>
+         <p><code>[]</code> =&gt; supports multiple [Names/Groups] (<em>separated by commas</em>)<br>
             <code>{}</code> =&gt; only support single VtuberName/VtuberGroup <br>
             Utility command don't need enable state,you can execute that command anywhere
+         </p>
+         <p>
+            <b>Important rule</b><br>
+            Independent groups have a strict rule, if no [Users/roles] are tagged than [live/fan art/lewd art] won't send anything. <br>
+            recommended that you enable "independent notif" so notifications will be send even if no [users/roles] are tagged.
+         </p>
+         <h4>Main</h4><br>
+         <p><code>vtbot&gt;Channel state</code><br>
+            This command shows the state of the channel, what is enabled or disabled in this channel. <br>
+            Role permission required: No permission needed
          </p>
          <p><code>vtbot&gt;Setup</code><br>
             This command will bring you in setup mode <br>
             Example: <code>vtbot&gt;Setup</code> <br>
-            <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/RemakeSetup.png" alt="">
+            <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/RemakeSetup.png" alt=""><br>
+            Role permission required: <b>Manage Channel or Higher</b> 
          </p> 
          <p><code>vtbot&gt;Update</code><br>
-            You can update your discord channel state like add vtuber region or delete it or change from livestream mode to fanart mode <br>
-            Example: <code>vtbot&gt;Update</code>
+            This command will update your discord channel state, like adding another region/removing  a region or changing from live stream to fan art.<br>
+            Example: <code>vtbot&gt;Update</code> <br>
+            Role permission required: <b>Manage Channel or Higher</b> 
          </p> 
          <p><code>vtbot&gt;Disable [Vtuber Group]</code><br>
-            This command for disable/remove vtuber group<br>
-            Example: <code>vtbot&gt;Disable nijisanji</code>
-         </p>
-         <p>
-            <b>Important rule</b><br>
-            independent group have strict rule if no one user/roles tagged live/fanart notif will be not send,i recommend you enable IndieNotif so notif will send even no one user/roles tagged
+            This command will disable/remove a [Group].<br>
+            Example: <code>vtbot&gt;Disable nijisanji</code> <br>
+            Role permission required: <b>Manage Channel or Higher</b> 
          </p>
          <p>
             Options: <br>
@@ -73,56 +89,58 @@
             <code>newupcoming</code> Enable new livestreams notification(by default will enable this) <br>
             <code>litemode</code> Disabling ping user/role function <br>
          </p>
-         <p><code>vtbot&gt;Channel state</code><br>
-            Shows what is enable on this channel
-         </p>
-         <h6>Only roles with permission “Manage Channel or Higher” can use Enable and Disable command</h6>
          <hr>
+         <h4>Roles & Tags</h4>
+         <p><code>vtbot&gt;Roles info [roles]</code><br>
+            Show all roles info <br>
+            Role permission required: No permission needed
+         </p>
+         <p><code>vtbot&gt;Tag me [Group/Member]</code><br>
+            This command will add you to the tag list if any new fan art or live stream is uploaded. <br>
+            Example: <code>vtbot&gt;tag me Kanochi</code>,then you will tagged when there is a new fanart or livestream(depends by channel state) of Kanochi <br>
+            deprecated <br>
+            <s>in other case if you want to remind before livestream started you can add <code>-setreminder {Minutes}</code> in <code>tag me</code><br>
+            Example: <code>vtbot&gt;tag me hanayori -setreminder 30</code> so bot will remind you 30 Minutes before livestream started</s><br>
+            Role permission required: No permission needed
+         </p>
+         <p><code>vtbot&gt;Del tag [Group/Member]</code><br>
+            This command will remove you from tags list <br>
+            Example: vtbot>del tag hololive <br>
+            Role permission required: No permission needed
+         </p>
          <p><code>vtbot&gt;Tag roles [roles] [Group/Member]</code><br>
             Same like <code>vtbot&gt;tag me</code> command,but this will tag roles (<em>every role separated by space</em>)<br>
-            Example: <code>vtbot&gt;tag roles @kanochi-simps hanayori</code> or <code>vtbot&gt;tag roles @fbk-simps @hololive-simps fbk</code>
-         </p>
-         <p>
-            In other case if you want to remind before livestream started you can add <code>-setreminder {Minutes}</code><br>
-            Example: <code>vtbot&gt;tag roles @kanochi-simps hanayori -setreminder 40</code>
-         </p>
-         <p><code>vtbot&gt;Roles info [roles]</code><br>
-            Show all roles info
+            Example: <code>vtbot&gt;tag roles @kanochi-simps hanayori</code> or <code>vtbot&gt;tag roles @fbk-simps @hololive-simps fbk</code> <br>
+            deprecated <br>
+            <s>In other case if you want to remind before livestream started you can add <code>-setreminder {Minutes}</code><br>
+            Example: <code>vtbot&gt;tag roles @kanochi-simps hanayori -setreminder 40</code></s><br>
+            Role permission required: <b>Manage Channel or Higher</b> 
          </p>
          <p><code>vtbot&gt;Del roles [roles] [Group/Member]</code><br>
-            Remove roles from tag list<br>
+            Removes roles from being tagged. <br>
             Example: <code>vtbot&gt;Del roles @kanochi-simps kanochi</code> or <code>vtbot&gt;Del roles @hololive-simps fbk</code><br>
+            Role permission required: <b>Manage Channel or Higher</b> 
+         </p>
+         <h4>Reminders</h4>
+         <p><code>vtbot&gt;Set reminder</code><br>
+            Update or Set your reminder time<br>
+            Example: <code>vtbot&gt;Set reminder hololive 20</code> <br>
+            if you want remove reminder time,you can set reminder to 0 <br>
+            Example: <code>vtbot&gt;Set reminder hololive 0</code> <br>
+            Role permission required: No permission needed
          </p>
          <p><code>vtbot&gt;Roles reminder [roles] [Group/Member] {Minutes}</code><br>
             Update or Set Roles reminder time<br>
             Example: <code>vtbot&gt;Roles reminder @kanochi-simps Hanayori 30</code><br>
             PS: if you want remove reminder time,you can set reminder to 0 <br>
             Example: <code>vtbot&gt;Roles reminder @kanochi-simps Hanayori 0</code><br>
-
-         </p>
-         <p><h6>Only user with permission “Manage Channel or Higher” can use Tag and Del roles</h6></p>
-         <hr>
-         <p><code>vtbot&gt;Tag me [Group/Member]</code><br>
-            This command will add you to tag lists if any new fanart or livestream started<br>
-            Example: <code>vtbot&gt;tag me Kanochi</code>,then you will tagged when there is a new fanart or livestream(depends by channel state) of kano
-         </p>
-         <p>in other case if you want to remind before livestream started you can add <code>-setreminder {Minutes}</code> in <code>tag me</code><br>
-            Example: <code>vtbot&gt;tag me hanayori -setreminder 30</code> so bot will remind you 30 Minutes before livestream started
-         </p>
-         <p><code>vtbot&gt;Del tag [Group/Member]</code><br>
-            This command will remove you from tags list
-         </p>
-         <p><code>vtbot&gt;My tags</code><br>
-            Shows all your info
-         </p>
-         <p><code>vtbot&gt;Set reminder</code><br>
-            Update or Set your reminder time<br>
-            Example: <code>vtbot&gt;Set reminder hololive 20</code> <br>
-            PS: if you want remove reminder time,you can set reminder to 0 <br>
-            Example: <code>vtbot&gt;Set reminder hololive 0</code> <br>
+            Role permission required: <b>Manage Channel or Higher</b> 
          </p>
          <hr>
          <p><b>Utility command</b></p>
+         <p><code>vtbot&gt;My tags</code><br>
+            Shows all your info
+         </p>
          <p><code>art&gt;{Group/Member}</code><br>
             Show fanart with randomly with their fanart hashtag<br>
             Example: <code>art&gt;Kanochi</code> or <code>art&gt;hololive</code>
@@ -157,15 +175,6 @@
          </p>
          <p><code>sp_bl&gt;[Group/Member]</code><br>
             Show latest video on Bilibili (<em>only 3 if use Vtuber Group</em>)
-         </p>
-         <p><code>vtbot&gt;Module</code><br>
-            Show bot module
-         </p>
-         <p><code>vtbot&gt;Help EN</code><br>
-            Well,you using it right now
-         </p>
-         <p><code>vtbot&gt;Help JP</code><br>
-            Like this but in Japanese
          </p>
       </div>
    </body>

@@ -22,7 +22,7 @@
             <a class="nav-link" href="/Vtubers/">Vtubers</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/Exec/">Bot Command</a>
+            <a class="nav-link" href="/Exec/">Bot Commands</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/Guide/">Guide</a>
@@ -71,7 +71,6 @@
         <div class="row">
            <br/>
            <div class="col text-center pt-2">
-              Nickname: {{Member.Name}}<br>
               {% if Member.EnName and Member.JpName %}
                 Original Name: {{Member.EnName}}/{{Member.JpName}}<br>
               {% elif Member.EnName and not Member.JpName %}  
@@ -79,6 +78,7 @@
               {% elif not Member.EnName and Member.JpName %}    
                 Original Name: {{Member.JpName}}<br>
               {% endif %} 
+              Nickname: {{Member.Name}}<br>
               Region: {{Member.Region}}<br>
            </div>
         </div>        

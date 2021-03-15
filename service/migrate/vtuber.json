@@ -468,7 +468,7 @@
                     "Region":"AU"
                 },
                 {
-                    "Name": "Lumi",
+                    "Name": "Lumituber",
                     "EN_Name": "Lumi",
                     "JP_Name": "",
                     "Hashtag": {
@@ -514,7 +514,7 @@
                 },
                 {
                     "Name": "Bao",
-                    "EN_Name": "Carmen The Moomoo",
+                    "EN_Name": "Bao",
                     "JP_Name": "海の幽霊",
                     "Hashtag": {
                         "Twitter": "#baort",
@@ -1520,7 +1520,7 @@
                     "EN_Name":"Mori Calliope",
                     "JP_Name":"森美声/もりかりおぺ",
                     "Hashtag": {
-                        "Twitter": "#callillustT",
+                        "Twitter": "#callillust",
                         "BiliBili": ""
                     },
                     "Yt_ID": "UCL_qhgtOy0dy1Agp8vkySQg",
@@ -2731,7 +2731,7 @@
                 {
                     "Name":"Hari",
                     "EN_Name":"Hari Ryu",
-                    "JP_Name":"ヤン・ナリ",
+                    "JP_Name":"リュ・ハリ",
                     "Hashtag": {
                         "Twitter": "#hari_art",
                         "BiliBili": ""
@@ -3705,11 +3705,11 @@
                     "Region":"US"
                 },
                 {
-                    "Name":"Ironmouse",
-                    "EN_Name":"Mousey",
+                    "Name":"Mousey",
+                    "EN_Name":"Ironmouse",
                     "JP_Name":"",
                     "Hashtag": {
-                        "Twitter": "#ironmouseart ",
+                        "Twitter": "#ironmouseart",
                         "BiliBili": ""
                     },
                     "Yt_ID": "UChgPVLjqugDQpRLWvC7zzig",
@@ -3724,7 +3724,7 @@
                     "EN_Name":"Zentreya",
                     "JP_Name":"",
                     "Hashtag": {
-                        "Twitter": "#zentreya_art ",
+                        "Twitter": "#zentreya_art",
                         "BiliBili": ""
                     },
                     "Yt_ID": "UCVLsPBwDtv7n7FZLiOsvhSQ",
@@ -3751,10 +3751,10 @@
                 },
                 {
                     "Name":"Froot",
-                    "EN_Name":"BSApricot",
+                    "EN_Name":"Apricot the Lich",
                     "JP_Name":"",
                     "Hashtag": {
-                        "Twitter": "#Lichcraft ",
+                        "Twitter": "#Lichcraft",
                         "BiliBili": ""
                     },
                     "Yt_ID": "UCtNeQ8cUwvAAhBbVbwfGWpg",

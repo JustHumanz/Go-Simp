@@ -105,6 +105,11 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 			} else if Register.ChannelState.TypeTag == config.ArtNLiveType {
 				Message("[Info] you disable Art type on this channel")
 				Register.UpdateType(config.LiveType)
+				err := Register.UpdateChannel()
+				if err != nil {
+					log.Error(err)
+				}
+				return
 			} else {
 				Register.UpdateType(config.ArtType)
 			}
@@ -119,6 +124,11 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 			} else if Register.ChannelState.TypeTag == config.ArtNLiveType {
 				Message("[Info] you disable Live type on this channel")
 				Register.UpdateType(config.ArtType)
+				err := Register.UpdateChannel()
+				if err != nil {
+					log.Error(err)
+				}
+				return
 			} else {
 				Register.UpdateType(config.LiveType)
 			}
@@ -228,7 +238,7 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 
 				Register.SetAdmin(m.Author.ID).SetChannel(m.ChannelID)
-				_, err = s.ChannelMessageSend(m.ChannelID, "Select ID of Vtuber group/agency you want to enable (Only one)")
+				_, err = s.ChannelMessageSend(m.ChannelID, "Select ID or Name of Vtuber group/agency you want to enable (Only one)")
 				if err != nil {
 					log.Error(err)
 				}
@@ -336,7 +346,7 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 							AddField("Dynamic", Dynamic).
 							AddField("Upcoming", NewUpcoming).
 							AddField("Lite", LiteMode).
-							AddField("Region", Region).
+							AddField("Regions", Region).
 							AddField("Independent notif", Indie).
 							InlineAllFields().MessageEmbed)
 						if err != nil {
@@ -394,7 +404,7 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 				if Register.ChannelState.ID != 0 {
 					Register.SetChannel(m.ChannelID)
-					_, err := s.ChannelMessageSend(m.ChannelID, "You select `"+Register.ChannelState.Group.GroupName+"` with ID `"+strconv.Itoa(int(Register.ChannelState.ID))+"`")
+					_, err := s.ChannelMessageSend(m.ChannelID, "You selectd `"+Register.ChannelState.Group.GroupName+"` with ID `"+strconv.Itoa(int(Register.ChannelState.ID))+"`")
 					if err != nil {
 						log.Error(err)
 					}
@@ -763,12 +773,12 @@ func (Data *Regis) AddRegion(s *discordgo.Session) {
 			Register.RegionTMP = append(Register.RegionTMP, v)
 		}
 	}
-	_, err := s.ChannelMessageSend(ChannelID, "`"+GroupName+"` Region you already enabled in here "+strings.Join(RegEmoji, "  "))
+	_, err := s.ChannelMessageSend(ChannelID, "`"+GroupName+"` Regions you already enabled: "+strings.Join(RegEmoji, "  "))
 	if err != nil {
 		log.Error(err)
 	}
 
-	MsgTxt2, err := s.ChannelMessageSend(ChannelID, "`"+GroupName+"` Select region you want to add it : ")
+	MsgTxt2, err := s.ChannelMessageSend(ChannelID, "`"+GroupName+" `Select the region you want to add: ")
 	if err != nil {
 		log.Error(err)
 	}
@@ -809,7 +819,7 @@ func (Data *Regis) AddRegion(s *discordgo.Session) {
 	Register.FixRegion("add")
 	Register.ChannelState.UpdateChannel("Region")
 
-	_, err = s.ChannelMessageSend(ChannelID, "Done,you add "+strings.Join(Register.AddRegionVal, ","))
+	_, err = s.ChannelMessageSend(ChannelID, "Done,you added "+strings.Join(Register.AddRegionVal, ","))
 	if err != nil {
 		log.Error(err)
 	}

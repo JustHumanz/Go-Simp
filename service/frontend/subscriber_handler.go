@@ -63,11 +63,11 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetTitle(engine.FixName(Member.EnName, Member.JpName)).
 									SetImage(Avatar).
 									SetThumbnail(GroupIcon).
-									AddField("Youtube subscriber", engine.NearestThousandFormat(float64(SubsData.YtSubs))).
-									AddField("Youtube views", engine.NearestThousandFormat(float64(SubsData.YtViews))).
+									AddField("Youtube subscribers", engine.NearestThousandFormat(float64(SubsData.YtSubs))).
+									AddField("Youtube viewers", engine.NearestThousandFormat(float64(SubsData.YtViews))).
 									AddField("Youtube videos", engine.NearestThousandFormat(float64(SubsData.YtVideos))).
 									AddField("BiliBili followers", engine.NearestThousandFormat(float64(SubsData.YtViews))).
-									AddField("BiliBili views", engine.NearestThousandFormat(float64(SubsData.BiliViews))).
+									AddField("BiliBili viewers", engine.NearestThousandFormat(float64(SubsData.BiliViews))).
 									AddField("BiliBili videos", engine.NearestThousandFormat(float64(SubsData.BiliVideos))).
 									InlineAllFields().
 									AddField("Twitter followers", engine.NearestThousandFormat(float64(SubsData.TwFollow))).
@@ -86,8 +86,8 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetTitle(engine.FixName(Member.EnName, Member.JpName)).
 									SetImage(Avatar).
 									SetThumbnail(GroupIcon).
-									AddField("Youtube subscriber", engine.NearestThousandFormat(float64(SubsData.YtSubs))).
-									AddField("Youtube views", engine.NearestThousandFormat(float64(SubsData.YtViews))).
+									AddField("Youtube subscribers", engine.NearestThousandFormat(float64(SubsData.YtSubs))).
+									AddField("Youtube viewers", engine.NearestThousandFormat(float64(SubsData.YtViews))).
 									AddField("Youtube videos", engine.NearestThousandFormat(float64(SubsData.YtVideos))).
 									InlineAllFields().
 									AddField("Twitter followers", engine.NearestThousandFormat(float64(SubsData.TwFollow))).

@@ -2,7 +2,6 @@ package twitch
 
 import (
 	"context"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -36,6 +35,7 @@ func (Data TwitchNotif) SendNotif() error {
 	if err != nil {
 		log.Error(err)
 	}
+
 	for i, v := range ChannelData {
 		v.SetMember(Data.Member)
 
@@ -61,7 +61,8 @@ func (Data TwitchNotif) SendNotif() error {
 				SetThumbnail(Data.Group.IconURL).
 				SetURL(ImgURL).
 				AddField("Start live", durafmt.Parse(expiresAt.Sub(Data.TwitchData.ScheduledStart.In(loc))).LimitFirstN(1).String()+" Ago").
-				AddField("Viewers", strconv.Itoa(Data.TwitchData.Viewers)+" simps").
+				AddField("Viewers", engine.NearestThousandFormat(float64(Data.TwitchData.Viewers))+" simps").
+				AddField("Game", Data.TwitchData.Game).
 				SetFooter(Data.TwitchData.ScheduledStart.In(loc).Format(time.RFC822), config.TwitchIMG).
 				SetColor(Color).MessageEmbed)
 			if err != nil {
@@ -106,7 +107,7 @@ func (Data TwitchNotif) SendNotif() error {
 
 				err = engine.Reacting(map[string]string{
 					"ChannelID": Channel.ChannelID,
-					"State":     "Twitch",
+					"State":     "Youtube",
 					"MessageID": msg.ID,
 				}, Bot)
 				if err != nil {

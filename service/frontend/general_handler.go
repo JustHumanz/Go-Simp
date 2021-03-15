@@ -220,7 +220,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if Data.IsNull() {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
-							s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
+							s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtuber groups and names.\nFor more information visit:\n "+config.VtubersData)
 							return
 						}
 						if database.CheckChannelEnable(m.ChannelID, Name, VTuberGroup.ID) {
@@ -238,7 +238,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							if Already != nil {
 								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-									SetDescription("You Already Added\n"+strings.Join(Already, " ")+" from your tag list").
+									SetDescription(m.Author.ID+" Already Added\n"+strings.Join(Already, " ")).
 									AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 									SetThumbnail(config.GoSimpIMG).
 									SetFooter("Use \""+Prefix+MyTags+"\" to show you tags list").
@@ -251,7 +251,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							if Done != nil {
 								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-									SetDescription("You Add\n"+strings.Join(Done, " ")+" to your tag list").
+									SetDescription(m.Author.ID+" notifications have been added to these members\n"+strings.Join(Done, " ")).
 									AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 									SetThumbnail(config.GoSimpIMG).
 									SetFooter("Use \""+Prefix+MyTags+"\" to show you tags list").
@@ -529,7 +529,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							if Already != nil {
 								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-									SetDescription("Already Removed from your tags or You never tag them\n"+strings.Join(Already, " ")).
+									SetDescription("You already removed this Group/Member from your list, or you never added them.\n"+strings.Join(Already, " ")).
 									AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 									SetThumbnail(config.GoSimpIMG).
 									SetFooter("Use \""+Prefix+MyTags+"\" to show you tags list").
@@ -542,7 +542,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							if Done != nil {
 								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-									SetDescription("You remove "+strings.Join(Done, " ")+" from your tag list").
+									SetDescription("You removed these Members from your list. "+strings.Join(Done, " ")).
 									AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 									SetThumbnail(config.GoSimpIMG).
 									SetFooter("Use \""+Prefix+MyTags+"\" to show you tags list").
@@ -887,7 +887,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 											} else if Done != nil {
 												_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 													SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-													SetDescription(Role.Mention()+" Remove\n"+strings.Join(Done, " ")+"\n notifications have been removed for these members.").
+													SetDescription(Role.Mention()+"notifications have been removed for these members\n"+strings.Join(Done, " ")).
 													AddField("Group Name", "**"+VTuberGroup.GroupName+"**").
 													SetThumbnail(config.GoSimpIMG).
 													SetFooter("Use \""+Prefix+RolesTags+" @"+Role.Name+"\" to show role tags list").
@@ -998,7 +998,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				ReminderUser := 0
 				tmpvar2, err := strconv.Atoi(strings.TrimSpace(tmpvar))
 				if err != nil {
-					s.ChannelMessageSend(m.ChannelID, "Invalid number, "+err.Error())
+					s.ChannelMessageSend(m.ChannelID, "Invalid number, "+err.Error()+"\nExample: `"+Prefix+RolesReminder+"` @somerole Hololive 30")
 					return
 				} else {
 					if tmpvar2 < 10 && tmpvar2 != 0 {
@@ -1051,7 +1051,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 												err := User.SetMember(Member).UpdateReminder()
 												if err != nil {
 													log.Error(err)
-													_, err := s.ChannelMessageSend(m.ChannelID, Role.Mention()+" not tag `"+VTuberGroup.GroupName+"`")
+													_, err := s.ChannelMessageSend(m.ChannelID, Role.Mention()+" hasn't been added to `"+VTuberGroup.GroupName+"`. If you want to add a reminder to `"+VTuberGroup.GroupName+"`, first add "+Role.Mention()+" to `"+VTuberGroup.GroupName+"` with: `"+Prefix+RolesReminder+"`[roles] [Group/Member].")
 													if err != nil {
 														log.Error(err)
 													}
@@ -1427,7 +1427,7 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 
 				if done != nil {
-					_, err := s.ChannelMessageSend(m.ChannelID, "done, <@"+m.Author.ID+"> is disable "+strings.Join(done, ",")+" from this channel")
+					_, err := s.ChannelMessageSend(m.ChannelID, "done, <@"+m.Author.ID+"> is disabled "+strings.Join(done, ",")+" from this channel")
 					if err != nil {
 						log.Error(err)
 					}
@@ -1822,6 +1822,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			} else {
 				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+					SetDescription("Your tag list is empty.").
 					SetTitle("404 Not found").
 					SetImage(config.NotFound).
 					SetColor(Color).MessageEmbed)
@@ -1858,42 +1859,15 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 						Indie = config.No
 					}
 
-					if Channel.TypeTag == 1 {
+					if Channel.IsFanart() && !Channel.IsLewd() && !Channel.IsLive() {
 						Typestr = "Art"
-						_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-							SetThumbnail(config.GoSimpIMG).
-							SetDescription("Channel States of "+Channel.Group.GroupName).
-							SetTitle(ChannelRaw.Name).
-							AddField("Type", Typestr).
-							AddField("Region", Region).
-							AddField("Independent notif", Indie).
-							InlineAllFields().
-							SetColor(Color).MessageEmbed)
-						if err != nil {
-							log.Error(err)
-						}
-
-					} else if Channel.TypeTag == 2 {
+					} else if !Channel.IsFanart() && !Channel.IsLewd() && Channel.IsLive() {
 						Typestr = "Live"
-					} else if Channel.TypeTag == 3 {
+					} else if Channel.IsFanart() && !Channel.IsLewd() && Channel.IsLive() {
 						Typestr = "Fanart & Livestream"
-					} else if Channel.TypeTag == 69 {
+					} else if Channel.IsLewd() && !Channel.IsFanart() {
 						Typestr = "Lewd"
-						_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-							SetThumbnail(config.GoSimpIMG).
-							SetDescription("Channel States of "+Channel.Group.GroupName).
-							SetTitle(ChannelRaw.Name).
-							AddField("Type", Typestr).
-							AddField("Region", Region).
-							AddField("Independent notif", Indie).
-							InlineAllFields().
-							SetColor(Color).MessageEmbed)
-						if err != nil {
-							log.Error(err)
-						}
-					} else if Channel.TypeTag == 70 {
+					} else if Channel.IsLewd() && Channel.IsFanart() {
 						Typestr = "Fanart & Lewd"
 					}
 
@@ -1913,22 +1887,103 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 						LiteMode = config.Ok
 					}
 
-					_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-						SetThumbnail(config.GoSimpIMG).
-						SetDescription("Channel States of "+Channel.Group.GroupName).
-						SetTitle(ChannelRaw.Name).
-						AddField("Type", Typestr).
-						AddField("LiveOnly", LiveOnly).
-						AddField("Dynamic", Dynamic).
-						AddField("Upcoming", NewUpcoming).
-						AddField("Lite", LiteMode).
-						AddField("Region", Region).
-						AddField("Independent notif", Indie).
-						InlineAllFields().
-						SetColor(Color).MessageEmbed)
-					if err != nil {
-						log.Error(err)
+					if Channel.IsFanart() && !Channel.IsLewd() && !Channel.IsLive() {
+						if Channel.Group.GroupName == config.Indie {
+							_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+								SetThumbnail(config.GoSimpIMG).
+								SetDescription("Channel States of "+Channel.Group.GroupName).
+								SetTitle(ChannelRaw.Name).
+								AddField("Type", Typestr).
+								AddField("Regions", Region).
+								AddField("Independent notif", Indie).
+								InlineAllFields().
+								SetColor(Color).MessageEmbed)
+							if err != nil {
+								log.Error(err)
+							}
+						} else {
+							_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+								SetThumbnail(config.GoSimpIMG).
+								SetDescription("Channel States of "+Channel.Group.GroupName).
+								SetTitle(ChannelRaw.Name).
+								AddField("Type", Typestr).
+								AddField("Regions", Region).
+								InlineAllFields().
+								SetColor(Color).MessageEmbed)
+							if err != nil {
+								log.Error(err)
+							}
+						}
+
+					} else if Channel.IsLewd() && !Channel.IsFanart() {
+						if Channel.Group.GroupName == config.Indie {
+							_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+								SetThumbnail(config.GoSimpIMG).
+								SetDescription("Channel States of "+Channel.Group.GroupName).
+								SetTitle(ChannelRaw.Name).
+								AddField("Type", Typestr).
+								AddField("Regions", Region).
+								AddField("Independent notif", Indie).
+								InlineAllFields().
+								SetColor(Color).MessageEmbed)
+							if err != nil {
+								log.Error(err)
+							}
+						} else {
+							_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+								SetThumbnail(config.GoSimpIMG).
+								SetDescription("Channel States of "+Channel.Group.GroupName).
+								SetTitle(ChannelRaw.Name).
+								AddField("Type", Typestr).
+								AddField("Regions", Region).
+								InlineAllFields().
+								SetColor(Color).MessageEmbed)
+							if err != nil {
+								log.Error(err)
+							}
+						}
+
+					} else {
+						if Channel.Group.GroupName == config.Indie {
+							_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+								SetThumbnail(config.GoSimpIMG).
+								SetDescription("Channel States of "+Channel.Group.GroupName).
+								SetTitle(ChannelRaw.Name).
+								AddField("Type", Typestr).
+								AddField("LiveOnly", LiveOnly).
+								AddField("Dynamic", Dynamic).
+								AddField("Upcoming", NewUpcoming).
+								AddField("Lite", LiteMode).
+								AddField("Regions", Region).
+								AddField("Independent notif", Indie).
+								InlineAllFields().
+								SetColor(Color).MessageEmbed)
+							if err != nil {
+								log.Error(err)
+							}
+						} else {
+							_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+								SetThumbnail(config.GoSimpIMG).
+								SetDescription("Channel States of "+Channel.Group.GroupName).
+								SetTitle(ChannelRaw.Name).
+								AddField("Type", Typestr).
+								AddField("LiveOnly", LiveOnly).
+								AddField("Dynamic", Dynamic).
+								AddField("Upcoming", NewUpcoming).
+								AddField("Lite", LiteMode).
+								AddField("Regions", Region).
+								InlineAllFields().
+								SetColor(Color).MessageEmbed)
+							if err != nil {
+								log.Error(err)
+							}
+						}
 					}
 				}
 			} else {
@@ -1999,14 +2054,14 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 								}
 
 								if GroupsByReg != nil {
-									table.SetHeader([]string{"Nickname", "Region", "Youtube", "BiliBili", "Group"})
+									table.SetHeader([]string{"Nickname", "Regions", "Youtube", "BiliBili", "Group"})
 									for _, Reg := range GroupsByReg {
 										if Reg == strings.ToLower(Member.Region) {
 											table.Append([]string{Member.Name, Member.Region, yt, bl, Group.GroupName})
 										}
 									}
 								} else {
-									table.SetHeader([]string{"Nickname", "Region", "Youtube", "BiliBili"})
+									table.SetHeader([]string{"Nickname", "Regions", "Youtube", "BiliBili"})
 									table.Append([]string{Member.Name, Member.Region, yt, bl})
 								}
 							}

@@ -78,6 +78,8 @@ func CheckTwitch() {
 
 								if len(GameResult.Data.Games) > 0 {
 									ResultDB.UpdateGame(GameResult.Data.Games[0].Name)
+								} else {
+									ResultDB.UpdateGame("-")
 								}
 
 								err = ResultDB.UpdateTwitch(Member.ID)

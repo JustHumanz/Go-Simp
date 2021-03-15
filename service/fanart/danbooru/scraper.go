@@ -43,7 +43,7 @@ func GetDan(Data database.Group) {
 					if *FistRunning {
 						DataStore[Member.Name] = append(DataStore[Member.Name], Dan.Source)
 					} else {
-						if Dan.IsNew(Member) && !Dan.HasChildren {
+						if Dan.IsNew(Member) && Dan.ParentID == nil {
 							log.WithFields(log.Fields{
 								"Group":      Data.GroupName,
 								"Vtubers":    Member.Name,

@@ -1,3 +1,11 @@
+v3.1.5
+- Change some grammar (web)
+- Update go simp web
+- Lewd disable multiple pic
+- Select Group by name
+- Fix worng vtuber name
+- Fanart fix filter
+
 v3.1.4
 - Change Helsinki/Finland to Europe/Helsinki
 

@@ -54,11 +54,13 @@ func SendFanart(Data []Fanart, Group database.Group) {
 				log.Error(err)
 				break
 			}
+
 			if UserTagsList != nil {
 				tags = strings.Join(UserTagsList, " ")
 			} else {
 				tags = "_"
 			}
+
 			if tags == "_" && Group.GroupName == config.Indie && !Channel.IndieNotif {
 				//do nothing,like my life
 			} else {
@@ -83,6 +85,7 @@ func SendFanart(Data []Fanart, Group database.Group) {
 					"ChannelID": Channel.ChannelID,
 				}, Bot)
 			}
+
 			if i%config.Waiting == 0 && configfile.LowResources {
 				log.WithFields(log.Fields{
 					"Func": "Twitter Fanart",

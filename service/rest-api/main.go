@@ -478,6 +478,7 @@ func getSubs(w http.ResponseWriter, r *http.Request) {
 				for _, MemberIDstr := range key {
 					MemberIDint, err := strconv.Atoi(MemberIDstr)
 					if err != nil {
+						log.Error(err)
 						w.Header().Set("Content-Type", "application/json")
 						json.NewEncoder(w).Encode(MessageError{
 							Message: err.Error(),
@@ -490,6 +491,13 @@ func getSubs(w http.ResponseWriter, r *http.Request) {
 						tmp, err := Member.GetSubsCount()
 						if err != nil {
 							log.Error(err)
+							w.Header().Set("Content-Type", "application/json")
+							json.NewEncoder(w).Encode(MessageError{
+								Message: err.Error(),
+								Date:    time.Now(),
+							})
+							w.WriteHeader(http.StatusInternalServerError)
+							return
 						}
 						SubsData = append(SubsData, SubsJson{
 							MemberID:          tmp.MemberID,
