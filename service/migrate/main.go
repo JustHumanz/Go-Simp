@@ -42,7 +42,7 @@ var (
 )
 
 type NewVtuber struct {
-	Member Member
+	Member Members
 	Group  database.Group
 }
 
@@ -168,11 +168,11 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		Data.Group.IconURL = ""
 	}
 
-	if Data.Member.YtID != "" {
+	if Data.Member.Youtube.YtID != "" {
 		Youtube = "✓"
-		URL = "https://www.youtube.com/channel/" + Data.Member.YtID + "?sub_confirmation=1"
+		URL = "https://www.youtube.com/channel/" + Data.Member.Youtube.YtID + "?sub_confirmation=1"
 
-		Avatar = Data.Member.YtAvatar()
+		Avatar = Data.Member.Youtube.YtAvatar()
 		Color, err = engine.GetColor(config.TmpDir, Avatar)
 		if err != nil {
 			log.Error(err)
@@ -180,8 +180,8 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 
 	} else {
 		Youtube = "✘"
-		URL = "https://space.bilibili.com/" + strconv.Itoa(Data.Member.BiliBiliID)
-		Avatar, err = Data.Member.BliBiliFace()
+		URL = "https://space.bilibili.com/" + strconv.Itoa(Data.Member.BiliBili.BiliBiliID)
+		Avatar, err = Data.Member.BiliBili.BliBiliFace()
 		if err != nil {
 			log.Error(err)
 		}
@@ -191,25 +191,25 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		}
 	}
 
-	if Data.Member.Hashtag.Twitter != "" {
+	if Data.Member.Twitter.TwitterFanart != "" {
 		Twitterfanart = "✓"
 	} else {
 		Twitterfanart = "✘"
 	}
 
-	if Data.Member.Hashtag.BiliBili != "" {
+	if Data.Member.BiliBili.BiliBiliFanart != "" {
 		Bilibilifanart = "✓"
 	} else {
 		Bilibilifanart = "✘"
 	}
 
-	if Data.Member.BiliRoomID != 0 {
+	if Data.Member.BiliBili.BiliRoomID != 0 {
 		Bilibili = "✓"
 	} else {
 		Bilibili = "✘"
 	}
 
-	if Data.Member.TwitchName != "" {
+	if Data.Member.Twitch.TwitchUsername != "" {
 		Twitch = "✓"
 	} else {
 		Twitch = "✘"
