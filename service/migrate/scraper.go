@@ -97,7 +97,7 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 	}
 }
 
-func (Data Member) YtAvatar() string {
+func (Data Youtube) YtAvatar() string {
 	var (
 		datasubs Subs
 	)
@@ -116,7 +116,7 @@ func (Data Member) YtAvatar() string {
 	}
 }
 
-func (Data Member) GetYtSubs() Subs {
+func (Data Youtube) GetYtSubs() Subs {
 	var (
 		datasubs Subs
 	)
@@ -135,7 +135,7 @@ func (Data Member) GetYtSubs() Subs {
 	}
 }
 
-func (Data Member) GetBiliFolow() BiliStat {
+func (Data BiliBili) GetBiliFolow(Vtuber string) BiliStat {
 	var (
 		wg   sync.WaitGroup
 		stat BiliStat
@@ -187,15 +187,15 @@ func (Data Member) GetBiliFolow() BiliStat {
 		return stat
 	} else {
 		log.WithFields(log.Fields{
-			"Vtuber": Data.ENName,
+			"Vtuber": Vtuber,
 		}).Info("BiliBili Space nill")
 		return stat
 	}
 }
 
-func (Data Member) GetTwitterFollow() (int, error) {
-	if Data.TwitterName != "" {
-		profile, err := twitterscraper.GetProfile(Data.TwitterName)
+func (Data Twitter) GetTwitterFollow() (int, error) {
+	if Data.TwitterUsername != "" {
+		profile, err := twitterscraper.GetProfile(Data.TwitterUsername)
 		if err != nil {
 			return 0, err
 		}
@@ -205,7 +205,7 @@ func (Data Member) GetTwitterFollow() (int, error) {
 	}
 }
 
-func (Data Member) BliBiliFace() (string, error) {
+func (Data BiliBili) BliBiliFace() (string, error) {
 	if Data.BiliBiliID == 0 {
 		return "", nil
 	} else {
@@ -225,10 +225,10 @@ func (Data Member) BliBiliFace() (string, error) {
 	}
 }
 
-func (Data Member) GetTwitchAvatar() (string, error) {
-	if Data.TwitchName != "" {
+func (Data Twitch) GetTwitchAvatar() (string, error) {
+	if Data.TwitchUsername != "" {
 		resp, err := TwitchClient.GetUsers(&helix.UsersParams{
-			Logins: []string{Data.TwitchName},
+			Logins: []string{Data.TwitchUsername},
 		})
 		if err != nil {
 			return "", err

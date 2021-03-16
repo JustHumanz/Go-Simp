@@ -32,32 +32,45 @@ type YtData struct {
 }
 
 type Vtuber struct {
-	Vtuber struct {
-		Independent struct {
-			Members []Member `json:"Members"`
-		} `json:"Independent"`
-		Group []struct {
-			GroupName string   `json:"GroupName"`
-			GroupIcon string   `json:"GroupIcon"`
-			Members   []Member `json:"Members"`
-		} `json:"Group"`
-	} `json:"Vtuber"`
+	VtuberData Data `json:"Data"`
 }
-
-type Member struct {
-	Name    string `json:"Name"`
-	ENName  string `json:"EN_Name"`
-	JPName  string `json:"JP_Name"`
-	Hashtag struct {
-		Twitter  string `json:"Twitter"`
-		BiliBili string `json:"BiliBili"`
-	} `json:"Hashtag"`
-	YtID        string `json:"Yt_ID"`
-	BiliBiliID  int    `json:"BiliBili_ID"`
-	BiliRoomID  int    `json:"BiliRoom_ID"`
-	TwitterName string `json:"Twitter_Username"`
-	TwitchName  string `json:"Twitch_Username"`
-	Region      string `json:"Region"`
+type Twitter struct {
+	TwitterFanart   string `json:"Twitter_Fanart"`
+	TwitterUsername string `json:"Twitter_Username"`
+}
+type Youtube struct {
+	YtID string `json:"Yt_ID"`
+}
+type BiliBili struct {
+	BiliBiliFanart string `json:"BiliBili_Fanart"`
+	BiliBiliID     int    `json:"BiliBili_ID"`
+	BiliRoomID     int    `json:"BiliRoom_ID"`
+}
+type Twitch struct {
+	TwitchUsername string `json:"Twitch_Username"`
+}
+type Members struct {
+	Name     string   `json:"Name"`
+	ENName   string   `json:"EN_Name"`
+	JPName   string   `json:"JP_Name"`
+	Twitter  Twitter  `json:"Twitter"`
+	Youtube  Youtube  `json:"Youtube"`
+	BiliBili BiliBili `json:"BiliBili"`
+	Twitch   Twitch   `json:"Twitch"`
+	Region   string   `json:"Region"`
+	Fanbase  string   `json:"Fanbase"`
+}
+type Independent struct {
+	Members []Members `json:"Members"`
+}
+type Group struct {
+	GroupName string    `json:"GroupName"`
+	GroupIcon string    `json:"GroupIcon"`
+	Members   []Members `json:"Members"`
+}
+type Data struct {
+	Independent Independent `json:"independent"`
+	Group       []Group     `json:"Group"`
 }
 
 type Subs struct {
