@@ -36,6 +36,7 @@ type Vtuber struct {
 }
 type Twitter struct {
 	TwitterFanart   string `json:"Twitter_Fanart"`
+	TwitterLewd     string `json:"Twitter_Lewd"`
 	TwitterUsername string `json:"Twitter_Username"`
 }
 type Youtube struct {
