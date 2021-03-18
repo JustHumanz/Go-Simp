@@ -8,12 +8,11 @@ require (
 	github.com/cenkalti/dominantcolor v0.0.0-20171020061837-df772e8dd39e
 	github.com/go-redis/redis/v8 v8.7.1
 	github.com/go-sql-driver/mysql v1.5.0
-	github.com/golang/protobuf v1.4.3
+	github.com/golang/protobuf v1.5.0
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hako/durafmt v0.0.0-20200710122514-c0fb7b4da026
 	github.com/kr/pretty v0.1.0 // indirect
-	github.com/magefile/mage v1.11.0 // indirect
 	github.com/mattn/go-runewidth v0.0.10 // indirect
 	github.com/n0madic/twitter-scraper v0.0.0-20210310070202-193e5a3989c6
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
@@ -30,6 +29,6 @@ require (
 	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba // indirect
 	google.golang.org/genproto v0.0.0-20210311153111-e2979279ddde // indirect
 	google.golang.org/grpc v1.36.0
-	google.golang.org/protobuf v1.25.0
+	google.golang.org/protobuf v1.26.0
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 )
