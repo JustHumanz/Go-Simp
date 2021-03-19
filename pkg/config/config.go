@@ -11,6 +11,7 @@ import (
 
 	"github.com/BurntSushi/toml"
 	_ "github.com/go-sql-driver/mysql"
+	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -40,6 +41,7 @@ var (
 	CommandURL  string
 	GuideURL    string
 	VtubersData string
+	Scraper     *twitterscraper.Scraper
 )
 
 //Const config
@@ -269,5 +271,12 @@ func (Data ConfigFile) InitConf() {
 
 	if Data.LimitConf.YoutubeLimit >= 15 {
 		GoSimpConf.LimitConf.YoutubeLimit = 15
+	}
+
+	Scraper = twitterscraper.New()
+	Scraper.SetSearchMode(twitterscraper.SearchLatest)
+	err := Scraper.SetProxy(GoSimpConf.MultiTOR)
+	if err != nil {
+		log.Error(err)
 	}
 }

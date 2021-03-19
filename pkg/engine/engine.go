@@ -20,7 +20,6 @@ import (
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	"github.com/bwmarrin/discordgo"
 	"github.com/cenkalti/dominantcolor"
-	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -368,9 +367,7 @@ func YtFindType(title string) string {
 
 //GetAuthorAvatar Get twitter avatar
 func GetAuthorAvatar(username string) string {
-	scraper := twitterscraper.New()
-	scraper.SetProxy(config.GoSimpConf.MultiTOR)
-	profile, err := scraper.GetProfile(username)
+	profile, err := config.Scraper.GetProfile(username)
 	if err != nil {
 		log.Error(err)
 	}

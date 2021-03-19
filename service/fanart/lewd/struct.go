@@ -1,4 +1,9 @@
-package danbooru
+package lewd
+
+import (
+	"regexp"
+	"strings"
+)
 
 //Danbooru struct
 type Danbooru struct {
@@ -51,4 +56,26 @@ type Danbooru struct {
 	FileURL             string      `json:"file_url,omitempty"`
 	LargeFileURL        string      `json:"large_file_url,omitempty"`
 	PreviewFileURL      string      `json:"preview_file_url,omitempty"`
+}
+
+func (Data Danbooru) CheckLewd() bool {
+	safebutcrott, _ := regexp.MatchString("(swimsuits|lingerie|pantyshot)", Data.TagString)
+	if Data.Rating == "e" || Data.Rating == "q" || safebutcrott {
+		return true
+	}
+	return false
+}
+
+func (Data Danbooru) IsPixiv() bool {
+	if Data.PixivID != 0 {
+		return true
+	}
+	return false
+}
+
+func (Data Danbooru) IsTwitter() bool {
+	if strings.HasPrefix(Data.Source, "https://twitter.com") {
+		return true
+	}
+	return false
 }

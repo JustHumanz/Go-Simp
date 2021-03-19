@@ -30,19 +30,24 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 	)
 
 	if strings.HasPrefix(m.Content, Prefix) {
-		SendNude := func(Title, Author, Text, URL, Pic, Msg string, Color int, State, Dynamic string) bool {
-			if State == "TBiliBili" {
-				body, errcurl := network.CoolerCurl("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id="+Dynamic, nil)
+		SendNude := func(Data database.DataFanart) bool {
+			Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
+			if err != nil {
+				log.Error(err)
+			}
+
+			if Data.State == "TBiliBili" {
+				body, errcurl := network.CoolerCurl("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id="+Data.Dynamic_id, nil)
 				if errcurl != nil {
 					log.Error(errcurl)
 				}
 				json.Unmarshal(body, &DynamicData)
 				embed = engine.NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-					SetTitle(Author).
+					SetTitle(Data.Author).
 					SetThumbnail(DynamicData.GetUserAvatar()).
-					SetDescription(Text).
-					SetURL(URL).
+					SetDescription(Data.Text).
+					SetURL(Data.PermanentURL).
 					SetImage(Pic).
 					SetColor(Color).
 					InlineAllFields().
@@ -50,10 +55,10 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 			} else {
 				embed = engine.NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-					SetTitle(Author).
-					SetThumbnail(engine.GetAuthorAvatar(Author)).
-					SetDescription(Text).
-					SetURL(URL).
+					SetTitle(Data.Author).
+					SetThumbnail(engine.GetAuthorAvatar(Data.Author)).
+					SetDescription(RemovePic(Data.Text)).
+					SetURL(Data.PermanentURL).
 					SetImage(Pic).
 					SetColor(Color).
 					InlineAllFields().
@@ -75,71 +80,58 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 		for _, GroupData := range Payload.VtuberData {
 			if m.Content == strings.ToLower(Prefix+GroupData.GroupName) {
-				Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
+				FanArtData := database.GetFanart(GroupData.ID, 0)
+				_, err := network.Curl(FanArtData.PermanentURL, nil)
 				if err != nil {
-					log.Error(err)
-				}
-
-				DataFix := database.GetFanart(GroupData.ID, 0)
-				_, err = network.Curl(DataFix.PermanentURL, nil)
-				if err != nil {
-					_, err = network.CoolerCurl(DataFix.PermanentURL, nil)
+					_, err = network.CoolerCurl(FanArtData.PermanentURL, nil)
 					if err != nil {
 						log.Error(err)
 					}
-					log.Info("Delete fanart metadata ", DataFix.PermanentURL)
-					err = DataFix.DeleteFanart()
+					err = FanArtData.DeleteFanart(err.Error())
 					if err != nil {
 						log.Error(err)
 					}
 				} else {
-					if DataFix.Videos != "" {
+					if FanArtData.Videos != "" {
 						Msg = "Video type,check original post"
 						Pic = config.NotFound
-					} else if len(DataFix.Photos) > 0 {
-						Pic = DataFix.Photos[0]
-						Msg = "1/" + strconv.Itoa(len(DataFix.Photos)) + " Photos"
+					} else if len(FanArtData.Photos) > 0 {
+						Pic = FanArtData.Photos[0]
+						Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
 					}
-					Group = SendNude(engine.FixName(DataFix.EnName, DataFix.JpName),
-						DataFix.Author, RemovePic(DataFix.Text),
-						DataFix.PermanentURL,
-						Pic, Msg, Color,
-						DataFix.State, DataFix.Dynamic_id)
+					for _, v := range GroupData.Members {
+						if v.ID == FanArtData.Member.ID {
+							FanArtData.Member = v
+							break
+						}
+					}
+					Group = SendNude(FanArtData)
 					break
 				}
 			}
 			for _, MemberData := range GroupData.Members {
 				if m.Content == strings.ToLower(Prefix+MemberData.Name) || m.Content == strings.ToLower(Prefix+MemberData.JpName) {
-					Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
+					FanArtData := database.GetFanart(0, MemberData.ID)
+					_, err := network.Curl(FanArtData.PermanentURL, nil)
 					if err != nil {
-						log.Error(err)
-					}
-
-					DataFix := database.GetFanart(0, MemberData.ID)
-					_, err = network.Curl(DataFix.PermanentURL, nil)
-					if err != nil {
-						_, err = network.CoolerCurl(DataFix.PermanentURL, nil)
+						_, err = network.CoolerCurl(FanArtData.PermanentURL, nil)
 						if err != nil {
 							log.Error(err)
 						}
-						log.Info("Delete fanart metadata ", DataFix.PermanentURL)
-						err = DataFix.DeleteFanart()
+						err = FanArtData.DeleteFanart(err.Error())
 						if err != nil {
 							log.Error(err)
 						}
 					} else {
-						if DataFix.Videos != "" {
+						if FanArtData.Videos != "" {
 							Msg = "Video type,check original post"
 							Pic = config.NotFound
-						} else if len(DataFix.Photos) > 0 {
-							Msg = "1/" + strconv.Itoa(len(DataFix.Photos)) + " Photos"
-							Pic = DataFix.Photos[0]
+						} else if len(FanArtData.Photos) > 0 {
+							Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
+							Pic = FanArtData.Photos[0]
 						}
-						Member = SendNude(engine.FixName(MemberData.EnName, MemberData.JpName),
-							DataFix.Author, RemovePic(DataFix.Text),
-							DataFix.PermanentURL,
-							Pic, Msg, Color,
-							DataFix.State, DataFix.Dynamic_id)
+						FanArtData.Member = MemberData
+						Member = SendNude(FanArtData)
 						break
 					}
 				}

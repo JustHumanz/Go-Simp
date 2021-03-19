@@ -82,7 +82,7 @@ func GetMembers(GroupID int64) []Member {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		err = rows.Scan(&list.ID, &list.Name, &list.EnName, &list.JpName, &list.YoutubeID, &list.BiliBiliID, &list.BiliRoomID, &list.Region, &list.TwitterHashtags, &list.BiliBiliHashtags, &list.BiliBiliAvatar, &list.TwitterName, &list.TwitchName, &list.YoutubeAvatar)
+		err = rows.Scan(&list.ID, &list.Name, &list.EnName, &list.JpName, &list.TwitterHashtags, &list.TwitterLewd, &list.BiliBiliHashtags, &list.YoutubeID, &list.YoutubeAvatar, &list.BiliBiliID, &list.BiliRoomID, &list.BiliBiliAvatar, &list.TwitterName, &list.TwitchName, &list.TwitchAvatar, &list.Region, &list.GroupID)
 		if err != nil {
 			log.Error(err)
 		}
@@ -215,7 +215,7 @@ func GetFanart(GroupID, MemberID int64) DataFanart {
 
 		defer rows.Close()
 		for rows.Next() {
-			err = rows.Scan(&Data.ID, &Data.EnName, &Data.JpName, &Data.PermanentURL, &Data.Author, &PhotoTmp, &Video, &Data.Text)
+			err = rows.Scan(&Data.ID, &Data.PermanentURL, &Data.Author, &Data.Likes, &Data.Videos, &Data.Text, &Data.TweetID, &Data.Member.ID)
 			if err != nil {
 				log.Error(err)
 			}
@@ -230,7 +230,7 @@ func GetFanart(GroupID, MemberID int64) DataFanart {
 
 		defer rows.Close()
 		for rows.Next() {
-			err = rows.Scan(&Data.ID, &Data.EnName, &Data.JpName, &Data.PermanentURL, &Data.Author, &PhotoTmp, &Video, &Data.Text)
+			err = rows.Scan(&Data.ID, &Data.PermanentURL, &Data.Author, &Data.Likes, &Data.Videos, &Data.Text, &Data.Dynamic_id, &Data.Member.ID)
 			if err != nil {
 				log.Error(err)
 			}
@@ -255,24 +255,29 @@ func GetFanart(GroupID, MemberID int64) DataFanart {
 }
 
 //DeleteFanart Delete fanart when get 404 error status
-func (Data DataFanart) DeleteFanart() error {
-	if Data.State == "Twitter" {
-		stmt, err := DB.Prepare(`DELETE From Twitter WHERE id=?`)
-		if err != nil {
-			log.Error(err)
-		}
-		defer stmt.Close()
+func (Data DataFanart) DeleteFanart(e string) error {
+	if notfound, _ := regexp.MatchString("404", e); notfound {
+		log.Info("Delete fanart metadata ", Data.PermanentURL)
+		if Data.State == "Twitter" {
+			stmt, err := DB.Prepare(`DELETE From Twitter WHERE id=?`)
+			if err != nil {
+				return err
+			}
+			defer stmt.Close()
 
-		stmt.Exec(Data.ID)
-		return nil
+			stmt.Exec(Data.ID)
+			return nil
+		} else {
+			stmt, err := DB.Prepare(`DELETE From TBiliBili WHERE id=?`)
+			if err != nil {
+				return err
+			}
+			defer stmt.Close()
+
+			stmt.Exec(Data.ID)
+			return nil
+		}
 	} else {
-		stmt, err := DB.Prepare(`DELETE From TBiliBili WHERE id=?`)
-		if err != nil {
-			log.Error(err)
-		}
-		defer stmt.Close()
-
-		stmt.Exec(Data.ID)
 		return nil
 	}
 }
@@ -942,8 +947,7 @@ func GetUserReminderList(ChannelIDDiscord int64, Member int64, Reminder int) []s
 
 //GetTwitterFollow Scrapping twitter followers
 func (Data Member) GetTwitterFollow() (twitterscraper.Profile, error) {
-	twitterscraper.SetProxy(config.GoSimpConf.MultiTOR)
-	profile, err := twitterscraper.GetProfile(Data.TwitterName)
+	profile, err := config.Scraper.GetProfile(Data.TwitterName)
 	if err != nil {
 		return twitterscraper.Profile{}, err
 	}
