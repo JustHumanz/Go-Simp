@@ -198,7 +198,7 @@ func (Member *MemberSubs) UpdateSubs(State string) {
 }
 
 //GetFanart Get Member fanart URL from TBiliBili and Twitter
-func GetFanart(GroupID, MemberID int64) DataFanart {
+func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 	var (
 		Data     DataFanart
 		PhotoTmp sql.NullString
@@ -207,50 +207,66 @@ func GetFanart(GroupID, MemberID int64) DataFanart {
 		err      error
 	)
 
-	Twitter := func(State string) {
+	Twitter := func(State string) error {
 		rows, err = DB.Query(`Call GetArt(?,?,'twitter')`, GroupID, MemberID)
 		if err != nil {
-			log.Error(err)
+			return err
+		} else if err == sql.ErrNoRows {
+			return errors.New("Vtuber don't have any fanart")
 		}
 
 		defer rows.Close()
 		for rows.Next() {
-			err = rows.Scan(&Data.ID, &Data.PermanentURL, &Data.Author, &Data.Likes, &Data.Videos, &Data.Text, &Data.TweetID, &Data.Member.ID)
+			err = rows.Scan(&Data.ID, &Data.PermanentURL, &Data.Author, &Data.Likes, &PhotoTmp, &Video, &Data.Text, &Data.TweetID, &Data.Member.ID)
 			if err != nil {
-				log.Error(err)
+				return err
 			}
 		}
 		Data.State = State
+		return nil
 	}
-	Tbilibili := func(State string) {
+	Tbilibili := func(State string) error {
 		rows, err = DB.Query(`Call GetArt(?,?,'westtaiwan')`, GroupID, MemberID)
 		if err != nil {
-			log.Error(err)
+			return err
+		} else if err == sql.ErrNoRows {
+			return errors.New("Vtuber don't have any fanart")
 		}
 
 		defer rows.Close()
 		for rows.Next() {
-			err = rows.Scan(&Data.ID, &Data.PermanentURL, &Data.Author, &Data.Likes, &Data.Videos, &Data.Text, &Data.Dynamic_id, &Data.Member.ID)
+			err = rows.Scan(&Data.ID, &Data.PermanentURL, &Data.Author, &Data.Likes, &PhotoTmp, &Video, &Data.Text, &Data.Dynamic_id, &Data.Member.ID)
 			if err != nil {
-				log.Error(err)
+				return err
 			}
 		}
 		Data.State = State
+		return nil
 	}
 
 	if gacha() {
-		Twitter("Twitter")
+		err := Twitter("Twitter")
+		if err != nil {
+			return nil, err
+		}
 	} else {
-		Tbilibili("TBiliBili")
+		err := Tbilibili("TBiliBili")
+		if err != nil {
+			return nil, err
+		}
+
 		if Data.ID == 0 {
 			log.Warn("Tbilibili nill")
-			Twitter("Twitter")
+			err := Twitter("Twitter")
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
 	Data.Videos = Video.String
 	Data.Photos = strings.Fields(PhotoTmp.String)
-	return Data
+	return &Data, nil
 
 }
 

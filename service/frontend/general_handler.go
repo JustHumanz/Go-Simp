@@ -30,7 +30,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 	)
 
 	if strings.HasPrefix(m.Content, Prefix) {
-		SendNude := func(Data database.DataFanart) bool {
+		SendNude := func(Data *database.DataFanart) bool {
 			Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 			if err != nil {
 				log.Error(err)
@@ -80,8 +80,12 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 		for _, GroupData := range Payload.VtuberData {
 			if m.Content == strings.ToLower(Prefix+GroupData.GroupName) {
-				FanArtData := database.GetFanart(GroupData.ID, 0)
-				_, err := network.Curl(FanArtData.PermanentURL, nil)
+				FanArtData, err := database.GetFanart(GroupData.ID, 0)
+				if err != nil {
+					log.Error(err)
+					s.ChannelMessageSend(m.ChannelID, "Opps,something goes worng,like dev life\n"+err.Error())
+				}
+				_, err = network.Curl(FanArtData.PermanentURL, nil)
 				if err != nil {
 					_, err = network.CoolerCurl(FanArtData.PermanentURL, nil)
 					if err != nil {
@@ -101,7 +105,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 					for _, v := range GroupData.Members {
 						if v.ID == FanArtData.Member.ID {
-							FanArtData.Member = v
+							FanArtData.AddMember(v)
 							break
 						}
 					}
@@ -111,8 +115,12 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 			for _, MemberData := range GroupData.Members {
 				if m.Content == strings.ToLower(Prefix+MemberData.Name) || m.Content == strings.ToLower(Prefix+MemberData.JpName) {
-					FanArtData := database.GetFanart(0, MemberData.ID)
-					_, err := network.Curl(FanArtData.PermanentURL, nil)
+					FanArtData, err := database.GetFanart(0, MemberData.ID)
+					if err != nil {
+						log.Error(err)
+						s.ChannelMessageSend(m.ChannelID, "Opps,something goes worng,like dev life\n"+err.Error())
+					}
+					_, err = network.Curl(FanArtData.PermanentURL, nil)
 					if err != nil {
 						_, err = network.CoolerCurl(FanArtData.PermanentURL, nil)
 						if err != nil {
@@ -130,7 +138,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 							Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
 							Pic = FanArtData.Photos[0]
 						}
-						FanArtData.Member = MemberData
+						FanArtData.AddMember(MemberData)
 						Member = SendNude(FanArtData)
 						break
 					}

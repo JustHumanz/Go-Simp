@@ -21,6 +21,11 @@ type DataFanart struct {
 	State        string
 }
 
+func (Data *DataFanart) AddMember(new Member) *DataFanart {
+	Data.Member = new
+	return Data
+}
+
 //Group group struct
 type Group struct {
 	ID        int64
