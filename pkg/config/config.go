@@ -122,6 +122,7 @@ type ConfigFile struct {
 	TopGG          string `toml:"TOPGG"`
 	Domain         string `toml:"Domain"`
 	LowResources   bool   `toml:"LowResources"` //Disable update like fanart & set wait every 5 counter
+	DevServer      string `toml:"DevServer"`
 	Twitch         struct {
 		ClientID     string `toml:"ClientID"`
 		ClientSecret string `toml:"ClientSecret"`

@@ -1723,6 +1723,35 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 				log.Error(err)
 			}
 			return
+		} else if m.Content == Prefix+Kings {
+			guild, err := s.Guild(config.GoSimpConf.DevServer)
+			if err != nil {
+				log.Error(err)
+			}
+			OuiSama := []string{}
+			RoleID := ""
+			for _, v := range guild.Roles {
+				if v.Name == "Contributor" {
+					RoleID = v.ID
+				}
+			}
+
+			for _, v := range guild.Members {
+				for _, v2 := range v.Roles {
+					if v2 == RoleID {
+						OuiSama = append(OuiSama, v.User.Username)
+					}
+				}
+			}
+			_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+				SetTitle("Help").
+				SetDescription("List of Contributor\n"+strings.Join(OuiSama, "\n")).
+				SetThumbnail(config.BSD).
+				SetFooter(os.Getenv("VERSION")).
+				SetColor(Color).MessageEmbed)
+		} else if m.Content == Prefix+Upvote {
+			s.ChannelMessageSend(m.ChannelID, config.GoSimpConf.TopGG)
 		}
 	}
 }

@@ -51,6 +51,8 @@ const (
 	Live          = "live"
 	ModuleInfo    = "module"
 	Setup         = "setup"
+	Kings         = "kings"
+	Upvote        = "upvote"
 )
 
 func init() {
