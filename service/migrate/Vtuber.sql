@@ -159,6 +159,26 @@ CREATE TABLE IF NOT EXISTS `Twitter` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `Lewd`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE IF NOT EXISTS `Lewd` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `PermanentURL` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Author` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Photos` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Videos` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Text` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `TweetID` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `PixivID` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `VtuberMember_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=186288 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `User`
 --
 
@@ -201,7 +221,8 @@ CREATE TABLE IF NOT EXISTS `VtuberMember` (
   `VtuberName` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `VtuberName_EN` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `VtuberName_JP` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `Hashtag` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Twitter_Hashtag` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Twitter_Lewd` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,    
   `BiliBili_Hashtag` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Youtube_ID` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Youtube_Avatar` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -261,12 +282,12 @@ CREATE PROCEDURE `GetArt`(
 		)
 BEGIN
 		IF State = 'twitter' THEN
-			SELECT Twitter.id,VtuberName_EN,VtuberName_JP,PermanentURL,Author,Photos,Videos,Text FROM Vtuber.Twitter 
+			SELECT Twitter.* FROM Vtuber.Twitter 
 			Inner Join Vtuber.VtuberMember on VtuberMember.id = Twitter.VtuberMember_id 
 			Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id 
 			where (VtuberGroup.id=GroupID OR VtuberMember.id=MemberID)  ORDER by RAND() LIMIT 1;
 		else
-			SELECT TBiliBili.id,VtuberName_EN,VtuberName_JP,PermanentURL,Author,Photos,Videos,Text FROM Vtuber.TBiliBili  
+			SELECT TBiliBili.* FROM Vtuber.TBiliBili  
 			Inner Join Vtuber.VtuberMember on VtuberMember.id = TBiliBili.VtuberMember_id 
 			Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id 
 			where (VtuberGroup.id=GroupID OR VtuberMember.id=MemberID)  ORDER by RAND() LIMIT 1;
@@ -354,9 +375,7 @@ CREATE PROCEDURE `GetVtuberName`(
 			GroupID int
 		)
 BEGIN
-			SELECT id,VtuberName,VtuberName_EN,VtuberName_JP,Youtube_ID,BiliBili_SpaceID,BiliBili_RoomID,
-			Region,Hashtag,BiliBili_Hashtag,BiliBili_Avatar,Twitter_Username,Twitch_Username,Youtube_Avatar 
-			FROM Vtuber.VtuberMember WHERE VtuberGroup_id=GroupID 
+			SELECT VtuberMember.* FROM Vtuber.VtuberMember WHERE VtuberGroup_id=GroupID 
 			Order by Region,VtuberGroup_id;
 		END ;;
 DELIMITER ;
@@ -448,47 +467,5 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE PROCEDURE `GetYtByReg`(
-			grpid int,
-			sts varchar(11),
-			reg varchar(2)
-		)
-BEGIN
-		IF sts = 'upcoming' THEN
-			SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,
-			Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id 
-			FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-			Where VtuberGroup.id=grpid AND Status='upcoming' AND Region=reg Order by ScheduledStart DESC Limit 3;
-
-		ELSEIF sts = 'live' OR sts = 'private' THEN 
-			SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,
-			Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id 
-			FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-			Where VtuberGroup.id=grpid AND Status=sts AND Region=reg Limit 3;
-		ELSE 
-			SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,
-			Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id 
-			FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-			Where VtuberGroup.id=grpid AND Status='past' AND Region=reg AND EndStream !='' order by EndStream ASC Limit 3;
-			
-		end if;	
-		END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2021-03-02 14:31:03

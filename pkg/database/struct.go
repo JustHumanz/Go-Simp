@@ -8,8 +8,7 @@ import (
 //DataFanart fanart struct
 type DataFanart struct {
 	ID           int64
-	EnName       string
-	JpName       string
+	Member       Member
 	PermanentURL string
 	Author       string
 	Photos       []string
@@ -17,7 +16,14 @@ type DataFanart struct {
 	Text         string
 	Likes        int
 	Dynamic_id   string
+	TweetID      string
+	PixivID      string
 	State        string
+}
+
+func (Data *DataFanart) AddMember(new Member) *DataFanart {
+	Data.Member = new
+	return Data
 }
 
 //Group group struct
@@ -53,9 +59,11 @@ type Member struct {
 	BiliRoomID       int
 	TwitterHashtags  string
 	TwitterName      string
+	TwitterLewd      string
 	BiliBiliHashtags string
 	BiliBiliAvatar   string
 	TwitchName       string
+	TwitchAvatar     string
 	Region           string
 	GroupID          int64
 }

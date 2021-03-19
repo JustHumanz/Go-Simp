@@ -1,4 +1,4 @@
-package danbooru
+package lewd
 
 import (
 	"github.com/JustHumanz/Go-Simp/pkg/config"
@@ -13,8 +13,6 @@ var (
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
 	configfile  config.ConfigFile
-	FistRunning *bool
-	DataStore   = make(map[string][]string)
 )
 
 //Start start twitter module
@@ -22,21 +20,11 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 	Bot = a
 	VtubersData = c
 	configfile = d
-	tmp := true
-	FistRunning = &tmp
-	log.Info("Enable danbooru fanart module")
-	CheckDan()
-	b.AddFunc(config.DanbooruFanart, CheckDan)
-}
-
-func CheckDan() {
-	log.Info("Start Checking Danbooru lewd")
-	for i, Group := range VtubersData.VtuberData {
-		GetDan(Group)
-		if i == len(VtubersData.VtuberData)-1 && *FistRunning {
-			tmp := false
-			FistRunning = &tmp
-			log.Info("Set FistRunning to false")
+	log.Info("Enable lewd fanart module")
+	b.AddFunc(config.DanbooruFanart, func() {
+		log.Info("Start Checking Danbooru lewd")
+		for _, Group := range VtubersData.VtuberData {
+			GetDan(Group)
 		}
-	}
+	})
 }
