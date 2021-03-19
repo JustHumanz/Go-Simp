@@ -34,37 +34,35 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 //CheckSpaceVideo
 func CheckSpaceVideo() {
 	for _, GroupData := range VtubersData.VtuberData {
-		if GroupData.GroupName != "Hololive" {
-			wg := new(sync.WaitGroup)
-			for i, MemberData := range GroupData.Members {
-				wg.Add(1)
-				go func(Group database.Group, Member database.Member, wg *sync.WaitGroup) {
-					defer wg.Done()
-					if Member.BiliBiliID != 0 {
-						log.WithFields(log.Fields{
-							"Group":      Group.GroupName,
-							"Vtuber":     Member.EnName,
-							"BiliBiliID": Member.BiliBiliID,
-						}).Info("Checking Space BiliBili")
+		wg := new(sync.WaitGroup)
+		for i, MemberData := range GroupData.Members {
+			wg.Add(1)
+			go func(Group database.Group, Member database.Member, wg *sync.WaitGroup) {
+				defer wg.Done()
+				if Member.BiliBiliID != 0 {
+					log.WithFields(log.Fields{
+						"Group":      Group.GroupName,
+						"Vtuber":     Member.EnName,
+						"BiliBiliID": Member.BiliBiliID,
+					}).Info("Checking Space BiliBili")
 
-						if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
-							Group.IconURL = ""
-						}
-
-						Data := &CheckSctruct{
-							Member: Member,
-							Group:  Group,
-						}
-						SpaceBiliLimit := strconv.Itoa(configfile.LimitConf.SpaceBiliBili)
-						Data.Check(SpaceBiliLimit).SendNude()
-
+					if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
+						Group.IconURL = ""
 					}
-				}(GroupData, MemberData, wg)
-				if i%config.Waiting == 0 {
-					wg.Wait()
+
+					Data := &CheckSctruct{
+						Member: Member,
+						Group:  Group,
+					}
+					SpaceBiliLimit := strconv.Itoa(configfile.LimitConf.SpaceBiliBili)
+					Data.Check(SpaceBiliLimit).SendNude()
+
 				}
+			}(GroupData, MemberData, wg)
+			if i%config.Waiting == 0 {
+				wg.Wait()
 			}
-			wg.Wait()
 		}
+		wg.Wait()
 	}
 }
