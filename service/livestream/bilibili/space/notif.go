@@ -25,6 +25,11 @@ func (Data CheckSctruct) SendNude() {
 			"Vtuber": Data.Member.Name,
 		}).Info("New video uploaded")
 
+		FanBase := "simps"
+		if Data.Member.Fanbase != "" {
+			FanBase = Data.Member.Fanbase
+		}
+
 		for _, video := range Data.VideoList {
 			//ID, DiscordChannelID
 			var (
@@ -63,7 +68,7 @@ func (Data CheckSctruct) SendNude() {
 						AddField("Type ", video.VideoType).
 						AddField("Duration ", video.Length).
 						InlineAllFields().
-						AddField("Viwers ", engine.NearestThousandFormat(float64(video.Play))).
+						AddField("Viwers ", engine.NearestThousandFormat(float64(video.Play))+" "+FanBase).
 						SetFooter(durafmt.Parse(expiresAt.Sub(time.Unix(int64(video.Created), 0).In(loc))).LimitFirstN(2).String()+" Ago", config.BiliBiliIMG).
 						SetColor(Color).MessageEmbed)
 					if err != nil {

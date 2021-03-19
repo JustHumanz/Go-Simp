@@ -65,6 +65,7 @@ type Member struct {
 	TwitchName       string
 	TwitchAvatar     string
 	Region           string
+	Fanbase          string
 	GroupID          int64
 }
 

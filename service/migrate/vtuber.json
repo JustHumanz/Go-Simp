@@ -575,7 +575,7 @@
                   "Twitch_Username":"lolnani"
                },
                "Region":"EN",
-               "Fanbase":""
+               "Fanbase":"Ducks"
             },
             {
                "Name":"Juniper",
@@ -621,14 +621,14 @@
                   "Twitch_Username":"harukakaribu"
                },
                "Region":"EN",
-               "Fanbase":""
+               "Fanbase":"Cultists"
             },
             {
                "Name":"Artemis",
                "EN_Name":"Artemis of the Blue",
                "JP_Name":"",
                "Twitter":{
-                  "Twitter_Fanart":"#HarukArt",
+                  "Twitter_Fanart":"#ArtOfTheBlue",
                   "Twitter_Lewd":"",
                   "Twitter_Username":"artemisvtuber"
                },
@@ -644,7 +644,7 @@
                   "Twitch_Username":"artemisoftheblue"
                },
                "Region":"EN",
-               "Fanbase":""
+               "Fanbase":"Bottom Feeders"
             },
             {
                "Name":"moenaomii",
@@ -690,7 +690,7 @@
                   "Twitch_Username":"Leaflit"
                },
                "Region":"EN",
-               "Fanbase":""
+               "Fanbase":"Hoomans"
             },
             {
                "Name":"Wolfychu",
@@ -2290,7 +2290,7 @@
                      "Twitch_Username":""
                   },
                   "Region":"EN",
-                  "Fanbase":""
+                  "Fanbase":"Shrimps"
                },
                {
                   "Name":"Ame",
@@ -2313,7 +2313,7 @@
                      "Twitch_Username":""
                   },
                   "Region":"EN",
-                  "Fanbase":""
+                  "Fanbase":"Investigators"
                },
                {
                   "Name":"Calli",
@@ -2336,7 +2336,7 @@
                      "Twitch_Username":""
                   },
                   "Region":"EN",
-                  "Fanbase":""
+                  "Fanbase":"Dead Beats"
                },
                {
                   "Name":"Kusotori",
@@ -2359,7 +2359,7 @@
                      "Twitch_Username":""
                   },
                   "Region":"EN",
-                  "Fanbase":""
+                  "Fanbase":"KFP employees"
                },
                {
                   "Name":"Ina",
@@ -2382,7 +2382,7 @@
                      "Twitch_Username":""
                   },
                   "Region":"EN",
-                  "Fanbase":""
+                  "Fanbase":"Tentacults"
                },
                {
                   "Name":"Rushia",
@@ -5582,7 +5582,7 @@
                      "Twitch_Username":"projektmelody"
                   },
                   "Region":"EN",
-                  "Fanbase":""
+                  "Fanbase":"Science team members"
                },
                {
                   "Name":"Nyaniki",
@@ -5605,7 +5605,7 @@
                      "Twitch_Username":"nyanners"
                   },
                   "Region":"US",
-                  "Fanbase":""
+                  "Fanbase":"Nyanbers"
                },
                {
                   "Name":"Silver",
@@ -5628,7 +5628,7 @@
                      "Twitch_Username":"silvervale"
                   },
                   "Region":"US",
-                  "Fanbase":""
+                  "Fanbase":"Wolfs"
                },
                {
                   "Name":"Ironmouse",
@@ -5651,7 +5651,7 @@
                      "Twitch_Username":"ironmouse"
                   },
                   "Region":"US",
-                  "Fanbase":""
+                  "Fanbase":"Precious family"
                },
                {
                   "Name":"Dragonqueen",
@@ -5674,7 +5674,7 @@
                      "Twitch_Username":"zentreya"
                   },
                   "Region":"EN",
-                  "Fanbase":""
+                  "Fanbase":"Knights"
                },
                {
                   "Name":"Hime",
@@ -5697,7 +5697,7 @@
                      "Twitch_Username":"hajime"
                   },
                   "Region":"EN",
-                  "Fanbase":""
+                  "Fanbase":"Childrens"
                },
                {
                   "Name":"Froot",
@@ -5720,7 +5720,7 @@
                      "Twitch_Username":"apricot"
                   },
                   "Region":"US",
-                  "Fanbase":""
+                  "Fanbase":"Frootcakes"
                }
             ]
          }
