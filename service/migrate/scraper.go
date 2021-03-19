@@ -188,7 +188,7 @@ func (Data BiliBili) GetBiliFolow(Vtuber string) BiliStat {
 	} else {
 		log.WithFields(log.Fields{
 			"Vtuber": Vtuber,
-		}).Info("BiliBili Space nill")
+		}).Warn("BiliBili Space nill")
 		return stat
 	}
 }
