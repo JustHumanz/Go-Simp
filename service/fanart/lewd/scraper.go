@@ -94,7 +94,7 @@ func GetDan(Data database.Group) {
 				}).Info("Check lewd pic")
 
 				for tweet := range config.Scraper.SearchTweets(context.Background(), Member.TwitterLewd+" AND -filter:replies -filter:retweets -filter:quote filter:media OR filter:link", 20) {
-					if len(tweet.Photos) > 0 {
+					if len(tweet.Photos) > 0 && !tweet.IsQuoted && !tweet.IsReply {
 						if database.IsLewdNew("Twitter", tweet.PermanentURL) {
 							log.WithFields(log.Fields{
 								"Group":    Data.GroupName,
