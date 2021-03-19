@@ -21,7 +21,6 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 	VtubersData = c
 	configfile = d
 	log.Info("Enable lewd fanart module")
-	CheckLewd()
 	b.AddFunc(config.DanbooruFanart, CheckLewd)
 }
 

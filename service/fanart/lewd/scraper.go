@@ -27,6 +27,7 @@ func GetDan(Data database.Group) {
 			log.WithFields(log.Fields{
 				"Group":   Data.GroupName,
 				"Vtubers": Member.Name,
+				"Site":    "Danbooru",
 			}).Info("Check lewd pic")
 
 			var (
@@ -84,6 +85,31 @@ func GetDan(Data database.Group) {
 					return nil
 				}
 			)
+
+			if Member.TwitterLewd != "" {
+				log.WithFields(log.Fields{
+					"Group":   Data.GroupName,
+					"Vtubers": Member.Name,
+					"Site":    "Twitter",
+				}).Info("Check lewd pic")
+
+				for tweet := range config.Scraper.SearchTweets(context.Background(), Member.TwitterLewd+" AND -filter:replies -filter:retweets -filter:quote filter:media OR filter:link", 20) {
+					if len(tweet.Photos) > 0 {
+						if database.IsLewdNew("Twitter", tweet.PermanentURL) {
+							log.WithFields(log.Fields{
+								"Group":    Data.GroupName,
+								"Vtubers":  Member.Name,
+								"TweetURL": tweet.PermanentURL,
+							}).Info("New Lewd pic from Twitter")
+							TweetID := strings.Split(tweet.PermanentURL, "/")
+							err := TwitterHandler(TweetID)
+							if err != nil {
+								log.Error(err)
+							}
+						}
+					}
+				}
+			}
 
 			databyte, err := network.Curl(config.DanbooruEndPoint+strings.Replace(Member.EnName, " ", "_", -1)+"&limit=10", nil)
 			if err != nil {
@@ -171,23 +197,6 @@ func GetDan(Data database.Group) {
 									log.Error(err)
 								}
 							}
-						}
-					}
-				}
-			}
-
-			if Member.TwitterLewd != "" {
-				for tweet := range config.Scraper.SearchTweets(context.Background(), Member.TwitterLewd, 20) {
-					if database.IsLewdNew("Twitter", tweet.PermanentURL) {
-						log.WithFields(log.Fields{
-							"Group":    Data.GroupName,
-							"Vtubers":  Member.Name,
-							"TweetURL": tweet.PermanentURL,
-						}).Info("New Lewd pic from Twitter")
-						TweetID := strings.Split(tweet.PermanentURL, "/")
-						err := TwitterHandler(TweetID)
-						if err != nil {
-							log.Error(err)
 						}
 					}
 				}
