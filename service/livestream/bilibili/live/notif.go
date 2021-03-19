@@ -25,7 +25,10 @@ func (Data *LiveBili) Crotttt() error {
 		return err
 	}
 	BiliBiliRoomID := strconv.Itoa(Data.RoomData.LiveRoomID)
-
+	FanBase := "simps"
+	if Data.Member.Fanbase != "" {
+		FanBase = Data.Member.Fanbase
+	}
 	User := &database.UserStruct{
 		Human:    true,
 		Reminder: 0,
@@ -39,7 +42,7 @@ func (Data *LiveBili) Crotttt() error {
 			SetImage(Data.RoomData.Thumbnail).
 			SetURL(BiliBiliURL).
 			AddField("Start live", durafmt.Parse(expiresAt.Sub(Data.RoomData.ScheduledStart.In(loc))).LimitFirstN(1).String()+" Ago").
-			AddField("Online", engine.NearestThousandFormat(float64(Data.RoomData.Online))).
+			AddField("Online", engine.NearestThousandFormat(float64(Data.RoomData.Online))+" "+FanBase).
 			InlineAllFields().
 			//AddField("Rank",Data).
 			SetFooter(Data.RoomData.ScheduledStart.In(loc).Format(time.RFC822), config.BiliBiliIMG).

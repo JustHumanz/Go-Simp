@@ -31,6 +31,11 @@ func (Data TwitchNotif) SendNotif() error {
 		}
 	)
 
+	FanBase := "simps"
+	if Data.Member.Fanbase != "" {
+		FanBase = Data.Member.Fanbase
+	}
+
 	ChannelData, err := database.ChannelTag(Data.Member.ID, 2, config.Default, Data.Member.Region)
 	if err != nil {
 		log.Error(err)
@@ -61,7 +66,7 @@ func (Data TwitchNotif) SendNotif() error {
 				SetThumbnail(Data.Group.IconURL).
 				SetURL(ImgURL).
 				AddField("Start live", durafmt.Parse(expiresAt.Sub(Data.TwitchData.ScheduledStart.In(loc))).LimitFirstN(1).String()+" Ago").
-				AddField("Viewers", engine.NearestThousandFormat(float64(Data.TwitchData.Viewers))+" simps").
+				AddField("Viewers", engine.NearestThousandFormat(float64(Data.TwitchData.Viewers))+" "+FanBase).
 				AddField("Game", Data.TwitchData.Game).
 				SetFooter(Data.TwitchData.ScheduledStart.In(loc).Format(time.RFC822), config.TwitchIMG).
 				SetColor(Color).MessageEmbed)

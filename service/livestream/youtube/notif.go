@@ -26,6 +26,11 @@ func (PushData *NotifStruct) SendNude() error {
 	expiresAt := time.Now().In(loc)
 	VtuberName := engine.FixName(PushData.Member.EnName, PushData.Member.JpName)
 
+	FanBase := "simps"
+	if PushData.Member.Fanbase != "" {
+		FanBase = PushData.Member.Fanbase
+	}
+
 	var (
 		Timestart time.Time
 		User      = &database.UserStruct{
@@ -97,7 +102,7 @@ func (PushData *NotifStruct) SendNude() error {
 					AddField("Type ", PushData.YtData.Type).
 					AddField("Start live in", durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(1).String()).
 					InlineAllFields().
-					AddField("Waiting", PushData.YtData.Viewers+" Simps in ChatRoom").
+					AddField("Waiting", PushData.YtData.Viewers+" "+FanBase+" in ChatRoom").
 					SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
 					SetColor(Color).MessageEmbed)
 				if err != nil {
@@ -185,7 +190,7 @@ func (PushData *NotifStruct) SendNude() error {
 					AddField("Type ", PushData.YtData.Type).
 					AddField("Start live", durafmt.Parse(expiresAt.Sub(Timestart.In(loc))).LimitFirstN(1).String()+" Ago").
 					InlineAllFields().
-					AddField("Viewers", PushData.YtData.Viewers+" simps").
+					AddField("Viewers", PushData.YtData.Viewers+" "+FanBase).
 					SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
 					SetColor(Color).MessageEmbed)
 				if err != nil {
@@ -305,7 +310,7 @@ func (PushData *NotifStruct) SendNude() error {
 					SetURL(YtURL).
 					AddField("Type ", PushData.YtData.Type).
 					AddField("Upload", durafmt.Parse(expiresAt.Sub(Timestart.In(loc))).LimitFirstN(1).String()+" Ago").
-					AddField("Viewers", PushData.YtData.Viewers).
+					AddField("Viewers", PushData.YtData.Viewers+" "+FanBase).
 					AddField("Duration", PushData.YtData.Length).
 					InlineAllFields().
 					SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
@@ -367,7 +372,7 @@ func (PushData *NotifStruct) SendNude() error {
 							AddField("Type", PushData.YtData.Type).
 							AddField("Start live in", LiveCount).
 							InlineAllFields().
-							AddField("Waiting", PushData.YtData.Viewers+" Simps in ChatRoom").
+							AddField("Waiting", PushData.YtData.Viewers+" "+FanBase+" in ChatRoom").
 							SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
 							SetColor(Color).MessageEmbed)
 						if err != nil {

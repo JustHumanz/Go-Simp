@@ -82,7 +82,7 @@ func GetMembers(GroupID int64) []Member {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		err = rows.Scan(&list.ID, &list.Name, &list.EnName, &list.JpName, &list.TwitterHashtags, &list.TwitterLewd, &list.BiliBiliHashtags, &list.YoutubeID, &list.YoutubeAvatar, &list.BiliBiliID, &list.BiliRoomID, &list.BiliBiliAvatar, &list.TwitterName, &list.TwitchName, &list.TwitchAvatar, &list.Region, &list.GroupID)
+		err = rows.Scan(&list.ID, &list.Name, &list.EnName, &list.JpName, &list.TwitterHashtags, &list.TwitterLewd, &list.BiliBiliHashtags, &list.YoutubeID, &list.YoutubeAvatar, &list.BiliBiliID, &list.BiliRoomID, &list.BiliBiliAvatar, &list.TwitterName, &list.TwitchName, &list.TwitchAvatar, &list.Region, &list.Fanbase, &list.GroupID)
 		if err != nil {
 			log.Error(err)
 		}
