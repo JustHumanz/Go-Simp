@@ -84,6 +84,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 				if err != nil {
 					log.Error(err)
 					s.ChannelMessageSend(m.ChannelID, "Opps,something goes worng,like dev life\n"+err.Error())
+					return
 				}
 				if FanArtData.Videos != "" {
 					Msg = "Video type,check original post"
@@ -107,6 +108,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if err != nil {
 						log.Error(err)
 						s.ChannelMessageSend(m.ChannelID, "Opps,something goes worng,like dev life\n"+err.Error())
+						return
 					}
 
 					if FanArtData.Videos != "" {
