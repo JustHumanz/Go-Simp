@@ -186,9 +186,7 @@ build static_files:
     - gce        
 
 build web:
-  stage: build
-  only:
-    - tags      
+  stage: build   
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
@@ -201,9 +199,7 @@ build web:
     - gce            
 
 build multitor:
-  stage: build
-  only:
-    - tags      
+  stage: build     
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
