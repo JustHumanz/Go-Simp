@@ -17,8 +17,8 @@ build go-simp:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info
   script:
-    - docker build -t $BASEIMAGE .
-    - docker push $BASEIMAGE
+    - docker build -t $CI_REGISTRY_IMAGE .
+    - docker push $CI_REGISTRY_IMAGE
   tags:
     - docker
     - gce    
