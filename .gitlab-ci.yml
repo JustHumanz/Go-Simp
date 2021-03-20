@@ -3,9 +3,6 @@ image: docker:19.03.12
 services:
   - docker:19.03.12-dind
 
-variables:
-  BASEIMAGE: "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
-
 stages:
   - init
   - build
@@ -32,8 +29,8 @@ build pilot:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info  
   script:
-    - docker pull $BASEIMAGE
-    - docker tag $BASEIMAGE go-simp
+    - docker pull $CI_REGISTRY_IMAGE
+    - docker tag $CI_REGISTRY_IMAGE go-simp
     - docker build -t pilot $CI_PROJECT_DIR/service/pilot
     - docker tag pilot "$CI_REGISTRY_IMAGE"/pilot:"$CI_COMMIT_TAG"
     - docker push "$CI_REGISTRY_IMAGE"/pilot:"$CI_COMMIT_TAG"
@@ -47,8 +44,8 @@ build migrate:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info  
   script:
-    - docker pull $BASEIMAGE
-    - docker tag $BASEIMAGE go-simp
+    - docker pull $CI_REGISTRY_IMAGE
+    - docker tag $CI_REGISTRY_IMAGE go-simp
     - docker build -t migrate $CI_PROJECT_DIR/service/migrate
     - docker tag migrate "$CI_REGISTRY_IMAGE"/migrate
     - docker push "$CI_REGISTRY_IMAGE"/migrate
@@ -64,8 +61,8 @@ build fanart:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
   script:
-    - docker pull $BASEIMAGE
-    - docker tag $BASEIMAGE go-simp
+    - docker pull $CI_REGISTRY_IMAGE
+    - docker tag $CI_REGISTRY_IMAGE go-simp
     - docker build -t fanart $CI_PROJECT_DIR/service/fanart
     - docker tag fanart "$CI_REGISTRY_IMAGE"/fanart:"$CI_COMMIT_TAG"
     - docker push "$CI_REGISTRY_IMAGE"/fanart:"$CI_COMMIT_TAG"
@@ -81,8 +78,8 @@ build livestream:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
   script:
-    - docker pull $BASEIMAGE
-    - docker tag $BASEIMAGE go-simp
+    - docker pull $CI_REGISTRY_IMAGE
+    - docker tag $CI_REGISTRY_IMAGE go-simp
     - docker build -t livestream $CI_PROJECT_DIR/service/livestream
     - docker tag livestream "$CI_REGISTRY_IMAGE"/livestream:"$CI_COMMIT_TAG"
     - docker push "$CI_REGISTRY_IMAGE"/livestream:"$CI_COMMIT_TAG"
@@ -98,8 +95,8 @@ build subscriber:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
   script:
-    - docker pull $BASEIMAGE
-    - docker tag $BASEIMAGE go-simp
+    - docker pull $CI_REGISTRY_IMAGE
+    - docker tag $CI_REGISTRY_IMAGE go-simp
     - docker build -t subscriber $CI_PROJECT_DIR/service/subscriber
     - docker tag subscriber "$CI_REGISTRY_IMAGE"/subscriber:"$CI_COMMIT_TAG"
     - docker push "$CI_REGISTRY_IMAGE"/subscriber:"$CI_COMMIT_TAG"   
@@ -115,8 +112,8 @@ build utility:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
   script:
-    - docker pull $BASEIMAGE
-    - docker tag $BASEIMAGE go-simp
+    - docker pull $CI_REGISTRY_IMAGE
+    - docker tag $CI_REGISTRY_IMAGE go-simp
     - docker build -t utility $CI_PROJECT_DIR/service/utility
     - docker tag utility "$CI_REGISTRY_IMAGE"/utility:"$CI_COMMIT_TAG"
     - docker push "$CI_REGISTRY_IMAGE"/utility:"$CI_COMMIT_TAG"       
@@ -132,8 +129,8 @@ build frontend:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
   script:
-    - docker pull $BASEIMAGE
-    - docker tag $BASEIMAGE go-simp
+    - docker pull $CI_REGISTRY_IMAGE
+    - docker tag $CI_REGISTRY_IMAGE go-simp
     - docker build -t frontend $CI_PROJECT_DIR/service/frontend
     - docker tag frontend "$CI_REGISTRY_IMAGE"/frontend:"$CI_COMMIT_TAG"
     - docker push "$CI_REGISTRY_IMAGE"/frontend:"$CI_COMMIT_TAG"        
@@ -149,8 +146,8 @@ build guild:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
   script:
-    - docker pull $BASEIMAGE
-    - docker tag $BASEIMAGE go-simp
+    - docker pull $CI_REGISTRY_IMAGE
+    - docker tag $CI_REGISTRY_IMAGE go-simp
     - docker build -t guild $CI_PROJECT_DIR/service/guild
     - docker tag guild "$CI_REGISTRY_IMAGE"/guild:"$CI_COMMIT_TAG"
     - docker push "$CI_REGISTRY_IMAGE"/guild:"$CI_COMMIT_TAG"  
@@ -166,8 +163,8 @@ build rest_api:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
   script:
-    - docker pull $BASEIMAGE
-    - docker tag $BASEIMAGE go-simp    
+    - docker pull $CI_REGISTRY_IMAGE
+    - docker tag $CI_REGISTRY_IMAGE go-simp    
     - docker build -t api $CI_PROJECT_DIR/service/rest-api
     - docker tag api "$CI_REGISTRY_IMAGE"/api:"$CI_COMMIT_TAG"
     - docker push "$CI_REGISTRY_IMAGE"/api:"$CI_COMMIT_TAG"
