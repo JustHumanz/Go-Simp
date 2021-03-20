@@ -85,33 +85,21 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					log.Error(err)
 					s.ChannelMessageSend(m.ChannelID, "Opps,something goes worng,like dev life\n"+err.Error())
 				}
-				_, err = network.Curl(FanArtData.PermanentURL, nil)
-				if err != nil {
-					_, err = network.CoolerCurl(FanArtData.PermanentURL, nil)
-					if err != nil {
-						log.Error(err)
-					}
-					err = FanArtData.DeleteFanart(err.Error())
-					if err != nil {
-						log.Error(err)
-					}
-				} else {
-					if FanArtData.Videos != "" {
-						Msg = "Video type,check original post"
-						Pic = config.NotFound
-					} else if len(FanArtData.Photos) > 0 {
-						Pic = FanArtData.Photos[0]
-						Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
-					}
-					for _, v := range GroupData.Members {
-						if v.ID == FanArtData.Member.ID {
-							FanArtData.AddMember(v)
-							break
-						}
-					}
-					Group = SendNude(FanArtData)
-					break
+				if FanArtData.Videos != "" {
+					Msg = "Video type,check original post"
+					Pic = config.NotFound
+				} else if len(FanArtData.Photos) > 0 {
+					Pic = FanArtData.Photos[0]
+					Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
 				}
+				for _, v := range GroupData.Members {
+					if v.ID == FanArtData.Member.ID {
+						FanArtData.AddMember(v)
+						break
+					}
+				}
+				Group = SendNude(FanArtData)
+				break
 			}
 			for _, MemberData := range GroupData.Members {
 				if m.Content == strings.ToLower(Prefix+MemberData.Name) || m.Content == strings.ToLower(Prefix+MemberData.JpName) {
@@ -120,28 +108,17 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 						log.Error(err)
 						s.ChannelMessageSend(m.ChannelID, "Opps,something goes worng,like dev life\n"+err.Error())
 					}
-					_, err = network.Curl(FanArtData.PermanentURL, nil)
-					if err != nil {
-						_, err = network.CoolerCurl(FanArtData.PermanentURL, nil)
-						if err != nil {
-							log.Error(err)
-						}
-						err = FanArtData.DeleteFanart(err.Error())
-						if err != nil {
-							log.Error(err)
-						}
-					} else {
-						if FanArtData.Videos != "" {
-							Msg = "Video type,check original post"
-							Pic = config.NotFound
-						} else if len(FanArtData.Photos) > 0 {
-							Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
-							Pic = FanArtData.Photos[0]
-						}
-						FanArtData.AddMember(MemberData)
-						Member = SendNude(FanArtData)
-						break
+
+					if FanArtData.Videos != "" {
+						Msg = "Video type,check original post"
+						Pic = config.NotFound
+					} else if len(FanArtData.Photos) > 0 {
+						Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
+						Pic = FanArtData.Photos[0]
 					}
+					FanArtData.AddMember(MemberData)
+					Member = SendNude(FanArtData)
+					break
 				}
 			}
 		}
