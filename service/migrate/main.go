@@ -140,7 +140,6 @@ func main() {
 	time.Sleep(5 * time.Minute)
 
 	go CheckSpaceBiliBili()
-	go CheckTBiliBili()
 	time.Sleep(5 * time.Minute)
 
 	go youtube.CheckPrivate()

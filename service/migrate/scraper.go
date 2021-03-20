@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
@@ -262,86 +261,6 @@ func CheckYoutube() {
 			}
 		}
 		wg.Wait()
-	}
-}
-
-func CheckTBiliBili() {
-	DataGroup := database.GetGroups()
-	for k := 0; k < len(DataGroup); k++ {
-		DataMember := database.GetMembers(DataGroup[k].ID)
-		for z := 0; z < len(DataMember); z++ {
-			if DataMember[z].BiliBiliHashtags != "" {
-				log.WithFields(log.Fields{
-					"Group":  DataGroup[k].GroupName,
-					"Vtuber": DataMember[z].EnName,
-				}).Info("Start crawler T.bilibili")
-				body, err := network.Curl("https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_name="+url.QueryEscape(DataMember[z].BiliBiliHashtags), nil)
-				if err != nil {
-					log.Error(err)
-				}
-				var (
-					TB              TBiliBili
-					DynamicIDStrTmp string
-				)
-				_ = json.Unmarshal(body, &TB)
-				if (len(TB.Data.Cards) > 0) && TB.Data.Cards[0].Desc.DynamicIDStr != DynamicIDStrTmp {
-					DynamicIDStrTmp = TB.Data.Cards[0].Desc.DynamicIDStr
-					for i := 0; i < len(TB.Data.Cards); i++ {
-						var (
-							STB  SubTbili
-							img  []string
-							nope bool
-						)
-						_ = json.Unmarshal([]byte(TB.Data.Cards[i].Card), &STB)
-						if STB.Item.Pictures != nil && TB.Data.Cards[i].Desc.Type == 2 { //type 2 is picture post (prob,heheheh)
-							niggerlist := []string{"解锁专属粉丝卡片", "Official", "twitter.com", "咖啡厅", "CD", "专辑", "PIXIV", "遇", "marshmallow-qa.com"}
-							for _, Nworld := range niggerlist {
-								nope, _ = regexp.MatchString(Nworld, STB.Item.Description)
-								if nope {
-									break
-								}
-							}
-							New := database.GetTBiliBili(TB.Data.Cards[i].Desc.DynamicIDStr)
-
-							if New && !nope {
-								log.WithFields(log.Fields{
-									"Group":  DataGroup[k].GroupName,
-									"Vtuber": DataMember[z].EnName,
-								}).Info("New Fanart")
-								for l := 0; l < len(STB.Item.Pictures); l++ {
-									img = append(img, STB.Item.Pictures[l].ImgSrc)
-								}
-
-								Data := database.TBiliBili{
-									URL:        "https://t.bilibili.com/" + TB.Data.Cards[i].Desc.DynamicIDStr + "?tab=2",
-									Author:     TB.Data.Cards[i].Desc.UserProfile.Info.Uname,
-									Avatar:     TB.Data.Cards[i].Desc.UserProfile.Info.Face,
-									Like:       TB.Data.Cards[i].Desc.Like,
-									Photos:     img,
-									Dynamic_id: TB.Data.Cards[i].Desc.DynamicIDStr,
-									Text:       STB.Item.Description,
-									Member:     DataMember[z],
-									Group:      DataGroup[k],
-								}
-								log.Info("Send to database")
-								Data.InputTBiliBili()
-							} else {
-								log.WithFields(log.Fields{
-									"Group":  DataGroup[k].GroupName,
-									"Vtuber": DataMember[z].EnName,
-								}).Info("Still same")
-							}
-						}
-					}
-				} else {
-					log.WithFields(log.Fields{
-						"Group":  DataGroup[k].GroupName,
-						"Vtuber": DataMember[z].EnName,
-					}).Info("Still same")
-				}
-				time.Sleep(1 * time.Second)
-			}
-		}
 	}
 }
 

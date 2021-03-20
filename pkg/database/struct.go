@@ -2,6 +2,7 @@ package database
 
 import (
 	"encoding/json"
+	"regexp"
 	"time"
 )
 
@@ -32,6 +33,13 @@ type Group struct {
 	IconURL   string
 	GroupName string
 	Members   []Member
+}
+
+func (Data *Group) RemoveNillIconURL() *Group {
+	if match, _ := regexp.MatchString("404.jpg", Data.IconURL); match {
+		Data.IconURL = ""
+	}
+	return Data
 }
 
 //IsNull check if group struct is nil

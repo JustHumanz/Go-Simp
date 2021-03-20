@@ -13,9 +13,10 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func SendFanart(Data []Fanart, Group database.Group) {
+func SendFanart(Data []database.DataFanart, DataGroup database.Group) {
+	Group := DataGroup.RemoveNillIconURL()
 	for _, MemberFanart := range Data {
-		url := MemberFanart.Tweet.PermanentURL
+		url := MemberFanart.PermanentURL
 		ChannelData, err := database.ChannelTag(MemberFanart.Member.ID, 1, config.Default, MemberFanart.Member.Region)
 		if err != nil {
 			log.Error(err)
@@ -26,12 +27,12 @@ func SendFanart(Data []Fanart, Group database.Group) {
 			Msg   string
 		)
 
-		if len(MemberFanart.Tweet.Videos) > 0 {
-			Media = MemberFanart.Tweet.Videos[0].Preview
+		if MemberFanart.Videos != "" {
+			Media = MemberFanart.Videos
 			Msg = "1/1 Videos"
-		} else if len(MemberFanart.Tweet.Photos) > 0 {
-			Media = MemberFanart.Tweet.Photos[0]
-			Msg = "1/" + strconv.Itoa(len(MemberFanart.Tweet.Photos)) + " Photos"
+		} else if len(MemberFanart.Photos) > 0 {
+			Media = MemberFanart.Photos[0]
+			Msg = "1/" + strconv.Itoa(len(MemberFanart.Photos)) + " Photos"
 		} else {
 			Media = config.NotFound
 			Msg = "Photos/Video oversize,check original post"
@@ -40,10 +41,6 @@ func SendFanart(Data []Fanart, Group database.Group) {
 		Color, err := engine.GetColor(config.TmpDir, Media)
 		if err != nil {
 			log.Error(err)
-		}
-
-		if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
-			Group.IconURL = ""
 		}
 
 		for i, Channel := range ChannelData {
@@ -66,10 +63,10 @@ func SendFanart(Data []Fanart, Group database.Group) {
 			} else {
 				msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 					SetAuthor(strings.Title(Group.GroupName), Group.IconURL).
-					SetTitle("@"+MemberFanart.Tweet.Username).
+					SetTitle("@"+MemberFanart.Author).
 					SetURL(url).
-					SetThumbnail(engine.GetAuthorAvatar(MemberFanart.Tweet.Username)).
-					SetDescription(RemoveTwitterShortLink(MemberFanart.Tweet.Text)).
+					SetThumbnail(engine.GetAuthorAvatar(MemberFanart.Author)).
+					SetDescription(RemoveTwitterShortLink(MemberFanart.Text)).
 					SetImage(Media).
 					AddField("User Tags", tags).
 					SetColor(Color).
