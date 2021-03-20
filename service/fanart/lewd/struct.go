@@ -79,3 +79,10 @@ func (Data Danbooru) IsTwitter() bool {
 	}
 	return false
 }
+
+func (Data Danbooru) IsBadID() bool {
+	if match, _ := regexp.MatchString("(bad_id|bad_pixiv_id)", Data.TagStringMeta); match {
+		return true
+	}
+	return false
+}

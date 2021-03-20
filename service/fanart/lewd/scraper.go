@@ -122,7 +122,7 @@ func GetDan(Data database.Group) {
 			}
 
 			for _, Dan := range DanPayload {
-				if Dan.CheckLewd() {
+				if Dan.CheckLewd() && Dan.IsBadID() {
 					if Dan.ParentID == nil {
 						if Dan.IsPixiv() {
 							if database.IsLewdNew("Pixiv", strconv.Itoa(Dan.PixivID)) {
