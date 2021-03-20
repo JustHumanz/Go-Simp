@@ -13,8 +13,6 @@ stages:
 
 build go-simp:
   stage: init
-  only:
-    - tags      
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info
@@ -45,8 +43,6 @@ build pilot:
 
 build migrate:
   stage: build
-  only:
-    - tags      
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info  
@@ -180,9 +176,7 @@ build rest_api:
     - gce        
 
 build static_files:
-  stage: build
-  only:
-    - tags      
+  stage: build     
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
