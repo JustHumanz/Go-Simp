@@ -47,5 +47,5 @@ RUN install -d -m 0755 -o multitor -g multitor /var/lib/multitor
 WORKDIR /multitor/
 EXPOSE	16379
 
-CMD multitor --init 10 --user multitor --socks-port 9000 --control-port 9900 --proxy privoxy --haproxy --verbose --debug > /tmp/multitor.log; tail -f /tmp/multitor.log
+CMD multitor --init 15 --user multitor --socks-port 9000 --control-port 9900 --proxy privoxy --haproxy --verbose --debug > /tmp/multitor.log; tail -f /tmp/multitor.log
 #CMD ["./startup.sh"]
