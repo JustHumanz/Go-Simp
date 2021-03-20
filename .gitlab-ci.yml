@@ -192,8 +192,8 @@ build web:
     - docker info   
   script:
     - docker build -t web $CI_PROJECT_DIR/service/web
-    - docker tag web "$CI_REGISTRY_IMAGE"/web:"$CI_COMMIT_TAG"
-    - docker push "$CI_REGISTRY_IMAGE"/web:"$CI_COMMIT_TAG"
+    - docker tag web "$CI_REGISTRY_IMAGE"/web
+    - docker push "$CI_REGISTRY_IMAGE"/web
   tags:
     - docker
     - gce            
