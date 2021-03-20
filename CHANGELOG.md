@@ -1,4 +1,4 @@
-v3.2.6
+v3.2.0
 - Add `upvote` command
 - Add fanbase name
 - Fix lewd
