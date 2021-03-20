@@ -1,8 +1,9 @@
-v3.1.6
+v3.2.6
 - Add `upvote` command
 - Add fanbase name
 - Fix lewd
 - Rework Fanart logic
+- Remove fanart checker
 
 v3.1.5
 - Change some grammar (web)
