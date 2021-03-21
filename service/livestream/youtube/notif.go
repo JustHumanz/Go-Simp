@@ -17,11 +17,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (PushData *NotifStruct) SendNude() error {
-	Status := PushData.YtData.Status
+func SendNude(PushData database.LiveStream) error {
+	Status := PushData.Status
 	Avatar := PushData.Member.YoutubeAvatar
 	YtChannel := "https://www.youtube.com/channel/" + PushData.Member.YoutubeID + "?sub_confirmation=1"
-	YtURL := "https://www.youtube.com/watch?v=" + PushData.YtData.VideoID
+	YtURL := "https://www.youtube.com/watch?v=" + PushData.VideoID
 	loc := engine.Zawarudo(PushData.Member.Region)
 	expiresAt := time.Now().In(loc)
 	VtuberName := engine.FixName(PushData.Member.EnName, PushData.Member.JpName)
@@ -37,32 +37,33 @@ func (PushData *NotifStruct) SendNude() error {
 			Human:    true,
 			Reminder: 0,
 		}
+		Viewers string
 	)
 
 	if match, _ := regexp.MatchString("404.jpg", PushData.Group.IconURL); match {
 		PushData.Group.IconURL = ""
 	}
 
-	if !PushData.YtData.Schedul.IsZero() {
-		Timestart = PushData.YtData.Schedul
-	} else if PushData.YtData.Schedul.IsZero() && !PushData.YtData.Published.IsZero() {
-		Timestart = PushData.YtData.Published
-	} else if PushData.YtData.Schedul.IsZero() && PushData.YtData.Published.IsZero() {
+	if !PushData.Schedul.IsZero() {
+		Timestart = PushData.Schedul
+	} else if PushData.Schedul.IsZero() && !PushData.Published.IsZero() {
+		Timestart = PushData.Published
+	} else if PushData.Schedul.IsZero() && PushData.Published.IsZero() {
 		Timestart = time.Now()
 	}
 
-	if PushData.YtData.Viewers == "0" {
-		PushData.YtData.Viewers = Ytwaiting
+	if PushData.Viewers == "0" {
+		PushData.Viewers = Ytwaiting
 	} else {
-		Views, err := strconv.Atoi(PushData.YtData.Viewers)
+		view, err := strconv.Atoi(PushData.Viewers)
 		if err != nil {
 			log.Error(err)
 		}
-		PushData.YtData.Viewers = engine.NearestThousandFormat(float64(Views))
+		Viewers = engine.NearestThousandFormat(float64(view))
 	}
 
 	if Status == "upcoming" {
-		Color, err := engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
+		Color, err := engine.GetColor(config.TmpDir, PushData.Thumb)
 		if err != nil {
 			return err
 		}
@@ -95,14 +96,14 @@ func (PushData *NotifStruct) SendNude() error {
 				msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 					SetAuthor(VtuberName, Avatar, YtChannel).
 					SetTitle("New upcoming Livestream").
-					SetDescription(PushData.YtData.Title).
-					SetImage(PushData.YtData.Thumb).
+					SetDescription(PushData.Title).
+					SetImage(PushData.Thumb).
 					SetThumbnail(PushData.Group.IconURL).
 					SetURL(YtURL).
-					AddField("Type ", PushData.YtData.Type).
+					AddField("Type ", PushData.Type).
 					AddField("Start live in", durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(1).String()).
 					InlineAllFields().
-					AddField("Waiting", PushData.YtData.Viewers+" "+FanBase+" in ChatRoom").
+					AddField("Waiting", Viewers+" "+FanBase+" in ChatRoom").
 					SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
 					SetColor(Color).MessageEmbed)
 				if err != nil {
@@ -137,7 +138,7 @@ func (PushData *NotifStruct) SendNude() error {
 		wg.Wait()
 
 	} else if Status == "live" {
-		Color, err := engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
+		Color, err := engine.GetColor(config.TmpDir, PushData.Thumb)
 		if err != nil {
 			return err
 		}
@@ -183,14 +184,14 @@ func (PushData *NotifStruct) SendNude() error {
 				MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 					SetAuthor(VtuberName, Avatar, YtChannel).
 					SetTitle("Live right now").
-					SetDescription(PushData.YtData.Title).
-					SetImage(PushData.YtData.Thumb).
+					SetDescription(PushData.Title).
+					SetImage(PushData.Thumb).
 					SetThumbnail(PushData.Group.IconURL).
 					SetURL(YtURL).
-					AddField("Type ", PushData.YtData.Type).
+					AddField("Type ", PushData.Type).
 					AddField("Start live", durafmt.Parse(expiresAt.Sub(Timestart.In(loc))).LimitFirstN(1).String()+" Ago").
 					InlineAllFields().
-					AddField("Viewers", PushData.YtData.Viewers+" "+FanBase).
+					AddField("Viewers", Viewers+" "+FanBase).
 					SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
 					SetColor(Color).MessageEmbed)
 				if err != nil {
@@ -210,9 +211,9 @@ func (PushData *NotifStruct) SendNude() error {
 					log.WithFields(log.Fields{
 						"DiscordChannel":  Channel.ChannelID,
 						"VtuberGroupName": PushData.Group.GroupName,
-						"YoutubeVideoID":  PushData.YtData.VideoID,
+						"YoutubeVideoID":  PushData.VideoID,
 					}).Info("Set dynamic mode")
-					Channel.SetVideoID(PushData.YtData.VideoID).
+					Channel.SetVideoID(PushData.VideoID).
 						SetMsgEmbedID(MsgEmbed.ID)
 				}
 
@@ -268,7 +269,7 @@ func (PushData *NotifStruct) SendNude() error {
 		wg.Wait()
 
 	} else if Status == "past" {
-		Color, err := engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
+		Color, err := engine.GetColor(config.TmpDir, PushData.Thumb)
 		if err != nil {
 			return err
 		}
@@ -304,14 +305,14 @@ func (PushData *NotifStruct) SendNude() error {
 				msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 					SetAuthor(VtuberName, Avatar, YtChannel).
 					SetTitle("Uploaded a new video").
-					SetDescription(PushData.YtData.Title).
-					SetImage(PushData.YtData.Thumb).
+					SetDescription(PushData.Title).
+					SetImage(PushData.Thumb).
 					SetThumbnail(PushData.Group.IconURL).
 					SetURL(YtURL).
-					AddField("Type ", PushData.YtData.Type).
+					AddField("Type ", PushData.Type).
 					AddField("Upload", durafmt.Parse(expiresAt.Sub(Timestart.In(loc))).LimitFirstN(1).String()+" Ago").
-					AddField("Viewers", PushData.YtData.Viewers+" "+FanBase).
-					AddField("Duration", PushData.YtData.Length).
+					AddField("Viewers", Viewers+" "+FanBase).
+					AddField("Duration", PushData.Length).
 					InlineAllFields().
 					SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
 					SetColor(Color).MessageEmbed)
@@ -354,7 +355,7 @@ func (PushData *NotifStruct) SendNude() error {
 					log.Error(err)
 				}
 
-				Color, err := engine.GetColor(config.TmpDir, PushData.YtData.Thumb)
+				Color, err := engine.GetColor(config.TmpDir, PushData.Thumb)
 				if err != nil {
 					return err
 				}
@@ -365,14 +366,14 @@ func (PushData *NotifStruct) SendNude() error {
 						MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 							SetAuthor(VtuberName, Avatar, YtChannel).
 							SetTitle(PushData.Member.EnName+" Live in "+LiveCount).
-							SetDescription(PushData.YtData.Title).
-							SetImage(PushData.YtData.Thumb).
+							SetDescription(PushData.Title).
+							SetImage(PushData.Thumb).
 							SetThumbnail(PushData.Group.IconURL).
 							SetURL(YtURL).
-							AddField("Type", PushData.YtData.Type).
+							AddField("Type", PushData.Type).
 							AddField("Start live in", LiveCount).
 							InlineAllFields().
-							AddField("Waiting", PushData.YtData.Viewers+" "+FanBase+" in ChatRoom").
+							AddField("Waiting", Viewers+" "+FanBase+" in ChatRoom").
 							SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
 							SetColor(Color).MessageEmbed)
 						if err != nil {

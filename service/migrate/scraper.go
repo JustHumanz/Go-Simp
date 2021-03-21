@@ -57,7 +57,7 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 			yttype = "Streaming"
 		}
 
-		YtData, err := Dat.CheckYtVideo(VideoID[i])
+		YtData, err := Dat.CheckYoutubeVideo(VideoID[i])
 		if err != nil {
 			log.Error(err)
 		}
@@ -72,7 +72,8 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 			} else {
 				Viewers = Data.Items[i].LiveDetails.Viewers
 			}
-			NewData := database.YtDbData{
+
+			NewData := &database.LiveStream{
 				Status:    Data.Items[i].Snippet.VideoStatus,
 				VideoID:   VideoID[i],
 				Title:     Data.Items[i].Snippet.Title,
@@ -83,7 +84,7 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 				End:       Data.Items[i].LiveDetails.EndTime,
 				Type:      yttype,
 				Viewers:   Viewers,
-				MemberID:  Dat.ID,
+				Member:    Dat,
 			}
 
 			if Data.Items[i].Snippet.VideoStatus != "upcoming" || Data.Items[i].Snippet.VideoStatus != "live" {
@@ -319,7 +320,7 @@ func CheckLiveBiliBili() {
 					}).Info("Status Past")
 					Data["Status"] = "Past"
 					LiveBiliBili(Data)
-				} else if DataDB.LiveRoomID == 0 {
+				} else if DataDB.Member.BiliRoomID == 0 {
 					log.WithFields(log.Fields{
 						"Group":      Group.GroupName,
 						"VtuberName": Member.Name,
@@ -433,15 +434,15 @@ func CheckSpaceBiliBili() {
 					} else {
 						videotype = "Streaming"
 					}
-					tmp := database.InputBiliBili{
-						VideoID:  video.Bvid,
-						Type:     videotype,
-						Title:    video.Title,
-						Thum:     "https:" + video.Pic,
-						Desc:     video.Description,
-						Update:   time.Unix(int64(video.Created), 0).In(loc),
-						Viewers:  video.Play,
-						MemberID: Name[k].ID,
+					tmp := database.LiveStream{
+						VideoID: video.Bvid,
+						Type:    videotype,
+						Title:   video.Title,
+						Thumb:   "https:" + video.Pic,
+						Desc:    video.Description,
+						Schedul: time.Unix(int64(video.Created), 0).In(loc),
+						Viewers: strconv.Itoa(video.Play),
+						Member:  Name[k],
 					}
 					tmp.InputSpaceVideo()
 				}

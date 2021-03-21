@@ -7,7 +7,7 @@ import (
 )
 
 //GetRoomData get RoomData from LiveBiliBili
-func GetRoomData(MemberID int64, RoomID int) (*LiveBiliDB, error) {
+func GetRoomData(MemberID int64, RoomID int) (*LiveStream, error) {
 	rows, err := DB.Query(`SELECT id,RoomID,Status,Title,Thumbnails,Description,ScheduledStart,Published,Viewers FROM LiveBiliBili Where VtuberMember_id=? AND RoomID=? order by ScheduledStart ASC`, MemberID, RoomID)
 	if err != nil {
 		return nil, err
@@ -15,10 +15,10 @@ func GetRoomData(MemberID int64, RoomID int) (*LiveBiliDB, error) {
 	defer rows.Close()
 
 	var (
-		Data LiveBiliDB
+		Data LiveStream
 	)
 	for rows.Next() {
-		err = rows.Scan(&Data.ID, &Data.LiveRoomID, &Data.Status, &Data.Title, &Data.Thumbnail, &Data.Description, &Data.ScheduledStart, &Data.PublishedAt, &Data.Online)
+		err = rows.Scan(&Data.ID, &Data.Member.BiliRoomID, &Data.Status, &Data.Title, &Data.Thumb, &Data.Desc, &Data.Schedul, &Data.Published, &Data.Viewers)
 		if err != nil {
 			return nil, err
 		}
@@ -27,8 +27,8 @@ func GetRoomData(MemberID int64, RoomID int) (*LiveBiliDB, error) {
 }
 
 //UpdateLiveBili Update LiveBiliBili Data
-func (Data *LiveBiliDB) UpdateLiveBili(MemberID int64) error {
-	_, err := DB.Exec(`Update LiveBiliBili set Status=? , Title=? ,Thumbnails=?, Description=?, Published=?, ScheduledStart=?, Viewers=? Where id=? AND VtuberMember_id=?`, Data.Status, Data.Title, Data.Thumbnail, Data.Description, Data.PublishedAt, Data.ScheduledStart, Data.Online, Data.ID, MemberID)
+func (Data *LiveStream) UpdateLiveBili() error {
+	_, err := DB.Exec(`Update LiveBiliBili set Status=? , Title=? ,Thumbnails=?, Description=?, Published=?, ScheduledStart=?, Viewers=? Where id=? AND VtuberMember_id=?`, Data.Status, Data.Title, Data.Thumb, Data.Desc, Data.Published, Data.Schedul, Data.VideoID, Data.ID, Data.Member.ID)
 	if err != nil {
 		return err
 	}
@@ -44,32 +44,29 @@ func SetRoomToLive(MemberID int64) {
 }
 
 //BilGet Get LiveBiliBili by Status (live,past)
-func BilGet(GroupID int64, MemberID int64, Status string) []LiveBiliDB {
+func BilGet(GroupID int64, MemberID int64, Status string) []LiveStream {
 	var (
-		rows *sql.Rows
-		err  error
+		Limit int
 	)
 
 	if GroupID > 0 && Status != "Live" {
-		rows, err = DB.Query(`call GetLiveBiliBili(?,?,?,?)`, GroupID, MemberID, Status, 3)
-		if err != nil {
-			log.Error(err)
-		}
-		defer rows.Close()
+		Limit = 3
 	} else {
-		rows, err = DB.Query(`call GetLiveBiliBili(?,?,?,?)`, GroupID, MemberID, Status, 2525)
-		if err != nil {
-			log.Error(err)
-		}
-		defer rows.Close()
+		Limit = 2525
 	}
 
+	rows, err := DB.Query(`SELECT * FROM Vtuber.LiveBiliBili Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status=? Order by ScheduledStart DESC Limit ?`, GroupID, MemberID, Status, Limit)
+	if err != nil {
+		log.Error(err)
+	}
+	defer rows.Close()
+
 	var (
-		Data []LiveBiliDB
-		list LiveBiliDB
+		Data []LiveStream
+		list LiveStream
 	)
 	for rows.Next() {
-		err = rows.Scan(&list.LiveRoomID, &list.Status, &list.Title, &list.Thumbnail, &list.Description, &list.ScheduledStart, &list.Online, &list.EnName, &list.JpName, &list.Avatar)
+		err = rows.Scan(&list.ID, &list.Member.BiliRoomID, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.Viewers, &list.End, &list.Member.ID)
 		if err != nil {
 			log.Error(err)
 		}
@@ -79,19 +76,28 @@ func BilGet(GroupID int64, MemberID int64, Status string) []LiveBiliDB {
 }
 
 //SpaceGet Get SpaceBiliBili Data
-func SpaceGet(GroupID int64, MemberID int64) []SpaceBiliDB {
-	rows, err := DB.Query(`Call GetSpaceBiliBili(?,?)`, GroupID, MemberID)
+func SpaceGet(GroupID int64, MemberID int64) []LiveStream {
+	var (
+		Limit int
+	)
+	if GroupID == 0 {
+		Limit = 3
+	} else {
+		Limit = 5
+	}
+
+	rows, err := DB.Query(`SELECT * FROM Vtuber.BiliBili Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) Order by UploadDate DESC limit ?`, GroupID, MemberID, Limit)
 	if err != nil {
 		log.Error(err)
 	}
 	defer rows.Close()
 
 	var (
-		Data []SpaceBiliDB
-		list SpaceBiliDB
+		Data []LiveStream
+		list LiveStream
 	)
 	for rows.Next() {
-		err = rows.Scan(&list.VideoID, &list.Type, &list.Title, &list.Thumbnail, &list.Description, &list.UploadDate, &list.Viewers, &list.Length, &list.EnName, &list.JpName, &list.Avatar)
+		err = rows.Scan(&list.ID, &list.VideoID, &list.Type, &list.Title, &list.Thumb, &list.Desc, &list.Schedul, &list.Viewers, &list.Length, &list.Member.ID)
 		if err != nil {
 			log.Error(err)
 		}
@@ -101,14 +107,14 @@ func SpaceGet(GroupID int64, MemberID int64) []SpaceBiliDB {
 }
 
 //InputSpaceVideo Input data to SpaceBiliBili
-func (Data InputBiliBili) InputSpaceVideo() {
+func (Data LiveStream) InputSpaceVideo() {
 	stmt, err := DB.Prepare(`INSERT INTO BiliBili (VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberMember_id) values(?,?,?,?,?,?,?,?,?)`)
 	if err != nil {
 		log.Error(err)
 	}
 	defer stmt.Close()
 
-	res, err := stmt.Exec(Data.VideoID, Data.Type, Data.Title, Data.Thum, Data.Desc, Data.Update, Data.Viewers, Data.Length, Data.MemberID)
+	res, err := stmt.Exec(Data.VideoID, Data.Type, Data.Title, Data.Thumb, Data.Desc, Data.Schedul, Data.Viewers, Data.Length, Data.Member.ID)
 	if err != nil {
 		log.Error(err)
 	}
@@ -120,9 +126,9 @@ func (Data InputBiliBili) InputSpaceVideo() {
 }
 
 //CheckVideo Check New video from SpaceBiliBili
-func (Data InputBiliBili) CheckVideo() (bool, int) {
+func (Data LiveStream) CheckVideo() (bool, int) {
 	var tmp int
-	row := DB.QueryRow("SELECT id FROM Vtuber.BiliBili WHERE VideoID=? AND VtuberMember_id=?", Data.VideoID, Data.MemberID)
+	row := DB.QueryRow("SELECT id FROM Vtuber.BiliBili WHERE VideoID=? AND VtuberMember_id=?", Data.VideoID, Data.Member.ID)
 	err := row.Scan(&tmp)
 	if err == sql.ErrNoRows {
 		return true, 0
@@ -135,7 +141,7 @@ func (Data InputBiliBili) CheckVideo() (bool, int) {
 }
 
 //UpdateView Update SpaceBiliBili data
-func (Data InputBiliBili) UpdateView(id int) {
+func (Data LiveStream) UpdateView(id int) {
 	log.WithFields(log.Fields{
 		"VideoData ID": Data.VideoID,
 		"Viwers":       Data.Viewers,

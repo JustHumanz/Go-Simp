@@ -64,38 +64,33 @@ func CheckYtByTime() {
 					log.Error(err)
 				}
 
-				for _, v := range YoutubeStatus {
-					YoutubeData := &NotifStruct{
-						Member: Member,
-						Group:  Group,
-						YtData: &v,
-					}
-					if time.Now().Sub(v.Schedul) > v.Schedul.Sub(time.Now()) {
+				for _, Youtube := range YoutubeStatus {
+					if time.Now().Sub(Youtube.Schedul) > Youtube.Schedul.Sub(time.Now()) {
 						log.WithFields(log.Fields{
 							"Vtuber":  Member.EnName,
 							"Group":   Group.GroupName,
-							"VideoID": v.VideoID,
+							"VideoID": Youtube.VideoID,
 						}).Info("Vtuber upcoming schedule deadline,force change to live")
 
 						yttoken = engine.GetYtToken()
-						Data, err := YtAPI([]string{v.VideoID})
+						Data, err := YtAPI([]string{Youtube.VideoID})
 						if err != nil {
 							log.Error(err)
 						}
 						if len(Data.Items) > 0 {
 							if Data.Items[0].Snippet.VideoStatus != "none" {
 								if Data.Items[0].Statistics.ViewCount != "" {
-									YoutubeData.UpYtView(Data.Items[0].Statistics.ViewCount)
-								} else if Data.Items[0].Statistics.ViewCount == "0" && v.Viewers == "0" {
-									Viewers, err := GetWaiting(v.VideoID)
+									Youtube.UpdateViewers(Data.Items[0].Statistics.ViewCount)
+								} else if Data.Items[0].Statistics.ViewCount == "0" && Youtube.Viewers == "0" {
+									Viewers, err := GetWaiting(Youtube.VideoID)
 									if err != nil {
 										log.Error(err)
 									}
-									YoutubeData.UpYtView(Viewers)
+									Youtube.UpdateViewers(Viewers)
 								}
 
 								if !Data.Items[0].LiveDetails.ActualStartTime.IsZero() {
-									YoutubeData.UpYtSchedul(Data.Items[0].LiveDetails.ActualStartTime)
+									Youtube.UpdateSchdule(Data.Items[0].LiveDetails.ActualStartTime)
 								}
 								Key := "0" + strconv.Itoa(int(Member.ID)) + "upcoming" + ""
 								err = database.RemoveYtCache(Key, context.Background())
@@ -103,11 +98,11 @@ func CheckYtByTime() {
 									log.Error(err)
 								}
 
-								YoutubeData.ChangeYtStatus("live").UpdateYtDB().SendNude()
+								Youtube.UpdateYt("live") //.SendNude()
 							}
 						}
 					}
-					YoutubeData.ChangeYtStatus("reminder").SendNude()
+					Youtube.UpdateStatus("reminder") //.SendNude()
 				}
 			}
 		}
@@ -169,14 +164,14 @@ func GetWaiting(VideoID string) (string, error) {
 
 func CheckPrivate() {
 	log.Info("Start Video private slayer")
-	Check := func(Youtube database.YtDbData) {
+	Check := func(Youtube database.LiveStream) {
 		if Youtube.Status == "upcoming" && time.Now().Sub(Youtube.Schedul) > Youtube.Schedul.Sub(time.Now()) {
 			log.WithFields(log.Fields{
 				"VideoID": Youtube.VideoID,
 			}).Info("Member only video")
 			Youtube.UpdateYt("past")
 			engine.RemoveEmbed(Youtube.VideoID, Bot)
-		} else if Youtube.Status == "live" && Youtube.Viewers == "" || Youtube.Status == "live" && int(math.Round(time.Now().Sub(Youtube.Schedul).Hours())) > 30 {
+		} else if Youtube.Status == "live" && Youtube.Viewers == "0" || Youtube.Status == "live" && int(math.Round(time.Now().Sub(Youtube.Schedul).Hours())) > 30 {
 			log.WithFields(log.Fields{
 				"VideoID": Youtube.VideoID,
 			}).Info("Member only video")

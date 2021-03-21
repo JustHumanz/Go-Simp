@@ -53,20 +53,20 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 	if Member.BiliBiliID != 0 {
 		var (
 			ScheduledStart time.Time
-			Data           LiveBili
 		)
-		DataDB, err := database.GetRoomData(Member.ID, Member.BiliRoomID)
+
+		LiveBiliDB, err := database.GetRoomData(Member.ID, Member.BiliRoomID)
 		if err != nil {
 			log.Error(err)
 		}
+
 		Status, err := GetRoomStatus(Member.BiliRoomID)
 		if err != nil {
 			log.Error(err)
 		}
 
-		if DataDB != nil {
-			Data.AddData(DataDB)
-			if Status.CheckScheduleLive() && DataDB.Status != "Live" {
+		if LiveBiliDB != nil {
+			if Status.CheckScheduleLive() && LiveBiliDB.Status != "Live" {
 				//Live
 				if Status.Data.RoomInfo.LiveStartTime != 0 {
 					ScheduledStart = time.Unix(int64(Status.Data.RoomInfo.LiveStartTime), 0).In(loc)
@@ -84,48 +84,47 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 					"Start":  ScheduledStart,
 				}).Info("Start live right now")
 
-				Data.SetStatus("Live").
+				LiveBiliDB.UpdateStatus("Live").
 					UpdateSchdule(ScheduledStart).
-					UpdateOnline(Status.Data.RoomInfo.Online).
+					UpdateViewers(strconv.Itoa(Status.Data.RoomInfo.Online)).
 					UpdateThumbnail(Status.Data.RoomInfo.Cover).
 					UpdateTitle(Status.Data.RoomInfo.Title).
-					SetMember(Member).
-					SetGroup(Group)
+					AddMember(Member).
+					AddGroup(Group)
 
-				err = Data.Crotttt()
+				err := LiveBiliDB.UpdateLiveBili()
 				if err != nil {
 					log.Error(err)
 				}
 
-				err := Data.UpdateDB()
+				err = Crotttt(*LiveBiliDB)
 				if err != nil {
 					log.Error(err)
 				}
 
-			} else if !Status.CheckScheduleLive() && DataDB.Status == "Live" {
+			} else if !Status.CheckScheduleLive() && LiveBiliDB.Status == "Live" {
 				//prob past
 				log.WithFields(log.Fields{
 					"Group":  Group.GroupName,
 					"Vtuber": Member.EnName,
 					"Start":  ScheduledStart,
 				}).Info("Past live stream")
-				engine.RemoveEmbed(strconv.Itoa(DataDB.LiveRoomID), Bot)
-				Data.SetStatus("Past").
-					UpdateOnline(Status.Data.RoomInfo.Online)
+				engine.RemoveEmbed(strconv.Itoa(LiveBiliDB.Member.BiliRoomID), Bot)
+				LiveBiliDB.UpdateStatus("Past").
+					UpdateViewers(strconv.Itoa(Status.Data.RoomInfo.Online))
 
-				err = Data.UpdateDB()
+				err = LiveBiliDB.UpdateLiveBili()
 				if err != nil {
 					log.Error(err)
 				}
 			} else {
 				//update online
-				Data.UpdateOnline(Status.Data.RoomInfo.Online)
-				err := Data.UpdateDB()
+				LiveBiliDB.UpdateViewers(strconv.Itoa(Status.Data.RoomInfo.Online))
+				err := LiveBiliDB.UpdateLiveBili()
 				if err != nil {
 					log.Error(err)
 				}
 			}
 		}
-
 	}
 }

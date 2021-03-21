@@ -46,7 +46,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 					SetTitle(Data.Author).
 					SetThumbnail(DynamicData.GetUserAvatar()).
-					SetDescription(Data.Text).
+					SetDescription(RemovePic(Data.Text)).
 					SetURL(Data.PermanentURL).
 					SetImage(Pic).
 					SetColor(Color).
@@ -141,7 +141,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 		var (
 			Already     []string
 			Done        []string
-			MemberTag   []NameStruct
+			MemberTag   []database.Member
 			ReminderInt = 0
 		)
 		User := &database.UserStruct{
@@ -195,8 +195,8 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if VtuberName != "" {
 				tmp := strings.Split(VtuberName, ",")
 				for _, Name := range tmp {
-					Data := FindName(Name)
-					if Data.IsNull() {
+					Member := FindVtuber(Name, 0)
+					if Member == (database.Member{}) {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
 							s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtuber groups and names.\nFor more information visit:\n "+config.VtubersData)
@@ -248,17 +248,22 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							return
 						}
 					} else {
-						MemberTag = append(MemberTag, Data)
+						MemberTag = append(MemberTag, Member)
 					}
 					Already = nil
 					Done = nil
 				}
 				for i, Member := range MemberTag {
-					if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.Group.ID) {
-						User.SetGroup(Member.Group).
+					Group, err := FindGropName(Member.GroupID)
+					if err != nil {
+						log.Error(err)
+					}
+
+					if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.GroupID) {
+						User.SetGroup(Group).
 							SetReminder(ReminderUser)
 
-						err := User.SetMember(Member.Member).Adduser()
+						err = User.SetMember(Member).Adduser()
 						if err != nil {
 							Already = append(Already, "`"+tmp[i]+"`")
 						} else {
@@ -267,7 +272,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					} else {
 						_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-							SetDescription("look like this channel not enable `"+Member.Group.GroupName+"`").
+							SetDescription("look like this channel not enable `"+Group.GroupName+"`").
 							SetThumbnail(config.GoSimpIMG).
 							SetColor(Color).MessageEmbed)
 						if err != nil {
@@ -343,8 +348,8 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 				tmp := strings.Split(FindInt[1], ",")
 				for _, Name := range tmp {
-					Data := FindName(Name)
-					if Data.IsNull() {
+					Member := FindVtuber(Name, 0)
+					if Member == (database.Member{}) {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
 							_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
@@ -409,14 +414,19 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							return
 						}
 					} else {
-						MemberTag = append(MemberTag, Data)
+						MemberTag = append(MemberTag, Member)
 					}
 				}
 				for i, Member := range MemberTag {
-					if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.Group.ID) {
-						User.SetGroup(Member.Group).
+					Group, err := FindGropName(Member.GroupID)
+					if err != nil {
+						log.Error(err)
+					}
+
+					if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.GroupID) {
+						User.SetGroup(Group).
 							SetReminder(ReminderUser).
-							SetMember(Member.Member)
+							SetMember(Member)
 						err := User.UpdateReminder()
 						if err != nil {
 							log.Error(err)
@@ -428,7 +438,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					} else {
 						_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-							SetDescription("look like this channel not enable `"+Member.Group.GroupName+"`").
+							SetDescription("look like this channel not enable `"+Group.GroupName+"`").
 							SetThumbnail(config.GoSimpIMG).
 							SetColor(Color).MessageEmbed)
 						if err != nil {
@@ -485,8 +495,8 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if VtuberName != "" {
 				tmp := strings.Split(VtuberName, ",")
 				for _, Name := range tmp {
-					Data := FindName(Name)
-					if Data.IsNull() {
+					Member := FindVtuber(Name, 0)
+					if Member == (database.Member{}) {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
 							_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
@@ -546,14 +556,19 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 
 					} else {
-						MemberTag = append(MemberTag, Data)
+						MemberTag = append(MemberTag, Member)
 					}
 				}
 				Already = nil
 				Done = nil
 				for i, Member := range MemberTag {
-					if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.Group.ID) {
-						err := User.SetGroup(Member.Group).SetMember(Member.Member).Deluser()
+					Group, err := FindGropName(Member.GroupID)
+					if err != nil {
+						log.Error(err)
+					}
+
+					if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.GroupID) {
+						err := User.SetGroup(Group).SetMember(Member).Deluser()
 						if err != nil {
 							Already = append(Already, "`"+tmp[i]+"`")
 						} else {
@@ -562,7 +577,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					} else {
 						_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-							SetDescription("look like this channel not enable `"+Member.Group.GroupName+"`").
+							SetDescription("look like this channel not enable `"+Group.GroupName+"`").
 							SetThumbnail(config.GoSimpIMG).
 							SetColor(Color).MessageEmbed)
 						if err != nil {
@@ -650,8 +665,8 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				if len(VtuberName[len(VtuberName)-1:]) > 0 {
 					tmp := strings.Split(VtuberName[len(VtuberName)-1:][0], ",")
 					for _, Name := range tmp {
-						Data := FindName(Name)
-						if Data.IsNull() {
+						Member := FindVtuber(Name, 0)
+						if Member == (database.Member{}) {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)
@@ -722,13 +737,18 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								return
 							}
 						} else {
-							MemberTag = append(MemberTag, Data)
+							MemberTag = append(MemberTag, Member)
 						}
 						Already = nil
 						Done = nil
 					}
 					for i, Member := range MemberTag {
-						if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.Group.ID) {
+						Group, err := FindGropName(Member.GroupID)
+						if err != nil {
+							log.Error(err)
+						}
+
+						if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.GroupID) {
 							for _, Role := range guild.Roles {
 								for _, UserRole := range VtuberName {
 									if UserRole == Role.Mention() {
@@ -736,11 +756,11 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 											DiscordID:       Role.ID,
 											DiscordUserName: Role.Name,
 											Channel_ID:      m.ChannelID,
-											Group:           Member.Group,
+											Group:           Group,
 											Human:           false,
 											Reminder:        ReminderUser,
 										}
-										err := User.SetMember(Member.Member).Adduser()
+										err := User.SetMember(Member).Adduser()
 										if err != nil {
 											Already = append(Already, "`"+tmp[i]+"`")
 										} else {
@@ -778,7 +798,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						} else {
 							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-								SetDescription("look like this channel not enable `"+Member.Group.GroupName+"`").
+								SetDescription("look like this channel not enable `"+Group.GroupName+"`").
 								SetThumbnail(config.GoSimpIMG).
 								SetColor(Color).MessageEmbed)
 							if err != nil {
@@ -818,8 +838,8 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					tmp := strings.Split(VtuberName[len(VtuberName)-1:][0], ",")
 
 					for _, Name := range tmp {
-						Data := FindName(Name)
-						if Data.IsNull() {
+						Member := FindVtuber(Name, 0)
+						if Member == (database.Member{}) {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)
@@ -888,13 +908,17 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								return
 							}
 						} else {
-							MemberTag = append(MemberTag, Data)
+							MemberTag = append(MemberTag, Member)
 						}
 					}
 					Already = nil
 					Done = nil
 					for i, Member := range MemberTag {
-						if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.Group.ID) {
+						Group, err := FindGropName(Member.GroupID)
+						if err != nil {
+							log.Error(err)
+						}
+						if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.GroupID) {
 							for _, Role := range guild.Roles {
 								for _, UserRole := range VtuberName {
 									if UserRole == Role.Mention() {
@@ -902,10 +926,10 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 											DiscordID:       Role.ID,
 											DiscordUserName: Role.Name,
 											Channel_ID:      m.ChannelID,
-											Group:           Member.Group,
+											Group:           Group,
 											Human:           false,
 										}
-										err := User.SetMember(Member.Member).Deluser()
+										err := User.SetMember(Member).Deluser()
 										if err != nil {
 											Already = append(Already, "`"+tmp[i]+"`")
 										} else {
@@ -942,7 +966,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						} else {
 							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-								SetDescription("look like this channel not enable `"+Member.Group.GroupName+"`").
+								SetDescription("look like this channel not enable `"+Group.GroupName+"`").
 								SetThumbnail(config.GoSimpIMG).
 								SetColor(Color).MessageEmbed)
 							if err != nil {
@@ -1002,8 +1026,8 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				if len(VtuberName[len(VtuberName)-2:]) > 0 {
 					tmp := strings.Split(VtuberName[len(VtuberName)-2:][0], ",")
 					for _, Name := range tmp {
-						Data := FindName(Name)
-						if Data.IsNull() {
+						Member := FindVtuber(Name, 0)
+						if Member == (database.Member{}) {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)
@@ -1079,12 +1103,17 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 								return
 							}
 						} else {
-							MemberTag = append(MemberTag, Data)
+							MemberTag = append(MemberTag, Member)
 						}
 						Done = nil
 					}
 					for i, Member := range MemberTag {
-						if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.Group.ID) {
+						Group, err := FindGropName(Member.GroupID)
+						if err != nil {
+							log.Error(err)
+						}
+
+						if database.CheckChannelEnable(m.ChannelID, tmp[i], Group.ID) {
 							for _, Role := range guild.Roles {
 								for _, UserRole := range VtuberName {
 									if UserRole == Role.Mention() {
@@ -1092,14 +1121,14 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 											DiscordID:       Role.ID,
 											DiscordUserName: Role.Name,
 											Channel_ID:      m.ChannelID,
-											Group:           Member.Group,
+											Group:           Group,
 											Human:           false,
 											Reminder:        ReminderUser,
 										}
-										err := User.SetMember(Member.Member).UpdateReminder()
+										err := User.SetMember(Member).UpdateReminder()
 										if err != nil {
 											log.Error(err)
-											_, err := s.ChannelMessageSend(m.ChannelID, Role.Mention()+" not tag `"+Member.Member.Name+"`")
+											_, err := s.ChannelMessageSend(m.ChannelID, Role.Mention()+" not tag `"+Member.Name+"`")
 											if err != nil {
 												log.Error(err)
 											}
@@ -1127,7 +1156,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						} else {
 							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-								SetDescription("look like this channel not enable `"+Member.Group.GroupName+"`").
+								SetDescription("look like this channel not enable `"+Group.GroupName+"`").
 								SetThumbnail(config.GoSimpIMG).
 								SetColor(Color).MessageEmbed)
 							if err != nil {
