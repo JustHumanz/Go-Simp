@@ -21,7 +21,7 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 	)
 
 	Twitter := func(State string) error {
-		rows, err = DB.Query(`Call GetArt(?,?,'twitter')`, GroupID, MemberID)
+		rows, err = DB.Query(`SELECT Twitter.* FROM Vtuber.Twitter Inner Join Vtuber.VtuberMember on VtuberMember.id = Twitter.VtuberMember_id Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id where (VtuberGroup.id=? OR VtuberMember.id=?)  ORDER by RAND() LIMIT 1`, GroupID, MemberID)
 		if err != nil {
 			return err
 		} else if err == sql.ErrNoRows {
@@ -39,7 +39,7 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 		return nil
 	}
 	Tbilibili := func(State string) error {
-		rows, err = DB.Query(`Call GetArt(?,?,'westtaiwan')`, GroupID, MemberID)
+		rows, err = DB.Query(`SELECT TBiliBili.* FROM Vtuber.TBiliBili Inner Join Vtuber.VtuberMember on VtuberMember.id = TBiliBili.VtuberMember_id Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id where (VtuberGroup.id=? OR VtuberMember.id=?)  ORDER by RAND() LIMIT 1`, GroupID, MemberID)
 		if err != nil {
 			return err
 		} else if err == sql.ErrNoRows {

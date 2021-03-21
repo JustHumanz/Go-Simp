@@ -76,7 +76,8 @@ func GetMembers(GroupID int64) []Member {
 		list Member
 		Data []Member
 	)
-	rows, err := DB.Query(`call GetVtuberName(?)`, GroupID)
+
+	rows, err := DB.Query(`SELECT VtuberMember.* FROM Vtuber.VtuberMember WHERE VtuberGroup_id=? Order by Region,VtuberGroup_id;`, GroupID)
 	if err != nil {
 		log.Error(err)
 	}
