@@ -2,9 +2,6 @@ package live
 
 import (
 	"time"
-
-	database "github.com/JustHumanz/Go-Simp/pkg/database"
-	"github.com/bwmarrin/discordgo"
 )
 
 type Bilibili struct {
@@ -837,59 +834,4 @@ type RoomID2 struct {
 		BroadcastType int    `json:"broadcast_type"`
 		OnlineHidden  int    `json:"online_hidden"`
 	} `json:"data"`
-}
-
-type LiveBili struct {
-	RoomData *database.LiveBiliDB
-	Member   database.Member
-	Group    database.Group
-	Embed    *discordgo.MessageEmbed
-}
-
-func (Data *LiveBili) UpdateDB() error {
-	err := Data.RoomData.UpdateLiveBili(Data.Member.ID)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (Data *LiveBili) AddData(new *database.LiveBiliDB) *LiveBili {
-	Data.RoomData = new
-	return Data
-}
-
-func (Data *LiveBili) UpdateSchdule(new time.Time) *LiveBili {
-	Data.RoomData.ScheduledStart = new
-	return Data
-}
-
-func (Data *LiveBili) UpdateThumbnail(new string) *LiveBili {
-	Data.RoomData.Thumbnail = new
-	return Data
-}
-
-func (Data *LiveBili) UpdateTitle(new string) *LiveBili {
-	Data.RoomData.Title = new
-	return Data
-}
-
-func (Data *LiveBili) SetStatus(new string) *LiveBili {
-	Data.RoomData.Status = new
-	return Data
-}
-
-func (Data *LiveBili) UpdateOnline(new int) *LiveBili {
-	Data.RoomData.Online = new
-	return Data
-}
-
-func (Data *LiveBili) SetMember(new database.Member) *LiveBili {
-	Data.Member = new
-	return Data
-}
-
-func (Data *LiveBili) SetGroup(new database.Group) *LiveBili {
-	Data.Group = new
-	return Data
 }

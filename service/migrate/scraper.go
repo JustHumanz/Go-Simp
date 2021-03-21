@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
@@ -58,7 +57,7 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 			yttype = "Streaming"
 		}
 
-		YtData, err := Dat.CheckYtVideo(VideoID[i])
+		YtData, err := Dat.CheckYoutubeVideo(VideoID[i])
 		if err != nil {
 			log.Error(err)
 		}
@@ -73,7 +72,8 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 			} else {
 				Viewers = Data.Items[i].LiveDetails.Viewers
 			}
-			NewData := database.YtDbData{
+
+			NewData := &database.LiveStream{
 				Status:    Data.Items[i].Snippet.VideoStatus,
 				VideoID:   VideoID[i],
 				Title:     Data.Items[i].Snippet.Title,
@@ -84,7 +84,7 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 				End:       Data.Items[i].LiveDetails.EndTime,
 				Type:      yttype,
 				Viewers:   Viewers,
-				MemberID:  Dat.ID,
+				Member:    Dat,
 			}
 
 			if Data.Items[i].Snippet.VideoStatus != "upcoming" || Data.Items[i].Snippet.VideoStatus != "live" {
@@ -265,86 +265,6 @@ func CheckYoutube() {
 	}
 }
 
-func CheckTBiliBili() {
-	DataGroup := database.GetGroups()
-	for k := 0; k < len(DataGroup); k++ {
-		DataMember := database.GetMembers(DataGroup[k].ID)
-		for z := 0; z < len(DataMember); z++ {
-			if DataMember[z].BiliBiliHashtags != "" {
-				log.WithFields(log.Fields{
-					"Group":  DataGroup[k].GroupName,
-					"Vtuber": DataMember[z].EnName,
-				}).Info("Start crawler T.bilibili")
-				body, err := network.Curl("https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_name="+url.QueryEscape(DataMember[z].BiliBiliHashtags), nil)
-				if err != nil {
-					log.Error(err)
-				}
-				var (
-					TB              TBiliBili
-					DynamicIDStrTmp string
-				)
-				_ = json.Unmarshal(body, &TB)
-				if (len(TB.Data.Cards) > 0) && TB.Data.Cards[0].Desc.DynamicIDStr != DynamicIDStrTmp {
-					DynamicIDStrTmp = TB.Data.Cards[0].Desc.DynamicIDStr
-					for i := 0; i < len(TB.Data.Cards); i++ {
-						var (
-							STB  SubTbili
-							img  []string
-							nope bool
-						)
-						_ = json.Unmarshal([]byte(TB.Data.Cards[i].Card), &STB)
-						if STB.Item.Pictures != nil && TB.Data.Cards[i].Desc.Type == 2 { //type 2 is picture post (prob,heheheh)
-							niggerlist := []string{"解锁专属粉丝卡片", "Official", "twitter.com", "咖啡厅", "CD", "专辑", "PIXIV", "遇", "marshmallow-qa.com"}
-							for _, Nworld := range niggerlist {
-								nope, _ = regexp.MatchString(Nworld, STB.Item.Description)
-								if nope {
-									break
-								}
-							}
-							New := database.GetTBiliBili(TB.Data.Cards[i].Desc.DynamicIDStr)
-
-							if New && !nope {
-								log.WithFields(log.Fields{
-									"Group":  DataGroup[k].GroupName,
-									"Vtuber": DataMember[z].EnName,
-								}).Info("New Fanart")
-								for l := 0; l < len(STB.Item.Pictures); l++ {
-									img = append(img, STB.Item.Pictures[l].ImgSrc)
-								}
-
-								Data := database.TBiliBili{
-									URL:        "https://t.bilibili.com/" + TB.Data.Cards[i].Desc.DynamicIDStr + "?tab=2",
-									Author:     TB.Data.Cards[i].Desc.UserProfile.Info.Uname,
-									Avatar:     TB.Data.Cards[i].Desc.UserProfile.Info.Face,
-									Like:       TB.Data.Cards[i].Desc.Like,
-									Photos:     img,
-									Dynamic_id: TB.Data.Cards[i].Desc.DynamicIDStr,
-									Text:       STB.Item.Description,
-									Member:     DataMember[z],
-									Group:      DataGroup[k],
-								}
-								log.Info("Send to database")
-								Data.InputTBiliBili()
-							} else {
-								log.WithFields(log.Fields{
-									"Group":  DataGroup[k].GroupName,
-									"Vtuber": DataMember[z].EnName,
-								}).Info("Still same")
-							}
-						}
-					}
-				} else {
-					log.WithFields(log.Fields{
-						"Group":  DataGroup[k].GroupName,
-						"Vtuber": DataMember[z].EnName,
-					}).Info("Still same")
-				}
-				time.Sleep(1 * time.Second)
-			}
-		}
-	}
-}
-
 func CheckLiveBiliBili() {
 	log.Info("Start check BiliBili room")
 	for _, Group := range database.GetGroups() {
@@ -400,7 +320,7 @@ func CheckLiveBiliBili() {
 					}).Info("Status Past")
 					Data["Status"] = "Past"
 					LiveBiliBili(Data)
-				} else if DataDB.LiveRoomID == 0 {
+				} else if DataDB.Member.BiliRoomID == 0 {
 					log.WithFields(log.Fields{
 						"Group":      Group.GroupName,
 						"VtuberName": Member.Name,
@@ -514,15 +434,15 @@ func CheckSpaceBiliBili() {
 					} else {
 						videotype = "Streaming"
 					}
-					tmp := database.InputBiliBili{
-						VideoID:  video.Bvid,
-						Type:     videotype,
-						Title:    video.Title,
-						Thum:     "https:" + video.Pic,
-						Desc:     video.Description,
-						Update:   time.Unix(int64(video.Created), 0).In(loc),
-						Viewers:  video.Play,
-						MemberID: Name[k].ID,
+					tmp := database.LiveStream{
+						VideoID: video.Bvid,
+						Type:    videotype,
+						Title:   video.Title,
+						Thumb:   "https:" + video.Pic,
+						Desc:    video.Description,
+						Schedul: time.Unix(int64(video.Created), 0).In(loc),
+						Viewers: strconv.Itoa(video.Play),
+						Member:  Name[k],
 					}
 					tmp.InputSpaceVideo()
 				}

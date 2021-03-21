@@ -1,6 +1,7 @@
 package twitch
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
@@ -57,6 +58,7 @@ func CheckTwitch() {
 				if err != nil {
 					log.Error(err)
 				}
+
 				if len(result.Data.Streams) > 0 {
 					for _, Stream := range result.Data.Streams {
 						if ResultDB.Status == "Past" && Stream.Type == "live" {
@@ -72,9 +74,9 @@ func CheckTwitch() {
 								Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{height}", "720", -1)
 
 								ResultDB.UpdateStatus("Live").
-									UpdateViewers(Stream.ViewerCount).
-									UpdateThumbnails(Stream.ThumbnailURL).
-									UpdateSchedule(Stream.StartedAt)
+									UpdateViewers(strconv.Itoa(Stream.ViewerCount)).
+									UpdateThumbnail(Stream.ThumbnailURL).
+									UpdateSchdule(Stream.StartedAt)
 
 								if len(GameResult.Data.Games) > 0 {
 									ResultDB.UpdateGame(GameResult.Data.Games[0].Name)
@@ -82,18 +84,12 @@ func CheckTwitch() {
 									ResultDB.UpdateGame("-")
 								}
 
-								err = ResultDB.UpdateTwitch(Member.ID)
+								err = ResultDB.UpdateTwitch()
 								if err != nil {
 									log.Error(err)
 								}
 
-								Notif := TwitchNotif{
-									TwitchData: ResultDB,
-									Member:     Member,
-									Group:      Group,
-								}
-
-								err = Notif.SendNotif()
+								err = SendNotif(*ResultDB)
 								if err != nil {
 									log.Error(err)
 								}
@@ -102,6 +98,7 @@ func CheckTwitch() {
 									"Group":      Group.GroupName,
 									"VtuberName": Member.Name,
 								}).Info("Change Twitch status to Live")
+
 							}
 						} else if Stream.Type == "live" && ResultDB.Status == "Live" {
 							log.WithFields(log.Fields{
@@ -109,12 +106,13 @@ func CheckTwitch() {
 								"VtuberName": Member.Name,
 								"Viewers":    Stream.ViewerCount,
 							}).Info("Update Viewers")
-							ResultDB.UpdateViewers(Stream.ViewerCount).UpdateTwitch(Member.ID)
+
+							ResultDB.UpdateViewers(strconv.Itoa(Stream.ViewerCount)).UpdateTwitch()
 						}
 					}
 				} else if ResultDB.Status == "Live" && len(result.Data.Streams) == 0 {
 					ResultDB.UpdateStatus("Past")
-					err = ResultDB.UpdateTwitch(Member.ID)
+					err = ResultDB.UpdateTwitch()
 					if err != nil {
 						log.Error(err)
 					}
@@ -127,10 +125,4 @@ func CheckTwitch() {
 			}
 		}
 	}
-}
-
-type TwitchNotif struct {
-	TwitchData *database.TwitchDB
-	Group      database.Group
-	Member     database.Member
 }

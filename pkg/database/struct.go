@@ -2,6 +2,7 @@ package database
 
 import (
 	"encoding/json"
+	"regexp"
 	"time"
 )
 
@@ -32,6 +33,13 @@ type Group struct {
 	IconURL   string
 	GroupName string
 	Members   []Member
+}
+
+func (Data *Group) RemoveNillIconURL() *Group {
+	if match, _ := regexp.MatchString("404.jpg", Data.IconURL); match {
+		Data.IconURL = ""
+	}
+	return Data
 }
 
 //IsNull check if group struct is nil
@@ -69,28 +77,77 @@ type Member struct {
 	GroupID          int64
 }
 
-//YtDbData Youtube database struct
-type YtDbData struct {
-	ID            int64
-	ChannelID     string
-	Group         string
-	Status        string
-	NameEN        string
-	NameJP        string
-	VideoID       string
-	Title         string
-	Thumb         string
-	Desc          string
-	YoutubeAvatar string
-	Schedul       time.Time
-	End           time.Time
-	Published     time.Time
-	Type          string
-	Region        string
-	Viewers       string
-	Length        string
-	MemberID      int64
-	GroupID       int64
+type LiveStream struct {
+	ID        int64
+	Status    string
+	VideoID   string
+	Title     string
+	Thumb     string
+	Desc      string
+	Schedul   time.Time
+	End       time.Time
+	Published time.Time
+	Game      string
+	Type      string
+	Viewers   string
+	Length    string
+	Member    Member
+	Group     Group
+}
+
+func (Data *LiveStream) AddMember(new Member) *LiveStream {
+	Data.Member = new
+	return Data
+}
+
+func (Data *LiveStream) AddGroup(new Group) *LiveStream {
+	Data.Group = new
+	return Data
+}
+
+func (Data *LiveStream) UpdateStatus(new string) *LiveStream {
+	Data.Status = new
+	return Data
+}
+
+func (Data *LiveStream) UpdateSchdule(new time.Time) *LiveStream {
+	Data.Schedul = new
+	return Data
+}
+
+func (Data *LiveStream) UpdateViewers(new string) *LiveStream {
+	Data.Viewers = new
+	return Data
+}
+
+func (Data *LiveStream) UpdateThumbnail(new string) *LiveStream {
+	Data.Thumb = new
+	return Data
+}
+
+func (Data *LiveStream) UpdateTitle(new string) *LiveStream {
+	Data.Title = new
+	return Data
+}
+
+func (Data *LiveStream) UpdateEnd(new time.Time) *LiveStream {
+	Data.End = new
+	return Data
+}
+
+func (Data *LiveStream) UpdateLength(new string) *LiveStream {
+	Data.Length = new
+	return Data
+}
+
+func (Data *LiveStream) UpdatePublished(new time.Time) *LiveStream {
+	Data.Published = new
+	return Data
+}
+
+func (Data *LiveStream) UpdateGame(new string) *LiveStream {
+	Data.Game = new
+	return Data
 }
 
 //UserStruct user struct
@@ -144,20 +201,6 @@ func (Data *UserStruct) SetMember(new Member) *UserStruct {
 	return Data
 }
 
-//LiveBiliDB live bilibili database struct
-type LiveBiliDB struct {
-	LiveRoomID, Online, ID                                        int
-	Status, Title, Thumbnail, Description, EnName, JpName, Avatar string
-	ScheduledStart, PublishedAt                                   time.Time
-}
-
-//SpaceBiliDB spacebilibili database struct
-type SpaceBiliDB struct {
-	Viewers                                                                      int
-	VideoID, Title, Thumbnail, Description, EnName, JpName, Avatar, Type, Length string
-	UploadDate                                                                   time.Time
-}
-
 //InputTW twitter fanart struct
 type InputTW struct {
 	Url      string
@@ -178,33 +221,6 @@ type MemberSubs struct {
 	MemberID                          int64
 }
 
-//InputBiliBili input bilibili struct
-type InputBiliBili struct {
-	VideoID  string
-	Type     string
-	Title    string
-	Thum     string
-	Desc     string
-	Update   time.Time
-	Viewers  int
-	MemberID int64
-	Length   string
-}
-
-//TBiliBili tbilibili struct
-type TBiliBili struct {
-	URL        string
-	Author     string
-	Avatar     string
-	Like       int
-	Photos     []string
-	Videos     string
-	Text       string
-	Dynamic_id string
-	Member     Member
-	Group      Group
-}
-
 //Guild guild struct
 type Guild struct {
 	ID   string
@@ -218,7 +234,7 @@ func (ac MemberSubs) MarshalBinary() ([]byte, error) {
 }
 
 //MarshalBinary change struct to binary
-func (ac YtDbData) MarshalBinary() ([]byte, error) {
+func (ac LiveStream) MarshalBinary() ([]byte, error) {
 	return json.Marshal(ac)
 }
 
@@ -339,44 +355,4 @@ func (Data *DiscordChannel) IsLewd() bool {
 		return true
 	}
 	return false
-}
-
-type TwitchDB struct {
-	ID             int64
-	Game           string
-	Status         string
-	Title          string
-	Thumbnails     string
-	ScheduledStart time.Time
-	Viewers        int
-}
-
-func (Data *TwitchDB) UpdateViewers(new int) *TwitchDB {
-	Data.Viewers = new
-	return Data
-}
-
-func (Data *TwitchDB) UpdateStatus(new string) *TwitchDB {
-	Data.Status = new
-	return Data
-}
-
-func (Data *TwitchDB) UpdateTitle(new string) *TwitchDB {
-	Data.Title = new
-	return Data
-}
-
-func (Data *TwitchDB) UpdateThumbnails(new string) *TwitchDB {
-	Data.Thumbnails = new
-	return Data
-}
-
-func (Data *TwitchDB) UpdateSchedule(new time.Time) *TwitchDB {
-	Data.ScheduledStart = new
-	return Data
-}
-
-func (Data *TwitchDB) UpdateGame(new string) *TwitchDB {
-	Data.Game = new
-	return Data
 }

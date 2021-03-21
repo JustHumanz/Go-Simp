@@ -10,7 +10,6 @@ import (
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
-	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
@@ -27,6 +26,7 @@ var (
 	Payload    database.VtubersPayload
 	configfile config.ConfigFile
 	Bot        *discordgo.Session
+	FanBase    = "simps"
 )
 
 //Prefix command
@@ -190,58 +190,35 @@ func Module(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 */
 
-//ValidName Find a valid name from user input
-func ValidName(Name string) Memberst {
-	for _, Group := range Payload.VtuberData {
-		for _, Member := range Group.Members {
-			if Name == strings.ToLower(Member.Name) || Name == strings.ToLower(Member.JpName) {
-				return Memberst{
-					VTName:     engine.FixName(Member.EnName, Member.JpName),
-					ID:         Member.ID,
-					YtChannel:  Member.YoutubeID,
-					SpaceID:    Member.BiliBiliID,
-					BiliAvatar: Member.BiliBiliAvatar,
-				}
-			}
-		}
-	}
-	return Memberst{}
-}
-
 //FindName Find a valid Vtuber name from message handler
-func FindName(MemberName string) NameStruct {
-	for _, Group := range Payload.VtuberData {
-		for _, Name := range Group.Members {
-			if strings.ToLower(Name.Name) == MemberName || strings.ToLower(Name.JpName) == MemberName {
-				return NameStruct{
-					Group:  Group,
-					Member: Name,
+func FindVtuber(MemberName string, ID int64) database.Member {
+	if ID == 0 {
+		for _, Group := range Payload.VtuberData {
+			for _, Name := range Group.Members {
+				if Name.ID == ID {
+					return Name
+				}
+			}
+		}
+	} else {
+		for _, Group := range Payload.VtuberData {
+			for _, Name := range Group.Members {
+				if strings.ToLower(Name.Name) == MemberName || strings.ToLower(Name.JpName) == MemberName {
+					return Name
 				}
 			}
 		}
 	}
-	return NameStruct{}
-}
 
-func (Data NameStruct) IsNull() bool {
-	if Data.Group.ID == 0 {
-		return true
-	}
-	return false
-}
-
-//NameStruct struct
-type NameStruct struct {
-	Group  database.Group
-	Member database.Member
+	return database.Member{}
 }
 
 //FindGropName Find a valid Vtuber Group from message handler
-func FindGropName(GroupName string) (database.Group, error) {
-	ID, err := strconv.Atoi(GroupName)
+func FindGropName(g interface{}) (database.Group, error) {
+	ID, err := strconv.Atoi(g.(string))
 	if err != nil {
 		for _, Group := range Payload.VtuberData {
-			if strings.ToLower(Group.GroupName) == strings.ToLower(GroupName) {
+			if strings.ToLower(Group.GroupName) == strings.ToLower(g.(string)) {
 				return Group, nil
 			}
 		}
@@ -252,7 +229,7 @@ func FindGropName(GroupName string) (database.Group, error) {
 			}
 		}
 	}
-	return database.Group{}, errors.New(GroupName + " Name Vtuber not valid")
+	return database.Group{}, errors.New(g.(string) + " Name Vtuber not valid")
 }
 
 //RemovePic Remove twitter pic

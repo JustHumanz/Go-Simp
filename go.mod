@@ -13,7 +13,6 @@ require (
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hako/durafmt v0.0.0-20200710122514-c0fb7b4da026
 	github.com/kr/pretty v0.1.0 // indirect
-	github.com/magefile/mage v1.11.0 // indirect
 	github.com/mattn/go-runewidth v0.0.10 // indirect
 	github.com/n0madic/twitter-scraper v0.0.0-20210310070202-193e5a3989c6
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect

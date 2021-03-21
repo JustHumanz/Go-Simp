@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS IF NOT EXISTS `BiliBili` (
   `Length` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   `VtuberMember_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=217707 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `Channel` (
   `IndieNotif` tinyint(4) NOT NULL DEFAULT 0,
   `VtuberGroup_id` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2068 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `LiveBiliBili` (
   `EndStream` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `VtuberMember_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=397 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `Subscriber` (
   `Twitter_Followers` int(11) DEFAULT NULL,
   `VtuberMember_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=252 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `TBiliBili` (
   `Dynamic_id` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `VtuberMember_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2981 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `Twitch` (
   `Viewers` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `VtuberMember_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -155,8 +155,27 @@ CREATE TABLE IF NOT EXISTS `Twitter` (
   `TweetID` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `VtuberMember_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=186288 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `Pixiv`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE IF NOT EXISTS `Pixiv` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `PermanentURL` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Author` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Photos` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Text` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `PixivID` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `VtuberMember_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 
 --
 -- Table structure for table `Lewd`
@@ -175,8 +194,9 @@ CREATE TABLE IF NOT EXISTS `Lewd` (
   `PixivID` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `VtuberMember_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=186288 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
 
 --
 -- Table structure for table `User`
@@ -193,7 +213,7 @@ CREATE TABLE IF NOT EXISTS `User` (
   `VtuberMember_id` int(11) NOT NULL,
   `Channel_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25050 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -207,7 +227,7 @@ CREATE TABLE IF NOT EXISTS `VtuberGroup` (
   `VtuberGroupName` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `VtuberGroupIcon` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -236,7 +256,7 @@ CREATE TABLE IF NOT EXISTS `VtuberMember` (
   `Fanbase` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `VtuberGroup_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=282 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -260,213 +280,5 @@ CREATE TABLE IF NOT EXISTS `Youtube` (
   `Length` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   `VtuberMember_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30020 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping routines for database 'Vtuber'
---
-/*!50003 DROP PROCEDURE IF EXISTS `GetArt` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE PROCEDURE `GetArt`(
-			GroupID int,
-			MemberID int,
-			State varchar(11)
-		)
-BEGIN
-		IF State = 'twitter' THEN
-			SELECT Twitter.* FROM Vtuber.Twitter 
-			Inner Join Vtuber.VtuberMember on VtuberMember.id = Twitter.VtuberMember_id 
-			Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id 
-			where (VtuberGroup.id=GroupID OR VtuberMember.id=MemberID)  ORDER by RAND() LIMIT 1;
-		else
-			SELECT TBiliBili.* FROM Vtuber.TBiliBili  
-			Inner Join Vtuber.VtuberMember on VtuberMember.id = TBiliBili.VtuberMember_id 
-			Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id 
-			where (VtuberGroup.id=GroupID OR VtuberMember.id=MemberID)  ORDER by RAND() LIMIT 1;
-			
-		end if;
-		END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `GetLiveBiliBili` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE PROCEDURE `GetLiveBiliBili`(
-			GroupID int,
-			MemberID int,
-			Sts varchar(11),
-			lmt int
-		)
-BEGIN
-			SELECT RoomID,Status,Title,Thumbnails,Description,ScheduledStart,Viewers,VtuberName_EN,
-			VtuberName_JP,BiliBili_Avatar FROM Vtuber.LiveBiliBili 
-			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where 
-			(VtuberGroup.id=GroupID or VtuberMember.id=MemberID) 
-			AND Status=Sts Order by ScheduledStart DESC Limit lmt;
-		END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `GetSpaceBiliBili` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE PROCEDURE `GetSpaceBiliBili`(
-			GroupID int,
-			MemberID int
-		)
-BEGIN
-		IF GroupID > 0 THEN
-			SELECT VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM Vtuber.BiliBili 
-			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-			Where (VtuberGroup.id=GroupID or VtuberMember.id=MemberID) Order by UploadDate DESC limit 3;
-		Else 
-			SELECT VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM Vtuber.BiliBili 
-			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-			Where (VtuberGroup.id=GroupID or VtuberMember.id=MemberID) Order by UploadDate DESC limit 5;		
-
-		end if;						
-		END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `GetVtuberName` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE PROCEDURE `GetVtuberName`(
-			GroupID int
-		)
-BEGIN
-			SELECT VtuberMember.* FROM Vtuber.VtuberMember WHERE VtuberGroup_id=GroupID 
-			Order by Region,VtuberGroup_id;
-		END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `GetYt` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE PROCEDURE `GetYt`(
-		memid int,
-		grpid int,
-		lmt int,
-		sts varchar(11),
-		reg  varchar(11)
-	)
-BEGIN
-		IF reg != '' THEN
-				IF sts = 'upcoming' THEN
-				SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Type,
-				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id 
-				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-				Where VtuberGroup.id=grpid AND Status='upcoming' AND Region=reg Order by ScheduledStart DESC Limit 3;
-
-			ELSEIF sts = 'live' OR sts = 'private' THEN 
-				SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Type,
-				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id 
-				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-				Where VtuberGroup.id=grpid AND Status=sts AND Region=reg Limit 3;
-			ELSE 
-				SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Type,
-				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id 
-				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-				Where VtuberGroup.id=grpid AND Status='past' AND Region=reg AND EndStream !='' order by EndStream DESC Limit 3;
-				
-			END if;	
-		ELSE
-			IF sts = 'upcoming' THEN
-				SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Type,
-				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id 
-				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-				Where (VtuberGroup.id=grpid or VtuberMember.id=memid) 
-				AND Status='upcoming' 
-				Order by ScheduledStart DESC Limit lmt;
-			ELSEIF sts = 'live' OR sts = 'private' THEN 
-				SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Type,
-				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id 
-				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-				Where (VtuberGroup.id=grpid or VtuberMember.id=memid) 
-				AND Status=sts
-				Limit lmt;
-			ELSE 
-				SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Type,
-				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id 
-				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id 
-				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id 
-				Where (VtuberGroup.id=grpid or VtuberMember.id=memid) 
-				AND Status='past'
-				AND EndStream !='' order by EndStream ASC Limit lmt;
-				
-			END if;	
-		END if;
-	END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `GetYtByReg` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-
--- Dump completed on 2021-03-02 14:31:03

@@ -25,6 +25,7 @@ var (
 	BiliBiliIMG string
 	TwitchIMG   string
 	TwitterIMG  string
+	PixivIMG    string
 	WorryIMG    string
 	GoSimpIMG   string
 	Longcatttt  = "https://cdn.ebaumsworld.com/2020/09/20/013235/86394200/longcat-pic.jpg"
@@ -62,6 +63,7 @@ const (
 	TwitterFanart              = "@every 0h3m0s"
 	BiliBiliFanart             = "@every 0h6m0s"
 	DanbooruFanart             = "@every 0h4m0s"
+	PixivFanart                = "@every 0h15m0s"
 	BiliBiliLive               = "@every 0h7m0s"
 	BiliBiliSpace              = "@every 0h13m0s"
 	Twitch                     = "@every 0h7m0s"
@@ -253,6 +255,7 @@ func (Data ConfigFile) InitConf() {
 	YoutubeIMG = fmt.Sprintf("https://cdn.%s/youtube.png", Data.Domain)
 	BiliBiliIMG = fmt.Sprintf("https://cdn.%s/bilibili.png", Data.Domain)
 	TwitterIMG = fmt.Sprintf("https://cdn.%s/twitter.png", Data.Domain)
+	PixivIMG = fmt.Sprintf("https://cdn.%s/pixiv.png", Data.Domain)
 	WorryIMG = fmt.Sprintf("https://cdn.%s/parerunworry.png", Data.Domain)
 	GoSimpIMG = fmt.Sprintf("https://cdn.%s/go-simp.png", Data.Domain)
 	Dead = fmt.Sprintf("https://cdn.%s/dead.jpg", Data.Domain)

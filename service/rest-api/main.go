@@ -166,7 +166,7 @@ func getFanart(w http.ResponseWriter, r *http.Request) {
 
 func getYoutube(w http.ResponseWriter, r *http.Request) {
 	var (
-		YoutubeData []database.YtDbData
+		YoutubeData []database.LiveStream
 		Vars        = mux.Vars(r)
 		Region      = strings.ToLower(r.FormValue("region"))
 		Status      = strings.ToLower(Vars["Status"])
@@ -254,7 +254,7 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 
 func getBilibili(w http.ResponseWriter, r *http.Request) {
 	var (
-		BiliBiliData []database.LiveBiliDB
+		BiliBiliData []database.LiveStream
 		Vars         = mux.Vars(r)
 		Status       = strings.ToLower(Vars["Status"])
 	)

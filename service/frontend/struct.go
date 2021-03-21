@@ -105,6 +105,7 @@ type DynamicSvr struct {
 	} `json:"data"`
 }
 
+/*
 //Memberst Vtuber member struct
 type Memberst struct {
 	ID         int64
@@ -112,9 +113,7 @@ type Memberst struct {
 	YtChannel  string
 	SpaceID    int
 	BiliAvatar string
-	YtData     database.YtDbData
-	SpaceData  database.SpaceBiliDB
-	LiveData   database.LiveBiliDB
+	Stream     database.LiveStream
 	Msg        string
 	Msg1       string
 	Msg2       string
@@ -122,6 +121,7 @@ type Memberst struct {
 	View       string
 	Length     string
 }
+*/
 
 type Regis struct {
 	Admin         string

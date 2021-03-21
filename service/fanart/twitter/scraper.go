@@ -10,10 +10,10 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func CreatePayload(Group database.Group, Scraper *twitterscraper.Scraper, Limit int) ([]Fanart, error) {
+func CreatePayload(Group database.Group, Scraper *twitterscraper.Scraper, Limit int) ([]database.DataFanart, error) {
 	var (
 		Hashtags []string
-		Fanarts  []Fanart
+		Fanarts  []database.DataFanart
 	)
 
 	CurlTwitter := func(Hashtags []string, GroupData database.Group) {
@@ -28,16 +28,26 @@ func CreatePayload(Group database.Group, Scraper *twitterscraper.Scraper, Limit 
 			for _, MemberHashtag := range Group.Members {
 				for _, TweetHashtag := range tweet.Hashtags {
 					if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) && !tweet.IsQuoted && !tweet.IsReply && MemberHashtag.Name != "Kaichou" && len(tweet.Photos) > 0 {
-						New, err := MemberHashtag.CheckMemberFanart(tweet)
+						TweetArt := database.DataFanart{
+							PermanentURL: tweet.PermanentURL,
+							Author:       tweet.Username,
+							TweetID:      tweet.ID,
+							Text:         tweet.Text,
+							Photos:       tweet.Photos,
+							Likes:        tweet.Likes,
+							Member:       MemberHashtag,
+						}
+						if tweet.Videos != nil {
+							TweetArt.Videos = tweet.Videos[0].Preview
+						}
+
+						New, err := TweetArt.CheckTweetFanArt()
 						if err != nil {
 							log.Error(err)
 						}
 
 						if New {
-							Fanarts = append(Fanarts, Fanart{
-								Member: MemberHashtag,
-								Tweet:  tweet,
-							})
+							Fanarts = append(Fanarts, TweetArt)
 						}
 					}
 				}
@@ -67,11 +77,6 @@ func CreatePayload(Group database.Group, Scraper *twitterscraper.Scraper, Limit 
 	if len(Fanarts) > 0 {
 		return Fanarts, nil
 	} else {
-		return []Fanart{}, errors.New("Still same")
+		return []database.DataFanart{}, errors.New("Still same")
 	}
-}
-
-type Fanart struct {
-	Member database.Member
-	Tweet  *twitterscraper.Result
 }

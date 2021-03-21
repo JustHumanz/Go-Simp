@@ -2,6 +2,7 @@ package twitch
 
 import (
 	"context"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -13,8 +14,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (Data TwitchNotif) SendNotif() error {
-	Color, err := engine.GetColor(config.TmpDir, Data.TwitchData.Thumbnails)
+func SendNotif(Data database.LiveStream) error {
+	Color, err := engine.GetColor(config.TmpDir, Data.Thumb)
 	if err != nil {
 		return err
 	}
@@ -58,17 +59,21 @@ func (Data TwitchNotif) SendNotif() error {
 				return nil
 			}
 
+			View, err := strconv.Atoi(Data.Viewers)
+			if err != nil {
+				log.Error()
+			}
 			MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 				SetAuthor(VtuberName, Data.Member.YoutubeAvatar, ImgURL).
 				SetTitle("Live right now").
-				SetDescription(Data.TwitchData.Title).
-				SetImage(Data.TwitchData.Thumbnails).
+				SetDescription(Data.Title).
+				SetImage(Data.Thumb).
 				SetThumbnail(Data.Group.IconURL).
 				SetURL(ImgURL).
-				AddField("Start live", durafmt.Parse(expiresAt.Sub(Data.TwitchData.ScheduledStart.In(loc))).LimitFirstN(1).String()+" Ago").
-				AddField("Viewers", engine.NearestThousandFormat(float64(Data.TwitchData.Viewers))+" "+FanBase).
-				AddField("Game", Data.TwitchData.Game).
-				SetFooter(Data.TwitchData.ScheduledStart.In(loc).Format(time.RFC822), config.TwitchIMG).
+				AddField("Start live", durafmt.Parse(expiresAt.Sub(Data.Schedul.In(loc))).LimitFirstN(1).String()+" Ago").
+				AddField("Viewers", engine.NearestThousandFormat(float64(View))+" "+FanBase).
+				AddField("Game", Data.Game).
+				SetFooter(Data.Schedul.In(loc).Format(time.RFC822), config.TwitchIMG).
 				SetColor(Color).MessageEmbed)
 			if err != nil {
 				log.WithFields(log.Fields{

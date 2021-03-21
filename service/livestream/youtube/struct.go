@@ -3,8 +3,6 @@ package youtube
 import (
 	"encoding/xml"
 	"time"
-
-	"github.com/JustHumanz/Go-Simp/pkg/database"
 )
 
 type YtXML struct {
@@ -116,6 +114,8 @@ type YtData struct {
 	} `json:"items"`
 }
 
+/*
+
 type NotifStruct struct {
 	YtData        *database.YtDbData
 	ActuallyStart time.Time
@@ -167,3 +167,4 @@ func (Data *NotifStruct) SetYoutubeID(new int64) *NotifStruct {
 	Data.YtData.ID = new
 	return Data
 }
+*/
