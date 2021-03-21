@@ -15,9 +15,8 @@ type PixivArtworks struct {
 			Recent    []interface{} `json:"recent"`
 			Permanent []interface{} `json:"permanent"`
 		} `json:"popular"`
-		Relatedtags    []interface{} `json:"relatedTags"`
-		Tagtranslation []interface{} `json:"tagTranslation"`
-		Zoneconfig     struct {
+		Relatedtags []interface{} `json:"relatedTags"`
+		Zoneconfig  struct {
 			Header struct {
 				URL string `json:"url"`
 			} `json:"header"`

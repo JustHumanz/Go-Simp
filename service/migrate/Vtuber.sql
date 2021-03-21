@@ -169,7 +169,6 @@ CREATE TABLE IF NOT EXISTS `Pixiv` (
   `PermanentURL` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Author` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Photos` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `Videos` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Text` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `PixivID` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `VtuberMember_id` int(11) NOT NULL,

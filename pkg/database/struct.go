@@ -199,20 +199,6 @@ type InputBiliBili struct {
 	Length   string
 }
 
-//TBiliBili tbilibili struct
-type TBiliBili struct {
-	URL        string
-	Author     string
-	Avatar     string
-	Like       int
-	Photos     []string
-	Videos     string
-	Text       string
-	Dynamic_id string
-	Member     Member
-	Group      Group
-}
-
 //Guild guild struct
 type Guild struct {
 	ID   string

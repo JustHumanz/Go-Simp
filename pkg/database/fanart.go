@@ -230,3 +230,35 @@ func (FanArt DataFanart) CheckTBiliBiliFanArt() (bool, error) {
 	return false, nil
 
 }
+
+func (FanArt DataFanart) CheckPixivFanArt() (bool, error) {
+	var tmp int64
+	row := DB.QueryRow("SELECT id FROM Vtuber.Pixiv where PixivID=?", FanArt.PixivID)
+	err := row.Scan(&tmp)
+	if err == sql.ErrNoRows {
+		log.WithFields(log.Fields{
+			"Vtuber": FanArt.Member.EnName,
+			"Img":    FanArt.Photos,
+		}).Info("New Fanart")
+		stmt, err := DB.Prepare(`INSERT INTO Pixiv (PermanentURL,Author,Photos,Text,PixivID,VtuberMember_id) values(?,?,?,?,?,?)`)
+		if err != nil {
+			return false, err
+		}
+		defer stmt.Close()
+
+		res, err := stmt.Exec(FanArt.PermanentURL, FanArt.Author, strings.Join(FanArt.Photos, "\n"), FanArt.Text, FanArt.PixivID, FanArt.Member.ID)
+		if err != nil {
+			return false, err
+		}
+
+		_, err = res.LastInsertId()
+		if err != nil {
+			return false, err
+		}
+		return true, nil
+	} else if err != nil {
+		return false, err
+	}
+	return false, nil
+
+}

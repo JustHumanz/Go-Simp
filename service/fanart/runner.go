@@ -13,6 +13,7 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/network"
 	"github.com/JustHumanz/Go-Simp/service/fanart/bilibili"
 	"github.com/JustHumanz/Go-Simp/service/fanart/lewd"
+	"github.com/JustHumanz/Go-Simp/service/fanart/pixiv"
 	"github.com/JustHumanz/Go-Simp/service/fanart/twitter"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
@@ -27,6 +28,7 @@ func main() {
 	Twitter := flag.Bool("TwitterFanart", false, "Enable twitter fanart module")
 	BiliBili := flag.Bool("BiliBiliFanart", false, "Enable bilibili fanart module")
 	Danbooru := flag.Bool("DanbooruLewd", false, "Enable Danbooru lewd fanart module")
+	Pixiv := flag.Bool("PixivFanArt", false, "Enable Pixiv fanart module")
 	flag.Parse()
 
 	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
@@ -80,6 +82,10 @@ func main() {
 
 	if *Danbooru {
 		lewd.Start(Bot, c, Payload, configfile)
+	}
+
+	if *Pixiv {
+		pixiv.Start(Bot, c, Payload, configfile)
 	}
 
 	_, err = gRCPconn.ModuleList(context.Background(), &pilot.ModuleData{
