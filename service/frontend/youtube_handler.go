@@ -407,7 +407,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetTitle(FixName).
 									SetThumbnail(Youtube.Thumb).
 									SetDescription(Youtube.Title).
-									SetImage(Youtube.Thumb).
+									SetImage(Youtube.Member.YoutubeAvatar).
 									SetURL("https://www.youtube.com/watch?v="+Youtube.VideoID).
 									AddField("Live duration", durationlive.String()).
 									AddField("Live ended", duration.String()+" Ago").

@@ -38,6 +38,14 @@ func YtGetStatus(Group, Member int64, Status, Region string) ([]LiveStream, erro
 			}
 			defer rows.Close()
 
+		} else if Status == "past" {
+			rows, err = DB.Query(`SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status=? Order by EndStream DESC Limit ?`, Group, Member, Status, limit)
+			if err != nil {
+				return nil, err
+			} else if err == sql.ErrNoRows {
+				return nil, errors.New("Not found any schdule")
+			}
+			defer rows.Close()
 		} else {
 			rows, err = DB.Query(`SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status=? Order by ScheduledStart DESC Limit ?`, Group, Member, Status, limit)
 			if err != nil {

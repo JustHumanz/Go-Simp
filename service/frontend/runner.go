@@ -192,7 +192,7 @@ func Module(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 //FindName Find a valid Vtuber name from message handler
 func FindVtuber(MemberName string, ID int64) database.Member {
-	if ID == 0 {
+	if ID != 0 {
 		for _, Group := range Payload.VtuberData {
 			for _, Name := range Group.Members {
 				if Name.ID == ID {

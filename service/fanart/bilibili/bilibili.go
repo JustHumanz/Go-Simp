@@ -57,6 +57,10 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 								log.Error(err)
 							}
 							if STB.Item.Pictures != nil && v.Desc.Type == 2 { //type 2 is picture post (prob,heheheh)
+								for _, pic := range STB.Item.Pictures {
+									img = append(img, pic.ImgSrc)
+								}
+
 								TBiliData := database.DataFanart{
 									PermanentURL: "https://t.bilibili.com/" + v.Desc.DynamicIDStr + "?tab=2",
 									Author:       v.Desc.UserProfile.Info.Uname,
@@ -108,7 +112,6 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 												SetDescription(TBiliData.Text).
 												SetImage(TBiliData.Photos[0]).
 												AddField("User Tags", tags).
-												//AddField("Similar art", msg).
 												SetFooter("1/"+strconv.Itoa(len(TBiliData.Photos))+" photos", config.BiliBiliIMG).
 												InlineAllFields().
 												SetColor(Color).MessageEmbed)

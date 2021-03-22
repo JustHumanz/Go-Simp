@@ -72,6 +72,7 @@ func SendNotif(Data database.LiveStream) error {
 				SetURL(ImgURL).
 				AddField("Start live", durafmt.Parse(expiresAt.Sub(Data.Schedul.In(loc))).LimitFirstN(1).String()+" Ago").
 				AddField("Viewers", engine.NearestThousandFormat(float64(View))+" "+FanBase).
+				InlineAllFields().
 				AddField("Game", Data.Game).
 				SetFooter(Data.Schedul.In(loc).Format(time.RFC822), config.TwitchIMG).
 				SetColor(Color).MessageEmbed)

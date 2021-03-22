@@ -1,3 +1,8 @@
+v3.3.2
+- Fix Youtube upcoming/live/past command
+- Fix Bilibili fanart nill pointer
+- Add twitch embed inline 
+
 v3.3.1
 - Add pixiv as fanart
 - Rebase fanart & livestream struct
