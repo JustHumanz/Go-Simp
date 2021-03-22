@@ -98,43 +98,24 @@ func CheckYtByTime() {
 									log.Error(err)
 								}
 
-								Youtube.UpdateYt("live") //.SendNude()
+								Youtube.UpdateYt(config.LiveStatus)
+								err = SendNude(Youtube)
+								if err != nil {
+									log.Error(err)
+								}
 							}
 						}
 					}
-					Youtube.UpdateStatus("reminder") //.SendNude()
+					Youtube.UpdateStatus("reminder")
+					err = SendNude(Youtube)
+					if err != nil {
+						log.Error(err)
+					}
 				}
 			}
 		}
 	}
 }
-
-/*
-func CheckYtScheduleTest(GroupName string) {
-	yttoken = engine.GetYtToken()
-	for _, Group := range engine.GroupData {
-		if GroupName == Group.GroupName {
-			var wg sync.WaitGroup
-			for i, Member := range database.GetMembers(Group.ID) {
-				if Member.YoutubeID != "" {
-					wg.Add(1)
-					log.WithFields(log.Fields{
-						"Vtuber":        Member.EnName,
-						"Group":         Group.GroupName,
-						"Youtube ID":    Member.YoutubeID,
-						"Vtuber Region": Member.Region,
-					}).Info("Checking Youtube")
-					go StartCheckYT(Member, Group, &wg)
-				}
-				if i%10 == 0 {
-					wg.Wait()
-				}
-			}
-			wg.Wait()
-		}
-	}
-}
-*/
 
 func GetWaiting(VideoID string) (string, error) {
 	var (
