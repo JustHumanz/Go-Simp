@@ -66,7 +66,7 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 		}
 
 		if LiveBiliDB != nil {
-			if Status.CheckScheduleLive() && LiveBiliDB.Status != "Live" {
+			if Status.CheckScheduleLive() && LiveBiliDB.Status != config.LiveStatus {
 				//Live
 				if Status.Data.RoomInfo.LiveStartTime != 0 {
 					ScheduledStart = time.Unix(int64(Status.Data.RoomInfo.LiveStartTime), 0).In(loc)
@@ -84,7 +84,7 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 					"Start":  ScheduledStart,
 				}).Info("Start live right now")
 
-				LiveBiliDB.UpdateStatus("Live").
+				LiveBiliDB.UpdateStatus(config.LiveStatus).
 					UpdateSchdule(ScheduledStart).
 					UpdateViewers(strconv.Itoa(Status.Data.RoomInfo.Online)).
 					UpdateThumbnail(Status.Data.RoomInfo.Cover).
@@ -102,7 +102,7 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 					log.Error(err)
 				}
 
-			} else if !Status.CheckScheduleLive() && LiveBiliDB.Status == "Live" {
+			} else if !Status.CheckScheduleLive() && LiveBiliDB.Status == config.LiveStatus {
 				//prob past
 				log.WithFields(log.Fields{
 					"Group":  Group.GroupName,
@@ -110,7 +110,7 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 					"Start":  ScheduledStart,
 				}).Info("Past live stream")
 				engine.RemoveEmbed(strconv.Itoa(LiveBiliDB.Member.BiliRoomID), Bot)
-				LiveBiliDB.UpdateStatus("Past").
+				LiveBiliDB.UpdateStatus(config.PastStatus).
 					UpdateViewers(strconv.Itoa(Status.Data.RoomInfo.Online))
 
 				err = LiveBiliDB.UpdateLiveBili()

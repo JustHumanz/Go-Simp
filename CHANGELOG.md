@@ -1,3 +1,7 @@
+v3.3.3
+- Fix swaped youtube thub and avatar
+- Use const for paramater
+
 v3.3.2
 - Fix Youtube upcoming/live/past command
 - Fix Bilibili fanart nill pointer

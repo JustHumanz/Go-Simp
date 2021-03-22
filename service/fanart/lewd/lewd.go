@@ -55,6 +55,10 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 							if err != nil {
 								log.Error(err)
 							}
+							icon := config.TwitterIMG
+							if FanArt.State == config.PixivArt {
+								icon = config.PixivIMG
+							}
 
 							for _, Channel := range ChannelData {
 								Msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
@@ -64,7 +68,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 									SetThumbnail(AuthorImg).
 									SetDescription(FanArt.Text).
 									SetImage(FanArt.Photos[0]).
-									SetColor(Color).MessageEmbed)
+									SetColor(Color).SetFooter("1/"+strconv.Itoa(len(FanArt.Photos)), icon).MessageEmbed)
 								if err != nil {
 									log.Error(err, Msg)
 								}
@@ -88,6 +92,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 								Text:         TweetRes.Text,
 								TweetID:      TweetRes.ID,
 								Member:       Member,
+								State:        config.TwitterArt,
 							}
 							err = database.AddLewd(FanArtData)
 							if err != nil {
@@ -189,6 +194,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 											Text:         Body["title"].(string),
 											PixivID:      strconv.Itoa(Dan.PixivID),
 											Member:       Member,
+											State:        config.TwitterArt,
 										}
 										err = database.AddLewd(FanArtData)
 										if err != nil {

@@ -91,7 +91,6 @@ func CheckPixiv() {
 								Tags := Body["tags"].(map[string]interface{})
 								Img := Body["urls"].(map[string]interface{})
 								FixImg := Img["original"].(string)
-								MiniImg := Img["mini"].(string)
 
 								usrbyte, err := network.Curl(config.PixivUserEnd+Tags["authorId"].(string), nil)
 								if err != nil {
@@ -137,11 +136,6 @@ func CheckPixiv() {
 										Msg  string
 									)
 
-									Color, err := engine.GetColor(config.TmpDir, config.PixivProxy+MiniImg)
-									if err != nil {
-										return err
-									}
-
 									for i, Channel := range ChannelData {
 										Channel.SetMember(Member)
 										ctx := context.Background()
@@ -167,7 +161,6 @@ func CheckPixiv() {
 												SetDescription(TextFix).
 												SetImage(config.PixivProxy+FixImg).
 												AddField("User Tags", tags).
-												SetColor(Color).
 												SetFooter(Msg, config.PixivIMG).MessageEmbed)
 											if err != nil {
 												log.Error(msg, err)

@@ -46,7 +46,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 							return
 						} else {
-							YoutubeData, err := database.YtGetStatus(0, Member.ID, "upcoming", Region)
+							YoutubeData, err := database.YtGetStatus(0, Member.ID, config.UpcomingStatus, Region)
 							if err != nil {
 								log.Error(err)
 							}
@@ -103,7 +103,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						GroupData, err := database.YtGetStatus(VTuberGroup.ID, 0, "upcoming", Region)
+						GroupData, err := database.YtGetStatus(VTuberGroup.ID, 0, config.UpcomingStatus, Region)
 						if err != nil {
 							log.Error(err)
 						}
@@ -180,7 +180,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								log.Error(err)
 							}
 						} else {
-							YoutubeData, err := database.YtGetStatus(0, Member.ID, "live", Region)
+							YoutubeData, err := database.YtGetStatus(0, Member.ID, config.LiveStatus, Region)
 							if err != nil {
 								log.Error(err)
 							}
@@ -236,7 +236,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						YoutubeData, err := database.YtGetStatus(VTuberGroup.ID, 0, "live", Region)
+						YoutubeData, err := database.YtGetStatus(VTuberGroup.ID, 0, config.LiveStatus, Region)
 						if err != nil {
 							log.Error(err)
 						}
@@ -317,7 +317,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 							return
 						} else {
-							YoutubeData, err := database.YtGetStatus(0, Member.ID, "past", Region)
+							YoutubeData, err := database.YtGetStatus(0, Member.ID, config.PastStatus, Region)
 							if err != nil {
 								log.Error(err)
 							}
@@ -373,12 +373,12 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						)
 
 						if CheckReg(VTuberGroup.GroupName, Region) {
-							YoutubeData, err = database.YtGetStatus(VTuberGroup.ID, 0, "past", Region)
+							YoutubeData, err = database.YtGetStatus(VTuberGroup.ID, 0, config.PastStatus, Region)
 							if err != nil {
 								log.Error(err)
 							}
 						} else {
-							YoutubeData, err = database.YtGetStatus(VTuberGroup.ID, 0, "past", "")
+							YoutubeData, err = database.YtGetStatus(VTuberGroup.ID, 0, config.PastStatus, "")
 							if err != nil {
 								log.Error(err)
 							}
@@ -405,9 +405,9 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetTitle(FixName).
-									SetThumbnail(Youtube.Thumb).
+									SetThumbnail(Youtube.Member.YoutubeAvatar).
 									SetDescription(Youtube.Title).
-									SetImage(Youtube.Member.YoutubeAvatar).
+									SetImage(Youtube.Thumb).
 									SetURL("https://www.youtube.com/watch?v="+Youtube.VideoID).
 									AddField("Live duration", durationlive.String()).
 									AddField("Live ended", duration.String()+" Ago").

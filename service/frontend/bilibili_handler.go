@@ -31,7 +31,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
 						} else {
-							LiveBili := database.BilGet(0, Member.ID, "Live")
+							LiveBili := database.BilGet(0, Member.ID, config.LiveStatus)
 							FixName := engine.FixName(Member.EnName, Member.JpName)
 							if len(LiveBili) > 0 {
 								Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
@@ -70,7 +70,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						LiveBili := database.BilGet(VTuberGroup.ID, 0, "Live")
+						LiveBili := database.BilGet(VTuberGroup.ID, 0, config.LiveStatus)
 						if len(LiveBili) > 0 {
 							Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 							if err != nil {
@@ -121,7 +121,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
 						} else {
-							LiveBili := database.BilGet(0, Member.ID, "Past")
+							LiveBili := database.BilGet(0, Member.ID, config.PastStatus)
 							FixName := engine.FixName(Member.JpName, Member.EnName)
 							if len(LiveBili) > 0 {
 								Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
@@ -161,7 +161,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						LiveBili := database.BilGet(VTuberGroup.ID, 0, "Past")
+						LiveBili := database.BilGet(VTuberGroup.ID, 0, config.PastStatus)
 						if len(LiveBili) > 0 {
 							Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 							if err != nil {

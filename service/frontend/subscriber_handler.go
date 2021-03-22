@@ -2,7 +2,6 @@ package main
 
 import (
 	"math/rand"
-	"regexp"
 	"strconv"
 	"strings"
 
@@ -36,9 +35,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								log.Error(err)
 							}
 
-							if match, _ := regexp.MatchString("404.jpg", Group.GroupName); match {
-								Group.IconURL = ""
-							}
+							Group.RemoveNillIconURL()
 
 							if gacha() {
 								Avatar = Member.YoutubeAvatar

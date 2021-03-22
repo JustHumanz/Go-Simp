@@ -110,6 +110,17 @@ const (
 	LewdType     = 69
 	LewdNArtType = 70
 	NillType     = 0
+
+	//Live Status
+	LiveStatus     = "live"
+	PastStatus     = "past"
+	UpcomingStatus = "upcoming"
+	PrivateStatus  = "private"
+	UnknownStatus  = "unknown"
+
+	//Fanart
+	TwitterArt = "twitter"
+	PixivArt   = "pixiv"
 )
 
 //ConfigFile config file struct for config.toml

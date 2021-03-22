@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	"github.com/JustHumanz/Go-Simp/service/fanart/twitter"
@@ -87,8 +88,8 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 				Member:    Dat,
 			}
 
-			if Data.Items[i].Snippet.VideoStatus != "upcoming" || Data.Items[i].Snippet.VideoStatus != "live" {
-				NewData.Status = "past"
+			if Data.Items[i].Snippet.VideoStatus != "upcoming" || Data.Items[i].Snippet.VideoStatus != config.LiveStatus {
+				NewData.Status = config.PastStatus
 				NewData.InputYt()
 			} else {
 				NewData.InputYt()
@@ -310,22 +311,22 @@ func CheckLiveBiliBili() {
 						"Group":      Group.GroupName,
 						"VtuberName": Member.Name,
 					}).Info("Status Live")
-					Data["Status"] = "Live"
+					Data["Status"] = config.LiveStatus
 					LiveBiliBili(Data)
-				} else if !Status.CheckScheduleLive() && DataDB.Status == "Live" {
+				} else if !Status.CheckScheduleLive() && DataDB.Status == config.LiveStatus {
 					//prob past
 					log.WithFields(log.Fields{
 						"Group":      Group.GroupName,
 						"VtuberName": Member.Name,
 					}).Info("Status Past")
-					Data["Status"] = "Past"
+					Data["Status"] = config.PastStatus
 					LiveBiliBili(Data)
 				} else if DataDB.Member.BiliRoomID == 0 {
 					log.WithFields(log.Fields{
 						"Group":      Group.GroupName,
 						"VtuberName": Member.Name,
 					}).Info("Status Unknown")
-					Data["Status"] = "Unknown"
+					Data["Status"] = config.UnknownStatus
 					LiveBiliBili(Data)
 				}
 			}
@@ -380,7 +381,7 @@ func CheckTwitch() {
 					}).Info("Twitch status nill")
 					AddTwitchInfo(map[string]interface{}{
 						"MemberID":       Member.ID,
-						"Status":         "Past",
+						"Status":         config.PastStatus,
 						"Title":          "",
 						"Viewers":        0,
 						"ScheduledStart": time.Time{},

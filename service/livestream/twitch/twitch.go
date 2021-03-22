@@ -61,7 +61,7 @@ func CheckTwitch() {
 
 				if len(result.Data.Streams) > 0 {
 					for _, Stream := range result.Data.Streams {
-						if ResultDB.Status == "Past" && Stream.Type == "live" {
+						if ResultDB.Status == config.PastStatus && Stream.Type == config.LiveStatus {
 							if strings.ToLower(Stream.UserName) == strings.ToLower(Member.TwitchName) {
 								GameResult, err := TwitchClient.GetGames(&helix.GamesParams{
 									IDs: []string{Stream.GameID},
@@ -73,7 +73,7 @@ func CheckTwitch() {
 								Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{width}", "1280", -1)
 								Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{height}", "720", -1)
 
-								ResultDB.UpdateStatus("Live").
+								ResultDB.UpdateStatus(config.LiveStatus).
 									UpdateViewers(strconv.Itoa(Stream.ViewerCount)).
 									UpdateThumbnail(Stream.ThumbnailURL).
 									UpdateSchdule(Stream.StartedAt)
@@ -100,7 +100,7 @@ func CheckTwitch() {
 								}).Info("Change Twitch status to Live")
 
 							}
-						} else if Stream.Type == "live" && ResultDB.Status == "Live" {
+						} else if Stream.Type == config.LiveStatus && ResultDB.Status == config.LiveStatus {
 							log.WithFields(log.Fields{
 								"Group":      Group.GroupName,
 								"VtuberName": Member.Name,
@@ -110,8 +110,8 @@ func CheckTwitch() {
 							ResultDB.UpdateViewers(strconv.Itoa(Stream.ViewerCount)).UpdateTwitch()
 						}
 					}
-				} else if ResultDB.Status == "Live" && len(result.Data.Streams) == 0 {
-					ResultDB.UpdateStatus("Past")
+				} else if ResultDB.Status == config.LiveStatus && len(result.Data.Streams) == 0 {
+					ResultDB.UpdateStatus(config.PastStatus)
 					err = ResultDB.UpdateTwitch()
 					if err != nil {
 						log.Error(err)

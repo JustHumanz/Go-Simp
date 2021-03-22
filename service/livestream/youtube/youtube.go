@@ -59,7 +59,7 @@ func CheckYtByTime() {
 					"Vtuber": Member.EnName,
 					"Group":  Group.GroupName,
 				}).Info("Checking Upcoming schedule")
-				YoutubeStatus, err := database.YtGetStatus(0, Member.ID, "upcoming", "")
+				YoutubeStatus, err := database.YtGetStatus(0, Member.ID, config.UpcomingStatus, "")
 				if err != nil {
 					log.Error(err)
 				}
@@ -92,7 +92,7 @@ func CheckYtByTime() {
 								if !Data.Items[0].LiveDetails.ActualStartTime.IsZero() {
 									Youtube.UpdateSchdule(Data.Items[0].LiveDetails.ActualStartTime)
 								}
-								Key := "0" + strconv.Itoa(int(Member.ID)) + "upcoming" + ""
+								Key := "0" + strconv.Itoa(int(Member.ID)) + config.UpcomingStatus + ""
 								err = database.RemoveYtCache(Key, context.Background())
 								if err != nil {
 									log.Error(err)
@@ -198,7 +198,7 @@ func CheckPrivate() {
 	}
 
 	log.Info("Start Check Private video")
-	for _, Status := range []string{"upcoming", "past", "live", "private"} {
+	for _, Status := range []string{config.UpcomingStatus, config.PastStatus, config.LiveStatus, config.PrivateStatus} {
 		for _, Group := range VtubersData.VtuberData {
 			for _, Member := range Group.Members {
 				YtData, err := database.YtGetStatus(0, Member.ID, Status, "")

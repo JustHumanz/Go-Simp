@@ -2,7 +2,6 @@ package youtube
 
 import (
 	"context"
-	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -40,9 +39,7 @@ func SendNude(PushData database.LiveStream) error {
 		Viewers string
 	)
 
-	if match, _ := regexp.MatchString("404.jpg", PushData.Group.IconURL); match {
-		PushData.Group.IconURL = ""
-	}
+	PushData.Group.RemoveNillIconURL()
 
 	if !PushData.Schedul.IsZero() {
 		Timestart = PushData.Schedul
@@ -62,7 +59,7 @@ func SendNude(PushData database.LiveStream) error {
 		Viewers = engine.NearestThousandFormat(float64(view))
 	}
 
-	if Status == "upcoming" {
+	if Status == config.UpcomingStatus {
 		Color, err := engine.GetColor(config.TmpDir, PushData.Thumb)
 		if err != nil {
 			return err
@@ -137,7 +134,7 @@ func SendNude(PushData database.LiveStream) error {
 		}
 		wg.Wait()
 
-	} else if Status == "live" {
+	} else if Status == config.LiveStatus {
 		Color, err := engine.GetColor(config.TmpDir, PushData.Thumb)
 		if err != nil {
 			return err
@@ -268,7 +265,7 @@ func SendNude(PushData database.LiveStream) error {
 		}
 		wg.Wait()
 
-	} else if Status == "past" {
+	} else if Status == config.PastStatus {
 		Color, err := engine.GetColor(config.TmpDir, PushData.Thumb)
 		if err != nil {
 			return err
