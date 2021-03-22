@@ -27,7 +27,6 @@ build pilot:
   stage: build
   only:
     - tags      
-    - master    
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info  
@@ -43,6 +42,8 @@ build pilot:
 
 build migrate:
   stage: build
+  only:
+    - tags   
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info  
@@ -55,14 +56,11 @@ build migrate:
   tags:
     - docker
     - gce    
-  only:
-    - master
 
 build fanart:
   stage: build
   only:
     - tags      
-    - master    
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
@@ -80,7 +78,6 @@ build livestream:
   stage: build
   only:
     - tags      
-    - master
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
@@ -98,7 +95,6 @@ build subscriber:
   stage: build
   only:
     - tags      
-    - master
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
@@ -116,7 +112,6 @@ build utility:
   stage: build
   only:
     - tags      
-    - master
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
@@ -134,7 +129,6 @@ build frontend:
   stage: build
   only:
     - tags      
-    - master
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
@@ -152,7 +146,6 @@ build guild:
   stage: build
   only:
     - tags      
-    - master
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
@@ -170,7 +163,6 @@ build rest_api:
   stage: build
   only:
     - tags      
-    - master
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
@@ -186,6 +178,8 @@ build rest_api:
 
 build static_files:
   stage: build     
+  only:
+    - tags   
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
@@ -196,11 +190,11 @@ build static_files:
   tags:
     - docker
     - gce        
-  only:
-    - master     
 
 build web:
   stage: build   
+  only:
+    - tags   
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
@@ -210,12 +204,12 @@ build web:
     - docker push "$CI_REGISTRY_IMAGE"/web
   tags:
     - docker
-    - gce   
-  only:
-    - master              
+    - gce                
 
 build multitor:
   stage: build     
+  only:
+    - tags   
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker info   
@@ -226,8 +220,6 @@ build multitor:
   tags:
     - docker
     - gce            
-  only:
-    - master     
 
 
 deploy:
@@ -235,7 +227,6 @@ deploy:
   stage: deploy
   only:
     - tags      
-    - master
   script:
     - apk update  && apk add --no-cache curl
     - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
