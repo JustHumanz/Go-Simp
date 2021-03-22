@@ -1,3 +1,8 @@
+v3.3.1
+- Add pixiv as fanart
+- Rebase fanart & livestream struct
+- Remove call sql
+
 v3.2.0
 - Add `upvote` command
 - Add fanbase name
