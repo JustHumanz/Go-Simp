@@ -3,6 +3,10 @@ package pixiv
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"io"
+	"net/http"
+	"os"
 	"regexp"
 	"sort"
 	"strings"
@@ -34,6 +38,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 	Bot = a
 	VtubersData = c
 	configfile = d
+	CheckPixiv()
 	b.AddFunc(config.PixivFanart, CheckPixiv)
 	log.Info("Enable Pixiv fanart module")
 }
@@ -92,6 +97,16 @@ func CheckPixiv() {
 								Img := Body["urls"].(map[string]interface{})
 								FixImg := Img["original"].(string)
 
+								path, err := DownloadImg(Img["mini"].(string))
+								if err != nil {
+									log.Error(err)
+								}
+
+								Color, err := engine.GetColor("", path)
+								if err != nil {
+									return err
+								}
+
 								usrbyte, err := network.Curl(config.PixivUserEnd+Tags["authorId"].(string), nil)
 								if err != nil {
 									return err
@@ -133,7 +148,7 @@ func CheckPixiv() {
 									}
 									var (
 										tags string
-										Msg  string
+										Msg  = "Pixiv"
 									)
 
 									for i, Channel := range ChannelData {
@@ -161,6 +176,7 @@ func CheckPixiv() {
 												SetDescription(TextFix).
 												SetImage(config.PixivProxy+FixImg).
 												AddField("User Tags", tags).
+												SetColor(Color).
 												SetFooter(Msg, config.PixivIMG).MessageEmbed)
 											if err != nil {
 												log.Error(msg, err)
@@ -176,7 +192,7 @@ func CheckPixiv() {
 
 										if i%config.Waiting == 0 && configfile.LowResources {
 											log.WithFields(log.Fields{
-												"Func": "Twitter Fanart",
+												"Func": "Pixiv Fanart",
 											}).Warn(config.FanartSleep)
 											time.Sleep(config.FanartSleep)
 										}
@@ -246,4 +262,41 @@ func RemoveHtmlTag(in string) string {
 		}
 	}
 	return in
+}
+
+func DownloadImg(u string) (string, error) {
+	dir := config.TmpDir + engine.RanString()
+	out, err := os.Create(dir)
+	if err != nil {
+		return "", err
+	}
+
+	defer out.Close()
+	request, err := http.NewRequest(http.MethodGet, u, nil)
+	if err != nil {
+		return "", err
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	request.Header.Set("cache-control", "no-cache")
+	request.Header.Set("User-Agent", network.RandomAgent())
+	request.Header.Set("Referer", "https://www.pixiv.net")
+
+	spaceClient := http.Client{}
+	resp, err := spaceClient.Do(request.WithContext(ctx))
+	if err != nil {
+		return "", err
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return "", errors.New(resp.Status)
+	}
+	_, err = io.Copy(out, resp.Body)
+	if err != nil {
+		return "", err
+	}
+	return dir, nil
 }

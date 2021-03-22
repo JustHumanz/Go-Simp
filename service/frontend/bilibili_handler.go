@@ -26,7 +26,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 				for _, FindGroupArry := range Payload {
 					VTuberGroup, err := FindGropName(FindGroupArry)
 					if err != nil {
-						Member := FindVtuber(FindGroupArry, 0)
+						Member := FindVtuber(FindGroupArry)
 						if Member == (database.Member{}) {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
@@ -78,7 +78,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 
 							for _, LiveData := range LiveBili {
-								LiveData.AddMember(FindVtuber("", LiveData.Member.ID))
+								LiveData.AddMember(FindVtuber(LiveData.Member.ID))
 								FixName := engine.FixName(LiveData.Member.EnName, LiveData.Member.JpName)
 								diff := time.Now().In(loc).Sub(LiveData.Schedul.In(loc))
 								view, err := strconv.Atoi(LiveData.Viewers)
@@ -116,7 +116,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 				for _, FindGroupArry := range Payload {
 					VTuberGroup, err := FindGropName(FindGroupArry)
 					if err != nil {
-						Member := FindVtuber(FindGroupArry, 0)
+						Member := FindVtuber(FindGroupArry)
 						if Member == (database.Member{}) {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
@@ -169,7 +169,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 
 							for _, LiveData := range LiveBili {
-								LiveData.AddMember(FindVtuber("", LiveData.Member.ID))
+								LiveData.AddMember(FindVtuber(LiveData.Member.ID))
 								FixName := engine.FixName(LiveData.Member.EnName, LiveData.Member.JpName)
 								view, err := strconv.Atoi(LiveData.Viewers)
 								if err != nil {
@@ -223,7 +223,7 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 			for _, FindGroupArry := range strings.Split(strings.TrimSpace(Payload), ",") {
 				VTuberGroup, err := FindGropName(FindGroupArry)
 				if err != nil {
-					Member := FindVtuber(FindGroupArry, 0)
+					Member := FindVtuber(FindGroupArry)
 					if Member == (database.Member{}) {
 						s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 						return
@@ -281,7 +281,7 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 
 						for _, SpaceData := range SpaceBili {
-							SpaceData.AddMember(FindVtuber("", SpaceData.Member.ID))
+							SpaceData.AddMember(FindVtuber(SpaceData.Member.ID))
 
 							FixName := engine.FixName(SpaceData.Member.EnName, SpaceData.Member.JpName)
 							diff := time.Now().In(loc).Sub(SpaceData.Schedul.In(loc))

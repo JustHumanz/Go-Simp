@@ -191,19 +191,21 @@ func Module(s *discordgo.Session, m *discordgo.MessageCreate) {
 */
 
 //FindName Find a valid Vtuber name from message handler
-func FindVtuber(MemberName string, ID int64) database.Member {
-	if ID != 0 {
+func FindVtuber(M interface{}) database.Member {
+	MemberName, str := M.(string)
+	if str {
 		for _, Group := range Payload.VtuberData {
 			for _, Name := range Group.Members {
-				if Name.ID == ID {
+				if strings.ToLower(Name.Name) == MemberName || strings.ToLower(Name.JpName) == MemberName || MemberName == strconv.Itoa(int(Name.ID)) {
 					return Name
 				}
 			}
 		}
 	} else {
+		MemberID := M.(int64)
 		for _, Group := range Payload.VtuberData {
 			for _, Name := range Group.Members {
-				if strings.ToLower(Name.Name) == MemberName || strings.ToLower(Name.JpName) == MemberName {
+				if MemberID == Name.ID {
 					return Name
 				}
 			}
@@ -215,16 +217,17 @@ func FindVtuber(MemberName string, ID int64) database.Member {
 
 //FindGropName Find a valid Vtuber Group from message handler
 func FindGropName(g interface{}) (database.Group, error) {
-	ID, err := strconv.Atoi(g.(string))
-	if err != nil {
+	Grp, str := g.(string)
+	if str {
 		for _, Group := range Payload.VtuberData {
-			if strings.ToLower(Group.GroupName) == strings.ToLower(g.(string)) {
+			if strings.ToLower(Group.GroupName) == strings.ToLower(Grp) || strconv.Itoa(int(Group.ID)) == Grp {
 				return Group, nil
 			}
 		}
 	} else {
+		GrpID := g.(int64)
 		for _, Group := range Payload.VtuberData {
-			if Group.ID == int64(ID) {
+			if Group.ID == GrpID {
 				return Group, nil
 			}
 		}

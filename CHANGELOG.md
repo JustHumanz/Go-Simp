@@ -1,3 +1,8 @@
+v3.3.4
+- Fix bug on `setup`
+- Add color on pixiv image
+- Fix livestream conter not running
+
 v3.3.3
 - Fix swaped youtube thub and avatar
 - Use const for paramater

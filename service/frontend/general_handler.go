@@ -195,7 +195,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if VtuberName != "" {
 				tmp := strings.Split(VtuberName, ",")
 				for _, Name := range tmp {
-					Member := FindVtuber(Name, 0)
+					Member := FindVtuber(Name)
 					if Member == (database.Member{}) {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
@@ -348,7 +348,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 				tmp := strings.Split(FindInt[1], ",")
 				for _, Name := range tmp {
-					Member := FindVtuber(Name, 0)
+					Member := FindVtuber(Name)
 					if Member == (database.Member{}) {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
@@ -495,7 +495,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if VtuberName != "" {
 				tmp := strings.Split(VtuberName, ",")
 				for _, Name := range tmp {
-					Member := FindVtuber(Name, 0)
+					Member := FindVtuber(Name)
 					if Member == (database.Member{}) {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
@@ -665,7 +665,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				if len(VtuberName[len(VtuberName)-1:]) > 0 {
 					tmp := strings.Split(VtuberName[len(VtuberName)-1:][0], ",")
 					for _, Name := range tmp {
-						Member := FindVtuber(Name, 0)
+						Member := FindVtuber(Name)
 						if Member == (database.Member{}) {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
@@ -838,7 +838,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					tmp := strings.Split(VtuberName[len(VtuberName)-1:][0], ",")
 
 					for _, Name := range tmp {
-						Member := FindVtuber(Name, 0)
+						Member := FindVtuber(Name)
 						if Member == (database.Member{}) {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
@@ -1026,7 +1026,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				if len(VtuberName[len(VtuberName)-2:]) > 0 {
 					tmp := strings.Split(VtuberName[len(VtuberName)-2:][0], ",")
 					for _, Name := range tmp {
-						Member := FindVtuber(Name, 0)
+						Member := FindVtuber(Name)
 						if Member == (database.Member{}) {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
