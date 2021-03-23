@@ -98,7 +98,7 @@ func CheckYtByTime() {
 									log.Error(err)
 								}
 
-								Youtube.UpdateYt(config.LiveStatus)
+								Youtube.UpdateStatus(config.LiveStatus).UpdateYt(config.LiveStatus)
 								err = SendNude(Youtube)
 								if err != nil {
 									log.Error(err)
