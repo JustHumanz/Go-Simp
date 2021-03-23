@@ -62,6 +62,7 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 				log.Error(err)
 			}
 			Register.ChannelState.TypeTag = def
+			Register.Clear()
 		}
 
 		NillType := func() {
@@ -96,8 +97,17 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 
 		if m.Emoji.MessageFormat() == config.Art {
 			if Register.ChannelState.TypeTag == config.LiveType {
+				Message("[Info] you enable Livestream and Art type on this channel")
 				Register.UpdateType(config.ArtNLiveType)
+				err := Register.UpdateChannel("type")
+				if err != nil {
+					s.ChannelMessageSend(m.ChannelID, err.Error())
+					log.Error(err)
+				}
+				Register.Clear()
+				return
 			} else if Register.ChannelState.TypeTag == config.LewdType {
+				Message("[Info] you enable Lewd and Art type on this channel")
 				Register.UpdateType(config.LewdNArtType)
 			} else if Register.ChannelState.TypeTag == config.ArtType {
 				NillType()
@@ -105,40 +115,49 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 			} else if Register.ChannelState.TypeTag == config.ArtNLiveType {
 				Message("[Info] you disable Art type on this channel")
 				Register.UpdateType(config.LiveType)
-				err := Register.UpdateChannel()
+				err := Register.UpdateChannel("type")
 				if err != nil {
+					s.ChannelMessageSend(m.ChannelID, err.Error())
 					log.Error(err)
 				}
+				Register.Clear()
 				return
 			} else {
+				Message("[Info] you enable Art type on this channel")
 				Register.UpdateType(config.ArtType)
 			}
 		} else if m.Emoji.MessageFormat() == config.Live {
 			if Register.ChannelState.TypeTag == config.ArtType {
+				Message("[Info] you enable Livestream and Art type on this channel")
 				Register.UpdateType(config.ArtNLiveType)
 			} else if Register.ChannelState.TypeTag == config.LewdType {
 				LewdLive(config.LewdType)
+				return
 			} else if Register.ChannelState.TypeTag == config.LiveType {
 				NillType()
 				return
 			} else if Register.ChannelState.TypeTag == config.ArtNLiveType {
 				Message("[Info] you disable Live type on this channel")
 				Register.UpdateType(config.ArtType)
-				err := Register.UpdateChannel()
+				err := Register.UpdateChannel("type")
 				if err != nil {
+					s.ChannelMessageSend(m.ChannelID, err.Error())
 					log.Error(err)
 				}
 				return
 			} else {
+				Message("[Info] you enable Livestream type on this channel")
 				Register.UpdateType(config.LiveType)
 			}
 		} else if m.Emoji.MessageFormat() == config.Lewd {
 			if Register.ChannelState.TypeTag == config.LiveType {
 				LewdLive(config.LiveType)
+				return
 			} else if Register.ChannelState.TypeTag == config.ArtType {
 				Register.UpdateType(config.LewdNArtType)
 			} else if Register.ChannelState.TypeTag == config.ArtNLiveType {
 				LewdLive(config.ArtNLiveType)
+				return
 			} else if Register.ChannelState.TypeTag == config.LewdType {
 				NillType()
 				return
@@ -146,7 +165,7 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 				Message("[Info] you disable Lewd type on this channel")
 				Register.UpdateType(config.ArtType)
 			} else {
-				Register.UpdateType(config.LewdType) //nice
+				Register.UpdateType(config.LewdType)
 			}
 		}
 
@@ -168,8 +187,12 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 				}
 			}
 
-			Register.UpdateChannel()
-			_, err := s.ChannelMessageSend(m.ChannelID, "Done")
+			err := Register.UpdateChannel("all")
+			if err != nil {
+				s.ChannelMessageSend(m.ChannelID, err.Error())
+				log.Error(err)
+			}
+			_, err = s.ChannelMessageSend(m.ChannelID, "Done")
 			if err != nil {
 				log.Error(err)
 			}
@@ -183,8 +206,12 @@ func Answer(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 			Register.DelRegion(s)
 		} else if m.Emoji.MessageFormat() == config.Four {
 			LiveChange()
-			Register.UpdateChannel()
-			_, err := s.ChannelMessageSend(m.ChannelID, "Done")
+			err := Register.UpdateChannel("all")
+			if err != nil {
+				s.ChannelMessageSend(m.ChannelID, err.Error())
+				log.Error(err)
+			}
+			_, err = s.ChannelMessageSend(m.ChannelID, "Done")
 			if err != nil {
 				log.Error(err)
 			}
@@ -367,11 +394,12 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 				Register.SetAdmin(m.Author.ID).SetChannel(m.ChannelID)
 				Register.ChannelStates = ChannelData
 
-				Register.UpdateState("SelectChannel")
 				_, err = s.ChannelMessageSend(m.ChannelID, "Select ID : ")
 				if err != nil {
 					log.Error(err)
 				}
+
+				Register.UpdateState("SelectChannel")
 			} else {
 				_, err := s.ChannelMessageSend(m.ChannelID, "You don't have permission to enable/disable/update")
 				if err != nil {
@@ -702,61 +730,42 @@ func (Data *Regis) IndieNotif(s *discordgo.Session) *Regis {
 	return Data
 }
 
-func (Data *Regis) UpdateChannel() error {
-	ChannelID := Data.ChannelState.ChannelID
-
-	err := Data.ChannelState.UpdateChannel("Type")
-	if err != nil {
-		_, err := Bot.ChannelMessageSend(ChannelID, err.Error())
+func (Data *Regis) UpdateChannel(s string) error {
+	if s == "type" {
+		err := Data.ChannelState.UpdateChannel("Type")
 		if err != nil {
-			log.Error(err)
+			return err
 		}
-	}
-
-	err = Data.ChannelState.UpdateChannel("LiveOnly")
-	if err != nil {
-		_, err := Bot.ChannelMessageSend(ChannelID, err.Error())
+	} else {
+		err := Data.ChannelState.UpdateChannel("LiveOnly")
 		if err != nil {
-			log.Error(err)
+			return err
 		}
-	}
 
-	err = Data.ChannelState.UpdateChannel("Dynamic")
-	if err != nil {
-		_, err := Bot.ChannelMessageSend(ChannelID, err.Error())
+		err = Data.ChannelState.UpdateChannel("Dynamic")
 		if err != nil {
-			log.Error(err)
+			return err
 		}
-	}
 
-	if !Register.ChannelState.LiveOnly {
-		err = Data.ChannelState.UpdateChannel("NewUpcoming")
-		if err != nil {
-			_, err := Bot.ChannelMessageSend(ChannelID, err.Error())
+		if !Register.ChannelState.LiveOnly {
+			err = Data.ChannelState.UpdateChannel("NewUpcoming")
 			if err != nil {
-				log.Error(err)
+				return err
+			}
+		}
+
+		err = Data.ChannelState.UpdateChannel("LiteMode")
+		if err != nil {
+			return err
+		}
+
+		if Register.ChannelState.Group.GroupName == config.Indie {
+			err = Data.ChannelState.UpdateChannel("IndieNotif")
+			if err != nil {
+				return err
 			}
 		}
 	}
-
-	err = Data.ChannelState.UpdateChannel("LiteMode")
-	if err != nil {
-		_, err := Bot.ChannelMessageSend(ChannelID, err.Error())
-		if err != nil {
-			log.Error(err)
-		}
-	}
-
-	if Register.ChannelState.Group.GroupName == config.Indie {
-		err = Data.ChannelState.UpdateChannel("IndieNotif")
-		if err != nil {
-			_, err := Bot.ChannelMessageSend(ChannelID, err.Error())
-			if err != nil {
-				log.Error(err)
-			}
-		}
-	}
-
 	return nil
 }
 

@@ -36,7 +36,6 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 	b.AddFunc(config.YoutubePrivateSlayer, CheckPrivate)
 	VtubersData = c
 	log.Info("Enable youtube module")
-	//CheckYtScheduleTest("Hololive")
 }
 
 func CheckYtSchedule() {

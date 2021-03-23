@@ -1,3 +1,6 @@
+v3.3.5
+- Fix name not showed in upcoming livestream
+
 v3.3.4
 - Fix bug on `setup`
 - Add color on pixiv image

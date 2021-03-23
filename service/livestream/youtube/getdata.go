@@ -220,7 +220,11 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						if err != nil {
 							log.Error(err)
 						}
-						//YoutubeData.SetYoutubeID(ID).SendNude()
+
+						err = SendNude(*NewYoutubeData)
+						if err != nil {
+							log.Error(err)
+						}
 
 					} else if Items.Snippet.VideoStatus == config.LiveStatus {
 						log.WithFields(log.Fields{
@@ -254,13 +258,12 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 							"MemberName": Member.EnName,
 						}).Info("New MV or Cover")
 
-						NewYoutubeData.UpdateStatus(config.PastStatus)
+						NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
+
 						err := SendNude(*NewYoutubeData)
 						if err != nil {
 							log.Error(err)
 						}
-
-						NewYoutubeData.InputYt()
 
 					} else if !Items.Snippet.PublishedAt.IsZero() && Items.Snippet.VideoStatus == "none" {
 						log.WithFields(log.Fields{
@@ -271,13 +274,11 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 							NewYoutubeData.UpdateSchdule(NewYoutubeData.Published)
 						}
 
-						NewYoutubeData.UpdateStatus(config.PastStatus)
+						NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
 						err := SendNude(*NewYoutubeData)
 						if err != nil {
 							log.Error(err)
 						}
-
-						NewYoutubeData.InputYt()
 
 					} else {
 						log.WithFields(log.Fields{
