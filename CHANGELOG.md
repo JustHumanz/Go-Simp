@@ -1,5 +1,6 @@
 v3.3.5
 - Fix name not showed in upcoming livestream
+- Fix livestream not sended
 
 v3.3.4
 - Fix bug on `setup`
