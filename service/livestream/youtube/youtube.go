@@ -64,6 +64,7 @@ func CheckYtByTime() {
 				}
 
 				for _, Youtube := range YoutubeStatus {
+					Youtube.AddMember(Member).AddGroup(Group)
 					if time.Now().Sub(Youtube.Schedul) > Youtube.Schedul.Sub(time.Now()) {
 						log.WithFields(log.Fields{
 							"Vtuber":  Member.EnName,
@@ -97,7 +98,7 @@ func CheckYtByTime() {
 									log.Error(err)
 								}
 
-								Youtube.AddMember(Member).AddGroup(Group).UpdateYt(config.LiveStatus)
+								Youtube.UpdateYt(config.LiveStatus)
 								err = SendNude(Youtube)
 								if err != nil {
 									log.Error(err)
