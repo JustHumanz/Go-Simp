@@ -25,7 +25,7 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 		if err != nil {
 			return err
 		} else if err == sql.ErrNoRows {
-			return errors.New("Vtuber don't have any fanart")
+			return errors.New("Vtuber don't have any fanart in Twitter")
 		}
 
 		defer rows.Close()
@@ -43,7 +43,7 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 		if err != nil {
 			return err
 		} else if err == sql.ErrNoRows {
-			return errors.New("Vtuber don't have any fanart")
+			return errors.New("Vtuber don't have any fanart BiliBili")
 		}
 
 		defer rows.Close()
@@ -62,7 +62,7 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 		if err != nil {
 			return err
 		} else if err == sql.ErrNoRows {
-			return errors.New("Vtuber don't have any fanart")
+			return errors.New("Vtuber don't have any fanart Pixiv")
 		}
 
 		defer rows.Close()
