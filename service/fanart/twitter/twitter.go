@@ -1,10 +1,13 @@
 package twitter
 
 import (
+	"regexp"
 	"sync"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
+	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
+	"github.com/JustHumanz/Go-Simp/service/fanart/notif"
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
@@ -39,9 +42,20 @@ func CheckNew() {
 					"Group": Group.GroupName,
 				}).Error(err)
 			} else {
-				SendFanart(Fanarts, Group)
+				for _, Art := range Fanarts {
+					Color, err := engine.GetColor(config.TmpDir, Art.Photos[0])
+					if err != nil {
+						log.Error(err)
+					}
+					notif.SendNude(Art, Group, Bot, Color)
+				}
 			}
 		}(GroupData, wg)
 	}
 	wg.Wait()
+}
+
+//RemoveTwitterShortLink remove twitter shotlink
+func RemoveTwitterShortLink(text string) string {
+	return regexp.MustCompile(`(?m)^(.*?)https:\/\/t.co\/.+`).ReplaceAllString(text, "${1}$2")
 }

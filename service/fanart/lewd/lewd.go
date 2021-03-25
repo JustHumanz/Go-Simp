@@ -12,6 +12,7 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
+	"github.com/JustHumanz/Go-Simp/service/fanart/notif"
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
@@ -48,32 +49,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 					}).Info("Check lewd pic")
 
 					var (
-						DanPayload []Danbooru
-						SendFanart = func(FanArt database.DataFanart, AuthorImg string, Color int) {
-							Group := Group.RemoveNillIconURL()
-							ChannelData, err := database.ChannelTag(Member.ID, 0, config.LewdChannel, Member.Region)
-							if err != nil {
-								log.Error(err)
-							}
-							icon := config.TwitterIMG
-							if FanArt.State == config.PixivArt {
-								icon = config.PixivIMG
-							}
-
-							for _, Channel := range ChannelData {
-								Msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
-									SetAuthor(strings.Title(Group.GroupName), Group.IconURL).
-									SetTitle(FanArt.Author).
-									SetURL(FanArt.PermanentURL).
-									SetThumbnail(AuthorImg).
-									SetDescription(FanArt.Text).
-									SetImage(FanArt.Photos[0]).
-									SetColor(Color).SetFooter("1/"+strconv.Itoa(len(FanArt.Photos)), icon).MessageEmbed)
-								if err != nil {
-									log.Error(err, Msg)
-								}
-							}
-						}
+						DanPayload     []Danbooru
 						TwitterHandler = func(ID []string) error {
 							TweetRes, err := config.Scraper.GetTweet(ID[len(ID)-1])
 							if err != nil {
@@ -87,12 +63,14 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 							FanArtData := database.DataFanart{
 								PermanentURL: TweetRes.PermanentURL,
 								Author:       TweetRes.Username,
+								AuthorAvatar: engine.GetAuthorAvatar(TweetRes.Username),
 								Photos:       TweetRes.Photos,
 								Videos:       Video,
 								Text:         TweetRes.Text,
 								TweetID:      TweetRes.ID,
 								Member:       Member,
 								State:        config.TwitterArt,
+								Lewd:         true,
 							}
 							err = database.AddLewd(FanArtData)
 							if err != nil {
@@ -101,10 +79,11 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 
 							Color, err := engine.GetColor(config.TmpDir, TweetRes.Photos[0])
 							if err != nil {
-								return err
+								log.Error(err)
 							}
 
-							SendFanart(FanArtData, engine.GetAuthorAvatar(TweetRes.Username), Color)
+							notif.SendNude(FanArtData, Group, Bot, Color)
+
 							return nil
 						}
 					)
@@ -190,6 +169,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 										FanArtData := database.DataFanart{
 											PermanentURL: "https://www.pixiv.net/en/artworks/" + strconv.Itoa(Dan.PixivID),
 											Author:       UserBody["name"].(string),
+											AuthorAvatar: config.PixivProxy + UserBody["imageBig"].(string),
 											Photos:       []string{FixImg},
 											Text:         Body["title"].(string),
 											PixivID:      strconv.Itoa(Dan.PixivID),
@@ -206,7 +186,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 											log.Error(err)
 										}
 
-										SendFanart(FanArtData, config.PixivProxy+UserBody["imageBig"].(string), Color)
+										notif.SendNude(FanArtData, Group, Bot, Color)
 									}
 								} else if Dan.IsTwitter() {
 									if database.IsLewdNew("Twitter", Dan.Source) {

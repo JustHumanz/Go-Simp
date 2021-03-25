@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/JustHumanz/Go-Simp/pkg/database"
+	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
@@ -30,9 +31,10 @@ func CreatePayload(Group database.Group, Scraper *twitterscraper.Scraper, Limit 
 					if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) && !tweet.IsQuoted && !tweet.IsReply && MemberHashtag.Name != "Kaichou" && len(tweet.Photos) > 0 {
 						TweetArt := database.DataFanart{
 							PermanentURL: tweet.PermanentURL,
-							Author:       tweet.Username,
+							Author:       "@" + tweet.Username,
+							AuthorAvatar: engine.GetAuthorAvatar(tweet.Username),
 							TweetID:      tweet.ID,
-							Text:         tweet.Text,
+							Text:         RemoveTwitterShortLink(tweet.Text),
 							Photos:       tweet.Photos,
 							Likes:        tweet.Likes,
 							Member:       MemberHashtag,

@@ -17,6 +17,7 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
+	"github.com/JustHumanz/Go-Simp/service/fanart/notif"
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
@@ -97,16 +98,6 @@ func CheckPixiv() {
 								Img := Body["urls"].(map[string]interface{})
 								FixImg := Img["original"].(string)
 
-								path, err := DownloadImg(Img["mini"].(string))
-								if err != nil {
-									log.Error(err)
-								}
-
-								Color, err := engine.GetColor("", path)
-								if err != nil {
-									return err
-								}
-
 								usrbyte, err := network.Curl(config.PixivUserEnd+Tags["authorId"].(string), nil)
 								if err != nil {
 									return err
@@ -129,74 +120,29 @@ func CheckPixiv() {
 								FixFanArt := database.DataFanart{
 									PermanentURL: BaseURL + v2["id"].(string),
 									Author:       v2["userName"].(string),
+									AuthorAvatar: config.PixivProxy + UserBody["imageBig"].(string),
 									Photos:       []string{FixImg},
 									Text:         TextFix,
 									PixivID:      v2["id"].(string),
 									Member:       Member,
 								}
 
-								AuthorProfile := config.PixivProxy + UserBody["imageBig"].(string)
 								new, err := FixFanArt.CheckPixivFanArt()
 								if err != nil {
 									return err
 								}
 								if new {
-									url := BaseURL + v2["id"].(string)
-									ChannelData, err := database.ChannelTag(Member.ID, 1, config.Default, Member.Region)
+									path, err := DownloadImg(Img["mini"].(string))
+									if err != nil {
+										log.Error(err)
+									}
+
+									Color, err := engine.GetColor("", path)
 									if err != nil {
 										return err
 									}
-									var (
-										tags string
-										Msg  = "Pixiv"
-									)
 
-									for i, Channel := range ChannelData {
-										Channel.SetMember(Member)
-										ctx := context.Background()
-										UserTagsList, err := Channel.GetUserList(ctx)
-										if err != nil {
-											return err
-										}
-
-										if UserTagsList != nil {
-											tags = strings.Join(UserTagsList, " ")
-										} else {
-											tags = "_"
-										}
-
-										if tags == "_" && Group.GroupName == config.Indie && !Channel.IndieNotif {
-											//do nothing,like my life
-										} else {
-											msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
-												SetAuthor(strings.Title(Group.GroupName), Group.IconURL).
-												SetTitle(FixFanArt.Author).
-												SetURL(url).
-												SetThumbnail(AuthorProfile).
-												SetDescription(TextFix).
-												SetImage(config.PixivProxy+FixImg).
-												AddField("User Tags", tags).
-												SetColor(Color).
-												SetFooter(Msg, config.PixivIMG).MessageEmbed)
-											if err != nil {
-												log.Error(msg, err)
-												err = Channel.DelChannel(err.Error())
-												if err != nil {
-													return err
-												}
-											}
-											engine.Reacting(map[string]string{
-												"ChannelID": Channel.ChannelID,
-											}, Bot)
-										}
-
-										if i%config.Waiting == 0 && configfile.LowResources {
-											log.WithFields(log.Fields{
-												"Func": "Pixiv Fanart",
-											}).Warn(config.FanartSleep)
-											time.Sleep(config.FanartSleep)
-										}
-									}
+									notif.SendNude(FixFanArt, Group, Bot, Color)
 								}
 							}
 							if i == 10 {

@@ -12,6 +12,7 @@ type DataFanart struct {
 	Member       Member
 	PermanentURL string
 	Author       string
+	AuthorAvatar string
 	Photos       []string
 	Videos       string
 	Text         string
@@ -19,6 +20,7 @@ type DataFanart struct {
 	Dynamic_id   string
 	TweetID      string
 	PixivID      string
+	Lewd         bool
 	State        string
 }
 
