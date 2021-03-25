@@ -71,6 +71,7 @@ func main() {
 
 	c := cron.New()
 	c.Start()
+	c.AddFunc(config.CheckPayload, RequestPay)
 
 	if *Twitter {
 		twitter.Start(Bot, c, Payload, configfile)

@@ -73,6 +73,7 @@ func main() {
 
 	c := cron.New()
 	c.Start()
+	c.AddFunc(config.CheckPayload, RequestPay)
 
 	if *Youtube {
 		c.AddFunc(config.YoutubeSubscriber, CheckYoutube)

@@ -39,7 +39,6 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 	Bot = a
 	VtubersData = c
 	configfile = d
-	CheckPixiv()
 	b.AddFunc(config.PixivFanart, CheckPixiv)
 	log.Info("Enable Pixiv fanart module")
 }
@@ -125,6 +124,7 @@ func CheckPixiv() {
 									Text:         TextFix,
 									PixivID:      v2["id"].(string),
 									Member:       Member,
+									State:        config.PixivArt,
 								}
 
 								new, err := FixFanArt.CheckPixivFanArt()
@@ -141,7 +141,7 @@ func CheckPixiv() {
 									if err != nil {
 										return err
 									}
-
+									FixFanArt.Photos[0] = config.PixivProxy + FixImg
 									notif.SendNude(FixFanArt, Group, Bot, Color)
 								}
 							}

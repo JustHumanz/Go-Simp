@@ -5,6 +5,7 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	twitterscraper "github.com/n0madic/twitter-scraper"
@@ -38,6 +39,7 @@ func CreatePayload(Group database.Group, Scraper *twitterscraper.Scraper, Limit 
 							Photos:       tweet.Photos,
 							Likes:        tweet.Likes,
 							Member:       MemberHashtag,
+							State:        config.TwitterArt,
 						}
 						if tweet.Videos != nil {
 							TweetArt.Videos = tweet.Videos[0].Preview

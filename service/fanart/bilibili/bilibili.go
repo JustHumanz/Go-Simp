@@ -67,6 +67,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 									Dynamic_id:   v.Desc.DynamicIDStr,
 									Text:         STB.Item.Description,
 									Member:       Member,
+									State:        config.BiliBiliArt,
 								}
 
 								New, err := TBiliData.CheckTBiliBiliFanArt()
@@ -80,64 +81,6 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 									}
 
 									notif.SendNude(TBiliData, Group, Bot, Color)
-									/*
-										GroupData := Group.RemoveNillIconURL()
-										ChannelData, err := database.ChannelTag(TBiliData.Member.ID, 1, config.Default, TBiliData.Member.Region)
-										if err != nil {
-											log.Error(err)
-										}
-
-										tags := ""
-										for i, Channel := range ChannelData {
-											Channel.SetMember(TBiliData.Member)
-											ctx := context.Background()
-											UserTagsList, err := Channel.GetUserList(ctx)
-											if err != nil {
-												log.Error(err)
-												break
-											}
-											if UserTagsList != nil {
-												tags = strings.Join(UserTagsList, " ")
-											} else {
-												tags = "_"
-											}
-
-											if tags == "_" && Group.GroupName == config.Indie && !Channel.IndieNotif {
-												//do nothing,like my life
-											} else {
-												tmp, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
-													SetAuthor(strings.Title(GroupData.GroupName), GroupData.IconURL).
-													SetTitle(TBiliData.Author).
-													SetURL(TBiliData.PermanentURL).
-													SetThumbnail(v.Desc.UserProfile.Info.Face).
-													SetDescription(TBiliData.Text).
-													SetImage(TBiliData.Photos[0]).
-													AddField("User Tags", tags).
-													SetFooter("1/"+strconv.Itoa(len(TBiliData.Photos))+" photos", config.BiliBiliIMG).
-													InlineAllFields().
-													SetColor(Color).MessageEmbed)
-												if err != nil {
-													log.Error(tmp, err.Error())
-													err = Channel.DelChannel(err.Error())
-													if err != nil {
-														log.Error(err)
-													}
-												}
-												err = engine.Reacting(map[string]string{
-													"ChannelID": Channel.ChannelID,
-												}, Bot)
-												if err != nil {
-													log.Error(err)
-												}
-											}
-											if i%config.Waiting == 0 && config.GoSimpConf.LowResources {
-												log.WithFields(log.Fields{
-													"Func": "BiliBili Fanart",
-												}).Warn(config.FanartSleep)
-												time.Sleep(config.FanartSleep)
-											}
-										}
-									*/
 								}
 							}
 						}
@@ -146,5 +89,5 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 			}
 		}
 	})
-	log.Info("Enable bilibili fanart module")
+	log.Info("Enable Bilibili fanart module")
 }

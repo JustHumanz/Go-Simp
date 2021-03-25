@@ -30,7 +30,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 	Bot = a
 	VtubersData = c
 	configfile = d
-	log.Info("Enable lewd fanart module")
+	log.Info("Enable Lewd fanart module")
 	b.AddFunc(config.DanbooruFanart, func() {
 		log.Info("Start Checking Danbooru lewd")
 		for _, Group := range VtubersData.VtuberData {

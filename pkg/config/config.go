@@ -119,8 +119,9 @@ const (
 	UnknownStatus  = "unknown"
 
 	//Fanart
-	TwitterArt = "twitter"
-	PixivArt   = "pixiv"
+	TwitterArt  = "twitter"
+	PixivArt    = "pixiv"
+	BiliBiliArt = "bilibili"
 )
 
 //ConfigFile config file struct for config.toml
