@@ -12,7 +12,6 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
 	"github.com/JustHumanz/Go-Simp/service/fanart/bilibili"
-	"github.com/JustHumanz/Go-Simp/service/fanart/lewd"
 	"github.com/JustHumanz/Go-Simp/service/fanart/pixiv"
 	"github.com/JustHumanz/Go-Simp/service/fanart/twitter"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
@@ -27,7 +26,7 @@ func init() {
 func main() {
 	Twitter := flag.Bool("TwitterFanart", false, "Enable twitter fanart module")
 	BiliBili := flag.Bool("BiliBiliFanart", false, "Enable bilibili fanart module")
-	Danbooru := flag.Bool("DanbooruLewd", false, "Enable Danbooru lewd fanart module")
+	Lewd := flag.Bool("LewdFanart", false, "Enable lewd fanart module")
 	Pixiv := flag.Bool("PixivFanArt", false, "Enable Pixiv fanart module")
 	flag.Parse()
 
@@ -74,19 +73,15 @@ func main() {
 	c.AddFunc(config.CheckPayload, RequestPay)
 
 	if *Twitter {
-		twitter.Start(Bot, c, Payload, configfile)
+		twitter.Start(Bot, c, Payload, configfile, *Lewd)
 	}
 
 	if *BiliBili {
 		bilibili.Start(Bot, c, Payload, configfile)
 	}
 
-	if *Danbooru {
-		lewd.Start(Bot, c, Payload, configfile)
-	}
-
 	if *Pixiv {
-		pixiv.Start(Bot, c, Payload, configfile)
+		pixiv.Start(Bot, c, Payload, configfile, *Lewd)
 	}
 
 	_, err = gRCPconn.ModuleList(context.Background(), &pilot.ModuleData{

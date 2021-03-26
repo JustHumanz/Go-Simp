@@ -67,6 +67,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 									Dynamic_id:   v.Desc.DynamicIDStr,
 									Text:         STB.Item.Description,
 									Member:       Member,
+									Group:        Group,
 									State:        config.BiliBiliArt,
 								}
 
@@ -80,7 +81,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 										log.Error(err)
 									}
 
-									notif.SendNude(TBiliData, Group, Bot, Color)
+									notif.SendNude(TBiliData, Bot, Color)
 								}
 							}
 						}

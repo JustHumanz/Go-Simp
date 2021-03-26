@@ -18,15 +18,21 @@ var (
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
 	configfile  config.ConfigFile
+	lewd        bool
 )
 
 //Start start twitter module
-func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile) {
+func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile, e bool) {
 	Bot = a
 	VtubersData = c
 	configfile = d
+	lewd = e
 	b.AddFunc(config.TwitterFanart, CheckNew)
-	log.Info("Enable Twitter fanart module")
+	if lewd {
+		log.Info("Enable Twitter lewd fanart module")
+	} else {
+		log.Info("Enable Twitter fanart module")
+	}
 }
 
 //CheckNew Check new fanart
@@ -47,7 +53,7 @@ func CheckNew() {
 					if err != nil {
 						log.Error(err)
 					}
-					notif.SendNude(Art, Group, Bot, Color)
+					notif.SendNude(Art, Bot, Color)
 				}
 			}
 		}(GroupData, wg)

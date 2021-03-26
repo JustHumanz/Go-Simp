@@ -12,9 +12,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func SendNude(Art database.DataFanart, Group database.Group, Bot *discordgo.Session, Color int) {
-	Group.RemoveNillIconURL()
-	for _, Member := range Group.Members {
+func SendNude(Art database.DataFanart, Bot *discordgo.Session, Color int) {
+	Art.Group.RemoveNillIconURL()
+	for _, Member := range Art.Group.Members {
 		if Art.Member.ID == Member.ID {
 			var (
 				ChannelData []database.DiscordChannel
@@ -55,11 +55,11 @@ func SendNude(Art database.DataFanart, Group database.Group, Bot *discordgo.Sess
 					tags = "_"
 				}
 
-				if tags == "_" && Group.GroupName == config.Indie && !Channel.IndieNotif {
+				if tags == "_" && Art.Group.GroupName == config.Indie && !Channel.IndieNotif {
 					//do nothing,like my life
 				} else {
 					tmp, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
-						SetAuthor(strings.Title(Group.GroupName), Group.IconURL).
+						SetAuthor(strings.Title(Art.Group.GroupName), Art.Group.IconURL).
 						SetTitle(Art.Author).
 						SetURL(Art.PermanentURL).
 						SetThumbnail(Art.AuthorAvatar).
@@ -85,7 +85,7 @@ func SendNude(Art database.DataFanart, Group database.Group, Bot *discordgo.Sess
 				}
 				if i%config.Waiting == 0 && config.GoSimpConf.LowResources {
 					log.WithFields(log.Fields{
-						"Func": Art.State + "Fanart",
+						"State": Art.State + " Fanart",
 					}).Warn(config.FanartSleep)
 					time.Sleep(config.FanartSleep)
 				}
