@@ -129,6 +129,7 @@ const (
 type ConfigFile struct {
 	Discord        string `toml:"Discord"`
 	BiliSess       string `toml:"BiliSess"`
+	PixivSession   string `toml:"PixivSess"`
 	SauceAPI       string `toml:"SauceAPI"`
 	InviteLog      string `toml:"InviteLog"`
 	PilotReporting string `toml:"PilotReporting"`
@@ -163,6 +164,7 @@ type ConfigFile struct {
 		Youtube  string `toml:"Youtube"`
 		Bilibili string `toml:"Bilibili"`
 		General  string `toml:"General"`
+		Lewd     string `toml:"Lewd"`
 	} `toml:"BotPrefix"`
 	Emoji struct {
 		Fanart     []string `toml:"Fanart"`

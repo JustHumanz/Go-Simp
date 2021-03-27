@@ -35,7 +35,7 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 				return err
 			}
 		}
-		Data.State = "Twitter"
+		Data.State = config.TwitterArt
 		return nil
 	}
 	Tbilibili := func() error {
@@ -53,7 +53,7 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 				return err
 			}
 		}
-		Data.State = "TBiliBili"
+		Data.State = config.BiliBiliArt
 		return nil
 	}
 
@@ -72,7 +72,7 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 				return err
 			}
 		}
-		Data.State = "Pixiv"
+		Data.State = config.PixivArt
 		return nil
 	}
 
@@ -148,6 +148,39 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 
 	Data.Videos = Video.String
 	Data.Photos = strings.Fields(PhotoTmp.String)
+	return &Data, nil
+
+}
+
+//GetFanart Get Member fanart URL from TBiliBili and Twitter
+func GetLewd(GroupID, MemberID int64) (*DataFanart, error) {
+	var (
+		Data     DataFanart
+		PhotoTmp sql.NullString
+		Video    sql.NullString
+	)
+
+	rows, err := DB.Query(`SELECT Lewd.* FROM Vtuber.Lewd Inner Join Vtuber.VtuberMember on VtuberMember.id = Lewd.VtuberMember_id Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id where (VtuberGroup.id=? OR VtuberMember.id=?)  ORDER by RAND() LIMIT 1`, GroupID, MemberID)
+	if err != nil {
+		return nil, err
+	} else if err == sql.ErrNoRows {
+		return nil, errors.New("Vtuber don't have any fanart in Twitter")
+	}
+
+	defer rows.Close()
+	for rows.Next() {
+		err = rows.Scan(&Data.ID, &Data.PermanentURL, &Data.Author, &PhotoTmp, &Video, &Data.Text, &Data.TweetID, &Data.PixivID, &Data.Member.ID)
+		if err != nil {
+			return nil, err
+		}
+	}
+	if Data.PixivID != "" {
+		Data.State = config.PixivArt
+	} else {
+		Data.State = config.TwitterArt
+	}
+	Data.Photos = strings.Fields(PhotoTmp.String)
+	Data.Videos = Video.String
 	return &Data, nil
 
 }

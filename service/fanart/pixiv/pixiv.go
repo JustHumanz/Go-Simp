@@ -35,7 +35,7 @@ var (
 
 const (
 	BaseURL = "https://www.pixiv.net/en/artworks/"
-	Limit   = 20
+	Limit   = 10
 )
 
 //Start start twitter module
@@ -144,7 +144,7 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 	req.Header.Set("Dnt", "1")
 	req.Header.Set("Upgrade-Insecure-Requests", "1")
 	req.Header.Set("Connection", "keep-alive")
-	req.Header.Set("Cookie", "PHPSESSID=32023760_0wwmcnvQ2lWuBNdNyJ2foJc6F28UL5xf")
+	req.Header.Set("Cookie", "PHPSESSID="+config.GoSimpConf.PixivSession)
 	req.Header.Set("Cache-Control", "max-age=0")
 	req.Header.Set("Te", "Trailers")
 

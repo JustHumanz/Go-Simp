@@ -23,6 +23,7 @@ func CreatePayload(Group database.Group, Scraper *twitterscraper.Scraper, Limit 
 		log.WithFields(log.Fields{
 			"Hashtag": strings.Join(Hashtags, " OR "),
 			"Group":   Group.GroupName,
+			"Lewd":    false,
 		}).Info("Start curl twitter")
 		for tweet := range Scraper.SearchTweets(context.Background(), "("+strings.ReplaceAll(strings.Join(Hashtags, " OR "), " ", "")+") AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)", Limit) {
 			if tweet.Error != nil {
@@ -33,7 +34,7 @@ func CreatePayload(Group database.Group, Scraper *twitterscraper.Scraper, Limit 
 					if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) && !tweet.IsQuoted && !tweet.IsReply && MemberHashtag.Name != "Kaichou" && len(tweet.Photos) > 0 {
 						TweetArt := database.DataFanart{
 							PermanentURL: tweet.PermanentURL,
-							Author:       "@" + tweet.Username,
+							Author:       tweet.Username,
 							AuthorAvatar: engine.GetAuthorAvatar(tweet.Username),
 							TweetID:      tweet.ID,
 							Text:         RemoveTwitterShortLink(tweet.Text),
@@ -65,6 +66,7 @@ func CreatePayload(Group database.Group, Scraper *twitterscraper.Scraper, Limit 
 		log.WithFields(log.Fields{
 			"Hashtag": strings.Join(Hashtags, " OR "),
 			"Group":   Group.GroupName,
+			"Lewd":    true,
 		}).Info("Start curl twitter")
 		for tweet := range Scraper.SearchTweets(context.Background(), "("+strings.ReplaceAll(strings.Join(Hashtags, " OR "), " ", "")+") AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)", Limit) {
 			if tweet.Error != nil {
@@ -75,7 +77,7 @@ func CreatePayload(Group database.Group, Scraper *twitterscraper.Scraper, Limit 
 					if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterLewd) && !tweet.IsQuoted && !tweet.IsReply && len(tweet.Photos) > 0 {
 						TweetArt := database.DataFanart{
 							PermanentURL: tweet.PermanentURL,
-							Author:       "@" + tweet.Username,
+							Author:       tweet.Username,
 							AuthorAvatar: engine.GetAuthorAvatar(tweet.Username),
 							TweetID:      tweet.ID,
 							Text:         RemoveTwitterShortLink(tweet.Text),
@@ -136,7 +138,7 @@ func CreatePayload(Group database.Group, Scraper *twitterscraper.Scraper, Limit 
 
 		CurlTwitter(Hashtags)
 
-		if lewd {
+		if lewd && LewdHashtags != nil {
 			CurlTwitterLewd(LewdHashtags)
 		}
 	}

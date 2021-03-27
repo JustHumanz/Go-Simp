@@ -145,7 +145,7 @@ func main() {
 			Bot.AddHandler(BiliBiliSpace)
 			Bot.AddHandler(YoutubeMessage)
 			Bot.AddHandler(SubsMessage)
-			//Bot.AddHandler(Module)
+			Bot.AddHandler(Lewd)
 			Bot.AddHandler(RegisterFunc)
 			Bot.AddHandler(Answer)
 			c.Stop()
