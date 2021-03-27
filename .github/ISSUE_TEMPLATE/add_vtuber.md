@@ -6,32 +6,52 @@ labels: enhancement
 assignees: 'JustHumanz'
 
 ---
-
 {
-"Nickname": "[Vtuber NickName]",
-"EN_Name": "[Vtuber EN_Name]",
-"JP_Name": "[Vtuber JP_Name]",
-"Youtube": "[Youtube URL or Youtube ChannelID]",
-"BiliBili": "[BiliBili ID]",
-"Twitter": "[Vtuber twitter username]",
-"TwitterFanart": "[Vtuber twitter hashtag fanart]",
-"BiliBiliFanart": "[Vtuber bilibili hashtag fanart]",
-"Region": "[Vtuber Region]",
-"Wiki": "[Wiki link] *Optional",
-"DiscordID": "Your DiscordID *Optional"
-}
+    "Name":{Vtuber nickname},
+    "EN_Name":{Vtuber name [EN]},
+    "JP_Name":{Vtuber name [JP]},
+    "Twitter":{
+        "Twitter_Fanart":{Fanart Hashtag},
+        "Twitter_Lewd":{Fanart Lewd Hashtag},
+        "Twitter_Username":{Twitter username}
+    },
+    "Youtube":{
+        "Yt_ID": {YoutubeID or Channel url}
+    },
+    "BiliBili":{
+        "BiliBili_Fanart": {BiliBili Fanart hashtag},
+        "BiliBili_ID": {BiliBili ID},
+        "BiliRoom_ID": {BiliBili Room liveID}
+    },
+    "Twitch":{
+        "Twitch_Username": {Twitch username}
+    },
+    "Region": {Vtuber region},
+    "Fanbase": {FanBase name}
+},
 
 Example :
 
 {
-"Nickname": "Kanochi",
-"EN_Name": "Kano",
-"JP_Name": "鹿乃",
-"Youtube": "UCfuz6xYbYFGsWWBi3SpJI1w",
-"BiliBili": "0",
-"Twitter": "https://mobile.twitter.com/kano_hanayori",
-"TwitterFanart": "#鹿乃art",
-"BiliBiliFanart": "",
-"Region": "JP",
-"Wiki": ""
-}
+    "Name":"Kanochi",
+    "EN_Name":"Kano",
+    "JP_Name":"鹿乃",
+    "Twitter":{
+        "Twitter_Fanart":"#絵えかの",
+        "Twitter_Lewd":"",
+        "Twitter_Username":"kanolive_"
+    },
+    "Youtube":{
+        "Yt_ID":"UCfuz6xYbYFGsWWBi3SpJI1w"
+    },
+    "BiliBili":{
+        "BiliBili_Fanart":"鹿乃絵",
+        "BiliBili_ID":316381099,
+        "BiliRoom_ID":15152878
+    },
+    "Twitch":{
+        "Twitch_Username":""
+    },
+    "Region":"JP",
+    "Fanbase":""
+},
