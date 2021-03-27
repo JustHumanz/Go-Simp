@@ -12,6 +12,7 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
+	"github.com/robfig/cron/v3"
 
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
@@ -29,24 +30,30 @@ func init() {
 		configfile config.ConfigFile
 	)
 
-	res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
-		Message: "Send me nude",
-		Service: "Rest_API",
-	})
-	if err != nil {
-		log.Fatalf("Error when request payload: %s", err)
-	}
-	err = json.Unmarshal(res.ConfigFile, &configfile)
-	if err != nil {
-		log.Panic(err)
-	}
+	RequestPayload := func() {
+		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+			Message: "Send me nude",
+			Service: "Rest_API",
+		})
+		if err != nil {
+			log.Fatalf("Error when request payload: %s", err)
+		}
+		err = json.Unmarshal(res.ConfigFile, &configfile)
+		if err != nil {
+			log.Panic(err)
+		}
 
-	err = json.Unmarshal(res.VtuberPayload, &Payload)
-	if err != nil {
-		log.Panic(err)
+		err = json.Unmarshal(res.VtuberPayload, &Payload)
+		if err != nil {
+			log.Panic(err)
+		}
 	}
+	RequestPayload()
 
 	configfile.InitConf()
+	c := cron.New()
+	c.Start()
+	c.AddFunc(config.CheckPayload, RequestPayload)
 	database.Start(configfile)
 	go pilot.RunHeartBeat(gRCPconn, "Rest_API")
 }

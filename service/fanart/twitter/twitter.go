@@ -1,10 +1,13 @@
 package twitter
 
 import (
+	"regexp"
 	"sync"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
+	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
+	"github.com/JustHumanz/Go-Simp/service/fanart/notif"
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
@@ -15,15 +18,21 @@ var (
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
 	configfile  config.ConfigFile
+	lewd        bool
 )
 
 //Start start twitter module
-func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile) {
+func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile, e bool) {
 	Bot = a
 	VtubersData = c
 	configfile = d
+	lewd = e
 	b.AddFunc(config.TwitterFanart, CheckNew)
-	log.Info("Enable Twitter fanart module")
+	if lewd {
+		log.Info("Enable Twitter lewd fanart module")
+	} else {
+		log.Info("Enable Twitter fanart module")
+	}
 }
 
 //CheckNew Check new fanart
@@ -39,9 +48,20 @@ func CheckNew() {
 					"Group": Group.GroupName,
 				}).Error(err)
 			} else {
-				SendFanart(Fanarts, Group)
+				for _, Art := range Fanarts {
+					Color, err := engine.GetColor(config.TmpDir, Art.Photos[0])
+					if err != nil {
+						log.Error(err)
+					}
+					notif.SendNude(Art, Bot, Color)
+				}
 			}
 		}(GroupData, wg)
 	}
 	wg.Wait()
+}
+
+//RemoveTwitterShortLink remove twitter shotlink
+func RemoveTwitterShortLink(text string) string {
+	return regexp.MustCompile(`(?m)^(.*?)https:\/\/t.co\/.+`).ReplaceAllString(text, "${1}$2")
 }

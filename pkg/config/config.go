@@ -64,6 +64,7 @@ const (
 	BiliBiliFanart             = "@every 0h6m0s"
 	DanbooruFanart             = "@every 0h4m0s"
 	PixivFanart                = "@every 0h15m0s"
+	PixivFanartLewd            = "@every 0h20m0s"
 	BiliBiliLive               = "@every 0h7m0s"
 	BiliBiliSpace              = "@every 0h13m0s"
 	Twitch                     = "@every 0h7m0s"
@@ -119,14 +120,16 @@ const (
 	UnknownStatus  = "unknown"
 
 	//Fanart
-	TwitterArt = "twitter"
-	PixivArt   = "pixiv"
+	TwitterArt  = "twitter"
+	PixivArt    = "pixiv"
+	BiliBiliArt = "bilibili"
 )
 
 //ConfigFile config file struct for config.toml
 type ConfigFile struct {
 	Discord        string `toml:"Discord"`
 	BiliSess       string `toml:"BiliSess"`
+	PixivSession   string `toml:"PixivSess"`
 	SauceAPI       string `toml:"SauceAPI"`
 	InviteLog      string `toml:"InviteLog"`
 	PilotReporting string `toml:"PilotReporting"`
@@ -161,6 +164,7 @@ type ConfigFile struct {
 		Youtube  string `toml:"Youtube"`
 		Bilibili string `toml:"Bilibili"`
 		General  string `toml:"General"`
+		Lewd     string `toml:"Lewd"`
 	} `toml:"BotPrefix"`
 	Emoji struct {
 		Fanart     []string `toml:"Fanart"`

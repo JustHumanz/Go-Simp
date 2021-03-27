@@ -201,6 +201,10 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 										}
 									}
 
+									if Member.Fanbase != "" {
+										FanBase = Member.Fanbase
+									}
+
 									view, err := strconv.Atoi(Youtube.Viewers)
 									if err != nil {
 										log.Error(err)

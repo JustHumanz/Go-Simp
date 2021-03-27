@@ -6,27 +6,6 @@ import (
 	"time"
 )
 
-//DataFanart fanart struct
-type DataFanart struct {
-	ID           int64
-	Member       Member
-	PermanentURL string
-	Author       string
-	Photos       []string
-	Videos       string
-	Text         string
-	Likes        int
-	Dynamic_id   string
-	TweetID      string
-	PixivID      string
-	State        string
-}
-
-func (Data *DataFanart) AddMember(new Member) *DataFanart {
-	Data.Member = new
-	return Data
-}
-
 //Group group struct
 type Group struct {
 	ID        int64

@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
 	"regexp"
 	"sort"
@@ -17,6 +19,7 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
+	"github.com/JustHumanz/Go-Simp/service/fanart/notif"
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
@@ -27,214 +30,298 @@ var (
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
 	configfile  config.ConfigFile
+	lewd        bool
 )
 
 const (
 	BaseURL = "https://www.pixiv.net/en/artworks/"
+	Limit   = 10
 )
 
 //Start start twitter module
-func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile) {
+func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile, e bool) {
 	Bot = a
 	VtubersData = c
 	configfile = d
-	CheckPixiv()
+	lewd = e
 	b.AddFunc(config.PixivFanart, CheckPixiv)
-	log.Info("Enable Pixiv fanart module")
+	if lewd {
+		b.AddFunc(config.PixivFanartLewd, CheckPixivLewd)
+		log.Info("Enable Pixiv lewd fanart module")
+	} else {
+		log.Info("Enable Pixiv fanart module")
+	}
 }
 
 //CheckNew Check new fanart
 func CheckPixiv() {
-	wg := new(sync.WaitGroup)
-	for _, GroupData := range VtubersData.VtuberData {
-		wg.Add(1)
-		go func(Group database.Group, wg *sync.WaitGroup) {
-			defer wg.Done()
-			for _, Member := range Group.Members {
-				Pixiv := func(Payload string) error {
-					var Art PixivArtworks
-					log.WithFields(log.Fields{
-						"Member": Member.EnName,
-						"Group":  Group.GroupName,
-					}).Info("Start curl pixiv")
-					body, err := network.Curl(Payload, nil)
-					if err != nil {
-						return err
-					}
-					err = json.Unmarshal(body, &Art)
-					if err != nil {
-						return err
-					}
-					IsVtuber := false
-					for _, tag := range Art.Body.Relatedtags {
-						if strings.ToLower(tag.(string)) == strings.ToLower(Group.GroupName) {
-							IsVtuber = true
-						}
-					}
-
-					if Art.Body.Illustmanga.Data != nil && IsVtuber {
-						for i, v := range Art.Body.Illustmanga.Data {
-							var (
-								v2      = v.(map[string]interface{})
-								Illusts map[string]interface{}
-								User    map[string]interface{}
-								TextFix string
-							)
-
-							if v2["xRestrict"].(float64) == 0 {
-								illusbyte, err := network.Curl(config.PixivIllustsEnd+v2["id"].(string), nil)
-								if err != nil {
-									return err
-								}
-
-								err = json.Unmarshal(illusbyte, &Illusts)
-								if err != nil {
-									return err
-								}
-
-								Body := Illusts["body"].(map[string]interface{})
-								Tags := Body["tags"].(map[string]interface{})
-								Img := Body["urls"].(map[string]interface{})
-								FixImg := Img["original"].(string)
-
-								path, err := DownloadImg(Img["mini"].(string))
-								if err != nil {
-									log.Error(err)
-								}
-
-								Color, err := engine.GetColor("", path)
-								if err != nil {
-									return err
-								}
-
-								usrbyte, err := network.Curl(config.PixivUserEnd+Tags["authorId"].(string), nil)
-								if err != nil {
-									return err
-								}
-
-								err = json.Unmarshal(usrbyte, &User)
-								if err != nil {
-									return err
-								}
-
-								UserBody := User["body"].(map[string]interface{})
-
-								Desc := RemoveHtmlTag(Body["description"].(string))
-								if match, _ := regexp.MatchString("http://twitter.com", Desc); match {
-									TextFix = ClearTwitterURL(Desc)
-								} else {
-									TextFix = "**" + Body["title"].(string) + "**\n" + Desc
-								}
-
-								FixFanArt := database.DataFanart{
-									PermanentURL: BaseURL + v2["id"].(string),
-									Author:       v2["userName"].(string),
-									Photos:       []string{FixImg},
-									Text:         TextFix,
-									PixivID:      v2["id"].(string),
-									Member:       Member,
-								}
-
-								AuthorProfile := config.PixivProxy + UserBody["imageBig"].(string)
-								new, err := FixFanArt.CheckPixivFanArt()
-								if err != nil {
-									return err
-								}
-								if new {
-									url := BaseURL + v2["id"].(string)
-									ChannelData, err := database.ChannelTag(Member.ID, 1, config.Default, Member.Region)
-									if err != nil {
-										return err
-									}
-									var (
-										tags string
-										Msg  = "Pixiv"
-									)
-
-									for i, Channel := range ChannelData {
-										Channel.SetMember(Member)
-										ctx := context.Background()
-										UserTagsList, err := Channel.GetUserList(ctx)
-										if err != nil {
-											return err
-										}
-
-										if UserTagsList != nil {
-											tags = strings.Join(UserTagsList, " ")
-										} else {
-											tags = "_"
-										}
-
-										if tags == "_" && Group.GroupName == config.Indie && !Channel.IndieNotif {
-											//do nothing,like my life
-										} else {
-											msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
-												SetAuthor(strings.Title(Group.GroupName), Group.IconURL).
-												SetTitle(FixFanArt.Author).
-												SetURL(url).
-												SetThumbnail(AuthorProfile).
-												SetDescription(TextFix).
-												SetImage(config.PixivProxy+FixImg).
-												AddField("User Tags", tags).
-												SetColor(Color).
-												SetFooter(Msg, config.PixivIMG).MessageEmbed)
-											if err != nil {
-												log.Error(msg, err)
-												err = Channel.DelChannel(err.Error())
-												if err != nil {
-													return err
-												}
-											}
-											engine.Reacting(map[string]string{
-												"ChannelID": Channel.ChannelID,
-											}, Bot)
-										}
-
-										if i%config.Waiting == 0 && configfile.LowResources {
-											log.WithFields(log.Fields{
-												"Func": "Pixiv Fanart",
-											}).Warn(config.FanartSleep)
-											time.Sleep(config.FanartSleep)
-										}
-									}
-								}
-							}
-							if i == 10 {
-								break
-							}
-						}
-					}
-					return nil
+	for _, Group := range VtubersData.VtuberData {
+		var wg sync.WaitGroup
+		for i, Member := range Group.Members {
+			wg.Add(1)
+			go func(wg *sync.WaitGroup, Member database.Member) {
+				defer wg.Done()
+				FixFanArt := &database.DataFanart{
+					Member: Member,
+					Group:  Group,
+					Lewd:   false,
 				}
-				if Member.Region == "JP" {
-					URL := GetPixivURL(strings.Replace(Member.JpName, " ", "_", -1))
-					err := Pixiv(URL)
+				if Member.JpName != "" {
+					log.WithFields(log.Fields{
+						"Member": Member.JpName,
+						"Group":  Group.GroupName,
+						"Lewd":   false,
+					}).Info("Start curl pixiv")
+					URLJP := GetPixivURL(url.QueryEscape(Member.JpName))
+					err := Pixiv(URLJP, FixFanArt, false)
 					if err != nil {
 						log.Error(err)
 					}
-				} else {
+				}
+
+				if Member.EnName == Member.Name {
 					if Member.EnName != "" {
-						URL := GetPixivURL(strings.Replace(Member.EnName, " ", "_", -1))
-						err := Pixiv(URL)
+						log.WithFields(log.Fields{
+							"Member": Member.EnName,
+							"Group":  Group.GroupName,
+							"Lewd":   false,
+						}).Info("Start curl pixiv")
+						URLEN := GetPixivURL(url.QueryEscape(Member.EnName))
+						err := Pixiv(URLEN, FixFanArt, false)
 						if err != nil {
 							log.Error(err)
 						}
-					} else {
-						URL := GetPixivURL(strings.Replace(Member.Name, " ", "_", -1))
-						err := Pixiv(URL)
+
+					}
+				} else {
+					if Member.EnName != "" {
+						log.WithFields(log.Fields{
+							"Member": Member.EnName,
+							"Group":  Group.GroupName,
+							"Lewd":   false,
+						}).Info("Start curl pixiv")
+						URLEN := GetPixivURL(url.QueryEscape(Member.EnName))
+						err := Pixiv(URLEN, FixFanArt, false)
+						if err != nil {
+							log.Error(err)
+						}
+
+					}
+					if Member.Name != "" {
+						log.WithFields(log.Fields{
+							"Member": Member.Name,
+							"Group":  Group.GroupName,
+							"Lewd":   false,
+						}).Info("Start curl pixiv")
+						URL := GetPixivURL(url.QueryEscape(Member.Name))
+						err := Pixiv(URL, FixFanArt, false)
 						if err != nil {
 							log.Error(err)
 						}
 					}
 				}
+
+			}(&wg, Member)
+
+			if i%4 == 0 {
+				wg.Wait()
 			}
-		}(GroupData, wg)
+
+		}
+		wg.Wait()
 	}
-	wg.Wait()
+}
+
+func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
+	var Art PixivArtworks
+	req, err := http.NewRequest("GET", p, nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:87.0) Gecko/20100101 Firefox/87.0")
+	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
+	req.Header.Set("Accept-Language", "en-US,en;q=0.5")
+	req.Header.Set("Dnt", "1")
+	req.Header.Set("Upgrade-Insecure-Requests", "1")
+	req.Header.Set("Connection", "keep-alive")
+	req.Header.Set("Cookie", "PHPSESSID="+config.GoSimpConf.PixivSession)
+	req.Header.Set("Cache-Control", "max-age=0")
+	req.Header.Set("Te", "Trailers")
+
+	response, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusOK {
+		log.WithFields(log.Fields{
+			"Status": response.StatusCode,
+			"Reason": response.Status,
+		}).Error("Status code not daijobu")
+		return errors.New(response.Status)
+	}
+
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return err
+
+	}
+
+	err = json.Unmarshal(body, &Art)
+	if err != nil {
+		return err
+	}
+
+	if Art.Body.Illustmanga.Data != nil {
+		for i, v := range Art.Body.Illustmanga.Data {
+			v2 := v.(map[string]interface{})
+			IsVtuber := false
+
+			for _, tag := range v2["tags"].([]interface{}) {
+				Tag := strings.ToLower(tag.(string))
+				match, _ := regexp.MatchString("(youtube|vtuber|"+strings.ToLower(FixFanArt.Group.GroupName)+")", Tag)
+				if match {
+					IsVtuber = true
+				}
+			}
+
+			var (
+				Illusts map[string]interface{}
+				User    map[string]interface{}
+				TextFix string
+			)
+
+			if IsVtuber {
+				if v2["xRestrict"].(float64) == 0 && !l {
+					illusbyte, err := network.Curl(config.PixivIllustsEnd+v2["id"].(string), nil)
+					if err != nil {
+						return err
+					}
+
+					err = json.Unmarshal(illusbyte, &Illusts)
+					if err != nil {
+						return err
+					}
+
+					Body := Illusts["body"].(map[string]interface{})
+					Tags := Body["tags"].(map[string]interface{})
+					Img := Body["urls"].(map[string]interface{})
+					FixImg := Img["original"].(string)
+
+					usrbyte, err := network.Curl(config.PixivUserEnd+Tags["authorId"].(string), nil)
+					if err != nil {
+						return err
+					}
+
+					err = json.Unmarshal(usrbyte, &User)
+					if err != nil {
+						return err
+					}
+
+					UserBody := User["body"].(map[string]interface{})
+
+					Desc := RemoveHtmlTag(Body["description"].(string))
+					if match, _ := regexp.MatchString("http://twitter.com", Desc); match {
+						TextFix = ClearTwitterURL(Desc)
+					} else {
+						TextFix = "**" + Body["title"].(string) + "**\n" + Desc
+					}
+
+					FixFanArt.AddAuthor(v2["userName"].(string)).AddPermanentURL(BaseURL + v2["id"].(string)).
+						AddAuthorAvatar(config.PixivProxy + UserBody["imageBig"].(string)).AddPhotos([]string{FixImg}).
+						AddText(TextFix).AddPixivID(v2["id"].(string)).SetState(config.PixivArt)
+
+					new, err := FixFanArt.CheckPixivFanArt()
+					if err != nil {
+						return err
+					}
+
+					if new {
+						path, err := DownloadImg(Img["mini"].(string))
+						if err != nil {
+							log.Error(err)
+						}
+
+						Color, err := engine.GetColor("", path)
+						if err != nil {
+							return err
+						}
+						FixFanArt.Photos[0] = config.PixivProxy + FixImg
+						notif.SendNude(*FixFanArt, Bot, Color)
+					}
+				} else if l && v2["xRestrict"].(float64) == 1 {
+					illusbyte, err := network.Curl(config.PixivIllustsEnd+v2["id"].(string), nil)
+					if err != nil {
+						return err
+					}
+
+					err = json.Unmarshal(illusbyte, &Illusts)
+					if err != nil {
+						return err
+					}
+
+					Body := Illusts["body"].(map[string]interface{})
+					Tags := Body["tags"].(map[string]interface{})
+					Img := Body["urls"].(map[string]interface{})
+					FixImg := Img["original"].(string)
+
+					usrbyte, err := network.Curl(config.PixivUserEnd+Tags["authorId"].(string), nil)
+					if err != nil {
+						return err
+					}
+
+					err = json.Unmarshal(usrbyte, &User)
+					if err != nil {
+						return err
+					}
+
+					UserBody := User["body"].(map[string]interface{})
+
+					Desc := RemoveHtmlTag(Body["description"].(string))
+					if match, _ := regexp.MatchString("http://twitter.com", Desc); match {
+						TextFix = ClearTwitterURL(Desc)
+					} else {
+						TextFix = "**" + Body["title"].(string) + "**\n" + Desc
+					}
+
+					FixFanArt.AddAuthor(v2["userName"].(string)).AddPermanentURL(BaseURL + v2["id"].(string)).
+						AddAuthorAvatar(config.PixivProxy + UserBody["imageBig"].(string)).AddPhotos([]string{FixImg}).
+						AddText(TextFix).AddPixivID(v2["id"].(string)).SetState(config.PixivArt)
+
+					new, err := FixFanArt.CheckPixivFanArt()
+					if err != nil {
+						return err
+					}
+					if new {
+						path, err := DownloadImg(Img["mini"].(string))
+						if err != nil {
+							log.Error(err)
+						}
+
+						Color, err := engine.GetColor("", path)
+						if err != nil {
+							return err
+						}
+						FixFanArt.Photos[0] = config.PixivProxy + FixImg
+						notif.SendNude(*FixFanArt, Bot, Color)
+					}
+				}
+				if i == Limit {
+					break
+				}
+			}
+		}
+	}
+	return nil
 }
 
 func GetPixivURL(str string) string {
 	return "https://www.pixiv.net/ajax/search/artworks/" + str + "?word=" + str + "&order=date_d&mode=all&p=1&s_mode=s_tag_full&type=all&lang=en"
+}
+
+func GetPixivLewdURL(str string) string {
+	return "https://www.pixiv.net/ajax/search/artworks/" + str + "?word=" + str + "&order=date_d&mode=r18&p=1&s_mode=s_tag_full&type=all&lang=en"
 }
 
 func ClearTwitterURL(str1 string) string {
