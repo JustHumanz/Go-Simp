@@ -486,6 +486,29 @@
                "Fanbase":""
             },
             {
+               "Name":"Kuriri",
+               "EN_Name":"Kuri",
+               "JP_Name":"路理",
+               "Twitter":{
+                  "Twitter_Fanart":"",
+                  "Twitter_Lewd":"",
+                  "Twitter_Username":""
+               },
+               "Youtube":{
+                  "Yt_ID":""
+               },
+               "BiliBili":{
+                  "BiliBili_Fanart":"苦栗啵",
+                  "BiliBili_ID":646432928,
+                  "BiliRoom_ID":22918711
+               },
+               "Twitch":{
+                  "Twitch_Username":""
+               },
+               "Region":"CN",
+               "Fanbase":""
+            },
+            {
                "Name":"Kanna",
                "EN_Name":"Kanna Tamachi",
                "JP_Name":"かんな",
