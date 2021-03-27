@@ -1,3 +1,6 @@
+v3.4.1
+- Add NSFW checker
+
 v3.4.0
 - Remove Danbooru lewd
 - Add pixiv R18
