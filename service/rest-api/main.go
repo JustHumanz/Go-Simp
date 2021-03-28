@@ -127,14 +127,6 @@ func main() {
 	router.HandleFunc("/groups/{GroupID}", getGroup).Methods("GET")
 	router.HandleFunc("/members/{MemberID}", getMembers).Methods("GET")
 
-	router.HandleFunc("/youtube/{Status}", getYoutube).Methods("GET")
-	router.HandleFunc("/youtube/group/{GroupID}/{Status}", getYoutube).Methods("GET")
-	router.HandleFunc("/youtube/member/{MemberID}/{Status}", getYoutube).Methods("GET")
-
-	router.HandleFunc("/bilibili/{Status}", getBilibili).Methods("GET")
-	router.HandleFunc("/bilibili/Group/{GroupID}/{Status}", getBilibili).Methods("GET")
-	router.HandleFunc("/bilibili/Member/{MemberID}/{Status}", getBilibili).Methods("GET")
-
 	FanArt := router.PathPrefix("/fanart").Subrouter()
 	FanArt.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -147,11 +139,12 @@ func main() {
 	FanArt.HandleFunc("/random/member/{MemberID}", getRandomFanart).Methods("GET")
 	FanArt.HandleFunc("/random/group/{groupID}", getRandomFanart).Methods("GET")
 
-	FanArt.HandleFunc("/bilibili/random", getFanart).Methods("GET")
 	FanArt.HandleFunc("/bilibili/member/{MemberID}", getFanart).Methods("GET")
 	FanArt.HandleFunc("/bilibili/group/{groupID}", getFanart).Methods("GET")
 
-	FanArt.HandleFunc("/pixiv/random", getFanart).Methods("GET")
+	FanArt.HandleFunc("/twitter/member/{MemberID}", getFanart).Methods("GET")
+	FanArt.HandleFunc("/twitter/group/{groupID}", getFanart).Methods("GET")
+
 	FanArt.HandleFunc("/pixiv/member/{MemberID}", getFanart).Methods("GET")
 	FanArt.HandleFunc("/pixiv/group/{groupID}", getFanart).Methods("GET")
 	/*
@@ -168,7 +161,69 @@ func main() {
 		router.HandleFunc("/Subscriber/Member/{MemberID}", getSubs).Methods("GET")
 	*/
 
+	Live := router.PathPrefix("/livestream").Subrouter()
+	Live.HandleFunc("/youtube/{Status}", getYoutube).Methods("GET")
+	Live.HandleFunc("/youtube/group/{GroupID}/{Status}", getYoutube).Methods("GET")
+	Live.HandleFunc("/youtube/member/{MemberID}/{Status}", getYoutube).Methods("GET")
+
+	Live.HandleFunc("/bilibili/{Status}", getBilibili).Methods("GET")
+	Live.HandleFunc("/bilibili/Group/{GroupID}/{Status}", getBilibili).Methods("GET")
+	Live.HandleFunc("/bilibili/Member/{MemberID}/{Status}", getBilibili).Methods("GET")
 	http.ListenAndServe(":2525", router)
+}
+
+var FixFanart = func(FanArt database.DataFanart) map[string]interface{} {
+	var (
+		PixivPostID, TwitterPostID, BiliBiliPostID, Video interface{}
+	)
+
+	if FanArt.State == config.PixivArt {
+		PixivPostID = FanArt.PixivID
+	} else {
+		PixivPostID = nil
+	}
+
+	if FanArt.State == config.TwitterArt {
+		TwitterPostID = FanArt.TweetID
+	} else {
+		TwitterPostID = nil
+	}
+
+	if FanArt.State == config.BiliBiliArt {
+		BiliBiliPostID = FanArt.Dynamic_id
+	} else {
+		BiliBiliPostID = nil
+	}
+
+	if FanArt.Videos == "" {
+		Video = nil
+	} else {
+		Video = FanArt.Videos
+	}
+	return map[string]interface{}{
+		"Member": map[string]interface{}{
+			"ID":       FanArt.Member.ID,
+			"NickName": FanArt.Member.Name,
+			"EnName":   FanArt.Member.EnName,
+			"JpName":   FanArt.Member.JpName,
+			"Region":   FanArt.Member.Region,
+			"Hashtags": map[string]interface{}{
+				"TwitterFanart":  FanArt.Member.TwitterHashtags,
+				"BiliBiliFanart": FanArt.Member.BiliBiliHashtags,
+			},
+		},
+		"Fanart": map[string]interface{}{
+			"State":       FanArt.State,
+			"URL":         FanArt.PermanentURL,
+			"Photos":      FanArt.Photos,
+			"Video":       Video,
+			"Author":      FanArt.Author,
+			"PixivID":     PixivPostID,
+			"TwitterID":   TwitterPostID,
+			"BiliBiliID":  BiliBiliPostID,
+			"Description": FanArt.Text,
+		},
+	}
 }
 
 func getRandomFanart(w http.ResponseWriter, r *http.Request) {
@@ -207,64 +262,15 @@ func getRandomFanart(w http.ResponseWriter, r *http.Request) {
 						return
 					}
 					FanArt.AddMember(GetMember(FanArt.Member.ID))
-					var (
-						PixivPostID, TwitterPostID, BiliBiliPostID, Video interface{}
-					)
 
-					if FanArt.State == config.PixivArt {
-						PixivPostID = FanArt.PixivID
-					} else {
-						PixivPostID = nil
-					}
-
-					if FanArt.State == config.TwitterArt {
-						TwitterPostID = FanArt.TweetID
-					} else {
-						TwitterPostID = nil
-					}
-
-					if FanArt.State == config.BiliBiliArt {
-						BiliBiliPostID = FanArt.Dynamic_id
-					} else {
-						BiliBiliPostID = nil
-					}
-
-					if FanArt.Videos == "" {
-						Video = nil
-					} else {
-						Video = FanArt.Videos
-					}
-					Art := map[string]interface{}{
-						"Member": map[string]interface{}{
-							"ID":       FanArt.Member.ID,
-							"NickName": FanArt.Member.Name,
-							"EnName":   FanArt.Member.EnName,
-							"JpName":   FanArt.Member.JpName,
-							"Region":   FanArt.Member.Region,
-							"Hashtags": map[string]interface{}{
-								"TwitterFanart":  FanArt.Member.TwitterHashtags,
-								"BiliBiliFanart": FanArt.Member.BiliBiliHashtags,
-							},
-						},
-						"Fanart": map[string]interface{}{
-							"State":      FanArt.State,
-							"URL":        FanArt.PermanentURL,
-							"Photos":     FanArt.Photos,
-							"Video":      Video,
-							"Author":     FanArt.Author,
-							"PixivID":    PixivPostID,
-							"TwitterID":  TwitterPostID,
-							"BiliBiliID": BiliBiliPostID,
-						},
-					}
 					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(Art)
+					json.NewEncoder(w).Encode(FixFanart(*FanArt))
 					w.WriteHeader(http.StatusOK)
 				}
 			}
 		}
-	} else if Vars["MemberID"] != "" {
-		key := strings.Split(Vars["MemberID"], ",")
+	} else if Vars["memberID"] != "" {
+		key := strings.Split(Vars["memberID"], ",")
 		for _, Group := range Data {
 			for _, Member := range Group["Members"].([]map[string]interface{}) {
 				for _, MemberIDstr := range key {
@@ -294,58 +300,8 @@ func getRandomFanart(w http.ResponseWriter, r *http.Request) {
 							})
 						}
 						FanArt.AddMember(GetMember(FanArt.Member.ID))
-						var (
-							PixivPostID, TwitterPostID, BiliBiliPostID, Video interface{}
-						)
-
-						if FanArt.State == config.PixivArt {
-							PixivPostID = FanArt.PixivID
-						} else {
-							PixivPostID = nil
-						}
-
-						if FanArt.State == config.TwitterArt {
-							TwitterPostID = FanArt.TweetID
-						} else {
-							TwitterPostID = nil
-						}
-
-						if FanArt.State == config.BiliBiliArt {
-							BiliBiliPostID = FanArt.Dynamic_id
-						} else {
-							BiliBiliPostID = nil
-						}
-
-						if FanArt.Videos == "" {
-							Video = nil
-						} else {
-							Video = FanArt.Videos
-						}
-						Art := map[string]interface{}{
-							"Member": map[string]interface{}{
-								"ID":       FanArt.Member.ID,
-								"NickName": FanArt.Member.Name,
-								"EnName":   FanArt.Member.EnName,
-								"JpName":   FanArt.Member.JpName,
-								"Region":   FanArt.Member.Region,
-								"Hashtags": map[string]interface{}{
-									"TwitterFanart":  FanArt.Member.TwitterHashtags,
-									"BiliBiliFanart": FanArt.Member.BiliBiliHashtags,
-								},
-							},
-							"Fanart": map[string]interface{}{
-								"State":      FanArt.State,
-								"URL":        FanArt.PermanentURL,
-								"Photos":     FanArt.Photos,
-								"Video":      Video,
-								"Author":     FanArt.Author,
-								"PixivID":    PixivPostID,
-								"TwitterID":  TwitterPostID,
-								"BiliBiliID": BiliBiliPostID,
-							},
-						}
 						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(Art)
+						json.NewEncoder(w).Encode(FixFanart(*FanArt))
 						w.WriteHeader(http.StatusOK)
 					}
 				}
@@ -356,20 +312,11 @@ func getRandomFanart(w http.ResponseWriter, r *http.Request) {
 
 func getFanart(w http.ResponseWriter, r *http.Request) {
 	var (
-		Vars   = mux.Vars(r)
-		Fanart []database.DataFanart
+		Vars = mux.Vars(r)
 	)
 
-	if strings.HasPrefix(r.URL.String(), "/fanart/twitter/") {
-
-	} else if r.URL.String() == "/fanart/bilibili/random" {
-
-	} else if r.URL.String() == "/fanart/pixiv/random" {
-
-	}
-
-	if Vars["GroupID"] != "" {
-		key := strings.Split(Vars["GroupID"], ",")
+	if Vars["groupID"] != "" {
+		key := strings.Split(Vars["groupID"], ",")
 		for _, Group := range Data {
 			for _, GroupIDstr := range key {
 				GroupIDint, err := strconv.Atoi(GroupIDstr)
@@ -384,12 +331,72 @@ func getFanart(w http.ResponseWriter, r *http.Request) {
 				}
 				GroupID := Group["ID"].(int64)
 				if GroupIDint == int(GroupID) {
-					//Fanart = append(Fanart, GetFanartData(State, GroupID, 0)...)
+					if strings.HasPrefix(r.URL.String(), "/fanart/twitter/") {
+						FanArtData, err := GetFanartData(config.TwitterArt, GroupID, 0)
+						if err != nil {
+							log.Error(err)
+							w.Header().Set("Content-Type", "application/json")
+							json.NewEncoder(w).Encode(MessageError{
+								Message: err.Error(),
+								Date:    time.Now(),
+							})
+							return
+						}
+
+						var FanArtDataFix []map[string]interface{}
+						for _, v := range FanArtData {
+							v.AddMember(GetMember(v.Member.ID))
+							FanArtDataFix = append(FanArtDataFix, FixFanart(v))
+						}
+
+						w.Header().Set("Content-Type", "application/json")
+						json.NewEncoder(w).Encode(FanArtDataFix)
+						w.WriteHeader(http.StatusOK)
+
+					} else if strings.HasPrefix(r.URL.String(), "/fanart/pixiv/") {
+						FanArtData, err := GetFanartData(config.PixivArt, GroupID, 0)
+						if err != nil {
+							log.Error(err)
+							w.Header().Set("Content-Type", "application/json")
+							json.NewEncoder(w).Encode(MessageError{
+								Message: err.Error(),
+								Date:    time.Now(),
+							})
+							return
+						}
+						var FanArtDataFix []map[string]interface{}
+						for _, v := range FanArtData {
+							v.AddMember(GetMember(v.Member.ID))
+							FanArtDataFix = append(FanArtDataFix, FixFanart(v))
+						}
+						w.Header().Set("Content-Type", "application/json")
+						json.NewEncoder(w).Encode(FanArtDataFix)
+						w.WriteHeader(http.StatusOK)
+					} else if strings.HasPrefix(r.URL.String(), "/fanart/bilibili/") {
+						FanArtData, err := GetFanartData(config.BiliBiliArt, GroupID, 0)
+						if err != nil {
+							log.Error(err)
+							w.Header().Set("Content-Type", "application/json")
+							json.NewEncoder(w).Encode(MessageError{
+								Message: err.Error(),
+								Date:    time.Now(),
+							})
+							return
+						}
+						var FanArtDataFix []map[string]interface{}
+						for _, v := range FanArtData {
+							v.AddMember(GetMember(v.Member.ID))
+							FanArtDataFix = append(FanArtDataFix, FixFanart(v))
+						}
+						w.Header().Set("Content-Type", "application/json")
+						json.NewEncoder(w).Encode(FanArtDataFix)
+						w.WriteHeader(http.StatusOK)
+					}
 				}
 			}
 		}
-	} else if Vars["MemberID"] != "" {
-		key := strings.Split(Vars["MemberID"], ",")
+	} else if Vars["memberID"] != "" {
+		key := strings.Split(Vars["memberID"], ",")
 		for _, Group := range Data {
 			for _, Member := range Group["Members"].([]map[string]interface{}) {
 				for _, MemberIDstr := range key {
@@ -405,29 +412,68 @@ func getFanart(w http.ResponseWriter, r *http.Request) {
 					}
 					MemberID := Member["ID"].(int64)
 					if MemberIDint == int(MemberID) {
-						//	Fanart = append(Fanart, GetFanartData(State, 0, MemberID)...)
+						if strings.HasPrefix(r.URL.String(), "/fanart/twitter/") {
+							FanArtData, err := GetFanartData(config.TwitterArt, 0, MemberID)
+							if err != nil {
+								log.Error(err)
+								w.Header().Set("Content-Type", "application/json")
+								json.NewEncoder(w).Encode(MessageError{
+									Message: err.Error(),
+									Date:    time.Now(),
+								})
+								return
+							}
+							var FanArtDataFix []map[string]interface{}
+							for _, v := range FanArtData {
+								v.AddMember(GetMember(v.Member.ID))
+								FanArtDataFix = append(FanArtDataFix, FixFanart(v))
+							}
+							w.Header().Set("Content-Type", "application/json")
+							json.NewEncoder(w).Encode(FanArtDataFix)
+							w.WriteHeader(http.StatusOK)
+						} else if strings.HasPrefix(r.URL.String(), "/fanart/pixiv/") {
+							FanArtData, err := GetFanartData(config.PixivArt, 0, MemberID)
+							if err != nil {
+								log.Error(err)
+								w.Header().Set("Content-Type", "application/json")
+								json.NewEncoder(w).Encode(MessageError{
+									Message: err.Error(),
+									Date:    time.Now(),
+								})
+								return
+							}
+							var FanArtDataFix []map[string]interface{}
+							for _, v := range FanArtData {
+								v.AddMember(GetMember(v.Member.ID))
+								FanArtDataFix = append(FanArtDataFix, FixFanart(v))
+							}
+							w.Header().Set("Content-Type", "application/json")
+							json.NewEncoder(w).Encode(FanArtDataFix)
+							w.WriteHeader(http.StatusOK)
+						} else if strings.HasPrefix(r.URL.String(), "/fanart/bilibili/") {
+							FanArtData, err := GetFanartData(config.BiliBiliArt, 0, MemberID)
+							if err != nil {
+								log.Error(err)
+								w.Header().Set("Content-Type", "application/json")
+								json.NewEncoder(w).Encode(MessageError{
+									Message: err.Error(),
+									Date:    time.Now(),
+								})
+								return
+							}
+							var FanArtDataFix []map[string]interface{}
+							for _, v := range FanArtData {
+								v.AddMember(GetMember(v.Member.ID))
+								FanArtDataFix = append(FanArtDataFix, FixFanart(v))
+							}
+							w.Header().Set("Content-Type", "application/json")
+							json.NewEncoder(w).Encode(FanArtDataFix)
+							w.WriteHeader(http.StatusOK)
+						}
 					}
 				}
 			}
 		}
-	} else {
-		/*
-			for _, Group := range Data {
-				//Fanart = append(Fanart, GetFanartData(State, Group.ID, 0)...)
-			}
-		*/
-	}
-
-	if len(Fanart) > 0 {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(Fanart)
-	} else {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(MessageError{
-			Message: "Reqest not found,404",
-			Date:    time.Now(),
-		})
-		w.WriteHeader(http.StatusNotFound)
 	}
 }
 
