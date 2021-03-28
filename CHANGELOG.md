@@ -1,3 +1,7 @@
+v3.4.2
+- Add ViViD vtuber group
+- Add Kuri from Independen #150
+
 v3.4.1
 - Add NSFW checker
 
