@@ -5589,7 +5589,7 @@
                   "EN_Name":"Projekt Melody",
                   "JP_Name":"メロディー",
                   "Twitter":{
-                     "Twitter_Fanart":"#projektmelodyfanart ",
+                     "Twitter_Fanart":"#projektmelodyfanart",
                      "Twitter_Lewd":"",
                      "Twitter_Username":"ProjektMelody"
                   },
@@ -5658,7 +5658,7 @@
                   "EN_Name":"Mousey",
                   "JP_Name":"",
                   "Twitter":{
-                     "Twitter_Fanart":"#ironmouseart ",
+                     "Twitter_Fanart":"#ironmouseart",
                      "Twitter_Lewd":"",
                      "Twitter_Username":"iron_mouse"
                   },
@@ -5681,7 +5681,7 @@
                   "EN_Name":"Zentreya",
                   "JP_Name":"",
                   "Twitter":{
-                     "Twitter_Fanart":"#zentreya_art ",
+                     "Twitter_Fanart":"#zentreya_art",
                      "Twitter_Lewd":"#zentreNSFW",
                      "Twitter_Username":"zentreya"
                   },
@@ -5744,6 +5744,150 @@
                   },
                   "Region":"US",
                   "Fanbase":"Frootcakes"
+               }
+            ]
+         },
+         {
+            "GroupName":"ViViD",
+            "GroupIcon":"https://cdn.humanz.moe/ViViD.png",
+            "Members":[
+               {
+                  "Name":"Shirayuri",
+                  "EN_Name":"Shirayuri Lily",
+                  "JP_Name":"白百合リリィ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#白百合アート",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"SRYR_0"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCl-3q6t6zdZwgIsFZELb7Zg"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"布丁天使絵画",
+                     "BiliBili_ID":421347849,
+                     "BiliRoom_ID":21415012  
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":""
+               },
+               {
+                  "Name":"Elena",
+                  "EN_Name":"Elena Yunagi",
+                  "JP_Name":"勇凪エレナ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#絵レナ",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"ELENA_YUNAGI"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCKwATdrcjyzNv9c56PqJbWA"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0  
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":""
+               },
+               {
+                  "Name":"Mochi",
+                  "EN_Name":"Fuwamochi Anko",
+                  "JP_Name":"二和餅あんこ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#あんこ絵巻",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"ANKOchan_01"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCBKxF1PHQtT78ypcVYmBtBA"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0  
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":""
+               },
+               {
+                  "Name":"Memory",
+                  "EN_Name":"Utakata Memory",
+                  "JP_Name":"泡沫メモリ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#メモリのアルバム",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"Memory_Utakata"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UClV7gDF9sUzu4jJCK7rCYkQ"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0  
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":""
+               },
+               {
+                  "Name":"Bell",
+                  "EN_Name":"Bell Nekonogi",
+                  "JP_Name":"猫芒ベル",
+                  "Twitter":{
+                     "Twitter_Fanart":"#ベルピク",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"Bell_Nekonogi"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCflNPJUJ4VQh1hGDNK7bsFg"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0  
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":""
+               },
+               {
+                  "Name":"Ephedra",
+                  "EN_Name":"Chrono Lock",
+                  "JP_Name":"クロノロク",
+                  "Twitter":{
+                     "Twitter_Fanart":"#クロノガロク",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"cHRONO_lock"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCAvgFoTWEisO5Pp7eYVDgEw"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0  
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":""
                }
             ]
          }
