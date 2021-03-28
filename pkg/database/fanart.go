@@ -16,16 +16,12 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 		Data     DataFanart
 		PhotoTmp sql.NullString
 		Video    sql.NullString
-		rows     *sql.Rows
-		err      error
 	)
 
 	Twitter := func() error {
-		rows, err = DB.Query(`SELECT Twitter.* FROM Vtuber.Twitter Inner Join Vtuber.VtuberMember on VtuberMember.id = Twitter.VtuberMember_id Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id where (VtuberGroup.id=? OR VtuberMember.id=?)  ORDER by RAND() LIMIT 1`, GroupID, MemberID)
+		rows, err := DB.Query(`SELECT Twitter.* FROM Vtuber.Twitter Inner Join Vtuber.VtuberMember on VtuberMember.id = Twitter.VtuberMember_id Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id where (VtuberGroup.id=? OR VtuberMember.id=?)  ORDER by RAND() LIMIT 1`, GroupID, MemberID)
 		if err != nil {
 			return err
-		} else if err == sql.ErrNoRows {
-			return errors.New("Vtuber don't have any fanart in Twitter")
 		}
 
 		defer rows.Close()
@@ -35,15 +31,17 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 				return err
 			}
 		}
+
+		if Data.ID == 0 {
+			return errors.New("Vtuber don't have any fanart in Twitter")
+		}
 		Data.State = config.TwitterArt
 		return nil
 	}
 	Tbilibili := func() error {
-		rows, err = DB.Query(`SELECT TBiliBili.* FROM Vtuber.TBiliBili Inner Join Vtuber.VtuberMember on VtuberMember.id = TBiliBili.VtuberMember_id Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id where (VtuberGroup.id=? OR VtuberMember.id=?)  ORDER by RAND() LIMIT 1`, GroupID, MemberID)
+		rows, err := DB.Query(`SELECT TBiliBili.* FROM Vtuber.TBiliBili Inner Join Vtuber.VtuberMember on VtuberMember.id = TBiliBili.VtuberMember_id Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id where (VtuberGroup.id=? OR VtuberMember.id=?)  ORDER by RAND() LIMIT 1`, GroupID, MemberID)
 		if err != nil {
 			return err
-		} else if err == sql.ErrNoRows {
-			return errors.New("Vtuber don't have any fanart BiliBili")
 		}
 
 		defer rows.Close()
@@ -53,16 +51,18 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 				return err
 			}
 		}
+		if Data.ID == 0 {
+			return errors.New("Vtuber don't have any fanart in Twitter")
+		}
+
 		Data.State = config.BiliBiliArt
 		return nil
 	}
 
 	Pixiv := func() error {
-		rows, err = DB.Query(`SELECT Pixiv.* FROM Vtuber.Pixiv Inner Join Vtuber.VtuberMember on VtuberMember.id = Pixiv.VtuberMember_id Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id where (VtuberGroup.id=? OR VtuberMember.id=?)  ORDER by RAND() LIMIT 1`, GroupID, MemberID)
+		rows, err := DB.Query(`SELECT Pixiv.* FROM Vtuber.Pixiv Inner Join Vtuber.VtuberMember on VtuberMember.id = Pixiv.VtuberMember_id Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id where (VtuberGroup.id=? OR VtuberMember.id=?)  ORDER by RAND() LIMIT 1`, GroupID, MemberID)
 		if err != nil {
 			return err
-		} else if err == sql.ErrNoRows {
-			return errors.New("Vtuber don't have any fanart Pixiv")
 		}
 
 		defer rows.Close()
@@ -72,6 +72,10 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 				return err
 			}
 		}
+		if Data.ID == 0 {
+			return errors.New("Vtuber don't have any fanart in Twitter")
+		}
+
 		Data.State = config.PixivArt
 		return nil
 	}
@@ -84,10 +88,13 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 					return nil, err
 				}
 			} else {
-				err := Tbilibili()
-				if err != nil {
-					log.Error(err)
-					err := Pixiv()
+				if gacha() {
+					err := Tbilibili()
+					if err != nil {
+						return nil, err
+					}
+				} else {
+					err := Twitter()
 					if err != nil {
 						return nil, err
 					}
@@ -100,10 +107,13 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 					return nil, err
 				}
 			} else {
-				err := Tbilibili()
-				if err != nil {
-					log.Error(err)
-					err := Twitter()
+				if gacha() {
+					err := Tbilibili()
+					if err != nil {
+						return nil, err
+					}
+				} else {
+					err := Pixiv()
 					if err != nil {
 						return nil, err
 					}
@@ -113,14 +123,31 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 	} else {
 		if gacha() {
 			if gacha() {
-				err := Pixiv()
-				if err != nil {
-					return nil, err
+				if gacha() {
+					err := Tbilibili()
+					if err != nil {
+						return nil, err
+					}
+				} else {
+					if gacha() {
+						err := Pixiv()
+						if err != nil {
+							return nil, err
+						}
+					} else {
+						err := Twitter()
+						if err != nil {
+							return nil, err
+						}
+					}
 				}
 			} else {
-				err := Tbilibili()
-				if err != nil {
-					log.Error(err)
+				if gacha() {
+					err := Twitter()
+					if err != nil {
+						return nil, err
+					}
+				} else {
 					err := Pixiv()
 					if err != nil {
 						return nil, err
@@ -134,12 +161,23 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 					return nil, err
 				}
 			} else {
-				err := Tbilibili()
-				if err != nil {
-					log.Error(err)
-					err := Twitter()
+				if gacha() {
+					err := Tbilibili()
 					if err != nil {
 						return nil, err
+					}
+
+				} else {
+					if gacha() {
+						err := Tbilibili()
+						if err != nil {
+							return nil, err
+						}
+					} else {
+						err := Pixiv()
+						if err != nil {
+							return nil, err
+						}
 					}
 				}
 			}

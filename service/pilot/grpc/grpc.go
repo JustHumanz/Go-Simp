@@ -137,7 +137,6 @@ func (s *Server) HeartBeat(in *ServiceMessage, stream PilotService_HeartBeatServ
 		}
 		time.Sleep(5 * time.Second)
 	}
-	return nil
 }
 
 func RunHeartBeat(client PilotServiceClient, Service string) {

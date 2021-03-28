@@ -71,27 +71,32 @@ func main() {
 	c.Start()
 
 	StartBot := func() {
-		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
-			Message: "Send me nude",
-			Service: "Frontend",
-		})
-		if err != nil {
-			if configfile.Discord != "" {
-				pilot.ReportDeadService(err.Error())
+		GetPayload := func() {
+			res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+				Message: "Send me nude",
+				Service: "Frontend",
+			})
+			if err != nil {
+				if configfile.Discord != "" {
+					pilot.ReportDeadService(err.Error())
+				}
+				log.Error("Error when request payload: %s", err)
 			}
-			log.Fatalf("Error when request payload: %s", err)
-		}
 
-		WaitMigrate = res.WaitMigrate
-		err = json.Unmarshal(res.ConfigFile, &configfile)
-		if err != nil {
-			log.Panic(err)
-		}
+			WaitMigrate = res.WaitMigrate
+			err = json.Unmarshal(res.ConfigFile, &configfile)
+			if err != nil {
+				log.Error(err)
+			}
 
-		err = json.Unmarshal(res.VtuberPayload, &Payload)
-		if err != nil {
-			log.Panic(err)
+			configfile.InitConf()
+
+			err = json.Unmarshal(res.VtuberPayload, &Payload)
+			if err != nil {
+				log.Error(err)
+			}
 		}
+		GetPayload()
 
 		for _, Group := range Payload.VtuberData {
 			GroupsName = append(GroupsName, Group.GroupName)
@@ -106,7 +111,7 @@ func main() {
 			RegList[Group.GroupName] = strings.Join(list, ",")
 		}
 
-		if !res.WaitMigrate || Counter == 3 {
+		if !WaitMigrate || Counter == 3 {
 			log.Info("Start Frontend")
 			var err error
 			Bot, err = discordgo.New("Bot " + configfile.Discord)
@@ -128,7 +133,6 @@ func main() {
 				GuildList = append(GuildList, GuildID.ID)
 			}
 
-			configfile.InitConf()
 			database.Start(configfile)
 
 			err = Bot.UpdateStreamingStatus(0, config.GoSimpConf.BotPrefix.General+"help", config.VtubersData)
@@ -149,6 +153,7 @@ func main() {
 			Bot.AddHandler(RegisterFunc)
 			Bot.AddHandler(Answer)
 			c.Stop()
+			c.AddFunc(config.CheckPayload, GetPayload)
 
 		} else {
 			log.Info("Waiting migrate done")
