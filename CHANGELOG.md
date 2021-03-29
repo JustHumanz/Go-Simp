@@ -1,3 +1,6 @@
+v3.4.4-beta
+- Update pixiv fanart scrape
+
 v3.4.3
 - Fix bilibili space not send any new video
 - Fix live bilibili not update status
