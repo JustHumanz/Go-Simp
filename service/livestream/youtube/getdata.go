@@ -15,6 +15,8 @@ import (
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
+	"github.com/JustHumanz/Go-Simp/service/livestream/bilibili/live"
+	"github.com/JustHumanz/Go-Simp/service/livestream/notif"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -76,7 +78,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						if err != nil {
 							log.Error(err)
 						}
-					} else if YoutubeData.Viewers != Ytwaiting {
+					} else if YoutubeData.Viewers != config.Ytwaiting {
 						Viewers = YoutubeData.Viewers
 					} else {
 						Viewers, err = GetWaiting(YtVideoID)
@@ -95,6 +97,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						UpdateViewers(Viewers).
 						UpdateEnd(Items.LiveDetails.EndTime).
 						UpdateLength(durafmt.Parse(ParseDuration(Items.ContentDetails.Duration)).String()).
+						SetState(config.YoutubeLive).
 						AddMember(Member).
 						AddGroup(Group)
 
@@ -118,11 +121,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						if !Items.LiveDetails.ActualStartTime.IsZero() {
 							YoutubeData.UpdateSchdule(Items.LiveDetails.ActualStartTime)
 						} else {
-							err := SendNude(*YoutubeData)
-							if err != nil {
-								log.Error(err)
-							}
-							//YoutubeData.SendNude()
+							notif.SendDude(YoutubeData, Bot)
 						}
 
 						YoutubeData.UpdateYt(YoutubeData.Status)
@@ -143,10 +142,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						}).Info("maybe yt error or human error")
 
 						YoutubeData.UpdateStatus(config.UpcomingStatus)
-						err := SendNude(*YoutubeData)
-						if err != nil {
-							log.Error(err)
-						}
+						notif.SendDude(YoutubeData, Bot)
 
 					} else if Items.Snippet.VideoStatus == "none" && YoutubeData.Viewers != Items.Statistics.ViewCount {
 						log.WithFields(log.Fields{
@@ -206,6 +202,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						Length:    durafmt.Parse(ParseDuration(Items.ContentDetails.Duration)).String(),
 						Member:    Member,
 						Group:     Group,
+						State:     config.YoutubeLive,
 					}
 
 					if Items.Snippet.VideoStatus == config.UpcomingStatus {
@@ -220,11 +217,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						if err != nil {
 							log.Error(err)
 						}
-
-						err = SendNude(*NewYoutubeData)
-						if err != nil {
-							log.Error(err)
-						}
+						notif.SendDude(NewYoutubeData, Bot)
 
 					} else if Items.Snippet.VideoStatus == config.LiveStatus {
 						log.WithFields(log.Fields{
@@ -239,17 +232,22 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 							log.Error(err)
 						}
 
+						if Member.BiliRoomID != 0 {
+							LiveBili, err := live.GetRoomStatus(Member.BiliRoomID)
+							if err != nil {
+								log.Error(err)
+							}
+							if LiveBili.CheckScheduleLive() {
+								NewYoutubeData.SetBiliLive(true).UpdateBiliToLive()
+							}
+						}
+
 						if !Items.LiveDetails.ActualStartTime.IsZero() {
 							NewYoutubeData.UpdateSchdule(Items.LiveDetails.ActualStartTime)
-							err := SendNude(*NewYoutubeData)
-							if err != nil {
-								log.Error(err)
-							}
+							notif.SendDude(NewYoutubeData, Bot)
+
 						} else {
-							err := SendNude(*NewYoutubeData)
-							if err != nil {
-								log.Error(err)
-							}
+							notif.SendDude(NewYoutubeData, Bot)
 						}
 
 					} else if Items.Snippet.VideoStatus == "none" && YtType == "Covering" {
@@ -259,11 +257,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						}).Info("New MV or Cover")
 
 						NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
-
-						err := SendNude(*NewYoutubeData)
-						if err != nil {
-							log.Error(err)
-						}
+						notif.SendDude(NewYoutubeData, Bot)
 
 					} else if !Items.Snippet.PublishedAt.IsZero() && Items.Snippet.VideoStatus == "none" {
 						log.WithFields(log.Fields{
@@ -275,10 +269,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						}
 
 						NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
-						err := SendNude(*NewYoutubeData)
-						if err != nil {
-							log.Error(err)
-						}
+						notif.SendDude(NewYoutubeData, Bot)
 
 					} else {
 						log.WithFields(log.Fields{
@@ -286,16 +277,11 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 							"MemberName": Member.EnName,
 						}).Info("Past live stream")
 						NewYoutubeData.UpdateStatus(config.PastStatus)
-						err := SendNude(*NewYoutubeData)
-						if err != nil {
-							log.Error(err)
-						}
+						notif.SendDude(NewYoutubeData, Bot)
 					}
 				}
 			}
-
 		}
-		time.Sleep(1 * time.Second)
 	}
 }
 
