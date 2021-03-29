@@ -54,7 +54,9 @@ build migrate:
   tags:
     - docker
     - gce    
-
+  only:
+    - master  
+    
 build fanart:
   stage: build
   only:
