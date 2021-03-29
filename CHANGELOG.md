@@ -1,3 +1,8 @@
+v3.4.3
+- Fix bilibili space not send any new video
+- Fix live bilibili not update status
+- Rework logic livestream service for sending notif
+
 v3.4.2
 - Add ViViD vtuber group
 - Add Kuri from Independen #150
