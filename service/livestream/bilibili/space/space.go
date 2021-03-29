@@ -33,33 +33,34 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 //CheckSpaceVideo
 func CheckSpaceVideo() {
 	for _, GroupData := range VtubersData.VtuberData {
-		wg := new(sync.WaitGroup)
-		for i, MemberData := range GroupData.Members {
-			wg.Add(1)
-			go func(Group database.Group, Member database.Member, wg *sync.WaitGroup) {
-				defer wg.Done()
-				if Member.BiliBiliID != 0 {
-					log.WithFields(log.Fields{
-						"Group":      Group.GroupName,
-						"Vtuber":     Member.EnName,
-						"BiliBiliID": Member.BiliBiliID,
-					}).Info("Checking Space BiliBili")
+		if GroupData.GroupName != "Hololive" {
+			wg := new(sync.WaitGroup)
+			for i, MemberData := range GroupData.Members {
+				wg.Add(1)
+				go func(Group database.Group, Member database.Member, wg *sync.WaitGroup) {
+					defer wg.Done()
+					if Member.BiliBiliID != 0 {
+						log.WithFields(log.Fields{
+							"Group":      Group.GroupName,
+							"Vtuber":     Member.EnName,
+							"BiliBiliID": Member.BiliBiliID,
+						}).Info("Checking Space BiliBili")
 
-					Group.RemoveNillIconURL()
+						Group.RemoveNillIconURL()
+						SpaceBiliLimit := strconv.Itoa(configfile.LimitConf.SpaceBiliBili)
+						Data := &database.LiveStream{
+							Member: Member,
+							Group:  Group,
+						}
+						CheckSpace(Data, SpaceBiliLimit)
 
-					Data := &CheckSctruct{
-						Member: Member,
-						Group:  Group,
 					}
-					SpaceBiliLimit := strconv.Itoa(configfile.LimitConf.SpaceBiliBili)
-					Data.Check(SpaceBiliLimit).SendNude()
-
+				}(GroupData, MemberData, wg)
+				if i%config.Waiting == 0 {
+					wg.Wait()
 				}
-			}(GroupData, MemberData, wg)
-			if i%config.Waiting == 0 {
-				wg.Wait()
 			}
+			wg.Wait()
 		}
-		wg.Wait()
 	}
 }

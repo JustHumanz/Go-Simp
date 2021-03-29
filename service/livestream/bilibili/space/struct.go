@@ -1,14 +1,5 @@
 package space
 
-import database "github.com/JustHumanz/Go-Simp/pkg/database"
-
-type CheckSctruct struct {
-	SpaceID   int
-	VideoList Vlist
-	Member    database.Member
-	Group     database.Group
-}
-
 type SpaceVideo struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`

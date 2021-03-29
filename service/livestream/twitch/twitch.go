@@ -7,6 +7,7 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/engine"
+	"github.com/JustHumanz/Go-Simp/service/livestream/notif"
 	"github.com/bwmarrin/discordgo"
 	"github.com/nicklaw5/helix"
 	"github.com/robfig/cron/v3"
@@ -25,7 +26,6 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 	Bot = a
 	VtubersData = c
 	configfile = d
-	b.AddFunc(config.Twitch, CheckTwitch)
 	var err error
 	TwitchClient, err = helix.NewClient(&helix.Options{
 		ClientID:     config.GoSimpConf.Twitch.ClientID,
@@ -35,6 +35,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 		log.Error(err)
 	}
 	TwitchClient.SetUserAccessToken(config.GoSimpConf.GetTwitchAccessToken())
+	b.AddFunc(config.Twitch, CheckTwitch)
 	log.Info("Enable Twitch module")
 }
 
@@ -89,10 +90,7 @@ func CheckTwitch() {
 									log.Error(err)
 								}
 
-								err = SendNotif(*ResultDB)
-								if err != nil {
-									log.Error(err)
-								}
+								notif.SendDude(ResultDB, Bot)
 
 								log.WithFields(log.Fields{
 									"Group":      Group.GroupName,
