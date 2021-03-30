@@ -14,4 +14,5 @@
 |シー#1373 | ![alt text](https://cdn.discordapp.com/embed/avatars/0.png?size=128 "シー#1373") |
 |yuqi#1 | ![alt text](https://cdn.discordapp.com/embed/avatars/0.png?size=128 "yuqi#1") |   
 |Luijaro#8470 | ![alt text](https://cdn.discordapp.com/embed/avatars/0.png?size=128 "Luijaro#8470") |   
-|Yutyu#7878 | ![alt text](https://cdn.discordapp.com/embed/avatars/0.png?size=128 "Luijaro#8470") |   
+|Yutyu#7878 | ![alt text](https://cdn.discordapp.com/embed/avatars/0.png?size=128 "Yutyu#7878") |   
+|dp247 | ![alt text](https://avatars.githubusercontent.com/u/9065463 "dp247") |   
