@@ -170,6 +170,7 @@ type ConfigFile struct {
 		Fanart   string `toml:"Fanart"`
 		Youtube  string `toml:"Youtube"`
 		Bilibili string `toml:"Bilibili"`
+		Twitch   string `toml:"Twitch"`
 		General  string `toml:"General"`
 		Lewd     string `toml:"Lewd"`
 	} `toml:"BotPrefix"`
