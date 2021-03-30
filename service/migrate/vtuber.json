@@ -5772,7 +5772,7 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"Pomaera"
                },
                {
                   "Name":"Elena",
@@ -5795,10 +5795,10 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"Honey"
                },
                {
-                  "Name":"Mochi",
+                  "Name":"Anko",
                   "EN_Name":"Fuwamochi Anko",
                   "JP_Name":"二和餅あんこ",
                   "Twitter":{
@@ -5818,7 +5818,7 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"Dan-in"
                },
                {
                   "Name":"Memory",
@@ -5833,15 +5833,15 @@
                      "Yt_ID":"UClV7gDF9sUzu4jJCK7rCYkQ"
                   },
                   "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0  
+                     "BiliBili_Fanart":"泡沫美术馆",
+                     "BiliBili_ID":487551829,
+                     "BiliRoom_ID":21955596  
                   },
                   "Twitch":{
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"Kotoricchi"
                },
                {
                   "Name":"Bell",
@@ -5857,17 +5857,17 @@
                   },
                   "BiliBili":{
                      "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0  
+                     "BiliBili_ID":487550002,
+                     "BiliRoom_ID":21811136  
                   },
                   "Twitch":{
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"Okyaku-syan"
                },
                {
-                  "Name":"Ephedra",
+                  "Name":"Maou",
                   "EN_Name":"Chrono Lock",
                   "JP_Name":"クロノロク",
                   "Twitter":{
@@ -5887,7 +5887,7 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"Rokudenashi"
                }
             ]
          }
