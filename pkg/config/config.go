@@ -307,4 +307,24 @@ func (Data ConfigFile) InitConf() {
 			log.Error(err)
 		}
 	}
+
+	if Data.BotPrefix.Bilibili == "" {
+		log.Fatal("Bilibili Prefix not found")
+	}
+
+	if Data.BotPrefix.Fanart == "" {
+		log.Fatal("Fanart Prefix not found")
+	}
+
+	if Data.BotPrefix.General == "" {
+		log.Fatal("General Prefix not found")
+	}
+
+	if Data.BotPrefix.Twitch == "" {
+		log.Fatal("Twitch Prefix not found")
+	}
+
+	if Data.BotPrefix.Youtube == "" {
+		log.Fatal("Youtube Prefix not found")
+	}
 }
