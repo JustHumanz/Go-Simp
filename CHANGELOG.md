@@ -1,5 +1,6 @@
 v3.4.4-beta
 - Update pixiv fanart scrape
+- Add Twitch `live`/`past` command
 
 v3.4.3
 - Fix bilibili space not send any new video
