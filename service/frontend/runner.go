@@ -26,7 +26,6 @@ var (
 	Payload    database.VtubersPayload
 	configfile config.ConfigFile
 	Bot        *discordgo.Session
-	FanBase    = "simps"
 )
 
 //Prefix command

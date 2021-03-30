@@ -321,7 +321,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				tmp := strings.Split(VtuberName, ",")
 				for _, Name := range tmp {
 					Member := FindVtuber(Name)
-					if Member == (database.Member{}) {
+					if Member.IsMemberNill() {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
 							s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtuber groups and names.\nFor more information visit:\n "+config.VtubersData)
@@ -474,7 +474,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				tmp := strings.Split(FindInt[1], ",")
 				for _, Name := range tmp {
 					Member := FindVtuber(Name)
-					if Member == (database.Member{}) {
+					if Member.IsMemberNill() {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
 							_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
@@ -621,7 +621,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				tmp := strings.Split(VtuberName, ",")
 				for _, Name := range tmp {
 					Member := FindVtuber(Name)
-					if Member == (database.Member{}) {
+					if Member.IsMemberNill() {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
 							_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
@@ -791,7 +791,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					tmp := strings.Split(VtuberName[len(VtuberName)-1:][0], ",")
 					for _, Name := range tmp {
 						Member := FindVtuber(Name)
-						if Member == (database.Member{}) {
+						if Member.IsMemberNill() {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)
@@ -964,7 +964,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 					for _, Name := range tmp {
 						Member := FindVtuber(Name)
-						if Member == (database.Member{}) {
+						if Member.IsMemberNill() {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)
@@ -1152,7 +1152,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					tmp := strings.Split(VtuberName[len(VtuberName)-2:][0], ",")
 					for _, Name := range tmp {
 						Member := FindVtuber(Name)
-						if Member == (database.Member{}) {
+						if Member.IsMemberNill() {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)

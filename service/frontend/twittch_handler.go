@@ -25,7 +25,7 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					VTuberGroup, err := FindGropName(FindGroupArry)
 					if err != nil {
 						Member := FindVtuber(FindGroupArry)
-						if Member == (database.Member{}) {
+						if Member.IsMemberNill() {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
 						} else {
@@ -37,12 +37,18 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									log.Error(err)
 								}
 								for _, LiveData := range LiveTwitch {
+									FanBase := "simps"
 									loc := engine.Zawarudo(Member.Region)
 									diff := time.Now().In(loc).Sub(LiveData.Schedul.In(loc))
 									view, err := strconv.Atoi(LiveData.Viewers)
 									if err != nil {
 										log.Error(err)
 									}
+
+									if Member.Fanbase != "" {
+										FanBase = Member.Fanbase
+									}
+
 									_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 										SetTitle(FixName).
 										SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
@@ -50,7 +56,7 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 										SetImage(LiveData.Thumb).
 										SetURL("https://twitch.tv/"+Member.TwitchName).
 										AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-										AddField("Viewers", engine.NearestThousandFormat(float64(view))).
+										AddField("Viewers", engine.NearestThousandFormat(float64(view))+" "+FanBase).
 										InlineAllFields().
 										AddField("Game", LiveData.Game).
 										SetColor(Color).
@@ -78,6 +84,7 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 
 							for _, LiveData := range TwitchLive {
+								FanBase := "simps"
 								LiveData.AddMember(FindVtuber(LiveData.Member.ID))
 								loc := engine.Zawarudo(LiveData.Member.Region)
 								FixName := engine.FixName(LiveData.Member.EnName, LiveData.Member.JpName)
@@ -86,6 +93,11 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								if err != nil {
 									log.Error(err)
 								}
+
+								if LiveData.Member.Fanbase != "" {
+									FanBase = LiveData.Member.Fanbase
+								}
+
 								_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetTitle(FixName).
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
@@ -93,7 +105,7 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetImage(LiveData.Thumb).
 									SetURL("https://twitch.tv/"+LiveData.Member.TwitchName).
 									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-									AddField("Viewers", engine.NearestThousandFormat(float64(view))).
+									AddField("Viewers", engine.NearestThousandFormat(float64(view))+" "+FanBase).
 									InlineAllFields().
 									AddField("Game", LiveData.Game).
 									SetColor(Color).
@@ -119,7 +131,7 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					VTuberGroup, err := FindGropName(FindGroupArry)
 					if err != nil {
 						Member := FindVtuber(FindGroupArry)
-						if Member == (database.Member{}) {
+						if Member.IsMemberNill() {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
 						} else {
@@ -132,12 +144,18 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								}
 
 								for _, LiveData := range TwitchLive {
+									FanBase := "simps"
 									loc := engine.Zawarudo(Member.Region)
 									diff := LiveData.Schedul.In(loc).Sub(time.Now().In(loc))
 									view, err := strconv.Atoi(LiveData.Viewers)
 									if err != nil {
 										log.Error(err)
 									}
+
+									if Member.Fanbase != "" {
+										FanBase = Member.Fanbase
+									}
+
 									_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 										SetTitle(FixName).
 										SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
@@ -145,7 +163,7 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 										SetImage(LiveData.Thumb).
 										SetURL("https://twitch.tv/"+Member.TwitchName).
 										AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-										AddField("Viewers", engine.NearestThousandFormat(float64(view))).
+										AddField("Viewers", engine.NearestThousandFormat(float64(view))+" "+FanBase).
 										InlineAllFields().
 										AddField("Game", LiveData.Game).
 										SetColor(Color).
@@ -173,6 +191,7 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 
 							for _, LiveData := range TwitchLive {
+								FanBase := "simps"
 								LiveData.AddMember(FindVtuber(LiveData.Member.ID))
 								loc := engine.Zawarudo(LiveData.Member.Region)
 
@@ -180,6 +199,10 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								view, err := strconv.Atoi(LiveData.Viewers)
 								if err != nil {
 									log.Error(err)
+								}
+
+								if LiveData.Member.Fanbase != "" {
+									FanBase = LiveData.Member.Fanbase
 								}
 
 								diff := time.Now().In(loc).Sub(LiveData.Schedul.In(loc))
@@ -190,7 +213,7 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetImage(LiveData.Thumb).
 									SetURL("https://twitch.tv/"+LiveData.Member.TwitchName).
 									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-									AddField("Viewers", engine.NearestThousandFormat(float64(view))).
+									AddField("Viewers", engine.NearestThousandFormat(float64(view))+" "+FanBase).
 									InlineAllFields().
 									AddField("Game", LiveData.Game).
 									SetColor(Color).
