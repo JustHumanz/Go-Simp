@@ -128,25 +128,27 @@ func main() {
 	router.HandleFunc("/members/{MemberID}", getMembers).Methods("GET")
 
 	FanArt := router.PathPrefix("/fanart").Subrouter()
-	FanArt.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(MessageError{
-			Message: "Invalid request",
-			Date:    time.Now(),
-		})
-		w.WriteHeader(http.StatusBadRequest)
-	}).Methods("GET")
-	FanArt.HandleFunc("/random/member/{MemberID}", getRandomFanart).Methods("GET")
-	FanArt.HandleFunc("/random/group/{groupID}", getRandomFanart).Methods("GET")
+	FanArt.HandleFunc("/", invalidPath).Methods("GET")
 
-	FanArt.HandleFunc("/bilibili/member/{MemberID}", getFanart).Methods("GET")
-	FanArt.HandleFunc("/bilibili/group/{groupID}", getFanart).Methods("GET")
+	RandomArt := FanArt.PathPrefix("/random").Subrouter()
+	RandomArt.HandleFunc("/", invalidPath).Methods("GET")
+	RandomArt.HandleFunc("/member/{memberID}", getRandomFanart).Methods("GET")
+	RandomArt.HandleFunc("/group/{groupID}", getRandomFanart).Methods("GET")
 
-	FanArt.HandleFunc("/twitter/member/{MemberID}", getFanart).Methods("GET")
-	FanArt.HandleFunc("/twitter/group/{groupID}", getFanart).Methods("GET")
+	BiliArt := FanArt.PathPrefix("/bilibili").Subrouter()
+	BiliArt.HandleFunc("/", invalidPath).Methods("GET")
+	BiliArt.HandleFunc("/member/{memberID}", getFanart).Methods("GET")
+	BiliArt.HandleFunc("/group/{groupID}", getFanart).Methods("GET")
 
-	FanArt.HandleFunc("/pixiv/member/{MemberID}", getFanart).Methods("GET")
-	FanArt.HandleFunc("/pixiv/group/{groupID}", getFanart).Methods("GET")
+	TwitterArt := FanArt.PathPrefix("/twitter").Subrouter()
+	TwitterArt.HandleFunc("/", invalidPath).Methods("GET")
+	TwitterArt.HandleFunc("/member/{memberID}", getFanart).Methods("GET")
+	TwitterArt.HandleFunc("/group/{groupID}", getFanart).Methods("GET")
+
+	PixivArt := FanArt.PathPrefix("/pixiv").Subrouter()
+	PixivArt.HandleFunc("/", invalidPath).Methods("GET")
+	PixivArt.HandleFunc("/member/{memberID}", getFanart).Methods("GET")
+	PixivArt.HandleFunc("/group/{groupID}", getFanart).Methods("GET")
 	/*
 		router.HandleFunc("/Twitter", getFanart).Methods("GET")
 		router.HandleFunc("/Twitter/Group/{GroupID}", getFanart).Methods("GET")
@@ -162,487 +164,27 @@ func main() {
 	*/
 
 	Live := router.PathPrefix("/livestream").Subrouter()
-	Live.HandleFunc("/youtube/{Status}", getYoutube).Methods("GET")
-	Live.HandleFunc("/youtube/group/{GroupID}/{Status}", getYoutube).Methods("GET")
-	Live.HandleFunc("/youtube/member/{MemberID}/{Status}", getYoutube).Methods("GET")
+	Live.HandleFunc("/", invalidPath).Methods("GET")
 
-	Live.HandleFunc("/bilibili/{Status}", getBilibili).Methods("GET")
-	Live.HandleFunc("/bilibili/Group/{GroupID}/{Status}", getBilibili).Methods("GET")
-	Live.HandleFunc("/bilibili/Member/{MemberID}/{Status}", getBilibili).Methods("GET")
+	LiveYoutube := Live.PathPrefix("/youtube").Subrouter()
+	LiveYoutube.HandleFunc("/", invalidPath).Methods("GET")
+	LiveYoutube.HandleFunc("/group/{groupID}/{status}", getYoutube).Methods("GET")
+	LiveYoutube.HandleFunc("/member/{memberID}/{status}", getYoutube).Methods("GET")
+
+	LiveBili := Live.PathPrefix("/bilibili").Subrouter()
+	LiveBili.HandleFunc("/", invalidPath).Methods("GET")
+	LiveBili.HandleFunc("/group/{groupID}/{status}", getBilibili).Methods("GET")
+	LiveBili.HandleFunc("/member/{memberID}/{status}", getBilibili).Methods("GET")
 	http.ListenAndServe(":2525", router)
 }
 
-var FixFanart = func(FanArt database.DataFanart) map[string]interface{} {
-	var (
-		PixivPostID, TwitterPostID, BiliBiliPostID, Video interface{}
-	)
-
-	if FanArt.State == config.PixivArt {
-		PixivPostID = FanArt.PixivID
-	} else {
-		PixivPostID = nil
-	}
-
-	if FanArt.State == config.TwitterArt {
-		TwitterPostID = FanArt.TweetID
-	} else {
-		TwitterPostID = nil
-	}
-
-	if FanArt.State == config.BiliBiliArt {
-		BiliBiliPostID = FanArt.Dynamic_id
-	} else {
-		BiliBiliPostID = nil
-	}
-
-	if FanArt.Videos == "" {
-		Video = nil
-	} else {
-		Video = FanArt.Videos
-	}
-	return map[string]interface{}{
-		"Member": map[string]interface{}{
-			"ID":       FanArt.Member.ID,
-			"NickName": FanArt.Member.Name,
-			"EnName":   FanArt.Member.EnName,
-			"JpName":   FanArt.Member.JpName,
-			"Region":   FanArt.Member.Region,
-			"Hashtags": map[string]interface{}{
-				"TwitterFanart":  FanArt.Member.TwitterHashtags,
-				"BiliBiliFanart": FanArt.Member.BiliBiliHashtags,
-			},
-		},
-		"Fanart": map[string]interface{}{
-			"State":       FanArt.State,
-			"URL":         FanArt.PermanentURL,
-			"Photos":      FanArt.Photos,
-			"Video":       Video,
-			"Author":      FanArt.Author,
-			"PixivID":     PixivPostID,
-			"TwitterID":   TwitterPostID,
-			"BiliBiliID":  BiliBiliPostID,
-			"Description": FanArt.Text,
-		},
-	}
-}
-
-func getRandomFanart(w http.ResponseWriter, r *http.Request) {
-	var (
-		Vars = mux.Vars(r)
-	)
-	if Vars["groupID"] != "" {
-		key := strings.Split(Vars["groupID"], ",")
-		for _, Group := range Data {
-			for _, GroupIDstr := range key {
-				GroupIDint, err := strconv.Atoi(GroupIDstr)
-				if err != nil {
-					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(MessageError{
-						Message: err.Error(),
-						Date:    time.Now(),
-					})
-					w.WriteHeader(http.StatusInternalServerError)
-					return
-				}
-				GroupID := Group["ID"].(int64)
-				if GroupIDint == int(GroupID) {
-					FanArt, err := database.GetFanart(GroupID, 0)
-					if err != nil {
-						log.Error(err)
-						errstr := err.Error()
-						if FanArt == nil {
-							errstr = "Opps,fanart not found"
-						}
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(MessageError{
-							Message: errstr,
-							Date:    time.Now(),
-						})
-						w.WriteHeader(http.StatusInternalServerError)
-						return
-					}
-					FanArt.AddMember(GetMember(FanArt.Member.ID))
-
-					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(FixFanart(*FanArt))
-					w.WriteHeader(http.StatusOK)
-				}
-			}
-		}
-	} else if Vars["memberID"] != "" {
-		key := strings.Split(Vars["memberID"], ",")
-		for _, Group := range Data {
-			for _, Member := range Group["Members"].([]map[string]interface{}) {
-				for _, MemberIDstr := range key {
-					MemberIDint, err := strconv.Atoi(MemberIDstr)
-					if err != nil {
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(MessageError{
-							Message: err.Error(),
-							Date:    time.Now(),
-						})
-						w.WriteHeader(http.StatusInternalServerError)
-						return
-					}
-					MemberID := Member["ID"].(int64)
-					if MemberIDint == int(MemberID) {
-						FanArt, err := database.GetFanart(0, MemberID)
-						if err != nil {
-							log.Error(err)
-							errstr := err.Error()
-							if FanArt == nil {
-								errstr = "Opps,fanart not found"
-							}
-							w.Header().Set("Content-Type", "application/json")
-							json.NewEncoder(w).Encode(MessageError{
-								Message: errstr,
-								Date:    time.Now(),
-							})
-						}
-						FanArt.AddMember(GetMember(FanArt.Member.ID))
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(FixFanart(*FanArt))
-						w.WriteHeader(http.StatusOK)
-					}
-				}
-			}
-		}
-	}
-}
-
-func getFanart(w http.ResponseWriter, r *http.Request) {
-	var (
-		Vars = mux.Vars(r)
-	)
-
-	if Vars["groupID"] != "" {
-		key := strings.Split(Vars["groupID"], ",")
-		for _, Group := range Data {
-			for _, GroupIDstr := range key {
-				GroupIDint, err := strconv.Atoi(GroupIDstr)
-				if err != nil {
-					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(MessageError{
-						Message: err.Error(),
-						Date:    time.Now(),
-					})
-					w.WriteHeader(http.StatusInternalServerError)
-					return
-				}
-				GroupID := Group["ID"].(int64)
-				if GroupIDint == int(GroupID) {
-					if strings.HasPrefix(r.URL.String(), "/fanart/twitter/") {
-						FanArtData, err := GetFanartData(config.TwitterArt, GroupID, 0)
-						if err != nil {
-							log.Error(err)
-							w.Header().Set("Content-Type", "application/json")
-							json.NewEncoder(w).Encode(MessageError{
-								Message: err.Error(),
-								Date:    time.Now(),
-							})
-							return
-						}
-
-						var FanArtDataFix []map[string]interface{}
-						for _, v := range FanArtData {
-							v.AddMember(GetMember(v.Member.ID))
-							FanArtDataFix = append(FanArtDataFix, FixFanart(v))
-						}
-
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(FanArtDataFix)
-						w.WriteHeader(http.StatusOK)
-
-					} else if strings.HasPrefix(r.URL.String(), "/fanart/pixiv/") {
-						FanArtData, err := GetFanartData(config.PixivArt, GroupID, 0)
-						if err != nil {
-							log.Error(err)
-							w.Header().Set("Content-Type", "application/json")
-							json.NewEncoder(w).Encode(MessageError{
-								Message: err.Error(),
-								Date:    time.Now(),
-							})
-							return
-						}
-						var FanArtDataFix []map[string]interface{}
-						for _, v := range FanArtData {
-							v.AddMember(GetMember(v.Member.ID))
-							FanArtDataFix = append(FanArtDataFix, FixFanart(v))
-						}
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(FanArtDataFix)
-						w.WriteHeader(http.StatusOK)
-					} else if strings.HasPrefix(r.URL.String(), "/fanart/bilibili/") {
-						FanArtData, err := GetFanartData(config.BiliBiliArt, GroupID, 0)
-						if err != nil {
-							log.Error(err)
-							w.Header().Set("Content-Type", "application/json")
-							json.NewEncoder(w).Encode(MessageError{
-								Message: err.Error(),
-								Date:    time.Now(),
-							})
-							return
-						}
-						var FanArtDataFix []map[string]interface{}
-						for _, v := range FanArtData {
-							v.AddMember(GetMember(v.Member.ID))
-							FanArtDataFix = append(FanArtDataFix, FixFanart(v))
-						}
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(FanArtDataFix)
-						w.WriteHeader(http.StatusOK)
-					}
-				}
-			}
-		}
-	} else if Vars["memberID"] != "" {
-		key := strings.Split(Vars["memberID"], ",")
-		for _, Group := range Data {
-			for _, Member := range Group["Members"].([]map[string]interface{}) {
-				for _, MemberIDstr := range key {
-					MemberIDint, err := strconv.Atoi(MemberIDstr)
-					if err != nil {
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(MessageError{
-							Message: err.Error(),
-							Date:    time.Now(),
-						})
-						w.WriteHeader(http.StatusInternalServerError)
-						return
-					}
-					MemberID := Member["ID"].(int64)
-					if MemberIDint == int(MemberID) {
-						if strings.HasPrefix(r.URL.String(), "/fanart/twitter/") {
-							FanArtData, err := GetFanartData(config.TwitterArt, 0, MemberID)
-							if err != nil {
-								log.Error(err)
-								w.Header().Set("Content-Type", "application/json")
-								json.NewEncoder(w).Encode(MessageError{
-									Message: err.Error(),
-									Date:    time.Now(),
-								})
-								return
-							}
-							var FanArtDataFix []map[string]interface{}
-							for _, v := range FanArtData {
-								v.AddMember(GetMember(v.Member.ID))
-								FanArtDataFix = append(FanArtDataFix, FixFanart(v))
-							}
-							w.Header().Set("Content-Type", "application/json")
-							json.NewEncoder(w).Encode(FanArtDataFix)
-							w.WriteHeader(http.StatusOK)
-						} else if strings.HasPrefix(r.URL.String(), "/fanart/pixiv/") {
-							FanArtData, err := GetFanartData(config.PixivArt, 0, MemberID)
-							if err != nil {
-								log.Error(err)
-								w.Header().Set("Content-Type", "application/json")
-								json.NewEncoder(w).Encode(MessageError{
-									Message: err.Error(),
-									Date:    time.Now(),
-								})
-								return
-							}
-							var FanArtDataFix []map[string]interface{}
-							for _, v := range FanArtData {
-								v.AddMember(GetMember(v.Member.ID))
-								FanArtDataFix = append(FanArtDataFix, FixFanart(v))
-							}
-							w.Header().Set("Content-Type", "application/json")
-							json.NewEncoder(w).Encode(FanArtDataFix)
-							w.WriteHeader(http.StatusOK)
-						} else if strings.HasPrefix(r.URL.String(), "/fanart/bilibili/") {
-							FanArtData, err := GetFanartData(config.BiliBiliArt, 0, MemberID)
-							if err != nil {
-								log.Error(err)
-								w.Header().Set("Content-Type", "application/json")
-								json.NewEncoder(w).Encode(MessageError{
-									Message: err.Error(),
-									Date:    time.Now(),
-								})
-								return
-							}
-							var FanArtDataFix []map[string]interface{}
-							for _, v := range FanArtData {
-								v.AddMember(GetMember(v.Member.ID))
-								FanArtDataFix = append(FanArtDataFix, FixFanart(v))
-							}
-							w.Header().Set("Content-Type", "application/json")
-							json.NewEncoder(w).Encode(FanArtDataFix)
-							w.WriteHeader(http.StatusOK)
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-func getYoutube(w http.ResponseWriter, r *http.Request) {
-	var (
-		YoutubeData []database.LiveStream
-		Vars        = mux.Vars(r)
-		Region      = strings.ToLower(r.FormValue("region"))
-		Status      = strings.ToLower(Vars["Status"])
-	)
-	if Status == "" {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(MessageError{
-			Message: "Status notfound",
-			Date:    time.Now(),
-		})
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	if Vars["GroupID"] != "" {
-		key := strings.Split(Vars["GroupID"], ",")
-		for _, Group := range Data {
-			for _, GroupIDstr := range key {
-				GroupIDint, err := strconv.Atoi(GroupIDstr)
-				if err != nil {
-					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(MessageError{
-						Message: err.Error(),
-						Date:    time.Now(),
-					})
-					w.WriteHeader(http.StatusInternalServerError)
-					return
-				}
-				GroupID := Group["ID"].(int64)
-				if GroupIDint == int(GroupID) {
-					YTData, err := database.YtGetStatus(GroupID, 0, Status, Region)
-					if err != nil {
-						log.Error(err)
-					}
-					YoutubeData = append(YoutubeData, YTData...)
-				}
-			}
-		}
-	} else if Vars["MemberID"] != "" {
-		key := strings.Split(Vars["MemberID"], ",")
-		for _, Group := range Data {
-			for _, Member := range Group["Members"].([]map[string]interface{}) {
-				for _, MemberIDstr := range key {
-					MemberIDint, err := strconv.Atoi(MemberIDstr)
-					if err != nil {
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(MessageError{
-							Message: err.Error(),
-							Date:    time.Now(),
-						})
-						w.WriteHeader(http.StatusInternalServerError)
-						return
-					}
-					MemberID := Member["ID"].(int64)
-					if MemberIDint == int(MemberID) {
-						YTData, err := database.YtGetStatus(0, MemberID, Status, Region)
-						if err != nil {
-							log.Error(err)
-						}
-						YoutubeData = append(YoutubeData, YTData...)
-					}
-				}
-			}
-		}
-	} else {
-		for _, Group := range Data {
-			YTData, err := database.YtGetStatus(Group["ID"].(int64), 0, Status, Region)
-			if err != nil {
-				log.Error(err)
-			}
-			YoutubeData = append(YoutubeData, YTData...)
-		}
-	}
-
-	if len(YoutubeData) > 0 {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(YoutubeData)
-	} else {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode(MessageError{
-			Message: "Reqest not found,404",
-			Date:    time.Now(),
-		})
-		w.WriteHeader(http.StatusNotFound)
-	}
-}
-
-func getBilibili(w http.ResponseWriter, r *http.Request) {
-	var (
-		BiliBiliData []database.LiveStream
-		Vars         = mux.Vars(r)
-		Status       = strings.ToLower(Vars["Status"])
-	)
-	if Status == "" {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(MessageError{
-			Message: "Status notfound",
-			Date:    time.Now(),
-		})
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-	if Vars["GroupID"] != "" {
-		key := strings.Split(Vars["GroupID"], ",")
-		for _, Group := range Data {
-			for _, GroupIDstr := range key {
-				GroupIDint, err := strconv.Atoi(GroupIDstr)
-				if err != nil {
-					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(MessageError{
-						Message: err.Error(),
-						Date:    time.Now(),
-					})
-					w.WriteHeader(http.StatusInternalServerError)
-					return
-				}
-				GroupID := Group["ID"].(int64)
-				if GroupIDint == int(GroupID) {
-					BiliBiliData = append(BiliBiliData, database.BilGet(GroupID, 0, Status)...)
-				}
-			}
-		}
-	} else if Vars["MemberID"] != "" {
-		key := strings.Split(Vars["MemberID"], ",")
-		for _, Group := range Data {
-			for _, Member := range Group["Members"].([]map[string]interface{}) {
-				for _, MemberIDstr := range key {
-					MemberIDint, err := strconv.Atoi(MemberIDstr)
-					if err != nil {
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(MessageError{
-							Message: err.Error(),
-							Date:    time.Now(),
-						})
-						w.WriteHeader(http.StatusInternalServerError)
-						return
-					}
-					MemberID := Member["ID"].(int64)
-					if MemberIDint == int(MemberID) {
-						BiliBiliData = append(BiliBiliData, database.BilGet(0, MemberID, Status)...)
-					}
-				}
-			}
-		}
-	} else {
-		for _, Group := range Data {
-			BiliBiliData = append(BiliBiliData, database.BilGet(Group["ID"].(int64), 0, Status)...)
-		}
-	}
-
-	if len(BiliBiliData) > 0 {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(BiliBiliData)
-	} else {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode(MessageError{
-			Message: "Reqest not found,404",
-			Date:    time.Now(),
-		})
-		w.WriteHeader(http.StatusNotFound)
-	}
+func invalidPath(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(MessageError{
+		Message: "Invalid request.check your request and path",
+		Date:    time.Now(),
+	})
+	w.WriteHeader(http.StatusBadRequest)
 }
 
 func getGroup(w http.ResponseWriter, r *http.Request) {
@@ -668,9 +210,11 @@ func getGroup(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
-		if len(GroupsTMP) > 0 {
+
+		if GroupsTMP != nil {
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(GroupsTMP)
+			w.WriteHeader(http.StatusOK)
 			return
 		} else {
 			w.Header().Set("Content-Type", "application/json")
@@ -689,7 +233,7 @@ func getGroup(w http.ResponseWriter, r *http.Request) {
 
 func getMembers(w http.ResponseWriter, r *http.Request) {
 	region := r.FormValue("region")
-	idstr := mux.Vars(r)["MemberID"]
+	idstr := mux.Vars(r)["memberID"]
 	var Members []map[string]interface{}
 
 	for _, Group := range Data {
@@ -722,9 +266,11 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-	if len(Members) > 0 {
+
+	if Members != nil {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(Members)
+		w.WriteHeader(http.StatusOK)
 	} else {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotFound)
@@ -732,6 +278,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 			Message: "Reqest not found,404",
 			Date:    time.Now(),
 		})
+		w.WriteHeader(http.StatusNotFound)
 	}
 }
 
