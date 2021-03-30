@@ -9,6 +9,7 @@ import (
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
+	"github.com/JustHumanz/Go-Simp/service/livestream/notif"
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
@@ -26,24 +27,27 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
 	Bot = a
 	configfile = d
-	b.AddFunc(config.BiliBiliLive, CheckLiveSchedule)
 	VtubersData = c
+	b.AddFunc(config.BiliBiliLive, CheckLiveSchedule)
 	log.Info("Enable Live BiliBili module")
 }
 
 func CheckLiveSchedule() {
 	for _, GroupData := range VtubersData.VtuberData {
 		var wg sync.WaitGroup
-		for i, MemberData := range GroupData.Members {
-			wg.Add(1)
-			log.WithFields(log.Fields{
-				"Group":  GroupData.GroupName,
-				"Vtuber": MemberData.EnName,
-			}).Info("Checking LiveBiliBili")
-			go CheckBili(GroupData, MemberData, &wg)
-			if i%10 == 0 {
-				wg.Wait()
+		if GroupData.GroupName != "Hololive" {
+			for i, MemberData := range GroupData.Members {
+				wg.Add(1)
+				log.WithFields(log.Fields{
+					"Group":  GroupData.GroupName,
+					"Vtuber": MemberData.EnName,
+				}).Info("Checking LiveBiliBili")
+				go CheckBili(GroupData, MemberData, &wg)
+				if i%10 == 0 {
+					wg.Wait()
+				}
 			}
+
 		}
 	}
 }
@@ -66,6 +70,7 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 		}
 
 		if LiveBiliDB != nil {
+			LiveBiliDB.AddMember(Member).AddGroup(Group)
 			if Status.CheckScheduleLive() && LiveBiliDB.Status != config.LiveStatus {
 				//Live
 				if Status.Data.RoomInfo.LiveStartTime != 0 {
@@ -97,21 +102,16 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 					log.Error(err)
 				}
 
-				err = Crotttt(*LiveBiliDB)
-				if err != nil {
-					log.Error(err)
-				}
+				notif.SendDude(LiveBiliDB, Bot)
 
 			} else if !Status.CheckScheduleLive() && LiveBiliDB.Status == config.LiveStatus {
-				//prob past
 				log.WithFields(log.Fields{
 					"Group":  Group.GroupName,
 					"Vtuber": Member.EnName,
-					"Start":  ScheduledStart,
+					"Start":  LiveBiliDB.Schedul,
 				}).Info("Past live stream")
 				engine.RemoveEmbed(strconv.Itoa(LiveBiliDB.Member.BiliRoomID), Bot)
-				LiveBiliDB.UpdateStatus(config.PastStatus).
-					UpdateViewers(strconv.Itoa(Status.Data.RoomInfo.Online))
+				LiveBiliDB.UpdateStatus(config.PastStatus)
 
 				err = LiveBiliDB.UpdateLiveBili()
 				if err != nil {

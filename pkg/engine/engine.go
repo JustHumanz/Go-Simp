@@ -511,3 +511,7 @@ func RemoveEmbed(VideoID string, Bot *discordgo.Session) {
 		}
 	}
 }
+
+func UnderScoreName(s string) string {
+	return strings.ReplaceAll(s, " ", "_")
+}

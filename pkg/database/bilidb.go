@@ -8,7 +8,7 @@ import (
 
 //GetRoomData get RoomData from LiveBiliBili
 func GetRoomData(MemberID int64, RoomID int) (*LiveStream, error) {
-	rows, err := DB.Query(`SELECT id,RoomID,Status,Title,Thumbnails,Description,ScheduledStart,Published,Viewers FROM LiveBiliBili Where VtuberMember_id=? AND RoomID=? order by ScheduledStart ASC`, MemberID, RoomID)
+	rows, err := DB.Query(`SELECT * FROM LiveBiliBili Where VtuberMember_id=? AND RoomID=?`, MemberID, RoomID)
 	if err != nil {
 		return nil, err
 	}
@@ -18,7 +18,7 @@ func GetRoomData(MemberID int64, RoomID int) (*LiveStream, error) {
 		Data LiveStream
 	)
 	for rows.Next() {
-		err = rows.Scan(&Data.ID, &Data.Member.BiliRoomID, &Data.Status, &Data.Title, &Data.Thumb, &Data.Desc, &Data.Schedul, &Data.Published, &Data.Viewers)
+		err = rows.Scan(&Data.ID, &Data.Member.BiliRoomID, &Data.Status, &Data.Title, &Data.Thumb, &Data.Desc, &Data.Published, &Data.Schedul, &Data.Viewers, &Data.End, &Data.Member.ID)
 		if err != nil {
 			return nil, err
 		}
@@ -35,12 +35,18 @@ func (Data *LiveStream) UpdateLiveBili() error {
 	return nil
 }
 
-//SetRoomToLive force bilibili room status to live
-func SetRoomToLive(MemberID int64) {
-	_, err := DB.Exec(`Update LiveBiliBili set Status='Live' Where VtuberMember_id=?`, MemberID)
+//UpdateBiliToLive force bilibili room status to live
+func (Data *LiveStream) UpdateBiliToLive() {
+	_, err := DB.Exec(`Update LiveBiliBili set Status=? Where VtuberMember_id=?`, Data.Status, Data.Member.ID)
 	if err != nil {
 		log.Error(err)
 	}
+}
+
+//UpdateBiliToLive force bilibili room status to live
+func (Data *LiveStream) SetBiliLive(new bool) *LiveStream {
+	Data.IsBiliLive = new
+	return Data
 }
 
 //BilGet Get LiveBiliBili by Status (live,past)
@@ -141,7 +147,7 @@ func (Data LiveStream) CheckVideo() (bool, int) {
 }
 
 //UpdateView Update SpaceBiliBili data
-func (Data LiveStream) UpdateView(id int) {
+func (Data LiveStream) UpdateSpaceViews(id int) {
 	log.WithFields(log.Fields{
 		"VideoData ID": Data.VideoID,
 		"Viwers":       Data.Viewers,

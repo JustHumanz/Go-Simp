@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/JustHumanz/Go-Simp/pkg/database"
+	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -20,6 +21,7 @@ func CheckPixivLewd() {
 					Group:  Group,
 					Lewd:   true,
 				}
+
 				if Member.JpName != "" {
 					log.WithFields(log.Fields{
 						"Member": Member.JpName,
@@ -40,7 +42,7 @@ func CheckPixivLewd() {
 							"Group":  Group.GroupName,
 							"Lewd":   true,
 						}).Info("Start curl lewd pixiv")
-						URLEN := GetPixivLewdURL(url.QueryEscape(Member.EnName))
+						URLEN := GetPixivLewdURL(engine.UnderScoreName(Member.EnName))
 						err := Pixiv(URLEN, FixFanArt, true)
 						if err != nil {
 							log.Error(err)
@@ -54,7 +56,7 @@ func CheckPixivLewd() {
 							"Group":  Group.GroupName,
 							"Lewd":   true,
 						}).Info("Start curl lewd pixiv")
-						URLEN := GetPixivLewdURL(url.QueryEscape(Member.EnName))
+						URLEN := GetPixivLewdURL(engine.UnderScoreName(Member.EnName))
 						err := Pixiv(URLEN, FixFanArt, true)
 						if err != nil {
 							log.Error(err)
@@ -67,7 +69,7 @@ func CheckPixivLewd() {
 							"Group":  Group.GroupName,
 							"Lewd":   true,
 						}).Info("Start curl lewd pixiv")
-						URL := GetPixivLewdURL(url.QueryEscape(Member.Name))
+						URL := GetPixivLewdURL(engine.UnderScoreName(Member.Name))
 						err := Pixiv(URL, FixFanArt, true)
 						if err != nil {
 							log.Error(err)
@@ -76,12 +78,34 @@ func CheckPixivLewd() {
 
 				}
 
-			}(&wg, Member)
+				if Member.TwitterHashtags != "" {
+					log.WithFields(log.Fields{
+						"Member": Member.Name,
+						"Group":  Group.GroupName,
+						"Lewd":   true,
+					}).Info("Start curl pixiv")
+					URL := GetPixivURL(engine.UnderScoreName(Member.TwitterHashtags[1:]))
+					err := Pixiv(URL, FixFanArt, true)
+					if err != nil {
+						log.Error(err)
+					}
+				} else if Member.BiliBiliHashtags != "" {
+					log.WithFields(log.Fields{
+						"Member": Member.Name,
+						"Group":  Group.GroupName,
+						"Lewd":   true,
+					}).Info("Start curl pixiv")
+					URL := GetPixivURL(engine.UnderScoreName(Member.BiliBiliHashtags[1 : len(Member.BiliBiliHashtags)-1]))
+					err := Pixiv(URL, FixFanArt, true)
+					if err != nil {
+						log.Error(err)
+					}
+				}
 
+			}(&wg, Member)
 			if i%4 == 0 {
 				wg.Wait()
 			}
-
 		}
 		wg.Wait()
 	}

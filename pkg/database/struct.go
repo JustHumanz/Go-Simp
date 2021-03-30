@@ -57,21 +57,38 @@ type Member struct {
 }
 
 type LiveStream struct {
-	ID        int64
-	Status    string
-	VideoID   string
-	Title     string
-	Thumb     string
-	Desc      string
-	Schedul   time.Time
-	End       time.Time
-	Published time.Time
-	Game      string
-	Type      string
-	Viewers   string
-	Length    string
-	Member    Member
-	Group     Group
+	ID         int64
+	Status     string
+	VideoID    string
+	Title      string
+	Thumb      string
+	Desc       string
+	Schedul    time.Time
+	End        time.Time
+	Published  time.Time
+	Game       string
+	Type       string
+	Viewers    string
+	Length     string
+	Member     Member
+	Group      Group
+	State      string
+	IsBiliLive bool
+}
+
+func (Data *LiveStream) AddVideoID(new string) *LiveStream {
+	Data.VideoID = new
+	return Data
+}
+
+func (Data *LiveStream) SetType(new string) *LiveStream {
+	Data.Type = new
+	return Data
+}
+
+func (Data *LiveStream) SetState(new string) *LiveStream {
+	Data.State = new
+	return Data
 }
 
 func (Data *LiveStream) AddMember(new Member) *LiveStream {

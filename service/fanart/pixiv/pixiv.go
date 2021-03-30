@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -66,6 +67,7 @@ func CheckPixiv() {
 					Group:  Group,
 					Lewd:   false,
 				}
+
 				if Member.JpName != "" {
 					log.WithFields(log.Fields{
 						"Member": Member.JpName,
@@ -86,7 +88,7 @@ func CheckPixiv() {
 							"Group":  Group.GroupName,
 							"Lewd":   false,
 						}).Info("Start curl pixiv")
-						URLEN := GetPixivURL(url.QueryEscape(Member.EnName))
+						URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
 						err := Pixiv(URLEN, FixFanArt, false)
 						if err != nil {
 							log.Error(err)
@@ -100,7 +102,7 @@ func CheckPixiv() {
 							"Group":  Group.GroupName,
 							"Lewd":   false,
 						}).Info("Start curl pixiv")
-						URLEN := GetPixivURL(url.QueryEscape(Member.EnName))
+						URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
 						err := Pixiv(URLEN, FixFanArt, false)
 						if err != nil {
 							log.Error(err)
@@ -113,7 +115,31 @@ func CheckPixiv() {
 							"Group":  Group.GroupName,
 							"Lewd":   false,
 						}).Info("Start curl pixiv")
-						URL := GetPixivURL(url.QueryEscape(Member.Name))
+						URL := GetPixivURL(engine.UnderScoreName(Member.Name))
+						err := Pixiv(URL, FixFanArt, false)
+						if err != nil {
+							log.Error(err)
+						}
+					}
+
+					if Member.TwitterHashtags != "" {
+						log.WithFields(log.Fields{
+							"Member": Member.Name,
+							"Group":  Group.GroupName,
+							"Lewd":   false,
+						}).Info("Start curl pixiv")
+						URL := GetPixivURL(engine.UnderScoreName(Member.TwitterHashtags[1:]))
+						err := Pixiv(URL, FixFanArt, false)
+						if err != nil {
+							log.Error(err)
+						}
+					} else if Member.BiliBiliHashtags != "" {
+						log.WithFields(log.Fields{
+							"Member": Member.Name,
+							"Group":  Group.GroupName,
+							"Lewd":   false,
+						}).Info("Start curl pixiv")
+						URL := GetPixivURL(engine.UnderScoreName(Member.BiliBiliHashtags[1 : len(Member.BiliBiliHashtags)-1]))
 						err := Pixiv(URL, FixFanArt, false)
 						if err != nil {
 							log.Error(err)
@@ -122,11 +148,9 @@ func CheckPixiv() {
 				}
 
 			}(&wg, Member)
-
 			if i%4 == 0 {
 				wg.Wait()
 			}
-
 		}
 		wg.Wait()
 	}
@@ -156,8 +180,9 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 
 	if response.StatusCode != http.StatusOK {
 		log.WithFields(log.Fields{
-			"Status": response.StatusCode,
-			"Reason": response.Status,
+			"Status":  response.StatusCode,
+			"Reason":  response.Status,
+			"Payload": p,
 		}).Error("Status code not daijobu")
 		return errors.New(response.Status)
 	}
@@ -180,10 +205,22 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 
 			for _, tag := range v2["tags"].([]interface{}) {
 				Tag := strings.ToLower(tag.(string))
-				match, _ := regexp.MatchString("(youtube|vtuber|"+strings.ToLower(FixFanArt.Group.GroupName)+")", Tag)
+				GrpName := strings.ToLower(FixFanArt.Group.GroupName)
+				HashTag := "vtuber"
+				if FixFanArt.Member.TwitterHashtags != "" {
+					HashTag = FixFanArt.Member.TwitterHashtags[1:]
+				} else if FixFanArt.Member.BiliBiliHashtags != "" {
+					HashTag = FixFanArt.Member.BiliBiliHashtags[1 : len(FixFanArt.Member.BiliBiliHashtags)-1]
+				}
+
+				match, _ := regexp.MatchString("(youtube|vtuber|"+GrpName+"|"+strings.ToLower(HashTag)+")", Tag)
 				if match {
 					IsVtuber = true
 				}
+			}
+
+			if FixFanArt.Member.ID == 13 {
+				fmt.Println(BaseURL+v2["id"].(string), IsVtuber)
 			}
 
 			var (
@@ -317,11 +354,11 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 }
 
 func GetPixivURL(str string) string {
-	return "https://www.pixiv.net/ajax/search/artworks/" + str + "?word=" + str + "&order=date_d&mode=all&p=1&s_mode=s_tag_full&type=all&lang=en"
+	return "https://www.pixiv.net/ajax/search/artworks/" + str + "?word=" + str + "&order=date_d&mode=all&p=1&s_mode=s_tag&type=all&lang=en"
 }
 
 func GetPixivLewdURL(str string) string {
-	return "https://www.pixiv.net/ajax/search/artworks/" + str + "?word=" + str + "&order=date_d&mode=r18&p=1&s_mode=s_tag_full&type=all&lang=en"
+	return "https://www.pixiv.net/ajax/search/artworks/" + str + "?word=" + str + "&order=date_d&mode=r18&p=1&s_mode=s_tag&type=all&lang=en"
 }
 
 func ClearTwitterURL(str1 string) string {

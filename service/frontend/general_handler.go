@@ -145,79 +145,56 @@ func Lewd(s *discordgo.Session, m *discordgo.MessageCreate) {
 	)
 
 	if strings.HasPrefix(m.Content, Prefix) {
-		SendNude := func(Data *database.DataFanart) bool {
-			Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
-			if err != nil {
-				log.Error(err)
-			}
-
-			if Data.State == config.PixivArt {
-				embed = engine.NewEmbed().
-					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-					SetTitle(Data.Author).
-					SetDescription(RemovePic(Data.Text)).
-					SetURL(Data.PermanentURL).
-					SetImage(config.PixivProxy+Pic).
-					SetColor(Color).
-					InlineAllFields().
-					SetFooter(Msg, config.PixivIMG).MessageEmbed
-			} else {
-				embed = engine.NewEmbed().
-					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-					SetTitle(Data.Author).
-					SetThumbnail(engine.GetAuthorAvatar(Data.Author)).
-					SetDescription(RemovePic(Data.Text)).
-					SetURL(Data.PermanentURL).
-					SetImage(Pic).
-					SetColor(Color).
-					InlineAllFields().
-					SetFooter(Msg, config.TwitterIMG).MessageEmbed
-			}
-			msg, err := s.ChannelMessageSendEmbed(m.ChannelID, embed)
-			if err != nil {
-				log.Error(err, msg)
-			}
-			err = engine.Reacting(map[string]string{
-				"ChannelID": m.ChannelID,
-				"Content":   m.Content,
-				"Prefix":    Prefix,
-			}, s)
-			if err != nil {
-				log.Error(err)
-			}
-			return true
+		ChannelRaw, err := s.Channel(m.ChannelID)
+		if err != nil {
+			log.Error(err)
 		}
-		for _, GroupData := range Payload.VtuberData {
-			if m.Content == strings.ToLower(Prefix+GroupData.GroupName) {
-				FanArtData, err := database.GetLewd(GroupData.ID, 0)
+		if ChannelRaw.NSFW {
+			SendNude := func(Data *database.DataFanart) bool {
+				Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 				if err != nil {
 					log.Error(err)
-					s.ChannelMessageSend(m.ChannelID, "Opps,something goes worng,like dev life\n"+err.Error())
-					return
 				}
 
-				if FanArtData.Videos != "" {
-					Msg = "Video type,check original post"
-					Pic = config.NotFound
-				} else if len(FanArtData.Photos) > 0 {
-					Pic = FanArtData.Photos[0]
-					Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
+				if Data.State == config.PixivArt {
+					embed = engine.NewEmbed().
+						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+						SetTitle(Data.Author).
+						SetDescription(RemovePic(Data.Text)).
+						SetURL(Data.PermanentURL).
+						SetImage(config.PixivProxy+Pic).
+						SetColor(Color).
+						InlineAllFields().
+						SetFooter(Msg, config.PixivIMG).MessageEmbed
+				} else {
+					embed = engine.NewEmbed().
+						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+						SetTitle(Data.Author).
+						SetThumbnail(engine.GetAuthorAvatar(Data.Author)).
+						SetDescription(RemovePic(Data.Text)).
+						SetURL(Data.PermanentURL).
+						SetImage(Pic).
+						SetColor(Color).
+						InlineAllFields().
+						SetFooter(Msg, config.TwitterIMG).MessageEmbed
 				}
-
-				for _, v := range GroupData.Members {
-					if v.ID == FanArtData.Member.ID {
-						FanArtData.AddMember(v)
-						break
-					}
+				msg, err := s.ChannelMessageSendEmbed(m.ChannelID, embed)
+				if err != nil {
+					log.Error(err, msg)
 				}
-
-				Group = SendNude(FanArtData)
-				break
+				err = engine.Reacting(map[string]string{
+					"ChannelID": m.ChannelID,
+					"Content":   m.Content,
+					"Prefix":    Prefix,
+				}, s)
+				if err != nil {
+					log.Error(err)
+				}
+				return true
 			}
-
-			for _, MemberData := range GroupData.Members {
-				if m.Content == strings.ToLower(Prefix+MemberData.Name) || m.Content == strings.ToLower(Prefix+MemberData.JpName) {
-					FanArtData, err := database.GetLewd(0, MemberData.ID)
+			for _, GroupData := range Payload.VtuberData {
+				if m.Content == strings.ToLower(Prefix+GroupData.GroupName) {
+					FanArtData, err := database.GetLewd(GroupData.ID, 0)
 					if err != nil {
 						log.Error(err)
 						s.ChannelMessageSend(m.ChannelID, "Opps,something goes worng,like dev life\n"+err.Error())
@@ -228,23 +205,55 @@ func Lewd(s *discordgo.Session, m *discordgo.MessageCreate) {
 						Msg = "Video type,check original post"
 						Pic = config.NotFound
 					} else if len(FanArtData.Photos) > 0 {
-						Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
 						Pic = FanArtData.Photos[0]
+						Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
 					}
 
-					FanArtData.AddMember(MemberData)
-					Member = SendNude(FanArtData)
+					for _, v := range GroupData.Members {
+						if v.ID == FanArtData.Member.ID {
+							FanArtData.AddMember(v)
+							break
+						}
+					}
+
+					Group = SendNude(FanArtData)
 					break
 				}
+
+				for _, MemberData := range GroupData.Members {
+					if m.Content == strings.ToLower(Prefix+MemberData.Name) || m.Content == strings.ToLower(Prefix+MemberData.JpName) {
+						FanArtData, err := database.GetLewd(0, MemberData.ID)
+						if err != nil {
+							log.Error(err)
+							s.ChannelMessageSend(m.ChannelID, "Opps,something goes worng,like dev life\n"+err.Error())
+							return
+						}
+
+						if FanArtData.Videos != "" {
+							Msg = "Video type,check original post"
+							Pic = config.NotFound
+						} else if len(FanArtData.Photos) > 0 {
+							Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
+							Pic = FanArtData.Photos[0]
+						}
+
+						FanArtData.AddMember(MemberData)
+						Member = SendNude(FanArtData)
+						break
+					}
+				}
 			}
-		}
 
-		if Member || Group {
+			if Member || Group {
+				return
+			}
+
+			if !Group && !Member {
+				s.ChannelMessageSend(m.ChannelID, "`"+m.Content[len(Prefix):]+"` was invalid name")
+			}
+		} else {
+			s.ChannelMessageSend(m.ChannelID, "i know you horny,but this channel was not a NSFW channel")
 			return
-		}
-
-		if !Group && !Member {
-			s.ChannelMessageSend(m.ChannelID, "`"+m.Content[len(Prefix):]+"` was invalid name")
 		}
 	}
 }

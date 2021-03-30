@@ -43,6 +43,7 @@ var (
 	GuideURL    string
 	VtubersData string
 	Scraper     *twitterscraper.Scraper
+	Ytwaiting   = "???"
 )
 
 //Const config
@@ -119,10 +120,16 @@ const (
 	PrivateStatus  = "private"
 	UnknownStatus  = "unknown"
 
-	//Fanart
+	//FanartState
 	TwitterArt  = "twitter"
 	PixivArt    = "pixiv"
 	BiliBiliArt = "bilibili"
+
+	//LiveState
+	YoutubeLive = "youtube"
+	BiliLive    = "bilibili"
+	SpaceBili   = "spacebili"
+	TwitchLive  = "twitch"
 )
 
 //ConfigFile config file struct for config.toml

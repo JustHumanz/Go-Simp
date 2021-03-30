@@ -13,6 +13,8 @@ import (
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
+	"github.com/JustHumanz/Go-Simp/service/livestream/bilibili/live"
+	"github.com/JustHumanz/Go-Simp/service/livestream/notif"
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
 
@@ -21,7 +23,6 @@ import (
 
 var (
 	yttoken     *string
-	Ytwaiting   = "???"
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
 	configfile  config.ConfigFile
@@ -31,10 +32,10 @@ var (
 func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile) {
 	Bot = a
 	configfile = d
+	VtubersData = c
 	b.AddFunc(config.YoutubeCheckChannel, CheckYtSchedule)
 	b.AddFunc(config.YoutubeCheckUpcomingByTime, CheckYtByTime)
 	b.AddFunc(config.YoutubePrivateSlayer, CheckPrivate)
-	VtubersData = c
 	log.Info("Enable youtube module")
 }
 
@@ -98,19 +99,27 @@ func CheckYtByTime() {
 									log.Error(err)
 								}
 
-								Youtube.UpdateStatus(config.LiveStatus).UpdateYt(config.LiveStatus)
-								err = SendNude(Youtube)
-								if err != nil {
-									log.Error(err)
+								Youtube.UpdateStatus(config.LiveStatus).
+									SetState(config.YoutubeLive).
+									UpdateYt(config.LiveStatus)
+
+								if Member.BiliRoomID != 0 {
+									LiveBili, err := live.GetRoomStatus(Member.BiliRoomID)
+									if err != nil {
+										log.Error(err)
+									}
+									if LiveBili.CheckScheduleLive() {
+										Youtube.SetBiliLive(true).UpdateBiliToLive()
+									}
 								}
+								notif.SendDude(&Youtube, Bot)
 							}
 						}
 					}
-					Youtube.UpdateStatus("reminder")
-					err = SendNude(Youtube)
-					if err != nil {
-						log.Error(err)
-					}
+					Youtube.
+						SetState(config.YoutubeLive).
+						UpdateStatus("reminder")
+					notif.SendDude(&Youtube, Bot)
 				}
 			}
 		}
@@ -127,20 +136,20 @@ func GetWaiting(VideoID string) (string, error) {
 	if curlerr != nil || bit == nil {
 		bit, curlerr = network.CoolerCurl(urls, nil)
 		if curlerr != nil {
-			return Ytwaiting, curlerr
+			return config.Ytwaiting, curlerr
 		}
 	}
 	reg, err := regexp.Compile("[^a-zA-Z0-9]+")
 	if err != nil {
-		return Ytwaiting, err
+		return config.Ytwaiting, err
 	}
 	for _, element := range regexp.MustCompile(`(?m)videoViewCountRenderer.*?text([0-9\s]+).+(isLive\strue)`).FindAllStringSubmatch(reg.ReplaceAllString(string(bit), " "), -1) {
 		tmp := strings.Replace(element[1], " ", "", -1)
 		if tmp != "" {
-			Ytwaiting = tmp
+			config.Ytwaiting = tmp
 		}
 	}
-	return Ytwaiting, nil
+	return config.Ytwaiting, nil
 }
 
 func CheckPrivate() {

@@ -1,3 +1,24 @@
+v3.4.4-beta
+- Update pixiv fanart scrape
+
+v3.4.3
+- Fix bilibili space not send any new video
+- Fix live bilibili not update status
+- Rework logic livestream service for sending notif
+
+v3.4.2
+- Add ViViD vtuber group
+- Add Kuri from Independen #150
+- Update go-simp web exec
+
+v3.4.1
+- Add NSFW checker
+
+v3.4.0
+- Remove Danbooru lewd
+- Add pixiv R18
+- Add `lewd` command
+
 v3.3.5
 - Fix name not showed in upcoming livestream
 - Fix livestream not sended
