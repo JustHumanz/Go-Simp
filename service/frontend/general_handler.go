@@ -1410,6 +1410,7 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 				AddField("Server count", strconv.Itoa(len(GuildList))).
 				AddField("Member count", strconv.Itoa(database.GetMemberCount())).
 				InlineAllFields().
+				AddField("Join Dev server", "[Invite](https://discord.com/invite/ydWC5knbJT)").
 				SetThumbnail(config.BSD).
 				SetFooter(os.Getenv("VERSION")).
 				SetColor(Color).MessageEmbed)
