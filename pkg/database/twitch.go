@@ -27,7 +27,7 @@ func (Data *LiveStream) UpdateTwitch() error {
 	return nil
 }
 
-//BilGet Get LiveBiliBili by Status (live,past)
+//TwitchGet Get LiveBiliBili by Status (live,past)
 func TwitchGet(GroupID int64, MemberID int64, Status string) []LiveStream {
 	var (
 		Limit int
