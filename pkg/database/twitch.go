@@ -1,5 +1,7 @@
 package database
 
+import log "github.com/sirupsen/logrus"
+
 func GetTwitch(MemberID int64) (*LiveStream, error) {
 	var Data LiveStream
 	rows, err := DB.Query(`SELECT * FROM Vtuber.Twitch Where VtuberMember_id=?`, MemberID)
@@ -23,4 +25,36 @@ func (Data *LiveStream) UpdateTwitch() error {
 		return err
 	}
 	return nil
+}
+
+//BilGet Get LiveBiliBili by Status (live,past)
+func TwitchGet(GroupID int64, MemberID int64, Status string) []LiveStream {
+	var (
+		Limit int
+	)
+
+	if GroupID > 0 && Status != "Live" {
+		Limit = 3
+	} else {
+		Limit = 2525
+	}
+
+	rows, err := DB.Query(`SELECT Twitch.* FROM Vtuber.Twitch Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status=? Order by ScheduledStart ASC Limit ?`, GroupID, MemberID, Status, Limit)
+	if err != nil {
+		log.Error(err)
+	}
+	defer rows.Close()
+
+	var (
+		Data []LiveStream
+		list LiveStream
+	)
+	for rows.Next() {
+		err = rows.Scan(&list.ID, &list.Game, &list.Status, &list.Title, &list.Thumb, &list.Schedul, &list.Viewers, &list.Member.ID)
+		if err != nil {
+			log.Error(err)
+		}
+		Data = append(Data, list)
+	}
+	return Data
 }
