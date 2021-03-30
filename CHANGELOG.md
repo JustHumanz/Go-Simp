@@ -1,4 +1,10 @@
-v3.4.4-beta
+v3.5.0
+- Update pixiv fanart scrape
+- Add Twitch `live`/`past` command
+- Fix live bilibili not send notif
+- Fix space bilibili vtuber name
+
+v3.5.0-beta
 - Update pixiv fanart scrape
 - Add Twitch `live`/`past` command
 
