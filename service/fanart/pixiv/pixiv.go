@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -218,10 +217,6 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 				if match {
 					IsVtuber = true
 				}
-			}
-
-			if FixFanArt.Member.ID == 13 {
-				fmt.Println(BaseURL+v2["id"].(string), IsVtuber)
 			}
 
 			var (
