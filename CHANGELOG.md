@@ -1,3 +1,7 @@
+v3.5.1
+- Fix Pixiv 401
+- Change data.bilibili to live.bilibili
+
 v3.5.0
 - Update pixiv fanart scrape
 - Add Twitch `live`/`past` command
