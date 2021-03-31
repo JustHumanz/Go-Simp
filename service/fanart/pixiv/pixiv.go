@@ -168,7 +168,9 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 	req.Header.Set("Dnt", "1")
 	req.Header.Set("Upgrade-Insecure-Requests", "1")
 	req.Header.Set("Connection", "keep-alive")
-	req.Header.Set("Cookie", "PHPSESSID="+config.GoSimpConf.PixivSession)
+	if l {
+		req.Header.Set("Cookie", "PHPSESSID="+config.GoSimpConf.PixivSession)
+	}
 	req.Header.Set("Cache-Control", "max-age=0")
 	req.Header.Set("Te", "Trailers")
 
@@ -190,7 +192,6 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return err
-
 	}
 
 	err = json.Unmarshal(body, &Art)
