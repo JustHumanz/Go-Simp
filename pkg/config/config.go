@@ -65,7 +65,7 @@ const (
 	BiliBiliFanart             = "@every 0h6m0s"
 	DanbooruFanart             = "@every 0h4m0s"
 	PixivFanart                = "@every 0h15m0s"
-	PixivFanartLewd            = "@every 0h20m0s"
+	PixivFanartLewd            = "@every 1h0m0s"
 	BiliBiliLive               = "@every 0h7m0s"
 	BiliBiliSpace              = "@every 0h13m0s"
 	Twitch                     = "@every 0h7m0s"
@@ -170,6 +170,7 @@ type ConfigFile struct {
 		Fanart   string `toml:"Fanart"`
 		Youtube  string `toml:"Youtube"`
 		Bilibili string `toml:"Bilibili"`
+		Twitch   string `toml:"Twitch"`
 		General  string `toml:"General"`
 		Lewd     string `toml:"Lewd"`
 	} `toml:"BotPrefix"`
@@ -305,5 +306,25 @@ func (Data ConfigFile) InitConf() {
 		if err != nil {
 			log.Error(err)
 		}
+	}
+
+	if Data.BotPrefix.Bilibili == "" {
+		log.Fatal("Bilibili Prefix not found")
+	}
+
+	if Data.BotPrefix.Fanart == "" {
+		log.Fatal("Fanart Prefix not found")
+	}
+
+	if Data.BotPrefix.General == "" {
+		log.Fatal("General Prefix not found")
+	}
+
+	if Data.BotPrefix.Twitch == "" {
+		log.Fatal("Twitch Prefix not found")
+	}
+
+	if Data.BotPrefix.Youtube == "" {
+		log.Fatal("Youtube Prefix not found")
 	}
 }

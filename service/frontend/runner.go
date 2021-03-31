@@ -26,7 +26,6 @@ var (
 	Payload    database.VtubersPayload
 	configfile config.ConfigFile
 	Bot        *discordgo.Session
-	FanBase    = "simps"
 )
 
 //Prefix command
@@ -148,6 +147,7 @@ func main() {
 			Bot.AddHandler(BiliBiliMessage)
 			Bot.AddHandler(BiliBiliSpace)
 			Bot.AddHandler(YoutubeMessage)
+			Bot.AddHandler(TwitchMessage)
 			Bot.AddHandler(SubsMessage)
 			Bot.AddHandler(Lewd)
 			Bot.AddHandler(RegisterFunc)

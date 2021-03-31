@@ -56,6 +56,13 @@ type Member struct {
 	GroupID          int64
 }
 
+func (Data Member) IsMemberNill() bool {
+	if Data == (Member{}) {
+		return true
+	}
+	return false
+}
+
 type LiveStream struct {
 	ID         int64
 	Status     string

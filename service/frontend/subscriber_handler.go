@@ -42,7 +42,6 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							} else {
 								if Member.BiliRoomID != 0 {
 									Avatar = Member.BiliBiliAvatar
-									//URL = "https://space.bilibili.com/" + strconv.Itoa(Member.BiliBiliID)
 								} else {
 									Avatar = Member.YoutubeAvatar
 								}

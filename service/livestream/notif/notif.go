@@ -371,14 +371,14 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 	} else if Data.State == config.BiliLive {
 		loc, _ := time.LoadLocation("Asia/Shanghai")
 		BiliBiliAccount := "https://space.bilibili.com/" + strconv.Itoa(Data.Member.BiliBiliID)
-		BiliBiliURL := "https://Data.bilibili.com/" + strconv.Itoa(Data.Member.BiliRoomID)
+		BiliBiliURL := "https://live.bilibili.com/" + strconv.Itoa(Data.Member.BiliRoomID)
 
 		BiliBiliRoomID := strconv.Itoa(Data.Member.BiliRoomID)
 		User := &database.UserStruct{
 			Human:    true,
 			Reminder: 0,
 		}
-		if Data.Status == "Live" {
+		if Data.Status == config.LiveStatus {
 
 			MemberID := Data.Member.ID
 			//id, DiscordChannelID
@@ -410,17 +410,18 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 					if err != nil {
 						log.Error(err)
 					}
+
+					Start := durafmt.Parse(expiresAt.Sub(Data.Schedul.In(loc))).LimitFirstN(1)
 					MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
-						SetAuthor(config.VtubersData, Data.Member.BiliBiliAvatar, BiliBiliAccount).
+						SetAuthor(VtuberName, Data.Member.BiliBiliAvatar, BiliBiliAccount).
 						SetTitle(Data.Title).
 						SetThumbnail(Data.Group.IconURL).
 						SetDescription(Data.Desc).
 						SetImage(Data.Thumb).
 						SetURL(BiliBiliURL).
-						AddField("Start live", durafmt.Parse(expiresAt.Sub(Data.Schedul.In(loc))).LimitFirstN(1).String()+" Ago").
+						AddField("Start live", Start.String()+" Ago").
 						AddField("Online", engine.NearestThousandFormat(float64(view))+" "+FanBase).
 						InlineAllFields().
-						//AddField("Rank",Data).
 						SetFooter(Data.Schedul.In(loc).Format(time.RFC822), config.BiliBiliIMG).
 						SetColor(Color()).MessageEmbed)
 					if err != nil {
@@ -628,7 +629,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 				}
 
 				msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
-					SetAuthor(Data.Member.Name, Data.Member.BiliBiliAvatar, "https://space.bilibili/"+strconv.Itoa(Data.Member.BiliBiliID)).
+					SetAuthor(VtuberName, Data.Member.BiliBiliAvatar, "https://space.bilibili/"+strconv.Itoa(Data.Member.BiliBiliID)).
 					SetTitle("Uploaded new video").
 					SetDescription(Data.Title).
 					SetImage(Data.Thumb).

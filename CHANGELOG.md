@@ -1,5 +1,16 @@
-v3.4.4-beta
+v3.5.1
+- Fix Pixiv 401
+- Change data.bilibili to live.bilibili
+
+v3.5.0
 - Update pixiv fanart scrape
+- Add Twitch `live`/`past` command
+- Fix live bilibili not send notif
+- Fix space bilibili vtuber name
+
+v3.5.0-beta
+- Update pixiv fanart scrape
+- Add Twitch `live`/`past` command
 
 v3.4.3
 - Fix bilibili space not send any new video

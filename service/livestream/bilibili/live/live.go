@@ -37,14 +37,17 @@ func CheckLiveSchedule() {
 		var wg sync.WaitGroup
 		if GroupData.GroupName != "Hololive" {
 			for i, MemberData := range GroupData.Members {
-				wg.Add(1)
-				log.WithFields(log.Fields{
-					"Group":  GroupData.GroupName,
-					"Vtuber": MemberData.EnName,
-				}).Info("Checking LiveBiliBili")
-				go CheckBili(GroupData, MemberData, &wg)
-				if i%10 == 0 {
-					wg.Wait()
+				if MemberData.BiliRoomID != 0 {
+					wg.Add(1)
+					log.WithFields(log.Fields{
+						"Group":  GroupData.GroupName,
+						"Vtuber": MemberData.EnName,
+					}).Info("Checking LiveBiliBili")
+					go CheckBili(GroupData, MemberData, &wg)
+					if i%10 == 0 {
+						wg.Wait()
+					}
+
 				}
 			}
 
@@ -95,7 +98,8 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 					UpdateThumbnail(Status.Data.RoomInfo.Cover).
 					UpdateTitle(Status.Data.RoomInfo.Title).
 					AddMember(Member).
-					AddGroup(Group)
+					AddGroup(Group).
+					SetState(config.BiliLive)
 
 				err := LiveBiliDB.UpdateLiveBili()
 				if err != nil {
@@ -118,7 +122,6 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 					log.Error(err)
 				}
 			} else {
-				//update online
 				LiveBiliDB.UpdateViewers(strconv.Itoa(Status.Data.RoomInfo.Online))
 				err := LiveBiliDB.UpdateLiveBili()
 				if err != nil {

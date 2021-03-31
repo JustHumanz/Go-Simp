@@ -39,7 +39,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					VTuberGroup, err := FindGropName(GroupNameQuery)
 					if err != nil {
 						Member := FindVtuber(GroupNameQuery)
-						if Member == (database.Member{}) {
+						if Member.IsMemberNill() {
 							_, err := s.ChannelMessageSend(m.ChannelID, "`"+GroupNameQuery+"`,Name of Vtuber Group or Vtuber Name was not found")
 							if err != nil {
 								log.Error(err)
@@ -53,6 +53,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							FixName := engine.FixName(Member.EnName, Member.JpName)
 							if YoutubeData != nil {
 								for _, Youtube := range YoutubeData {
+									FanBase := "simps"
 									loc := engine.Zawarudo(Member.Region)
 									duration := durafmt.Parse(Youtube.Schedul.In(loc).Sub(time.Now().In(loc))).LimitFirstN(2)
 
@@ -111,6 +112,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							for _, Youtube := range GroupData {
 								Youtube.AddMember(FindVtuber(Youtube.Member.ID))
 								FixName := engine.FixName(Youtube.Member.EnName, Youtube.Member.JpName)
+								FanBase := "simps"
 
 								loc := engine.Zawarudo(Youtube.Member.Region)
 								duration := durafmt.Parse(Youtube.Schedul.In(loc).Sub(time.Now().In(loc))).LimitFirstN(2)
@@ -127,6 +129,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								if Youtube.Member.Fanbase != "" {
 									FanBase = Youtube.Member.Fanbase
 								}
+
 								view, err := strconv.Atoi(Youtube.Viewers)
 								if err != nil {
 									log.Error(err)
@@ -174,7 +177,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					VTuberGroup, err := FindGropName(GroupName)
 					if err != nil {
 						Member := FindVtuber(GroupName)
-						if Member == (database.Member{}) {
+						if Member.IsMemberNill() {
 							_, err := s.ChannelMessageSend(m.ChannelID, "`"+GroupName+"`,Name of Vtuber Group or Vtuber Name was not found")
 							if err != nil {
 								log.Error(err)
@@ -188,6 +191,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 							if YoutubeData != nil {
 								for _, Youtube := range YoutubeData {
+									FanBase := "simps"
 									loc := engine.Zawarudo(Member.Region)
 									expiresAt := time.Now().In(loc)
 									duration := durafmt.Parse(expiresAt.In(loc).Sub(Youtube.Schedul)).LimitFirstN(2)
@@ -248,6 +252,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							for _, Youtube := range YoutubeData {
 								Youtube.AddMember(FindVtuber(Youtube.Member.ID))
 
+								FanBase := "simps"
 								loc := engine.Zawarudo(Youtube.Member.Region)
 								duration := durafmt.Parse(time.Now().In(loc).Sub(Youtube.Schedul.In(loc))).LimitFirstN(2)
 
@@ -314,7 +319,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					VTuberGroup, err := FindGropName(GroupName)
 					if err != nil {
 						Member := FindVtuber(GroupName)
-						if Member == (database.Member{}) {
+						if Member.IsMemberNill() {
 							_, err := s.ChannelMessageSend(m.ChannelID, "`"+GroupName+"`,Name of Vtuber Group or Vtuber Name was not found")
 							if err != nil {
 								log.Error(err)
