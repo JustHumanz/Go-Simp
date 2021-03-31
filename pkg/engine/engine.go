@@ -525,11 +525,11 @@ func MaintenanceIMG() string {
 func NotFoundIMG() string {
 	min := 1
 	max := 7
-	return config.CdnDomain + "Not_Found/" + strconv.Itoa(rand.Intn(max-min)+min) + ".png"
+	return config.CdnDomain + "Command_Not_Found/" + strconv.Itoa(rand.Intn(max-min)+min) + ".png"
 }
 
 func LewdIMG() string {
 	min := 1
 	max := 5
-	return config.CdnDomain + "Command_Not_Found/" + strconv.Itoa(rand.Intn(max-min)+min) + ".png"
+	return config.CdnDomain + "Lewd/" + strconv.Itoa(rand.Intn(max-min)+min) + ".png"
 }
