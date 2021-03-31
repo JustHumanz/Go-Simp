@@ -97,7 +97,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetTitle(FixName).
 									SetDescription("It looks like `"+FixName+"` doesn't have a livestream schedule for now").
-									SetImage(config.WorryIMG).MessageEmbed)
+									SetImage(engine.NotFoundIMG()).MessageEmbed)
 								if err != nil {
 									log.Error(err)
 								}
@@ -157,7 +157,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 								SetTitle(VTuberGroup.GroupName).
 								SetDescription("It looks like `"+VTuberGroup.GroupName+"` doesn't have a livestream schedule for now").
-								SetImage(config.WorryIMG).MessageEmbed)
+								SetImage(engine.NotFoundIMG()).MessageEmbed)
 							if err != nil {
 								log.Error(err)
 							}
@@ -165,7 +165,9 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+Upcoming+"` command")
+				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+					SetDescription("Incomplete `"+Upcoming+"` command").
+					SetImage(engine.NotFoundIMG()).MessageEmbed)
 				if err != nil {
 					log.Error(err)
 				}
@@ -237,7 +239,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetTitle(FixName).
 									SetDescription("It looks like `"+FixName+"` doesn't have a livestream schedule for now").
-									SetImage(config.WorryIMG).MessageEmbed)
+									SetImage(engine.NotFoundIMG()).MessageEmbed)
 								if err != nil {
 									log.Error(err)
 								}
@@ -297,7 +299,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 								SetTitle(VTuberGroup.GroupName).
 								SetDescription("It looks like `"+VTuberGroup.GroupName+"` doesn't have a livestream schedule for now").
-								SetImage(config.WorryIMG).MessageEmbed)
+								SetImage(engine.NotFoundIMG()).MessageEmbed)
 							if err != nil {
 								log.Error(err)
 							}
@@ -306,7 +308,9 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+Live+"` command")
+				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+					SetDescription("Incomplete `"+Live+"` command").
+					SetImage(engine.NotFoundIMG()).MessageEmbed)
 				if err != nil {
 					log.Error(err)
 				}
@@ -370,7 +374,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetTitle(FixName).
 									SetDescription("Internal error XD").
-									SetImage(config.WorryIMG).MessageEmbed)
+									SetImage(engine.NotFoundIMG()).MessageEmbed)
 								if err != nil {
 									log.Error(err)
 								}
@@ -433,7 +437,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 								SetTitle(VTuberGroup.GroupName).
 								SetDescription("Internal error XD").
-								SetImage(config.WorryIMG).MessageEmbed)
+								SetImage(engine.NotFoundIMG()).MessageEmbed)
 							if err != nil {
 								log.Error(err)
 							}
@@ -442,7 +446,9 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+Prefix+"` command")
+				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+					SetDescription("Incomplete `"+Prefix+"` command").
+					SetImage(engine.NotFoundIMG()).MessageEmbed)
 				if err != nil {
 					log.Error(err)
 				}

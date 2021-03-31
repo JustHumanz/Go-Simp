@@ -250,7 +250,7 @@ func Dead(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetDescription("Still Processing new data,Comeback when i ready to bang you (around 10-20 minutes or more)").
 				AddField("See update at", "[Changelog](https://github.com/JustHumanz/Go-Simp/blob/master/CHANGELOG.md)").
 				SetThumbnail(config.Sleep).
-				SetImage(config.Dead).
+				SetImage(engine.MaintenanceIMG()).
 				SetColor(Color).
 				SetFooter("Adios~").MessageEmbed)
 		}

@@ -29,7 +29,6 @@ var (
 	WorryIMG    string
 	GoSimpIMG   string
 	Longcatttt  = "https://cdn.ebaumsworld.com/2020/09/20/013235/86394200/longcat-pic.jpg"
-	Dead        string
 	BSD         string
 	Sleep       string
 	Bonjour     string
@@ -44,6 +43,7 @@ var (
 	VtubersData string
 	Scraper     *twitterscraper.Scraper
 	Ytwaiting   = "???"
+	CdnDomain   string
 )
 
 //Const config
@@ -274,6 +274,7 @@ func (Data ConfigFile) GetTwitchAccessToken() string {
 //InitConf initializing config file
 func (Data ConfigFile) InitConf() {
 	GoSimpConf = Data
+	CdnDomain = fmt.Sprintf("https://cdn.%s/", Data.Domain)
 	NotFound = fmt.Sprintf("https://cdn.%s/404.jpg", Data.Domain)
 	YoutubeIMG = fmt.Sprintf("https://cdn.%s/youtube.png", Data.Domain)
 	BiliBiliIMG = fmt.Sprintf("https://cdn.%s/bilibili.png", Data.Domain)
@@ -281,7 +282,6 @@ func (Data ConfigFile) InitConf() {
 	PixivIMG = fmt.Sprintf("https://cdn.%s/pixiv.png", Data.Domain)
 	WorryIMG = fmt.Sprintf("https://cdn.%s/parerunworry.png", Data.Domain)
 	GoSimpIMG = fmt.Sprintf("https://cdn.%s/go-simp.png", Data.Domain)
-	Dead = fmt.Sprintf("https://cdn.%s/dead.jpg", Data.Domain)
 	BSD = fmt.Sprintf("https://cdn.%s/bsd.png", Data.Domain)
 	Sleep = fmt.Sprintf("https://cdn.%s/sleep.png", Data.Domain)
 	Bonjour = fmt.Sprintf("https://cdn.%s/bonjour.png", Data.Domain)

@@ -63,7 +63,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetDescription("It looks like `"+FixName+"` doesn't have a livestream right now").
-									SetImage(config.WorryIMG).MessageEmbed)
+									SetImage(engine.NotFoundIMG()).MessageEmbed)
 								if err != nil {
 									log.Error(err)
 								}
@@ -104,7 +104,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 								SetDescription("It looks like `"+VTuberGroup.GroupName+"` doesn't have a livestream right now").
-								SetImage(config.WorryIMG).MessageEmbed)
+								SetImage(engine.NotFoundIMG()).MessageEmbed)
 							if err != nil {
 								log.Error(err)
 							}
@@ -154,7 +154,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 									SetDescription("It looks like `"+FixName+"` doesn't have a Past livestream right now").
-									SetImage(config.WorryIMG).MessageEmbed)
+									SetImage(engine.NotFoundIMG()).MessageEmbed)
 								if err != nil {
 									log.Error(err)
 								}
@@ -195,7 +195,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 								SetDescription("It looks like `"+VTuberGroup.GroupName+"` doesn't have a Past livestream right now").
-								SetImage(config.WorryIMG).MessageEmbed)
+								SetImage(engine.NotFoundIMG()).MessageEmbed)
 							if err != nil {
 								log.Error(err)
 							}
@@ -204,7 +204,9 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			}
 		} else {
-			_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+Prefix+"` command")
+			_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+				SetDescription("Incomplete `"+Prefix+"` command").
+				SetImage(engine.NotFoundIMG()).MessageEmbed)
 			if err != nil {
 				log.Error(err)
 			}
@@ -264,7 +266,7 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 								SetDescription("It looks like `"+FixName+"` doesn't have a video in space.bilibili").
-								SetImage(config.WorryIMG).MessageEmbed)
+								SetImage(engine.NotFoundIMG()).MessageEmbed)
 							if err != nil {
 								log.Error(err)
 							}
@@ -312,7 +314,7 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 						_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 							SetDescription("It looks like `"+VTuberGroup.GroupName+"` doesn't have a video in space.bilibili").
-							SetImage(config.WorryIMG).MessageEmbed)
+							SetImage(engine.NotFoundIMG()).MessageEmbed)
 						if err != nil {
 							log.Error(err)
 						}
@@ -321,7 +323,9 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			}
 		} else {
-			_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+Prefix+"` command")
+			_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+				SetDescription("Incomplete `"+Prefix+"` command").
+				SetImage(engine.NotFoundIMG()).MessageEmbed)
 			if err != nil {
 				log.Error(err)
 			}
