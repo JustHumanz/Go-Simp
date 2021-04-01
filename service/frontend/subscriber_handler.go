@@ -102,10 +102,13 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			}
 		} else {
-			_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+Prefix+"` command")
+			_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+				SetDescription("Incomplete `"+Prefix+"` command").
+				SetImage(engine.NotFoundIMG()).MessageEmbed)
 			if err != nil {
 				log.Error(err)
 			}
+
 		}
 	}
 }

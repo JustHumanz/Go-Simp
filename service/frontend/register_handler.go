@@ -384,7 +384,7 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 					_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 						SetTitle("404 Not found,use `"+Prefix+Setup+"` first").
 						SetThumbnail(config.GoSimpIMG).
-						SetImage(config.NotFound).MessageEmbed)
+						SetImage(engine.NotFoundIMG()).MessageEmbed)
 					if err != nil {
 						log.Error(err)
 					}
@@ -495,7 +495,9 @@ func RegisterFunc(s *discordgo.Session, m *discordgo.MessageCreate) {
 			Register.SetGroup(VTuberGroup)
 
 			if Register.ChannelState.Group.IsNull() {
-				_, err := s.ChannelMessageSend(m.ChannelID, "Invalid ID,Group not found")
+				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+					SetDescription("Invalid ID,Group not found").
+					SetImage(engine.NotFoundIMG()).MessageEmbed)
 				if err != nil {
 					log.Error(err)
 				}
