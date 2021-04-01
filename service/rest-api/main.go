@@ -51,57 +51,96 @@ func init() {
 			log.Panic(err)
 		}
 
+		configfile.InitConf()
+		database.Start(configfile)
+
 		for _, Group := range Payload.VtuberData {
 			var Mem []map[string]interface{}
 			VtuberGroups = append(VtuberGroups, Group)
 			for _, Member := range Group.Members {
-				VtuberMembers = append(VtuberMembers, Member)
-				tmp := map[string]interface{}{
+				Subs, err := Member.GetSubsCount()
+				if err != nil {
+					log.Error(err)
+				}
+
+				MemberData := map[string]interface{}{
 					"ID":       Member.ID,
 					"NickName": Member.Name,
 					"EnName":   Member.EnName,
 					"JpName":   Member.JpName,
-					"Region":   Member.Region,
-				}
-				if Member.BiliBiliID != 0 {
-					tmp["BiliBili"] = map[string]interface{}{
-						"ID":       Member.BiliBiliID,
-						"LiveRoom": Member.BiliRoomID,
-						"Avatar":   Member.BiliBiliAvatar,
-						"FanArt":   Member.BiliBiliHashtags,
-					}
-				} else {
-					tmp["BiliBili"] = nil
+					"Fanbase":  Member.Fanbase,
 				}
 
 				if Member.YoutubeID != "" {
-					tmp["Youtube"] = map[string]interface{}{
-						"ID":     Member.YoutubeID,
-						"Avatar": Member.YoutubeAvatar,
+					MemberData["Youtube"] = map[string]interface{}{
+						"ID":          Member.YoutubeID,
+						"Avatar":      Member.YoutubeAvatar,
+						"Subscriber":  Subs.YtSubs,
+						"ViwersCount": Subs.YtViews,
+						"TotalVideos": Subs.YtVideos,
 					}
 				} else {
-					tmp["Youtube"] = nil
+					MemberData["Youtube"] = nil
+				}
+
+				if Member.BiliBiliID != 0 {
+					var fanart interface{}
+					if Member.BiliBiliHashtags != "" {
+						fanart = Member.BiliBiliHashtags
+					} else {
+						fanart = nil
+					}
+					MemberData["BiliBili"] = map[string]interface{}{
+						"ID":          Member.BiliBiliID,
+						"RoomID":      Member.BiliRoomID,
+						"Avatar":      Member.BiliBiliAvatar,
+						"Fanart":      fanart,
+						"Followers":   Subs.BiliFollow,
+						"TotalVideos": Subs.BiliVideos,
+						"ViwersCount": Subs.BiliViews,
+					}
+				} else {
+					MemberData["BiliBili"] = nil
 				}
 
 				if Member.TwitterName != "" {
-					tmp["Twiter"] = map[string]interface{}{
-						"UserName": Member.TwitterName,
-						"FanArt":   Member.TwitterHashtags,
-						"Lewd":     Member.TwitterLewd,
+					var (
+						Lewd   interface{}
+						Fanart interface{}
+					)
+
+					if Member.TwitterLewd != "" {
+						Lewd = Member.TwitterLewd
+					} else {
+						Lewd = nil
+					}
+
+					if Member.TwitterHashtags != "" {
+						Fanart = Member.TwitterHashtags
+					} else {
+						Fanart = nil
+					}
+
+					MemberData["Twitter"] = map[string]interface{}{
+						"UserName":  Member.TwitterName,
+						"Fanart":    Fanart,
+						"Lewd":      Lewd,
+						"Followers": Subs.TwFollow,
 					}
 				} else {
-					tmp["Twiter"] = nil
+					MemberData["Twitter"] = nil
 				}
 
 				if Member.TwitchName != "" {
-					tmp["Twitch"] = map[string]interface{}{
+					MemberData["Twitch"] = map[string]interface{}{
 						"UserName": Member.TwitchName,
 						"Avatar":   Member.TwitchAvatar,
 					}
 				} else {
-					tmp["Twitch"] = nil
+					MemberData["Twitch"] = nil
 				}
-				Mem = append(Mem, tmp)
+				Mem = append(Mem, MemberData)
+				VtuberMembers = append(VtuberMembers, Member)
 			}
 			Data = append(Data, map[string]interface{}{
 				"ID":        Group.ID,
@@ -110,14 +149,12 @@ func init() {
 				"Members":   Mem,
 			})
 		}
-		configfile.InitConf()
 	}
-	RequestPayload()
 
+	RequestPayload()
 	c := cron.New()
 	c.Start()
 	c.AddFunc(config.CheckPayload, RequestPayload)
-	database.Start(configfile)
 	go pilot.RunHeartBeat(gRCPconn, "Rest_API")
 }
 
@@ -149,19 +186,6 @@ func main() {
 	PixivArt.HandleFunc("/", invalidPath).Methods("GET")
 	PixivArt.HandleFunc("/member/{memberID}", getFanart).Methods("GET")
 	PixivArt.HandleFunc("/group/{groupID}", getFanart).Methods("GET")
-	/*
-		router.HandleFunc("/Twitter", getFanart).Methods("GET")
-		router.HandleFunc("/Twitter/Group/{GroupID}", getFanart).Methods("GET")
-		router.HandleFunc("/Twitter/Member/{MemberID}", getFanart).Methods("GET")
-
-		router.HandleFunc("/Tbilibili", getFanart).Methods("GET")
-		router.HandleFunc("/Tbilibili/Group/{GroupID}", getFanart).Methods("GET")
-		router.HandleFunc("/Tbilibili/Member/{MemberID}", getFanart).Methods("GET")
-
-		router.HandleFunc("/Subscriber", getSubs).Methods("GET")
-		router.HandleFunc("/Subscriber/Group/{GroupID}", getSubs).Methods("GET")
-		router.HandleFunc("/Subscriber/Member/{MemberID}", getSubs).Methods("GET")
-	*/
 
 	Live := router.PathPrefix("/livestream").Subrouter()
 	Live.HandleFunc("/", invalidPath).Methods("GET")
@@ -175,7 +199,7 @@ func main() {
 	LiveBili.HandleFunc("/", invalidPath).Methods("GET")
 	LiveBili.HandleFunc("/group/{groupID}/{status}", getBilibili).Methods("GET")
 	LiveBili.HandleFunc("/member/{memberID}/{status}", getBilibili).Methods("GET")
-	http.ListenAndServe(":2525", router)
+	http.ListenAndServe(":2525", LowerCaseURI(router))
 }
 
 func invalidPath(w http.ResponseWriter, r *http.Request) {
@@ -240,7 +264,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 		if idstr != "" {
 			key := strings.Split(idstr, ",")
 			for _, Member := range Group["Members"].([]map[string]interface{}) {
-				Member["GroupID"] = Group["ID"]
+				Member["GroupID"] = Group["ID"].(int64)
 				for _, MemberStr := range key {
 					MemberInt, err := strconv.Atoi(MemberStr)
 					if err != nil {
@@ -252,13 +276,13 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 						w.WriteHeader(http.StatusInternalServerError)
 						return
 					}
-					MemberID := Member["ID"].(int64)
+
 					if region != "" {
-						if MemberInt == int(MemberID) && strings.ToLower(region) == strings.ToLower(Member["Region"].(string)) {
+						if MemberInt == int(Member["GroupID"].(int64)) && strings.ToLower(region) == strings.ToLower(Member["Region"].(string)) {
 							Members = append(Members, Member)
 						}
 					} else {
-						if MemberInt == int(MemberID) {
+						if MemberInt == int(Member["GroupID"].(int64)) {
 							Members = append(Members, Member)
 						}
 					}
@@ -282,147 +306,6 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-/*
-
-func getSubs(w http.ResponseWriter, r *http.Request) {
-	type SubsJson struct {
-		MemberID          int64
-		Name              string
-		EnName            string
-		JpName            string
-		YoutubeSubscribe  int
-		YoutubeVideos     int
-		YoutubeViews      int
-		BiliBiliFollowers int
-		BiliBiliVideos    int
-		BiliBiliViews     int
-		TwitterFollowers  int
-	}
-	var (
-		SubsData []SubsJson
-		Vars     = mux.Vars(r)
-	)
-	if Vars["GroupID"] != "" {
-		key := strings.Split(Vars["GroupID"], ",")
-		for _, Group := range Data {
-			for _, GroupIDstr := range key {
-				GroupIDint, err := strconv.Atoi(GroupIDstr)
-				if err != nil {
-					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(MessageError{
-						Message: err.Error(),
-						Date:    time.Now(),
-					})
-					w.WriteHeader(http.StatusInternalServerError)
-					return
-				}
-				if GroupIDint == int(Group.ID) {
-					for _, Member := range Group.Members {
-						tmp, err := Member.GetSubsCount()
-						if err != nil {
-							log.Error(err)
-						}
-						SubsData = append(SubsData, SubsJson{
-							MemberID:          tmp.MemberID,
-							Name:              Member.Name,
-							EnName:            Member.EnName,
-							JpName:            Member.JpName,
-							YoutubeSubscribe:  tmp.YtSubs,
-							YoutubeVideos:     tmp.YtVideos,
-							YoutubeViews:      tmp.YtViews,
-							BiliBiliFollowers: tmp.BiliFollow,
-							BiliBiliVideos:    tmp.BiliVideos,
-							BiliBiliViews:     tmp.BiliViews,
-							TwitterFollowers:  tmp.TwFollow,
-						})
-					}
-				}
-			}
-		}
-	} else if Vars["MemberID"] != "" {
-		key := strings.Split(Vars["MemberID"], ",")
-		for _, Group := range Data {
-			for _, Member := range Group["Members"].([]map[string]interface{}) {
-				for _, MemberIDstr := range key {
-					MemberIDint, err := strconv.Atoi(MemberIDstr)
-					if err != nil {
-						log.Error(err)
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(MessageError{
-							Message: err.Error(),
-							Date:    time.Now(),
-						})
-						w.WriteHeader(http.StatusInternalServerError)
-						return
-					}
-					if MemberIDint == int(Member.ID) {
-						tmp, err := Member.GetSubsCount()
-						if err != nil {
-							log.Error(err)
-							w.Header().Set("Content-Type", "application/json")
-							json.NewEncoder(w).Encode(MessageError{
-								Message: err.Error(),
-								Date:    time.Now(),
-							})
-							w.WriteHeader(http.StatusInternalServerError)
-							return
-						}
-						SubsData = append(SubsData, SubsJson{
-							MemberID:          tmp.MemberID,
-							Name:              Member.Name,
-							EnName:            Member.EnName,
-							JpName:            Member.JpName,
-							YoutubeSubscribe:  tmp.YtSubs,
-							YoutubeVideos:     tmp.YtVideos,
-							YoutubeViews:      tmp.YtViews,
-							BiliBiliFollowers: tmp.BiliFollow,
-							BiliBiliVideos:    tmp.BiliVideos,
-							BiliBiliViews:     tmp.BiliViews,
-							TwitterFollowers:  tmp.TwFollow,
-						})
-					}
-				}
-			}
-		}
-	} else {
-		for _, Group := range Payload.VtuberData {
-			for _, Member := range Group.Members {
-				tmp, err := Member.GetSubsCount()
-				if err != nil {
-					log.Error(err)
-				}
-				SubsData = append(SubsData, SubsJson{
-					MemberID:          tmp.MemberID,
-					Name:              Member.Name,
-					EnName:            Member.EnName,
-					JpName:            Member.JpName,
-					YoutubeSubscribe:  tmp.YtSubs,
-					YoutubeVideos:     tmp.YtVideos,
-					YoutubeViews:      tmp.YtViews,
-					BiliBiliFollowers: tmp.BiliFollow,
-					BiliBiliVideos:    tmp.BiliVideos,
-					BiliBiliViews:     tmp.BiliViews,
-					TwitterFollowers:  tmp.TwFollow,
-				})
-			}
-		}
-	}
-
-	if len(SubsData) > 0 {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(SubsData)
-	} else {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode(MessageError{
-			Message: "Reqest not found,404",
-			Date:    time.Now(),
-		})
-		w.WriteHeader(http.StatusNotFound)
-	}
-}
-*/
-
 type MessageError struct {
 	Message string
 	Date    time.Time
@@ -435,4 +318,13 @@ func GetMember(i int64) database.Member {
 		}
 	}
 	return database.Member{}
+}
+
+func LowerCaseURI(h http.Handler) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		r.URL.Path = strings.ToLower(r.URL.Path)
+		h.ServeHTTP(w, r)
+	}
+
+	return http.HandlerFunc(fn)
 }

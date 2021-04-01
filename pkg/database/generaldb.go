@@ -132,7 +132,6 @@ func (Member Member) GetSubsCount() (*MemberSubs, error) {
 			return nil, err
 		}
 	}
-
 	return &Data, nil
 }
 
