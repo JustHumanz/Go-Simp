@@ -69,6 +69,7 @@ func init() {
 					"EnName":   Member.EnName,
 					"JpName":   Member.JpName,
 					"Fanbase":  Member.Fanbase,
+					"Region":   Member.Region,
 				}
 
 				if Member.YoutubeID != "" {

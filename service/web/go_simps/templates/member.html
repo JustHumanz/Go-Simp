@@ -33,7 +33,7 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="/Support/hug/">Support dev with hug</a>
-              <a class="dropdown-item" target="_blank" rel="noopener noreferrer" href="https://www.patreon.com/JustHumanz">Sponsor this project</a>
+             <!-- <a class="dropdown-item" target="_blank" rel="noopener noreferrer" href="https://www.patreon.com/JustHumanz">Sponsor this project</a> -->
             </div>
           </li>
         </ul>
@@ -45,27 +45,27 @@
   <body>
     <div class="container" id="container">
       <div class="text-center">
-      {% if Member.BiliRoomID and Member.YoutubeID %}
+      {% if Member.BiliBili.RoomID and Member.Youtube.ID %}
       <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
           <div class="carousel-item active">
-            <a href="https://www.youtube.com/channel/{{Member.YoutubeID}}?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
-              <img class="w-20 rounded mx-auto" width="200" height="200" src="{{Member.YoutubeAvatar}}" alt="Youtube">
+            <a href="https://www.youtube.com/channel/{{Member.Youtube.ID}}?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
+              <img class="w-20 rounded mx-auto" width="200" height="200" src="{{Member.Youtube.Avatar}}" alt="Youtube">
             </a>
           </div>
           <div class="carousel-item">
-            <a href="http://space.bilibili.com/{{Member.BiliBiliID}}" target="_blank" rel="noopener noreferrer">
-              <img class="w-20 rounded mx-auto" width="200" height="200" src="{{Member.BiliBiliAvatar}}" alt="BiliBili">
+            <a href="http://space.bilibili.com/{{Member.BiliBili.ID}}" target="_blank" rel="noopener noreferrer">
+              <img class="w-20 rounded mx-auto" width="200" height="200" src="{{Member.BiliBili.Avatar}}" alt="BiliBili">
             </a>
           </div>
         </div>
       </div>
-      {% elif Member.YoutubeID and not Member.BiliRoomID %}
-        <a href="https://www.youtube.com/channel/{{Member.YoutubeID}}?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
-          <img class="w-20 rounded mx-auto" width="200" height="200" src="{{Member.YoutubeAvatar}}" alt="Youtube"></a>
-      {% elif Member.BiliRoomID and not Member.YoutubeID %} 
-        <a href="http://space.bilibili.com/{{Member.BiliBiliID}}" target="_blank" rel="noopener noreferrer">
-          <img class="w-20 rounded mx-auto" width="200" height="200" src="{{Member.BiliBiliAvatar}}" alt="BiliBili"></a>
+      {% elif Member.Youtube.ID and not Member.BiliBili.RoomID %}
+        <a href="https://www.youtube.com/channel/{{Member.Youtube.ID}}?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
+          <img class="w-20 rounded mx-auto" width="200" height="200" src="{{Member.Youtube.Avatar}}" alt="Youtube"></a>
+      {% elif Member.BiliBili.RoomID and not Member.Youtube.ID %} 
+        <a href="http://space.bilibili.com/{{Member.BiliBili.ID}}" target="_blank" rel="noopener noreferrer">
+          <img class="w-20 rounded mx-auto" width="200" height="200" src="{{Member.BiliBili.Avatar}}" alt="BiliBili"></a>
       {% endif %}
       <div class="container mb-5">
         <div class="row">
@@ -78,32 +78,32 @@
               {% elif not Member.EnName and Member.JpName %}    
                 Original Name: {{Member.JpName}}<br>
               {% endif %} 
-              Nickname: {{Member.Name}}<br>
+              Nickname: {{Member.NickName}}<br>
               Region: {{Member.Region}}<br>
            </div>
         </div>        
         <div class="row text-center">
            <div class="col-xs-6 col-sm-4 col-md-4 mt-4">
               <div class="counter-div">
-                <a href="https://www.youtube.com/channel/{{Member.YoutubeID}}?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.youtube.com/channel/{{Member.Youtube.ID}}?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
                  <i class="fa fa-youtube-play fa-yt fa-2x"></i></a>
-                 <h2 class="timer count-title count-number prg-count counter" data-count="{{SubsInfo.YoutubeSubscribe}}">0</h2>
+                 <h2 class="timer count-title count-number prg-count counter" data-count="{{Member.Youtube.Subscriber}}">0</h2>
                  <p class="count-text ">Youtube Subscriber</p>
               </div>
            </div>
            <div class="col-xs-6 col-sm-4 col-md-4 mt-4">
               <div class="counter-div" >
-                <a href="https://twitter.com/{{Member.TwitterName}}" target="_blank" rel="noopener noreferrer">
+                <a href="https://twitter.com/{{Member.Twitter.UserName}}" target="_blank" rel="noopener noreferrer">
                  <i class="fa fa-twitter fa-tw fa-2x"></i></a>
-                 <h2 class="timer count-title count-number prg-count counter" data-count="{{SubsInfo.TwitterFollowers}}">0</h2>
+                 <h2 class="timer count-title count-number prg-count counter" data-count="{{Member.Twitter.Followers}}">0</h2>
                  <p class="count-text ">Twitter followers</p>
               </div>
            </div>
            <div class="col-xs-6 col-sm-4 col-md-4 mt-4">
               <div class="counter-div">
-                <a href="https://space.bilibili.com/{{Member.BiliBiliID}}" target="_blank" rel="noopener noreferrer">
+                <a href="https://space.bilibili.com/{{Member.BiliBili.ID}}" target="_blank" rel="noopener noreferrer">
                 <svg class="icon" style="width: 2em; height: 2em;vertical-align: middle;fill: #23aee5;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="517"><path d="M777.514667 131.669333a53.333333 53.333333 0 0 1 0 75.434667L728.746667 255.829333h49.92A160 160 0 0 1 938.666667 415.872v320a160 160 0 0 1-160 160H245.333333A160 160 0 0 1 85.333333 735.872v-320a160 160 0 0 1 160-160h49.749334L246.4 207.146667a53.333333 53.333333 0 1 1 75.392-75.434667l113.152 113.152c3.370667 3.370667 6.186667 7.04 8.448 10.965333h137.088c2.261333-3.925333 5.12-7.68 8.490667-11.008l113.109333-113.152a53.333333 53.333333 0 0 1 75.434667 0z m1.152 231.253334H245.333333a53.333333 53.333333 0 0 0-53.205333 49.365333l-0.128 4.010667v320c0 28.117333 21.76 51.157333 49.365333 53.162666l3.968 0.170667h533.333334a53.333333 53.333333 0 0 0 53.205333-49.365333l0.128-3.968v-320c0-29.44-23.893333-53.333333-53.333333-53.333334z m-426.666667 106.666666c29.44 0 53.333333 23.893333 53.333333 53.333334v53.333333a53.333333 53.333333 0 1 1-106.666666 0v-53.333333c0-29.44 23.893333-53.333333 53.333333-53.333334z m320 0c29.44 0 53.333333 23.893333 53.333333 53.333334v53.333333a53.333333 53.333333 0 1 1-106.666666 0v-53.333333c0-29.44 23.893333-53.333333 53.333333-53.333334z" p-id="518"></path></svg></a>
-                 <h2 class="timer count-title count-number prg-count counter" data-count="{{SubsInfo.BiliBiliFollowers}}">0</h2>
+                 <h2 class="timer count-title count-number prg-count counter" data-count="{{Member.BiliBili.Followers}}">0</h2>
                  <p class="count-text ">BiliBili followers</p>
               </div>
            </div>

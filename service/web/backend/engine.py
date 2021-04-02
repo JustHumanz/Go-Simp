@@ -1,11 +1,8 @@
 from github import Github
 import requests,os,json,re
 
-GroupURL = "http://"+os.environ['REST_API']+":2525/Groups"
 AllURL = "http://"+os.environ['REST_API']+":2525/All"
-SubscriberURL = "http://"+os.environ['REST_API']+":2525/Subscriber/"
-ChannelURL = "http://"+os.environ['REST_API']+":2525/channel/"
-Youtube = "http://"+os.environ['REST_API']+":2525/Youtube/"
+Youtube = "http://"+os.environ['REST_API']+":2525/livestream/youtube/member/"
 API_ENDPOINT = 'https://discord.com/api/v6'
 
 class GetVtubers:
@@ -20,6 +17,11 @@ class GetVtubers:
         
         self.Members = Members
 
+    def GetMemberInfo(self,ID):
+        for Member in self.Members:
+            if int(ID) == int(Member["ID"]):
+                return Member
+
     def GetGroups(self):
         self.Groups = []
         for Group in self.BaseData:
@@ -27,13 +29,7 @@ class GetVtubers:
             del GroupTMP["Members"]
             self.Groups.append(GroupTMP)
         return self.Groups
-        
-    def GetMemberSubs(self,ID):
-        for Member in self.Members:
-            if int(Member["ID"]) == int(ID):
-                SubInfo = requests.get(SubscriberURL+"Member/"+str(Member["ID"]))    
-                return Member,SubInfo.json()[0]
-        return None        
+           
 
     def GetMemberGroups(self,GroupID):
         GroupMember = []
@@ -42,6 +38,8 @@ class GetVtubers:
                 for Member in Group["Members"]:
                     if MemberCheckLive(Member["ID"]) is not None:
                         Member["YtLive"] = True
+                    else:
+                        Member["YtLive"] = False    
                 """
                 MemberData["YtLive"] = False
                 if LiveInfo is not None:
@@ -56,7 +54,8 @@ class GetVtubers:
 
     def ResizeImg(self,size):
         for i in range(len(self.Members)):
-            self.Members[i]["YoutubeAvatar"] = self.Members[i]["YoutubeAvatar"].replace("s800","s"+size)    
+            if self.Members[i]["Youtube"] is not None:
+                self.Members[i]["Youtube"]["Avatar"] = self.Members[i]["Youtube"]["Avatar"].replace("s800","s"+size)    
 
 def GetRegList(Members):
     Region = []
@@ -66,7 +65,7 @@ def GetRegList(Members):
     return Region    
 
 def MemberCheckLive(MemberID):
-    response = requests.get(Youtube+"Member/"+str(MemberID)+"/Live")
+    response = requests.get(Youtube+str(MemberID)+"/Live")
     if response.ok:
         return response.json()
     else:

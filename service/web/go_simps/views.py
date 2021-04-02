@@ -6,10 +6,6 @@ from backend.engine import *
 git = GitGood(os.environ['GITKEY'])
 DOMAIN = os.environ['DOMAIN']
 
-"""
-LOGINURL = "https://discord.com/api/oauth2/authorize?client_id=719540207552167936&permissions=522304&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2FDiscord%2Flanding&response_type=code&scope=bot%20guilds%20identify"
-Discord = Discortttt()
-"""
 Vtubers = GetVtubers()
 Vtubers.ResizeImg("512")
 Groups = Vtubers.GetGroups()
@@ -65,8 +61,8 @@ def go_simps_add(request):
         return render(request,'add.html',Payload)
 
 def go_simps_member(request,MemberID):
-    Member,Subs = Vtubers.GetMemberSubs(MemberID)
-    return render(request, 'member.html',{'Member': Member,'SubsInfo':Subs,'Domain':DOMAIN})
+    Member = Vtubers.GetMemberInfo(MemberID)
+    return render(request, 'member.html',{'Member': Member,'Domain':DOMAIN})
 
 
 def go_simps_support(request,Type):
