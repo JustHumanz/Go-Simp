@@ -1,12 +1,9 @@
 package config
 
 import (
-	"context"
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"time"
 
 	"github.com/BurntSushi/toml"
@@ -69,7 +66,7 @@ const (
 	PixivFanartLewd            = "@every 1h0m0s"
 	BiliBiliLive               = "@every 0h7m0s"
 	BiliBiliSpace              = "@every 0h13m0s"
-	Twitch                     = "@every 0h7m0s"
+	Twitch                     = "@every 0h11m0s"
 	YoutubeCheckChannel        = "@every 0h10m30s"
 	YoutubeCheckUpcomingByTime = "@every 0h1m0s"
 	YoutubePrivateSlayer       = "@every 2h31m0s"
@@ -223,6 +220,7 @@ func (Data ConfigFile) CheckSQL() *sql.DB {
 	return db
 }
 
+/*
 //GetTwitchAccessToken get twitch access token
 func (Data ConfigFile) GetTwitchAccessToken() string {
 	if TwitchToken != "" {
@@ -271,6 +269,7 @@ func (Data ConfigFile) GetTwitchAccessToken() string {
 		return TwitchToken
 	}
 }
+*/
 
 //InitConf initializing config file
 func (Data ConfigFile) InitConf() {

@@ -2,6 +2,8 @@ v3.5.2
 - Update rest api to V2
 - Update Go simp web
 - Update utility
+- Update dependencies
+- Change twitch auth
 
 v3.5.1
 - Fix Pixiv 401

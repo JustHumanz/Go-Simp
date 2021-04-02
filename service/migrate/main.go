@@ -36,7 +36,6 @@ var (
 	BiliBiliSession []string
 	Bot             *discordgo.Session
 	TwitchClient    *helix.Client
-	TwitchToken     string
 	configfile      config.ConfigFile
 	gRCPconn        pilot.PilotServiceClient
 )
@@ -91,7 +90,7 @@ func init() {
 	YoutubeToken = engine.GetYtToken()
 	BiliBiliSession = []string{"Cookie", "SESSDATA=" + configfile.BiliSess}
 	Limit = 100
-	TwitchToken = configfile.GetTwitchAccessToken()
+
 	err = Bot.Open()
 	if err != nil {
 		log.Error(err)
@@ -105,7 +104,13 @@ func init() {
 	if err != nil {
 		log.Error(err)
 	}
-	TwitchClient.SetUserAccessToken(TwitchToken)
+
+	resp, err := TwitchClient.RequestAppAccessToken([]string{"user:read:email"})
+	if err != nil {
+		log.Error(err)
+	}
+
+	TwitchClient.SetAppAccessToken(resp.Data.AccessToken)
 
 	Bot.AddHandler(Dead)
 	err = Bot.UpdateStreamingStatus(0, "Maintenance!!!!", config.VtubersData)

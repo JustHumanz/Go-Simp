@@ -34,7 +34,12 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 	if err != nil {
 		log.Error(err)
 	}
-	TwitchClient.SetUserAccessToken(config.GoSimpConf.GetTwitchAccessToken())
+	resp, err := TwitchClient.RequestAppAccessToken([]string{"user:read:email"})
+	if err != nil {
+		log.Error(err)
+	}
+
+	TwitchClient.SetAppAccessToken(resp.Data.AccessToken)
 	b.AddFunc(config.Twitch, CheckTwitch)
 	log.Info("Enable Twitch module")
 }
@@ -51,8 +56,8 @@ func CheckTwitch() {
 				result, err := TwitchClient.GetStreams(&helix.StreamsParams{
 					UserLogins: []string{Member.TwitchName},
 				})
-				if err != nil {
-					log.Error(err)
+				if err != nil || result.ErrorMessage != "" {
+					log.Error(err, result.ErrorMessage)
 				}
 
 				ResultDB, err := database.GetTwitch(Member.ID)
@@ -63,12 +68,12 @@ func CheckTwitch() {
 				if len(result.Data.Streams) > 0 {
 					for _, Stream := range result.Data.Streams {
 						if ResultDB.Status == config.PastStatus && Stream.Type == config.LiveStatus {
-							if strings.ToLower(Stream.UserName) == strings.ToLower(Member.TwitchName) {
+							if strings.EqualFold(Stream.UserName, Member.TwitchName) {
 								GameResult, err := TwitchClient.GetGames(&helix.GamesParams{
 									IDs: []string{Stream.GameID},
 								})
-								if err != nil {
-									log.Error(err)
+								if err != nil || GameResult.ErrorMessage != "" {
+									log.Error(err, GameResult.ErrorMessage)
 								}
 
 								Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{width}", "1280", -1)
