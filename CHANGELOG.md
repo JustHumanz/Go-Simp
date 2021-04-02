@@ -1,3 +1,8 @@
+v3.5.2
+- Update rest api to V2
+- Update Go simp web
+- Update utility
+
 v3.5.1
 - Fix Pixiv 401
 - Change data.bilibili to live.bilibili
