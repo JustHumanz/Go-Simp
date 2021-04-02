@@ -23,7 +23,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 	var (
 		Member      bool
 		Group       bool
-		Pic         = config.NotFound
+		Pic         = engine.NotFoundIMG()
 		Msg         string
 		embed       *discordgo.MessageEmbed
 		DynamicData DynamicSvr
@@ -88,7 +88,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 				if FanArtData.Videos != "" {
 					Msg = "Video type,check original post"
-					Pic = config.NotFound
+					Pic = engine.NotFoundIMG()
 				} else if len(FanArtData.Photos) > 0 {
 					Pic = FanArtData.Photos[0]
 					Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
@@ -113,7 +113,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 					if FanArtData.Videos != "" {
 						Msg = "Video type,check original post"
-						Pic = config.NotFound
+						Pic = engine.NotFoundIMG()
 					} else if len(FanArtData.Photos) > 0 {
 						Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
 						Pic = FanArtData.Photos[0]
@@ -128,7 +128,12 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 			return
 		}
 		if !Group && !Member {
-			s.ChannelMessageSend(m.ChannelID, "`"+m.Content[len(Prefix):]+"` was invalid name")
+			_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+				SetDescription("`"+m.Content[len(Prefix):]+"` was invalid name").
+				SetImage(engine.NotFoundIMG()).MessageEmbed)
+			if err != nil {
+				log.Error(err)
+			}
 		}
 	}
 }
@@ -139,7 +144,7 @@ func Lewd(s *discordgo.Session, m *discordgo.MessageCreate) {
 	var (
 		Member bool
 		Group  bool
-		Pic    = config.NotFound
+		Pic    = engine.NotFoundIMG()
 		Msg    string
 		embed  *discordgo.MessageEmbed
 	)
@@ -203,7 +208,7 @@ func Lewd(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 					if FanArtData.Videos != "" {
 						Msg = "Video type,check original post"
-						Pic = config.NotFound
+						Pic = engine.NotFoundIMG()
 					} else if len(FanArtData.Photos) > 0 {
 						Pic = FanArtData.Photos[0]
 						Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
@@ -231,7 +236,7 @@ func Lewd(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 						if FanArtData.Videos != "" {
 							Msg = "Video type,check original post"
-							Pic = config.NotFound
+							Pic = engine.NotFoundIMG()
 						} else if len(FanArtData.Photos) > 0 {
 							Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
 							Pic = FanArtData.Photos[0]
@@ -249,10 +254,20 @@ func Lewd(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 
 			if !Group && !Member {
-				s.ChannelMessageSend(m.ChannelID, "`"+m.Content[len(Prefix):]+"` was invalid name")
+				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+					SetDescription("`"+m.Content[len(Prefix):]+"` was invalid name").
+					SetImage(engine.NotFoundIMG()).MessageEmbed)
+				if err != nil {
+					log.Error(err)
+				}
 			}
 		} else {
-			s.ChannelMessageSend(m.ChannelID, "i know you horny,but this channel was not a NSFW channel")
+			_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+				SetDescription("i know you horny,but this channel was not a NSFW channel").
+				SetImage(engine.LewdIMG()).MessageEmbed)
+			if err != nil {
+				log.Error(err)
+			}
 			return
 		}
 	}
@@ -294,7 +309,12 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				tmpvar := re.FindAllString(UserInput, -1)[0]
 				tmpvar2, err := strconv.Atoi(strings.TrimSpace(tmpvar[len(tmpvar)-2:]))
 				if err != nil {
-					s.ChannelMessageSend(m.ChannelID, "Invalid number, "+err.Error())
+					_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+						SetDescription("Invalid number, "+err.Error()).
+						SetImage(engine.NotFoundIMG()).MessageEmbed)
+					if err != nil {
+						log.Error(err)
+					}
 					return
 				} else {
 					if tmpvar2 < 10 && tmpvar2 != 0 {
@@ -324,7 +344,12 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if Member.IsMemberNill() {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
-							s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtuber groups and names.\nFor more information visit:\n "+config.VtubersData)
+							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+								SetDescription("`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtuber groups and names.\nFor more information visit:\n "+config.VtubersData).
+								SetImage(engine.NotFoundIMG()).MessageEmbed)
+							if err != nil {
+								log.Error(err)
+							}
 							return
 						}
 						if database.CheckChannelEnable(m.ChannelID, Name, VTuberGroup.ID) {
@@ -430,7 +455,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+TagMe+"` command")
+				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+					SetDescription("Incomplete `"+TagMe+"` command").
+					SetImage(engine.NotFoundIMG()).MessageEmbed)
 				if err != nil {
 					log.Error(err)
 				}
@@ -447,7 +474,12 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					tmpvar := FindInt[2]
 					tmpvar2, err := strconv.Atoi(tmpvar)
 					if err != nil {
-						s.ChannelMessageSend(m.ChannelID, "Invalid number, "+err.Error())
+						_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+							SetDescription("Invalid number, "+err.Error()).
+							SetImage(engine.NotFoundIMG()).MessageEmbed)
+						if err != nil {
+							log.Error(err)
+						}
 						return
 					} else {
 						if tmpvar2 < 10 && tmpvar2 != 0 {
@@ -464,7 +496,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 					}
 				} else {
-					_, err := s.ChannelMessageSend(m.ChannelID, "Invalid `"+SetReminder+"` command")
+					_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+						SetDescription("Invalid `"+SetReminder+"` command").
+						SetImage(engine.NotFoundIMG()).MessageEmbed)
 					if err != nil {
 						log.Error(err)
 					}
@@ -477,7 +511,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if Member.IsMemberNill() {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
-							_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
+							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+								SetDescription("`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData).
+								SetImage(engine.NotFoundIMG()).MessageEmbed)
 							if err != nil {
 								log.Error(err)
 							}
@@ -607,7 +643,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 				}
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+SetReminder+"` command")
+				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+					SetDescription("Incomplete `"+SetReminder+"` command").
+					SetImage(engine.NotFoundIMG()).MessageEmbed)
 				if err != nil {
 					log.Error(err)
 				}
@@ -624,7 +662,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					if Member.IsMemberNill() {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
-							_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
+							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+								SetDescription("`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData).
+								SetImage(engine.NotFoundIMG()).MessageEmbed)
 							if err != nil {
 								log.Error(err)
 							}
@@ -737,10 +777,13 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+DelTag+"` command")
+				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+					SetDescription("Incomplete `"+DelTag+"` command").
+					SetImage(engine.NotFoundIMG()).MessageEmbed)
 				if err != nil {
 					log.Error(err)
 				}
+
 			}
 		} else if strings.HasPrefix(m.Content, Prefix+TagRoles) {
 			Admin, err := MemberHasPermission(m.GuildID, m.Author.ID)
@@ -758,7 +801,12 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					tmpvar := re.FindAllString(UserInput, -1)[0]
 					tmpvar2, err := strconv.Atoi(strings.TrimSpace(tmpvar[len(tmpvar)-2:]))
 					if err != nil {
-						s.ChannelMessageSend(m.ChannelID, "Invalid number, "+err.Error())
+						_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+							SetDescription("Invalid number, "+err.Error()).
+							SetImage(engine.NotFoundIMG()).MessageEmbed)
+						if err != nil {
+							log.Error(err)
+						}
 						return
 					} else {
 						if tmpvar2 < 10 && tmpvar2 != 0 {
@@ -795,7 +843,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)
-								_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
+								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+									SetDescription("`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData).
+									SetImage(engine.NotFoundIMG()).MessageEmbed)
 								if err != nil {
 									log.Error(err)
 								}
@@ -933,7 +983,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 					}
 				} else {
-					_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+TagRoles+"` command")
+					_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+						SetDescription("Incomplete `"+TagRoles+"` command").
+						SetImage(engine.NotFoundIMG()).MessageEmbed)
 					if err != nil {
 						log.Error(err)
 					}
@@ -968,7 +1020,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)
-								_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
+								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+									SetDescription("`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData).
+									SetImage(engine.NotFoundIMG()).MessageEmbed)
 								if err != nil {
 									log.Error(err)
 								}
@@ -1101,7 +1155,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 					}
 				} else {
-					_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+DelRoles+"` command")
+					_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+						SetDescription("Incomplete `"+DelRoles+"` command").
+						SetImage(engine.NotFoundIMG()).MessageEmbed)
 					if err != nil {
 						log.Error(err)
 					}
@@ -1126,7 +1182,12 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				ReminderUser := 0
 				tmpvar2, err := strconv.Atoi(strings.TrimSpace(tmpvar))
 				if err != nil {
-					s.ChannelMessageSend(m.ChannelID, "Invalid number, "+err.Error()+"\nExample: `"+Prefix+RolesReminder+"` @somerole Hololive 30")
+					_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+						SetDescription("Invalid number, "+err.Error()+"\nExample: `"+Prefix+RolesReminder+"` @somerole Hololive 30").
+						SetImage(engine.NotFoundIMG()).MessageEmbed)
+					if err != nil {
+						log.Error(err)
+					}
 					return
 				} else {
 					if tmpvar2 < 10 && tmpvar2 != 0 {
@@ -1156,7 +1217,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)
-								_, err := s.ChannelMessageSend(m.ChannelID, "`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData)
+								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+									SetDescription("`"+Name+"` was invalid,use `"+VtuberData+"` command to see vtubers name or see at web site \n "+config.VtubersData).
+									SetImage(engine.NotFoundIMG()).MessageEmbed)
 								if err != nil {
 									log.Error(err)
 								}
@@ -1291,7 +1354,9 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 					}
 				} else {
-					_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+RolesReminder+"` command")
+					_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+						SetDescription("Incomplete `"+RolesReminder+"` command").
+						SetImage(engine.NotFoundIMG()).MessageEmbed)
 					if err != nil {
 						log.Error(err)
 					}
@@ -1379,7 +1444,9 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+Disable+"` command")
+				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+					SetDescription("Incomplete `"+Disable+"` command").
+					SetImage(engine.NotFoundIMG()).MessageEmbed)
 				if err != nil {
 					log.Error(err)
 				}
@@ -1499,7 +1566,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 							} else {
 								_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 									SetTitle("404 Not found").
-									SetImage(config.NotFound).
+									SetImage(engine.NotFoundIMG()).
 									SetColor(Color).MessageEmbed)
 								if err != nil {
 									log.Error(err)
@@ -1509,7 +1576,10 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 			} else {
-				_, err := s.ChannelMessageSend(m.ChannelID, "Incomplete `"+RolesTags+"` command")
+				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+					SetDescription("Incomplete `"+RolesTags+"` command").
+					SetImage(engine.NotFoundIMG()).
+					SetColor(Color).MessageEmbed)
 				if err != nil {
 					log.Error(err)
 				}
@@ -1535,7 +1605,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 					SetDescription("Your tag list is empty.").
 					SetTitle("404 Not found").
-					SetImage(config.NotFound).
+					SetImage(engine.NotFoundIMG()).
 					SetColor(Color).MessageEmbed)
 				if err != nil {
 					log.Error(err)
@@ -1701,7 +1771,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 					SetTitle("404 Not found").
 					SetThumbnail(config.GoSimpIMG).
-					SetImage(config.NotFound).
+					SetImage(engine.NotFoundIMG()).
 					SetColor(Color).MessageEmbed)
 				if err != nil {
 					log.Error(err)
@@ -1833,6 +1903,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 					SetThumbnail(config.GoSimpIMG).
 					SetURL(config.CommandURL).
+					SetImage(engine.NotFoundIMG()).
 					SetDescription("Invalid command,see command at my github\n"+config.CommandURL).
 					SetColor(Color).MessageEmbed)
 				if err != nil {

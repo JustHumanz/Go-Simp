@@ -33,7 +33,7 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="/Support/hug/">Support dev with hug</a>
-              <a class="dropdown-item" target="_blank" rel="noopener noreferrer" href="https://ko-fi.com/justhumanz">Support dev with ko-fi</a>
+              <!-- <a class="dropdown-item" target="_blank" rel="noopener noreferrer" href="https://www.patreon.com/JustHumanz">Sponsor this project</a> -->
             </div>
           </li>
         </ul>
@@ -57,11 +57,11 @@
       {% if Add %}
         {% for Member in Members %}
         <a class="MemberInfo" href="/Member/{{Member.ID}}">
-          <figure class="figure p-1" name="{{Member.Region}}" id="{{Member.Name}}">
-            {% if Member.YoutubeAvatar != "" %}
-              <img src={{Member.YoutubeAvatar}} class="zoom figure-img img-fluid img-thumbnail" alt="" width="75" height="75">
-            {% elif Member.BiliBiliAvatar != "" %}
-              <img src={{Member.BiliBiliAvatar}} class="zoom figure-img img-fluid img-thumbnail" alt="" width="75" height="75">
+          <figure class="figure p-1" name="{{Member.Region}}" id="{{Member.NickName}}">
+            {% if Member.Youtube.Avatar != "" %}
+              <img src={{Member.Youtube.Avatar}} class="zoom figure-img img-fluid img-thumbnail" alt="" width="75" height="75">
+            {% elif Member.BiliBili.Avatar != "" %}
+              <img src={{Member.BiliBili.Avatar}} class="zoom figure-img img-fluid img-thumbnail" alt="" width="75" height="75">
             {% else %}
               <img src=https://cdn.{{Domain}}/404.jpg class="zoom figure-img img-fluid img-thumbnail" alt="" width="75" height="75">
             {% endif %}
@@ -73,16 +73,16 @@
       <div class="row row-cols-1 row-cols-md-4 ">
         {% for Member in Members %}
         <div class="col mb-4">
-          <div class="card" name="{{Member.Region}}" id="{{Member.Name}}">
-            {% if Member.YoutubeAvatar != "" %}
-              <img class="card-img-top" src="{{Member.YoutubeAvatar}}" alt="Card image cap">
-            {% elif Member.BiliBiliAvatar != "" %}
-              <img class="card-img-top" src="{{Member.BiliBiliAvatar}}" alt="Card image cap">
+          <div class="card" name="{{Member.Region}}" id="{{Member.NickName}}">
+            {% if Member.Youtube.Avatar != "" %}
+              <img class="card-img-top" src="{{Member.Youtube.Avatar}}" alt="Card image cap">
+            {% elif Member.BiliBili.Avatar != "" %}
+              <img class="card-img-top" src="{{Member.BiliBili.Avatar}}" alt="Card image cap">
             {% else %}  
               <img class="card-img-top" src="https://cdn.{{Domain}}/404.jpg" alt="Card image cap">
             {% endif %}
             <div class="card-body">
-              <h5 class="card-title">{{Member.Name}}</h5>
+              <h5 class="card-title">{{Member.NickName}}</h5>
               <a href="/Member/{{Member.ID}}" class="btn btn-primary">Info</a>
             </div>
             {% if Member.YtLive %}

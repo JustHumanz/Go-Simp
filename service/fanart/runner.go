@@ -46,17 +46,18 @@ func main() {
 			if configfile.Discord != "" {
 				pilot.ReportDeadService(err.Error())
 			}
-			log.Fatalf("Error when request payload: %s", err)
+			log.Error("Error when request payload: %s", err)
 		}
 		err = json.Unmarshal(res.ConfigFile, &configfile)
 		if err != nil {
-			log.Panic(err)
+			log.Error(err)
 		}
 
 		err = json.Unmarshal(res.VtuberPayload, &Payload)
 		if err != nil {
-			log.Panic(err)
+			log.Error(err)
 		}
+		configfile.InitConf()
 	}
 	RequestPay()
 
@@ -65,7 +66,6 @@ func main() {
 		log.Error(err)
 	}
 
-	configfile.InitConf()
 	database.Start(configfile)
 
 	c := cron.New()
