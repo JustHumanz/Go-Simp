@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"math/rand"
 	"os"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
@@ -30,7 +31,7 @@ func main() {
 	RequestPay := func() {
 		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
 			Message: "Send me nude",
-			Service: "Livestream",
+			Service: "Utility",
 		})
 		if err != nil {
 			if configfile.Discord != "" {
@@ -66,6 +67,9 @@ func main() {
 		return len(Bot.State.Guilds)
 	}
 	GuildCount()
+	Donation := configfile.DonationLink
+	configfile.InitConf()
+	database.Start(configfile)
 
 	Bot.AddHandler(func(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 		if (m.Emoji.MessageFormat() == configfile.Emoji.Livestream[0] || m.Emoji.MessageFormat() == configfile.Emoji.Livestream[1]) && m.UserID != BotInfo.ID {
@@ -128,19 +132,32 @@ func main() {
 		}
 	})
 
-	Donation := configfile.DonationLink
-	configfile.InitConf()
-	database.Start(configfile)
-
 	c := cron.New()
 	c.Start()
 	if configfile.DonationLink != "" {
+		Img := config.GoSimpIMG
+		if rand.Float32() < 0.5 {
+			if rand.Float32() < 0.5 {
+				Img = engine.LewdIMG()
+			} else {
+				Img = engine.MaintenanceIMG()
+			}
+			Img = engine.NotFoundIMG()
+		} else {
+			if rand.Float32() < 0.5 {
+				Img = engine.NotFoundIMG()
+			} else {
+				Img = engine.MaintenanceIMG()
+			}
+			Img = engine.LewdIMG()
+		}
+
 		c.AddFunc(config.DonationMsg, func() {
 			Bot.ChannelMessageSendEmbed(database.GetRanChannel(), engine.NewEmbed().
 				SetTitle("Donate").
 				SetURL(Donation).
 				SetThumbnail(BotInfo.AvatarURL("128")).
-				SetImage(config.GoSimpIMG).
+				SetImage(Img).
 				SetColor(14807034).
 				SetDescription("Enjoy the bot?\ndon't forget to support this bot and dev").
 				AddField("Ko-Fi", "[Link]("+Donation+")").

@@ -65,7 +65,6 @@ const (
 	//Crontab
 	TwitterFanart              = "@every 0h3m0s"
 	BiliBiliFanart             = "@every 0h6m0s"
-	DanbooruFanart             = "@every 0h4m0s"
 	PixivFanart                = "@every 0h15m0s"
 	PixivFanartLewd            = "@every 1h0m0s"
 	BiliBiliLive               = "@every 0h7m0s"
@@ -77,7 +76,7 @@ const (
 	YoutubeSubscriber          = "@every 1h0m0s"
 	BiliBiliFollowers          = "@every 0h30m0s"
 	TwitterFollowers           = "@every 0h17m0s"
-	DonationMsg                = "@every 0h30m0s"
+	DonationMsg                = "@every 0h45m0s"
 	CheckServerCount           = "@every 0h10m0s"
 	CheckPayload               = "@every 2h0m0s"
 	PilotGetGroups             = "@every 1h30m0s"
