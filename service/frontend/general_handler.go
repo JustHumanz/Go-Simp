@@ -23,8 +23,6 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 	var (
 		Member      bool
 		Group       bool
-		Pic         = engine.NotFoundIMG()
-		Msg         string
 		embed       *discordgo.MessageEmbed
 		DynamicData DynamicSvr
 	)
@@ -48,10 +46,10 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					SetThumbnail(DynamicData.GetUserAvatar()).
 					SetDescription(RemovePic(Data.Text)).
 					SetURL(Data.PermanentURL).
-					SetImage(Pic).
+					SetImage(Data.Photos...).
 					SetColor(Color).
 					InlineAllFields().
-					SetFooter(Msg, config.BiliBiliIMG).MessageEmbed
+					SetFooter(Data.State, config.BiliBiliIMG).MessageEmbed
 			} else {
 				embed = engine.NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
@@ -59,10 +57,10 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					SetThumbnail(engine.GetAuthorAvatar(Data.Author)).
 					SetDescription(RemovePic(Data.Text)).
 					SetURL(Data.PermanentURL).
-					SetImage(Pic).
+					SetImage(Data.Photos...).
 					SetColor(Color).
 					InlineAllFields().
-					SetFooter(Msg, config.TwitterIMG).MessageEmbed
+					SetFooter(Data.State, config.TwitterIMG).MessageEmbed
 			}
 			msg, err := s.ChannelMessageSendEmbed(m.ChannelID, embed)
 			if err != nil {
@@ -86,13 +84,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					s.ChannelMessageSend(m.ChannelID, "Opps,something goes worng,like dev life\n"+err.Error())
 					return
 				}
-				if FanArtData.Videos != "" {
-					Msg = "Video type,check original post"
-					Pic = engine.NotFoundIMG()
-				} else if len(FanArtData.Photos) > 0 {
-					Pic = FanArtData.Photos[0]
-					Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
-				}
+
 				for _, v := range GroupData.Members {
 					if v.ID == FanArtData.Member.ID {
 						FanArtData.AddMember(v)
@@ -111,13 +103,6 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 						return
 					}
 
-					if FanArtData.Videos != "" {
-						Msg = "Video type,check original post"
-						Pic = engine.NotFoundIMG()
-					} else if len(FanArtData.Photos) > 0 {
-						Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
-						Pic = FanArtData.Photos[0]
-					}
 					FanArtData.AddMember(MemberData)
 					Member = SendNude(FanArtData)
 					break
@@ -144,8 +129,6 @@ func Lewd(s *discordgo.Session, m *discordgo.MessageCreate) {
 	var (
 		Member bool
 		Group  bool
-		Pic    = engine.NotFoundIMG()
-		Msg    string
 		embed  *discordgo.MessageEmbed
 	)
 
@@ -167,10 +150,10 @@ func Lewd(s *discordgo.Session, m *discordgo.MessageCreate) {
 						SetTitle(Data.Author).
 						SetDescription(RemovePic(Data.Text)).
 						SetURL(Data.PermanentURL).
-						SetImage(config.PixivProxy+Pic).
+						SetImage(config.PixivProxy+Data.Photos[0]).
 						SetColor(Color).
 						InlineAllFields().
-						SetFooter(Msg, config.PixivIMG).MessageEmbed
+						SetFooter(Data.State, config.PixivIMG).MessageEmbed
 				} else {
 					embed = engine.NewEmbed().
 						SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
@@ -178,10 +161,10 @@ func Lewd(s *discordgo.Session, m *discordgo.MessageCreate) {
 						SetThumbnail(engine.GetAuthorAvatar(Data.Author)).
 						SetDescription(RemovePic(Data.Text)).
 						SetURL(Data.PermanentURL).
-						SetImage(Pic).
+						SetImage(Data.Photos...).
 						SetColor(Color).
 						InlineAllFields().
-						SetFooter(Msg, config.TwitterIMG).MessageEmbed
+						SetFooter(Data.State, config.TwitterIMG).MessageEmbed
 				}
 				msg, err := s.ChannelMessageSendEmbed(m.ChannelID, embed)
 				if err != nil {
@@ -206,14 +189,6 @@ func Lewd(s *discordgo.Session, m *discordgo.MessageCreate) {
 						return
 					}
 
-					if FanArtData.Videos != "" {
-						Msg = "Video type,check original post"
-						Pic = engine.NotFoundIMG()
-					} else if len(FanArtData.Photos) > 0 {
-						Pic = FanArtData.Photos[0]
-						Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
-					}
-
 					for _, v := range GroupData.Members {
 						if v.ID == FanArtData.Member.ID {
 							FanArtData.AddMember(v)
@@ -232,14 +207,6 @@ func Lewd(s *discordgo.Session, m *discordgo.MessageCreate) {
 							log.Error(err)
 							s.ChannelMessageSend(m.ChannelID, "Opps,something goes worng,like dev life\n"+err.Error())
 							return
-						}
-
-						if FanArtData.Videos != "" {
-							Msg = "Video type,check original post"
-							Pic = engine.NotFoundIMG()
-						} else if len(FanArtData.Photos) > 0 {
-							Msg = "1/" + strconv.Itoa(len(FanArtData.Photos)) + " Photos"
-							Pic = FanArtData.Photos[0]
 						}
 
 						FanArtData.AddMember(MemberData)

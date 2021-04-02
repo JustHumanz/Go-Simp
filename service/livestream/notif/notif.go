@@ -57,7 +57,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 			Timestart = time.Now()
 		}
 
-		if Data.Viewers == "0" {
+		if Data.Viewers == "" || Data.Viewers == "0" {
 			Data.Viewers = config.Ytwaiting
 		} else {
 			view, err := strconv.Atoi(Data.Viewers)
@@ -120,7 +120,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 						}
 					}
 					if !Channel.LiteMode {
-						msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` New upcoming Livestream\nUserTags: "+strings.Join(UserTagsList, " "))
+						_, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` New upcoming Livestream\nUserTags: "+strings.Join(UserTagsList, " "))
 						if err != nil {
 							return err
 						}
@@ -309,7 +309,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 						}
 					}
 					if !Channel.LiteMode {
-						msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` Uploaded a new video\nUserTags: "+strings.Join(UserTagsList, " "))
+						_, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` Uploaded a new video\nUserTags: "+strings.Join(UserTagsList, " "))
 						if err != nil {
 							return err
 						}
