@@ -12,12 +12,12 @@ import (
 )
 
 //Get Youtube data from status
-func YtGetStatus(Group, Member int64, Status, Region string) ([]LiveStream, error) {
+func YtGetStatus(Group, Member int64, Status, Region, Uniq string) ([]LiveStream, error) {
 	var (
 		Data  []LiveStream
 		list  LiveStream
 		limit int
-		Key   = strconv.Itoa(int(Group)) + strconv.Itoa(int(Member)) + Status + Region
+		Key   = strconv.Itoa(int(Group)) + strconv.Itoa(int(Member)) + Status + Region + Uniq
 		rows  *sql.Rows
 		err   error
 	)
@@ -34,7 +34,7 @@ func YtGetStatus(Group, Member int64, Status, Region string) ([]LiveStream, erro
 			if err != nil {
 				return nil, err
 			} else if err == sql.ErrNoRows {
-				return nil, errors.New("Not found any schdule")
+				return nil, errors.New("not found any schdule")
 			}
 			defer rows.Close()
 
@@ -43,7 +43,7 @@ func YtGetStatus(Group, Member int64, Status, Region string) ([]LiveStream, erro
 			if err != nil {
 				return nil, err
 			} else if err == sql.ErrNoRows {
-				return nil, errors.New("Not found any schdule")
+				return nil, errors.New("not found any schdule")
 			}
 			defer rows.Close()
 		} else {
@@ -51,7 +51,7 @@ func YtGetStatus(Group, Member int64, Status, Region string) ([]LiveStream, erro
 			if err != nil {
 				return nil, err
 			} else if err == sql.ErrNoRows {
-				return nil, errors.New("Not found any schdule")
+				return nil, errors.New("not found any schdule")
 			}
 			defer rows.Close()
 		}

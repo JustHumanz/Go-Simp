@@ -59,6 +59,8 @@ const (
 	Waiting           = 5
 	Pilot             = "pilot"
 	Indie             = "independent"
+	Fe                = "frontend"
+	Sys               = "system"
 
 	//Crontab
 	TwitterFanart              = "@every 0h3m0s"

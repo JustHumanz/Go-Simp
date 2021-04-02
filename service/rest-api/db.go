@@ -31,7 +31,7 @@ func GetFanartData(State string, GroupID, MemberID int64) ([]database.DataFanart
 			}
 
 			if Data.ID == 0 {
-				return errors.New("Vtuber don't have any fanart in Twitter")
+				return errors.New("vtuber don't have any fanart in Twitter")
 			}
 			Data.State = config.TwitterArt
 			Datafanart = append(Datafanart, Data)
@@ -52,7 +52,7 @@ func GetFanartData(State string, GroupID, MemberID int64) ([]database.DataFanart
 				return err
 			}
 			if Data.ID == 0 {
-				return errors.New("Vtuber don't have any fanart in Twitter")
+				return errors.New("vtuber don't have any fanart in Twitter")
 			}
 
 			Data.State = config.BiliBiliArt
@@ -75,7 +75,7 @@ func GetFanartData(State string, GroupID, MemberID int64) ([]database.DataFanart
 				return err
 			}
 			if Data.ID == 0 {
-				return errors.New("Vtuber don't have any fanart in Twitter")
+				return errors.New("vtuber don't have any fanart in Twitter")
 			}
 
 			Data.State = config.PixivArt

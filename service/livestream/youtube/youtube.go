@@ -59,7 +59,7 @@ func CheckYtByTime() {
 					"Vtuber": Member.EnName,
 					"Group":  Group.GroupName,
 				}).Info("Checking Upcoming schedule")
-				YoutubeStatus, err := database.YtGetStatus(0, Member.ID, config.UpcomingStatus, "")
+				YoutubeStatus, err := database.YtGetStatus(0, Member.ID, config.UpcomingStatus, "", config.Sys)
 				if err != nil {
 					log.Error(err)
 				}
@@ -191,7 +191,7 @@ func CheckPrivate() {
 	for _, Status := range []string{config.UpcomingStatus, config.PastStatus, config.LiveStatus, config.PrivateStatus} {
 		for _, Group := range VtubersData.VtuberData {
 			for _, Member := range Group.Members {
-				YtData, err := database.YtGetStatus(0, Member.ID, Status, "")
+				YtData, err := database.YtGetStatus(0, Member.ID, Status, "", config.Sys)
 				if err != nil {
 					log.Error(err)
 				}

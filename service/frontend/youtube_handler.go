@@ -46,7 +46,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 							return
 						} else {
-							YoutubeData, err := database.YtGetStatus(0, Member.ID, config.UpcomingStatus, Region)
+							YoutubeData, err := database.YtGetStatus(0, Member.ID, config.UpcomingStatus, Region, config.Fe)
 							if err != nil {
 								log.Error(err)
 							}
@@ -104,7 +104,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						GroupData, err := database.YtGetStatus(VTuberGroup.ID, 0, config.UpcomingStatus, Region)
+						GroupData, err := database.YtGetStatus(VTuberGroup.ID, 0, config.UpcomingStatus, Region, config.Fe)
 						if err != nil {
 							log.Error(err)
 						}
@@ -185,7 +185,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								log.Error(err)
 							}
 						} else {
-							YoutubeData, err := database.YtGetStatus(0, Member.ID, config.LiveStatus, Region)
+							YoutubeData, err := database.YtGetStatus(0, Member.ID, config.LiveStatus, Region, config.Fe)
 							if err != nil {
 								log.Error(err)
 							}
@@ -246,7 +246,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						YoutubeData, err := database.YtGetStatus(VTuberGroup.ID, 0, config.LiveStatus, Region)
+						YoutubeData, err := database.YtGetStatus(VTuberGroup.ID, 0, config.LiveStatus, Region, config.Fe)
 						if err != nil {
 							log.Error(err)
 						}
@@ -330,7 +330,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 							return
 						} else {
-							YoutubeData, err := database.YtGetStatus(0, Member.ID, config.PastStatus, Region)
+							YoutubeData, err := database.YtGetStatus(0, Member.ID, config.PastStatus, Region, config.Fe)
 							if err != nil {
 								log.Error(err)
 							}
@@ -386,12 +386,12 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						)
 
 						if CheckReg(VTuberGroup.GroupName, Region) {
-							YoutubeData, err = database.YtGetStatus(VTuberGroup.ID, 0, config.PastStatus, Region)
+							YoutubeData, err = database.YtGetStatus(VTuberGroup.ID, 0, config.PastStatus, Region, config.Fe)
 							if err != nil {
 								log.Error(err)
 							}
 						} else {
-							YoutubeData, err = database.YtGetStatus(VTuberGroup.ID, 0, config.PastStatus, "")
+							YoutubeData, err = database.YtGetStatus(VTuberGroup.ID, 0, config.PastStatus, "", config.Fe)
 							if err != nil {
 								log.Error(err)
 							}
