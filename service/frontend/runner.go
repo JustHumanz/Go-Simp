@@ -10,10 +10,12 @@ import (
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
+	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
+	"github.com/olekukonko/tablewriter"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 )
@@ -150,8 +152,9 @@ func main() {
 			Bot.AddHandler(TwitchMessage)
 			Bot.AddHandler(SubsMessage)
 			Bot.AddHandler(Lewd)
-			Bot.AddHandler(RegisterFunc)
-			Bot.AddHandler(Answer)
+			Bot.AddHandler(StartRegister)
+			Bot.AddHandler(EmojiHandler)
+			Bot.AddHandler(UpdateChannel)
 			c.Stop()
 			c.AddFunc(config.CheckPayload, GetPayload)
 
@@ -186,7 +189,7 @@ func Module(s *discordgo.Session, m *discordgo.MessageCreate) {
 					list = append(list, Member)
 				}
 			}
-			_, err := s.ChannelMessageSend(m.ChannelID, strings.Join(list, "\n"))
+			_, err := Bot.ChannelMessageSend(m.ChannelID, strings.Join(list, "\n"))
 			if err != nil {
 				log.Error(err)
 			}
@@ -225,7 +228,7 @@ func FindGropName(g interface{}) (database.Group, error) {
 	Grp, str := g.(string)
 	if str {
 		for _, Group := range Payload.VtuberData {
-			if strings.ToLower(Group.GroupName) == strings.ToLower(Grp) || strconv.Itoa(int(Group.ID)) == Grp {
+			if strings.EqualFold(Group.GroupName, Grp) || strconv.Itoa(int(Group.ID)) == Grp {
 				return Group, nil
 			}
 		}
@@ -253,7 +256,7 @@ func (Data DynamicSvr) GetUserAvatar() string {
 //CheckReg Check available region
 func CheckReg(GroupName, Reg string) bool {
 	for Key, Val := range RegList {
-		if strings.ToLower(Key) == strings.ToLower(GroupName) {
+		if strings.EqualFold(Key, GroupName) {
 			for _, Region := range strings.Split(strings.ToLower(Val), ",") {
 				if Region == Reg {
 					return true
@@ -273,7 +276,7 @@ func MemberHasPermission(guildID string, userID string) (bool, error) {
 	}
 
 	if len(member.Roles) == 0 {
-		return false, errors.New("You not enabled by any roles with administrator permissions")
+		return false, errors.New("you not enabled by any roles with administrator permissions")
 	}
 
 	for _, roleID := range member.Roles {
@@ -288,4 +291,334 @@ func MemberHasPermission(guildID string, userID string) (bool, error) {
 	}
 
 	return false, nil
+}
+
+func (Data *ChannelRegister) ChoiceType() *ChannelRegister {
+	tableString := &strings.Builder{}
+	table := tablewriter.NewWriter(tableString)
+	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+	table.SetCenterSeparator("|")
+
+	_, err := Bot.ChannelMessageSend(Data.ChannelState.ChannelID, "Select Channel Type: ")
+	if err != nil {
+		log.Error(err)
+	}
+	Fanart := "Disabled"
+	Live := "Disabled"
+	Lewd := "Disabled"
+	if Data.ChannelState.IsFanart() {
+		Fanart = "Enabled"
+	}
+
+	if Data.ChannelState.IsLive() {
+		Live = "Enabled"
+	}
+
+	if Data.ChannelState.IsLewd() {
+		Lewd = "Enabled"
+	}
+
+	table.SetHeader([]string{"Type", "Select", "Status"})
+	table.Append([]string{"Fanart", config.Art, Fanart})
+	table.Append([]string{"Livestream", config.Live, Live})
+	table.Append([]string{"Lewd Fanart", config.Lewd, Lewd})
+	table.Render()
+
+	MsgText, err := Bot.ChannelMessageSend(Data.ChannelState.ChannelID, "`"+tableString.String()+"`")
+	if err != nil {
+		Bot.ChannelMessageSend(Data.ChannelState.ChannelID, "Something error, "+err.Error())
+		log.Error(err)
+	}
+	err = engine.Reacting(map[string]string{
+		"ChannelID": Data.ChannelState.ChannelID,
+		"State":     "TypeChannel",
+		"MessageID": MsgText.ID,
+	}, Bot)
+	if err != nil {
+		log.Error(err)
+	}
+
+	Data.UpdateMessageID(MsgText.ID).EmojiTrue()
+	return Data
+}
+
+func (Data *ChannelRegister) LiveOnly() *ChannelRegister {
+	MsgTxt, err := Bot.ChannelMessageSend(Data.ChannelState.ChannelID, "Enable LiveOnly? **Set livestreams in strict mode(ignoring covering or regular video) notification**")
+	if err != nil {
+		log.Error(err)
+	}
+	err = engine.Reacting(map[string]string{
+		"ChannelID": Data.ChannelState.ChannelID,
+		"State":     "SelectType",
+		"MessageID": MsgTxt.ID,
+	}, Bot)
+	if err != nil {
+		log.Error(err)
+	}
+	Data.UpdateMessageID(MsgTxt.ID)
+	Data.UpdateState(config.LiveOnly)
+	return Data
+}
+
+func (Data *ChannelRegister) NewUpcoming() *ChannelRegister {
+	MsgTxt, err := Bot.ChannelMessageSend(Data.ChannelState.ChannelID, "Enable NewUpcoming? **Bot will send new upcoming livestream**")
+	if err != nil {
+		log.Error(err)
+	}
+	err = engine.Reacting(map[string]string{
+		"ChannelID": Data.ChannelState.ChannelID,
+		"State":     "SelectType",
+		"MessageID": MsgTxt.ID,
+	}, Bot)
+	if err != nil {
+		log.Error(err)
+	}
+	Data.UpdateMessageID(MsgTxt.ID)
+	Data.UpdateState(config.NewUpcoming)
+	return Data
+}
+
+func (Data *ChannelRegister) Dynamic() *ChannelRegister {
+	MsgTxt, err := Bot.ChannelMessageSend(Data.ChannelState.ChannelID, "Enable Dynamic mode? **Livestream message will disappear after livestream ended**")
+	if err != nil {
+		log.Error(err)
+	}
+	err = engine.Reacting(map[string]string{
+		"ChannelID": Data.ChannelState.ChannelID,
+		"State":     "SelectType",
+		"MessageID": MsgTxt.ID,
+	}, Bot)
+	if err != nil {
+		log.Error(err)
+	}
+	Data.UpdateMessageID(MsgTxt.ID)
+	Data.UpdateState(config.Dynamic)
+	return Data
+}
+
+func (Data *ChannelRegister) Lite() *ChannelRegister {
+	MsgTxt, err := Bot.ChannelMessageSend(Data.ChannelState.ChannelID, "Enable Lite mode? **Disabling ping user/role function**")
+	if err != nil {
+		log.Error(err)
+	}
+	err = engine.Reacting(map[string]string{
+		"ChannelID": Data.ChannelState.ChannelID,
+		"State":     "SelectType",
+		"MessageID": MsgTxt.ID,
+	}, Bot)
+	if err != nil {
+		log.Error(err)
+	}
+	Data.UpdateMessageID(MsgTxt.ID)
+	Data.UpdateState(config.LiteMode)
+	return Data
+}
+
+func (Data *ChannelRegister) IndieNotif() *ChannelRegister {
+	MsgTxt, err := Bot.ChannelMessageSend(Data.ChannelState.ChannelID, "Send all independent vtubers notification?")
+	if err != nil {
+		log.Error(err)
+	}
+	err = engine.Reacting(map[string]string{
+		"ChannelID": Data.ChannelState.ChannelID,
+		"State":     "SelectType",
+		"MessageID": MsgTxt.ID,
+	}, Bot)
+	if err != nil {
+		log.Error(err)
+	}
+	Data.UpdateMessageID(MsgTxt.ID)
+	Data.UpdateState(config.IndieNotif)
+	return Data
+}
+
+func (Data *ChannelRegister) UpdateChannel(s string) error {
+	if s == config.Type {
+		err := Data.ChannelState.UpdateChannel(config.Type)
+		if err != nil {
+			return err
+		}
+	} else {
+		err := Data.ChannelState.UpdateChannel(config.LiveOnly)
+		if err != nil {
+			return err
+		}
+
+		err = Data.ChannelState.UpdateChannel(config.Dynamic)
+		if err != nil {
+			return err
+		}
+
+		if !Register.ChannelState.LiveOnly {
+			err = Data.ChannelState.UpdateChannel(config.NewUpcoming)
+			if err != nil {
+				return err
+			}
+		}
+
+		err = Data.ChannelState.UpdateChannel(config.LiveOnly)
+		if err != nil {
+			return err
+		}
+
+		if Register.ChannelState.Group.GroupName == config.Indie {
+			err = Data.ChannelState.UpdateChannel(config.IndieNotif)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (Data *ChannelRegister) AddRegion() {
+	GroupName := Register.ChannelState.Group.GroupName
+	ChannelID := Register.ChannelState.ChannelID
+
+	Register.UpdateState(AddRegion)
+	RegEmoji := []string{}
+	ChannelRegion := strings.Split(Register.ChannelState.Region, ",")
+	for _, v := range ChannelRegion {
+		if v != "" {
+			RegEmoji = append(RegEmoji, engine.CountryCodetoUniCode(v))
+			Register.RegionTMP = append(Register.RegionTMP, v)
+		}
+	}
+	_, err := Bot.ChannelMessageSend(ChannelID, "`"+GroupName+"` Regions you already enabled: "+strings.Join(RegEmoji, "  "))
+	if err != nil {
+		log.Error(err)
+	}
+
+	MsgTxt2, err := Bot.ChannelMessageSend(ChannelID, "`"+GroupName+" `Select the region you want to add: ")
+	if err != nil {
+		log.Error(err)
+	}
+
+	Register.UpdateMessageID(MsgTxt2.ID)
+	for Key, Val := range RegList {
+		GroupRegList := strings.Split(Val, ",")
+
+		if Key == GroupName {
+			if len(ChannelRegion) == len(GroupRegList) {
+				_, err := Bot.ChannelMessageSend(ChannelID, "You already enable all region")
+				if err != nil {
+					log.Error(err)
+				}
+				return
+			}
+
+			Register.Stop()
+			for _, v2 := range GroupRegList {
+				skip := false
+				for _, v := range ChannelRegion {
+					if v == v2 {
+						skip = true
+						break
+					}
+				}
+				if !skip {
+					err := Bot.MessageReactionAdd(ChannelID, MsgTxt2.ID, engine.CountryCodetoUniCode(v2))
+					if err != nil {
+						log.Error(err)
+					}
+				}
+			}
+		}
+	}
+
+	Register.BreakPoint(4)
+	Register.FixRegion("add")
+	Register.ChannelState.UpdateChannel(config.Region)
+
+	_, err = Bot.ChannelMessageSend(ChannelID, "Done,you added "+strings.Join(Register.AddRegionVal, ","))
+	if err != nil {
+		log.Error(err)
+	}
+	CleanRegister()
+}
+
+func (Data *ChannelRegister) DelRegion() {
+	GroupName := Register.ChannelState.Group.GroupName
+	ChannelID := Register.ChannelState.ChannelID
+
+	Register.UpdateState(DelRegion)
+	RegEmoji := []string{}
+	for Key, Val := range RegList {
+		if Key == GroupName {
+			for _, v2 := range strings.Split(Val, ",") {
+				for _, v := range strings.Split(Register.ChannelState.Region, ",") {
+					if v == v2 {
+						RegEmoji = append(RegEmoji, engine.CountryCodetoUniCode(v2))
+						Register.RegionTMP = append(Register.RegionTMP, v2)
+					}
+				}
+			}
+		}
+	}
+
+	_, err := Bot.ChannelMessageSend(ChannelID, "`"+GroupName+"` Region you already enabled in this channel "+strings.Join(RegEmoji, "  "))
+	if err != nil {
+		log.Error(err)
+	}
+
+	MsgID := ""
+	if len(RegEmoji) == 0 {
+		_, err := Bot.ChannelMessageSend(ChannelID, "`"+GroupName+"` Region 404,add first")
+		if err != nil {
+			log.Error(err)
+		}
+		return
+	} else {
+		MsgTxt2, err := Bot.ChannelMessageSend(ChannelID, "`"+GroupName+"` Select region you want to delete : ")
+		if err != nil {
+			log.Error(err)
+		}
+		MsgID = MsgTxt2.ID
+	}
+
+	Register.Stop()
+	for _, v := range RegEmoji {
+		err := Bot.MessageReactionAdd(ChannelID, MsgID, v)
+		if err != nil {
+			log.Error(err)
+		}
+	}
+	Register.UpdateMessageID(MsgID)
+	Register.BreakPoint(4)
+	Register.FixRegion("del")
+	err = Register.ChannelState.UpdateChannel(config.Region)
+	if err != nil {
+		log.Error(err)
+	}
+
+	_, err = Bot.ChannelMessageSend(ChannelID, "Done,you remove "+strings.Join(Data.DelRegionVal, ","))
+	if err != nil {
+		log.Error(err)
+	}
+	CleanRegister()
+}
+
+func (Data *ChannelRegister) CheckNSFW() bool {
+	ChannelRaw, err := Bot.Channel(Data.ChannelState.ChannelID)
+	if err != nil {
+		log.Error(err)
+	}
+
+	if !ChannelRaw.NSFW {
+		if Register.ChannelState.TypeTag == 69 {
+			_, err := Bot.ChannelMessageSend(Data.ChannelState.ChannelID, "This Channel was not a NSFW channel")
+			if err != nil {
+				log.Error(err)
+			}
+			return false
+		} else {
+			_, err := Bot.ChannelMessageSend(Data.ChannelState.ChannelID, "This Channel was not a NSFW channel,change channel type to fanart")
+			if err != nil {
+				log.Error(err)
+			}
+			Register.ChannelState.TypeTag = 1
+		}
+
+	}
+	return true
 }
