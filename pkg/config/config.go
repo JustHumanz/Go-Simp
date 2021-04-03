@@ -102,6 +102,12 @@ const (
 	NewUpcoming = "NewUpcoming"
 	LewdChannel = "Lewd"
 	Default     = "Default"
+	Type        = "Type"
+	LiveOnly    = "LiveOnly"
+	Dynamic     = "Dynamic"
+	Region      = "Region"
+	LiteMode    = "LiteMode"
+	IndieNotif  = "IndieNotif"
 
 	//ChannelType
 	ArtType      = 1

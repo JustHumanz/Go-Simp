@@ -4,6 +4,7 @@ import (
 	"strings"
 	"time"
 
+	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 )
 
@@ -105,25 +106,7 @@ type DynamicSvr struct {
 	} `json:"data"`
 }
 
-/*
-//Memberst Vtuber member struct
-type Memberst struct {
-	ID         int64
-	VTName     string
-	YtChannel  string
-	SpaceID    int
-	BiliAvatar string
-	Stream     database.LiveStream
-	Msg        string
-	Msg1       string
-	Msg2       string
-	Msg3       string
-	View       string
-	Length     string
-}
-*/
-
-type Regis struct {
+type ChannelRegister struct {
 	Admin         string
 	State         string
 	MessageID     string
@@ -131,56 +114,80 @@ type Regis struct {
 	AddRegionVal  []string
 	DelRegionVal  []string
 	Gass          bool
+	Emoji         bool
+	DisableState  bool
 	ChannelState  database.DiscordChannel
 	ChannelStates []database.DiscordChannel
 }
 
-func (Data *Regis) SetLiveOnly(new bool) *Regis {
+func NewRegister() *ChannelRegister {
+	return &ChannelRegister{}
+}
+func (Data *ChannelRegister) SetLiveOnly(new bool) *ChannelRegister {
 	Data.ChannelState.LiveOnly = new
 	return Data
 }
 
-func (Data *Regis) SetNewUpcoming(new bool) *Regis {
+func (Data *ChannelRegister) EmojiTrue() *ChannelRegister {
+	Data.Emoji = true
+	return Data
+}
+
+func (Data *ChannelRegister) SetChannels(a []database.DiscordChannel) *ChannelRegister {
+	Data.ChannelStates = a
+	return Data
+}
+
+func (Data *ChannelRegister) SetNewUpcoming(new bool) *ChannelRegister {
 	Data.ChannelState.NewUpcoming = new
 	return Data
 }
 
-func (Data *Regis) SetDynamic(new bool) *Regis {
+func (Data *ChannelRegister) SetDynamic(new bool) *ChannelRegister {
 	Data.ChannelState.Dynamic = new
 	return Data
 }
 
-func (Data *Regis) SetLite(new bool) *Regis {
+func (Data *ChannelRegister) SetLite(new bool) *ChannelRegister {
 	Data.ChannelState.LiteMode = new
 	return Data
 }
 
-func (Data *Regis) SetIndieNotif(new bool) *Regis {
+func (Data *ChannelRegister) SetIndieNotif(new bool) *ChannelRegister {
 	Data.ChannelState.IndieNotif = new
 	return Data
 }
 
-func (Data *Regis) SetChannel(new string) *Regis {
+func (Data *ChannelRegister) SetChannelID(new string) *ChannelRegister {
 	Data.ChannelState.ChannelID = new
 	return Data
 }
+func (Data *ChannelRegister) SetChannel(new database.DiscordChannel) *ChannelRegister {
+	Data.ChannelState = new
+	return Data
+}
 
-func (Data *Regis) SetAdmin(new string) *Regis {
+func (Data *ChannelRegister) SetAdmin(new string) *ChannelRegister {
 	Data.Admin = new
 	return Data
 }
 
-func (Data *Regis) UpdateState(new string) *Regis {
+func (Data *ChannelRegister) UpdateState(new string) *ChannelRegister {
 	Data.State = new
 	return Data
 }
 
-func (Data *Regis) SetGroup(new database.Group) *Regis {
+func (Data *ChannelRegister) SetGroup(new database.Group) *ChannelRegister {
 	Data.ChannelState.Group = new
 	return Data
 }
 
-func (Data *Regis) FixRegion(s string) {
+func (Data *ChannelRegister) DisableChannelState(new bool) *ChannelRegister {
+	Data.DisableState = new
+	return Data
+}
+
+func (Data *ChannelRegister) FixRegion(s string) *ChannelRegister {
 	list := []string{}
 	keys := make(map[string]bool)
 	for _, Reg := range Data.RegionTMP {
@@ -207,47 +214,72 @@ func (Data *Regis) FixRegion(s string) {
 		}
 		Data.ChannelState.Region = strings.Join(tmp, ",")
 	}
+	return Data
 }
 
-func (Data *Regis) AddNewRegion(new string) *Regis {
+func (Data *ChannelRegister) AddNewRegion(new string) *ChannelRegister {
 	Data.AddRegionVal = append(Data.AddRegionVal, new)
 	Data.RegionTMP = append(Data.RegionTMP, new)
 	return Data
 }
 
-func (Data *Regis) RemoveRegion(new string) *Regis {
+func (Data *ChannelRegister) RemoveRegion(new string) *ChannelRegister {
 	Data.DelRegionVal = append(Data.DelRegionVal, new)
 	return Data
 }
 
-func (Data *Regis) UpdateType(new int) *Regis {
+func (Data *ChannelRegister) UpdateType(new int) *ChannelRegister {
 	Data.ChannelState.TypeTag = new
 	return Data
 }
 
-func (Data *Regis) UpdateMessageID(new string) *Regis {
+func (Data *ChannelRegister) UpdateMessageID(new string) *ChannelRegister {
 	Data.MessageID = new
 	return Data
 }
 
-func (Data *Regis) Clear() {
-	Register = &Regis{}
-	Data = &Regis{}
+func CleanRegister() {
+	Register = NewRegister()
 }
 
-func (Data *Regis) Stop() {
+func (Data *ChannelRegister) Stop() *ChannelRegister {
 	Data.Gass = false
+	return Data
 }
 
-func (Data *Regis) Start() {
+func (Data *ChannelRegister) Start() *ChannelRegister {
 	Data.Gass = true
+	return Data
 }
 
-func (Data *Regis) BreakPoint(num time.Duration) {
+func (Data *ChannelRegister) BreakPoint(num time.Duration) {
 	for i := 0; i < 100; i++ {
 		if Data.Gass {
 			break
 		}
 		time.Sleep(num * time.Second)
 	}
+}
+
+func (Data *ChannelRegister) ChangeLiveStream() *ChannelRegister {
+	if Data.ChannelState.TypeTag == config.LiveType || Data.ChannelState.TypeTag == config.ArtNLiveType {
+		Data.Stop()
+		Data.LiveOnly()
+		Data.BreakPoint(1)
+
+		if !Data.ChannelState.LiveOnly {
+			Data.Stop()
+			Data.NewUpcoming()
+			Data.BreakPoint(1)
+		}
+
+		Data.Stop()
+		Data.Dynamic()
+		Data.BreakPoint(1)
+
+		Data.Stop()
+		Data.Lite()
+		Data.BreakPoint(1)
+	}
+	return Data
 }

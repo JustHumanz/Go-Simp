@@ -410,18 +410,18 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 		lite = false
 	}
 
-	if UpdateType == "Type" {
+	if UpdateType == config.Type {
 		if channeltype == Data.TypeTag {
 			if channeltype == 1 {
-				return errors.New("Already set fanart type on this channel")
+				return errors.New("already set fanart type on this channel")
 			} else if channeltype == 2 {
-				return errors.New("Already set livestream type on this channel")
+				return errors.New("already set livestream type on this channel")
 			} else if channeltype == 3 {
-				return errors.New("Already set fanart & livestream type on this channel")
+				return errors.New("already set fanart & livestream type on this channel")
 			} else if channeltype == 69 {
-				return errors.New("Already set lewd type on this channel")
+				return errors.New("already set lewd type on this channel")
 			} else if channeltype == 70 {
-				return errors.New("Already set lewd & fanart type on this channel")
+				return errors.New("already set lewd & fanart type on this channel")
 			}
 
 		} else {
@@ -430,18 +430,18 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 				return err
 			}
 		}
-	} else if UpdateType == "LiveOnly" {
+	} else if UpdateType == config.LiveOnly {
 		if liveonly == Data.LiveOnly && liveonly {
-			return errors.New("Already set LiveOnly on this channel")
+			return errors.New("already set LiveOnly on this channel")
 		} else {
 			_, err := DB.Exec(`Update Channel set Type=?,LiveOnly=?,NewUpcoming=?,Dynamic=? Where VtuberGroup_id=? AND DiscordChannelID=?`, channeltype, Data.LiveOnly, newupcoming, dynamic, Data.Group.ID, Data.ChannelID)
 			if err != nil {
 				return err
 			}
 		}
-	} else if UpdateType == "Dynamic" {
+	} else if UpdateType == config.Dynamic {
 		if dynamic == Data.Dynamic && dynamic {
-			return errors.New("Already set Dynamic on this channel")
+			return errors.New("already set Dynamic on this channel")
 		} else if newupcoming && dynamic {
 			newupcoming = false
 			liveonly = true
@@ -451,24 +451,24 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 				return err
 			}
 		}
-	} else if UpdateType == "Region" {
+	} else if UpdateType == config.Region {
 		_, err := DB.Exec(`Update Channel set Region=? Where VtuberGroup_id=? AND DiscordChannelID=?`, Data.Region, Data.Group.ID, Data.ChannelID)
 		if err != nil {
 			return err
 		}
-	} else if UpdateType == "LiteMode" {
+	} else if UpdateType == config.LiteMode {
 		_, err := DB.Exec(`Update Channel set Lite=? Where VtuberGroup_id=? AND DiscordChannelID=?`, Data.LiteMode, Data.Group.ID, Data.ChannelID)
 		if err != nil {
 			return err
 		}
-	} else if UpdateType == "IndieNotif" {
+	} else if UpdateType == config.IndieNotif {
 		_, err := DB.Exec(`Update Channel set IndieNotif=? Where VtuberGroup_id=? AND DiscordChannelID=?`, Data.IndieNotif, Data.Group.ID, Data.ChannelID)
 		if err != nil {
 			return err
 		}
 	} else {
 		if newupcoming == Data.NewUpcoming && newupcoming {
-			return errors.New("Already set NewUpcoming on this channel")
+			return errors.New("already set NewUpcoming on this channel")
 		} else {
 			_, err := DB.Exec(`Update Channel set Type=?,LiveOnly=?,NewUpcoming=?,Dynamic=? Where VtuberGroup_id=? AND DiscordChannelID=?`, channeltype, liveonly, Data.NewUpcoming, dynamic, Data.Group.ID, Data.ChannelID)
 			if err != nil {
