@@ -1,3 +1,7 @@
+v3.5.3
+- Fix `update` command
+- Add Pixiv session outdate alert
+
 v3.5.2
 - Update rest api to V2
 - Update Go simp web
