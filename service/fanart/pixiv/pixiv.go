@@ -20,6 +20,7 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
 	"github.com/JustHumanz/Go-Simp/service/fanart/notif"
+	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
@@ -29,7 +30,6 @@ import (
 var (
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
-	configfile  config.ConfigFile
 	lewd        bool
 )
 
@@ -42,7 +42,6 @@ const (
 func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile, e bool) {
 	Bot = a
 	VtubersData = c
-	configfile = d
 	lewd = e
 	b.AddFunc(config.PixivFanart, CheckPixiv)
 	if lewd {
@@ -180,6 +179,9 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 	defer response.Body.Close()
 
 	if response.StatusCode != http.StatusOK {
+		if l && response.StatusCode == http.StatusUnauthorized {
+			pilot.ReportDeadService("Pixiv Session outdate")
+		}
 		log.WithFields(log.Fields{
 			"Status":  response.StatusCode,
 			"Reason":  response.Status,
