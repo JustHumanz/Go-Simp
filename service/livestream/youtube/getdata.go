@@ -120,8 +120,6 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						log.Info("Send to notify")
 						if !Items.LiveDetails.ActualStartTime.IsZero() {
 							YoutubeData.UpdateSchdule(Items.LiveDetails.ActualStartTime)
-						} else {
-							notif.SendDude(YoutubeData, Bot)
 						}
 
 						YoutubeData.UpdateYt(YoutubeData.Status)
