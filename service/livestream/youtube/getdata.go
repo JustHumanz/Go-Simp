@@ -140,8 +140,6 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						}).Info("maybe yt error or human error")
 
 						YoutubeData.UpdateStatus(config.UpcomingStatus)
-						notif.SendDude(YoutubeData, Bot)
-
 					} else if Items.Snippet.VideoStatus == "none" && YoutubeData.Viewers != Items.Statistics.ViewCount {
 						log.WithFields(log.Fields{
 							"VideoData ID": YtVideoID,
