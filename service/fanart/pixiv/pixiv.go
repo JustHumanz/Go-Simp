@@ -119,30 +119,6 @@ func CheckPixiv() {
 							log.Error(err)
 						}
 					}
-
-					if Member.TwitterHashtags != "" {
-						log.WithFields(log.Fields{
-							"Member": Member.Name,
-							"Group":  Group.GroupName,
-							"Lewd":   false,
-						}).Info("Start curl pixiv")
-						URL := GetPixivURL(engine.UnderScoreName(Member.TwitterHashtags[1:]))
-						err := Pixiv(URL, FixFanArt, false)
-						if err != nil {
-							log.Error(err)
-						}
-					} else if Member.BiliBiliHashtags != "" {
-						log.WithFields(log.Fields{
-							"Member": Member.Name,
-							"Group":  Group.GroupName,
-							"Lewd":   false,
-						}).Info("Start curl pixiv")
-						URL := GetPixivURL(engine.UnderScoreName(Member.BiliBiliHashtags[1 : len(Member.BiliBiliHashtags)-1]))
-						err := Pixiv(URL, FixFanArt, false)
-						if err != nil {
-							log.Error(err)
-						}
-					}
 				}
 
 			}(&wg, Member)
