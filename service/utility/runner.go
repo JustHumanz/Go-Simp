@@ -135,34 +135,35 @@ func main() {
 	c := cron.New()
 	c.Start()
 	if configfile.DonationLink != "" {
-		Img := config.GoSimpIMG
-		if rand.Float32() < 0.5 {
+		c.AddFunc(config.DonationMsg, func() {
+			Img := config.GoSimpIMG
 			if rand.Float32() < 0.5 {
-				Img = engine.LewdIMG()
-			} else {
-				Img = engine.MaintenanceIMG()
-			}
-			Img = engine.NotFoundIMG()
-		} else {
-			if rand.Float32() < 0.5 {
+				if rand.Float32() < 0.5 {
+					Img = engine.LewdIMG()
+				} else {
+					Img = engine.MaintenanceIMG()
+				}
 				Img = engine.NotFoundIMG()
 			} else {
-				Img = engine.MaintenanceIMG()
+				if rand.Float32() < 0.5 {
+					Img = engine.NotFoundIMG()
+				} else {
+					Img = engine.MaintenanceIMG()
+				}
+				Img = engine.LewdIMG()
 			}
-			Img = engine.LewdIMG()
-		}
 
-		c.AddFunc(config.DonationMsg, func() {
 			Bot.ChannelMessageSendEmbed(database.GetRanChannel(), engine.NewEmbed().
 				SetTitle("Donate").
 				SetURL(Donation).
 				SetThumbnail(BotInfo.AvatarURL("128")).
 				SetImage(Img).
 				SetColor(14807034).
-				SetDescription("Enjoy the bot?\ndon't forget to support this bot and dev").
+				SetDescription("Enjoy the bot?\nhelp dev to pay server,domain and database for development of "+BotInfo.Username).
 				AddField("Ko-Fi", "[Link]("+Donation+")").
 				AddField("if you a broke gang,you can upvote "+BotInfo.Username, "[Top.gg]("+configfile.TopGG+")").
-				AddField("or give some star on github", "[Github](https://github.com/JustHumanz/Go-Simp)").MessageEmbed)
+				AddField("or give some star on github", "[Github](https://github.com/JustHumanz/Go-Simp)").
+				InlineAllFields().MessageEmbed)
 		})
 	}
 	c.AddFunc(config.CheckServerCount, func() {
