@@ -117,7 +117,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						}).Info("Update video status from " + YoutubeData.Status + " to live")
 						YoutubeData.UpdateStatus(config.LiveStatus)
 
-						log.Info("Send to notify")
+						log.Info("Update database")
 						if !Items.LiveDetails.ActualStartTime.IsZero() {
 							YoutubeData.UpdateSchdule(Items.LiveDetails.ActualStartTime)
 						}
