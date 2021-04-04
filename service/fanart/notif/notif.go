@@ -19,6 +19,7 @@ func SendNude(Art database.DataFanart, Bot *discordgo.Session, Color int) {
 			var (
 				ChannelData []database.DiscordChannel
 				err1        error
+				NewEmbed    *discordgo.MessageEmbed
 			)
 			if Art.Lewd {
 				ChannelData, err1 = database.ChannelTag(Member.ID, 1, config.LewdChannel, Member.Region)
@@ -51,14 +52,7 @@ func SendNude(Art database.DataFanart, Bot *discordgo.Session, Color int) {
 				}
 				if UserTagsList != nil {
 					tags = strings.Join(UserTagsList, " ")
-				} else {
-					tags = "_"
-				}
-
-				if tags == "_" && Art.Group.GroupName == config.Indie && !Channel.IndieNotif {
-					//do nothing,like my life
-				} else {
-					tmp, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
+					NewEmbed = engine.NewEmbed().
 						SetAuthor(strings.Title(Art.Group.GroupName), Art.Group.IconURL).
 						SetTitle(Art.Author).
 						SetURL(Art.PermanentURL).
@@ -68,7 +62,24 @@ func SendNude(Art database.DataFanart, Bot *discordgo.Session, Color int) {
 						AddField("User Tags", tags).
 						SetFooter(Art.State, icon).
 						InlineAllFields().
-						SetColor(Color).MessageEmbed)
+						SetColor(Color).MessageEmbed
+				} else {
+					NewEmbed = engine.NewEmbed().
+						SetAuthor(strings.Title(Art.Group.GroupName), Art.Group.IconURL).
+						SetTitle(Art.Author).
+						SetURL(Art.PermanentURL).
+						SetThumbnail(Art.AuthorAvatar).
+						SetDescription(Art.Text).
+						SetImage(Art.Photos...).
+						SetFooter(Art.State, icon).
+						InlineAllFields().
+						SetColor(Color).MessageEmbed
+				}
+
+				if tags == "" && Art.Group.GroupName == config.Indie && !Channel.IndieNotif {
+					//do nothing,like my life
+				} else {
+					tmp, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed)
 					if err != nil {
 						log.Error(tmp, err.Error())
 						err = Channel.DelChannel(err.Error())

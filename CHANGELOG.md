@@ -1,3 +1,8 @@
+v3.5.4
+- Blacklist loli tag in NSFW
+- Remove `-` in fanart notif
+- Fix youtube viwers
+
 v3.5.3
 - Fix `update` command
 - Add Pixiv session outdate alert

@@ -47,6 +47,22 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 				Reminder: 0,
 			}
 			Viewers string
+			GetView = func() {
+				view, err := strconv.Atoi(Data.Viewers)
+				if err != nil {
+					log.Error(err)
+				}
+
+				if Data.Viewers == "" || Data.Viewers == "0" {
+					Data.Viewers = config.Ytwaiting
+				} else {
+					Viewers = engine.NearestThousandFormat(float64(view))
+				}
+
+				if Viewers == "" || view < 100 {
+					Viewers = "???"
+				}
+			}
 		)
 
 		if !Data.Schedul.IsZero() {
@@ -57,16 +73,8 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 			Timestart = time.Now()
 		}
 
-		if Data.Viewers == "" || Data.Viewers == "0" {
-			Data.Viewers = config.Ytwaiting
-		} else {
-			view, err := strconv.Atoi(Data.Viewers)
-			if err != nil {
-				log.Error(err)
-				Viewers = config.Ytwaiting
-			} else {
-				Viewers = engine.NearestThousandFormat(float64(view))
-			}
+		if Status != "reminder" {
+			GetView()
 		}
 
 		if Status == config.UpcomingStatus {
@@ -86,7 +94,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 				go func(Channel database.DiscordChannel, wg *sync.WaitGroup) error {
 					defer wg.Done()
 					ctx := context.Background()
-					UserTagsList, err := Channel.GetUserList(ctx) //database.GetUserList(Channel.ID, Data.Member.ID)
+					UserTagsList, err := Channel.GetUserList(ctx)
 					if err != nil {
 						log.Error(err)
 					}
@@ -328,6 +336,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 				}
 			}
 		} else if Status == "reminder" {
+			GetView()
 			UpcominginMinutes := int(Timestart.Sub(time.Now()).Minutes())
 			if UpcominginMinutes > 10 && UpcominginMinutes < 70 {
 				if database.CheckReminder(UpcominginMinutes) {

@@ -41,6 +41,9 @@ var (
 	Scraper     *twitterscraper.Scraper
 	Ytwaiting   = "???"
 	CdnDomain   string
+
+	//LewdBlacklist
+	BlackList = []string{"loli", "gore"}
 )
 
 //Const config

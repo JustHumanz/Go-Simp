@@ -180,20 +180,30 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 		for i, v := range Art.Body.Illustmanga.Data {
 			v2 := v.(map[string]interface{})
 			IsVtuber := false
+			IsNotLoli := true
 
 			for _, tag := range v2["tags"].([]interface{}) {
 				Tag := strings.ToLower(tag.(string))
 				GrpName := strings.ToLower(FixFanArt.Group.GroupName)
-				HashTag := "vtuber"
-				if FixFanArt.Member.TwitterHashtags != "" {
-					HashTag = FixFanArt.Member.TwitterHashtags[1:]
-				} else if FixFanArt.Member.BiliBiliHashtags != "" {
-					HashTag = FixFanArt.Member.BiliBiliHashtags[1 : len(FixFanArt.Member.BiliBiliHashtags)-1]
-				}
+				if Tag == GrpName {
+					HashTag := "vtuber"
+					if FixFanArt.Member.TwitterHashtags != "" {
+						HashTag = FixFanArt.Member.TwitterHashtags[1:]
+					} else if FixFanArt.Member.BiliBiliHashtags != "" {
+						HashTag = FixFanArt.Member.BiliBiliHashtags[1 : len(FixFanArt.Member.BiliBiliHashtags)-1]
+					}
 
-				match, _ := regexp.MatchString("(youtube|vtuber|"+GrpName+"|"+strings.ToLower(HashTag)+")", Tag)
-				if match {
-					IsVtuber = true
+					match, _ := regexp.MatchString("(youtube|vtuber|"+strings.ToLower(HashTag)+")", Tag)
+					if match {
+						IsVtuber = true
+					}
+
+					if l {
+						match, _ := regexp.MatchString("("+strings.Join(config.BlackList, "|")+")", Tag)
+						if match {
+							IsNotLoli = false
+						}
+					}
 				}
 			}
 
@@ -261,7 +271,7 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 						FixFanArt.Photos[0] = config.PixivProxy + FixImg
 						notif.SendNude(*FixFanArt, Bot, Color)
 					}
-				} else if l && v2["xRestrict"].(float64) == 1 {
+				} else if l && v2["xRestrict"].(float64) == 1 && IsNotLoli {
 					illusbyte, err := network.Curl(config.PixivIllustsEnd+v2["id"].(string), nil)
 					if err != nil {
 						return err

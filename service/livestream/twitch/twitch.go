@@ -40,6 +40,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 	}
 
 	TwitchClient.SetAppAccessToken(resp.Data.AccessToken)
+	CheckTwitch()
 	b.AddFunc(config.Twitch, CheckTwitch)
 	log.Info("Enable Twitch module")
 }
