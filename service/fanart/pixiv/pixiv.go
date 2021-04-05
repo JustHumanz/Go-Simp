@@ -44,6 +44,8 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 	VtubersData = c
 	lewd = e
 	b.AddFunc(config.PixivFanart, CheckPixiv)
+	CheckPixiv()
+	CheckPixivLewd()
 	if lewd {
 		b.AddFunc(config.PixivFanartLewd, CheckPixivLewd)
 		log.Info("Enable Pixiv lewd fanart module")
@@ -107,17 +109,29 @@ func CheckPixiv() {
 						}
 
 					}
-					if Member.Name != "" {
-						log.WithFields(log.Fields{
-							"Member": Member.Name,
-							"Group":  Group.GroupName,
-							"Lewd":   false,
-						}).Info("Start curl pixiv")
-						URL := GetPixivURL(engine.UnderScoreName(Member.Name))
-						err := Pixiv(URL, FixFanArt, false)
-						if err != nil {
-							log.Error(err)
-						}
+				}
+
+				if Member.TwitterHashtags != "" {
+					log.WithFields(log.Fields{
+						"Member": Member.Name,
+						"Group":  Group.GroupName,
+						"Lewd":   false,
+					}).Info("Start curl pixiv")
+					URL := GetPixivURL(engine.UnderScoreName(Member.TwitterHashtags[1:]))
+					err := Pixiv(URL, FixFanArt, false)
+					if err != nil {
+						log.Error(err)
+					}
+				} else if Member.BiliBiliHashtags != "" {
+					log.WithFields(log.Fields{
+						"Member": Member.Name,
+						"Group":  Group.GroupName,
+						"Lewd":   false,
+					}).Info("Start curl pixiv")
+					URL := GetPixivURL(engine.UnderScoreName(Member.BiliBiliHashtags[1 : len(Member.BiliBiliHashtags)-1]))
+					err := Pixiv(URL, FixFanArt, false)
+					if err != nil {
+						log.Error(err)
 					}
 				}
 
@@ -185,24 +199,25 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 			for _, tag := range v2["tags"].([]interface{}) {
 				Tag := strings.ToLower(tag.(string))
 				GrpName := strings.ToLower(FixFanArt.Group.GroupName)
-				if Tag == GrpName {
-					HashTag := "vtuber"
-					if FixFanArt.Member.TwitterHashtags != "" {
-						HashTag = FixFanArt.Member.TwitterHashtags[1:]
-					} else if FixFanArt.Member.BiliBiliHashtags != "" {
-						HashTag = FixFanArt.Member.BiliBiliHashtags[1 : len(FixFanArt.Member.BiliBiliHashtags)-1]
-					}
+				HashTag := "vtuber"
+				if FixFanArt.Member.TwitterHashtags != "" {
+					HashTag = FixFanArt.Member.TwitterHashtags[1:]
+				} else if FixFanArt.Member.BiliBiliHashtags != "" {
+					HashTag = FixFanArt.Member.BiliBiliHashtags[1 : len(FixFanArt.Member.BiliBiliHashtags)-1]
+				}
 
-					match, _ := regexp.MatchString("(youtube|vtuber|"+strings.ToLower(HashTag)+")", Tag)
-					if match {
-						IsVtuber = true
-					}
+				match, _ := regexp.MatchString("(youtube|vtuber|"+strings.ToLower(HashTag)+"|"+GrpName+")", Tag)
+				if match {
+					IsVtuber = true
+				}
 
-					if l {
-						for _,black := range config.BlackList{
-							if strings.ToLower(black) == Tag {
-								IsNotLoli = false
-							}
+				if l {
+					for _, black := range config.BlackList {
+						if strings.ToLower(black) == Tag {
+							log.WithFields(log.Fields{
+								"URL": BaseURL + v2["id"].(string),
+							}).Info("Lol,it's loli")
+							IsNotLoli = false
 						}
 					}
 				}

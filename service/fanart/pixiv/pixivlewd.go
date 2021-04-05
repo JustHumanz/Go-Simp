@@ -63,19 +63,30 @@ func CheckPixivLewd() {
 						}
 
 					}
-					if Member.Name != "" {
-						log.WithFields(log.Fields{
-							"Member": Member.Name,
-							"Group":  Group.GroupName,
-							"Lewd":   true,
-						}).Info("Start curl lewd pixiv")
-						URL := GetPixivLewdURL(engine.UnderScoreName(Member.Name))
-						err := Pixiv(URL, FixFanArt, true)
-						if err != nil {
-							log.Error(err)
-						}
-					}
+				}
 
+				if Member.TwitterHashtags != "" {
+					log.WithFields(log.Fields{
+						"Member": Member.Name,
+						"Group":  Group.GroupName,
+						"Lewd":   false,
+					}).Info("Start curl pixiv")
+					URL := GetPixivURL(engine.UnderScoreName(Member.TwitterHashtags[1:]))
+					err := Pixiv(URL, FixFanArt, false)
+					if err != nil {
+						log.Error(err)
+					}
+				} else if Member.TwitterLewd != "" {
+					log.WithFields(log.Fields{
+						"Member": Member.Name,
+						"Group":  Group.GroupName,
+						"Lewd":   false,
+					}).Info("Start curl pixiv")
+					URL := GetPixivURL(engine.UnderScoreName(Member.TwitterLewd[1:]))
+					err := Pixiv(URL, FixFanArt, false)
+					if err != nil {
+						log.Error(err)
+					}
 				}
 
 			}(&wg, Member)

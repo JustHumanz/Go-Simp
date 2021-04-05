@@ -155,7 +155,6 @@ func init() {
 	RequestPayload()
 	c := cron.New()
 	c.Start()
-	c.AddFunc(config.CheckPayload, RequestPayload)
 	go pilot.RunHeartBeat(gRCPconn, "Rest_API")
 }
 
