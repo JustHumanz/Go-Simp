@@ -12,7 +12,6 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
-	"github.com/robfig/cron/v3"
 
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
@@ -153,8 +152,6 @@ func init() {
 	}
 
 	RequestPayload()
-	c := cron.New()
-	c.Start()
 	go pilot.RunHeartBeat(gRCPconn, "Rest_API")
 }
 
