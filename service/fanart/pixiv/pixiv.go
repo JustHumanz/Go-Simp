@@ -199,9 +199,10 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 					}
 
 					if l {
-						match, _ := regexp.MatchString("("+strings.Join(config.BlackList, "|")+")", Tag)
-						if match {
-							IsNotLoli = false
+						for _,black := range config.BlackList{
+							if strings.ToLower(black) == Tag {
+								IsNotLoli = false
+							}
 						}
 					}
 				}
