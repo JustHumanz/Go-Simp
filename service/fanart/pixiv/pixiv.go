@@ -44,8 +44,6 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 	VtubersData = c
 	lewd = e
 	b.AddFunc(config.PixivFanart, CheckPixiv)
-	CheckPixiv()
-	CheckPixivLewd()
 	if lewd {
 		b.AddFunc(config.PixivFanartLewd, CheckPixivLewd)
 		log.Info("Enable Pixiv lewd fanart module")
