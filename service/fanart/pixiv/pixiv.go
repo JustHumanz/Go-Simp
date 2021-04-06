@@ -43,6 +43,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 	Bot = a
 	VtubersData = c
 	lewd = e
+	CheckPixivLewd()
 	b.AddFunc(config.PixivFanart, CheckPixiv)
 	if lewd {
 		b.AddFunc(config.PixivFanartLewd, CheckPixivLewd)
@@ -65,74 +66,86 @@ func CheckPixiv() {
 					Group:  Group,
 					Lewd:   false,
 				}
+				var wg2 sync.WaitGroup
+				wg2.Add(3)
 
-				if Member.JpName != "" {
-					log.WithFields(log.Fields{
-						"Member": Member.JpName,
-						"Group":  Group.GroupName,
-						"Lewd":   false,
-					}).Info("Start curl pixiv")
-					URLJP := GetPixivURL(url.QueryEscape(Member.JpName))
-					err := Pixiv(URLJP, FixFanArt, false)
-					if err != nil {
-						log.Error(err)
-					}
-				}
-
-				if Member.EnName == Member.Name {
-					if Member.EnName != "" {
+				go func(w *sync.WaitGroup) {
+					defer w.Done()
+					if Member.JpName != "" {
 						log.WithFields(log.Fields{
-							"Member": Member.EnName,
+							"Member": Member.JpName,
 							"Group":  Group.GroupName,
 							"Lewd":   false,
 						}).Info("Start curl pixiv")
-						URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
-						err := Pixiv(URLEN, FixFanArt, false)
+						URLJP := GetPixivURL(url.QueryEscape(Member.JpName))
+						err := Pixiv(URLJP, FixFanArt, false)
 						if err != nil {
 							log.Error(err)
 						}
-
 					}
-				} else {
-					if Member.EnName != "" {
+				}(&wg2)
+
+				go func(w *sync.WaitGroup) {
+					defer w.Done()
+					if Member.EnName == Member.Name {
+						if Member.EnName != "" {
+							log.WithFields(log.Fields{
+								"Member": Member.EnName,
+								"Group":  Group.GroupName,
+								"Lewd":   false,
+							}).Info("Start curl pixiv")
+							URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
+							err := Pixiv(URLEN, FixFanArt, false)
+							if err != nil {
+								log.Error(err)
+							}
+
+						}
+					} else {
+						if Member.EnName != "" {
+							log.WithFields(log.Fields{
+								"Member": Member.EnName,
+								"Group":  Group.GroupName,
+								"Lewd":   false,
+							}).Info("Start curl pixiv")
+							URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
+							err := Pixiv(URLEN, FixFanArt, false)
+							if err != nil {
+								log.Error(err)
+							}
+
+						}
+					}
+				}(&wg2)
+
+				go func(w *sync.WaitGroup) {
+					defer w.Done()
+					if Member.TwitterHashtags != "" {
 						log.WithFields(log.Fields{
-							"Member": Member.EnName,
+							"Member": Member.Name,
 							"Group":  Group.GroupName,
 							"Lewd":   false,
 						}).Info("Start curl pixiv")
-						URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
-						err := Pixiv(URLEN, FixFanArt, false)
+						URL := GetPixivURL(engine.UnderScoreName(Member.TwitterHashtags[1:]))
+						err := Pixiv(URL, FixFanArt, false)
 						if err != nil {
 							log.Error(err)
 						}
-
+					} else if Member.BiliBiliHashtags != "" {
+						log.WithFields(log.Fields{
+							"Member": Member.Name,
+							"Group":  Group.GroupName,
+							"Lewd":   false,
+						}).Info("Start curl pixiv")
+						URL := GetPixivURL(engine.UnderScoreName(Member.BiliBiliHashtags[1 : len(Member.BiliBiliHashtags)-1]))
+						err := Pixiv(URL, FixFanArt, false)
+						if err != nil {
+							log.Error(err)
+						}
 					}
-				}
+				}(&wg2)
 
-				if Member.TwitterHashtags != "" {
-					log.WithFields(log.Fields{
-						"Member": Member.Name,
-						"Group":  Group.GroupName,
-						"Lewd":   false,
-					}).Info("Start curl pixiv")
-					URL := GetPixivURL(engine.UnderScoreName(Member.TwitterHashtags[1:]))
-					err := Pixiv(URL, FixFanArt, false)
-					if err != nil {
-						log.Error(err)
-					}
-				} else if Member.BiliBiliHashtags != "" {
-					log.WithFields(log.Fields{
-						"Member": Member.Name,
-						"Group":  Group.GroupName,
-						"Lewd":   false,
-					}).Info("Start curl pixiv")
-					URL := GetPixivURL(engine.UnderScoreName(Member.BiliBiliHashtags[1 : len(Member.BiliBiliHashtags)-1]))
-					err := Pixiv(URL, FixFanArt, false)
-					if err != nil {
-						log.Error(err)
-					}
-				}
-
+				wg2.Wait()
 			}(&wg, Member)
 			if i%4 == 0 {
 				wg.Wait()

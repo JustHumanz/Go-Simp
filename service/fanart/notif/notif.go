@@ -48,57 +48,57 @@ func SendNude(Art database.DataFanart, Bot *discordgo.Session, Color int) {
 				UserTagsList, err := Channel.GetUserList(context.Background())
 				if err != nil {
 					log.Error(err)
-					break
-				}
-				if UserTagsList != nil {
-					tags = strings.Join(UserTagsList, " ")
-					NewEmbed = engine.NewEmbed().
-						SetAuthor(strings.Title(Art.Group.GroupName), Art.Group.IconURL).
-						SetTitle(Art.Author).
-						SetURL(Art.PermanentURL).
-						SetThumbnail(Art.AuthorAvatar).
-						SetDescription(Art.Text).
-						SetImage(Art.Photos...).
-						AddField("User Tags", tags).
-						SetFooter(Art.State, icon).
-						InlineAllFields().
-						SetColor(Color).MessageEmbed
 				} else {
-					NewEmbed = engine.NewEmbed().
-						SetAuthor(strings.Title(Art.Group.GroupName), Art.Group.IconURL).
-						SetTitle(Art.Author).
-						SetURL(Art.PermanentURL).
-						SetThumbnail(Art.AuthorAvatar).
-						SetDescription(Art.Text).
-						SetImage(Art.Photos...).
-						SetFooter(Art.State, icon).
-						InlineAllFields().
-						SetColor(Color).MessageEmbed
-				}
+					if UserTagsList != nil {
+						tags = strings.Join(UserTagsList, " ")
+						NewEmbed = engine.NewEmbed().
+							SetAuthor(strings.Title(Art.Group.GroupName), Art.Group.IconURL).
+							SetTitle(Art.Author).
+							SetURL(Art.PermanentURL).
+							SetThumbnail(Art.AuthorAvatar).
+							SetDescription(Art.Text).
+							SetImage(Art.Photos...).
+							AddField("User Tags", tags).
+							SetFooter(Art.State, icon).
+							InlineAllFields().
+							SetColor(Color).MessageEmbed
+					} else {
+						NewEmbed = engine.NewEmbed().
+							SetAuthor(strings.Title(Art.Group.GroupName), Art.Group.IconURL).
+							SetTitle(Art.Author).
+							SetURL(Art.PermanentURL).
+							SetThumbnail(Art.AuthorAvatar).
+							SetDescription(Art.Text).
+							SetImage(Art.Photos...).
+							SetFooter(Art.State, icon).
+							InlineAllFields().
+							SetColor(Color).MessageEmbed
+					}
 
-				if tags == "" && Art.Group.GroupName == config.Indie && !Channel.IndieNotif {
-					//do nothing,like my life
-				} else {
-					tmp, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed)
-					if err != nil {
-						log.Error(tmp, err.Error())
-						err = Channel.DelChannel(err.Error())
+					if tags == "" && Art.Group.GroupName == config.Indie && !Channel.IndieNotif {
+						//do nothing,like my life
+					} else {
+						tmp, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed)
+						if err != nil {
+							log.Error(tmp, err.Error())
+							err = Channel.DelChannel(err.Error())
+							if err != nil {
+								log.Error(err)
+							}
+						}
+						err = engine.Reacting(map[string]string{
+							"ChannelID": Channel.ChannelID,
+						}, Bot)
 						if err != nil {
 							log.Error(err)
 						}
 					}
-					err = engine.Reacting(map[string]string{
-						"ChannelID": Channel.ChannelID,
-					}, Bot)
-					if err != nil {
-						log.Error(err)
+					if i%config.Waiting == 0 && config.GoSimpConf.LowResources {
+						log.WithFields(log.Fields{
+							"State": Art.State + " Fanart",
+						}).Warn(config.FanartSleep)
+						time.Sleep(config.FanartSleep)
 					}
-				}
-				if i%config.Waiting == 0 && config.GoSimpConf.LowResources {
-					log.WithFields(log.Fields{
-						"State": Art.State + " Fanart",
-					}).Warn(config.FanartSleep)
-					time.Sleep(config.FanartSleep)
 				}
 			}
 		}
