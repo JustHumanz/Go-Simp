@@ -263,7 +263,6 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 			wg.Wait()
 
 		} else if Status == config.PastStatus {
-			//id, DiscordChannelID
 			var (
 				wg sync.WaitGroup
 			)
@@ -336,10 +335,10 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 				}
 			}
 		} else if Status == "reminder" {
-			GetView()
 			UpcominginMinutes := int(Timestart.Sub(time.Now()).Minutes())
 			if UpcominginMinutes > 10 && UpcominginMinutes < 70 {
 				if database.CheckReminder(UpcominginMinutes) {
+					GetView()
 					ChanelData, err := database.ChannelTag(Data.Member.ID, 2, config.Default, Data.Member.Region)
 					if err != nil {
 						log.Error(err)
@@ -415,9 +414,15 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 					} else if UserTagsList == nil && Data.Group.GroupName == config.Indie && !Channel.IndieNotif {
 						return
 					}
+
 					view, err := strconv.Atoi(Data.Viewers)
 					if err != nil {
 						log.Error(err)
+					}
+
+					Views := "???"
+					if view > 100 {
+						Views = engine.NearestThousandFormat(float64(view))
 					}
 
 					Start := durafmt.Parse(expiresAt.Sub(Data.Schedul.In(loc))).LimitFirstN(1)
@@ -429,8 +434,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 						SetImage(Data.Thumb).
 						SetURL(BiliBiliURL).
 						AddField("Start live", Start.String()+" Ago").
-						AddField("Online", engine.NearestThousandFormat(float64(view))+" "+FanBase).
-						InlineAllFields().
+						AddField("Online", Views+" "+FanBase).
 						SetFooter(Data.Schedul.In(loc).Format(time.RFC822), config.BiliBiliIMG).
 						SetColor(Color()).MessageEmbed)
 					if err != nil {
@@ -502,6 +506,16 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 			}
 		)
 
+		view, err := strconv.Atoi(Data.Viewers)
+		if err != nil {
+			log.Error(err)
+		}
+
+		Views := "???"
+		if view > 100 {
+			Views = engine.NearestThousandFormat(float64(view))
+		}
+
 		ChannelData, err := database.ChannelTag(Data.Member.ID, 2, config.Default, Data.Member.Region)
 		if err != nil {
 			log.Error(err)
@@ -524,10 +538,6 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 					return nil
 				}
 
-				View, err := strconv.Atoi(Data.Viewers)
-				if err != nil {
-					log.Error()
-				}
 				MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
 					SetAuthor(VtuberName, Data.Member.YoutubeAvatar, ImgURL).
 					SetTitle("Live right now").
@@ -536,7 +546,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 					SetThumbnail(Data.Group.IconURL).
 					SetURL(ImgURL).
 					AddField("Start live", durafmt.Parse(expiresAt.Sub(Data.Schedul.In(loc))).LimitFirstN(1).String()+" Ago").
-					AddField("Viewers", engine.NearestThousandFormat(float64(View))+" "+FanBase).
+					AddField("Viewers", Views+" "+FanBase).
 					InlineAllFields().
 					AddField("Game", Data.Game).
 					SetFooter(Data.Schedul.In(loc).Format(time.RFC822), config.TwitchIMG).
@@ -610,6 +620,15 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 		var (
 			wg sync.WaitGroup
 		)
+		view, err := strconv.Atoi(Data.Viewers)
+		if err != nil {
+			log.Error(err)
+		}
+
+		Views := "???"
+		if view > 100 {
+			Views = engine.NearestThousandFormat(float64(view))
+		}
 
 		ChannelData, err := database.ChannelTag(Data.Member.ID, 2, config.NotLiveOnly, Data.Member.Region)
 		if err != nil {
@@ -628,13 +647,9 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 				}
 
 				if UserTagsList == nil && Data.Group.GroupName != config.Indie {
-					UserTagsList = []string{"_"}
+					UserTagsList = nil
 				} else if UserTagsList == nil && Data.Group.GroupName == config.Indie && !Channel.IndieNotif {
 					return
-				}
-				viwe, err := strconv.Atoi(Data.Viewers)
-				if err != nil {
-					log.Error(err)
 				}
 
 				msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
@@ -647,15 +662,17 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 					AddField("Type ", Data.Type).
 					AddField("Duration ", Data.Length).
 					InlineAllFields().
-					AddField("Viwers ", engine.NearestThousandFormat(float64(viwe))+" "+FanBase).
+					AddField("Viwers ", Views+" "+FanBase).
 					SetFooter(Data.Schedul.In(loc).Format(time.RFC822), config.BiliBiliIMG).
 					SetColor(Color()).MessageEmbed)
 				if err != nil {
 					log.Error(msg, err)
 				} else {
-					msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "UserTags: "+strings.Join(UserTagsList, " "))
-					if err != nil {
-						log.Error(msg, err)
+					if UserTagsList != nil {
+						msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "UserTags: "+strings.Join(UserTagsList, " "))
+						if err != nil {
+							log.Error(msg, err)
+						}
 					}
 				}
 			}(v, &wg)
@@ -670,6 +687,5 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 			}
 		}
 		wg.Wait()
-
 	}
 }
