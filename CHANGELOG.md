@@ -1,3 +1,11 @@
+v3.5.6
+- Change default views to "???"
+- Update fanart notif&Add sync in pixiv fanart
+
+v3.5.5
+- Fix pixiv not send any fanart
+- Fix rest-api
+
 v3.5.4
 - Blacklist loli tag in NSFW
 - Remove `-` in fanart notif
