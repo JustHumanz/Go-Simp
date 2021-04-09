@@ -282,3 +282,60 @@ CREATE TABLE IF NOT EXISTS `Youtube` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `GroupYoutube`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE IF NOT EXISTS `GroupYoutube` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `YoutubeChannel` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Region` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `VtuberGroup_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `GroupBiliBili`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE IF NOT EXISTS `GroupBiliBili` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `BiliBili_SpaceID` int COLLATE utf8mb4_unicode_ci NOT NULL,
+  `BiliBili_RoomID` int COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Region` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Status` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `VtuberGroup_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `GroupVideos`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE IF NOT EXISTS `GroupVideos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `VideoID` varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Type` varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Status` varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Title` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Thumbnails` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `PublishedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `ScheduledStart` timestamp NULL,
+  `EndStream` timestamp NULL,
+  `Viewers` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Length` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `VideoFrom` int(11) NOT NULL,
+  `VtuberGroup_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
