@@ -1,3 +1,8 @@
+v3.6.0-beta
+- Add Group/Agency in youtube/bilibili
+- Fix pilot memory leak
+- Update donate message
+
 v3.5.6
 - Change default views to "???"
 - Update fanart notif&Add sync in pixiv fanart
