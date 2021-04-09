@@ -334,7 +334,7 @@ CREATE TABLE IF NOT EXISTS `GroupVideos` (
   `EndStream` timestamp NULL,
   `Viewers` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Length` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `VideoFrom` int(11) NOT NULL,
+  `LiveBili` tinyint(4) NOT NULL,
   `VtuberGroup_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

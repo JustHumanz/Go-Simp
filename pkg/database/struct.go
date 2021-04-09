@@ -8,10 +8,17 @@ import (
 
 //Group group struct
 type Group struct {
+	ID              int64
+	IconURL         string
+	GroupName       string
+	YoutubeChannels []GroupYtChannel
+	Members         []Member
+}
+
+type GroupYtChannel struct {
 	ID        int64
-	IconURL   string
-	GroupName string
-	Members   []Member
+	YtChannel string
+	Region    string
 }
 
 func (Data *Group) RemoveNillIconURL() *Group {
@@ -23,10 +30,7 @@ func (Data *Group) RemoveNillIconURL() *Group {
 
 //IsNull check if group struct is nil
 func (Data Group) IsNull() bool {
-	if Data.ID == 0 {
-		return true
-	}
-	return false
+	return Data.ID == 0
 }
 
 //VtubersPayload payload with multiple group
@@ -57,30 +61,33 @@ type Member struct {
 }
 
 func (Data Member) IsMemberNill() bool {
-	if Data == (Member{}) {
-		return true
-	}
-	return false
+	return Data == (Member{})
 }
 
 type LiveStream struct {
-	ID         int64
-	Status     string
-	VideoID    string
-	Title      string
-	Thumb      string
-	Desc       string
-	Schedul    time.Time
-	End        time.Time
-	Published  time.Time
-	Game       string
-	Type       string
-	Viewers    string
-	Length     string
-	Member     Member
-	Group      Group
-	State      string
-	IsBiliLive bool
+	ID           int64
+	Status       string
+	VideoID      string
+	Title        string
+	Thumb        string
+	Desc         string
+	Schedul      time.Time
+	End          time.Time
+	Published    time.Time
+	Game         string
+	Type         string
+	Viewers      string
+	Length       string
+	Member       Member
+	Group        Group
+	GroupYoutube GroupYtChannel
+	State        string
+	IsBiliLive   bool
+}
+
+func (Data *LiveStream) SetGroupYt(new GroupYtChannel) *LiveStream {
+	Data.GroupYoutube = new
+	return Data
 }
 
 func (Data *LiveStream) AddVideoID(new string) *LiveStream {
