@@ -20,7 +20,6 @@ import (
 var (
 	Data          []map[string]interface{}
 	VtuberMembers []database.Member
-	VtuberGroups  []database.Group
 )
 
 func init() {
@@ -32,6 +31,9 @@ func init() {
 	)
 
 	RequestPayload := func() {
+		var (
+			VtuberGroups []database.Group
+		)
 		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
 			Message: "Send me nude",
 			Service: "Rest_API",
@@ -158,8 +160,8 @@ func init() {
 func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/all", getGroup).Methods("GET")
-	router.HandleFunc("/groups/{GroupID}", getGroup).Methods("GET")
-	router.HandleFunc("/members/{MemberID}", getMembers).Methods("GET")
+	router.HandleFunc("/groups/{groupID}", getGroup).Methods("GET")
+	router.HandleFunc("/members/{memberID}", getMembers).Methods("GET")
 
 	FanArt := router.PathPrefix("/fanart").Subrouter()
 	FanArt.HandleFunc("/", invalidPath).Methods("GET")
@@ -209,7 +211,7 @@ func invalidPath(w http.ResponseWriter, r *http.Request) {
 }
 
 func getGroup(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)["GroupID"]
+	vars := mux.Vars(r)["groupID"]
 	if vars != "" {
 		key := strings.Split(vars, ",")
 		var GroupsTMP []map[string]interface{}
@@ -275,7 +277,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 					}
 
 					if region != "" {
-						if MemberInt == int(Member["GroupID"].(int64)) && strings.ToLower(region) == strings.ToLower(Member["Region"].(string)) {
+						if MemberInt == int(Member["GroupID"].(int64)) && strings.EqualFold(region, Member["Region"].(string)) {
 							Members = append(Members, Member)
 						}
 					} else {

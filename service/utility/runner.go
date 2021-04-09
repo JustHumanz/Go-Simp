@@ -162,8 +162,8 @@ func main() {
 				SetDescription("Enjoy the bot?\nhelp dev to pay server,domain and database for development of "+BotInfo.Username).
 				AddField("Ko-Fi", "[Link]("+Donation+")").
 				AddField("if you a broke gang,you can upvote "+BotInfo.Username, "[Top.gg]("+configfile.TopGG+")").
-				AddField("or give some star on github", "[Github](https://github.com/JustHumanz/Go-Simp)").
-				InlineAllFields().MessageEmbed)
+				InlineAllFields().
+				AddField("or give some star on github", "[Github](https://github.com/JustHumanz/Go-Simp)").MessageEmbed)
 		})
 	}
 	c.AddFunc(config.CheckServerCount, func() {
