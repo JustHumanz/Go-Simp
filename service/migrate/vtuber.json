@@ -882,6 +882,14 @@
          {
             "GroupName":"774inc",
             "GroupIcon":"https://cdn.humanz.moe/774.png",
+            "GroupChannel": {
+               "Youtube": [
+                  null
+               ],
+               "BiliBili":[
+                  null
+               ]
+            },
             "Members":[
                {
                   "Name":"Patra",
@@ -1440,6 +1448,22 @@
          {
             "GroupName":"Hololive",
             "GroupIcon":"https://cdn.humanz.moe/holo.png",
+            "GroupChannel": {
+               "Youtube": [
+                  {
+                     "ChannelID": "UCotXwY6s8pWmuWd_snKYjhg",
+                     "Region":"EN"
+                  },
+                  {
+                     "ChannelID": "UCJFZiqLMntJufDCHc6bQixg",
+                     "Region":"JP"
+                  },
+                  {
+                     "ChannelID": "UCfrWoRGlawPQDQxxeIDRP0Q",
+                     "Region":"ID"
+                  }
+               ]
+            },
             "Members":[
                {
                   "Name":"Risu",
@@ -2435,6 +2459,17 @@
          {
             "GroupName":"Holostars",
             "GroupIcon":"https://cdn.humanz.moe/holostars.png",
+            "GroupChannel": {
+               "Youtube": [
+                  {
+                     "ChannelID": "UCWsfcksUUpoEvhia0_ut0bA",
+                     "Region":"JP"
+                  }
+               ],
+               "BiliBili": [
+                  null
+               ]
+            },
             "Members":[
                {
                   "Name":"Izu-Izu",
@@ -2671,6 +2706,29 @@
          {
             "GroupName":"Nijisanji",
             "GroupIcon":"https://cdn.humanz.moe/niji.png",
+            "GroupChannel": {
+               "Youtube": [
+                  {
+                     "ChannelID": "UCX7YkU9nEeaoZbkVLVajcMg",
+                     "Region":"JP"
+                  },
+                  {
+                     "ChannelID": "UCStzBFfjwFYb0qSYHnzFZvw",
+                     "Region":"KR"
+                  },
+                  {
+                     "ChannelID": "UC-JSeFfovhNsEhftt1WHMvg",
+                     "Region":""
+                  }
+               ],
+               "BiliBili": [
+                  {
+                     "BiliBili_ID":410484677,
+                     "BiliRoom_ID":21346449,
+                     "Region": "JP"
+                  }
+               ]
+            },
             "Members":[
                {
                   "Name":"Konlulu",
@@ -4448,6 +4506,14 @@
          {
             "GroupName":"Kizuna_AI",
             "GroupIcon":"https://cdn.humanz.moe/kizuna.png",
+            "GroupChannel": {
+               "Youtube": [
+                  null
+               ],
+               "BiliBili": [
+                  null
+               ]
+            },
             "Members":[
                {
                   "Name":"Ai-chan",
@@ -4500,6 +4566,14 @@
          {
             "GroupName":"ENTUM",
             "GroupIcon":"https://cdn.humanz.moe/entum.png",
+            "GroupChannel": {
+               "Youtube": [
+                  null
+               ],
+               "BiliBili": [
+                  null
+               ]
+            },
             "Members":[
                {
                   "Name":"hina-chan",
@@ -4552,6 +4626,14 @@
          {
             "GroupName":"sos_ev",
             "GroupIcon":"https://cdn.humanz.moe/404.jpg",
+            "GroupChannel": {
+               "Youtube": [
+                  null
+               ],
+               "BiliBili": [
+                  null
+               ]
+            },
             "Members":[
                {
                   "Name":"Evelyn",
@@ -4650,6 +4732,14 @@
          {
             "GroupName":"VOMS",
             "GroupIcon":"https://cdn.humanz.moe/vox.png",
+            "GroupChannel": {
+               "Youtube": [
+                  null
+               ],
+               "BiliBili": [
+                  null
+               ]
+            },
             "Members":[
                {
                   "Name":"Pikamee",
@@ -4725,6 +4815,17 @@
          {
             "GroupName":"MAHA5",
             "GroupIcon":"https://cdn.humanz.moe/MAHA5.png",
+            "GroupChannel": {
+               "Youtube": [
+                  {
+                     "ChannelID": "UCzc8GwjUvecxpjhGtuewYOQ",
+                     "Region":"ID"
+                  }
+               ],
+               "BiliBili":[
+                  null
+               ]
+            },
             "Members":[
                {
                   "Name":"Adelia",
@@ -4846,6 +4947,14 @@
          {
             "GroupName":"NoriPro",
             "GroupIcon":"https://cdn.humanz.moe/noripro.png",
+            "GroupChannel": {
+               "Youtube": [
+                  null
+               ],
+               "BiliBili": [
+                  null
+               ]
+            },
             "Members":[
                {
                   "Name":"Tamakin",
@@ -5082,6 +5191,14 @@
          {
             "GroupName":"ArkNET",
             "GroupIcon":"https://cdn.humanz.moe/ArkNet.png",
+            "GroupChannel": {
+               "Youtube": [
+                  null
+               ],
+               "BiliBili": [
+                  null
+               ]
+            },
             "Members":[
                {
                   "Name":"Enji_NC",
@@ -5134,6 +5251,14 @@
          {
             "GroupName":"Brave",
             "GroupIcon":"https://cdn.humanz.moe/brave.png",
+            "GroupChannel": {
+               "Youtube": [
+                  null
+               ],
+               "BiliBili": [
+                  null
+               ]
+            },
             "Members":[
                {
                   "Name":"Buchou",
@@ -5485,6 +5610,14 @@
          {
             "GroupName":"MyHolo",
             "GroupIcon":"https://cdn.humanz.moe/MyHolo.png",
+            "GroupChannel": {
+               "Youtube": [
+                  null
+               ],
+               "BiliBili": [
+                  null
+               ]
+            },
             "Members":[
                {
                   "Name":"Lili",
@@ -5583,6 +5716,14 @@
          {
             "GroupName":"VShojo",
             "GroupIcon":"https://cdn.humanz.moe/VShojo.png",
+            "GroupChannel": {
+               "Youtube": [
+                  null
+               ],
+               "BiliBili": [
+                  null
+               ]
+            },
             "Members":[
                {
                   "Name":"Mel",
@@ -5750,6 +5891,21 @@
          {
             "GroupName":"ViViD",
             "GroupIcon":"https://cdn.humanz.moe/ViViD.png",
+            "GroupChannel": {
+               "Youtube": [
+                  {
+                     "ChannelID": "UCaB_QHyYJriERPLKxSXqZKw",
+                     "Region":"JP"
+                  }
+               ],
+               "BiliBili": [
+                  {
+                     "BiliBili_ID":392214433,
+                     "BiliRoom_ID":21421874,
+                     "Region": "JP"
+                  }
+               ]
+            },
             "Members":[
                {
                   "Name":"Shirayuri",

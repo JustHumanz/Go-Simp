@@ -65,10 +65,17 @@ type Independent struct {
 	Members []Members `json:"Members"`
 }
 type Group struct {
-	GroupName string    `json:"GroupName"`
-	GroupIcon string    `json:"GroupIcon"`
-	Members   []Members `json:"Members"`
+	GroupName    string       `json:"GroupName"`
+	GroupIcon    string       `json:"GroupIcon"`
+	GroupChannel GroupChannel `json:"GroupChannel,omitempty"`
+	Members      []Members    `json:"Members"`
 }
+
+type GroupChannel struct {
+	Youtube  []interface{} `json:"Youtube"`
+	BiliBili []interface{} `json:"BiliBili"`
+}
+
 type Data struct {
 	Independent Independent `json:"independent"`
 	Group       []Group     `json:"Group"`

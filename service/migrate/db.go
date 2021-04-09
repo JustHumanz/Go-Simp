@@ -14,376 +14,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-/*
-func CreateDB(Data config.ConfigFile) error {
-	log.Info("Create Database")
-
-	db, err := sql.Open("mysql", Data.SQL.User+":"+Data.SQL.Pass+"@tcp("+Data.SQL.Host+":3306)/")
-	if err != nil {
-		log.Error(err, " Something worng with database,make sure you create Vtuber database first")
-		os.Exit(1)
-	}
-	_, err = db.Exec("CREATE DATABASE Vtuber")
-
-	_, err = db.Exec(`USE Vtuber`)
-	if err != nil {
-		return err
-	}
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS Channel (
-		id int(11) NOT NULL AUTO_INCREMENT,
-		DiscordChannelID varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		Type int(11) NOT NULL,
-		LiveOnly TINYINT NOT NULL DEFAULT 0,
-		NewUpcoming TINYINT NOT NULL DEFAULT 1,
-		Dynamic TINYINT NOT NULL DEFAULT 0,
-		Region VARCHAR(45) NOT NULL ,
-		Lite TINYINT NOT NULL DEFAULT 0,
-		IndieNotif TINYINT NOT NULL DEFAULT 0,
-		VtuberGroup_id int(11) NOT NULL,
-		PRIMARY KEY (id)
-	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`)
-	if err != nil {
-		return err
-	}
-
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS User (
-		id int(11) NOT NULL AUTO_INCREMENT,
-		DiscordID varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		DiscordUserName varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		Reminder INT(2) DEFAULT 0,
-		Human TINYINT DEFAULT 1,
-		VtuberMember_id int(11) NOT NULL,
-		Channel_id int(11) NOT NULL,
-		PRIMARY KEY (id)
-	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`)
-	if err != nil {
-		return err
-	}
-
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS Twitter (
-		id int(11) NOT NULL AUTO_INCREMENT,
-		PermanentURL varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		Author varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		Likes int(11) DEFAULT NULL,
-		Photos varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		Videos varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		Text varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		TweetID varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		VtuberMember_id int(11) NOT NULL,
-		PRIMARY KEY (id)
-	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`)
-	if err != nil {
-		return err
-	}
-
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS TBiliBili (
-		id int(11) NOT NULL AUTO_INCREMENT,
-		PermanentURL varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		Author varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		Likes int(11) DEFAULT NULL,
-		Photos TEXT COLLATE utf8mb4_unicode_ci DEFAULT NULL,  //i'm not joking,they use sha1 hash for image identify,so the url very fucking long
-		Videos varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		Text TEXT COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		Dynamic_id varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		VtuberMember_id int(11) NOT NULL,
-		PRIMARY KEY (id)
-	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`)
-	if err != nil {
-		return err
-	}
-
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS VtuberGroup (
-		id int(11) NOT NULL AUTO_INCREMENT,
-		VtuberGroupName varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		VtuberGroupIcon varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		PRIMARY KEY (id)
-	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`)
-	if err != nil {
-		return err
-	}
-
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS VtuberMember (
-		id int(11) NOT NULL AUTO_INCREMENT,
-		VtuberName varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		VtuberName_EN varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		VtuberName_JP varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		Hashtag varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		BiliBili_Hashtag varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		Youtube_ID varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		Youtube_Avatar varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		BiliBili_SpaceID INT(11) DEFAULT NULL,
-		BiliBili_RoomID INT(11) DEFAULT NULL,
-		BiliBili_Avatar varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		Twitter_Username varchar(24) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		Twitch_Username varchar(24) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		Twitch_Avatar varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		Region varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-		VtuberGroup_id int(11) NOT NULL,
-		PRIMARY KEY (id)
-	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`)
-	if err != nil {
-		return err
-	}
-
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS Youtube (
-		id int(11) NOT NULL AUTO_INCREMENT,
-		VideoID varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		Type varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		Status varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		Title varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		Thumbnails varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		Description text COLLATE utf8mb4_unicode_ci NOT NULL,
-		PublishedAt timestamp NOT NULL DEFAULT current_timestamp(),
-		ScheduledStart timestamp NOT NULL DEFAULT current_timestamp(),
-		EndStream timestamp NOT NULL DEFAULT current_timestamp(),
-		Viewers varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		Length varchar(11) COLLATE utf8mb4_unicode_ci NOT NULL,
-		VtuberMember_id int(11) NOT NULL,
-		PRIMARY KEY (id)
-	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`)
-	if err != nil {
-		return err
-	}
-
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS BiliBili (
-		id int(11) NOT NULL AUTO_INCREMENT,
-		VideoID varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		Type varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		Title varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		Thumbnails varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		Description text COLLATE utf8mb4_unicode_ci NOT NULL,
-		UploadDate timestamp NOT NULL DEFAULT current_timestamp(),
-		Viewers int(11) COLLATE utf8mb4_unicode_ci NOT NULL,
-		Length varchar(11) COLLATE utf8mb4_unicode_ci NOT NULL,
-		VtuberMember_id int(11) NOT NULL,
-		PRIMARY KEY (id)
-	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`)
-	if err != nil {
-		return err
-	}
-
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS LiveBiliBili (
-		id int(11) NOT NULL AUTO_INCREMENT,
-		RoomID varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		Status varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		Title varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		Thumbnails varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		Description text COLLATE utf8mb4_unicode_ci NOT NULL,
-		Published timestamp NOT NULL DEFAULT current_timestamp(),
-		ScheduledStart timestamp NOT NULL DEFAULT current_timestamp(),
-		Viewers varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		VtuberMember_id int(11) NOT NULL,
-		PRIMARY KEY (id)
-	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`)
-	if err != nil {
-		return err
-	}
-
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS Twitch (
-		id int(11) NOT NULL AUTO_INCREMENT,
-		Game varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		Status varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL,
-		Title varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		Thumbnails varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		ScheduledStart timestamp NOT NULL DEFAULT current_timestamp(),
-		Viewers varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-		VtuberMember_id int(11) NOT NULL,
-		PRIMARY KEY (id)
-	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`)
-	if err != nil {
-		return err
-	}
-
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS Subscriber (
-		id INT NOT NULL AUTO_INCREMENT,
-		Youtube_Subscriber INT(11) NULL,
-		Youtube_Videos INT(11) NULL,
-		Youtube_Views INT(11) NULL,
-		BiliBili_Followers INT(11) NULL,
-		BiliBili_Videos INT(11) NULL,
-		BiliBili_Views INT(11) NULL,
-		Twitter_Followers INT(11) NULL,
-		VtuberMember_id int(11) NOT NULL,
-		PRIMARY KEY (id)
-		);`)
-
-	log.Info("Create stored-procedure")
-
-	log.Info("Create GetYt")
-	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetYt;`)
-	if err != nil {
-		return err
-	}
-	_, err = db.Exec(`CREATE PROCEDURE GetYt
-	(
-		memid int,
-		grpid int,
-		lmt int,
-		sts varchar(11),
-		reg  varchar(11)
-	)
-	BEGIN
-		IF reg != '' THEN
-				IF sts = 'upcoming' THEN
-				SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Type,
-				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id
-				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id
-				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id
-				Where VtuberGroup.id=grpid AND Status='upcoming' AND Region=reg Order by ScheduledStart DESC Limit 3;
-
-			ELSEIF sts = 'live' OR sts = 'private' THEN
-				SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Type,
-				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id
-				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id
-				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id
-				Where VtuberGroup.id=grpid AND Status=sts AND Region=reg Limit 3;
-			ELSE
-				SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Type,
-				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id
-				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id
-				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id
-				Where VtuberGroup.id=grpid AND Status='past' AND Region=reg AND EndStream !='' order by EndStream DESC Limit 3;
-
-			END if;
-		ELSE
-			IF sts = 'upcoming' THEN
-				SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Type,
-				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id
-				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id
-				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id
-				Where (VtuberGroup.id=grpid or VtuberMember.id=memid)
-				AND Status='upcoming'
-				Order by ScheduledStart DESC Limit lmt;
-			ELSEIF sts = 'live' OR sts = 'private' THEN
-				SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Type,
-				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id
-				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id
-				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id
-				Where (VtuberGroup.id=grpid or VtuberMember.id=memid)
-				AND Status=sts
-				Limit lmt;
-			ELSE
-				SELECT Youtube.id,VtuberGroupName,Youtube_ID,VtuberName_EN,VtuberName_JP,Youtube_Avatar,VideoID,Title,Type,
-				Thumbnails,Description,ScheduledStart,EndStream,Region,Viewers,VtuberMember.id,VtuberGroup.id
-				FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id
-				Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id
-				Where (VtuberGroup.id=grpid or VtuberMember.id=memid)
-				AND Status='past'
-				AND EndStream !='' order by EndStream ASC Limit lmt;
-
-			END if;
-		END if;
-	END`)
-	if err != nil {
-		return err
-	}
-
-	log.Info("Create GetVtuberName")
-	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetVtuberName;`)
-	if err != nil {
-		return err
-	}
-	_, err = db.Exec(`CREATE PROCEDURE GetVtuberName
-		(
-			GroupID int
-		)
-		BEGIN
-			SELECT id,VtuberName,VtuberName_EN,VtuberName_JP,Youtube_ID,BiliBili_SpaceID,BiliBili_RoomID,
-			Region,Hashtag,BiliBili_Hashtag,BiliBili_Avatar,Twitter_Username,Twitch_Username,Youtube_Avatar
-			FROM Vtuber.VtuberMember WHERE VtuberGroup_id=GroupID
-			Order by Region,VtuberGroup_id;
-		END`)
-	if err != nil {
-		return err
-	}
-	log.Info("Create GetLiveBiliBili")
-	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetLiveBiliBili;`)
-	if err != nil {
-		return err
-	}
-	_, err = db.Exec(`CREATE PROCEDURE GetLiveBiliBili
-		(
-			GroupID int,
-			MemberID int,
-			Sts varchar(11),
-			lmt int
-		)
-		BEGIN
-			SELECT RoomID,Status,Title,Thumbnails,Description,ScheduledStart,Viewers,VtuberName_EN,
-			VtuberName_JP,BiliBili_Avatar FROM Vtuber.LiveBiliBili
-			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id
-			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where
-			(VtuberGroup.id=GroupID or VtuberMember.id=MemberID)
-			AND Status=Sts Order by ScheduledStart DESC Limit lmt;
-		END`)
-	if err != nil {
-		return err
-	}
-
-	log.Info("Create GetSpaceBiliBili")
-	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetSpaceBiliBili;`)
-	if err != nil {
-		return err
-	}
-	_, err = db.Exec(`CREATE PROCEDURE GetSpaceBiliBili
-		(
-			GroupID int,
-			MemberID int
-		)
-		BEGIN
-		IF GroupID > 0 THEN
-			SELECT VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM Vtuber.BiliBili
-			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id
-			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id
-			Where (VtuberGroup.id=GroupID or VtuberMember.id=MemberID) Order by UploadDate DESC limit 3;
-		Else
-			SELECT VideoID,Type,Title,Thumbnails,Description,UploadDate,Viewers,Length,VtuberName_EN,VtuberName_JP,BiliBili_Avatar FROM Vtuber.BiliBili
-			Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id
-			Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id
-			Where (VtuberGroup.id=GroupID or VtuberMember.id=MemberID) Order by UploadDate DESC limit 5;
-
-		end if;
-		END`)
-	if err != nil {
-		return err
-	}
-
-	log.Info("Create GetArt")
-	_, err = db.Exec(`DROP PROCEDURE IF EXISTS GetArt;`)
-	if err != nil {
-		return err
-	}
-	_, err = db.Exec(`CREATE PROCEDURE GetArt
-		(
-			GroupID int,
-			MemberID int,
-			State varchar(11)
-		)
-		BEGIN
-		IF State = 'twitter' THEN
-			SELECT Twitter.*,VtuberMember.* FROM Vtuber.Twitter
-			Inner Join Vtuber.VtuberMember on VtuberMember.id = Twitter.VtuberMember_id
-			Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id
-			where (VtuberGroup.id=GroupID OR VtuberMember.id=MemberID)  ORDER by RAND() LIMIT 1;
-		else
-			SELECT TBiliBili.*,VtuberMember.* FROM Vtuber.TBiliBili
-			Inner Join Vtuber.VtuberMember on VtuberMember.id = TBiliBili.VtuberMember_id
-			Inner Join Vtuber.VtuberGroup on VtuberGroup.id = VtuberMember.VtuberGroup_id
-			where (VtuberGroup.id=GroupID OR VtuberMember.id=MemberID)  ORDER by RAND() LIMIT 1;
-
-		end if;
-		END`)
-
-	if err != nil {
-		return err
-	}
-
-	log.Info("DB ok")
-	db.Close()
-	return nil
-}
-*/
-
 func AddData(Data Vtuber) {
 	Independen := func(wg *sync.WaitGroup) {
 		var (
@@ -633,6 +263,58 @@ func AddData(Data Vtuber) {
 					log.Error(err)
 				}
 				Update.Exec(GroupData.GroupName, GroupData.IconURL, GroupData.ID)
+			}
+
+			for _, ytb := range GroupRaw.GroupChannel.Youtube {
+				if ytb != nil {
+					Youtube := ytb.(map[string]interface{})
+					row := db.QueryRow("SELECT id FROM GroupYoutube WHERE VtuberGroup_id=? AND YoutubeChannel=? ", GroupData.ID, Youtube["ChannelID"])
+					err := row.Scan(&GroupData.ID)
+					if err == sql.ErrNoRows {
+						stmt, err := db.Prepare("INSERT INTO GroupYoutube (YoutubeChannel,Region,VtuberGroup_id) values(?,?,?)")
+						if err != nil {
+							log.Error(err)
+						}
+
+						res, err := stmt.Exec(Youtube["ChannelID"], Youtube["Region"], GroupData.ID)
+						if err != nil {
+							log.Error(err)
+						}
+
+						_, err = res.LastInsertId()
+						if err != nil {
+							log.Error(err)
+						}
+
+						defer stmt.Close()
+					}
+				}
+			}
+
+			for _, bil := range GroupRaw.GroupChannel.BiliBili {
+				if bil != nil {
+					BiliBili := bil.(map[string]interface{})
+					row := db.QueryRow("SELECT id FROM GroupBiliBili WHERE VtuberGroup_id=? AND BiliBili_SpaceID=? ", GroupData.ID, BiliBili["BiliBili_ID"])
+					err := row.Scan(&GroupData.ID)
+					if err == sql.ErrNoRows {
+						stmt, err := db.Prepare("INSERT INTO GroupBiliBili (BiliBili_SpaceID,BiliBili_RoomID,Status,Region,VtuberGroup_id) values(?,?,?,?,?)")
+						if err != nil {
+							log.Error(err)
+						}
+
+						res, err := stmt.Exec(BiliBili["BiliBili_ID"], BiliBili["BiliBili_RoomID"], config.UnknownStatus, BiliBili["Region"], GroupData.ID)
+						if err != nil {
+							log.Error(err)
+						}
+
+						_, err = res.LastInsertId()
+						if err != nil {
+							log.Error(err)
+						}
+
+						defer stmt.Close()
+					}
+				}
 			}
 
 			DiscordChannel := GroupData.GetChannelByGroup("")

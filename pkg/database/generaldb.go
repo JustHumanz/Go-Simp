@@ -64,8 +64,31 @@ func GetGroups() []Group {
 			log.Error(err)
 		}
 		list.Members = GetMembers(list.ID)
+		list.YoutubeChannels = GetGroupsYtChannel(list.ID)
 		Data = append(Data, list)
 
+	}
+	return Data
+}
+
+func GetGroupsYtChannel(i int64) []GroupYtChannel {
+	rows, err := DB.Query(`SELECT YoutubeChannel,Region FROM GroupYoutube where VtuberGroup_id=?`, i)
+	if err != nil {
+		log.Error(err)
+	}
+	defer rows.Close()
+
+	var Data []GroupYtChannel
+	for rows.Next() {
+		var (
+			list GroupYtChannel
+		)
+		err = rows.Scan(&list.YtChannel, &list.Region)
+		if err != nil {
+			log.Error(err)
+		}
+		list.ID = i
+		Data = append(Data, list)
 	}
 	return Data
 }
@@ -484,22 +507,24 @@ func (Data Group) GetChannelByGroup(Region string) []DiscordChannel {
 	var (
 		list        string
 		id          int64
+		channeltype int
 		ChannelData []DiscordChannel
 	)
-	rows, err := DB.Query(`SELECT id,DiscordChannelID FROM Channel WHERE VtuberGroup_id=? AND (Type=1 OR Type=2 OR Type=3) AND (Channel.Region like ? OR Channel.Region='') group by DiscordChannelID`, Data.ID, "%"+Region+"%")
+	rows, err := DB.Query(`SELECT id,DiscordChannelID,Type FROM Channel WHERE VtuberGroup_id=? AND (Type=1 OR Type=2 OR Type=3) AND (Channel.Region like ? OR Channel.Region='') group by DiscordChannelID`, Data.ID, "%"+Region+"%")
 	if err != nil {
 		log.Error(err)
 	}
 
 	defer rows.Close()
 	for rows.Next() {
-		err = rows.Scan(&id, &list)
+		err = rows.Scan(&id, &list, &channeltype)
 		if err != nil {
 			log.Error(err)
 		}
 		ChannelData = append(ChannelData, DiscordChannel{
 			ID:        id,
 			ChannelID: list,
+			TypeTag:   channeltype,
 		})
 	}
 	return ChannelData

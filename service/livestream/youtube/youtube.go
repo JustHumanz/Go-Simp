@@ -66,7 +66,7 @@ func CheckYtByTime() {
 
 				for _, Youtube := range YoutubeStatus {
 					Youtube.AddMember(Member).AddGroup(Group)
-					if time.Now().Sub(Youtube.Schedul) > Youtube.Schedul.Sub(time.Now()) {
+					if time.Since(Youtube.Schedul) > time.Until(Youtube.Schedul) {
 						log.WithFields(log.Fields{
 							"Vtuber":  Member.EnName,
 							"Group":   Group.GroupName,
@@ -155,13 +155,13 @@ func GetWaiting(VideoID string) (string, error) {
 func CheckPrivate() {
 	log.Info("Start Video private slayer")
 	Check := func(Youtube database.LiveStream) {
-		if Youtube.Status == "upcoming" && time.Now().Sub(Youtube.Schedul) > Youtube.Schedul.Sub(time.Now()) {
+		if Youtube.Status == "upcoming" && time.Since(Youtube.Schedul) > time.Until(Youtube.Schedul) {
 			log.WithFields(log.Fields{
 				"VideoID": Youtube.VideoID,
 			}).Info("Member only video")
 			Youtube.UpdateYt("past")
 			engine.RemoveEmbed(Youtube.VideoID, Bot)
-		} else if Youtube.Status == "live" && Youtube.Viewers == "0" || Youtube.Status == "live" && int(math.Round(time.Now().Sub(Youtube.Schedul).Hours())) > 30 {
+		} else if Youtube.Status == "live" && Youtube.Viewers == "0" || Youtube.Status == "live" && int(math.Round(time.Since(Youtube.Schedul).Hours())) > 30 {
 			log.WithFields(log.Fields{
 				"VideoID": Youtube.VideoID,
 			}).Info("Member only video")

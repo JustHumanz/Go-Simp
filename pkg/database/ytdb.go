@@ -100,23 +100,43 @@ func RemoveYtCache(Key string, ctx context.Context) error {
 
 //Input youtube new video
 func (Data *LiveStream) InputYt() (int64, error) {
-	stmt, err := DB.Prepare(`INSERT INTO Youtube (VideoID,Type,Status,Title,Thumbnails,Description,PublishedAt,ScheduledStart,EndStream,Viewers,Length,VtuberMember_id) values(?,?,?,?,?,?,?,?,?,?,?,?)`)
-	if err != nil {
-		return 0, err
-	}
-	defer stmt.Close()
+	if !Data.Member.IsMemberNill() {
+		stmt, err := DB.Prepare(`INSERT INTO Youtube (VideoID,Type,Status,Title,Thumbnails,Description,PublishedAt,ScheduledStart,EndStream,Viewers,Length,VtuberMember_id) values(?,?,?,?,?,?,?,?,?,?,?,?)`)
+		if err != nil {
+			return 0, err
+		}
+		defer stmt.Close()
 
-	res, err := stmt.Exec(Data.VideoID, Data.Type, Data.Status, Data.Title, Data.Thumb, Data.Desc, Data.Published, Data.Schedul, Data.End, Data.Viewers, Data.Length, Data.Member.ID)
-	if err != nil {
-		return 0, err
-	}
+		res, err := stmt.Exec(Data.VideoID, Data.Type, Data.Status, Data.Title, Data.Thumb, Data.Desc, Data.Published, Data.Schedul, Data.End, Data.Viewers, Data.Length, Data.Member.ID)
+		if err != nil {
+			return 0, err
+		}
 
-	id, err := res.LastInsertId()
-	if err != nil {
-		return 0, err
-	}
+		id, err := res.LastInsertId()
+		if err != nil {
+			return 0, err
+		}
 
-	return id, nil
+		return id, nil
+	} else {
+		stmt, err := DB.Prepare(`INSERT INTO GroupVideos (VideoID,Type,Status,Title,Thumbnails,Description,PublishedAt,ScheduledStart,EndStream,Viewers,Length,LiveBili,VtuberGroup_id) values(?,?,?,?,?,?,?,?,?,?,?,?,?)`)
+		if err != nil {
+			return 0, err
+		}
+		defer stmt.Close()
+
+		res, err := stmt.Exec(Data.VideoID, Data.Type, Data.Status, Data.Title, Data.Thumb, Data.Desc, Data.Published, Data.Schedul, Data.End, Data.Viewers, Data.Length, Data.IsBiliLive, Data.Group.ID)
+		if err != nil {
+			return 0, err
+		}
+
+		id, err := res.LastInsertId()
+		if err != nil {
+			return 0, err
+		}
+
+		return id, nil
+	}
 }
 
 func (Data LiveStream) YtIsEmpty() bool {
@@ -146,6 +166,28 @@ func (Member Member) CheckYoutubeVideo(VideoID string) (*LiveStream, error) {
 		return nil, errors.New("VideoID not found in database")
 	} else {
 		Data.AddMember(Member)
+		return &Data, nil
+	}
+}
+
+//Check new video or not
+func (Group GroupYtChannel) CheckYoutubeVideo(VideoID string) (*LiveStream, error) {
+	var Data LiveStream
+	rows, err := DB.Query(`SELECT * FROM Vtuber.GroupVideos Where VideoID=? AND VtuberGroup_id=?`, VideoID, Group.ID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err = rows.Scan(&Data.ID, &Data.VideoID, &Data.Type, &Data.Status, &Data.Title, &Data.Thumb, &Data.Desc, &Data.Published, &Data.Schedul, &Data.End, &Data.Viewers, &Data.Length, &Data.IsBiliLive, &Data.Group.ID)
+		if err != nil {
+			return nil, err
+		}
+	}
+	if Data.ID == 0 {
+		return nil, errors.New("VideoID not found in database")
+	} else {
 		return &Data, nil
 	}
 }
