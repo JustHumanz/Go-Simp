@@ -94,43 +94,45 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						GroupYoutube: YtChan,
 						State:        config.YoutubeLive,
 					}
+					/*
+						if Items.Snippet.VideoStatus == config.UpcomingStatus {
+							log.WithFields(log.Fields{
+								"YtID":      YtVideoID,
+								"GroupName": Group.GroupName,
+								"Message":   "Send to notify",
+							}).Info("New Upcoming live schedule")
 
-					if Items.Snippet.VideoStatus == config.UpcomingStatus {
-						log.WithFields(log.Fields{
-							"YtID":      YtVideoID,
-							"GroupName": Group.GroupName,
-							"Message":   "Send to notify",
-						}).Info("New Upcoming live schedule")
-
-						NewYoutubeData.UpdateStatus(config.UpcomingStatus)
-						_, err := NewYoutubeData.InputYt()
-						if err != nil {
-							log.Error(err)
-						}
-						notif.SendDude(NewYoutubeData, Bot)
-
-					} else if Items.Snippet.VideoStatus == config.LiveStatus {
-						log.WithFields(log.Fields{
-							"YtID":      YtVideoID,
-							"GroupName": Group.GroupName,
-							"Message":   "Send to notify",
-						}).Info("New live stream right now")
-
-						NewYoutubeData.UpdateStatus(config.LiveStatus)
-						_, err := NewYoutubeData.InputYt()
-						if err != nil {
-							log.Error(err)
-						}
-
-						if !Items.LiveDetails.ActualStartTime.IsZero() {
-							NewYoutubeData.UpdateSchdule(Items.LiveDetails.ActualStartTime)
+							NewYoutubeData.UpdateStatus(config.UpcomingStatus)
+							_, err := NewYoutubeData.InputYt()
+							if err != nil {
+								log.Error(err)
+							}
 							notif.SendDude(NewYoutubeData, Bot)
 
-						} else {
-							notif.SendDude(NewYoutubeData, Bot)
-						}
+						} else if Items.Snippet.VideoStatus == config.LiveStatus {
+							log.WithFields(log.Fields{
+								"YtID":      YtVideoID,
+								"GroupName": Group.GroupName,
+								"Message":   "Send to notify",
+							}).Info("New live stream right now")
 
-					} else if Items.Snippet.VideoStatus == "none" && YtType == "Covering" {
+							NewYoutubeData.UpdateStatus(config.LiveStatus)
+							_, err := NewYoutubeData.InputYt()
+							if err != nil {
+								log.Error(err)
+							}
+
+							if !Items.LiveDetails.ActualStartTime.IsZero() {
+								NewYoutubeData.UpdateSchdule(Items.LiveDetails.ActualStartTime)
+								notif.SendDude(NewYoutubeData, Bot)
+
+							} else {
+								notif.SendDude(NewYoutubeData, Bot)
+							}
+
+						} else
+					*/
+					if Items.Snippet.VideoStatus == "none" && YtType == "Covering" {
 						log.WithFields(log.Fields{
 							"YtID":      YtVideoID,
 							"GroupName": Group.GroupName,
