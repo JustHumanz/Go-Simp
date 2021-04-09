@@ -34,28 +34,16 @@ func Start() {
 
 	GetGroups := func() {
 		log.Info("Start get groups from database")
+		var Grp []database.Group
 		for _, v := range database.GetGroups() {
 			v.Members = database.GetMembers(v.ID)
-			Groups = append(Groups, v)
+			Grp = append(Grp, v)
 		}
+		Groups = Grp
 	}
 	GetGroups()
 
 	c.AddFunc(config.PilotGetGroups, GetGroups)
-
-	/*
-			Bot, err := discordgo.New("Bot " + config.GoSimpConf.Discord)
-			if err != nil {
-				log.Error(err)
-			}
-
-
-		BotByte, err = json.Marshal(Bot)
-		if err != nil {
-			log.Error(err)
-			BotByte = nil
-		}
-	*/
 
 	VtubersByte, err = json.Marshal(database.VtubersPayload{
 		VtuberData: Groups,
