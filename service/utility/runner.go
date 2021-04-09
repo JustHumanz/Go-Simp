@@ -163,7 +163,7 @@ func main() {
 				AddField("Ko-Fi", "[Link]("+Donation+")").
 				AddField("if you a broke gang,you can upvote "+BotInfo.Username, "[Top.gg]("+configfile.TopGG+")").
 				InlineAllFields().
-				AddField("or give some star on github", "[Github](https://github.com/JustHumanz/Go-Simp)").MessageEmbed)
+				AddField("or listen some music from dev waifu (kano/鹿乃)", "[鹿乃チャンネルofficial](https://www.youtube.com/watch?v=pCa_oSjBU1A&list=PLBQuo9fQ-4eMX8TSweBQhoduIPt6wEnHI&index=15)\nHope you like her voice ❤️").MessageEmbed)
 		})
 	}
 	c.AddFunc(config.CheckServerCount, func() {
