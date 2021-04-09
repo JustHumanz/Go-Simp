@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"math/rand"
 	"os"
-	"strconv"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
@@ -17,6 +16,39 @@ import (
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 	"github.com/top-gg/go-dbl"
+)
+
+var (
+	KanoPayload = []string{
+		"uEeSOh5jOk0",
+		"fokontvrio0",
+		"zZ0r3RgZzXA",
+		"CD1AvkqS8oE",
+		"yXxccEqgAO4",
+		"N-ZTFGlD8Rg",
+		"Do47UIW_TXw",
+		"qxNkMzlV-FU",
+		"gkVCUuPuF8I",
+		"I8yBbwRurAE",
+		"pCa_oSjBU1A",
+		"ImSW1g02FUk",
+		"GPo-g6tHH_4",
+		"paVYNlZ5Xuk",
+		"HqIx1CVPBsI",
+		"t6o2TpzpPGU",
+		"y-bPf-6OHws",
+		"_kj5xKz8CDM",
+		"CaMKMdkLbck",
+		"PIrx5lqQbGU",
+		"I7jnsXxHs8k",
+		"3Li-FfypZYE",
+		"CybFOypDQjY",
+		"l3j2Ud8Mo4A",
+		"zgqu6_nyRGY",
+		"vxZtflYGjA8",
+		"RfDN1JMMCM4",
+		"eyiYja05RAI",
+	}
 )
 
 func init() {
@@ -154,7 +186,7 @@ func main() {
 				Img = engine.LewdIMG()
 			}
 
-			Music := "https://www.youtube.com/watch?v=pCa_oSjBU1A&list=PLBQuo9fQ-4eMX8TSweBQhoduIPt6wEnHI&index=" + strconv.Itoa(engine.RandomNum(1, 44))
+			Music := "https://www.youtube.com/watch?v=" + KanoPayload[engine.RandomNum(0, len(KanoPayload)-1)]
 			Bot.ChannelMessageSendEmbed(database.GetRanChannel(), engine.NewEmbed().
 				SetTitle("Donate").
 				SetURL(Donation).
