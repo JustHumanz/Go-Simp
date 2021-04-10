@@ -302,7 +302,7 @@ func AddData(Data Vtuber) {
 							log.Error(err)
 						}
 
-						res, err := stmt.Exec(BiliBili["BiliBili_ID"], BiliBili["BiliBili_RoomID"], config.UnknownStatus, BiliBili["Region"], GroupData.ID)
+						res, err := stmt.Exec(BiliBili["BiliBili_ID"].(float64), BiliBili["BiliRoom_ID"].(float64), config.UnknownStatus, BiliBili["Region"].(string), GroupData.ID)
 						if err != nil {
 							log.Error(err)
 						}
