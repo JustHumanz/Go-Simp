@@ -5908,6 +5908,29 @@
                   },
                   "Region":"US",
                   "Fanbase":"Frootcakes"
+               },
+               {
+                  "Name":"Vei",
+                  "EN_Name":"Veibae",
+                  "JP_Name":"",
+                  "Twitter":{
+                     "Twitter_Fanart":"#veibae",
+                     "Twitter_Lewd":"#vei34",
+                     "Twitter_Username":"Veibae"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCsBFeCb82qOXyUP19nmD9xw"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":"veibae"
+                  },
+                  "Region":"US",
+                  "Fanbase":""
                }
             ]
          },
