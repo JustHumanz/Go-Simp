@@ -5245,6 +5245,29 @@
                   },
                   "Region":"ID",
                   "Fanbase":""
+               },
+               {
+                  "Name":"Chiwawa",
+                  "EN_Name":"Rania Chiwawa",
+                  "JP_Name":"",
+                  "Twitter":{
+                     "Twitter_Fanart":"#GambaRanran",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"RaniaChiwawa"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCaQod6Hl4_3OBWsvSHaRVMQ"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"ID",
+                  "Fanbase":""
                }
             ]
          },
