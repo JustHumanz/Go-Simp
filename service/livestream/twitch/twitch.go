@@ -65,45 +65,43 @@ func CheckTwitch() {
 				if err != nil {
 					log.Error(err)
 				}
+				ResultDB.AddMember(Member).AddGroup(Group)
 
 				if len(result.Data.Streams) > 0 {
 					for _, Stream := range result.Data.Streams {
 						if ResultDB.Status == config.PastStatus && Stream.Type == config.LiveStatus {
-							if strings.EqualFold(Stream.UserName, Member.TwitchName) {
-								GameResult, err := TwitchClient.GetGames(&helix.GamesParams{
-									IDs: []string{Stream.GameID},
-								})
-								if err != nil || GameResult.ErrorMessage != "" {
-									log.Error(err, GameResult.ErrorMessage)
-								}
-
-								Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{width}", "1280", -1)
-								Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{height}", "720", -1)
-
-								ResultDB.UpdateStatus(config.LiveStatus).
-									UpdateViewers(strconv.Itoa(Stream.ViewerCount)).
-									UpdateThumbnail(Stream.ThumbnailURL).
-									UpdateSchdule(Stream.StartedAt)
-
-								if len(GameResult.Data.Games) > 0 {
-									ResultDB.UpdateGame(GameResult.Data.Games[0].Name)
-								} else {
-									ResultDB.UpdateGame("-")
-								}
-
-								err = ResultDB.UpdateTwitch()
-								if err != nil {
-									log.Error(err)
-								}
-
-								notif.SendDude(ResultDB, Bot)
-
-								log.WithFields(log.Fields{
-									"Group":      Group.GroupName,
-									"VtuberName": Member.Name,
-								}).Info("Change Twitch status to Live")
-
+							GameResult, err := TwitchClient.GetGames(&helix.GamesParams{
+								IDs: []string{Stream.GameID},
+							})
+							if err != nil || GameResult.ErrorMessage != "" {
+								log.Error(err, GameResult.ErrorMessage)
 							}
+
+							Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{width}", "1280", -1)
+							Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{height}", "720", -1)
+
+							ResultDB.UpdateStatus(config.LiveStatus).
+								UpdateViewers(strconv.Itoa(Stream.ViewerCount)).
+								UpdateThumbnail(Stream.ThumbnailURL).
+								UpdateSchdule(Stream.StartedAt)
+
+							if len(GameResult.Data.Games) > 0 {
+								ResultDB.UpdateGame(GameResult.Data.Games[0].Name)
+							} else {
+								ResultDB.UpdateGame("-")
+							}
+
+							err = ResultDB.UpdateTwitch()
+							if err != nil {
+								log.Error(err)
+							}
+
+							notif.SendDude(ResultDB, Bot)
+
+							log.WithFields(log.Fields{
+								"Group":      Group.GroupName,
+								"VtuberName": Member.Name,
+							}).Info("Change Twitch status to Live")
 						} else if Stream.Type == config.LiveStatus && ResultDB.Status == config.LiveStatus {
 							log.WithFields(log.Fields{
 								"Group":      Group.GroupName,
