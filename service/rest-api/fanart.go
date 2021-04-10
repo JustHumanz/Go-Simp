@@ -75,7 +75,7 @@ func getRandomFanart(w http.ResponseWriter, r *http.Request) {
 	)
 	if GroupID != "" {
 		key := strings.Split(GroupID, ",")
-		for _, Group := range Data {
+		for _, Group := range GroupsData {
 			for _, GroupIDstr := range key {
 				GroupIDint, err := strconv.Atoi(GroupIDstr)
 				if err != nil {
@@ -114,39 +114,37 @@ func getRandomFanart(w http.ResponseWriter, r *http.Request) {
 		}
 	} else if MemberID != "" {
 		key := strings.Split(MemberID, ",")
-		for _, Group := range Data {
-			for _, Member := range Group["Members"].([]map[string]interface{}) {
-				for _, MemberIDstr := range key {
-					MemberIDint, err := strconv.Atoi(MemberIDstr)
+		for _, Member := range MembersData {
+			for _, MemberIDstr := range key {
+				MemberIDint, err := strconv.Atoi(MemberIDstr)
+				if err != nil {
+					w.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(w).Encode(MessageError{
+						Message: err.Error(),
+						Date:    time.Now(),
+					})
+					w.WriteHeader(http.StatusInternalServerError)
+					return
+				}
+				MemberID := Member["ID"].(int64)
+				if MemberIDint == int(MemberID) {
+					FanArt, err := database.GetFanart(0, MemberID)
 					if err != nil {
+						log.Error(err)
+						errstr := err.Error()
+						if FanArt == nil {
+							errstr = "Opps,fanart not found"
+						}
 						w.Header().Set("Content-Type", "application/json")
 						json.NewEncoder(w).Encode(MessageError{
-							Message: err.Error(),
+							Message: errstr,
 							Date:    time.Now(),
 						})
-						w.WriteHeader(http.StatusInternalServerError)
-						return
 					}
-					MemberID := Member["ID"].(int64)
-					if MemberIDint == int(MemberID) {
-						FanArt, err := database.GetFanart(0, MemberID)
-						if err != nil {
-							log.Error(err)
-							errstr := err.Error()
-							if FanArt == nil {
-								errstr = "Opps,fanart not found"
-							}
-							w.Header().Set("Content-Type", "application/json")
-							json.NewEncoder(w).Encode(MessageError{
-								Message: errstr,
-								Date:    time.Now(),
-							})
-						}
-						FanArt.AddMember(GetMember(FanArt.Member.ID))
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(FixFanart(*FanArt))
-						w.WriteHeader(http.StatusOK)
-					}
+					FanArt.AddMember(GetMember(FanArt.Member.ID))
+					w.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(w).Encode(FixFanart(*FanArt))
+					w.WriteHeader(http.StatusOK)
 				}
 			}
 		}
@@ -161,7 +159,7 @@ func getFanart(w http.ResponseWriter, r *http.Request) {
 
 	if GroupID != "" {
 		key := strings.Split(GroupID, ",")
-		for _, Group := range Data {
+		for _, Group := range GroupsData {
 			for _, GroupIDstr := range key {
 				GroupIDint, err := strconv.Atoi(GroupIDstr)
 				if err != nil {
@@ -241,82 +239,81 @@ func getFanart(w http.ResponseWriter, r *http.Request) {
 		}
 	} else if MemberID != "" {
 		key := strings.Split(MemberID, ",")
-		for _, Group := range Data {
-			for _, Member := range Group["Members"].([]map[string]interface{}) {
-				for _, MemberIDstr := range key {
-					MemberIDint, err := strconv.Atoi(MemberIDstr)
-					if err != nil {
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(MessageError{
-							Message: err.Error(),
-							Date:    time.Now(),
-						})
-						w.WriteHeader(http.StatusInternalServerError)
-						return
-					}
-					MemberID := Member["ID"].(int64)
-					if MemberIDint == int(MemberID) {
-						if strings.HasPrefix(r.URL.String(), "/fanart/twitter/") {
-							FanArtData, err := GetFanartData(config.TwitterArt, 0, MemberID)
-							if err != nil {
-								log.Error(err)
-								w.Header().Set("Content-Type", "application/json")
-								json.NewEncoder(w).Encode(MessageError{
-									Message: err.Error(),
-									Date:    time.Now(),
-								})
-								return
-							}
-							var FanArtDataFix []map[string]interface{}
-							for _, v := range FanArtData {
-								v.AddMember(GetMember(v.Member.ID))
-								FanArtDataFix = append(FanArtDataFix, FixFanart(v))
-							}
+		for _, Member := range MembersData {
+			for _, MemberIDstr := range key {
+				MemberIDint, err := strconv.Atoi(MemberIDstr)
+				if err != nil {
+					w.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(w).Encode(MessageError{
+						Message: err.Error(),
+						Date:    time.Now(),
+					})
+					w.WriteHeader(http.StatusInternalServerError)
+					return
+				}
+				MemberID := Member["ID"].(int64)
+				if MemberIDint == int(MemberID) {
+					if strings.HasPrefix(r.URL.String(), "/fanart/twitter/") {
+						FanArtData, err := GetFanartData(config.TwitterArt, 0, MemberID)
+						if err != nil {
+							log.Error(err)
 							w.Header().Set("Content-Type", "application/json")
-							json.NewEncoder(w).Encode(FanArtDataFix)
-							w.WriteHeader(http.StatusOK)
-						} else if strings.HasPrefix(r.URL.String(), "/fanart/pixiv/") {
-							FanArtData, err := GetFanartData(config.PixivArt, 0, MemberID)
-							if err != nil {
-								log.Error(err)
-								w.Header().Set("Content-Type", "application/json")
-								json.NewEncoder(w).Encode(MessageError{
-									Message: err.Error(),
-									Date:    time.Now(),
-								})
-								return
-							}
-							var FanArtDataFix []map[string]interface{}
-							for _, v := range FanArtData {
-								v.AddMember(GetMember(v.Member.ID))
-								FanArtDataFix = append(FanArtDataFix, FixFanart(v))
-							}
-							w.Header().Set("Content-Type", "application/json")
-							json.NewEncoder(w).Encode(FanArtDataFix)
-							w.WriteHeader(http.StatusOK)
-						} else if strings.HasPrefix(r.URL.String(), "/fanart/bilibili/") {
-							FanArtData, err := GetFanartData(config.BiliBiliArt, 0, MemberID)
-							if err != nil {
-								log.Error(err)
-								w.Header().Set("Content-Type", "application/json")
-								json.NewEncoder(w).Encode(MessageError{
-									Message: err.Error(),
-									Date:    time.Now(),
-								})
-								return
-							}
-							var FanArtDataFix []map[string]interface{}
-							for _, v := range FanArtData {
-								v.AddMember(GetMember(v.Member.ID))
-								FanArtDataFix = append(FanArtDataFix, FixFanart(v))
-							}
-							w.Header().Set("Content-Type", "application/json")
-							json.NewEncoder(w).Encode(FanArtDataFix)
-							w.WriteHeader(http.StatusOK)
+							json.NewEncoder(w).Encode(MessageError{
+								Message: err.Error(),
+								Date:    time.Now(),
+							})
+							return
 						}
+						var FanArtDataFix []map[string]interface{}
+						for _, v := range FanArtData {
+							v.AddMember(GetMember(v.Member.ID))
+							FanArtDataFix = append(FanArtDataFix, FixFanart(v))
+						}
+						w.Header().Set("Content-Type", "application/json")
+						json.NewEncoder(w).Encode(FanArtDataFix)
+						w.WriteHeader(http.StatusOK)
+					} else if strings.HasPrefix(r.URL.String(), "/fanart/pixiv/") {
+						FanArtData, err := GetFanartData(config.PixivArt, 0, MemberID)
+						if err != nil {
+							log.Error(err)
+							w.Header().Set("Content-Type", "application/json")
+							json.NewEncoder(w).Encode(MessageError{
+								Message: err.Error(),
+								Date:    time.Now(),
+							})
+							return
+						}
+						var FanArtDataFix []map[string]interface{}
+						for _, v := range FanArtData {
+							v.AddMember(GetMember(v.Member.ID))
+							FanArtDataFix = append(FanArtDataFix, FixFanart(v))
+						}
+						w.Header().Set("Content-Type", "application/json")
+						json.NewEncoder(w).Encode(FanArtDataFix)
+						w.WriteHeader(http.StatusOK)
+					} else if strings.HasPrefix(r.URL.String(), "/fanart/bilibili/") {
+						FanArtData, err := GetFanartData(config.BiliBiliArt, 0, MemberID)
+						if err != nil {
+							log.Error(err)
+							w.Header().Set("Content-Type", "application/json")
+							json.NewEncoder(w).Encode(MessageError{
+								Message: err.Error(),
+								Date:    time.Now(),
+							})
+							return
+						}
+						var FanArtDataFix []map[string]interface{}
+						for _, v := range FanArtData {
+							v.AddMember(GetMember(v.Member.ID))
+							FanArtDataFix = append(FanArtDataFix, FixFanart(v))
+						}
+						w.Header().Set("Content-Type", "application/json")
+						json.NewEncoder(w).Encode(FanArtDataFix)
+						w.WriteHeader(http.StatusOK)
 					}
 				}
 			}
 		}
+
 	}
 }

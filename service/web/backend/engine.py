@@ -1,20 +1,25 @@
 from github import Github
 import requests,os,json,re
 
-AllURL = "http://"+os.environ['REST_API']+":2525/All"
+GroupsURL = "http://"+os.environ['REST_API']+":2525/groups/"
+MembersURL = "http://"+os.environ['REST_API']+":2525/members/?groupid="
 Youtube = "http://"+os.environ['REST_API']+":2525/livestream/youtube/member/"
 API_ENDPOINT = 'https://discord.com/api/v6'
 
 class GetVtubers:
     def __init__(self):        
         Members = []
-        response = requests.get(AllURL)
-        self.BaseData = response.json()
+        Groups = []
+        response = requests.get(GroupsURL)
         for Data in response.json():
-            if Data["Members"] is not None:
-                for Member in Data["Members"]:
-                        Members.append(Member)
+            r = requests.get(MembersURL+str(Data["ID"]))
+            for Member in r.json():
+                Members.append(Member)
+
+            Data["Members"] = r.json()    
+            Groups.append(Data)                
         
+        self.Groups = Groups
         self.Members = Members
 
     def GetMemberInfo(self,ID):
@@ -23,17 +28,12 @@ class GetVtubers:
                 return Member
 
     def GetGroups(self):
-        self.Groups = []
-        for Group in self.BaseData:
-            GroupTMP = Group.copy()
-            del GroupTMP["Members"]
-            self.Groups.append(GroupTMP)
         return self.Groups
            
 
     def GetMemberGroups(self,GroupID):
         GroupMember = []
-        for Group in self.BaseData:
+        for Group in self.Groups:
             if int(Group["ID"]) == int(GroupID):
                 for Member in Group["Members"]:
                     if MemberCheckLive(Member["ID"]) is not None:

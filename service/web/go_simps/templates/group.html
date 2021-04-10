@@ -58,12 +58,12 @@
         {% for Member in Members %}
         <a class="MemberInfo" href="/Member/{{Member.ID}}">
           <figure class="figure p-1" name="{{Member.Region}}" id="{{Member.NickName}}">
-            {% if Member.Youtube.Avatar != "" %}
-              <img src={{Member.Youtube.Avatar}} class="zoom figure-img img-fluid img-thumbnail" alt="" width="75" height="75">
-            {% elif Member.BiliBili.Avatar != "" %}
-              <img src={{Member.BiliBili.Avatar}} class="zoom figure-img img-fluid img-thumbnail" alt="" width="75" height="75">
+            {% if Member.Youtube.Avatar != "" and Member.Youtube != None %}
+              <img src={{Member.Youtube.Avatar}} class="zoom figure-img img-fluid img-thumbnail" alt="Youtube" width="75" height="75">
+            {% elif Member.BiliBili.Avatar != "" and Member.BiliBili != None %}
+              <img src={{Member.BiliBili.Avatar}} class="zoom figure-img img-fluid img-thumbnail" alt="BiliBili" width="75" height="75">
             {% else %}
-              <img src=https://cdn.{{Domain}}/404.jpg class="zoom figure-img img-fluid img-thumbnail" alt="" width="75" height="75">
+              <img src=https://cdn.{{Domain}}/404.jpg class="zoom figure-img img-fluid img-thumbnail" alt="NotFound" width="75" height="75">
             {% endif %}
         <figcaption class="figure-caption">{{Member.EnName}}</figcaption></figure></a>
         {% endfor %} 

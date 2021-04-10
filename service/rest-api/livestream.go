@@ -37,7 +37,7 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 
 	if GroupIDs != "" {
 		key := strings.Split(GroupIDs, ",")
-		for _, Group := range Data {
+		for _, Group := range GroupsData {
 			for _, GroupIDstr := range key {
 				GroupIDint, err := strconv.Atoi(GroupIDstr)
 				if err != nil {
@@ -64,29 +64,27 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 		}
 	} else if MemberIDs != "" {
 		key := strings.Split(MemberIDs, ",")
-		for _, Group := range Data {
-			for _, Member := range Group["Members"].([]map[string]interface{}) {
-				for _, MemberIDstr := range key {
-					MemberIDint, err := strconv.Atoi(MemberIDstr)
+		for _, Member := range MembersData {
+			for _, MemberIDstr := range key {
+				MemberIDint, err := strconv.Atoi(MemberIDstr)
+				if err != nil {
+					w.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(w).Encode(MessageError{
+						Message: err.Error(),
+						Date:    time.Now(),
+					})
+					w.WriteHeader(http.StatusInternalServerError)
+					return
+				}
+				MemberID := Member["ID"].(int64)
+				if MemberIDint == int(MemberID) {
+					YTData, err := database.YtGetStatus(0, MemberID, Status, Region, config.Sys)
 					if err != nil {
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(MessageError{
-							Message: err.Error(),
-							Date:    time.Now(),
-						})
-						w.WriteHeader(http.StatusInternalServerError)
-						return
+						log.Error(err)
 					}
-					MemberID := Member["ID"].(int64)
-					if MemberIDint == int(MemberID) {
-						YTData, err := database.YtGetStatus(0, MemberID, Status, Region, config.Sys)
-						if err != nil {
-							log.Error(err)
-						}
-						for _, v := range YTData {
-							v.AddMember(GetMember(v.Member.ID)).SetState(config.YoutubeLive)
-							YoutubeData = append(YoutubeData, FixLive(v))
-						}
+					for _, v := range YTData {
+						v.AddMember(GetMember(v.Member.ID)).SetState(config.YoutubeLive)
+						YoutubeData = append(YoutubeData, FixLive(v))
 					}
 				}
 			}
@@ -128,7 +126,7 @@ func getBilibili(w http.ResponseWriter, r *http.Request) {
 	}
 	if GroupID != "" {
 		key := strings.Split(GroupID, ",")
-		for _, Group := range Data {
+		for _, Group := range GroupsData {
 			for _, GroupIDstr := range key {
 				GroupIDint, err := strconv.Atoi(GroupIDstr)
 				if err != nil {
@@ -152,26 +150,24 @@ func getBilibili(w http.ResponseWriter, r *http.Request) {
 		}
 	} else if MemberID != "" {
 		key := strings.Split(MemberID, ",")
-		for _, Group := range Data {
-			for _, Member := range Group["Members"].([]map[string]interface{}) {
-				for _, MemberIDstr := range key {
-					MemberIDint, err := strconv.Atoi(MemberIDstr)
-					if err != nil {
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(MessageError{
-							Message: err.Error(),
-							Date:    time.Now(),
-						})
-						w.WriteHeader(http.StatusInternalServerError)
-						return
-					}
-					MemberID := Member["ID"].(int64)
-					if MemberIDint == int(MemberID) {
-						BiliData := database.BilGet(0, MemberID, Status)
-						for _, v := range BiliData {
-							v.AddMember(GetMember(v.Member.ID)).SetState(config.BiliLive)
-							BiliBiliData = append(BiliBiliData, FixLive(v))
-						}
+		for _, Member := range MembersData {
+			for _, MemberIDstr := range key {
+				MemberIDint, err := strconv.Atoi(MemberIDstr)
+				if err != nil {
+					w.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(w).Encode(MessageError{
+						Message: err.Error(),
+						Date:    time.Now(),
+					})
+					w.WriteHeader(http.StatusInternalServerError)
+					return
+				}
+				MemberID := Member["ID"].(int64)
+				if MemberIDint == int(MemberID) {
+					BiliData := database.BilGet(0, MemberID, Status)
+					for _, v := range BiliData {
+						v.AddMember(GetMember(v.Member.ID)).SetState(config.BiliLive)
+						BiliBiliData = append(BiliBiliData, FixLive(v))
 					}
 				}
 			}

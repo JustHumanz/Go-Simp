@@ -12,13 +12,15 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
+	"github.com/robfig/cron/v3"
 
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 )
 
 var (
-	Data          []map[string]interface{}
+	MembersData   []map[string]interface{}
+	GroupsData    []map[string]interface{}
 	VtuberMembers []database.Member
 )
 
@@ -32,7 +34,9 @@ func init() {
 
 	RequestPayload := func() {
 		var (
-			VtuberGroups []database.Group
+			MembersDataTMP   []map[string]interface{}
+			GroupsDataTMP    []map[string]interface{}
+			VtuberMembersTMP []database.Member
 		)
 		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
 			Message: "Send me nude",
@@ -56,8 +60,6 @@ func init() {
 		database.Start(configfile)
 
 		for _, Group := range Payload.VtuberData {
-			var Mem []map[string]interface{}
-			VtuberGroups = append(VtuberGroups, Group)
 			for _, Member := range Group.Members {
 				Subs, err := Member.GetSubsCount()
 				if err != nil {
@@ -71,6 +73,7 @@ func init() {
 					"JpName":   Member.JpName,
 					"Fanbase":  Member.Fanbase,
 					"Region":   Member.Region,
+					"GroupID":  Group.ID,
 				}
 
 				if Member.YoutubeID != "" {
@@ -141,26 +144,32 @@ func init() {
 				} else {
 					MemberData["Twitch"] = nil
 				}
-				Mem = append(Mem, MemberData)
-				VtuberMembers = append(VtuberMembers, Member)
+				MembersDataTMP = append(MembersDataTMP, MemberData)
 			}
-			Data = append(Data, map[string]interface{}{
+			GroupsDataTMP = append(GroupsDataTMP, map[string]interface{}{
 				"ID":        Group.ID,
 				"GroupIcon": Group.IconURL,
 				"GroupName": Group.GroupName,
-				"Members":   Mem,
 			})
 		}
+		VtuberMembers = VtuberMembersTMP
+		MembersData = MembersDataTMP
+		GroupsData = GroupsDataTMP
 	}
 
 	RequestPayload()
+	c := cron.New()
+	c.Start()
+	c.AddFunc(config.CheckPayload, RequestPayload)
 	go pilot.RunHeartBeat(gRCPconn, "Rest_API")
 }
 
 func main() {
 	router := mux.NewRouter()
-	router.HandleFunc("/all", getGroup).Methods("GET")
+	router.HandleFunc("/groups/", getGroup).Methods("GET")
 	router.HandleFunc("/groups/{groupID}", getGroup).Methods("GET")
+
+	router.HandleFunc("/members/", getMembers).Methods("GET")
 	router.HandleFunc("/members/{memberID}", getMembers).Methods("GET")
 
 	FanArt := router.PathPrefix("/fanart").Subrouter()
@@ -215,7 +224,7 @@ func getGroup(w http.ResponseWriter, r *http.Request) {
 	if vars != "" {
 		key := strings.Split(vars, ",")
 		var GroupsTMP []map[string]interface{}
-		for _, Group := range Data {
+		for _, Group := range GroupsData {
 			for _, GroupIDstr := range key {
 				GroupIDint, err := strconv.Atoi(GroupIDstr)
 				if err != nil {
@@ -238,7 +247,6 @@ func getGroup(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(GroupsTMP)
 			w.WriteHeader(http.StatusOK)
-			return
 		} else {
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusNotFound)
@@ -250,22 +258,33 @@ func getGroup(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(Data)
+		json.NewEncoder(w).Encode(GroupsData)
+		w.WriteHeader(http.StatusOK)
 	}
 }
 
 func getMembers(w http.ResponseWriter, r *http.Request) {
 	region := r.FormValue("region")
+	grpID := r.FormValue("groupid")
 	idstr := mux.Vars(r)["memberID"]
 	var Members []map[string]interface{}
 
-	for _, Group := range Data {
-		if idstr != "" {
-			key := strings.Split(idstr, ",")
-			for _, Member := range Group["Members"].([]map[string]interface{}) {
-				Member["GroupID"] = Group["ID"].(int64)
-				for _, MemberStr := range key {
-					MemberInt, err := strconv.Atoi(MemberStr)
+	if idstr != "" {
+		key := strings.Split(idstr, ",")
+		for _, Member := range MembersData {
+			for _, MemberStr := range key {
+				MemberInt, err := strconv.Atoi(MemberStr)
+				if err != nil {
+					w.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(w).Encode(MessageError{
+						Message: err.Error(),
+						Date:    time.Now(),
+					})
+					w.WriteHeader(http.StatusInternalServerError)
+					return
+				}
+				if grpID != "" {
+					GroupID, err := strconv.Atoi(grpID)
 					if err != nil {
 						w.Header().Set("Content-Type", "application/json")
 						json.NewEncoder(w).Encode(MessageError{
@@ -275,19 +294,57 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 						w.WriteHeader(http.StatusInternalServerError)
 						return
 					}
-
 					if region != "" {
-						if MemberInt == int(Member["GroupID"].(int64)) && strings.EqualFold(region, Member["Region"].(string)) {
+						if GroupID == int(Member["GroupID"].(int64)) && strings.EqualFold(region, Member["Region"].(string)) {
 							Members = append(Members, Member)
 						}
 					} else {
-						if MemberInt == int(Member["GroupID"].(int64)) {
+						if GroupID == int(Member["GroupID"].(int64)) {
+							Members = append(Members, Member)
+						}
+					}
+				} else {
+					if region != "" {
+						if MemberInt == int(Member["ID"].(int64)) && strings.EqualFold(region, Member["Region"].(string)) {
+							Members = append(Members, Member)
+						}
+					} else {
+						if MemberInt == int(Member["ID"].(int64)) {
 							Members = append(Members, Member)
 						}
 					}
 				}
 			}
 		}
+	} else if grpID != "" {
+		for _, Member := range MembersData {
+			if grpID != "" {
+				GroupID, err := strconv.Atoi(grpID)
+				if err != nil {
+					w.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(w).Encode(MessageError{
+						Message: err.Error(),
+						Date:    time.Now(),
+					})
+					w.WriteHeader(http.StatusInternalServerError)
+					return
+				}
+				if region != "" {
+					if GroupID == int(Member["GroupID"].(int64)) && strings.EqualFold(region, Member["Region"].(string)) {
+						Members = append(Members, Member)
+					}
+				} else {
+					if GroupID == int(Member["GroupID"].(int64)) {
+						Members = append(Members, Member)
+					}
+				}
+			}
+		}
+	} else {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(MembersData)
+		w.WriteHeader(http.StatusOK)
+		return
 	}
 
 	if Members != nil {

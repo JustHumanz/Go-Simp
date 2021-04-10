@@ -45,7 +45,7 @@
   <body>
     <div class="container" id="container">
       <div class="text-center">
-      {% if Member.BiliBili.RoomID and Member.Youtube.ID %}
+      {% if Member.BiliBili != None and Member.Youtube != None %}
       <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
           <div class="carousel-item active">
@@ -60,10 +60,10 @@
           </div>
         </div>
       </div>
-      {% elif Member.Youtube.ID and not Member.BiliBili.RoomID %}
+      {% elif Member.Youtube != None and Member.BiliBili == None %}
         <a href="https://www.youtube.com/channel/{{Member.Youtube.ID}}?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
           <img class="w-20 rounded mx-auto" width="200" height="200" src="{{Member.Youtube.Avatar}}" alt="Youtube"></a>
-      {% elif Member.BiliBili.RoomID and not Member.Youtube.ID %} 
+      {% elif Member.BiliBili != NOne and Member.Youtube == None %} 
         <a href="http://space.bilibili.com/{{Member.BiliBili.ID}}" target="_blank" rel="noopener noreferrer">
           <img class="w-20 rounded mx-auto" width="200" height="200" src="{{Member.BiliBili.Avatar}}" alt="BiliBili"></a>
       {% endif %}
