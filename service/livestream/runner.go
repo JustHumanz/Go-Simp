@@ -37,31 +37,26 @@ func main() {
 		configfile config.ConfigFile
 		Payload    database.VtubersPayload
 	)
-
-	RequestPay := func() {
-		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
-			Message: "Send me nude",
-			Service: "Livestream",
-		})
-		if err != nil {
-			if configfile.Discord != "" {
-				pilot.ReportDeadService(err.Error())
-			}
-			log.Error("Error when request payload: %s", err)
+	res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+		Message: "Send me nude",
+		Service: "Livestream",
+	})
+	if err != nil {
+		if configfile.Discord != "" {
+			pilot.ReportDeadService(err.Error())
 		}
-		err = json.Unmarshal(res.ConfigFile, &configfile)
-		if err != nil {
-			log.Error(err)
-		}
-
-		err = json.Unmarshal(res.VtuberPayload, &Payload)
-		if err != nil {
-			log.Error(err)
-		}
-
-		configfile.InitConf()
+		log.Error("Error when request payload: %s", err)
 	}
-	RequestPay()
+	err = json.Unmarshal(res.ConfigFile, &configfile)
+	if err != nil {
+		log.Error(err)
+	}
+
+	err = json.Unmarshal(res.VtuberPayload, &Payload)
+	if err != nil {
+		log.Error(err)
+	}
+	configfile.InitConf()
 
 	Bot, err := discordgo.New("Bot " + configfile.Discord)
 	if err != nil {
@@ -77,8 +72,6 @@ func main() {
 
 	c := cron.New()
 	c.Start()
-
-	c.AddFunc(config.CheckPayload, RequestPay)
 
 	if *Youtube {
 		youtube.Start(Bot, c, Payload, configfile)

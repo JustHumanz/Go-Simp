@@ -36,29 +36,24 @@ func main() {
 	flag.Parse()
 
 	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
-
-	RequestPay := func() {
-		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
-			Message: "Send me nude",
-			Service: "Subscriber",
-		})
-		if err != nil {
-			log.Error("Error when request payload: %s", err)
-		}
-		err = json.Unmarshal(res.ConfigFile, &configfile)
-		if err != nil {
-			log.Error(err)
-		}
-
-		err = json.Unmarshal(res.VtuberPayload, &Payload)
-		if err != nil {
-			log.Error(err)
-		}
-		configfile.InitConf()
+	res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+		Message: "Send me nude",
+		Service: "Subscriber",
+	})
+	if err != nil {
+		log.Error("Error when request payload: %s", err)
 	}
-	RequestPay()
+	err = json.Unmarshal(res.ConfigFile, &configfile)
+	if err != nil {
+		log.Error(err)
+	}
 
-	var err error
+	err = json.Unmarshal(res.VtuberPayload, &Payload)
+	if err != nil {
+		log.Error(err)
+	}
+	configfile.InitConf()
+
 	Bot, err = discordgo.New("Bot " + configfile.Discord)
 	if err != nil {
 		log.Error(err)
@@ -73,7 +68,6 @@ func main() {
 
 	c := cron.New()
 	c.Start()
-	c.AddFunc(config.CheckPayload, RequestPay)
 
 	if *Youtube {
 		c.AddFunc(config.YoutubeSubscriber, CheckYoutube)

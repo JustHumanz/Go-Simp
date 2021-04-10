@@ -61,24 +61,20 @@ func main() {
 		configfile config.ConfigFile
 		GuildList  []string
 	)
-	RequestPay := func() {
-		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
-			Message: "Send me nude",
-			Service: "Utility",
-		})
-		if err != nil {
-			if configfile.Discord != "" {
-				pilot.ReportDeadService(err.Error())
-			}
-			log.Fatalf("Error when request payload: %s", err)
+	res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+		Message: "Send me nude",
+		Service: "Utility",
+	})
+	if err != nil {
+		if configfile.Discord != "" {
+			pilot.ReportDeadService(err.Error())
 		}
-		err = json.Unmarshal(res.ConfigFile, &configfile)
-		if err != nil {
-			log.Panic(err)
-		}
+		log.Fatalf("Error when request payload: %s", err)
 	}
-	RequestPay()
-
+	err = json.Unmarshal(res.ConfigFile, &configfile)
+	if err != nil {
+		log.Panic(err)
+	}
 	Bot, err := discordgo.New("Bot " + configfile.Discord)
 	if err != nil {
 		log.Error(err)
@@ -196,7 +192,6 @@ func main() {
 				SetDescription("Enjoy the bot?\nhelp dev to pay server,domain and database for development of "+BotInfo.Username).
 				AddField("Ko-Fi", "[Link]("+Donation+")").
 				AddField("if you a broke gang,you can upvote "+BotInfo.Username, "[Top.gg]("+configfile.TopGG+")").
-				InlineAllFields().
 				AddField("or help dev simping kano/鹿乃 with listening her music", "[鹿乃チャンネルofficial]("+Music+")\nHope you like her voice ❤️").MessageEmbed)
 		})
 	}
