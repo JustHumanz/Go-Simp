@@ -1,3 +1,12 @@
+v3.6.0
+- Add Group/Agency in youtube/bilibili
+- Fix pilot memory leak
+- Update donate message
+- Remove request payload every 2h
+- Fix image not showing in web
+- Update Vshojo&arknet
+- Update Rest-API
+
 v3.6.0-beta
 - Add Group/Agency in youtube/bilibili
 - Fix pilot memory leak
