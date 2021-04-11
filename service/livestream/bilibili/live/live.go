@@ -19,14 +19,12 @@ var (
 	loc         *time.Location
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
-	configfile  config.ConfigFile
 )
 
 //Start start twitter module
-func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile) {
+func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload) {
 	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
 	Bot = a
-	configfile = d
 	VtubersData = c
 	b.AddFunc(config.BiliBiliLive, CheckLiveSchedule)
 	log.Info("Enable Live BiliBili module")

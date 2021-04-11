@@ -37,7 +37,7 @@ func GetRSS(YtID string) []string {
 
 	for i := 0; i < len(DataXML.Entry); i++ {
 		VideoID = append(VideoID, DataXML.Entry[i].VideoId)
-		if i == configfile.LimitConf.YoutubeLimit {
+		if i == config.GoSimpConf.LimitConf.YoutubeLimit {
 			break
 		}
 	}

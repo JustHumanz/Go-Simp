@@ -39,7 +39,7 @@ const (
 )
 
 //Start start twitter module
-func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile, e bool) {
+func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, e bool) {
 	Bot = a
 	VtubersData = c
 	lewd = e

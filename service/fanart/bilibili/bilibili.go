@@ -19,14 +19,12 @@ import (
 var (
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
-	configfile  config.ConfigFile
 )
 
 //Start start twitter module
-func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile) {
+func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload) {
 	Bot = a
 	VtubersData = c
-	configfile = d
 	b.AddFunc(config.BiliBiliFanart, func() {
 		for _, Group := range VtubersData.VtuberData {
 			for _, Member := range Group.Members {

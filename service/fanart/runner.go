@@ -68,15 +68,15 @@ func main() {
 	c := cron.New()
 	c.Start()
 	if *Twitter {
-		twitter.Start(Bot, c, Payload, configfile, *Lewd)
+		twitter.Start(Bot, c, Payload, *Lewd)
 	}
 
 	if *BiliBili {
-		bilibili.Start(Bot, c, Payload, configfile)
+		bilibili.Start(Bot, c, Payload)
 	}
 
 	if *Pixiv {
-		pixiv.Start(Bot, c, Payload, configfile, *Lewd)
+		pixiv.Start(Bot, c, Payload, *Lewd)
 	}
 
 	_, err = gRCPconn.ModuleList(context.Background(), &pilot.ModuleData{

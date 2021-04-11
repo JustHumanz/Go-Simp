@@ -74,19 +74,19 @@ func main() {
 	c.Start()
 
 	if *Youtube {
-		youtube.Start(Bot, c, Payload, configfile)
+		youtube.Start(Bot, c, Payload)
 	}
 
 	if *SpaceBiliBili {
-		space.Start(Bot, c, Payload, configfile)
+		space.Start(Bot, c, Payload)
 	}
 
 	if *LiveBiliBili {
-		live.Start(Bot, c, Payload, configfile)
+		live.Start(Bot, c, Payload)
 	}
 
 	if *Twitch {
-		twitch.Start(Bot, c, Payload, configfile)
+		twitch.Start(Bot, c, Payload)
 	}
 
 	_, err = gRCPconn.ModuleList(context.Background(), &pilot.ModuleData{

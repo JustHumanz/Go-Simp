@@ -18,14 +18,12 @@ var (
 	Bot          *discordgo.Session
 	TwitchClient *helix.Client
 	VtubersData  database.VtubersPayload
-	configfile   config.ConfigFile
 )
 
 //Start start twitter module
-func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile) {
+func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload) {
 	Bot = a
 	VtubersData = c
-	configfile = d
 	var err error
 	TwitchClient, err = helix.NewClient(&helix.Options{
 		ClientID:     config.GoSimpConf.Twitch.ClientID,

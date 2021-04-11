@@ -25,13 +25,11 @@ var (
 	yttoken     *string
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
-	configfile  config.ConfigFile
 )
 
 //Start start twitter module
-func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile) {
+func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload) {
 	Bot = a
-	configfile = d
 	VtubersData = c
 	b.AddFunc(config.YoutubeCheckChannel, CheckYtSchedule)
 	b.AddFunc(config.YoutubeCheckUpcomingByTime, CheckYtByTime)

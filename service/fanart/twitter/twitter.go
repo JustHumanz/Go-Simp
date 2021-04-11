@@ -17,15 +17,13 @@ import (
 var (
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
-	configfile  config.ConfigFile
 	lewd        bool
 )
 
 //Start start twitter module
-func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile, e bool) {
+func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, e bool) {
 	Bot = a
 	VtubersData = c
-	configfile = d
 	lewd = e
 	b.AddFunc(config.TwitterFanart, CheckNew)
 	if lewd {
