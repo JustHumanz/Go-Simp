@@ -332,7 +332,11 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						if err != nil {
 							log.Error(err)
 						}
-						notif.SendDude(NewYoutubeData, Bot)
+
+						UpcominginHours := int(time.Until(NewYoutubeData.Schedul).Hours())
+						if UpcominginHours > 6 {
+							notif.SendDude(NewYoutubeData, Bot)
+						}
 
 					} else if Items.Snippet.VideoStatus == config.LiveStatus {
 						log.WithFields(log.Fields{
