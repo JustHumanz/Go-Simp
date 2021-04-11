@@ -12,6 +12,7 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
+	muxlogrus "github.com/pytimer/mux-logrus"
 	"github.com/robfig/cron/v3"
 
 	"github.com/gorilla/mux"
@@ -61,20 +62,14 @@ func init() {
 
 		for _, Group := range Payload.VtuberData {
 			for _, Member := range Group.Members {
+				VtuberMembersTMP = append(VtuberMembersTMP, Member)
 				Subs, err := Member.GetSubsCount()
 				if err != nil {
 					log.Error(err)
 				}
 
-				MemberData := map[string]interface{}{
-					"ID":       Member.ID,
-					"NickName": Member.Name,
-					"EnName":   Member.EnName,
-					"JpName":   Member.JpName,
-					"Fanbase":  Member.Fanbase,
-					"Region":   Member.Region,
-					"GroupID":  Group.ID,
-				}
+				MemberData := FixMemberMap(Member)
+				MemberData["GroupID"] = Group.ID
 
 				if Member.YoutubeID != "" {
 					MemberData["Youtube"] = map[string]interface{}{
@@ -166,6 +161,9 @@ func init() {
 
 func main() {
 	router := mux.NewRouter()
+	router.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
+		http.Redirect(rw, r, "https://github.com/JustHumanz/Go-Simp/tree/master/service/rest-api/go-simp-api.yml", http.StatusTemporaryRedirect)
+	})
 	router.HandleFunc("/groups/", getGroup).Methods("GET")
 	router.HandleFunc("/groups/{groupID}", getGroup).Methods("GET")
 
@@ -207,6 +205,7 @@ func main() {
 	LiveBili.HandleFunc("/", invalidPath).Methods("GET")
 	LiveBili.HandleFunc("/group/{groupID}/{status}", getBilibili).Methods("GET")
 	LiveBili.HandleFunc("/member/{memberID}/{status}", getBilibili).Methods("GET")
+	router.Use(muxlogrus.NewLogger().Middleware)
 	http.ListenAndServe(":2525", LowerCaseURI(router))
 }
 
@@ -340,11 +339,14 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
+	} else if region != "" {
+		for _, v := range MembersData {
+			if strings.EqualFold(region, v["Region"].(string)) {
+				Members = append(Members, v)
+			}
+		}
 	} else {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(MembersData)
-		w.WriteHeader(http.StatusOK)
-		return
+		Members = MembersData
 	}
 
 	if Members != nil {
@@ -374,6 +376,37 @@ func GetMember(i int64) database.Member {
 		}
 	}
 	return database.Member{}
+}
+
+func FixMemberMap(Member database.Member) map[string]interface{} {
+	var EnName, JpName, Fanbase interface{}
+
+	if Member.EnName == "" {
+		EnName = nil
+	} else {
+		EnName = Member.EnName
+	}
+
+	if Member.JpName == "" {
+		JpName = nil
+	} else {
+		JpName = Member.JpName
+	}
+
+	if Member.Fanbase == "" {
+		Fanbase = nil
+	} else {
+		Fanbase = Member.Fanbase
+	}
+
+	return map[string]interface{}{
+		"ID":       Member.ID,
+		"NickName": Member.Name,
+		"EnName":   EnName,
+		"JpName":   JpName,
+		"Fanbase":  Fanbase,
+		"Region":   Member.Region,
+	}
 }
 
 func LowerCaseURI(h http.Handler) http.Handler {

@@ -1,0 +1,468 @@
+openapi: '3.0.2'
+info:
+  description: "Go-simp Rest-api doc"
+  version: "2.0.0"
+  title: "Go-simp"
+
+servers:
+  - url: "https://api.humanz.moe/v2"
+
+tags:
+- name: "groups"
+  description: "vtuber groups state"
+- name: "members"
+  description: "vtuber member state"
+- name: "fanart"
+  description: "vtuber fanart state"
+- name: "livestream"
+  description: "vtuber livestream state"  
+
+paths:
+  /groups/:
+    get:
+      tags:
+      - "groups"
+      summary: "Get vtuber groups data"
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:            
+              schema:
+                $ref: '#/components/schemas/Group'
+  /groups/{groupID}:
+    get:
+      tags:
+      - "groups"
+      summary: "Get vtuber groups by id"
+      parameters:
+        - in: path
+          name: groupID
+          style: simple
+          explode: true          
+          schema:
+            type: integer
+          required: true
+          description: ID for vtuber group     
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:            
+              schema:
+                $ref: '#/components/schemas/Group'                
+
+  /members/:
+    get:
+      tags:
+      - "members"
+      summary: "Get all vtuber member data"
+      parameters:
+        - in: query
+          name: region
+          schema:
+            type: string
+          description: Get vtubers order by region iso 3166-1      
+        - in: query
+          name: groupID
+          schema:
+            type: string
+          description: Get vtubers by groupid             
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:            
+              schema:
+                $ref: '#/components/schemas/Member'
+
+  /members/{memberID}:
+    get:
+      tags:
+      - "members"
+      summary: "Get vtuber member data by id"
+      parameters:
+        - in: query
+          name: region
+          schema:
+            type: string
+          description: Get vtubers order by region iso 3166-1      
+        - in: query
+          name: groupID
+          schema:
+            type: string
+          description: Get vtubers by groupid             
+        - in: path
+          name: memberID
+          style: simple
+          explode: true          
+          schema:
+            type: integer
+          required: true
+          description: ID of vtuber member
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:            
+              schema:
+                $ref: '#/components/schemas/Member'
+
+  /fanart/random/member/{memberID}:
+    get:
+      tags:
+      - "fanart"
+      summary: "Get random vtuber fanart by memberid"
+      parameters:
+        - in: path
+          name: memberID        
+          schema:
+            type: integer
+          required: true
+          description: ID of vtuber member
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:            
+              schema:
+                $ref: '#/components/schemas/Fanart'    
+  /fanart/random/group/{groupID}:
+    get:
+      tags:
+      - "fanart"
+      summary: "Get random vtuber fanart by GroupID"
+      parameters:
+        - in: path
+          name: groupID        
+          schema:
+            type: integer
+          required: true
+          description: ID of vtuber group
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:            
+              schema:
+                $ref: '#/components/schemas/Fanart'         
+
+
+  /fanart/{state}/member/{memberID}:
+    get:
+      tags:
+      - "fanart"
+      summary: "Get latest vtuber fanart from twitter/pixiv/bilibili by memberID"
+      parameters:
+        - in: path
+          name: memberID        
+          schema:
+            type: integer
+          required: true
+          description: ID of vtuber group
+        - in: path
+          name: state        
+          schema:
+            type: string
+          required: true
+          description: State of fanart
+          example: twitter
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:            
+              schema:
+                $ref: '#/components/schemas/Fanart'        
+
+  /fanart/{state}/group/{groupID}:
+    get:
+      tags:
+      - "fanart"
+      summary: "Get latest vtuber fanart from twitter/pixiv/bilibili by groupID"
+      parameters:
+        - in: path
+          name: groupID        
+          schema:
+            type: integer
+          required: true
+          description: ID of vtuber group
+        - in: path
+          name: state        
+          schema:
+            type: string
+          required: true
+          description: State of fanart
+          example: twitter          
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:            
+              schema:
+                $ref: '#/components/schemas/Fanart'        
+
+  /livestream/{state}/group/{groupID}/{status}:
+    get:
+      tags:
+      - "livestream"
+      summary: "Get latest vtuber livestream from youtube or bilibili by groupID"
+      parameters:
+        - in: path
+          name: groupID
+          schema:
+            type: integer
+          required: true
+          description: ID of vtuber group
+        - in: path
+          name: state        
+          schema:
+            type: string
+          required: true
+          description: State of fanart
+          example: youtube              
+        - in: path
+          name: status
+          schema:
+            type: string
+          required: true
+          description: Status of livestream(live,past,upcoming,private)         
+          example: live
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:            
+              schema:
+                $ref: '#/components/schemas/LiveYoutube'             
+                                   
+components:
+  schemas:
+    Group:
+      properties:
+        ID:
+          type: integer
+          example: 4
+        GroupName:
+          type: string
+          example: "Hanayori"
+        GroupIcon:
+          type: string  
+          example: "https://cdn.humanz.moe/hana.png"
+    Member:
+      properties:
+        ID:
+          type: integer
+          example: 14
+        NickName:
+          type: string
+          example: "Parerun"
+        EnName:
+          type: string  
+          example: "Hanamaru Hareru"          
+        JpName:
+          type: string  
+          example: "花丸はれる"      
+        Fanbase:
+          type: string
+        Region:
+          type: string
+          example: "JP"
+        GroupID:
+          type: integer
+          example: 10
+        BiliBili:
+          type: object                 
+          properties: 
+            Avatar: 
+              type: string
+            Fanart: 
+              type: string
+              format: nullable
+            Followers: 
+              type: integer
+              format: int32
+            ID: 
+              type: integer
+              format: int32
+            RoomID: 
+              type: integer
+              format: int32
+            TotalVideos: 
+              type: integer
+              format: int32
+            ViwersCount: 
+              type: integer
+              format: int32  
+        Twitch: 
+          type: object
+          properties: 
+            Avatar: 
+              type: string
+            UserName: 
+              type: string
+        Twitter: 
+          type: object
+          properties: 
+            Fanart: 
+              type: string
+            Followers: 
+              type: integer
+              format: int32
+            Lewd: 
+              type: string
+              format: nullable
+            UserName: 
+              type: string
+        Youtube: 
+          type: object
+          properties: 
+            Avatar: 
+              type: string
+            ID: 
+              type: string
+            Subscriber: 
+              type: integer
+              format: int32
+            TotalVideos: 
+              type: integer
+              format: int32
+            ViwersCount: 
+              type: integer
+              format: int32
+    Fanart: 
+      type: object
+      properties: 
+        Author: 
+          type: string
+        BiliBiliID: 
+          type: string
+        Description: 
+          type: string
+        Photos: 
+          type: array
+          items: 
+            type: string
+        PixivID: 
+          type: string
+          format: nullable
+        State: 
+          type: string
+        TwitterID: 
+          type: string
+          format: nullable
+        URL: 
+          type: string
+        Video: 
+          type: string
+          format: nullable
+        Member: 
+          type: object
+          properties: 
+            EnName: 
+              type: string
+            Fanbase: 
+              type: string
+              format: nullable
+            ID: 
+              type: integer
+              format: int32
+            JpName: 
+              type: string
+            NickName: 
+              type: string
+            Region: 
+              type: string
+    LiveYoutube:
+      type: object
+      properties: 
+        Member: 
+          type: object
+          properties: 
+            EnName: 
+              type: string
+            ID: 
+              type: integer
+              format: int32
+            JpName: 
+              type: string
+            NickName: 
+              type: string
+            Region: 
+              type: string
+            YoutubeAvatar: 
+              type: string
+            YoutubeID: 
+              type: string
+        Youtube: 
+          type: object
+          properties: 
+            Description: 
+              type: string
+            EndStream: 
+              type: string
+              format: nullable
+            Length: 
+              type: string
+            SchedulPublished: 
+              type: string
+              format: date-time
+            StartStreamSchedul: 
+              type: string
+              format: date-time
+            Status: 
+              type: string
+            Thumbnail: 
+              type: string
+            Title: 
+              type: string
+            URL: 
+              type: string
+            VideoID: 
+              type: string
+            Viewers: 
+              type: string      
+    LiveBili:
+      type: object
+      properties: 
+        BiliBili: 
+          type: object
+          properties: 
+            BiliBiliRoomID: 
+              type: integer
+              format: int32
+            Description: 
+              type: string
+            StartStreamSchedul: 
+              type: string
+              format: date-time
+            Status: 
+              type: string
+            Thumbnail: 
+              type: string
+            Title: 
+              type: string
+            URL: 
+              type: string
+            Viewers: 
+              type: string
+        Member: 
+          type: object
+          properties: 
+            BiliBiliAvatar: 
+              type: string
+            BiliBiliRoomID: 
+              type: integer
+              format: int32
+            EnName: 
+              type: string
+            ID: 
+              type: integer
+              format: int32
+            JpName: 
+              type: string
+            NickName: 
+              type: string
+            Region: 
+              type: string          
+                      

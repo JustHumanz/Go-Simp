@@ -18,6 +18,7 @@ var FixFanart = func(FanArt database.DataFanart) map[string]interface{} {
 		PixivPostID, TwitterPostID, BiliBiliPostID, Video interface{}
 	)
 
+	Data := make(map[string]interface{})
 	if FanArt.State == config.PixivArt {
 		PixivPostID = FanArt.PixivID
 	} else {
@@ -41,30 +42,20 @@ var FixFanart = func(FanArt database.DataFanart) map[string]interface{} {
 	} else {
 		Video = FanArt.Videos
 	}
-	return map[string]interface{}{
-		"Member": map[string]interface{}{
-			"ID":       FanArt.Member.ID,
-			"NickName": FanArt.Member.Name,
-			"EnName":   FanArt.Member.EnName,
-			"JpName":   FanArt.Member.JpName,
-			"Region":   FanArt.Member.Region,
-			"Hashtags": map[string]interface{}{
-				"TwitterFanart":  FanArt.Member.TwitterHashtags,
-				"BiliBiliFanart": FanArt.Member.BiliBiliHashtags,
-			},
-		},
-		"Fanart": map[string]interface{}{
-			"State":       FanArt.State,
-			"URL":         FanArt.PermanentURL,
-			"Photos":      FanArt.Photos,
-			"Video":       Video,
-			"Author":      FanArt.Author,
-			"PixivID":     PixivPostID,
-			"TwitterID":   TwitterPostID,
-			"BiliBiliID":  BiliBiliPostID,
-			"Description": FanArt.Text,
-		},
+
+	Data["Member"] = FixMemberMap(FanArt.Member)
+	Data["Fanart"] = map[string]interface{}{
+		"State":       FanArt.State,
+		"URL":         FanArt.PermanentURL,
+		"Photos":      FanArt.Photos,
+		"Video":       Video,
+		"Author":      FanArt.Author,
+		"PixivID":     PixivPostID,
+		"TwitterID":   TwitterPostID,
+		"BiliBiliID":  BiliBiliPostID,
+		"Description": FanArt.Text,
 	}
+	return Data
 }
 
 func getRandomFanart(w http.ResponseWriter, r *http.Request) {
@@ -129,6 +120,7 @@ func getRandomFanart(w http.ResponseWriter, r *http.Request) {
 				MemberID := Member["ID"].(int64)
 				if MemberIDint == int(MemberID) {
 					FanArt, err := database.GetFanart(0, MemberID)
+					FanArt.Member.ID = MemberID
 					if err != nil {
 						log.Error(err)
 						errstr := err.Error()
@@ -152,9 +144,10 @@ func getRandomFanart(w http.ResponseWriter, r *http.Request) {
 }
 func getFanart(w http.ResponseWriter, r *http.Request) {
 	var (
-		Vars     = mux.Vars(r)
-		GroupID  = Vars["groupID"]
-		MemberID = Vars["memberID"]
+		Vars          = mux.Vars(r)
+		GroupID       = Vars["groupID"]
+		MemberID      = Vars["memberID"]
+		FanArtDataFix []map[string]interface{}
 	)
 
 	if GroupID != "" {
@@ -185,15 +178,10 @@ func getFanart(w http.ResponseWriter, r *http.Request) {
 							return
 						}
 
-						var FanArtDataFix []map[string]interface{}
 						for _, v := range FanArtData {
 							v.AddMember(GetMember(v.Member.ID))
 							FanArtDataFix = append(FanArtDataFix, FixFanart(v))
 						}
-
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(FanArtDataFix)
-						w.WriteHeader(http.StatusOK)
 
 					} else if strings.HasPrefix(r.URL.String(), "/fanart/pixiv/") {
 						FanArtData, err := GetFanartData(config.PixivArt, GroupID, 0)
@@ -206,14 +194,10 @@ func getFanart(w http.ResponseWriter, r *http.Request) {
 							})
 							return
 						}
-						var FanArtDataFix []map[string]interface{}
 						for _, v := range FanArtData {
 							v.AddMember(GetMember(v.Member.ID))
 							FanArtDataFix = append(FanArtDataFix, FixFanart(v))
 						}
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(FanArtDataFix)
-						w.WriteHeader(http.StatusOK)
 					} else if strings.HasPrefix(r.URL.String(), "/fanart/bilibili/") {
 						FanArtData, err := GetFanartData(config.BiliBiliArt, GroupID, 0)
 						if err != nil {
@@ -225,14 +209,10 @@ func getFanart(w http.ResponseWriter, r *http.Request) {
 							})
 							return
 						}
-						var FanArtDataFix []map[string]interface{}
 						for _, v := range FanArtData {
 							v.AddMember(GetMember(v.Member.ID))
 							FanArtDataFix = append(FanArtDataFix, FixFanart(v))
 						}
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(FanArtDataFix)
-						w.WriteHeader(http.StatusOK)
 					}
 				}
 			}
@@ -264,14 +244,10 @@ func getFanart(w http.ResponseWriter, r *http.Request) {
 							})
 							return
 						}
-						var FanArtDataFix []map[string]interface{}
 						for _, v := range FanArtData {
 							v.AddMember(GetMember(v.Member.ID))
 							FanArtDataFix = append(FanArtDataFix, FixFanart(v))
 						}
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(FanArtDataFix)
-						w.WriteHeader(http.StatusOK)
 					} else if strings.HasPrefix(r.URL.String(), "/fanart/pixiv/") {
 						FanArtData, err := GetFanartData(config.PixivArt, 0, MemberID)
 						if err != nil {
@@ -283,14 +259,10 @@ func getFanart(w http.ResponseWriter, r *http.Request) {
 							})
 							return
 						}
-						var FanArtDataFix []map[string]interface{}
 						for _, v := range FanArtData {
 							v.AddMember(GetMember(v.Member.ID))
 							FanArtDataFix = append(FanArtDataFix, FixFanart(v))
 						}
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(FanArtDataFix)
-						w.WriteHeader(http.StatusOK)
 					} else if strings.HasPrefix(r.URL.String(), "/fanart/bilibili/") {
 						FanArtData, err := GetFanartData(config.BiliBiliArt, 0, MemberID)
 						if err != nil {
@@ -302,18 +274,27 @@ func getFanart(w http.ResponseWriter, r *http.Request) {
 							})
 							return
 						}
-						var FanArtDataFix []map[string]interface{}
 						for _, v := range FanArtData {
 							v.AddMember(GetMember(v.Member.ID))
 							FanArtDataFix = append(FanArtDataFix, FixFanart(v))
 						}
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(FanArtDataFix)
-						w.WriteHeader(http.StatusOK)
 					}
 				}
 			}
 		}
+	}
 
+	if FanArtDataFix != nil {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(FanArtDataFix)
+		w.WriteHeader(http.StatusOK)
+	} else {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(MessageError{
+			Message: "Reqest not found,404",
+			Date:    time.Now(),
+		})
+		w.WriteHeader(http.StatusNotFound)
 	}
 }
