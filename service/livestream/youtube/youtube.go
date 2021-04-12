@@ -1,4 +1,4 @@
-package youtube
+package main
 
 import (
 	"context"

@@ -1,10 +1,9 @@
-package twitter
+package main
 
 import (
 	"context"
 	"encoding/json"
 	"flag"
-	"regexp"
 	"sync"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
@@ -35,8 +34,8 @@ func init() {
 	lewd = *Lewd
 }
 
-//Start start twitter module
-func Start() {
+//main start twitter module
+func main() {
 	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 	var (
 		configfile config.ConfigFile
@@ -94,7 +93,7 @@ func CheckNew() {
 		wg.Add(1)
 		go func(Group database.Group, wg *sync.WaitGroup) {
 			defer wg.Done()
-			Fanarts, err := CreatePayload(Group, config.Scraper, config.GoSimpConf.LimitConf.TwitterFanart)
+			Fanarts, err := engine.CreatePayload(Group, config.Scraper, config.GoSimpConf.LimitConf.TwitterFanart, lewd)
 			if err != nil {
 				log.WithFields(log.Fields{
 					"Group": Group.GroupName,
@@ -111,9 +110,4 @@ func CheckNew() {
 		}(GroupData, wg)
 	}
 	wg.Wait()
-}
-
-//RemoveTwitterShortLink remove twitter shotlink
-func RemoveTwitterShortLink(text string) string {
-	return regexp.MustCompile(`(?m)^(.*?)https:\/\/t.co\/.+`).ReplaceAllString(text, "${1}$2")
 }

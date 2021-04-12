@@ -12,8 +12,6 @@ import (
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
-	"github.com/JustHumanz/Go-Simp/service/fanart/twitter"
-	youtube "github.com/JustHumanz/Go-Simp/service/livestream/youtube"
 	twitterscraper "github.com/n0madic/twitter-scraper"
 	"github.com/nicklaw5/helix"
 	log "github.com/sirupsen/logrus"
@@ -24,7 +22,7 @@ func TwitterFanart() {
 	scraper.SetProxy(configfile.MultiTOR)
 	scraper.SetSearchMode(twitterscraper.SearchLatest)
 	for _, Group := range database.GetGroups() {
-		_, err := twitter.CreatePayload(Group, scraper, 100)
+		_, err := engine.CreatePayload(Group, scraper, 100, false)
 		if err != nil {
 			log.WithFields(log.Fields{
 				"Group": Group.GroupName,
@@ -34,7 +32,7 @@ func TwitterFanart() {
 }
 
 func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
-	VideoID := youtube.GetRSS(Dat.YoutubeID)
+	VideoID := engine.GetRSS(Dat.YoutubeID)
 	defer wg.Done()
 	body, err := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,actualEndTime),statistics(viewCount))&id="+strings.Join(VideoID, ",")+"&key="+*YoutubeToken, nil)
 	if err != nil {
