@@ -1,8 +1,7 @@
-package youtube
+package main
 
 import (
 	"encoding/json"
-	"encoding/xml"
 	"regexp"
 	"strconv"
 	"strings"
@@ -19,36 +18,13 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//GetRSS GetRSS from Channel
-func GetRSS(YtID string) []string {
-	var (
-		DataXML engine.YtXML
-		VideoID []string
-	)
-
-	Data, err := network.Curl("https://www.youtube.com/feeds/videos.xml?channel_id="+YtID+"&q=searchterms", nil)
-	if err != nil {
-		log.Error(err, string(Data))
-	}
-
-	xml.Unmarshal(Data, &DataXML)
-
-	for i := 0; i < len(DataXML.Entry); i++ {
-		VideoID = append(VideoID, DataXML.Entry[i].VideoId)
-		if i == config.GoSimpConf.LimitConf.YoutubeLimit {
-			break
-		}
-	}
-	return VideoID
-}
-
 //StartCheckYT Youtube rss and API
 func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	if Group.YoutubeChannels != nil {
 		for _, YtChan := range Group.YoutubeChannels {
-			VideoID := GetRSS(YtChan.YtChannel)
+			VideoID := engine.GetRSS(YtChan.YtChannel)
 			Data, err := YtAPI(VideoID)
 			if err != nil {
 				log.Error(err)
@@ -166,7 +142,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 
 	for _, Member := range Group.Members {
 		if Member.YoutubeID != "" {
-			VideoID := GetRSS(Member.YoutubeID)
+			VideoID := engine.GetRSS(Member.YoutubeID)
 			Data, err := YtAPI(VideoID)
 			if err != nil {
 				log.Error(err)

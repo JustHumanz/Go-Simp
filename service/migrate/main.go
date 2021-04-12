@@ -18,7 +18,6 @@ import (
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
-	youtube "github.com/JustHumanz/Go-Simp/service/livestream/youtube"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/nicklaw5/helix"
 
@@ -147,7 +146,6 @@ func main() {
 	go CheckSpaceBiliBili()
 	time.Sleep(5 * time.Minute)
 
-	go youtube.CheckPrivate()
 	go TwitterFanart()
 	time.Sleep(5 * time.Minute)
 	log.Info("Done")

@@ -1,4 +1,4 @@
-package twitch
+package main
 
 import (
 	"context"
@@ -31,8 +31,8 @@ func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
 }
 
-//Start start twitter module
-func Start() {
+//main start twitter module
+func main() {
 	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 	var (
 		configfile config.ConfigFile
