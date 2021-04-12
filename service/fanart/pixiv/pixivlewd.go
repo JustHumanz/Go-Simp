@@ -1,4 +1,4 @@
-package pixiv
+package main
 
 import (
 	"net/url"

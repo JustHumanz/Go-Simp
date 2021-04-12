@@ -10,9 +10,9 @@ import (
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
+	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	"github.com/JustHumanz/Go-Simp/service/fanart/twitter"
-	bilibili "github.com/JustHumanz/Go-Simp/service/livestream/bilibili/live"
 	youtube "github.com/JustHumanz/Go-Simp/service/livestream/youtube"
 	twitterscraper "github.com/n0madic/twitter-scraper"
 	"github.com/nicklaw5/helix"
@@ -282,7 +282,7 @@ func CheckLiveBiliBili() {
 				if err != nil {
 					log.Error(err)
 				}
-				Status, err := bilibili.GetRoomStatus(Member.BiliRoomID)
+				Status, err := engine.GetRoomStatus(Member.BiliRoomID)
 				if err != nil {
 					log.Error(err)
 				}

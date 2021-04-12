@@ -57,7 +57,7 @@ build migrate:
   only:
     - master  
     
-build fanart:
+build twitter fanart:
   stage: build
   only:
     - tags      
@@ -67,14 +67,14 @@ build fanart:
   script:
     - docker pull $CI_REGISTRY_IMAGE
     - docker tag $CI_REGISTRY_IMAGE go-simp
-    - docker build -t fanart $CI_PROJECT_DIR/service/fanart
-    - docker tag fanart "$CI_REGISTRY_IMAGE"/fanart:"$CI_COMMIT_TAG"
-    - docker push "$CI_REGISTRY_IMAGE"/fanart:"$CI_COMMIT_TAG"
+    - docker build -t fanart $CI_PROJECT_DIR/service/fanart/twitter
+    - docker tag fanart "$CI_REGISTRY_IMAGE"/fanart-twitter:"$CI_COMMIT_TAG"
+    - docker push "$CI_REGISTRY_IMAGE"/fanart-twitter:"$CI_COMMIT_TAG"
   tags:
     - docker
     - gce        
 
-build livestream:
+build bilibili fanart:
   stage: build
   only:
     - tags      
@@ -84,9 +84,94 @@ build livestream:
   script:
     - docker pull $CI_REGISTRY_IMAGE
     - docker tag $CI_REGISTRY_IMAGE go-simp
-    - docker build -t livestream $CI_PROJECT_DIR/service/livestream
-    - docker tag livestream "$CI_REGISTRY_IMAGE"/livestream:"$CI_COMMIT_TAG"
-    - docker push "$CI_REGISTRY_IMAGE"/livestream:"$CI_COMMIT_TAG"
+    - docker build -t fanart $CI_PROJECT_DIR/service/fanart/bilibili
+    - docker tag fanart "$CI_REGISTRY_IMAGE"/fanart-bilibili:"$CI_COMMIT_TAG"
+    - docker push "$CI_REGISTRY_IMAGE"/fanart-bilibili:"$CI_COMMIT_TAG"
+  tags:
+    - docker
+    - gce         
+
+build pixiv fanart:
+  stage: build
+  only:
+    - tags      
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker info   
+  script:
+    - docker pull $CI_REGISTRY_IMAGE
+    - docker tag $CI_REGISTRY_IMAGE go-simp
+    - docker build -t fanart $CI_PROJECT_DIR/service/fanart/pixiv
+    - docker tag fanart "$CI_REGISTRY_IMAGE"/fanart-pixiv:"$CI_COMMIT_TAG"
+    - docker push "$CI_REGISTRY_IMAGE"/fanart-pixiv:"$CI_COMMIT_TAG"
+  tags:
+    - docker
+    - gce      
+
+build youtube livestream:
+  stage: build
+  only:
+    - tags      
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker info   
+  script:
+    - docker pull $CI_REGISTRY_IMAGE
+    - docker tag $CI_REGISTRY_IMAGE go-simp
+    - docker build -t livestream $CI_PROJECT_DIR/service/livestream/youtube
+    - docker tag livestream "$CI_REGISTRY_IMAGE"/youtube-livestream:"$CI_COMMIT_TAG"
+    - docker push "$CI_REGISTRY_IMAGE"/youtube-livestream:"$CI_COMMIT_TAG"
+  tags:
+    - docker
+    - gce        
+
+build spacebili livestream:
+  stage: build
+  only:
+    - tags      
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker info   
+  script:
+    - docker pull $CI_REGISTRY_IMAGE
+    - docker tag $CI_REGISTRY_IMAGE go-simp
+    - docker build -t livestream $CI_PROJECT_DIR/service/livestream/bilibili/space
+    - docker tag livestream "$CI_REGISTRY_IMAGE"/spacebili-livestream:"$CI_COMMIT_TAG"
+    - docker push "$CI_REGISTRY_IMAGE"/spacebili-livestream:"$CI_COMMIT_TAG"
+  tags:
+    - docker
+    - gce        
+
+build livebili livestream:
+  stage: build
+  only:
+    - tags      
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker info   
+  script:
+    - docker pull $CI_REGISTRY_IMAGE
+    - docker tag $CI_REGISTRY_IMAGE go-simp
+    - docker build -t livestream $CI_PROJECT_DIR/service/livestream/bilibili/live
+    - docker tag livestream "$CI_REGISTRY_IMAGE"/livebili-livestream:"$CI_COMMIT_TAG"
+    - docker push "$CI_REGISTRY_IMAGE"/livebili-livestream:"$CI_COMMIT_TAG"
+  tags:
+    - docker
+    - gce        
+
+build twitch livestream:
+  stage: build
+  only:
+    - tags      
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker info   
+  script:
+    - docker pull $CI_REGISTRY_IMAGE
+    - docker tag $CI_REGISTRY_IMAGE go-simp
+    - docker build -t livestream $CI_PROJECT_DIR/service/livestream/twitch
+    - docker tag livestream "$CI_REGISTRY_IMAGE"/twitch-livestream:"$CI_COMMIT_TAG"
+    - docker push "$CI_REGISTRY_IMAGE"/twitch-livestream:"$CI_COMMIT_TAG"
   tags:
     - docker
     - gce        

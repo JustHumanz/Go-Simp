@@ -1,4 +1,4 @@
-package space
+package main
 
 import (
 	"encoding/json"
@@ -9,8 +9,8 @@ import (
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
+	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
-	"github.com/JustHumanz/Go-Simp/service/livestream/notif"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -18,7 +18,7 @@ import (
 func CheckSpace(Data *database.LiveStream, limit string) {
 	var (
 		Videotype string
-		PushVideo SpaceVideo
+		PushVideo engine.SpaceVideo
 	)
 
 	body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/space/arc/search?mid="+strconv.Itoa(Data.Member.BiliBiliID)+"&ps="+limit, nil)
@@ -51,7 +51,7 @@ func CheckSpace(Data *database.LiveStream, limit string) {
 			Data.InputSpaceVideo()
 			video.Pic = "https:" + video.Pic
 			video.VideoType = Videotype
-			notif.SendDude(Data, Bot)
+			engine.SendLiveNotif(Data, Bot)
 		} else {
 			if !config.GoSimpConf.LowResources {
 				Data.UpdateSpaceViews(id)

@@ -1,6 +1,8 @@
-package live
+package main
 
 import (
+	"context"
+	"encoding/json"
 	"regexp"
 	"strconv"
 	"sync"
@@ -9,7 +11,8 @@ import (
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
-	"github.com/JustHumanz/Go-Simp/service/livestream/notif"
+	network "github.com/JustHumanz/Go-Simp/pkg/network"
+	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
@@ -21,12 +24,60 @@ var (
 	VtubersData database.VtubersPayload
 )
 
-//Start start twitter module
-func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload) {
+const (
+	ModuleState = "LiveBiliBili"
+)
+
+func init() {
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
 	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
-	Bot = a
-	VtubersData = c
-	b.AddFunc(config.BiliBiliLive, CheckLiveSchedule)
+}
+
+//Start start twitter module
+func main() {
+	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
+	var (
+		configfile config.ConfigFile
+		err        error
+	)
+
+	GetPayload := func() {
+		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+			Message: "Send me nude",
+			Service: ModuleState,
+		})
+		if err != nil {
+			if configfile.Discord != "" {
+				pilot.ReportDeadService(err.Error())
+			}
+			log.Error("Error when request payload: %s", err)
+		}
+		err = json.Unmarshal(res.ConfigFile, &configfile)
+		if err != nil {
+			log.Error(err)
+		}
+
+		err = json.Unmarshal(res.VtuberPayload, &VtubersData)
+		if err != nil {
+			log.Error(err)
+		}
+	}
+
+	GetPayload()
+	configfile.InitConf()
+
+	Bot, err = discordgo.New("Bot " + configfile.Discord)
+	if err != nil {
+		log.Error(err)
+	}
+
+	database.Start(configfile)
+
+	c := cron.New()
+	c.Start()
+
+	c.AddFunc(config.CheckPayload, GetPayload)
+	c.AddFunc(config.BiliBiliLive, CheckLiveSchedule)
 	log.Info("Enable Live BiliBili module")
 }
 
@@ -65,7 +116,7 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 			log.Error(err)
 		}
 
-		Status, err := GetRoomStatus(Member.BiliRoomID)
+		Status, err := engine.GetRoomStatus(Member.BiliRoomID)
 		if err != nil {
 			log.Error(err)
 		}
@@ -104,7 +155,7 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 					log.Error(err)
 				}
 
-				notif.SendDude(LiveBiliDB, Bot)
+				engine.SendLiveNotif(LiveBiliDB, Bot)
 
 			} else if !Status.CheckScheduleLive() && LiveBiliDB.Status == config.LiveStatus {
 				log.WithFields(log.Fields{

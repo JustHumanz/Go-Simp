@@ -2,6 +2,7 @@ package youtube
 
 import (
 	"context"
+	"encoding/json"
 	"math"
 	"regexp"
 	"strconv"
@@ -13,8 +14,7 @@ import (
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
-	"github.com/JustHumanz/Go-Simp/service/livestream/bilibili/live"
-	"github.com/JustHumanz/Go-Simp/service/livestream/notif"
+	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
 
@@ -27,13 +27,60 @@ var (
 	VtubersData database.VtubersPayload
 )
 
+const (
+	ModuleState = "Twitch"
+)
+
+func init() {
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
+}
+
 //Start start twitter module
-func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload) {
-	Bot = a
-	VtubersData = c
-	b.AddFunc(config.YoutubeCheckChannel, CheckYtSchedule)
-	b.AddFunc(config.YoutubeCheckUpcomingByTime, CheckYtByTime)
-	b.AddFunc(config.YoutubePrivateSlayer, CheckPrivate)
+func main() {
+	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
+	var (
+		configfile config.ConfigFile
+		err        error
+	)
+
+	GetPayload := func() {
+		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+			Message: "Send me nude",
+			Service: ModuleState,
+		})
+		if err != nil {
+			if configfile.Discord != "" {
+				pilot.ReportDeadService(err.Error())
+			}
+			log.Error("Error when request payload: %s", err)
+		}
+		err = json.Unmarshal(res.ConfigFile, &configfile)
+		if err != nil {
+			log.Error(err)
+		}
+
+		err = json.Unmarshal(res.VtuberPayload, &VtubersData)
+		if err != nil {
+			log.Error(err)
+		}
+	}
+
+	GetPayload()
+	configfile.InitConf()
+
+	Bot, err = discordgo.New("Bot " + configfile.Discord)
+	if err != nil {
+		log.Error(err)
+	}
+
+	database.Start(configfile)
+
+	c := cron.New()
+	c.Start()
+	c.AddFunc(config.CheckPayload, GetPayload)
+	c.AddFunc(config.YoutubeCheckChannel, CheckYtSchedule)
+	c.AddFunc(config.YoutubeCheckUpcomingByTime, CheckYtByTime)
+	c.AddFunc(config.YoutubePrivateSlayer, CheckPrivate)
 	log.Info("Enable youtube module")
 }
 
@@ -102,7 +149,7 @@ func CheckYtByTime() {
 									UpdateYt(config.LiveStatus)
 
 								if Member.BiliRoomID != 0 {
-									LiveBili, err := live.GetRoomStatus(Member.BiliRoomID)
+									LiveBili, err := engine.GetRoomStatus(Member.BiliRoomID)
 									if err != nil {
 										log.Error(err)
 									}
@@ -110,14 +157,14 @@ func CheckYtByTime() {
 										Youtube.SetBiliLive(true).UpdateBiliToLive()
 									}
 								}
-								notif.SendDude(&Youtube, Bot)
+								engine.SendLiveNotif(&Youtube, Bot)
 							}
 						}
 					}
 					Youtube.
 						SetState(config.YoutubeLive).
 						UpdateStatus("reminder")
-					notif.SendDude(&Youtube, Bot)
+					engine.SendLiveNotif(&Youtube, Bot)
 				}
 			}
 		}

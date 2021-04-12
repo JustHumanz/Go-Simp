@@ -1,4 +1,4 @@
-package notif
+package engine
 
 import (
 	"context"
@@ -7,28 +7,26 @@ import (
 	"sync"
 	"time"
 
-	log "github.com/sirupsen/logrus"
-
 	"github.com/JustHumanz/Go-Simp/pkg/config"
-	"github.com/JustHumanz/Go-Simp/pkg/database"
-	"github.com/JustHumanz/Go-Simp/pkg/engine"
+	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/bwmarrin/discordgo"
 	"github.com/hako/durafmt"
+	log "github.com/sirupsen/logrus"
 )
 
-func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
+func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 	FanBase := "simps"
 	Color := func() int {
-		clr, err := engine.GetColor(config.TmpDir, Data.Thumb)
+		clr, err := GetColor(config.TmpDir, Data.Thumb)
 		if err != nil {
 			log.Error(err)
 		}
 		return clr
 	}
 	if !Data.Member.IsMemberNill() {
-		loc := engine.Zawarudo(Data.Member.Region)
+		loc := Zawarudo(Data.Member.Region)
 		expiresAt := time.Now().In(loc)
-		VtuberName := engine.FixName(Data.Member.EnName, Data.Member.JpName)
+		VtuberName := FixName(Data.Member.EnName, Data.Member.JpName)
 		if Data.Member.Fanbase != "" {
 			FanBase = Data.Member.Fanbase
 		}
@@ -56,7 +54,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 					if Data.Viewers == "" || Data.Viewers == "0" {
 						Data.Viewers = config.Ytwaiting
 					} else {
-						Viewers = engine.NearestThousandFormat(float64(view))
+						Viewers = NearestThousandFormat(float64(view))
 					}
 
 					if Viewers == "" || view < 100 {
@@ -103,7 +101,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 						} else if UserTagsList == nil && Data.Group.GroupName == config.Indie && !Channel.IndieNotif {
 							return nil
 						}
-						msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
+						msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
 							SetAuthor(VtuberName, Avatar, YtChannel).
 							SetTitle("New upcoming Livestream").
 							SetDescription(Data.Title).
@@ -175,7 +173,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 							return nil
 						}
 
-						MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
+						MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
 							SetAuthor(VtuberName, Avatar, YtChannel).
 							SetTitle("Live right now").
 							SetDescription(Data.Title).
@@ -236,7 +234,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 
 							Channel.SetMsgTextID(msgText.ID)
 
-							err = engine.Reacting(map[string]string{
+							err = Reacting(map[string]string{
 								"ChannelID": Channel.ChannelID,
 								"State":     "Youtube",
 								"MessageID": msgText.ID,
@@ -290,7 +288,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 							return nil
 						}
 
-						msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
+						msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
 							SetAuthor(VtuberName, Avatar, YtChannel).
 							SetTitle("Uploaded a new video").
 							SetDescription(Data.Title).
@@ -347,7 +345,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 						for _, Channel := range ChanelData {
 							UserTagsList := database.GetUserReminderList(Channel.ID, Data.Member.ID, UpcominginMinutes)
 							if UserTagsList != nil {
-								MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
+								MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
 									SetAuthor(VtuberName, Avatar, YtChannel).
 									SetTitle(Data.Member.EnName+" Live in "+LiveCount).
 									SetDescription(Data.Title).
@@ -422,11 +420,11 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 
 						Views := "???"
 						if view > 100 {
-							Views = engine.NearestThousandFormat(float64(view))
+							Views = NearestThousandFormat(float64(view))
 						}
 
 						Start := durafmt.Parse(expiresAt.Sub(Data.Schedul.In(loc))).LimitFirstN(1)
-						MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
+						MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
 							SetAuthor(VtuberName, Data.Member.BiliBiliAvatar, BiliBiliAccount).
 							SetTitle(Data.Title).
 							SetThumbnail(Data.Group.IconURL).
@@ -467,7 +465,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 							}
 
 							Channel.SetMsgTextID(MsgTxt.ID)
-							err = engine.Reacting(map[string]string{
+							err = Reacting(map[string]string{
 								"ChannelID": Channel.ChannelID,
 								"State":     "Youtube",
 								"MessageID": MsgTxt.ID,
@@ -513,7 +511,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 
 			Views := "???"
 			if view > 100 {
-				Views = engine.NearestThousandFormat(float64(view))
+				Views = NearestThousandFormat(float64(view))
 			}
 
 			ChannelData, err := database.ChannelTag(Data.Member.ID, 2, config.Default, Data.Member.Region)
@@ -538,7 +536,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 						return nil
 					}
 
-					MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
+					MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
 						SetAuthor(VtuberName, Data.Member.YoutubeAvatar, ImgURL).
 						SetTitle("Live right now").
 						SetDescription(Data.Title).
@@ -591,7 +589,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 
 						Channel.SetMsgTextID(msg.ID)
 
-						err = engine.Reacting(map[string]string{
+						err = Reacting(map[string]string{
 							"ChannelID": Channel.ChannelID,
 							"State":     "Youtube",
 							"MessageID": msg.ID,
@@ -627,7 +625,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 
 			Views := "???"
 			if view > 100 {
-				Views = engine.NearestThousandFormat(float64(view))
+				Views = NearestThousandFormat(float64(view))
 			}
 
 			ChannelData, err := database.ChannelTag(Data.Member.ID, 2, config.NotLiveOnly, Data.Member.Region)
@@ -652,7 +650,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 						return
 					}
 
-					msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
+					msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
 						SetAuthor(VtuberName, Data.Member.BiliBiliAvatar, "https://space.bilibili/"+strconv.Itoa(Data.Member.BiliBiliID)).
 						SetTitle("Uploaded new video").
 						SetDescription(Data.Title).
@@ -689,7 +687,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 			wg.Wait()
 		}
 	} else {
-		loc := engine.Zawarudo(Data.GroupYoutube.Region)
+		loc := Zawarudo(Data.GroupYoutube.Region)
 		expiresAt := time.Now().In(loc)
 		if Data.State == config.YoutubeLive {
 			var (
@@ -711,7 +709,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 					if Data.Viewers == "" || Data.Viewers == "0" {
 						Data.Viewers = config.Ytwaiting
 					} else {
-						Viewers = engine.NearestThousandFormat(float64(view))
+						Viewers = NearestThousandFormat(float64(view))
 					}
 
 					if Viewers == "" || view < 100 {
@@ -720,7 +718,7 @@ func SendDude(Data *database.LiveStream, Bot *discordgo.Session) {
 
 					go func(Channel database.DiscordChannel, wg *sync.WaitGroup) error {
 						defer wg.Done()
-						msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, engine.NewEmbed().
+						msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
 							SetAuthor(Data.Group.GroupName+" "+Data.GroupYoutube.Region, Data.Group.IconURL, YtChannel).
 							SetTitle("Uploaded a new video").
 							SetDescription(Data.Title).

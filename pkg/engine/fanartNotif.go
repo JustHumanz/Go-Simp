@@ -1,4 +1,4 @@
-package notif
+package engine
 
 import (
 	"context"
@@ -6,20 +6,19 @@ import (
 	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
-	"github.com/JustHumanz/Go-Simp/pkg/database"
-	"github.com/JustHumanz/Go-Simp/pkg/engine"
+	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/bwmarrin/discordgo"
 	log "github.com/sirupsen/logrus"
 )
 
-func SendNude(Art database.DataFanart, Bot *discordgo.Session, Color int) {
+func SendFanArtNude(Art database.DataFanart, Bot *discordgo.Session, Color int) {
 	Art.Group.RemoveNillIconURL()
 	for _, Member := range Art.Group.Members {
 		if Art.Member.ID == Member.ID {
 			var (
 				ChannelData []database.DiscordChannel
 				err1        error
-				NewEmbed    *discordgo.MessageEmbed
+				EmbedMsg    *discordgo.MessageEmbed
 			)
 			if Art.Lewd {
 				ChannelData, err1 = database.ChannelTag(Member.ID, 1, config.LewdChannel, Member.Region)
@@ -51,7 +50,7 @@ func SendNude(Art database.DataFanart, Bot *discordgo.Session, Color int) {
 				} else {
 					if UserTagsList != nil {
 						tags = strings.Join(UserTagsList, " ")
-						NewEmbed = engine.NewEmbed().
+						EmbedMsg = NewEmbed().
 							SetAuthor(strings.Title(Art.Group.GroupName), Art.Group.IconURL).
 							SetTitle(Art.Author).
 							SetURL(Art.PermanentURL).
@@ -63,7 +62,7 @@ func SendNude(Art database.DataFanart, Bot *discordgo.Session, Color int) {
 							InlineAllFields().
 							SetColor(Color).MessageEmbed
 					} else {
-						NewEmbed = engine.NewEmbed().
+						EmbedMsg = NewEmbed().
 							SetAuthor(strings.Title(Art.Group.GroupName), Art.Group.IconURL).
 							SetTitle(Art.Author).
 							SetURL(Art.PermanentURL).
@@ -78,7 +77,7 @@ func SendNude(Art database.DataFanart, Bot *discordgo.Session, Color int) {
 					if tags == "" && Art.Group.GroupName == config.Indie && !Channel.IndieNotif {
 						//do nothing,like my life
 					} else {
-						tmp, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed)
+						tmp, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, EmbedMsg)
 						if err != nil {
 							log.Error(tmp, err.Error())
 							err = Channel.DelChannel(err.Error())
@@ -86,7 +85,7 @@ func SendNude(Art database.DataFanart, Bot *discordgo.Session, Color int) {
 								log.Error(err)
 							}
 						}
-						err = engine.Reacting(map[string]string{
+						err = Reacting(map[string]string{
 							"ChannelID": Channel.ChannelID,
 						}, Bot)
 						if err != nil {

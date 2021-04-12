@@ -1,13 +1,16 @@
 package twitch
 
 import (
+	"context"
+	"encoding/json"
 	"strconv"
 	"strings"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/engine"
-	"github.com/JustHumanz/Go-Simp/service/livestream/notif"
+	"github.com/JustHumanz/Go-Simp/pkg/network"
+	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/bwmarrin/discordgo"
 	"github.com/nicklaw5/helix"
 	"github.com/robfig/cron/v3"
@@ -20,11 +23,57 @@ var (
 	VtubersData  database.VtubersPayload
 )
 
+const (
+	ModuleState = "Twitch"
+)
+
+func init() {
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
+}
+
 //Start start twitter module
-func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload) {
-	Bot = a
-	VtubersData = c
-	var err error
+func Start() {
+	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
+	var (
+		configfile config.ConfigFile
+		err        error
+	)
+
+	GetPayload := func() {
+		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+			Message: "Send me nude",
+			Service: ModuleState,
+		})
+		if err != nil {
+			if configfile.Discord != "" {
+				pilot.ReportDeadService(err.Error())
+			}
+			log.Error("Error when request payload: %s", err)
+		}
+		err = json.Unmarshal(res.ConfigFile, &configfile)
+		if err != nil {
+			log.Error(err)
+		}
+
+		err = json.Unmarshal(res.VtuberPayload, &VtubersData)
+		if err != nil {
+			log.Error(err)
+		}
+	}
+
+	GetPayload()
+	configfile.InitConf()
+
+	Bot, err = discordgo.New("Bot " + configfile.Discord)
+	if err != nil {
+		log.Error(err)
+	}
+
+	database.Start(configfile)
+
+	c := cron.New()
+	c.Start()
+
 	TwitchClient, err = helix.NewClient(&helix.Options{
 		ClientID:     config.GoSimpConf.Twitch.ClientID,
 		ClientSecret: config.GoSimpConf.Twitch.ClientSecret,
@@ -38,8 +87,8 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload) {
 	}
 
 	TwitchClient.SetAppAccessToken(resp.Data.AccessToken)
-	CheckTwitch()
-	b.AddFunc(config.Twitch, CheckTwitch)
+	c.AddFunc(config.CheckPayload, GetPayload)
+	c.AddFunc(config.Twitch, CheckTwitch)
 	log.Info("Enable Twitch module")
 }
 
@@ -94,7 +143,7 @@ func CheckTwitch() {
 								log.Error(err)
 							}
 
-							notif.SendDude(ResultDB, Bot)
+							engine.SendLiveNotif(ResultDB, Bot)
 
 							log.WithFields(log.Fields{
 								"Group":      Group.GroupName,

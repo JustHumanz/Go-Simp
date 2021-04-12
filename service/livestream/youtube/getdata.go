@@ -15,8 +15,6 @@ import (
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
-	"github.com/JustHumanz/Go-Simp/service/livestream/bilibili/live"
-	"github.com/JustHumanz/Go-Simp/service/livestream/notif"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -24,7 +22,7 @@ import (
 //GetRSS GetRSS from Channel
 func GetRSS(YtID string) []string {
 	var (
-		DataXML YtXML
+		DataXML engine.YtXML
 		VideoID []string
 	)
 
@@ -139,7 +137,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						}).Info("New MV or Cover")
 
 						NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
-						notif.SendDude(NewYoutubeData, Bot)
+						engine.SendLiveNotif(NewYoutubeData, Bot)
 
 					} else if !Items.Snippet.PublishedAt.IsZero() && Items.Snippet.VideoStatus == "none" {
 						log.WithFields(log.Fields{
@@ -151,7 +149,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						}
 
 						NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
-						notif.SendDude(NewYoutubeData, Bot)
+						engine.SendLiveNotif(NewYoutubeData, Bot)
 
 					} else {
 						log.WithFields(log.Fields{
@@ -159,7 +157,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 							"GroupName": Group.GroupName,
 						}).Info("Past live stream")
 						NewYoutubeData.UpdateStatus(config.PastStatus)
-						notif.SendDude(NewYoutubeData, Bot)
+						engine.SendLiveNotif(NewYoutubeData, Bot)
 					}
 				}
 			}
@@ -335,7 +333,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 
 						UpcominginHours := int(time.Until(NewYoutubeData.Schedul).Hours())
 						if UpcominginHours > 6 {
-							notif.SendDude(NewYoutubeData, Bot)
+							engine.SendLiveNotif(NewYoutubeData, Bot)
 						}
 
 					} else if Items.Snippet.VideoStatus == config.LiveStatus {
@@ -352,7 +350,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						}
 
 						if Member.BiliRoomID != 0 {
-							LiveBili, err := live.GetRoomStatus(Member.BiliRoomID)
+							LiveBili, err := engine.GetRoomStatus(Member.BiliRoomID)
 							if err != nil {
 								log.Error(err)
 							}
@@ -363,10 +361,10 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 
 						if !Items.LiveDetails.ActualStartTime.IsZero() {
 							NewYoutubeData.UpdateSchdule(Items.LiveDetails.ActualStartTime)
-							notif.SendDude(NewYoutubeData, Bot)
+							engine.SendLiveNotif(NewYoutubeData, Bot)
 
 						} else {
-							notif.SendDude(NewYoutubeData, Bot)
+							engine.SendLiveNotif(NewYoutubeData, Bot)
 						}
 
 					} else if Items.Snippet.VideoStatus == "none" && YtType == "Covering" {
@@ -376,7 +374,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						}).Info("New MV or Cover")
 
 						NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
-						notif.SendDude(NewYoutubeData, Bot)
+						engine.SendLiveNotif(NewYoutubeData, Bot)
 
 					} else if !Items.Snippet.PublishedAt.IsZero() && Items.Snippet.VideoStatus == "none" {
 						log.WithFields(log.Fields{
@@ -388,7 +386,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						}
 
 						NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
-						notif.SendDude(NewYoutubeData, Bot)
+						engine.SendLiveNotif(NewYoutubeData, Bot)
 
 					} else {
 						log.WithFields(log.Fields{
@@ -396,7 +394,7 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 							"MemberName": Member.EnName,
 						}).Info("Past live stream")
 						NewYoutubeData.UpdateStatus(config.PastStatus)
-						notif.SendDude(NewYoutubeData, Bot)
+						engine.SendLiveNotif(NewYoutubeData, Bot)
 					}
 				}
 			}
@@ -405,9 +403,9 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 }
 
 //YtAPI Get data from youtube api
-func YtAPI(VideoID []string) (YtData, error) {
+func YtAPI(VideoID []string) (engine.YtData, error) {
 	var (
-		Data YtData
+		Data engine.YtData
 	)
 
 	body, curlerr := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id="+strings.Join(VideoID, ",")+"&key="+*yttoken, nil)

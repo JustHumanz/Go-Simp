@@ -1,13 +1,17 @@
 package twitter
 
 import (
+	"context"
+	"encoding/json"
+	"flag"
 	"regexp"
 	"sync"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
-	"github.com/JustHumanz/Go-Simp/service/fanart/notif"
+	"github.com/JustHumanz/Go-Simp/pkg/network"
+	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
@@ -20,12 +24,62 @@ var (
 	lewd        bool
 )
 
+const (
+	ModuleState = "Twitter Fanart"
+)
+
+func init() {
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
+	Lewd := flag.Bool("LewdFanart", false, "Enable lewd fanart module")
+	flag.Parse()
+	lewd = *Lewd
+}
+
 //Start start twitter module
-func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, e bool) {
-	Bot = a
-	VtubersData = c
-	lewd = e
-	b.AddFunc(config.TwitterFanart, CheckNew)
+func Start() {
+	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
+	var (
+		configfile config.ConfigFile
+		err        error
+	)
+
+	GetPayload := func() {
+		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+			Message: "Send me nude",
+			Service: ModuleState,
+		})
+		if err != nil {
+			if configfile.Discord != "" {
+				pilot.ReportDeadService(err.Error())
+			}
+			log.Error("Error when request payload: %s", err)
+		}
+		err = json.Unmarshal(res.ConfigFile, &configfile)
+		if err != nil {
+			log.Error(err)
+		}
+
+		err = json.Unmarshal(res.VtuberPayload, &VtubersData)
+		if err != nil {
+			log.Error(err)
+		}
+	}
+
+	GetPayload()
+	configfile.InitConf()
+
+	Bot, err = discordgo.New("Bot " + configfile.Discord)
+	if err != nil {
+		log.Error(err)
+	}
+
+	database.Start(configfile)
+
+	c := cron.New()
+	c.Start()
+
+	c.AddFunc(config.CheckPayload, GetPayload)
+	c.AddFunc(config.TwitterFanart, CheckNew)
 	if lewd {
 		log.Info("Enable Twitter lewd fanart module")
 	} else {
@@ -51,7 +105,7 @@ func CheckNew() {
 					if err != nil {
 						log.Error(err)
 					}
-					notif.SendNude(Art, Bot, Color)
+					engine.SendFanArtNude(Art, Bot, Color)
 				}
 			}
 		}(GroupData, wg)
