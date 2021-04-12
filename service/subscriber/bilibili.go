@@ -9,7 +9,6 @@ import (
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
-	"github.com/JustHumanz/Go-Simp/service/livestream/bilibili/space"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -56,7 +55,7 @@ func CheckBiliBili() {
 						if curlerr != nil {
 							log.Error(curlerr)
 						}
-						var video space.SpaceVideo
+						var video engine.SpaceVideo
 						err := json.Unmarshal(body, &video)
 						if err != nil {
 							log.Error(err)

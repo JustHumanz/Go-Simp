@@ -1,9 +1,10 @@
-package pixiv
+package main
 
 import (
 	"context"
 	"encoding/json"
 	"errors"
+	"flag"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -19,8 +20,8 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
-	"github.com/JustHumanz/Go-Simp/service/fanart/notif"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
+	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
@@ -34,23 +35,72 @@ var (
 )
 
 const (
-	BaseURL = "https://www.pixiv.net/en/artworks/"
-	Limit   = 10
+	BaseURL     = "https://www.pixiv.net/en/artworks/"
+	Limit       = 10
+	ModuleState = "Pixiv Fanart"
 )
 
+func init() {
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
+	Lewd := flag.Bool("LewdFanart", false, "Enable lewd fanart module")
+	flag.Parse()
+	lewd = *Lewd
+}
+
 //Start start twitter module
-func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile, e bool) {
-	Bot = a
-	VtubersData = c
-	lewd = e
-	CheckPixivLewd()
-	b.AddFunc(config.PixivFanart, CheckPixiv)
+func main() {
+	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
+	var (
+		configfile config.ConfigFile
+		err        error
+	)
+
+	GetPayload := func() {
+		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+			Message: "Send me nude",
+			Service: ModuleState,
+		})
+		if err != nil {
+			if configfile.Discord != "" {
+				pilot.ReportDeadService(err.Error())
+			}
+			log.Error("Error when request payload: %s", err)
+		}
+		err = json.Unmarshal(res.ConfigFile, &configfile)
+		if err != nil {
+			log.Error(err)
+		}
+
+		err = json.Unmarshal(res.VtuberPayload, &VtubersData)
+		if err != nil {
+			log.Error(err)
+		}
+	}
+
+	GetPayload()
+	configfile.InitConf()
+
+	Bot, err = discordgo.New("Bot " + configfile.Discord)
+	if err != nil {
+		log.Error(err)
+	}
+
+	database.Start(configfile)
+
+	c := cron.New()
+	c.Start()
+
+	c.AddFunc(config.CheckPayload, GetPayload)
+	c.AddFunc(config.PixivFanart, CheckPixiv)
 	if lewd {
-		b.AddFunc(config.PixivFanartLewd, CheckPixivLewd)
+		c.AddFunc(config.PixivFanartLewd, CheckPixivLewd)
 		log.Info("Enable Pixiv lewd fanart module")
 	} else {
 		log.Info("Enable Pixiv fanart module")
 	}
+	log.Info("Enable " + ModuleState)
+	go pilot.RunHeartBeat(gRCPconn, ModuleState)
+	runfunc.Run(Bot)
 }
 
 //CheckNew Check new fanart
@@ -156,7 +206,7 @@ func CheckPixiv() {
 }
 
 func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
-	var Art PixivArtworks
+	var Art engine.PixivArtworks
 	req, err := http.NewRequest("GET", p, nil)
 	if err != nil {
 		return err
@@ -296,7 +346,7 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 							return err
 						}
 						FixFanArt.Photos[0] = config.PixivProxy + FixImg
-						notif.SendNude(*FixFanArt, Bot, Color)
+						engine.SendFanArtNude(*FixFanArt, Bot, Color)
 					}
 				} else if l && v2["xRestrict"].(float64) == 1 && IsNotLoli {
 					illusbyte, err := network.Curl(config.PixivIllustsEnd+v2["id"].(string), nil)
@@ -352,7 +402,7 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 							return err
 						}
 						FixFanArt.Photos[0] = config.PixivProxy + FixImg
-						notif.SendNude(*FixFanArt, Bot, Color)
+						engine.SendFanArtNude(*FixFanArt, Bot, Color)
 					}
 				}
 				if i == Limit {

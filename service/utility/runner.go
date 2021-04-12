@@ -192,7 +192,8 @@ func main() {
 				SetDescription("Enjoy the bot?\nhelp dev to pay server,domain and database for development of "+BotInfo.Username).
 				AddField("Ko-Fi", "[Link]("+Donation+")").
 				AddField("if you a broke gang,you can upvote "+BotInfo.Username, "[Top.gg]("+configfile.TopGG+")").
-				AddField("or help dev simping kano/鹿乃 with listening her music", "[鹿乃チャンネルofficial]("+Music+")\nHope you like her voice ❤️").MessageEmbed)
+				AddField("or help dev simping kano/鹿乃 with listening her music", "[鹿乃チャンネルofficial]("+Music+")\nHope you like her voice ❤️").
+				SetFooter("~advertisement").MessageEmbed)
 		})
 	}
 	c.AddFunc(config.CheckServerCount, func() {

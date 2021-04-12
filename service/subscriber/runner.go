@@ -25,6 +25,10 @@ var (
 	Payload    database.VtubersPayload
 )
 
+const (
+	ModuleState = "Twitter Fanart"
+)
+
 func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
 }
@@ -34,26 +38,34 @@ func main() {
 	BiliBili := flag.Bool("BiliBili", false, "Enable bilibili module")
 	Twitter := flag.Bool("Twitter", false, "Enable twitter module")
 	flag.Parse()
-
 	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
-	res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
-		Message: "Send me nude",
-		Service: "Subscriber",
-	})
-	if err != nil {
-		log.Error("Error when request payload: %s", err)
-	}
-	err = json.Unmarshal(res.ConfigFile, &configfile)
-	if err != nil {
-		log.Error(err)
+
+	GetPayload := func() {
+		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+			Message: "Send me nude",
+			Service: ModuleState,
+		})
+		if err != nil {
+			if configfile.Discord != "" {
+				pilot.ReportDeadService(err.Error())
+			}
+			log.Error("Error when request payload: %s", err)
+		}
+		err = json.Unmarshal(res.ConfigFile, &configfile)
+		if err != nil {
+			log.Error(err)
+		}
+
+		err = json.Unmarshal(res.VtuberPayload, &Payload)
+		if err != nil {
+			log.Error(err)
+		}
 	}
 
-	err = json.Unmarshal(res.VtuberPayload, &Payload)
-	if err != nil {
-		log.Error(err)
-	}
+	GetPayload()
 	configfile.InitConf()
 
+	var err error
 	Bot, err = discordgo.New("Bot " + configfile.Discord)
 	if err != nil {
 		log.Error(err)
@@ -61,14 +73,10 @@ func main() {
 
 	database.Start(configfile)
 
-	err = Bot.Open()
-	if err != nil {
-		log.Panic(err)
-	}
-
 	c := cron.New()
 	c.Start()
 
+	c.AddFunc(config.CheckPayload, GetPayload)
 	if *Youtube {
 		c.AddFunc(config.YoutubeSubscriber, CheckYoutube)
 		log.Info("Add youtube subscriber to cronjob")

@@ -1,3 +1,8 @@
+v3.6.1-beta
+- Update rest-api
+- Add rest-api doc
+- disable new upcoming livestream if livestream less than 6h
+
 v3.6.0
 - Add Group/Agency in youtube/bilibili
 - Fix pilot memory leak

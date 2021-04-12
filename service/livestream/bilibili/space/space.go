@@ -1,11 +1,15 @@
-package space
+package main
 
 import (
+	"context"
+	"encoding/json"
 	"strconv"
 	"sync"
 	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
+	network "github.com/JustHumanz/Go-Simp/pkg/network"
+	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
 
@@ -17,16 +21,62 @@ var (
 	loc         *time.Location
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
-	configfile  config.ConfigFile
 )
 
-//Start start twitter module
-func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile) {
+const (
+	ModuleState = "SpaceBiliBili"
+)
+
+func init() {
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
 	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
-	Bot = a
-	configfile = d
-	VtubersData = c
-	b.AddFunc(config.BiliBiliSpace, CheckSpaceVideo)
+}
+
+//Start start twitter module
+func main() {
+	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
+	var (
+		configfile config.ConfigFile
+		err        error
+	)
+
+	GetPayload := func() {
+		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+			Message: "Send me nude",
+			Service: ModuleState,
+		})
+		if err != nil {
+			if configfile.Discord != "" {
+				pilot.ReportDeadService(err.Error())
+			}
+			log.Error("Error when request payload: %s", err)
+		}
+		err = json.Unmarshal(res.ConfigFile, &configfile)
+		if err != nil {
+			log.Error(err)
+		}
+
+		err = json.Unmarshal(res.VtuberPayload, &VtubersData)
+		if err != nil {
+			log.Error(err)
+		}
+	}
+
+	GetPayload()
+	configfile.InitConf()
+
+	Bot, err = discordgo.New("Bot " + configfile.Discord)
+	if err != nil {
+		log.Error(err)
+	}
+
+	database.Start(configfile)
+
+	c := cron.New()
+	c.Start()
+
+	c.AddFunc(config.CheckPayload, GetPayload)
+	c.AddFunc(config.BiliBiliSpace, CheckSpaceVideo)
 	log.Info("Enable space bilibili module")
 }
 
@@ -47,7 +97,7 @@ func CheckSpaceVideo() {
 						}).Info("Checking Space BiliBili")
 
 						Group.RemoveNillIconURL()
-						SpaceBiliLimit := strconv.Itoa(configfile.LimitConf.SpaceBiliBili)
+						SpaceBiliLimit := strconv.Itoa(config.GoSimpConf.LimitConf.SpaceBiliBili)
 						Data := &database.LiveStream{
 							Member: Member,
 							Group:  Group,

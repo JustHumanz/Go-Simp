@@ -1,6 +1,7 @@
-package bilibili
+package main
 
 import (
+	"context"
 	"encoding/json"
 	"net/url"
 
@@ -12,22 +13,69 @@ import (
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
-	"github.com/JustHumanz/Go-Simp/service/fanart/notif"
+	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
+	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 )
 
 //Public variable
 var (
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
-	configfile  config.ConfigFile
 )
 
+const (
+	ModuleState = "BiliBili Fanart"
+)
+
+func init() {
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
+}
+
 //Start start twitter module
-func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d config.ConfigFile) {
-	Bot = a
-	VtubersData = c
-	configfile = d
-	b.AddFunc(config.BiliBiliFanart, func() {
+func main() {
+	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
+	var (
+		configfile config.ConfigFile
+		err        error
+	)
+
+	GetPayload := func() {
+		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+			Message: "Send me nude",
+			Service: ModuleState,
+		})
+		if err != nil {
+			if configfile.Discord != "" {
+				pilot.ReportDeadService(err.Error())
+			}
+			log.Error("Error when request payload: %s", err)
+		}
+		err = json.Unmarshal(res.ConfigFile, &configfile)
+		if err != nil {
+			log.Error(err)
+		}
+
+		err = json.Unmarshal(res.VtuberPayload, &VtubersData)
+		if err != nil {
+			log.Error(err)
+		}
+	}
+
+	GetPayload()
+	configfile.InitConf()
+
+	Bot, err = discordgo.New("Bot " + configfile.Discord)
+	if err != nil {
+		log.Error(err)
+	}
+
+	database.Start(configfile)
+
+	c := cron.New()
+	c.Start()
+
+	c.AddFunc(config.CheckPayload, GetPayload)
+	c.AddFunc(config.BiliBiliFanart, func() {
 		for _, Group := range VtubersData.VtuberData {
 			for _, Member := range Group.Members {
 				if Member.BiliBiliHashtags != "" {
@@ -40,13 +88,13 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 						log.Error(errcurl)
 					}
 					var (
-						TB TBiliBili
+						TB engine.TBiliBili
 					)
 					_ = json.Unmarshal(body, &TB)
 					if len(TB.Data.Cards) > 0 {
 						for _, v := range TB.Data.Cards {
 							var (
-								STB SubTbili
+								STB engine.SubTbili
 								img []string
 							)
 							err := json.Unmarshal([]byte(v.Card), &STB)
@@ -81,7 +129,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 										log.Error(err)
 									}
 
-									notif.SendNude(TBiliData, Bot, Color)
+									engine.SendFanArtNude(TBiliData, Bot, Color)
 								}
 							}
 						}
@@ -90,5 +138,7 @@ func Start(a *discordgo.Session, b *cron.Cron, c database.VtubersPayload, d conf
 			}
 		}
 	})
-	log.Info("Enable Bilibili fanart module")
+	log.Info("Enable " + ModuleState)
+	go pilot.RunHeartBeat(gRCPconn, ModuleState)
+	runfunc.Run(Bot)
 }
