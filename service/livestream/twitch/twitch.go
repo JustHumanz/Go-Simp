@@ -11,6 +11,7 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
+	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
 	"github.com/nicklaw5/helix"
 	"github.com/robfig/cron/v3"
@@ -89,7 +90,9 @@ func main() {
 	TwitchClient.SetAppAccessToken(resp.Data.AccessToken)
 	c.AddFunc(config.CheckPayload, GetPayload)
 	c.AddFunc(config.Twitch, CheckTwitch)
-	log.Info("Enable Twitch module")
+	log.Info("Enable " + ModuleState)
+	go pilot.RunHeartBeat(gRCPconn, ModuleState)
+	runfunc.Run(Bot)
 }
 
 func CheckTwitch() {

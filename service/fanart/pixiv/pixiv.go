@@ -94,11 +94,13 @@ func main() {
 	c.AddFunc(config.PixivFanart, CheckPixiv)
 	if lewd {
 		c.AddFunc(config.PixivFanartLewd, CheckPixivLewd)
-		log.Info("Enable Pixiv lewd fanart module")
+		log.Info("Enable lewd " + ModuleState)
+
 	} else {
-		log.Info("Enable Pixiv fanart module")
+		log.Info("Enable " + ModuleState)
+
 	}
-	log.Info("Enable " + ModuleState)
+
 	go pilot.RunHeartBeat(gRCPconn, ModuleState)
 	runfunc.Run(Bot)
 }

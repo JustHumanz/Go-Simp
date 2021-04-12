@@ -13,6 +13,7 @@ import (
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
+	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
@@ -78,7 +79,9 @@ func main() {
 
 	c.AddFunc(config.CheckPayload, GetPayload)
 	c.AddFunc(config.BiliBiliLive, CheckLiveSchedule)
-	log.Info("Enable Live BiliBili module")
+	log.Info("Enable " + ModuleState)
+	go pilot.RunHeartBeat(gRCPconn, ModuleState)
+	runfunc.Run(Bot)
 }
 
 func CheckLiveSchedule() {

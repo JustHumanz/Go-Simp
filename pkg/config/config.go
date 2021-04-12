@@ -14,7 +14,6 @@ import (
 
 // Public variables
 var (
-	ModuleList  = []string{"LiveBiliBili", "SpaceBiliBili", "Youtube", "TwitterFanart", "BiliBiliFanart", "YoutubeSubscriber", "BiliBiliFollowers", "TwitterFollowers"}
 	GoSimpConf  ConfigFile
 	TwitchToken string
 	NotFound    string
@@ -52,7 +51,6 @@ const (
 	ChannelPermission = 8208
 	BotPermission     = 452624
 	GuildSupport      = "https://discord.com/invite/ydWC5knbJT"
-	DanbooruEndPoint  = "https://danbooru.donmai.us/posts.json?tags=order:change%20"
 	PixivIllustsEnd   = "https://www.pixiv.net/ajax/illust/"
 	PixivUserEnd      = "https://www.pixiv.net/ajax/user/"
 	PixivProxy        = "https://cdn.humanz.moe/pixiv/?pixivURL="

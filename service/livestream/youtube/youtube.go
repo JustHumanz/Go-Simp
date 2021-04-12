@@ -15,6 +15,7 @@ import (
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
+	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
 
@@ -28,14 +29,14 @@ var (
 )
 
 const (
-	ModuleState = "Twitch"
+	ModuleState = "Youtube"
 )
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
 }
 
-//Start start twitter module
+//Start main youtube module
 func main() {
 	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 	var (
@@ -81,7 +82,10 @@ func main() {
 	c.AddFunc(config.YoutubeCheckChannel, CheckYtSchedule)
 	c.AddFunc(config.YoutubeCheckUpcomingByTime, CheckYtByTime)
 	c.AddFunc(config.YoutubePrivateSlayer, CheckPrivate)
-	log.Info("Enable youtube module")
+
+	log.Info("Enable " + ModuleState)
+	go pilot.RunHeartBeat(gRCPconn, ModuleState)
+	runfunc.Run(Bot)
 }
 
 func CheckYtSchedule() {
