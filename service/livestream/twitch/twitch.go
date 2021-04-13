@@ -115,7 +115,7 @@ func CheckTwitch() {
 				if err != nil {
 					log.Error(err)
 				}
-				ResultDB.AddMember(Member).AddGroup(Group)
+				ResultDB.AddMember(Member).AddGroup(Group).SetState(config.TwitchLive)
 
 				if len(result.Data.Streams) > 0 {
 					for _, Stream := range result.Data.Streams {
