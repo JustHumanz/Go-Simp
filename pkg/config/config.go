@@ -287,6 +287,7 @@ func (Data ConfigFile) InitConf() {
 	BiliBiliIMG = fmt.Sprintf("https://cdn.%s/bilibili.png", Data.Domain)
 	TwitterIMG = fmt.Sprintf("https://cdn.%s/twitter.png", Data.Domain)
 	PixivIMG = fmt.Sprintf("https://cdn.%s/pixiv.png", Data.Domain)
+	TwitchIMG = fmt.Sprintf("https://cdn.%s/twitch.png", Data.Domain)
 	WorryIMG = fmt.Sprintf("https://cdn.%s/parerunworry.png", Data.Domain)
 	GoSimpIMG = fmt.Sprintf("https://cdn.%s/go-simp.png", Data.Domain)
 	BSD = fmt.Sprintf("https://cdn.%s/bsd.png", Data.Domain)
