@@ -97,6 +97,7 @@ func getRandomFanart(w http.ResponseWriter, r *http.Request) {
 					}
 					FanArt.AddMember(GetMember(FanArt.Member.ID))
 
+					w.Header().Set("Access-Control-Allow-Origin", "*")
 					w.Header().Set("Content-Type", "application/json")
 					json.NewEncoder(w).Encode(FixFanart(*FanArt))
 					w.WriteHeader(http.StatusOK)
@@ -134,6 +135,8 @@ func getRandomFanart(w http.ResponseWriter, r *http.Request) {
 						})
 					}
 					FanArt.AddMember(GetMember(FanArt.Member.ID))
+
+					w.Header().Set("Access-Control-Allow-Origin", "*")
 					w.Header().Set("Content-Type", "application/json")
 					json.NewEncoder(w).Encode(FixFanart(*FanArt))
 					w.WriteHeader(http.StatusOK)
@@ -285,6 +288,7 @@ func getFanart(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if FanArtDataFix != nil {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(FanArtDataFix)
 		w.WriteHeader(http.StatusOK)

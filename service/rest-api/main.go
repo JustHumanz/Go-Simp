@@ -243,6 +243,7 @@ func getGroup(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if GroupsTMP != nil {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(GroupsTMP)
 			w.WriteHeader(http.StatusOK)
@@ -350,6 +351,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if Members != nil {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(Members)
 		w.WriteHeader(http.StatusOK)
