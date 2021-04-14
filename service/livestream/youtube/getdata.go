@@ -68,72 +68,36 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						GroupYoutube: YtChan,
 						State:        config.YoutubeLive,
 					}
-					/*
-						if Items.Snippet.VideoStatus == config.UpcomingStatus {
+					if Items.Snippet.VideoStatus == "none" {
+						if YtType == "Covering" {
 							log.WithFields(log.Fields{
 								"YtID":      YtVideoID,
 								"GroupName": Group.GroupName,
-								"Message":   "Send to notify",
-							}).Info("New Upcoming live schedule")
+							}).Info("New MV or Cover")
 
-							NewYoutubeData.UpdateStatus(config.UpcomingStatus)
-							_, err := NewYoutubeData.InputYt()
-							if err != nil {
-								log.Error(err)
-							}
-							notif.SendDude(NewYoutubeData, Bot)
+							NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
+							engine.SendLiveNotif(NewYoutubeData, Bot)
 
-						} else if Items.Snippet.VideoStatus == config.LiveStatus {
+						} else if !Items.Snippet.PublishedAt.IsZero() {
 							log.WithFields(log.Fields{
 								"YtID":      YtVideoID,
 								"GroupName": Group.GroupName,
-								"Message":   "Send to notify",
-							}).Info("New live stream right now")
-
-							NewYoutubeData.UpdateStatus(config.LiveStatus)
-							_, err := NewYoutubeData.InputYt()
-							if err != nil {
-								log.Error(err)
+							}).Info("Suddenly upload new video")
+							if NewYoutubeData.Schedul.IsZero() {
+								NewYoutubeData.UpdateSchdule(NewYoutubeData.Published)
 							}
 
-							if !Items.LiveDetails.ActualStartTime.IsZero() {
-								NewYoutubeData.UpdateSchdule(Items.LiveDetails.ActualStartTime)
-								notif.SendDude(NewYoutubeData, Bot)
+							NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
+							engine.SendLiveNotif(NewYoutubeData, Bot)
 
-							} else {
-								notif.SendDude(NewYoutubeData, Bot)
-							}
-
-						} else
-					*/
-					if Items.Snippet.VideoStatus == "none" && YtType == "Covering" {
-						log.WithFields(log.Fields{
-							"YtID":      YtVideoID,
-							"GroupName": Group.GroupName,
-						}).Info("New MV or Cover")
-
-						NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
-						engine.SendLiveNotif(NewYoutubeData, Bot)
-
-					} else if !Items.Snippet.PublishedAt.IsZero() && Items.Snippet.VideoStatus == "none" {
-						log.WithFields(log.Fields{
-							"YtID":      YtVideoID,
-							"GroupName": Group.GroupName,
-						}).Info("Suddenly upload new video")
-						if NewYoutubeData.Schedul.IsZero() {
-							NewYoutubeData.UpdateSchdule(NewYoutubeData.Published)
+						} else {
+							log.WithFields(log.Fields{
+								"YtID":      YtVideoID,
+								"GroupName": Group.GroupName,
+							}).Info("Past live stream")
+							NewYoutubeData.UpdateStatus(config.PastStatus)
+							engine.SendLiveNotif(NewYoutubeData, Bot)
 						}
-
-						NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
-						engine.SendLiveNotif(NewYoutubeData, Bot)
-
-					} else {
-						log.WithFields(log.Fields{
-							"YtID":      YtVideoID,
-							"GroupName": Group.GroupName,
-						}).Info("Past live stream")
-						NewYoutubeData.UpdateStatus(config.PastStatus)
-						engine.SendLiveNotif(NewYoutubeData, Bot)
 					}
 				}
 			}
