@@ -509,6 +509,29 @@
                "Fanbase":""
             },
             {
+               "Name": "Ciyana",
+               "EN_Name": "Ciyana",
+               "JP_Name": "",
+               "Twitter":{
+               "Twitter_Fanart": "",
+               "Twitter_Lewd": "",
+               "Twitter_Username": "_ciyana"
+               },
+               "Youtube":{
+               "Yt_ID": ""
+               },
+               "BiliBili":{
+               "BiliBili_Fanart": "希梦思",
+               "BiliBili_ID": 1926156228,
+               "BiliRoom_ID": 22608112
+               },
+               "Twitch":{
+               "Twitch_Username": ""
+               },
+               "Region": "CN",
+               "Fanbase": ""
+            },
+            {
                "Name":"Kanna",
                "EN_Name":"Kanna Tamachi",
                "JP_Name":"かんな",
