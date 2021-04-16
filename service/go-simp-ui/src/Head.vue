@@ -24,7 +24,6 @@
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <router-link class="nav-link" to="/Support/hug/">Support dev with hug</router-link>
-                <!-- <a class="dropdown-item" target="_blank" rel="noopener noreferrer" href="https://www.patreon.com/JustHumanz">Sponsor this project</a> -->
               </div>
             </li>
           </ul>

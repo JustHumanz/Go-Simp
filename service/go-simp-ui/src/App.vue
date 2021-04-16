@@ -1,27 +1,38 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-      <div id="nav">
-        <router-link to="/">Home</router-link> |
-        <router-link to="/group">group</router-link>
+    <div class="container" id="container">
+      <div class="text-center">
+        <figure v-for='m in msg' :key='m._id' class="figure p-2">
+          <router-link :to="`/group/${m.ID}`">
+            <img v-bind:src=m.GroupIcon class="figure-img img-fluid img-thumbnail" alt="" width="200" height="200" />
+            <figcaption class="figure-caption">{{ m.GroupName }}</figcaption>
+          </router-link>
+        </figure>
       </div>
-    <router-view/>
+    </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-  name: 'App'
+  name: 'Index',
+  data () {
+    return {
+      msg: null
+    }
+  },
+  mounted () {
+    axios
+      .get('http://localhost:2525/groups/', { crossDomain: true })
+      .then(response => (this.msg = response.data))
+  }
 }
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  min-height: 75rem;
+  padding-top: 4.5rem;
 }
 </style>

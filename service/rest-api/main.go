@@ -257,6 +257,7 @@ func getGroup(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusNotFound)
 		}
 	} else {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(GroupsData)
 		w.WriteHeader(http.StatusOK)
