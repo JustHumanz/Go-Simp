@@ -210,6 +210,7 @@ func main() {
 }
 
 func invalidPath(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(MessageError{
 		Message: "Invalid request.check your request and path",
@@ -357,6 +358,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(Members)
 		w.WriteHeader(http.StatusOK)
 	} else {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(MessageError{
