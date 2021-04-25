@@ -4,6 +4,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+RUN npm install @babel/core --save
 RUN npm run build
 
 # production stage
