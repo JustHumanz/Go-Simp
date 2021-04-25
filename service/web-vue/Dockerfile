@@ -1,10 +1,9 @@
 # build stage
 FROM node:lts-alpine as build-stage
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
 COPY . .
-RUN npm install @babel/core --save
+RUN npm install @babel/core jquery --save
+RUN npm install
 RUN npm run build
 
 # production stage
