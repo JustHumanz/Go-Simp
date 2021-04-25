@@ -70,6 +70,7 @@ func init() {
 
 				MemberData := FixMemberMap(Member)
 				MemberData["GroupID"] = Group.ID
+				MemberData["GroupName"] = Group.GroupName
 
 				if Member.YoutubeID != "" {
 					MemberData["Youtube"] = map[string]interface{}{
@@ -210,6 +211,7 @@ func main() {
 }
 
 func invalidPath(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(MessageError{
 		Message: "Invalid request.check your request and path",
@@ -243,6 +245,7 @@ func getGroup(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if GroupsTMP != nil {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(GroupsTMP)
 			w.WriteHeader(http.StatusOK)
@@ -256,6 +259,7 @@ func getGroup(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusNotFound)
 		}
 	} else {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(GroupsData)
 		w.WriteHeader(http.StatusOK)
@@ -265,9 +269,31 @@ func getGroup(w http.ResponseWriter, r *http.Request) {
 func getMembers(w http.ResponseWriter, r *http.Request) {
 	region := r.FormValue("region")
 	grpID := r.FormValue("groupid")
+	cekLive := r.FormValue("live")
 	idstr := mux.Vars(r)["memberID"]
 	var Members []map[string]interface{}
 
+	var CekLiveMember = func(Member map[string]interface{}) map[string]interface{} {
+		if cekLive == "true" {
+			YTData, err := database.YtGetStatus(0, Member["ID"].(int64), config.LiveStatus, "", config.Sys)
+			if err != nil {
+				log.Error(err)
+			}
+			if YTData != nil {
+				Member["IsYtLive"] = true
+			} else {
+				Member["IsYtLive"] = false
+			}
+			BiliData := database.BilGet(0, Member["ID"].(int64), config.LiveStatus)
+
+			if BiliData != nil {
+				Member["IsBiliLive"] = true
+			} else {
+				Member["IsBiliLive"] = false
+			}
+		}
+		return Member
+	}
 	if idstr != "" {
 		key := strings.Split(idstr, ",")
 		for _, Member := range MembersData {
@@ -279,7 +305,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 						Message: err.Error(),
 						Date:    time.Now(),
 					})
-					w.WriteHeader(http.StatusInternalServerError)
+					w.WriteHeader(http.StatusBadRequest)
 					return
 				}
 				if grpID != "" {
@@ -290,26 +316,26 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 							Message: err.Error(),
 							Date:    time.Now(),
 						})
-						w.WriteHeader(http.StatusInternalServerError)
+						w.WriteHeader(http.StatusBadRequest)
 						return
 					}
 					if region != "" {
 						if GroupID == int(Member["GroupID"].(int64)) && strings.EqualFold(region, Member["Region"].(string)) {
-							Members = append(Members, Member)
+							Members = append(Members, CekLiveMember(Member))
 						}
 					} else {
 						if GroupID == int(Member["GroupID"].(int64)) {
-							Members = append(Members, Member)
+							Members = append(Members, CekLiveMember(Member))
 						}
 					}
 				} else {
 					if region != "" {
 						if MemberInt == int(Member["ID"].(int64)) && strings.EqualFold(region, Member["Region"].(string)) {
-							Members = append(Members, Member)
+							Members = append(Members, CekLiveMember(Member))
 						}
 					} else {
 						if MemberInt == int(Member["ID"].(int64)) {
-							Members = append(Members, Member)
+							Members = append(Members, CekLiveMember(Member))
 						}
 					}
 				}
@@ -330,11 +356,11 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 				}
 				if region != "" {
 					if GroupID == int(Member["GroupID"].(int64)) && strings.EqualFold(region, Member["Region"].(string)) {
-						Members = append(Members, Member)
+						Members = append(Members, CekLiveMember(Member))
 					}
 				} else {
 					if GroupID == int(Member["GroupID"].(int64)) {
-						Members = append(Members, Member)
+						Members = append(Members, CekLiveMember(Member))
 					}
 				}
 			}
@@ -342,7 +368,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 	} else if region != "" {
 		for _, v := range MembersData {
 			if strings.EqualFold(region, v["Region"].(string)) {
-				Members = append(Members, v)
+				Members = append(Members, CekLiveMember(v))
 			}
 		}
 	} else {
@@ -350,10 +376,12 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if Members != nil {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(Members)
 		w.WriteHeader(http.StatusOK)
 	} else {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(MessageError{
