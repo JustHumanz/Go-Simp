@@ -55,9 +55,14 @@ export default {
           JpName  = post.JpName.toLowerCase().includes(this.search.toLowerCase())
         } 
         let NickName = post.NickName.toLowerCase().includes(this.search.toLowerCase())
-        let Region = post.Region.toLowerCase().includes(this.search.toLowerCase())
+
+        if (this.search.length == 2) {
+          let Region = post.Region.toLowerCase().includes(this.search.toLowerCase())
+          return Region
+        }
+
         let Group = post.GroupName.toLowerCase().includes(this.search.toLowerCase())
-        return EnName || JpName || NickName || Region || Group
+        return EnName || JpName || NickName || Group
       })
     }
   },
