@@ -112,6 +112,7 @@ Reminder 30 minutes before livestream start
 | yuqi#1 | <img src="https://cdn.discordapp.com/embed/avatars/0.png?size=128" alt="yuqi#1" width="128"/>     |   
 | Luijaro#8470 | <img src="https://cdn.discordapp.com/embed/avatars/0.png?size=128" alt="Luijaro#8470" width="128"/> | | Yutyu#7878 | <img src="https://cdn.discordapp.com/embed/avatars/0.png?size=128" alt="Yutyu#7878" width="128"/>   
 | dp247 | <img src="https://avatars.githubusercontent.com/u/9065463" alt="dp247" width="128"/>   
+| michelleliu4 | <img src="https://avatars.githubusercontent.com/u/70537047?v=4" alt="michelleliu4" width="128"/>   
 
 
 
