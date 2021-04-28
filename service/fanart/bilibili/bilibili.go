@@ -21,6 +21,7 @@ import (
 var (
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
+	gRCPconn    pilot.PilotServiceClient
 )
 
 const (
@@ -29,11 +30,11 @@ const (
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
+	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 }
 
 //Start start twitter module
 func main() {
-	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 	var (
 		configfile config.ConfigFile
 		err        error
@@ -129,6 +130,10 @@ func main() {
 										log.Error(err)
 									}
 
+									gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+										MetricData: TBiliData.MarshallBin(),
+										State:      config.FanartState,
+									})
 									engine.SendFanArtNude(TBiliData, Bot, Color)
 								}
 							}

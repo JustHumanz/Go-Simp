@@ -18,6 +18,8 @@ require (
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/nicklaw5/helix v1.7.0
 	github.com/olekukonko/tablewriter v0.0.5
+	github.com/prometheus/client_golang v1.10.0 // indirect
+	github.com/prometheus/common v0.21.0 // indirect
 	github.com/pytimer/mux-logrus v0.0.0-20200505085744-ce5a5e748151
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1
@@ -25,11 +27,12 @@ require (
 	github.com/top-gg/go-dbl v0.0.0-20201116001615-e844586b1159
 	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2 // indirect
 	golang.org/x/net v0.0.0-20210331212208-0fccb6fa2b5c // indirect
-	golang.org/x/sys v0.0.0-20210403161142-5e06dd20ab57 // indirect
+	golang.org/x/sys v0.0.0-20210426230700-d19ff857e887 // indirect
 	golang.org/x/text v0.3.6 // indirect
 	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba // indirect
 	google.golang.org/genproto v0.0.0-20210401141331-865547bb08e2 // indirect
 	google.golang.org/grpc v1.36.1
+	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.1.0 // indirect
 	google.golang.org/protobuf v1.26.0
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 )

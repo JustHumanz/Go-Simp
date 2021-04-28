@@ -139,7 +139,7 @@ func (Member Member) GetSubsCount() (*MemberSubs, error) {
 		defer rows.Close()
 
 		for rows.Next() {
-			err = rows.Scan(&Data.ID, &Data.YtSubs, &Data.YtVideos, &Data.YtViews, &Data.BiliFollow, &Data.BiliVideos, &Data.BiliViews, &Data.TwFollow, &Data.MemberID)
+			err = rows.Scan(&Data.ID, &Data.YtSubs, &Data.YtVideos, &Data.YtViews, &Data.BiliFollow, &Data.BiliVideos, &Data.BiliViews, &Data.TwFollow, &Data.Member.ID)
 			if err != nil {
 				return nil, err
 			}
@@ -201,13 +201,13 @@ func (Member *MemberSubs) UptwFollow(new int) *MemberSubs {
 }
 
 //UpdateSubs Update Subscriber data
-func (Member *MemberSubs) UpdateSubs(State string) {
-	if State == "yt" {
+func (Member *MemberSubs) UpdateSubs() {
+	if Member.State == config.YoutubeLive {
 		_, err := DB.Exec(`Update Subscriber set Youtube_Subscriber=?,Youtube_Videos=?,Youtube_Views=? Where id=? `, Member.YtSubs, Member.YtVideos, Member.YtViews, Member.ID)
 		if err != nil {
 			log.Error(err)
 		}
-	} else if State == "bili" {
+	} else if Member.State == config.BiliBiliArt {
 		_, err := DB.Exec(`Update Subscriber set BiliBili_Followers=?,BiliBili_Videos=?,BiliBili_Views=? Where id=? `, Member.BiliFollow, Member.BiliVideos, Member.BiliViews, Member.ID)
 		if err != nil {
 			log.Error(err)

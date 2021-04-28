@@ -22,6 +22,7 @@ var (
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
 	lewd        bool
+	gRCPconn    pilot.PilotServiceClient
 )
 
 const (
@@ -33,11 +34,11 @@ func init() {
 	Lewd := flag.Bool("LewdFanart", false, "Enable lewd fanart module")
 	flag.Parse()
 	lewd = *Lewd
+	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 }
 
 //main start twitter module
 func main() {
-	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 	var (
 		configfile config.ConfigFile
 		err        error
@@ -108,6 +109,12 @@ func CheckNew() {
 					if err != nil {
 						log.Error(err)
 					}
+
+					gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+						MetricData: Art.MarshallBin(),
+						State:      config.FanartState,
+					})
+
 					engine.SendFanArtNude(Art, Bot, Color)
 				}
 			}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"strconv"
 	"sync"
@@ -9,6 +10,7 @@ import (
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
+	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -122,10 +124,20 @@ func CheckBiliBili() {
 					"Current BiliBili Follower": bilistate.Follow.Data.Follower,
 					"Vtuber":                    Name.EnName,
 				}).Info("Update BiliBili Follower")
-				BiliFollowDB.UpBiliFollow(bilistate.Follow.Data.Follower).
+				BiliFollowDB.SetMember(Name).SetGroup(Group).
+					UpBiliFollow(bilistate.Follow.Data.Follower).
 					UpBiliVideo(bilistate.Videos).
 					UpBiliViews(bilistate.LikeView.Data.Archive.View).
-					UpdateSubs("bili")
+					UpdateState(config.BiliBiliLive).UpdateSubs()
+
+				bin, err := BiliFollowDB.MarshalBinary()
+				if err != nil {
+					log.Error(err)
+				}
+				gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+					MetricData: bin,
+					State:      config.SubsState,
+				})
 			}
 			if i%10 == 0 {
 				time.Sleep(3 * time.Second)

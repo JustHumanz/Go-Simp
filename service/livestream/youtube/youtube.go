@@ -26,6 +26,7 @@ var (
 	yttoken     *string
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
+	gRCPconn    pilot.PilotServiceClient
 )
 
 const (
@@ -34,11 +35,11 @@ const (
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
+	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 }
 
 //Start main youtube module
 func main() {
-	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 	var (
 		configfile config.ConfigFile
 		err        error
@@ -161,6 +162,16 @@ func CheckYtByTime() {
 										Youtube.SetBiliLive(true).UpdateBiliToLive()
 									}
 								}
+
+								bit, err := Youtube.MarshalBinary()
+								if err != nil {
+									log.Error(err)
+								}
+								gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+									MetricData: bit,
+									State:      config.LiveStatus,
+								})
+
 								engine.SendLiveNotif(&Youtube, Bot)
 							}
 						}

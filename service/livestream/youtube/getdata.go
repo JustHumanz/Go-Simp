@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"regexp"
 	"strconv"
@@ -14,6 +15,7 @@ import (
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
+	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -298,6 +300,15 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 								NewYoutubeData.SetBiliLive(true).UpdateBiliToLive()
 							}
 						}
+
+						bit, err := NewYoutubeData.MarshalBinary()
+						if err != nil {
+							log.Error(err)
+						}
+						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+							MetricData: bit,
+							State:      config.LiveStatus,
+						})
 
 						if !Items.LiveDetails.ActualStartTime.IsZero() {
 							NewYoutubeData.UpdateSchdule(Items.LiveDetails.ActualStartTime)

@@ -228,7 +228,24 @@ type MemberSubs struct {
 	YtSubs, YtVideos, YtViews         int
 	BiliFollow, BiliVideos, BiliViews int
 	ID, TwFollow                      int
-	MemberID                          int64
+	Member                            Member
+	Group                             Group
+	State                             string
+}
+
+func (Data *MemberSubs) SetMember(new Member) *MemberSubs {
+	Data.Member = new
+	return Data
+}
+
+func (Data *MemberSubs) SetGroup(new Group) *MemberSubs {
+	Data.Group = new
+	return Data
+}
+
+func (Data *MemberSubs) UpdateState(new string) *MemberSubs {
+	Data.State = new
+	return Data
 }
 
 //Guild guild struct

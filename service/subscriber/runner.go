@@ -23,6 +23,7 @@ var (
 	Bot        *discordgo.Session
 	configfile config.ConfigFile
 	Payload    database.VtubersPayload
+	gRCPconn   pilot.PilotServiceClient
 )
 
 const (
@@ -31,6 +32,7 @@ const (
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
+	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 }
 
 func main() {
@@ -38,7 +40,6 @@ func main() {
 	BiliBili := flag.Bool("BiliBili", false, "Enable bilibili module")
 	Twitter := flag.Bool("Twitter", false, "Enable twitter module")
 	flag.Parse()
-	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 
 	GetPayload := func() {
 		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{

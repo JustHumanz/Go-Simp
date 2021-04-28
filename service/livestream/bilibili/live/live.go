@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"regexp"
 	"strconv"
 	"sync"
 	"time"
@@ -11,7 +10,7 @@ import (
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
-	network "github.com/JustHumanz/Go-Simp/pkg/network"
+	"github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
@@ -23,6 +22,7 @@ var (
 	loc         *time.Location
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
+	gRCPconn    pilot.PilotServiceClient
 )
 
 const (
@@ -32,11 +32,11 @@ const (
 func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
 	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
+	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 }
 
 //Start start twitter module
 func main() {
-	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 	var (
 		configfile config.ConfigFile
 		err        error
@@ -134,9 +134,7 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 					ScheduledStart = time.Now().In(loc)
 				}
 
-				if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
-					Group.IconURL = ""
-				}
+				Group.IsNull()
 
 				log.WithFields(log.Fields{
 					"Group":  Group.GroupName,
@@ -157,6 +155,15 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 				if err != nil {
 					log.Error(err)
 				}
+
+				bit, err := LiveBiliDB.MarshalBinary()
+				if err != nil {
+					log.Error(err)
+				}
+				gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+					MetricData: bit,
+					State:      config.LiveStatus,
+				})
 
 				engine.SendLiveNotif(LiveBiliDB, Bot)
 
