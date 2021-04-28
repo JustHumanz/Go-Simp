@@ -32,6 +32,7 @@ var (
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
 	lewd        bool
+	gRCPconn    pilot.PilotServiceClient
 )
 
 const (
@@ -45,11 +46,11 @@ func init() {
 	Lewd := flag.Bool("LewdFanart", false, "Enable lewd fanart module")
 	flag.Parse()
 	lewd = *Lewd
+	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 }
 
 //Start start twitter module
 func main() {
-	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 	var (
 		configfile config.ConfigFile
 		err        error
@@ -348,6 +349,10 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 							return err
 						}
 						FixFanArt.Photos[0] = config.PixivProxy + FixImg
+						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+							MetricData: FixFanArt.MarshallBin(),
+							State:      config.FanartState,
+						})
 						engine.SendFanArtNude(*FixFanArt, Bot, Color)
 					}
 				} else if l && v2["xRestrict"].(float64) == 1 && IsNotLoli {
@@ -403,6 +408,10 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 						if err != nil {
 							return err
 						}
+						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+							MetricData: FixFanArt.MarshallBin(),
+							State:      config.FanartState,
+						})
 						FixFanArt.Photos[0] = config.PixivProxy + FixImg
 						engine.SendFanArtNude(*FixFanArt, Bot, Color)
 					}

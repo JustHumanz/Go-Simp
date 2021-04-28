@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
+	"github.com/JustHumanz/Go-Simp/pkg/metric"
+
+	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
@@ -108,6 +110,89 @@ func (s *Server) ModuleList(ctx context.Context, in *ModuleData) (*Empty, error)
 	return &Empty{}, nil
 }
 
+func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
+	if in.State == config.FanartState {
+		var FanArt database.DataFanart
+		err := json.Unmarshal(in.MetricData, &FanArt)
+		if err != nil {
+			log.Error(err)
+		}
+
+		metric.GetFanArt.WithLabelValues(
+			FanArt.Member.Name,
+			FanArt.Group.GroupName,
+			FanArt.Author,
+			BoolString(FanArt.Lewd),
+			FanArt.State,
+		).Inc()
+	} else if in.State == config.SubsState {
+		var Subs database.MemberSubs
+		err := json.Unmarshal(in.MetricData, &Subs)
+		if err != nil {
+			log.Error(err)
+		}
+
+		if Subs.State == config.BiliBiliLive {
+			metric.GetSubs.WithLabelValues(
+				Subs.Member.Name,
+				Subs.Group.GroupName,
+				"BiliBili",
+			).Add(float64(Subs.BiliFollow))
+
+			metric.GetViews.WithLabelValues(
+				Subs.Member.Name,
+				Subs.Group.GroupName,
+				"BiliBili",
+			).Add(float64(Subs.BiliViews))
+		} else if Subs.State == config.YoutubeLive {
+			metric.GetSubs.WithLabelValues(
+				Subs.Member.Name,
+				Subs.Group.GroupName,
+				"Youtube",
+			).Add(float64(Subs.YtSubs))
+
+			metric.GetViews.WithLabelValues(
+				Subs.Member.Name,
+				Subs.Group.GroupName,
+				"Youtube",
+			).Add(float64(Subs.YtViews))
+		} else {
+			metric.GetSubs.WithLabelValues(
+				Subs.Member.Name,
+				Subs.Group.GroupName,
+				"Twitter",
+			).Add(float64(Subs.TwFollow))
+		}
+	} else if in.State == config.LiveStatus {
+		var LiveData database.LiveStream
+		err := json.Unmarshal(in.MetricData, &LiveData)
+		if err != nil {
+			log.Error(err)
+		}
+		if LiveData.State == config.YoutubeLive {
+			metric.GetSubs.WithLabelValues(
+				LiveData.Member.Name,
+				LiveData.Group.GroupName,
+				"Youtube",
+			).Inc()
+		} else if LiveData.State == config.BiliLive {
+			metric.GetSubs.WithLabelValues(
+				LiveData.Member.Name,
+				LiveData.Group.GroupName,
+				"BiliBili",
+			).Inc()
+		} else if LiveData.State == config.TwitchLive {
+			metric.GetSubs.WithLabelValues(
+				LiveData.Member.Name,
+				LiveData.Group.GroupName,
+				"Twitch",
+			).Inc()
+		}
+	}
+
+	return &Empty{}, nil
+}
+
 func (s *Server) HeartBeat(in *ServiceMessage, stream PilotService_HeartBeatServer) error {
 	for {
 		if in.Alive {
@@ -167,4 +252,11 @@ func ReportDeadService(message string) {
 	if err != nil {
 		log.Error(err)
 	}
+}
+
+func BoolString(a bool) string {
+	if a {
+		return "true"
+	}
+	return "false"
 }

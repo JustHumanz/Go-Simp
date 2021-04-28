@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"strings"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
+	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -72,8 +74,19 @@ func CheckTwitter() {
 					"Vtuber":                   Name.EnName,
 				}).Info("Update Twitter Follower")
 
-				TwFollowDB.UptwFollow(Twitter.FollowersCount).
-					UpdateSubs("tw")
+				TwFollowDB.SetMember(Name).SetGroup(Group).
+					UptwFollow(Twitter.FollowersCount).
+					UpdateState(config.TwitterArt).
+					UpdateSubs()
+
+				bin, err := TwFollowDB.MarshalBinary()
+				if err != nil {
+					log.Error(err)
+				}
+				gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+					MetricData: bin,
+					State:      config.SubsState,
+				})
 			}
 		}
 	}

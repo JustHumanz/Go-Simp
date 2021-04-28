@@ -1,14 +1,26 @@
 package main
 
 import (
+	"flag"
+	"net/http"
+
+	"github.com/JustHumanz/Go-Simp/pkg/metric"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
 
 func main() {
 	pilot.Start()
+
+	var addr = flag.String("listen-address", ":8080", "The address to listen on for HTTP requests.")
+
+	http.Handle("/metrics", promhttp.Handler())
+	go http.ListenAndServe(*addr, nil)
+
+	metric.Init()
 	lis := network.InitNet()
 	defmigrate := false
 	s := pilot.Server{

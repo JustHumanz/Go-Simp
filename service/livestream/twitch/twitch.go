@@ -22,6 +22,7 @@ var (
 	Bot          *discordgo.Session
 	TwitchClient *helix.Client
 	VtubersData  database.VtubersPayload
+	gRCPconn     pilot.PilotServiceClient
 )
 
 const (
@@ -30,11 +31,11 @@ const (
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
+	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 }
 
 //main start twitter module
 func main() {
-	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 	var (
 		configfile config.ConfigFile
 		err        error
@@ -145,6 +146,15 @@ func CheckTwitch() {
 							if err != nil {
 								log.Error(err)
 							}
+
+							bit, err := ResultDB.MarshalBinary()
+							if err != nil {
+								log.Error(err)
+							}
+							gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+								MetricData: bit,
+								State:      config.LiveStatus,
+							})
 
 							engine.SendLiveNotif(ResultDB, Bot)
 

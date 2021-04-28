@@ -135,6 +135,9 @@ const (
 	BiliLive    = "bilibili"
 	SpaceBili   = "spacebili"
 	TwitchLive  = "twitch"
+
+	FanartState = "fanart"
+	SubsState   = "subs"
 )
 
 //ConfigFile config file struct for config.toml

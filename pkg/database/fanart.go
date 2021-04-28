@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"regexp"
 	"strings"
@@ -444,6 +445,14 @@ type DataFanart struct {
 	PixivID      string
 	Lewd         bool
 	State        string
+}
+
+func (Data *DataFanart) MarshallBin() []byte {
+	bit, err := json.Marshal(Data)
+	if err != nil {
+		log.Error(err)
+	}
+	return bit
 }
 
 func (Data *DataFanart) AddMember(new Member) *DataFanart {

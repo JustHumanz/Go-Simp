@@ -222,7 +222,6 @@ services:
       - traefik.http.services.go_simp_web.loadbalancer.server.port=8000
       - traefik.http.middlewares.redirect.redirectscheme.scheme=https
 
-
   rest_api:
     build: service/rest-api
     image: build_go-simp_rest-api
@@ -232,8 +231,8 @@ services:
       - redis
     command: go run . 
     restart: on-failure
-    volumes:
-      - ./config.toml:/app/Go-Simp    
+    ports:
+      - "2525:2525"    
     networks:
       - go_simp-proxy
       - go_simp-net
@@ -258,6 +257,16 @@ services:
     networks:
       - go_simp-net
 
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "8080:8080"        
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/etc/prometheus
+    networks:
+      - go_simp-proxy
+      - go_simp-net      
 networks:
   go_simp-proxy:
     external: true
@@ -266,3 +275,4 @@ networks:
 
 volumes:
   redis_data:
+  prometheus_data:

@@ -1,12 +1,14 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"strconv"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
+	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -98,10 +100,21 @@ func CheckYoutube() {
 						if err != nil {
 							log.Error(err)
 						}
-						YtSubsDB.UpYtSubs(YTSubscriberCount).
+						YtSubsDB.SetMember(Member).SetGroup(Group).
+							UpYtSubs(YTSubscriberCount).
 							UpYtVideo(VideoCount).
 							UpYtViews(ViewCount).
-							UpdateSubs("yt")
+							UpdateState(config.YoutubeLive).
+							UpdateSubs()
+
+						bin, err := YtSubsDB.MarshalBinary()
+						if err != nil {
+							log.Error(err)
+						}
+						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+							MetricData: bin,
+							State:      config.SubsState,
+						})
 					}
 				}
 			}
