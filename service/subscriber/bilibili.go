@@ -124,8 +124,8 @@ func CheckBiliBili() {
 					"Current BiliBili Follower": bilistate.Follow.Data.Follower,
 					"Vtuber":                    Name.EnName,
 				}).Info("Update BiliBili Follower")
-				newSubs := bilistate.Follow.Data.Follower - BiliFollowDB.BiliFollow
-				newViews := bilistate.LikeView.Data.Archive.View - BiliFollowDB.BiliViews
+				newSubs := BiliFollowDB.BiliFollow - bilistate.Follow.Data.Follower
+				newViews := BiliFollowDB.BiliViews - bilistate.LikeView.Data.Archive.View
 
 				BiliFollowDB.SetMember(Name).SetGroup(Group).
 					UpBiliFollow(bilistate.Follow.Data.Follower).

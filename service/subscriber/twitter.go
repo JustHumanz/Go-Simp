@@ -74,7 +74,7 @@ func CheckTwitter() {
 					"Vtuber":                   Name.EnName,
 				}).Info("Update Twitter Follower")
 
-				NewSubs := Twitter.FollowersCount - TwFollowDB.TwFollow
+				NewSubs := TwFollowDB.TwFollow - Twitter.FollowersCount
 				TwFollowDB.SetMember(Name).SetGroup(Group).
 					UptwFollow(Twitter.FollowersCount).
 					UpdateState(config.TwitterArt).

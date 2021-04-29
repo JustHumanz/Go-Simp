@@ -100,8 +100,8 @@ func CheckYoutube() {
 						if err != nil {
 							log.Error(err)
 						}
-						newSubs := YTSubscriberCount - YtSubsDB.YtSubs
-						newViews := ViewCount - YtSubsDB.YtViews
+						newSubs := YtSubsDB.YtSubs - YTSubscriberCount
+						newViews := YtSubsDB.YtViews - ViewCount
 						YtSubsDB.SetMember(Member).SetGroup(Group).
 							UpYtSubs(YTSubscriberCount).
 							UpYtVideo(VideoCount).
