@@ -134,7 +134,7 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 					ScheduledStart = time.Now().In(loc)
 				}
 
-				Group.IsNull()
+				Group.RemoveNillIconURL()
 
 				log.WithFields(log.Fields{
 					"Group":  Group.GroupName,
@@ -160,10 +160,12 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 				if err != nil {
 					log.Error(err)
 				}
-				gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-					MetricData: bit,
-					State:      config.LiveStatus,
-				})
+				if config.GoSimpConf.Metric {
+					gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+						MetricData: bit,
+						State:      config.LiveStatus,
+					})
+				}
 
 				engine.SendLiveNotif(LiveBiliDB, Bot)
 

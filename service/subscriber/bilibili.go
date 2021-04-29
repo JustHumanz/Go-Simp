@@ -124,20 +124,26 @@ func CheckBiliBili() {
 					"Current BiliBili Follower": bilistate.Follow.Data.Follower,
 					"Vtuber":                    Name.EnName,
 				}).Info("Update BiliBili Follower")
+				newSubs := bilistate.Follow.Data.Follower - BiliFollowDB.BiliFollow
+				newViews := bilistate.LikeView.Data.Archive.View - BiliFollowDB.BiliViews
+
 				BiliFollowDB.SetMember(Name).SetGroup(Group).
 					UpBiliFollow(bilistate.Follow.Data.Follower).
 					UpBiliVideo(bilistate.Videos).
 					UpBiliViews(bilistate.LikeView.Data.Archive.View).
-					UpdateState(config.BiliBiliLive).UpdateSubs()
+					UpdateState(config.BiliBiliLive).
+					AddNewSubs(newSubs).AddNewViews(newViews).UpdateSubs()
 
 				bin, err := BiliFollowDB.MarshalBinary()
 				if err != nil {
 					log.Error(err)
 				}
-				gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-					MetricData: bin,
-					State:      config.SubsState,
-				})
+				if config.GoSimpConf.Metric {
+					gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+						MetricData: bin,
+						State:      config.SubsState,
+					})
+				}
 			}
 			if i%10 == 0 {
 				time.Sleep(3 * time.Second)

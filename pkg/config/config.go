@@ -138,6 +138,12 @@ const (
 
 	FanartState = "fanart"
 	SubsState   = "subs"
+
+	//Metric Query
+	Get_Fanart     = "get_fanart"
+	Get_Subscriber = "get_subscriber"
+	Get_Live       = "get_live"
+	Get_Viewers    = "get_viewers"
 )
 
 //ConfigFile config file struct for config.toml
@@ -153,6 +159,7 @@ type ConfigFile struct {
 	TopGG          string `toml:"TOPGG"`
 	Domain         string `toml:"Domain"`
 	LowResources   bool   `toml:"LowResources"` //Disable update like fanart & set wait every 5 counter
+	Metric         bool   `toml:"Metric"`
 	Twitch         struct {
 		ClientID     string `toml:"ClientID"`
 		ClientSecret string `toml:"ClientSecret"`

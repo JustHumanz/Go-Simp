@@ -137,31 +137,31 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 				Subs.Member.Name,
 				Subs.Group.GroupName,
 				"BiliBili",
-			).Add(float64(Subs.BiliFollow))
+			).Add(float64(Subs.NewSubs))
 
 			metric.GetViews.WithLabelValues(
 				Subs.Member.Name,
 				Subs.Group.GroupName,
 				"BiliBili",
-			).Add(float64(Subs.BiliViews))
+			).Add(float64(Subs.NewViews))
 		} else if Subs.State == config.YoutubeLive {
 			metric.GetSubs.WithLabelValues(
 				Subs.Member.Name,
 				Subs.Group.GroupName,
 				"Youtube",
-			).Add(float64(Subs.YtSubs))
+			).Add(float64(Subs.NewSubs))
 
 			metric.GetViews.WithLabelValues(
 				Subs.Member.Name,
 				Subs.Group.GroupName,
 				"Youtube",
-			).Add(float64(Subs.YtViews))
+			).Add(float64(Subs.NewViews))
 		} else {
 			metric.GetSubs.WithLabelValues(
 				Subs.Member.Name,
 				Subs.Group.GroupName,
 				"Twitter",
-			).Add(float64(Subs.TwFollow))
+			).Add(float64(Subs.NewSubs))
 		}
 	} else if in.State == config.LiveStatus {
 		var LiveData database.LiveStream

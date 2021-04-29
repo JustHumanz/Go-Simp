@@ -100,21 +100,27 @@ func CheckYoutube() {
 						if err != nil {
 							log.Error(err)
 						}
+						newSubs := YTSubscriberCount - YtSubsDB.YtSubs
+						newViews := ViewCount - YtSubsDB.YtViews
 						YtSubsDB.SetMember(Member).SetGroup(Group).
 							UpYtSubs(YTSubscriberCount).
 							UpYtVideo(VideoCount).
 							UpYtViews(ViewCount).
 							UpdateState(config.YoutubeLive).
+							AddNewSubs(newSubs).
+							AddNewViews(newViews).
 							UpdateSubs()
 
 						bin, err := YtSubsDB.MarshalBinary()
 						if err != nil {
 							log.Error(err)
 						}
-						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-							MetricData: bin,
-							State:      config.SubsState,
-						})
+						if config.GoSimpConf.Metric {
+							gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+								MetricData: bin,
+								State:      config.SubsState,
+							})
+						}
 					}
 				}
 			}

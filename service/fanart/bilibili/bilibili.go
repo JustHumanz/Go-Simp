@@ -130,10 +130,13 @@ func main() {
 										log.Error(err)
 									}
 
-									gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-										MetricData: TBiliData.MarshallBin(),
-										State:      config.FanartState,
-									})
+									if config.GoSimpConf.Metric {
+										gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+											MetricData: TBiliData.MarshallBin(),
+											State:      config.FanartState,
+										})
+									}
+
 									engine.SendFanArtNude(TBiliData, Bot, Color)
 								}
 							}

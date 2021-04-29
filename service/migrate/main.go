@@ -147,6 +147,9 @@ func main() {
 	time.Sleep(5 * time.Minute)
 
 	go TwitterFanart()
+	if configfile.Metric {
+		go SetMetric()
+	}
 	time.Sleep(5 * time.Minute)
 	log.Info("Done")
 	RequestPay("Done migrate new vtuber")
@@ -166,9 +169,7 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		err            error
 	)
 
-	if match, _ := regexp.MatchString("404.jpg", Data.Group.IconURL); match {
-		Data.Group.IconURL = ""
-	}
+	Data.Group.RemoveNillIconURL()
 
 	if Data.Member.Youtube.YtID != "" {
 		Youtube = "✓"
@@ -257,5 +258,137 @@ func Dead(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetColor(Color).
 				SetFooter("Adios~").MessageEmbed)
 		}
+	}
+}
+
+func SetMetric() {
+	type Prometheus struct {
+		Status string `json:"status"`
+		Data   struct {
+			ResultType string        `json:"resultType"`
+			Result     []interface{} `json:"result"`
+		} `json:"data"`
+	}
+	Prome := os.Getenv("PROMETHEUS")
+	if Prome != "" {
+		Subs := func() {
+			bit, err := network.Curl("http://"+Prome+"/api/v1/query?query="+config.Get_Subscriber+"[5d]", nil)
+			if err != nil {
+				log.Error(err)
+			}
+			var data Prometheus
+			err = json.Unmarshal(bit, data)
+			if err != nil {
+				log.Error(err)
+			}
+			if len(data.Data.Result) == 0 {
+				for _, Group := range database.GetGroups() {
+					for _, Member := range Group.Members {
+						Subs, err := Member.GetSubsCount()
+						if err != nil {
+							log.Error(err)
+						}
+						bili := func() {
+							Subs.AddNewSubs(Subs.BiliFollow)
+							bin2, err := Subs.MarshalBinary()
+							if err != nil {
+								log.Error(err)
+							}
+							if config.GoSimpConf.Metric {
+								gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+									MetricData: bin2,
+									State:      config.SubsState,
+								})
+							}
+						}
+
+						yt := func() {
+							Subs.AddNewSubs(Subs.YtSubs)
+							bin2, err := Subs.MarshalBinary()
+							if err != nil {
+								log.Error(err)
+							}
+							if config.GoSimpConf.Metric {
+								gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+									MetricData: bin2,
+									State:      config.SubsState,
+								})
+							}
+						}
+
+						tw := func() {
+							Subs.AddNewSubs(Subs.TwFollow)
+							bin2, err := Subs.MarshalBinary()
+							if err != nil {
+								log.Error(err)
+							}
+							if config.GoSimpConf.Metric {
+								gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+									MetricData: bin2,
+									State:      config.SubsState,
+								})
+							}
+						}
+
+						bili()
+						tw()
+						yt()
+					}
+				}
+			}
+		}
+		View := func() {
+			bit, err := network.Curl("http://"+Prome+"/api/v1/query?query="+config.Get_Viewers+"[5d]", nil)
+			if err != nil {
+				log.Error(err)
+			}
+			var data Prometheus
+			err = json.Unmarshal(bit, data)
+			if err != nil {
+				log.Error(err)
+			}
+			if len(data.Data.Result) == 0 {
+				for _, Group := range database.GetGroups() {
+					for _, Member := range Group.Members {
+						Subs, err := Member.GetSubsCount()
+						if err != nil {
+							log.Error(err)
+						}
+						bili := func() {
+							Subs.AddNewViews(Subs.BiliViews)
+							bin2, err := Subs.MarshalBinary()
+							if err != nil {
+								log.Error(err)
+							}
+							if config.GoSimpConf.Metric {
+								gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+									MetricData: bin2,
+									State:      config.SubsState,
+								})
+							}
+						}
+
+						yt := func() {
+							Subs.AddNewViews(Subs.YtViews)
+							bin2, err := Subs.MarshalBinary()
+							if err != nil {
+								log.Error(err)
+							}
+							if config.GoSimpConf.Metric {
+								gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+									MetricData: bin2,
+									State:      config.SubsState,
+								})
+							}
+						}
+						bili()
+						yt()
+					}
+				}
+			}
+		}
+
+		Subs()
+		View()
 	}
 }

@@ -1,6 +1,7 @@
 package metric
 
 import (
+	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -8,7 +9,7 @@ import (
 var (
 	GetFanArt = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "get_fanart",
+			Name: config.Get_Fanart,
 			Help: "Get fanart data",
 		},
 		[]string{"vtuber", "group", "author", "isLewd", "state"},
@@ -16,7 +17,7 @@ var (
 
 	GetSubs = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "get_subscriber",
+			Name: config.Get_Subscriber,
 			Help: "Get subscriber/follower count",
 		},
 		[]string{"vtuber", "group", "state"},
@@ -24,7 +25,7 @@ var (
 
 	GetViews = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "get_viewers",
+			Name: config.Get_Viewers,
 			Help: "Get viewers count",
 		},
 		[]string{"vtuber", "group", "state"},
@@ -32,7 +33,7 @@ var (
 
 	GetLive = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "get_live",
+			Name: config.Get_Live,
 			Help: "Get vtuber live count",
 		},
 		[]string{"vtuber", "group", "state"},

@@ -349,10 +349,12 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 							return err
 						}
 						FixFanArt.Photos[0] = config.PixivProxy + FixImg
-						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-							MetricData: FixFanArt.MarshallBin(),
-							State:      config.FanartState,
-						})
+						if config.GoSimpConf.Metric {
+							gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+								MetricData: FixFanArt.MarshallBin(),
+								State:      config.FanartState,
+							})
+						}
 						engine.SendFanArtNude(*FixFanArt, Bot, Color)
 					}
 				} else if l && v2["xRestrict"].(float64) == 1 && IsNotLoli {
@@ -408,10 +410,13 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 						if err != nil {
 							return err
 						}
-						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-							MetricData: FixFanArt.MarshallBin(),
-							State:      config.FanartState,
-						})
+						if config.GoSimpConf.Metric {
+							gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+								MetricData: FixFanArt.MarshallBin(),
+								State:      config.FanartState,
+							})
+						}
+
 						FixFanArt.Photos[0] = config.PixivProxy + FixImg
 						engine.SendFanArtNude(*FixFanArt, Bot, Color)
 					}

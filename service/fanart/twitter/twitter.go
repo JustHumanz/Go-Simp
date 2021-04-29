@@ -109,11 +109,12 @@ func CheckNew() {
 					if err != nil {
 						log.Error(err)
 					}
-
-					gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-						MetricData: Art.MarshallBin(),
-						State:      config.FanartState,
-					})
+					if config.GoSimpConf.Metric {
+						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+							MetricData: Art.MarshallBin(),
+							State:      config.FanartState,
+						})
+					}
 
 					engine.SendFanArtNude(Art, Bot, Color)
 				}

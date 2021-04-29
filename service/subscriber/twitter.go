@@ -74,19 +74,23 @@ func CheckTwitter() {
 					"Vtuber":                   Name.EnName,
 				}).Info("Update Twitter Follower")
 
+				NewSubs := Twitter.FollowersCount - TwFollowDB.TwFollow
 				TwFollowDB.SetMember(Name).SetGroup(Group).
 					UptwFollow(Twitter.FollowersCount).
 					UpdateState(config.TwitterArt).
+					AddNewSubs(NewSubs).
 					UpdateSubs()
 
 				bin, err := TwFollowDB.MarshalBinary()
 				if err != nil {
 					log.Error(err)
 				}
-				gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-					MetricData: bin,
-					State:      config.SubsState,
-				})
+				if config.GoSimpConf.Metric {
+					gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+						MetricData: bin,
+						State:      config.SubsState,
+					})
+				}
 			}
 		}
 	}

@@ -231,10 +231,22 @@ type MemberSubs struct {
 	Member                            Member
 	Group                             Group
 	State                             string
+	NewSubs                           int
+	NewViews                          int
 }
 
 func (Data *MemberSubs) SetMember(new Member) *MemberSubs {
 	Data.Member = new
+	return Data
+}
+
+func (Data *MemberSubs) AddNewSubs(new int) *MemberSubs {
+	Data.NewSubs = new
+	return Data
+}
+
+func (Data *MemberSubs) AddNewViews(new int) *MemberSubs {
+	Data.NewViews = new
 	return Data
 }
 

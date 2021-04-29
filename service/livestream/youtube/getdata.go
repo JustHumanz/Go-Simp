@@ -305,10 +305,12 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 						if err != nil {
 							log.Error(err)
 						}
-						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-							MetricData: bit,
-							State:      config.LiveStatus,
-						})
+						if config.GoSimpConf.Metric {
+							gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+								MetricData: bit,
+								State:      config.LiveStatus,
+							})
+						}
 
 						if !Items.LiveDetails.ActualStartTime.IsZero() {
 							NewYoutubeData.UpdateSchdule(Items.LiveDetails.ActualStartTime)
