@@ -79,16 +79,19 @@ func main() {
 
 	c.AddFunc(config.CheckPayload, GetPayload)
 	if *Youtube {
+		CheckYoutube()
 		c.AddFunc(config.YoutubeSubscriber, CheckYoutube)
 		log.Info("Add youtube subscriber to cronjob")
 	}
 
 	if *BiliBili {
+		CheckBiliBili()
 		c.AddFunc(config.BiliBiliFollowers, CheckBiliBili)
 		log.Info("Add bilibili followers to cronjob")
 	}
 
 	if *Twitter {
+		CheckTwitter()
 		c.AddFunc(config.TwitterFollowers, CheckTwitter)
 		log.Info("Add twitter followers to cronjob")
 	}

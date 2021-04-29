@@ -67,29 +67,30 @@ func CheckTwitter() {
 							}
 						}
 					}
-				}
-				log.WithFields(log.Fields{
-					"Past Twitter Follower":    TwFollowDB.TwFollow,
-					"Current Twitter Follower": Twitter.FollowersCount,
-					"Vtuber":                   Name.EnName,
-				}).Info("Update Twitter Follower")
 
-				NewSubs := TwFollowDB.TwFollow - Twitter.FollowersCount
-				TwFollowDB.SetMember(Name).SetGroup(Group).
-					UptwFollow(Twitter.FollowersCount).
-					UpdateState(config.TwitterArt).
-					AddNewSubs(NewSubs).
-					UpdateSubs()
+					log.WithFields(log.Fields{
+						"Past Twitter Follower":    TwFollowDB.TwFollow,
+						"Current Twitter Follower": Twitter.FollowersCount,
+						"Vtuber":                   Name.EnName,
+					}).Info("Update Twitter Follower")
 
-				bin, err := TwFollowDB.MarshalBinary()
-				if err != nil {
-					log.Error(err)
-				}
-				if config.GoSimpConf.Metric {
-					gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-						MetricData: bin,
-						State:      config.SubsState,
-					})
+					NewSubs := Twitter.FollowersCount - TwFollowDB.TwFollow
+					TwFollowDB.SetMember(Name).SetGroup(Group).
+						UptwFollow(Twitter.FollowersCount).
+						UpdateState(config.TwitterArt).
+						AddNewSubs(NewSubs).
+						UpdateSubs()
+
+					bin, err := TwFollowDB.MarshalBinary()
+					if err != nil {
+						log.Error(err)
+					}
+					if config.GoSimpConf.Metric {
+						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+							MetricData: bin,
+							State:      config.SubsState,
+						})
+					}
 				}
 			}
 		}

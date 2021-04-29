@@ -120,6 +120,9 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 		if err != nil {
 			log.Error(err)
 		}
+		log.WithFields(log.Fields{
+			"Vtuber": FanArt.Member.EnName,
+		}).Info("Update Fanart")
 
 		metric.GetFanArt.WithLabelValues(
 			FanArt.Member.Name,
@@ -134,7 +137,10 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 		if err != nil {
 			log.Error(err)
 		}
-
+		log.WithFields(log.Fields{
+			"Vtuber": Subs.Member.EnName,
+			"State":  Subs.State,
+		}).Info("Update Subs")
 		if Subs.State == config.BiliLive && !Subs.Member.IsBiliNill() {
 			metric.GetSubs.WithLabelValues(
 				Subs.Member.Name,
