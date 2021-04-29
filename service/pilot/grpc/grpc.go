@@ -111,6 +111,9 @@ func (s *Server) ModuleList(ctx context.Context, in *ModuleData) (*Empty, error)
 }
 
 func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
+	log.WithFields(log.Fields{
+		"State": in.State,
+	}).Info("Update metric")
 	if in.State == config.FanartState {
 		var FanArt database.DataFanart
 		err := json.Unmarshal(in.MetricData, &FanArt)
