@@ -277,7 +277,7 @@ func SetMetric() {
 				log.Error(err)
 			}
 			var data Prometheus
-			err = json.Unmarshal(bit, data)
+			err = json.Unmarshal(bit, &data)
 			if err != nil {
 				log.Error(err)
 			}
@@ -343,7 +343,7 @@ func SetMetric() {
 				log.Error(err)
 			}
 			var data Prometheus
-			err = json.Unmarshal(bit, data)
+			err = json.Unmarshal(bit, &data)
 			if err != nil {
 				log.Error(err)
 			}
