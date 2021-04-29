@@ -146,31 +146,31 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 				Subs.Member.Name,
 				Subs.Group.GroupName,
 				"BiliBili",
-			).Add(float64(Subs.NewSubs))
+			).Set(float64(Subs.BiliFollow))
 
 			metric.GetViews.WithLabelValues(
 				Subs.Member.Name,
 				Subs.Group.GroupName,
 				"BiliBili",
-			).Add(float64(Subs.NewViews))
+			).Set(float64(Subs.BiliViews))
 		} else if Subs.State == config.YoutubeLive && !Subs.Member.IsYtNill() {
 			metric.GetSubs.WithLabelValues(
 				Subs.Member.Name,
 				Subs.Group.GroupName,
 				"Youtube",
-			).Add(float64(Subs.NewSubs))
+			).Set(float64(Subs.YtSubs))
 
 			metric.GetViews.WithLabelValues(
 				Subs.Member.Name,
 				Subs.Group.GroupName,
 				"Youtube",
-			).Add(float64(Subs.NewViews))
+			).Set(float64(Subs.YtViews))
 		} else {
 			metric.GetSubs.WithLabelValues(
 				Subs.Member.Name,
 				Subs.Group.GroupName,
 				"Twitter",
-			).Add(float64(Subs.NewSubs))
+			).Set(float64(Subs.TwFollow))
 		}
 	} else if in.State == config.LiveStatus {
 		var LiveData database.LiveStream
@@ -179,19 +179,19 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 			log.Error(err)
 		}
 		if LiveData.State == config.YoutubeLive && !LiveData.Member.IsYtNill() {
-			metric.GetSubs.WithLabelValues(
+			metric.GetLive.WithLabelValues(
 				LiveData.Member.Name,
 				LiveData.Group.GroupName,
 				"Youtube",
 			).Inc()
 		} else if LiveData.State == config.BiliLive && !LiveData.Member.IsBiliNill() {
-			metric.GetSubs.WithLabelValues(
+			metric.GetLive.WithLabelValues(
 				LiveData.Member.Name,
 				LiveData.Group.GroupName,
 				"BiliBili",
 			).Inc()
 		} else if LiveData.State == config.TwitchLive {
-			metric.GetSubs.WithLabelValues(
+			metric.GetLive.WithLabelValues(
 				LiveData.Member.Name,
 				LiveData.Group.GroupName,
 				"Twitch",

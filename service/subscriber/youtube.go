@@ -101,15 +101,11 @@ func CheckYoutube() {
 							log.Error(err)
 						}
 
-						newSubs := YTSubscriberCount - YtSubsDB.YtSubs
-						newViews := ViewCount - YtSubsDB.YtViews
 						YtSubsDB.SetMember(Member).SetGroup(Group).
 							UpYtSubs(YTSubscriberCount).
 							UpYtVideo(VideoCount).
 							UpYtViews(ViewCount).
 							UpdateState(config.YoutubeLive).
-							AddNewSubs(newSubs).
-							AddNewViews(newViews).
 							UpdateSubs()
 
 						bin, err := YtSubsDB.MarshalBinary()

@@ -163,11 +163,11 @@ func CheckYtByTime() {
 									}
 								}
 
-								bit, err := Youtube.MarshalBinary()
-								if err != nil {
-									log.Error(err)
-								}
 								if config.GoSimpConf.Metric {
+									bit, err := Youtube.MarshalBinary()
+									if err != nil {
+										log.Error(err)
+									}
 									gRCPconn.MetricReport(context.Background(), &pilot.Metric{
 										MetricData: bit,
 										State:      config.LiveStatus,

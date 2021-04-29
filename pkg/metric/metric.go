@@ -15,16 +15,16 @@ var (
 		[]string{"vtuber", "group", "author", "isLewd", "state"},
 	)
 
-	GetSubs = prometheus.NewCounterVec(
-		prometheus.CounterOpts{
+	GetSubs = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
 			Name: config.Get_Subscriber,
 			Help: "Get subscriber/follower count",
 		},
 		[]string{"vtuber", "group", "state"},
 	)
 
-	GetViews = prometheus.NewCounterVec(
-		prometheus.CounterOpts{
+	GetViews = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
 			Name: config.Get_Viewers,
 			Help: "Get viewers count",
 		},

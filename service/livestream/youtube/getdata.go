@@ -301,11 +301,11 @@ func StartCheckYT(Group database.Group, wg *sync.WaitGroup) {
 							}
 						}
 
-						bit, err := NewYoutubeData.MarshalBinary()
-						if err != nil {
-							log.Error(err)
-						}
 						if config.GoSimpConf.Metric {
+							bit, err := NewYoutubeData.MarshalBinary()
+							if err != nil {
+								log.Error(err)
+							}
 							gRCPconn.MetricReport(context.Background(), &pilot.Metric{
 								MetricData: bit,
 								State:      config.LiveStatus,

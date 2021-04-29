@@ -156,11 +156,11 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 					log.Error(err)
 				}
 
-				bit, err := LiveBiliDB.MarshalBinary()
-				if err != nil {
-					log.Error(err)
-				}
 				if config.GoSimpConf.Metric {
+					bit, err := LiveBiliDB.MarshalBinary()
+					if err != nil {
+						log.Error(err)
+					}
 					gRCPconn.MetricReport(context.Background(), &pilot.Metric{
 						MetricData: bit,
 						State:      config.LiveStatus,

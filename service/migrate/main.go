@@ -146,9 +146,6 @@ func main() {
 	time.Sleep(5 * time.Minute)
 
 	go TwitterFanart()
-	if configfile.Metric {
-		go SetMetric()
-	}
 	time.Sleep(5 * time.Minute)
 	log.Info("Done")
 	RequestPay("Done migrate new vtuber")
@@ -256,117 +253,6 @@ func Dead(s *discordgo.Session, m *discordgo.MessageCreate) {
 				SetImage(engine.MaintenanceIMG()).
 				SetColor(Color).
 				SetFooter("Adios~").MessageEmbed)
-		}
-	}
-}
-
-func SetMetric() {
-	type Prometheus struct {
-		Status string `json:"status"`
-		Data   struct {
-			ResultType string        `json:"resultType"`
-			Result     []interface{} `json:"result"`
-		} `json:"data"`
-	}
-	Prome := os.Getenv("PROMETHEUS")
-	if Prome != "" {
-		Subs := func() bool {
-			bit, err := network.Curl(Prome+"/api/v1/query?query="+config.Get_Subscriber+"[5d]", nil)
-			if err != nil {
-				log.Error(err)
-			}
-			var data Prometheus
-			err = json.Unmarshal(bit, &data)
-			if err != nil {
-				log.Error(err)
-			}
-			if len(data.Data.Result) == 0 {
-				return true
-			}
-			return false
-		}
-		View := func() bool {
-			bit, err := network.Curl(Prome+"/api/v1/query?query="+config.Get_Viewers+"[5d]", nil)
-			if err != nil {
-				log.Error(err)
-			}
-			var data Prometheus
-			err = json.Unmarshal(bit, &data)
-			if err != nil {
-				log.Error(err)
-			}
-			if len(data.Data.Result) == 0 {
-				return true
-			}
-			return false
-		}
-		view := View()
-		subs := Subs()
-
-		if view && subs {
-			log.Info("New Prome")
-			for _, Group := range database.GetGroups() {
-				for _, Member := range Group.Members {
-					func() {
-						Subs, err := Member.GetSubsCount()
-						if err != nil {
-							log.Error(err)
-						}
-
-						Subs.SetMember(Member).SetGroup(Group).
-							UpdateState(config.BiliLive).
-							AddNewSubs(Subs.BiliFollow).
-							AddNewViews(Subs.BiliViews)
-
-						bin2, err := Subs.MarshalBinary()
-						if err != nil {
-							log.Error(err)
-						}
-						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-							MetricData: bin2,
-							State:      config.SubsState,
-						})
-					}()
-
-					func() {
-						Subs, err := Member.GetSubsCount()
-						if err != nil {
-							log.Error(err)
-						}
-						Subs.SetMember(Member).SetGroup(Group).
-							UpdateState(config.YoutubeLive).
-							AddNewSubs(Subs.YtSubs).
-							AddNewViews(Subs.YtViews)
-
-						bin2, err := Subs.MarshalBinary()
-						if err != nil {
-							log.Error(err)
-						}
-						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-							MetricData: bin2,
-							State:      config.SubsState,
-						})
-					}()
-
-					func() {
-						Subs, err := Member.GetSubsCount()
-						if err != nil {
-							log.Error(err)
-						}
-						Subs.SetMember(Member).SetGroup(Group).
-							UpdateState(config.TwitterArt).
-							AddNewSubs(Subs.TwFollow)
-						bin2, err := Subs.MarshalBinary()
-						if err != nil {
-							log.Error(err)
-						}
-						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-							MetricData: bin2,
-							State:      config.SubsState,
-						})
-					}()
-				}
-			}
 		}
 	}
 }

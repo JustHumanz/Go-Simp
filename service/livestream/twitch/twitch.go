@@ -134,6 +134,7 @@ func CheckTwitch() {
 							ResultDB.UpdateStatus(config.LiveStatus).
 								UpdateViewers(strconv.Itoa(Stream.ViewerCount)).
 								UpdateThumbnail(Stream.ThumbnailURL).
+								SetState(config.TwitchLive).
 								UpdateSchdule(Stream.StartedAt)
 
 							if len(GameResult.Data.Games) > 0 {
@@ -147,11 +148,11 @@ func CheckTwitch() {
 								log.Error(err)
 							}
 
-							bit, err := ResultDB.MarshalBinary()
-							if err != nil {
-								log.Error(err)
-							}
 							if config.GoSimpConf.Metric {
+								bit, err := ResultDB.MarshalBinary()
+								if err != nil {
+									log.Error(err)
+								}
 								gRCPconn.MetricReport(context.Background(), &pilot.Metric{
 									MetricData: bit,
 									State:      config.LiveStatus,
