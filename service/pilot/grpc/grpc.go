@@ -135,7 +135,7 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 			log.Error(err)
 		}
 
-		if Subs.State == config.BiliBiliLive {
+		if Subs.State == config.BiliLive && !Subs.Member.IsBiliNill() {
 			metric.GetSubs.WithLabelValues(
 				Subs.Member.Name,
 				Subs.Group.GroupName,
@@ -147,7 +147,7 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 				Subs.Group.GroupName,
 				"BiliBili",
 			).Add(float64(Subs.NewViews))
-		} else if Subs.State == config.YoutubeLive {
+		} else if Subs.State == config.YoutubeLive && !Subs.Member.IsYtNill() {
 			metric.GetSubs.WithLabelValues(
 				Subs.Member.Name,
 				Subs.Group.GroupName,
@@ -172,13 +172,13 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 		if err != nil {
 			log.Error(err)
 		}
-		if LiveData.State == config.YoutubeLive {
+		if LiveData.State == config.YoutubeLive && !LiveData.Member.IsYtNill() {
 			metric.GetSubs.WithLabelValues(
 				LiveData.Member.Name,
 				LiveData.Group.GroupName,
 				"Youtube",
 			).Inc()
-		} else if LiveData.State == config.BiliLive {
+		} else if LiveData.State == config.BiliLive && !LiveData.Member.IsBiliNill() {
 			metric.GetSubs.WithLabelValues(
 				LiveData.Member.Name,
 				LiveData.Group.GroupName,

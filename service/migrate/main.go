@@ -136,8 +136,6 @@ func main() {
 			os.Exit(1)
 		}
 	}()
-
-	SetMetric()
 	AddData(JsonData)
 	go CheckYoutube()
 	go CheckLiveBiliBili()
@@ -272,7 +270,7 @@ func SetMetric() {
 	}
 	Prome := os.Getenv("PROMETHEUS")
 	if Prome != "" {
-		Subs := func() {
+		Subs := func() bool {
 			bit, err := network.Curl(Prome+"/api/v1/query?query="+config.Get_Subscriber+"[5d]", nil)
 			if err != nil {
 				log.Error(err)
@@ -283,65 +281,11 @@ func SetMetric() {
 				log.Error(err)
 			}
 			if len(data.Data.Result) == 0 {
-				log.Info("New Prome")
-				for _, Group := range database.GetGroups() {
-					for _, Member := range Group.Members {
-						Subs, err := Member.GetSubsCount()
-						if err != nil {
-							log.Error(err)
-						}
-						bili := func() {
-							Subs.AddNewSubs(Subs.BiliFollow)
-							bin2, err := Subs.MarshalBinary()
-							if err != nil {
-								log.Error(err)
-							}
-							if config.GoSimpConf.Metric {
-								gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-									MetricData: bin2,
-									State:      config.SubsState,
-								})
-							}
-						}
-
-						yt := func() {
-							Subs.AddNewSubs(Subs.YtSubs)
-							bin2, err := Subs.MarshalBinary()
-							if err != nil {
-								log.Error(err)
-							}
-							if config.GoSimpConf.Metric {
-								gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-									MetricData: bin2,
-									State:      config.SubsState,
-								})
-							}
-						}
-
-						tw := func() {
-							Subs.AddNewSubs(Subs.TwFollow)
-							bin2, err := Subs.MarshalBinary()
-							if err != nil {
-								log.Error(err)
-							}
-							if config.GoSimpConf.Metric {
-								gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-									MetricData: bin2,
-									State:      config.SubsState,
-								})
-							}
-						}
-
-						bili()
-						tw()
-						yt()
-					}
-				}
-			} else {
-				log.Info("Already have data")
+				return true
 			}
+			return false
 		}
-		View := func() {
+		View := func() bool {
 			bit, err := network.Curl(Prome+"/api/v1/query?query="+config.Get_Viewers+"[5d]", nil)
 			if err != nil {
 				log.Error(err)
@@ -352,49 +296,77 @@ func SetMetric() {
 				log.Error(err)
 			}
 			if len(data.Data.Result) == 0 {
-				for _, Group := range database.GetGroups() {
-					for _, Member := range Group.Members {
+				return true
+			}
+			return false
+		}
+		view := View()
+		subs := Subs()
+
+		if view && subs {
+			log.Info("New Prome")
+			for _, Group := range database.GetGroups() {
+				for _, Member := range Group.Members {
+					func() {
 						Subs, err := Member.GetSubsCount()
 						if err != nil {
 							log.Error(err)
 						}
-						bili := func() {
-							Subs.AddNewViews(Subs.BiliViews)
-							bin2, err := Subs.MarshalBinary()
-							if err != nil {
-								log.Error(err)
-							}
-							if config.GoSimpConf.Metric {
-								gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-									MetricData: bin2,
-									State:      config.SubsState,
-								})
-							}
-						}
 
-						yt := func() {
-							Subs.AddNewViews(Subs.YtViews)
-							bin2, err := Subs.MarshalBinary()
-							if err != nil {
-								log.Error(err)
-							}
-							if config.GoSimpConf.Metric {
-								gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-									MetricData: bin2,
-									State:      config.SubsState,
-								})
-							}
+						Subs.SetMember(Member).SetGroup(Group).
+							UpdateState(config.BiliLive).
+							AddNewSubs(Subs.BiliFollow).
+							AddNewViews(Subs.BiliViews)
+
+						bin2, err := Subs.MarshalBinary()
+						if err != nil {
+							log.Error(err)
 						}
-						bili()
-						yt()
-					}
+						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+							MetricData: bin2,
+							State:      config.SubsState,
+						})
+					}()
+
+					func() {
+						Subs, err := Member.GetSubsCount()
+						if err != nil {
+							log.Error(err)
+						}
+						Subs.SetMember(Member).SetGroup(Group).
+							UpdateState(config.YoutubeLive).
+							AddNewSubs(Subs.YtSubs).
+							AddNewViews(Subs.YtViews)
+
+						bin2, err := Subs.MarshalBinary()
+						if err != nil {
+							log.Error(err)
+						}
+						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+							MetricData: bin2,
+							State:      config.SubsState,
+						})
+					}()
+
+					func() {
+						Subs, err := Member.GetSubsCount()
+						if err != nil {
+							log.Error(err)
+						}
+						Subs.SetMember(Member).SetGroup(Group).
+							UpdateState(config.TwitterArt).
+							AddNewSubs(Subs.TwFollow)
+						bin2, err := Subs.MarshalBinary()
+						if err != nil {
+							log.Error(err)
+						}
+						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+							MetricData: bin2,
+							State:      config.SubsState,
+						})
+					}()
 				}
-			} else {
-				log.Info("Already have data")
 			}
 		}
-
-		Subs()
-		View()
 	}
 }

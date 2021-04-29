@@ -64,6 +64,20 @@ func (Data Member) IsMemberNill() bool {
 	return Data == (Member{})
 }
 
+func (Data Member) IsYtNill() bool {
+	if Data.YoutubeAvatar != "" {
+		return false
+	}
+	return true
+}
+
+func (Data Member) IsBiliNill() bool {
+	if Data.BiliRoomID != 0 {
+		return false
+	}
+	return true
+}
+
 type LiveStream struct {
 	ID           int64
 	Status       string
