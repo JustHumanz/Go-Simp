@@ -130,7 +130,7 @@ func CheckBiliBili() {
 						UpBiliFollow(bilistate.Follow.Data.Follower).
 						UpBiliVideo(bilistate.Videos).
 						UpBiliViews(bilistate.LikeView.Data.Archive.View).
-						UpdateState(config.BiliBiliLive).
+						UpdateState(config.BiliLive).
 						AddNewSubs(newSubs).AddNewViews(newViews).UpdateSubs()
 
 					bin, err := BiliFollowDB.MarshalBinary()
