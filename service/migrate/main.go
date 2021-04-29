@@ -137,6 +137,7 @@ func main() {
 		}
 	}()
 
+	SetMetric()
 	AddData(JsonData)
 	go CheckYoutube()
 	go CheckLiveBiliBili()
@@ -272,7 +273,7 @@ func SetMetric() {
 	Prome := os.Getenv("PROMETHEUS")
 	if Prome != "" {
 		Subs := func() {
-			bit, err := network.Curl("http://"+Prome+"/api/v1/query?query="+config.Get_Subscriber+"[5d]", nil)
+			bit, err := network.Curl(Prome+"/api/v1/query?query="+config.Get_Subscriber+"[5d]", nil)
 			if err != nil {
 				log.Error(err)
 			}
@@ -282,6 +283,7 @@ func SetMetric() {
 				log.Error(err)
 			}
 			if len(data.Data.Result) == 0 {
+				log.Info("New Prome")
 				for _, Group := range database.GetGroups() {
 					for _, Member := range Group.Members {
 						Subs, err := Member.GetSubsCount()
@@ -335,10 +337,12 @@ func SetMetric() {
 						yt()
 					}
 				}
+			} else {
+				log.Info("Already have data")
 			}
 		}
 		View := func() {
-			bit, err := network.Curl("http://"+Prome+"/api/v1/query?query="+config.Get_Viewers+"[5d]", nil)
+			bit, err := network.Curl(Prome+"/api/v1/query?query="+config.Get_Viewers+"[5d]", nil)
 			if err != nil {
 				log.Error(err)
 			}
@@ -385,6 +389,8 @@ func SetMetric() {
 						yt()
 					}
 				}
+			} else {
+				log.Info("Already have data")
 			}
 		}
 
