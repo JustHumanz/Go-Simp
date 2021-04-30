@@ -73,7 +73,7 @@ func CheckBiliBili() {
 					log.Error(err)
 				}
 				if Name.BiliBiliID != 0 {
-					if BiliFollowDB.BiliFollow != bilistate.Follow.Data.Follower {
+					if BiliFollowDB.BiliFollow != bilistate.Follow.Data.Follower && bilistate.Follow.Data.Follower != 0 {
 						if bilistate.Follow.Data.Follower <= 10000 {
 							for i := 0; i < 1000001; i += 100000 {
 								if i == bilistate.Follow.Data.Follower && bilistate.Follow.Data.Follower != 0 {
