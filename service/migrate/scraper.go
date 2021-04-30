@@ -383,6 +383,7 @@ func CheckTwitch() {
 						"Title":          "",
 						"Viewers":        0,
 						"ScheduledStart": time.Time{},
+						"EndStream":      time.Time{},
 						"Thumbnails":     "",
 						"Game":           "",
 						"MemberName":     Member.Name,

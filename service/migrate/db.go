@@ -639,11 +639,11 @@ func AddTwitchInfo(Data map[string]interface{}) error {
 			"VtuberName": Data["MemberName"],
 		}).Info("New Member Twitch")
 
-		stmt, err := db.Prepare("INSERT INTO Twitch (Game,Status,Title,Thumbnails,ScheduledStart,Viewers,VtuberMember_id) values(?,?,?,?,?,?,?)")
+		stmt, err := db.Prepare("INSERT INTO Twitch (Game,Status,Title,Thumbnails,ScheduledStart,EndStream,Viewers,VtuberMember_id) values(?,?,?,?,?,?,?)")
 		if err != nil {
 			return err
 		}
-		res, err := stmt.Exec(Data["Game"], Data["Status"], Data["Title"], Data["Thumbnails"], Data["ScheduledStart"], Data["Viewers"], Data["MemberID"])
+		res, err := stmt.Exec(Data["Game"], Data["Status"], Data["Title"], Data["Thumbnails"], Data["ScheduledStart"], Data["EndStream"], Data["Viewers"], Data["MemberID"])
 		if err != nil {
 			return err
 		}
