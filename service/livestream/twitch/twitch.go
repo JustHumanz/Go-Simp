@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
@@ -176,7 +177,7 @@ func CheckTwitch() {
 						}
 					}
 				} else if ResultDB.Status == config.LiveStatus && len(result.Data.Streams) == 0 {
-					ResultDB.UpdateStatus(config.PastStatus)
+					ResultDB.UpdateEnd(time.Now()).UpdateStatus(config.PastStatus)
 					err = ResultDB.UpdateTwitch()
 					if err != nil {
 						log.Error(err)

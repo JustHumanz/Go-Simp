@@ -11,7 +11,7 @@ func GetTwitch(MemberID int64) (*LiveStream, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&Data.ID, &Data.Game, &Data.Status, &Data.Title, &Data.Thumb, &Data.Schedul, &Data.Viewers, &MemberID)
+		err = rows.Scan(&Data.ID, &Data.Game, &Data.Status, &Data.Title, &Data.Thumb, &Data.Schedul, &Data.End, &Data.Viewers, &MemberID)
 		if err != nil {
 			return nil, err
 		}
@@ -20,7 +20,7 @@ func GetTwitch(MemberID int64) (*LiveStream, error) {
 }
 
 func (Data *LiveStream) UpdateTwitch() error {
-	_, err := DB.Exec(`Update Twitch set Game=?,Status=?,Thumbnails=?,ScheduledStart=?,Viewers=? Where id=? AND VtuberMember_id=?`, Data.Game, Data.Status, Data.Thumb, Data.Schedul, Data.Viewers, Data.ID, Data.Member.ID)
+	_, err := DB.Exec(`Update Twitch set Game=?,Status=?,Thumbnails=?,ScheduledStart=?,EndStream=?,Viewers=? Where id=? AND VtuberMember_id=?`, Data.Game, Data.Status, Data.Thumb, Data.Schedul, Data.End, Data.Viewers, Data.ID, Data.Member.ID)
 	if err != nil {
 		return err
 	}
@@ -50,7 +50,7 @@ func TwitchGet(GroupID int64, MemberID int64, Status string) []LiveStream {
 		list LiveStream
 	)
 	for rows.Next() {
-		err = rows.Scan(&list.ID, &list.Game, &list.Status, &list.Title, &list.Thumb, &list.Schedul, &list.Viewers, &list.Member.ID)
+		err = rows.Scan(&list.ID, &list.Game, &list.Status, &list.Title, &list.Thumb, &list.Schedul, &list.End, &list.Viewers, &list.Member.ID)
 		if err != nil {
 			log.Error(err)
 		}
