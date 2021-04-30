@@ -132,6 +132,7 @@ CREATE TABLE IF NOT EXISTS `Twitch` (
   `Title` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Thumbnails` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `ScheduledStart` timestamp NOT NULL DEFAULT current_timestamp(),
+  `EndStream` timestamp NOT NULL DEFAULT current_timestamp(),
   `Viewers` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `VtuberMember_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
