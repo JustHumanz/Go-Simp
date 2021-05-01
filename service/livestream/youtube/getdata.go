@@ -107,10 +107,6 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 	for _, Member := range Group.Members {
 		if Member.YoutubeID != "" {
 			VideoID := engine.GetRSS(Member.YoutubeID)
-			var (
-				Viewers string
-				Thumb   string
-			)
 			for _, ID := range VideoID {
 				YoutubeData, err := Member.CheckYoutubeVideo(ID)
 				if err != nil {
@@ -118,6 +114,11 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 				}
 
 				if YoutubeData == nil {
+					var (
+						Viewers string
+						Thumb   string
+					)
+
 					Data, err := YtAPI([]string{ID})
 					if err != nil {
 						log.Error(err)
@@ -280,8 +281,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 
 					Items := Data.Items[0]
 
-					YoutubeData.UpdateViewers(Viewers).
-						UpdateEnd(Items.LiveDetails.EndTime).
+					YoutubeData.UpdateEnd(Items.LiveDetails.EndTime).
 						UpdateLength(durafmt.Parse(ParseDuration(Items.ContentDetails.Duration)).String()).
 						SetState(config.YoutubeLive).
 						AddMember(Member).
