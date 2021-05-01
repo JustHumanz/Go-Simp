@@ -89,16 +89,26 @@ func main() {
 	runfunc.Run(Bot)
 }
 
+var Counter = 1
+
 func CheckYtSchedule() {
+	Update := false
 	yttoken = engine.GetYtToken()
 	var (
 		wg sync.WaitGroup
 	)
+
+	if Counter == 3 {
+		Update = true
+		Counter = 1
+	}
+
 	for _, Group := range VtubersData.VtuberData {
 		wg.Add(1)
-		go StartCheckYT(Group, &wg)
+		go StartCheckYT(Group, Update, &wg)
 	}
 	wg.Wait()
+	Counter++
 }
 
 func CheckYtByTime() {
