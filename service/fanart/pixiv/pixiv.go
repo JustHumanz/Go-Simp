@@ -63,7 +63,7 @@ func main() {
 		})
 		if err != nil {
 			if configfile.Discord != "" {
-				pilot.ReportDeadService(err.Error())
+				pilot.ReportDeadService(err.Error(), ModuleState)
 			}
 			log.Error("Error when request payload: %s", err)
 		}
@@ -236,7 +236,7 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 
 	if response.StatusCode != http.StatusOK {
 		if l && response.StatusCode == http.StatusUnauthorized {
-			pilot.ReportDeadService("Pixiv Session outdate")
+			pilot.ReportDeadService("Pixiv Session outdate", ModuleState)
 		}
 		log.WithFields(log.Fields{
 			"Status":  response.StatusCode,

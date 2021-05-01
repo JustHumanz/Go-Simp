@@ -214,7 +214,8 @@ func (s *Server) HeartBeat(in *ServiceMessage, stream PilotService_HeartBeatServ
 
 		err := stream.Send(&Empty{})
 		if err != nil {
-			ReportDeadService(err.Error())
+			log.Error(in.Service + " Dead")
+			ReportDeadService(err.Error(), in.Service)
 			return err
 		}
 		time.Sleep(5 * time.Second)
@@ -228,13 +229,13 @@ func RunHeartBeat(client PilotServiceClient, Service string) {
 		Alive:   true,
 	})
 	if err != nil {
-		ReportDeadService("Pilot down")
+		ReportDeadService("Pilot down", Service)
 		log.Fatal(err)
 	}
 }
 
-func ReportDeadService(message string) {
-	log.Error(message)
+func ReportDeadService(message, module string) {
+	log.Error(message, module)
 	PayloadBytes, err := json.Marshal(map[string]interface{}{
 		"embeds": []interface{}{
 			map[string]interface{}{
@@ -248,6 +249,11 @@ func ReportDeadService(message string) {
 					map[string]interface{}{
 						"name":   "Error message",
 						"value":  message,
+						"inline": true,
+					},
+					map[string]interface{}{
+						"name":   "Module",
+						"value":  module,
 						"inline": true,
 					},
 				},

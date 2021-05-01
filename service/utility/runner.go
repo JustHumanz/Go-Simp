@@ -67,7 +67,7 @@ func main() {
 	})
 	if err != nil {
 		if configfile.Discord != "" {
-			pilot.ReportDeadService(err.Error())
+			pilot.ReportDeadService(err.Error(), "Utility")
 		}
 		log.Fatalf("Error when request payload: %s", err)
 	}
