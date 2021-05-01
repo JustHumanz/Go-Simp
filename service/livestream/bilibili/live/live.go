@@ -99,10 +99,8 @@ func CheckLiveSchedule() {
 					if i%10 == 0 {
 						wg.Wait()
 					}
-
 				}
 			}
-
 		}
 	}
 }

@@ -204,7 +204,7 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 			log.Error(err)
 		}
 
-		Time := LiveData.Schedul.Sub(LiveData.End).Minutes()
+		Time := LiveData.End.Sub(LiveData.Schedul).Minutes()
 
 		if LiveData.State == config.YoutubeLive && !LiveData.Member.IsYtNill() {
 			metric.GetFlyingHours.WithLabelValues(
