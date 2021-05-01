@@ -348,6 +348,29 @@
                "Fanbase":""
             },
             {
+               "Name":"Pochimaru",
+               "EN_Name":"Iida Pochi",
+               "JP_Name":"飯田ぽち",
+               "Twitter":{
+                  "Twitter_Fanart":"",
+                  "Twitter_Lewd":"",
+                  "Twitter_Username":"lizhi3"
+               },
+               "Youtube":{
+                  "Yt_ID":"UC22BVlBsZc6ta3Dqz75NU6Q"
+               },
+               "BiliBili":{
+                  "BiliBili_Fanart":"",
+                  "BiliBili_ID":0,
+                  "BiliRoom_ID":0
+               },
+               "Twitch":{
+                  "Twitch_Username":""
+               },
+               "Region":"JP",
+               "Fanbase":""
+            },            
+            {
                "Name":"Artia",
                "EN_Name":"Artia",
                "JP_Name":"アティア",
