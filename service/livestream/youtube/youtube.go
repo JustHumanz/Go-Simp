@@ -23,7 +23,6 @@ import (
 )
 
 var (
-	yttoken     *string
 	Bot         *discordgo.Session
 	VtubersData database.VtubersPayload
 	gRCPconn    pilot.PilotServiceClient
@@ -93,7 +92,6 @@ var Counter = 1
 
 func CheckYtSchedule() {
 	Update := false
-	yttoken = engine.GetYtToken()
 	var (
 		wg sync.WaitGroup
 	)
@@ -133,7 +131,6 @@ func CheckYtByTime() {
 							"VideoID": Youtube.VideoID,
 						}).Info("Vtuber upcoming schedule deadline,force change to live")
 
-						yttoken = engine.GetYtToken()
 						Data, err := YtAPI([]string{Youtube.VideoID})
 						if err != nil {
 							log.Error(err)

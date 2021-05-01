@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"regexp"
 	"strconv"
 	"strings"
@@ -392,16 +393,25 @@ func YtAPI(VideoID []string) (engine.YtData, error) {
 		Data engine.YtData
 	)
 
-	body, curlerr := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id="+strings.Join(VideoID, ",")+"&key="+*yttoken, nil)
-	if curlerr != nil {
-		log.Error(curlerr)
-	}
-	err := json.Unmarshal(body, &Data)
-	if err != nil {
-		return Data, err
-	}
+	for i, Token := range config.GoSimpConf.YtToken {
+		body, curlerr := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id="+strings.Join(VideoID, ",")+"&key="+Token, nil)
+		if curlerr != nil {
+			log.Error(curlerr)
+			continue
+		} else {
+			err := json.Unmarshal(body, &Data)
+			if err != nil {
+				return Data, err
+			}
 
-	return Data, nil
+			return Data, nil
+		}
+
+		if i == len(config.GoSimpConf.YtToken)-1 {
+			break
+		}
+	}
+	return engine.YtData{}, errors.New("exhaustion Token")
 }
 
 //ParseDuration Parse video duration
