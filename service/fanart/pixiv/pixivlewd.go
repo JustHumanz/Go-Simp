@@ -3,6 +3,7 @@ package main
 import (
 	"net/url"
 	"sync"
+	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/engine"
@@ -39,6 +40,7 @@ func CheckPixivLewd() {
 						}
 					}
 				}(&wg2)
+				time.Sleep(1 * time.Second)
 
 				go func(w *sync.WaitGroup) {
 					defer w.Done()
@@ -72,6 +74,7 @@ func CheckPixivLewd() {
 						}
 					}
 				}(&wg2)
+				time.Sleep(1 * time.Second)
 
 				go func(w *sync.WaitGroup) {
 					defer w.Done()

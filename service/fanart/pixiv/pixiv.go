@@ -137,6 +137,7 @@ func CheckPixiv() {
 						}
 					}
 				}(&wg2)
+				time.Sleep(1 * time.Second)
 
 				go func(w *sync.WaitGroup) {
 					defer w.Done()
@@ -171,6 +172,7 @@ func CheckPixiv() {
 					}
 				}(&wg2)
 
+				time.Sleep(1 * time.Second)
 				go func(w *sync.WaitGroup) {
 					defer w.Done()
 					if Member.TwitterHashtags != "" {
