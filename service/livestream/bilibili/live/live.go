@@ -178,7 +178,8 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 					"Start":  LiveBiliDB.Schedul,
 				}).Info("Past live stream")
 				engine.RemoveEmbed(strconv.Itoa(LiveBiliDB.Member.BiliRoomID), Bot)
-				LiveBiliDB.UpdateStatus(config.PastStatus)
+				LiveBiliDB.UpdateEnd(time.Now().In(loc)).
+					UpdateStatus(config.PastStatus)
 
 				err = LiveBiliDB.UpdateLiveBili()
 				if err != nil {
