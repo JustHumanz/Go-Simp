@@ -111,18 +111,17 @@ func (s *Server) ModuleList(ctx context.Context, in *ModuleData) (*Empty, error)
 }
 
 func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
-	log.WithFields(log.Fields{
-		"State": in.State,
-	}).Info("Update metric")
 	if in.State == config.FanartState {
 		var FanArt database.DataFanart
 		err := json.Unmarshal(in.MetricData, &FanArt)
 		if err != nil {
 			log.Error(err)
 		}
+
 		log.WithFields(log.Fields{
 			"Vtuber": FanArt.Member.EnName,
-		}).Info("Update Fanart")
+			"State":  in.State,
+		}).Info("Update Fanart metric")
 
 		metric.GetFanArt.WithLabelValues(
 			FanArt.Member.Name,
@@ -178,6 +177,12 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 		if err != nil {
 			log.Error(err)
 		}
+
+		log.WithFields(log.Fields{
+			"Vtuber": LiveData.Member.EnName,
+			"State":  in.State,
+		}).Info("Update Livestream metric")
+
 		if LiveData.State == config.YoutubeLive && !LiveData.Member.IsYtNill() {
 			metric.GetLive.WithLabelValues(
 				LiveData.Member.Name,
@@ -205,6 +210,12 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 		}
 
 		Time := LiveData.End.Sub(LiveData.Schedul).Minutes()
+
+		log.WithFields(log.Fields{
+			"Vtuber": LiveData.Member.EnName,
+			"State":  in.State,
+			"Time":   int(Time),
+		}).Info("Update past Livestream metric")
 
 		if LiveData.State == config.YoutubeLive && !LiveData.Member.IsYtNill() {
 			metric.GetFlyingHours.WithLabelValues(
