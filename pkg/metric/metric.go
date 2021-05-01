@@ -38,6 +38,14 @@ var (
 		},
 		[]string{"vtuber", "group", "state"},
 	)
+
+	GetFlyingHours = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: config.Get_Flying_Hours,
+			Help: "Get vtuber flying hours",
+		},
+		[]string{"vtuber", "group", "state"},
+	)
 )
 
 // Init will register a Prometheus metrics with the specified variables
@@ -47,5 +55,6 @@ func Init() {
 		GetSubs,
 		GetViews,
 		GetLive,
+		GetFlyingHours,
 	)
 }

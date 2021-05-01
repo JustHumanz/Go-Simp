@@ -197,6 +197,34 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 				"Twitch",
 			).Inc()
 		}
+	} else if in.State == config.PastStatus {
+		var LiveData database.LiveStream
+		err := json.Unmarshal(in.MetricData, &LiveData)
+		if err != nil {
+			log.Error(err)
+		}
+
+		Time := LiveData.Schedul.Sub(LiveData.End).Minutes()
+
+		if LiveData.State == config.YoutubeLive && !LiveData.Member.IsYtNill() {
+			metric.GetFlyingHours.WithLabelValues(
+				LiveData.Member.Name,
+				LiveData.Group.GroupName,
+				"Youtube",
+			).Add(Time)
+		} else if LiveData.State == config.BiliLive && !LiveData.Member.IsBiliNill() {
+			metric.GetFlyingHours.WithLabelValues(
+				LiveData.Member.Name,
+				LiveData.Group.GroupName,
+				"BiliBili",
+			).Add(Time)
+		} else if LiveData.State == config.TwitchLive {
+			metric.GetFlyingHours.WithLabelValues(
+				LiveData.Member.Name,
+				LiveData.Group.GroupName,
+				"Twitch",
+			).Add(Time)
+		}
 	}
 
 	return &Empty{}, nil
