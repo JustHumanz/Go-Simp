@@ -140,10 +140,11 @@ const (
 	SubsState   = "subs"
 
 	//Metric Query
-	Get_Fanart     = "get_fanart"
-	Get_Subscriber = "get_subscriber"
-	Get_Live       = "get_live"
-	Get_Viewers    = "get_viewers"
+	Get_Fanart       = "get_fanart"
+	Get_Subscriber   = "get_subscriber"
+	Get_Live         = "get_live"
+	Get_Viewers      = "get_viewers"
+	Get_Flying_Hours = "get_flying_hours"
 )
 
 //ConfigFile config file struct for config.toml

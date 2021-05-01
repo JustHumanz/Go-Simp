@@ -119,6 +119,11 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 			log.Error(err)
 		}
 
+		LiveBiliDB.
+			AddMember(Member).
+			AddGroup(Group).
+			SetState(config.BiliLive)
+
 		Status, err := engine.GetRoomStatus(Member.BiliRoomID)
 		if err != nil {
 			log.Error(err)
@@ -146,10 +151,7 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 					UpdateSchdule(ScheduledStart).
 					UpdateViewers(strconv.Itoa(Status.Data.RoomInfo.Online)).
 					UpdateThumbnail(Status.Data.RoomInfo.Cover).
-					UpdateTitle(Status.Data.RoomInfo.Title).
-					AddMember(Member).
-					AddGroup(Group).
-					SetState(config.BiliLive)
+					UpdateTitle(Status.Data.RoomInfo.Title)
 
 				err := LiveBiliDB.UpdateLiveBili()
 				if err != nil {
@@ -182,6 +184,18 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 				if err != nil {
 					log.Error(err)
 				}
+
+				if config.GoSimpConf.Metric {
+					bit, err := LiveBiliDB.MarshalBinary()
+					if err != nil {
+						log.Error(err)
+					}
+					gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+						MetricData: bit,
+						State:      config.PastStatus,
+					})
+				}
+
 			} else {
 				LiveBiliDB.UpdateViewers(strconv.Itoa(Status.Data.RoomInfo.Online))
 				err := LiveBiliDB.UpdateLiveBili()

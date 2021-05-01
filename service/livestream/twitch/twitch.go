@@ -187,6 +187,17 @@ func CheckTwitch() {
 						"VtuberName": Member.Name,
 					}).Info("Change Twitch status to Past")
 					engine.RemoveEmbed("Twitch"+Member.TwitchName, Bot)
+
+					if config.GoSimpConf.Metric {
+						bit, err := ResultDB.MarshalBinary()
+						if err != nil {
+							log.Error(err)
+						}
+						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+							MetricData: bit,
+							State:      config.PastStatus,
+						})
+					}
 				}
 			}
 		}
