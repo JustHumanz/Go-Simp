@@ -40,7 +40,7 @@ func CheckSpace(Data *database.LiveStream, limit string) {
 
 		Data.AddVideoID(video.Bvid).SetType(Videotype).
 			UpdateTitle(video.Title).
-			UpdateThumbnail("https:" + video.Pic).UpdateSchdule(time.Unix(int64(video.Created), 0).In(loc)).
+			UpdateThumbnail(video.Pic).UpdateSchdule(time.Unix(int64(video.Created), 0).In(loc)).
 			UpdateViewers(strconv.Itoa(video.Play)).UpdateLength(video.Length).SetState(config.SpaceBili)
 		new, id := Data.CheckVideo()
 		if new {
@@ -49,7 +49,6 @@ func CheckSpace(Data *database.LiveStream, limit string) {
 			}).Info("New video uploaded")
 
 			Data.InputSpaceVideo()
-			video.Pic = "https:" + video.Pic
 			video.VideoType = Videotype
 			engine.SendLiveNotif(Data, Bot)
 		} else {
