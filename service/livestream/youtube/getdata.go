@@ -283,6 +283,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 					Items := Data.Items[0]
 
 					YoutubeData.UpdateEnd(Items.LiveDetails.EndTime).
+						UpdateViewers(Items.Statistics.ViewCount).
 						UpdateLength(durafmt.Parse(ParseDuration(Items.ContentDetails.Duration)).String()).
 						SetState(config.YoutubeLive).
 						AddMember(Member).
