@@ -5681,7 +5681,10 @@
             "GroupIcon":"https://cdn.humanz.moe/MyHolo.png",
             "GroupChannel": {
                "Youtube": [
-                  null
+                  {
+                     "ChannelID": "UCS1IqPUpSTzxuCvoPLqocFA",
+                     "Region":""
+                  }
                ],
                "BiliBili": [
                   null
@@ -5709,75 +5712,6 @@
                      "Twitch_Username":""
                   },
                   "Region":"MY",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Mari",
-                  "EN_Name":"Marica Bellerose",
-                  "JP_Name":"ベレローセマリカ",
-                  "Twitter":{
-                     "Twitter_Fanart":"#MariCanvas",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"maricabellerose"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UC3TxjUjyzodZ35pWUFCL9wQ"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"AU",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Mana",
-                  "EN_Name":"Manaka Umio",
-                  "JP_Name":"海音まなか",
-                  "Twitter":{
-                     "Twitter_Fanart":"#uminoart",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"manakaumio"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCvCJI3c40l9aZGpT8wIAX0w"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"MY",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Miori",
-                  "EN_Name":"Miori Celesta",
-                  "JP_Name":"セレスタミオリ",
-                  "Twitter":{
-                     "Twitter_Fanart":"#miorillust",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"mioricelesta"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCyKsg-57XC9pyHbP7v3kCPQ"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"US",
                   "Fanbase":""
                }
             ]
