@@ -1,3 +1,13 @@
+v3.8.0
+- Change Youtube workflow
+- Add Calli lewd hashtag
+- Add Metric
+- Add Prometheus
+
+v3.7.0
+- Add dark mode on go-simp web
+- Add search bar on go-simp web
+
 v3.6.1-beta
 - Update rest-api
 - Add rest-api doc
