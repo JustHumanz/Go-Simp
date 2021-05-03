@@ -270,15 +270,15 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						engine.SendLiveNotif(NewYoutubeData, Bot)
 					}
 				} else if Update {
-					Data, err := YtAPI([]string{ID})
-					if err != nil {
-						log.Error(err)
-					}
-
 					log.WithFields(log.Fields{
 						"Group":  Group.GroupName,
 						"Member": Member.Name,
 					}).Info("Update Youtube Channels")
+
+					Data, err := YtAPI([]string{ID})
+					if err != nil {
+						log.Error(err)
+					}
 
 					Items := Data.Items[0]
 
@@ -395,10 +395,19 @@ func YtAPI(VideoID []string) (engine.YtData, error) {
 	)
 
 	for i, Token := range config.GoSimpConf.YtToken {
+		if exTknList != nil {
+			for _, v := range exTknList {
+				if v == Token {
+					continue
+				}
+			}
+		}
 		body, curlerr := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id="+strings.Join(VideoID, ",")+"&key="+Token, nil)
 		if curlerr != nil {
+			if curlerr.Error() == "403 Forbidden" {
+				exTknList = append(exTknList, Token)
+			}
 			log.Error(curlerr)
-			continue
 		} else {
 			err := json.Unmarshal(body, &Data)
 			if err != nil {

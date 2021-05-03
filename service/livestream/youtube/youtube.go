@@ -82,13 +82,16 @@ func main() {
 	c.AddFunc(config.YoutubeCheckChannel, CheckYtSchedule)
 	c.AddFunc(config.YoutubeCheckUpcomingByTime, CheckYtByTime)
 	c.AddFunc(config.YoutubePrivateSlayer, CheckPrivate)
-
+	c.AddFunc("0 */13 * * *", func() {
+		exTknList = nil
+	})
 	log.Info("Enable " + ModuleState)
 	go pilot.RunHeartBeat(gRCPconn, ModuleState)
 	runfunc.Run(Bot)
 }
 
 var Counter = 1
+var exTknList []string
 
 func CheckYtSchedule() {
 	Update := false
