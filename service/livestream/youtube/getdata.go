@@ -396,10 +396,15 @@ func YtAPI(VideoID []string) (engine.YtData, error) {
 
 	for i, Token := range config.GoSimpConf.YtToken {
 		if exTknList != nil {
+			isExhaustion := false
 			for _, v := range exTknList {
 				if v == Token {
-					continue
+					isExhaustion = true
 				}
+			}
+
+			if isExhaustion {
+				continue
 			}
 		}
 		body, curlerr := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id="+strings.Join(VideoID, ",")+"&key="+Token, nil)
