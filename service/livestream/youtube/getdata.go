@@ -106,7 +106,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 	}
 
 	for _, Member := range Group.Members {
-		if Member.YoutubeID != "" {
+		if !Member.IsYtNill() {
 			VideoID := engine.GetRSS(Member.YoutubeID)
 			for _, ID := range VideoID {
 				YoutubeData, err := Member.CheckYoutubeVideo(ID)
@@ -128,7 +128,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 					log.WithFields(log.Fields{
 						"Group":  Group.GroupName,
 						"Member": Member.Name,
-					}).Info("Checking Youtube Channels")
+					}).Info("Checking New VideoID")
 
 					Items := Data.Items[0]
 
@@ -271,9 +271,10 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 					}
 				} else if Update {
 					log.WithFields(log.Fields{
-						"Group":  Group.GroupName,
-						"Member": Member.Name,
-					}).Info("Update Youtube Channels")
+						"Group":   Group.GroupName,
+						"Member":  Member.Name,
+						"VideoID": ID,
+					}).Info("Update VideoID")
 
 					Data, err := YtAPI([]string{ID})
 					if err != nil {

@@ -209,12 +209,17 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 			log.Error(err)
 		}
 
+		if LiveData.End.IsZero() {
+			return &Empty{}, nil
+		}
+
 		Time := LiveData.End.Sub(LiveData.Schedul).Minutes()
 
 		log.WithFields(log.Fields{
-			"Vtuber": LiveData.Member.EnName,
-			"State":  in.State,
-			"Time":   int(Time),
+			"Vtuber":  LiveData.Member.EnName,
+			"State":   in.State,
+			"Time":    int(Time),
+			"VideoID": LiveData.VideoID,
 		}).Info("Update past Livestream metric")
 
 		if LiveData.State == config.YoutubeLive && !LiveData.Member.IsYtNill() {

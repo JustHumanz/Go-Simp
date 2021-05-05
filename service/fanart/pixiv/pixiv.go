@@ -310,7 +310,7 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 					Body := Illusts["body"].(map[string]interface{})
 					Tags := Body["tags"].(map[string]interface{})
 					Img := Body["urls"].(map[string]interface{})
-					FixImg := Img["original"].(string)
+					FixImg := Img["regular"].(string)
 
 					usrbyte, err := network.Curl(config.PixivUserEnd+Tags["authorId"].(string), nil)
 					if err != nil {
@@ -373,7 +373,7 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 					Body := Illusts["body"].(map[string]interface{})
 					Tags := Body["tags"].(map[string]interface{})
 					Img := Body["urls"].(map[string]interface{})
-					FixImg := Img["original"].(string)
+					FixImg := Img["regular"].(string)
 
 					usrbyte, err := network.Curl(config.PixivUserEnd+Tags["authorId"].(string), nil)
 					if err != nil {
