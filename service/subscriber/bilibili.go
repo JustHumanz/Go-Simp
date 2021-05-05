@@ -71,72 +71,74 @@ func CheckBiliBili() {
 				if err != nil {
 					log.Error(err)
 				}
-				if BiliFollowDB.BiliFollow != bilistate.Follow.Data.Follower && bilistate.Follow.Data.Follower != 0 {
-					if bilistate.Follow.Data.Follower <= 10000 {
-						for i := 0; i < 1000001; i += 100000 {
-							if i == bilistate.Follow.Data.Follower && bilistate.Follow.Data.Follower != 0 {
-								Avatar := Name.BiliBiliAvatar
-								Color, err := engine.GetColor(config.TmpDir, Avatar)
-								if err != nil {
-									log.Error(err)
+				if bilistate.Follow.Data.Follower != 0 {
+					if BiliFollowDB.BiliFollow != bilistate.Follow.Data.Follower {
+						if bilistate.Follow.Data.Follower <= 10000 {
+							for i := 0; i < 1000001; i += 100000 {
+								if i == bilistate.Follow.Data.Follower {
+									Avatar := Name.BiliBiliAvatar
+									Color, err := engine.GetColor(config.TmpDir, Avatar)
+									if err != nil {
+										log.Error(err)
+									}
+									SendNude(engine.NewEmbed().
+										SetAuthor(Group.GroupName, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
+										SetTitle(engine.FixName(Name.EnName, Name.JpName)).
+										SetThumbnail(config.BiliBiliIMG).
+										SetDescription("Congratulation for "+engine.NearestThousandFormat(float64(i))+" followers").
+										SetImage(Avatar).
+										AddField("Viewers", strconv.Itoa(bilistate.LikeView.Data.Archive.View)).
+										AddField("Videos", strconv.Itoa(bilistate.Videos)).
+										SetURL("https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
+										InlineAllFields().
+										SetColor(Color).MessageEmbed, Group, Name)
 								}
-								SendNude(engine.NewEmbed().
-									SetAuthor(Group.GroupName, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
-									SetTitle(engine.FixName(Name.EnName, Name.JpName)).
-									SetThumbnail(config.BiliBiliIMG).
-									SetDescription("Congratulation for "+engine.NearestThousandFormat(float64(i))+" followers").
-									SetImage(Avatar).
-									AddField("Viewers", strconv.Itoa(bilistate.LikeView.Data.Archive.View)).
-									AddField("Videos", strconv.Itoa(bilistate.Videos)).
-									SetURL("https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
-									InlineAllFields().
-									SetColor(Color).MessageEmbed, Group, Name)
 							}
-						}
-					} else {
-						for i := 0; i < 10001; i += 1000 {
-							if i == bilistate.Follow.Data.Follower && bilistate.Follow.Data.Follower != 0 {
-								Avatar := Name.BiliBiliAvatar
-								Color, err := engine.GetColor(config.TmpDir, Avatar)
-								if err != nil {
-									log.Error(err)
+						} else {
+							for i := 0; i < 10001; i += 1000 {
+								if i == bilistate.Follow.Data.Follower {
+									Avatar := Name.BiliBiliAvatar
+									Color, err := engine.GetColor(config.TmpDir, Avatar)
+									if err != nil {
+										log.Error(err)
+									}
+									SendNude(engine.NewEmbed().
+										SetAuthor(Group.GroupName, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
+										SetTitle(engine.FixName(Name.EnName, Name.JpName)).
+										SetThumbnail(config.BiliBiliIMG).
+										SetDescription("Congratulation for "+engine.NearestThousandFormat(float64(i))+" followers").
+										SetImage(Avatar).
+										AddField("Views", engine.NearestThousandFormat(float64(bilistate.LikeView.Data.Archive.View))).
+										AddField("Videos", engine.NearestThousandFormat(float64(bilistate.Videos))).
+										SetURL("https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
+										InlineAllFields().
+										SetColor(Color).MessageEmbed, Group, Name)
 								}
-								SendNude(engine.NewEmbed().
-									SetAuthor(Group.GroupName, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
-									SetTitle(engine.FixName(Name.EnName, Name.JpName)).
-									SetThumbnail(config.BiliBiliIMG).
-									SetDescription("Congratulation for "+engine.NearestThousandFormat(float64(i))+" followers").
-									SetImage(Avatar).
-									AddField("Views", engine.NearestThousandFormat(float64(bilistate.LikeView.Data.Archive.View))).
-									AddField("Videos", engine.NearestThousandFormat(float64(bilistate.Videos))).
-									SetURL("https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
-									InlineAllFields().
-									SetColor(Color).MessageEmbed, Group, Name)
 							}
 						}
 					}
-				}
-				log.WithFields(log.Fields{
-					"Past BiliBili Follower":    BiliFollowDB.BiliFollow,
-					"Current BiliBili Follower": bilistate.Follow.Data.Follower,
-					"Vtuber":                    Name.EnName,
-				}).Info("Update BiliBili Follower")
+					log.WithFields(log.Fields{
+						"Past BiliBili Follower":    BiliFollowDB.BiliFollow,
+						"Current BiliBili Follower": bilistate.Follow.Data.Follower,
+						"Vtuber":                    Name.EnName,
+					}).Info("Update BiliBili Follower")
 
-				BiliFollowDB.SetMember(Name).SetGroup(Group).
-					UpBiliFollow(bilistate.Follow.Data.Follower).
-					UpBiliVideo(bilistate.Videos).
-					UpBiliViews(bilistate.LikeView.Data.Archive.View).
-					UpdateState(config.BiliLive).UpdateSubs()
+					BiliFollowDB.SetMember(Name).SetGroup(Group).
+						UpBiliFollow(bilistate.Follow.Data.Follower).
+						UpBiliVideo(bilistate.Videos).
+						UpBiliViews(bilistate.LikeView.Data.Archive.View).
+						UpdateState(config.BiliLive).UpdateSubs()
 
-				bin, err := BiliFollowDB.MarshalBinary()
-				if err != nil {
-					log.Error(err)
-				}
-				if config.GoSimpConf.Metric {
-					gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-						MetricData: bin,
-						State:      config.SubsState,
-					})
+					bin, err := BiliFollowDB.MarshalBinary()
+					if err != nil {
+						log.Error(err)
+					}
+					if config.GoSimpConf.Metric {
+						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+							MetricData: bin,
+							State:      config.SubsState,
+						})
+					}
 				}
 			}
 		}
