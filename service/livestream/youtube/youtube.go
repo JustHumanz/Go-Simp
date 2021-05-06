@@ -115,7 +115,7 @@ func CheckYtSchedule() {
 func CheckYtByTime() {
 	for _, Group := range VtubersData.VtuberData {
 		for _, Member := range Group.Members {
-			if Member.YoutubeID != "" {
+			if Member.YoutubeID != "" && Member.Active() {
 				log.WithFields(log.Fields{
 					"Vtuber": Member.EnName,
 					"Group":  Group.GroupName,

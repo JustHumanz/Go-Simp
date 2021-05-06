@@ -89,7 +89,7 @@ func CheckLiveSchedule() {
 		var wg sync.WaitGroup
 		if GroupData.GroupName != "Hololive" {
 			for i, MemberData := range GroupData.Members {
-				if MemberData.BiliRoomID != 0 {
+				if MemberData.BiliRoomID != 0 && MemberData.Active() {
 					wg.Add(1)
 					log.WithFields(log.Fields{
 						"Group":  GroupData.GroupName,

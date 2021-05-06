@@ -100,7 +100,7 @@ func main() {
 func CheckTwitch() {
 	for _, Group := range VtubersData.VtuberData {
 		for _, Member := range Group.Members {
-			if Member.TwitchName != "" {
+			if Member.TwitchName != "" && Member.Active() {
 				log.WithFields(log.Fields{
 					"Group":      Group.GroupName,
 					"VtuberName": Member.Name,

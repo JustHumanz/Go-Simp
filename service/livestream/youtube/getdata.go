@@ -106,7 +106,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 	}
 
 	for _, Member := range Group.Members {
-		if !Member.IsYtNill() {
+		if !Member.IsYtNill() && Member.Active() {
 			VideoID := engine.GetRSS(Member.YoutubeID)
 			for _, ID := range VideoID {
 				YoutubeData, err := Member.CheckYoutubeVideo(ID)
