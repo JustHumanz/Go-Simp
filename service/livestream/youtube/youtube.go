@@ -99,7 +99,7 @@ func CheckYtSchedule() {
 		wg sync.WaitGroup
 	)
 
-	if Counter == 3 {
+	if Counter == 4 {
 		Update = true
 		Counter = 1
 	}
