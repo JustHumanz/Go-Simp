@@ -24,7 +24,7 @@ var (
 )
 
 func Start() {
-	configfile, err := config.ReadConfig("../../config.toml")
+	configfile, err := config.ReadConfig("./config.toml")
 	if err != nil {
 		log.Panic(err)
 	}
