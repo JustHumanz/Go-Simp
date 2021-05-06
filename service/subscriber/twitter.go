@@ -13,7 +13,7 @@ import (
 func CheckTwitter() {
 	for _, Group := range Payload.VtuberData {
 		for _, Name := range Group.Members {
-			if Name.TwitterName != "" {
+			if Name.TwitterName != "" && Name.Active() {
 				Twitter, err := Name.GetTwitterFollow()
 				if err != nil {
 					log.Error(err)

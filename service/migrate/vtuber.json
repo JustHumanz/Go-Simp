@@ -23,7 +23,8 @@
                   "Twitch_Username":""
                },
                "Region":"JP",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Parerun",
@@ -46,7 +47,8 @@
                   "Twitch_Username":""
                },
                "Region":"JP",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"               
             },
             {
                "Name":"Kohi",
@@ -69,7 +71,8 @@
                   "Twitch_Username":""
                },
                "Region":"JP",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Nononon",
@@ -92,7 +95,8 @@
                   "Twitch_Username":""
                },
                "Region":"JP",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Inactive"
             },
             {
                "Name":"Nana",
@@ -115,7 +119,8 @@
                   "Twitch_Username":""
                },
                "Region":"JP",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Ui-mama",
@@ -138,7 +143,8 @@
                   "Twitch_Username":""
                },
                "Region":"JP",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Kotone",
@@ -161,7 +167,8 @@
                   "Twitch_Username":""
                },
                "Region":"JP",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"MafuMafu",
@@ -184,7 +191,8 @@
                   "Twitch_Username":""
                },
                "Region":"JP",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Nano",
@@ -207,7 +215,8 @@
                   "Twitch_Username":""
                },
                "Region":"JP",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Tama",
@@ -230,7 +239,8 @@
                   "Twitch_Username":""
                },
                "Region":"JP",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Tenshi",
@@ -253,7 +263,8 @@
                   "Twitch_Username":""
                },
                "Region":"JP",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Ririsya",
@@ -276,7 +287,8 @@
                   "Twitch_Username":""
                },
                "Region":"JP",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Yayanehi",
@@ -299,7 +311,8 @@
                   "Twitch_Username":""
                },
                "Region":"JP",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Hamu",
@@ -322,7 +335,8 @@
                   "Twitch_Username":"shibuyahal"
                },
                "Region":"JP",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Mea",
@@ -345,7 +359,8 @@
                   "Twitch_Username":""
                },
                "Region":"JP",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Pochimaru",
@@ -368,7 +383,32 @@
                   "Twitch_Username":""
                },
                "Region":"JP",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
+            },
+            {
+               "Name":"Nabichan",
+               "EN_Name":"Aoi Nabi",
+               "JP_Name":"蒼彩なび",
+               "Twitter":{
+                  "Twitter_Fanart":"#Nabillust",
+                  "Twitter_Lewd":"",
+                  "Twitter_Username":"nab0i"
+               },
+               "Youtube":{
+                  "Yt_ID":"UCzKkwB84Y0ql0EvyOWRSkEw"
+               },
+               "BiliBili":{
+                  "BiliBili_Fanart":"",
+                  "BiliBili_ID":0,
+                  "BiliRoom_ID":0
+               },
+               "Twitch":{
+                  "Twitch_Username":""
+               },
+               "Region":"KR",
+               "Fanbase":"Nabigators",
+               "Status": "Active"
             },            
             {
                "Name":"Artia",
@@ -391,7 +431,8 @@
                   "Twitch_Username":""
                },
                "Region":"CN",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Inactive"
             },
             {
                "Name":"Civia",
@@ -414,7 +455,8 @@
                   "Twitch_Username":""
                },
                "Region":"CN",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Inactive"
             },
             {
                "Name":"Yogiri",
@@ -437,7 +479,8 @@
                   "Twitch_Username":""
                },
                "Region":"CN",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Inactive"
             },
             {
                "Name":"Kuromomo",
@@ -460,7 +503,8 @@
                   "Twitch_Username":""
                },
                "Region":"CN",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Inactive"
             },
             {
                "Name":"Doris",
@@ -483,7 +527,8 @@
                   "Twitch_Username":""
                },
                "Region":"CN",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Inactive"
             },
             {
                "Name":"Rosalyn",
@@ -506,7 +551,8 @@
                   "Twitch_Username":""
                },
                "Region":"CN",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Inactive"
             },
             {
                "Name":"Kuriri",
@@ -529,30 +575,32 @@
                   "Twitch_Username":""
                },
                "Region":"CN",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name": "Ciyana",
                "EN_Name": "Ciyana",
                "JP_Name": "",
                "Twitter":{
-               "Twitter_Fanart": "",
-               "Twitter_Lewd": "",
-               "Twitter_Username": "_ciyana"
+                  "Twitter_Fanart": "",
+                  "Twitter_Lewd": "",
+                  "Twitter_Username": "_ciyana"
                },
                "Youtube":{
-               "Yt_ID": ""
+                  "Yt_ID": ""
                },
                "BiliBili":{
-               "BiliBili_Fanart": "希梦思",
-               "BiliBili_ID": 1926156228,
-               "BiliRoom_ID": 22608112
+                  "BiliBili_Fanart": "希梦思",
+                  "BiliBili_ID": 1926156228,
+                  "BiliRoom_ID": 22608112
                },
                "Twitch":{
-               "Twitch_Username": ""
+                  "Twitch_Username": ""
                },
                "Region": "CN",
-               "Fanbase": ""
+               "Fanbase": "",
+               "Status": "Active"
             },
             {
                "Name":"Kanna",
@@ -575,7 +623,8 @@
                   "Twitch_Username":""
                },
                "Region":"ID",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Jaret",
@@ -598,7 +647,8 @@
                   "Twitch_Username":""
                },
                "Region":"ID",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Ameka",
@@ -621,7 +671,8 @@
                   "Twitch_Username":""
                },
                "Region":"EN",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"lolnani",
@@ -644,7 +695,8 @@
                   "Twitch_Username":"lolnani"
                },
                "Region":"EN",
-               "Fanbase":"Ducks"
+               "Fanbase":"Ducks",
+               "Status": "Active"
             },
             {
                "Name":"Juniper",
@@ -667,7 +719,8 @@
                   "Twitch_Username":"juniperactias"
                },
                "Region":"EN",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Haruchi",
@@ -690,7 +743,8 @@
                   "Twitch_Username":"harukakaribu"
                },
                "Region":"EN",
-               "Fanbase":"Cultists"
+               "Fanbase":"Cultists",
+               "Status": "Active"
             },
             {
                "Name":"Artemis",
@@ -713,7 +767,8 @@
                   "Twitch_Username":"artemisoftheblue"
                },
                "Region":"EN",
-               "Fanbase":"Bottom Feeders"
+               "Fanbase":"Bottom Feeders",
+               "Status": "Active"
             },
             {
                "Name":"moenaomii",
@@ -736,7 +791,8 @@
                   "Twitch_Username":"moenaomii"
                },
                "Region":"EN",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Leaf",
@@ -759,7 +815,8 @@
                   "Twitch_Username":"Leaflit"
                },
                "Region":"EN",
-               "Fanbase":"Hoomans"
+               "Fanbase":"Hoomans",
+               "Status": "Active"
             },
             {
                "Name":"Wolfychu",
@@ -782,7 +839,8 @@
                   "Twitch_Username":"wolfychulive"
                },
                "Region":"AU",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Lumituber",
@@ -805,7 +863,8 @@
                   "Twitch_Username":"lumituber"
                },
                "Region":"FI",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Moomoo",
@@ -828,7 +887,8 @@
                   "Twitch_Username":"carmenthemoomoo"
                },
                "Region":"UK",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Snuffy",
@@ -851,7 +911,8 @@
                   "Twitch_Username":"snuffy"
                },
                "Region":"US",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Bao",
@@ -874,7 +935,8 @@
                   "Twitch_Username":"hikarustation"
                },
                "Region":"US",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Lyri",
@@ -897,7 +959,8 @@
                   "Twitch_Username":"lyrica_ch"
                },
                "Region":"PH",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             },
             {
                "Name":"Kira",
@@ -920,7 +983,8 @@
                   "Twitch_Username":"kiraomori"
                },
                "Region":"PH",
-               "Fanbase":""
+               "Fanbase":"",
+               "Status": "Active"
             }
          ]
       },
@@ -958,7 +1022,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Charlotte",
@@ -981,7 +1046,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Mary",
@@ -1004,7 +1070,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Mico",
@@ -1027,7 +1094,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Neru",
@@ -1050,7 +1118,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Ichika",
@@ -1073,7 +1142,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Rantarou",
@@ -1096,7 +1166,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Kuku",
@@ -1119,7 +1190,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Yunohara",
@@ -1142,7 +1214,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Shiromiya",
@@ -1165,7 +1238,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Natsumi",
@@ -1188,7 +1262,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Hikari",
@@ -1211,7 +1286,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Rui",
@@ -1234,7 +1310,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Rukako",
@@ -1257,7 +1334,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Mia",
@@ -1280,7 +1358,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Tirol",
@@ -1303,7 +1382,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Uge",
@@ -1326,7 +1406,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Kanon",
@@ -1349,7 +1430,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Anko",
@@ -1372,7 +1454,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Komori",
@@ -1395,7 +1478,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Wat",
@@ -1418,7 +1502,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Shishio",
@@ -1441,7 +1526,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Rene",
@@ -1464,7 +1550,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Anna",
@@ -1487,7 +1574,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                }
             ]
          },
@@ -1532,7 +1620,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Moona",
@@ -1555,7 +1644,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Iofi",
@@ -1578,7 +1668,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Ollie",
@@ -1601,7 +1692,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Anya",
@@ -1624,7 +1716,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Reine",
@@ -1647,7 +1740,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"FBK",
@@ -1670,7 +1764,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Koronen",
@@ -1693,7 +1788,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Matsuri",
@@ -1716,7 +1812,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Aqua",
@@ -1739,7 +1836,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Pekora",
@@ -1762,7 +1860,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Danchou",
@@ -1785,7 +1884,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Senchou",
@@ -1808,7 +1908,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Haato",
@@ -1831,7 +1932,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Sheep",
@@ -1854,7 +1956,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Kaichou",
@@ -1877,7 +1980,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Choco-sensei",
@@ -1900,7 +2004,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Okayun",
@@ -1923,7 +2028,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Kanatan",
@@ -1946,7 +2052,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Subaru",
@@ -1969,7 +2076,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Sora",
@@ -1992,7 +2100,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Miko-chi",
@@ -2015,7 +2124,8 @@
                      "Twitch_Username":"sakuramiko_hololive"
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Mio",
@@ -2038,7 +2148,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Shishiron",
@@ -2061,7 +2172,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Polka",
@@ -2084,7 +2196,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Lamy",
@@ -2107,7 +2220,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Nenechi",
@@ -2130,7 +2244,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Sui-chan",
@@ -2153,7 +2268,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Merumeru",
@@ -2176,7 +2292,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"AkiRose",
@@ -2199,7 +2316,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Ayame",
@@ -2222,7 +2340,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Shion",
@@ -2245,7 +2364,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Luna-tan",
@@ -2268,7 +2388,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Fuu-tan",
@@ -2291,7 +2412,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Towa-sama",
@@ -2314,7 +2436,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Roboco",
@@ -2337,7 +2460,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"AZKi",
@@ -2360,7 +2484,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Gura",
@@ -2383,7 +2508,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"EN",
-                  "Fanbase":"Shrimps"
+                  "Fanbase":"Shrimps",
+                  "Status": "Active"
                },
                {
                   "Name":"Ame",
@@ -2406,7 +2532,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"EN",
-                  "Fanbase":"Investigators"
+                  "Fanbase":"Investigators",
+                  "Status": "Active"
                },
                {
                   "Name":"Calli",
@@ -2429,7 +2556,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"EN",
-                  "Fanbase":"Dead Beats"
+                  "Fanbase":"Dead Beats",
+                  "Status": "Active"
                },
                {
                   "Name":"Kusotori",
@@ -2452,7 +2580,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"EN",
-                  "Fanbase":"KFP employees"
+                  "Fanbase":"KFP employees",
+                  "Status": "Active"
                },
                {
                   "Name":"Ina",
@@ -2475,7 +2604,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"EN",
-                  "Fanbase":"Tentacults"
+                  "Fanbase":"Tentacults",
+                  "Status": "Active"
                },
                {
                   "Name":"Rushia",
@@ -2498,7 +2628,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                }
             ]
          },
@@ -2538,7 +2669,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Miyabin",
@@ -2561,7 +2693,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Kiracchi",
@@ -2584,7 +2717,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Aruran",
@@ -2607,7 +2741,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Ricchan",
@@ -2630,7 +2765,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Roberu",
@@ -2653,7 +2789,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Temma",
@@ -2676,7 +2813,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Astel",
@@ -2699,7 +2837,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Eroga",
@@ -2722,7 +2861,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Shien",
@@ -2745,7 +2885,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                }
             ]
          },
@@ -2797,7 +2938,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Cleaire",
@@ -2820,7 +2962,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Debiru",
@@ -2843,7 +2986,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Alice",
@@ -2866,7 +3010,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Noraneko",
@@ -2889,7 +3034,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Mito-chan",
@@ -2912,7 +3058,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Shizurin",
@@ -2935,8 +3082,345 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
+               },               
+               {
+                  "Name":"Chihiro",
+                  "EN_Name":"Yuki Chihiro",
+                  "JP_Name":"勇気ちひろ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#ちーあーと",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"Chihiro_yuki23"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCLO9QDxVL4bnvRRsz6K4bsQ"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
                },
+               {
+                  "Name":"Elu",
+                  "EN_Name":"Elu the Elf",
+                  "JP_Name":"エルフのえる",
+                  "Twitter":{
+                     "Twitter_Fanart":"#えるの絵だよ",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"Elu_World"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCYKP16oMX9KKPbrNgo_Kgag"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Hajiki",
+                  "EN_Name":"Shibuya Hajime",
+                  "JP_Name":"渋谷ハジメ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#ピク渋",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"sibuya_hajime"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCeK9HFcRZoTrvqcUCtccMoQ"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"Shibumin",
+                  "Status": "Active"
+               },               
+               {
+                  "Name":"Aki-kun",
+                  "EN_Name":"Suzuya Aki",
+                  "JP_Name":"鈴谷アキ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#アキくんちゃんアート",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"aki_suzuya"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCpnvhOIJ6BN-vPkYU9ls-Eg"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Moira-sama",
+                  "EN_Name":"Moira",
+                  "JP_Name":"モイラ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#もいもいらすと",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"Moiramoimoimoi"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCvmppcdYf4HOv-tFQhHHJMA"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Gakkun",
+                  "EN_Name":"Fushimi Gaku",
+                  "JP_Name":"伏見ガク",
+                  "Twitter":{
+                     "Twitter_Fanart":"#おはガク",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"gaku_fushimi"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCXU7YYxy_iQd3ulXyO-zC2w"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Mugi-mugi",
+                  "EN_Name":"Ienaga Mugi",
+                  "JP_Name":"家長むぎ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#むぎあーと",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"ienaga_mugi23"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UC_GCs6GARLxEHxy1w40d6VQ"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":436596837,
+                     "BiliRoom_ID":21463227
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Kaza-chan",
+                  "EN_Name":"Morinaka Kazaki",
+                  "JP_Name":"森中花咲",
+                  "Twitter":{
+                     "Twitter_Fanart":"#森中びじゅつかん",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"KazakiMorinaka"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCtpB6Bvhs1Um93ziEDACQ8g"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },                                  
+               {
+                  "Name":"Utako",
+                  "EN_Name":"Suzuka Utako",
+                  "JP_Name":"鈴鹿詩子",
+                  "Twitter":{
+                     "Twitter_Fanart":"#詩子あーと",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"suzukautako"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCwokZsOK_uEre70XayaFnzA"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":458154144,
+                     "BiliRoom_ID":21575231
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Ichigo",
+                  "EN_Name":"Ushimi Ichigo",
+                  "JP_Name":"宇志海いちご",
+                  "Twitter":{
+                     "Twitter_Fanart":"#いちごのあとりえ",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"ushimi_ichigo"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCmUjjW5zF1MMOhYUwwwQv9Q"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Ichigo",
+                  "EN_Name":"Ushimi Ichigo",
+                  "JP_Name":"宇志海いちご",
+                  "Twitter":{
+                     "Twitter_Fanart":"#いちごのあとりえ",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"ushimi_ichigo"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCmUjjW5zF1MMOhYUwwwQv9Q"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Gilzaren",
+                  "EN_Name":"Gilzaren III",
+                  "JP_Name":"ギルザレン",
+                  "Twitter":{
+                     "Twitter_Fanart":"#ギルザレン画廊",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"Gilzaren_III"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCUzJ90o1EjqUbk2pBAy0_aw"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Youko",
+                  "EN_Name":"Akabane Youko",
+                  "JP_Name":"赤羽葉子",
+                  "Twitter":{
+                     "Twitter_Fanart":"#赤羽絵葉書",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"Youko_Akabane"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCBi8YaVyZpiKWN3_Z0dCTfQ"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Ririmu",
+                  "EN_Name":"Makaino Ririmu",
+                  "JP_Name":"魔界ノりりむ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#りりむとおえかき",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"makaino_ririmu"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UC9EjSJ8pvxtvPdxLOElv73w"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },                                                                                          
                {
                   "Name":"Riri",
                   "EN_Name":"Yuuhi Riri",
@@ -2958,7 +3442,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Hima-chan",
@@ -2981,7 +3466,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Rion",
@@ -3004,7 +3490,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Doge",
@@ -3027,7 +3514,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Sara",
@@ -3050,490 +3538,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Tsumugu",
-                  "EN_Name":"Kataribe Tsumugu",
-                  "JP_Name":"語部紡",
-                  "Twitter":{
-                     "Twitter_Fanart":"#い絵ーい",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"KataribeTsumugu"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCufQu4q65z63IgE4cfKs1BQ"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Malmal",
-                  "EN_Name":"Ars Almal",
-                  "JP_Name":"アルス・アルマル",
-                  "Twitter":{
-                     "Twitter_Fanart":"#マル描いてちょんっ",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"ars_almal"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCdpUojq0KWZCN9bxXnZwz5w"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Shiishii",
-                  "EN_Name":"Shiina Yuika",
-                  "JP_Name":"椎名唯華",
-                  "Twitter":{
-                     "Twitter_Fanart":"#しいなーと",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"yuika_siina"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UC_4tXjqecqox5Uc05ncxpxg"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Mikoto",
-                  "EN_Name":"Mikoto Rindou",
-                  "JP_Name":"りんどうみこと",
-                  "Twitter":{
-                     "Twitter_Fanart":"#尊絵巻",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"rindoumikoto"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCPvGypSgfDkVe7JG2KygK7A"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Meiji",
-                  "EN_Name":"Warabeda Meiji",
-                  "JP_Name":"童田明治",
-                  "Twitter":{
-                     "Twitter_Fanart":"#いめいじー",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"warabeda_meiji"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCveZ9Ic1VtcXbsyaBgxPMvg"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Sorahoshi",
-                  "EN_Name":"Sorahoshi Kirame",
-                  "JP_Name":"空星きらめ",
-                  "Twitter":{
-                     "Twitter_Fanart":"#きら名画",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"kirame_2434"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UC_82HBGtvwN1hcGeOGHzUBQ"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Rei",
-                  "EN_Name":"Kenmochi Toya",
-                  "JP_Name":"剣持刀也",
-                  "Twitter":{
-                     "Twitter_Fanart":"#金剛力也像",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"rei_Toya_rei"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCv1fFr156jc65EMiLbaLImw"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Toko-chan",
-                  "EN_Name":"Inui Toko",
-                  "JP_Name":"戌亥とこ",
-                  "Twitter":{
-                     "Twitter_Fanart":"#いぬいらすと",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"inui_toko"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCXRlIK3Cw_TJIQC5kSJJQMg"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Kana-Kana",
-                  "EN_Name":"Kanae",
-                  "JP_Name":"叶",
-                  "Twitter":{
-                     "Twitter_Fanart":"#かな絵",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"Kanae_2434"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCspv01oxUFf_MTSipURRhkA"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":434563934,
-                     "BiliRoom_ID":21449068
-                  },
-                  "Twitch":{
-                     "Twitch_Username":"kanae_2434"
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Saki-chan",
-                  "EN_Name":"Sasaki Saku",
-                  "JP_Name":"笹木 咲",
-                  "Twitter":{
-                     "Twitter_Fanart":"#笹の絵",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"saku_sasaki"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCoztvTULBYd3WmStqYeoHcA"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Rikiichi",
-                  "EN_Name":"Joe Rikiichi",
-                  "JP_Name":"ジョー・力一",
-                  "Twitter":{
-                     "Twitter_Fanart":"#ジョー設展",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"joerikiichi"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UChUJbHiTVeGrSkTdBzVfNCQ"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Maimoto",
-                  "EN_Name":"Maimoto Keisuke",
-                  "JP_Name":"舞元啓介",
-                  "Twitter":{
-                     "Twitter_Fanart":"#しら画",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"maimoto_k"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCJubINhCcFXlsBwnHp0wl_g"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Ange",
-                  "EN_Name":"Ange Katrina",
-                  "JP_Name":"アンジュ・カトリーナ",
-                  "Twitter":{
-                     "Twitter_Fanart":"#絵ンジュ",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"ange_katrina_"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCHVXbQzkl3rDfsXWo8xi2qw"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Chai-chan",
-                  "EN_Name":"Hanabatake Chaika",
-                  "JP_Name":"花畑チャイカ",
-                  "Twitter":{
-                     "Twitter_Fanart":"#お花畑青空大写生大会",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"ZulmIhP1nlMOT5y"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCsFn_ueskBkMCEyzCEqAOvg"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Yashiro",
-                  "EN_Name":"Yashiro Kizuku",
-                  "JP_Name":"社築",
-                  "Twitter":{
-                     "Twitter_Fanart":"#社築納品物",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"846kizuQ"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCKMYISTJAQ8xTplUPHiABlA"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Tomoe",
-                  "EN_Name":"Shirayuki Tomoe",
-                  "JP_Name":"白雪巴",
-                  "Twitter":{
-                     "Twitter_Fanart":"#巴絵",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"Tomoe_Shirayuki"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCuvk5PilcvDECU7dDZhQiEw"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Sukoya",
-                  "EN_Name":"Sukoya Kana",
-                  "JP_Name":"健屋花那",
-                  "Twitter":{
-                     "Twitter_Fanart":"#いらすこや",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"sukosuko_sukoya"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UC8C1LLhBhf_E2IBPLSDJXlQ"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Ruco",
-                  "EN_Name":"Suzuki Masaru",
-                  "JP_Name":"鈴木勝",
-                  "Twitter":{
-                     "Twitter_Fanart":"#漆黒の水鏡",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"Darkness_Eater"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCryOPk2GZ1meIDt53tL30Tw"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Rena",
-                  "EN_Name":"Yorumi Rena",
-                  "JP_Name":"夜見れな",
-                  "Twitter":{
-                     "Twitter_Fanart":"#れなの鳥っくあーと",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"rena_yorumi"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCL34fAoFim9oHLbVzMKFavQ"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Kanda-kun",
-                  "EN_Name":"Kanda Shoichi",
-                  "JP_Name":"神田笑一",
-                  "Twitter":{
-                     "Twitter_Fanart":"#クリ笑イト",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"Kanda_Shoichi"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCWz0CSYCxf4MhRKPDm220AQ"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
-               },
-               {
-                  "Name":"Lize",
-                  "EN_Name":"Lize Helesta",
-                  "JP_Name":"リゼ・ヘルエスタ",
-                  "Twitter":{
-                     "Twitter_Fanart":"#ヘル絵スタ",
-                     "Twitter_Lewd":"",
-                     "Twitter_Username":"Lize_Helesta"
-                  },
-                  "Youtube":{
-                     "Yt_ID":"UCZ1xuCK1kNmn5RzPYIZop3w"
-                  },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":0,
-                     "BiliRoom_ID":0
-                  },
-                  "Twitch":{
-                     "Twitch_Username":""
-                  },
-                  "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Roa-chan",
@@ -3556,7 +3562,536 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
+               },               
+               {
+                  "Name":"Tsumugu",
+                  "EN_Name":"Kataribe Tsumugu",
+                  "JP_Name":"語部紡",
+                  "Twitter":{
+                     "Twitter_Fanart":"#い絵ーい",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"KataribeTsumugu"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCufQu4q65z63IgE4cfKs1BQ"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Malmal",
+                  "EN_Name":"Ars Almal",
+                  "JP_Name":"アルス・アルマル",
+                  "Twitter":{
+                     "Twitter_Fanart":"#マル描いてちょんっ",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"ars_almal"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCdpUojq0KWZCN9bxXnZwz5w"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Shiishii",
+                  "EN_Name":"Shiina Yuika",
+                  "JP_Name":"椎名唯華",
+                  "Twitter":{
+                     "Twitter_Fanart":"#しいなーと",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"yuika_siina"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UC_4tXjqecqox5Uc05ncxpxg"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Mikoto",
+                  "EN_Name":"Mikoto Rindou",
+                  "JP_Name":"りんどうみこと",
+                  "Twitter":{
+                     "Twitter_Fanart":"#尊絵巻",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"rindoumikoto"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCPvGypSgfDkVe7JG2KygK7A"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Meiji",
+                  "EN_Name":"Warabeda Meiji",
+                  "JP_Name":"童田明治",
+                  "Twitter":{
+                     "Twitter_Fanart":"#いめいじー",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"warabeda_meiji"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCveZ9Ic1VtcXbsyaBgxPMvg"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Sorahoshi",
+                  "EN_Name":"Sorahoshi Kirame",
+                  "JP_Name":"空星きらめ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#きら名画",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"kirame_2434"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UC_82HBGtvwN1hcGeOGHzUBQ"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Rei",
+                  "EN_Name":"Kenmochi Toya",
+                  "JP_Name":"剣持刀也",
+                  "Twitter":{
+                     "Twitter_Fanart":"#金剛力也像",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"rei_Toya_rei"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCv1fFr156jc65EMiLbaLImw"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Toko-chan",
+                  "EN_Name":"Inui Toko",
+                  "JP_Name":"戌亥とこ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#いぬいらすと",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"inui_toko"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCXRlIK3Cw_TJIQC5kSJJQMg"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Kana-Kana",
+                  "EN_Name":"Kanae",
+                  "JP_Name":"叶",
+                  "Twitter":{
+                     "Twitter_Fanart":"#かな絵",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"Kanae_2434"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCspv01oxUFf_MTSipURRhkA"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":434563934,
+                     "BiliRoom_ID":21449068
+                  },
+                  "Twitch":{
+                     "Twitch_Username":"kanae_2434"
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Saki-chan",
+                  "EN_Name":"Sasaki Saku",
+                  "JP_Name":"笹木 咲",
+                  "Twitter":{
+                     "Twitter_Fanart":"#笹の絵",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"saku_sasaki"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCoztvTULBYd3WmStqYeoHcA"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Rikiichi",
+                  "EN_Name":"Joe Rikiichi",
+                  "JP_Name":"ジョー・力一",
+                  "Twitter":{
+                     "Twitter_Fanart":"#ジョー設展",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"joerikiichi"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UChUJbHiTVeGrSkTdBzVfNCQ"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Maimoto",
+                  "EN_Name":"Maimoto Keisuke",
+                  "JP_Name":"舞元啓介",
+                  "Twitter":{
+                     "Twitter_Fanart":"#しら画",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"maimoto_k"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCJubINhCcFXlsBwnHp0wl_g"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Ange",
+                  "EN_Name":"Ange Katrina",
+                  "JP_Name":"アンジュ・カトリーナ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#絵ンジュ",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"ange_katrina_"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCHVXbQzkl3rDfsXWo8xi2qw"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Chai-chan",
+                  "EN_Name":"Hanabatake Chaika",
+                  "JP_Name":"花畑チャイカ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#お花畑青空大写生大会",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"ZulmIhP1nlMOT5y"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCsFn_ueskBkMCEyzCEqAOvg"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Yashiro",
+                  "EN_Name":"Yashiro Kizuku",
+                  "JP_Name":"社築",
+                  "Twitter":{
+                     "Twitter_Fanart":"#社築納品物",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"846kizuQ"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCKMYISTJAQ8xTplUPHiABlA"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Tomoe",
+                  "EN_Name":"Shirayuki Tomoe",
+                  "JP_Name":"白雪巴",
+                  "Twitter":{
+                     "Twitter_Fanart":"#巴絵",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"Tomoe_Shirayuki"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCuvk5PilcvDECU7dDZhQiEw"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Sukoya",
+                  "EN_Name":"Sukoya Kana",
+                  "JP_Name":"健屋花那",
+                  "Twitter":{
+                     "Twitter_Fanart":"#いらすこや",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"sukosuko_sukoya"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UC8C1LLhBhf_E2IBPLSDJXlQ"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Ruco",
+                  "EN_Name":"Suzuki Masaru",
+                  "JP_Name":"鈴木勝",
+                  "Twitter":{
+                     "Twitter_Fanart":"#漆黒の水鏡",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"Darkness_Eater"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCryOPk2GZ1meIDt53tL30Tw"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Rena",
+                  "EN_Name":"Yorumi Rena",
+                  "JP_Name":"夜見れな",
+                  "Twitter":{
+                     "Twitter_Fanart":"#れなの鳥っくあーと",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"rena_yorumi"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCL34fAoFim9oHLbVzMKFavQ"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Kanda-kun",
+                  "EN_Name":"Kanda Shoichi",
+                  "JP_Name":"神田笑一",
+                  "Twitter":{
+                     "Twitter_Fanart":"#クリ笑イト",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"Kanda_Shoichi"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCWz0CSYCxf4MhRKPDm220AQ"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Lize",
+                  "EN_Name":"Lize Helesta",
+                  "JP_Name":"リゼ・ヘルエスタ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#ヘル絵スタ",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"Lize_Helesta"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCZ1xuCK1kNmn5RzPYIZop3w"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Roa-chan",
+                  "EN_Name":"Yuzuki Roa",
+                  "JP_Name":"夢月ロア",
+                  "Twitter":{
+                     "Twitter_Fanart":"#ロアート",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"yuzuki_roa"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCCVwhI5trmaSxfcze_Ovzfw"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Gunmichi",
@@ -3579,7 +4114,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Vamp-san",
@@ -3602,7 +4138,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Kaederon",
@@ -3625,7 +4162,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Hakase",
@@ -3648,7 +4186,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Hanamaki",
@@ -3671,7 +4210,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Miyu",
@@ -3694,7 +4234,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Zea",
@@ -3717,7 +4258,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Takamama",
@@ -3740,7 +4282,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Jukut",
@@ -3763,7 +4306,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Cia",
@@ -3786,7 +4330,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Rai",
@@ -3809,7 +4354,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Zura",
@@ -3832,7 +4378,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Layla",
@@ -3855,7 +4402,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Nara",
@@ -3878,7 +4426,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Bobon",
@@ -3901,7 +4450,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Etna",
@@ -3924,7 +4474,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Siska",
@@ -3947,7 +4498,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Nagisa",
@@ -3970,7 +4522,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Kado",
@@ -3993,7 +4546,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Eja",
@@ -4016,7 +4570,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Yuya",
@@ -4039,7 +4594,8 @@
                      "Twitch_Username":"yuyashin2434"
                   },
                   "Region":"KR",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Wiffy",
@@ -4062,7 +4618,8 @@
                      "Twitch_Username":"wiffy2434"
                   },
                   "Region":"KR",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Inactive"
                },
                {
                   "Name":"Suha",
@@ -4085,7 +4642,8 @@
                      "Twitch_Username":"suhamin2434"
                   },
                   "Region":"KR",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Ray",
@@ -4108,7 +4666,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"KR",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Bora",
@@ -4131,7 +4690,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"KR",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Chiho",
@@ -4154,7 +4714,8 @@
                      "Twitch_Username":"chihorahao"
                   },
                   "Region":"KR",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Gaon",
@@ -4177,7 +4738,8 @@
                      "Twitch_Username":"gaon_2434"
                   },
                   "Region":"KR",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Ara",
@@ -4200,7 +4762,8 @@
                      "Twitch_Username":"arachae2434"
                   },
                   "Region":"KR",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Siu",
@@ -4223,7 +4786,8 @@
                      "Twitch_Username":"siulee2434"
                   },
                   "Region":"KR",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Nagi",
@@ -4246,7 +4810,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"KR",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Roha",
@@ -4269,7 +4834,8 @@
                      "Twitch_Username":"rohalee2434"
                   },
                   "Region":"KR",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Nari",
@@ -4292,7 +4858,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"KR",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Hari",
@@ -4315,7 +4882,8 @@
                      "Twitch_Username":"hariryu2434"
                   },
                   "Region":"KR",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Kiru",
@@ -4338,7 +4906,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"KR",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Jiyu",
@@ -4361,7 +4930,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"KR",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Aadya",
@@ -4384,7 +4954,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"IN",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Inactive"
                },
                {
                   "Name":"Noor",
@@ -4407,7 +4978,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"IN",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Inactive"
                },
                {
                   "Name":"Vihaan",
@@ -4430,7 +5002,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"IN",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Inactive"
                },
                {
                   "Name":"Yukie",
@@ -4453,7 +5026,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"CN",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Nanami",
@@ -4476,7 +5050,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"CN",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Ruki",
@@ -4499,7 +5074,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"CN",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Hoshimi",
@@ -4522,7 +5098,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"CN",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Chiharu",
@@ -4545,7 +5122,128 @@
                      "Twitch_Username":""
                   },
                   "Region":"CN",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Eine",
+                  "EN_Name":"Eine",
+                  "JP_Name":"艾因",
+                  "Twitter":{
+                     "Twitter_Fanart":"",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"VirtuaRealEine"
+                  },
+                  "Youtube":{
+                     "Yt_ID":""
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"艾因的艺术",
+                     "BiliBili_ID":558070433,
+                     "BiliRoom_ID":21403601
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"CN",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Muri",
+                  "EN_Name":"Muri",
+                  "JP_Name":"无理",
+                  "Twitter":{
+                     "Twitter_Fanart":"",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"VirtuaRealEine"
+                  },
+                  "Youtube":{
+                     "Yt_ID":""
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"无理调查报告",
+                     "BiliBili_ID":455916618,
+                     "BiliRoom_ID":21571739
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"CN",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Plus",
+                  "EN_Name":"Plus",
+                  "JP_Name":"有加",
+                  "Twitter":{
+                     "Twitter_Fanart":"",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":""
+                  },
+                  "Youtube":{
+                     "Yt_ID":""
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"加心糖",
+                     "BiliBili_ID":472845978,
+                     "BiliRoom_ID":21613353
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"CN",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"nyatsuki",
+                  "EN_Name":"nyatsuki",
+                  "JP_Name":"喵月",
+                  "Twitter":{
+                     "Twitter_Fanart":"",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"Nyatsuki4"
+                  },
+                  "Youtube":{
+                     "Yt_ID":""
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"喵月牌猫抓板",
+                     "BiliBili_ID":472821519,
+                     "BiliRoom_ID":21615277
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"CN",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Waku",
+                  "EN_Name":"Waku",
+                  "JP_Name":"惑姬",
+                  "Twitter":{
+                     "Twitter_Fanart":"",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":""
+                  },
+                  "Youtube":{
+                     "Yt_ID":""
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"惑姬的绘本",
+                     "BiliBili_ID":472877684,
+                     "BiliRoom_ID":21613356
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"CN",
+                  "Fanbase":"",
+                  "Status": "Active"
                }
             ]
          },
@@ -4582,7 +5280,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Love-chan",
@@ -4605,7 +5304,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                }
             ]
          },
@@ -4642,7 +5342,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Mirai",
@@ -4665,7 +5366,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                }
             ]
          },
@@ -4702,7 +5404,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Chloe",
@@ -4725,7 +5428,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Reynard",
@@ -4748,7 +5452,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Lily",
@@ -4771,7 +5476,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                }
             ]
          },
@@ -4808,7 +5514,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Tomoshika",
@@ -4831,7 +5538,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Monoe",
@@ -4854,7 +5562,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                }
             ]
          },
@@ -4894,7 +5603,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Andi",
@@ -4917,7 +5627,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Lumi",
@@ -4940,7 +5651,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Zen",
@@ -4963,7 +5675,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Nia",
@@ -4986,7 +5699,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                }
             ]
          },
@@ -5023,7 +5737,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Enomiya",
@@ -5046,7 +5761,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Shirayuki",
@@ -5069,7 +5785,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Himesaki",
@@ -5092,7 +5809,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Kumakuma",
@@ -5115,7 +5833,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Warabe",
@@ -5138,7 +5857,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Lilith",
@@ -5161,7 +5881,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Lilith",
@@ -5184,7 +5905,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Kirara",
@@ -5207,7 +5929,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Momo",
@@ -5230,7 +5953,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                }
             ]
          },
@@ -5267,7 +5991,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Rawrska",
@@ -5290,7 +6015,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Chiwawa",
@@ -5313,7 +6039,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                }
             ]
          },
@@ -5350,7 +6077,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Ahopink",
@@ -5373,7 +6101,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Ryo-kun",
@@ -5396,7 +6125,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Harukasu",
@@ -5419,7 +6149,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Kokoa",
@@ -5442,7 +6173,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Ashizawa",
@@ -5465,7 +6197,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Matsunaga",
@@ -5488,7 +6221,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Yuka",
@@ -5511,7 +6245,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Nagihara",
@@ -5534,7 +6269,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Tamako",
@@ -5557,7 +6293,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Natsuki",
@@ -5580,7 +6317,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Akari",
@@ -5603,7 +6341,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Mashiro",
@@ -5626,7 +6365,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Claire-sensei",
@@ -5649,7 +6389,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Yuika",
@@ -5672,7 +6413,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                }
             ]
          },
@@ -5712,7 +6454,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"MY",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                }
             ]
          },
@@ -5749,7 +6492,8 @@
                      "Twitch_Username":"projektmelody"
                   },
                   "Region":"EN",
-                  "Fanbase":"Science team members"
+                  "Fanbase":"Science team members",
+                  "Status": "Active"
                },
                {
                   "Name":"Nyaniki",
@@ -5772,7 +6516,8 @@
                      "Twitch_Username":"nyanners"
                   },
                   "Region":"US",
-                  "Fanbase":"Nyanbers"
+                  "Fanbase":"Nyanbers",
+                  "Status": "Active"
                },
                {
                   "Name":"Silver",
@@ -5795,7 +6540,8 @@
                      "Twitch_Username":"silvervale"
                   },
                   "Region":"US",
-                  "Fanbase":"Wolfs"
+                  "Fanbase":"Wolfs",
+                  "Status": "Active"
                },
                {
                   "Name":"Mousey",
@@ -5818,7 +6564,8 @@
                      "Twitch_Username":"ironmouse"
                   },
                   "Region":"US",
-                  "Fanbase":"Precious family"
+                  "Fanbase":"Precious family",
+                  "Status": "Active"
                },
                {
                   "Name":"Dragonqueen",
@@ -5841,7 +6588,8 @@
                      "Twitch_Username":"zentreya"
                   },
                   "Region":"EN",
-                  "Fanbase":"Knights"
+                  "Fanbase":"Knights",
+                  "Status": "Active"
                },
                {
                   "Name":"Hime",
@@ -5864,7 +6612,8 @@
                      "Twitch_Username":"hajime"
                   },
                   "Region":"EN",
-                  "Fanbase":"Childrens"
+                  "Fanbase":"Childrens",
+                  "Status": "Active"
                },
                {
                   "Name":"Froot",
@@ -5887,7 +6636,8 @@
                      "Twitch_Username":"apricot"
                   },
                   "Region":"US",
-                  "Fanbase":"Frootcakes"
+                  "Fanbase":"Frootcakes",
+                  "Status": "Active"
                },
                {
                   "Name":"Vei",
@@ -5910,7 +6660,8 @@
                      "Twitch_Username":"veibae"
                   },
                   "Region":"UK",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                }
             ]
          },
@@ -5954,7 +6705,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":"Pomaera"
+                  "Fanbase":"Pomaera",
+                  "Status": "Active"
                },
                {
                   "Name":"Elena",
@@ -5977,7 +6729,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":"Honey"
+                  "Fanbase":"Honey",
+                  "Status": "Active"
                },
                {
                   "Name":"Fuwamochi_Anko",
@@ -6000,7 +6753,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":"Dan-in"
+                  "Fanbase":"Dan-in",
+                  "Status": "Active"
                },
                {
                   "Name":"Memory",
@@ -6023,7 +6777,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":"Kotoricchi"
+                  "Fanbase":"Kotoricchi",
+                  "Status": "Active"
                },
                {
                   "Name":"Bell",
@@ -6046,7 +6801,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":"Okyaku-syan"
+                  "Fanbase":"Okyaku-syan",
+                  "Status": "Active"
                },
                {
                   "Name":"Maou",
@@ -6069,7 +6825,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":"Rokudenashi"
+                  "Fanbase":"Rokudenashi",
+                  "Status": "Active"
                }
             ]
          },
@@ -6102,7 +6859,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"RU",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Planya",
@@ -6125,7 +6883,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"RU",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                }
             ]
          }

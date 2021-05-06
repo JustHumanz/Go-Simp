@@ -18,7 +18,7 @@ func CheckBiliBili() {
 	for _, Group := range Payload.VtuberData {
 		Names := Group.Members
 		for _, Name := range Names {
-			if Name.BiliBiliID != 0 {
+			if Name.BiliBiliID != 0 && Name.Active() {
 				var (
 					wg        sync.WaitGroup
 					bilistate BiliBiliStat

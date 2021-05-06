@@ -255,6 +255,7 @@ CREATE TABLE IF NOT EXISTS `VtuberMember` (
   `Twitch_Avatar` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Region` varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Fanbase` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Status` varchar(24) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `VtuberGroup_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

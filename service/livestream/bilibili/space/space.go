@@ -92,7 +92,7 @@ func CheckSpaceVideo() {
 				wg.Add(1)
 				go func(Group database.Group, Member database.Member, wg *sync.WaitGroup) {
 					defer wg.Done()
-					if Member.BiliBiliID != 0 {
+					if Member.BiliBiliID != 0 && Member.Active() {
 						log.WithFields(log.Fields{
 							"Group":      Group.GroupName,
 							"Vtuber":     Member.EnName,

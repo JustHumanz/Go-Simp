@@ -60,6 +60,7 @@ type Members struct {
 	Twitch   Twitch   `json:"Twitch"`
 	Region   string   `json:"Region"`
 	Fanbase  string   `json:"Fanbase"`
+	Status   string   `json:"Status"`
 }
 type Independent struct {
 	Members []Members `json:"Members"`
