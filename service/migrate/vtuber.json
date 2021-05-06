@@ -385,6 +385,30 @@
                "Region":"JP",
                "Fanbase":"",
                "Status": "Active"
+            },
+            {
+               "Name":"Nabichan",
+               "EN_Name":"Aoi Nabi",
+               "JP_Name":"蒼彩なび",
+               "Twitter":{
+                  "Twitter_Fanart":"#Nabillust",
+                  "Twitter_Lewd":"",
+                  "Twitter_Username":"nab0i"
+               },
+               "Youtube":{
+                  "Yt_ID":"UCzKkwB84Y0ql0EvyOWRSkEw"
+               },
+               "BiliBili":{
+                  "BiliBili_Fanart":"",
+                  "BiliBili_ID":0,
+                  "BiliRoom_ID":0
+               },
+               "Twitch":{
+                  "Twitch_Username":""
+               },
+               "Region":"KR",
+               "Fanbase":"Nabigators",
+               "Status": "Active"
             },            
             {
                "Name":"Artia",
