@@ -1,4 +1,4 @@
 FROM go-simp
-WORKDIR /app/Go-Simp/service/migrate/
-RUN go build -o migrate
+FROM alpine as migrate
+COPY --from=go-simp /app/Go-Simp/bin/migrate /migrate
 CMD ["./migrate"]

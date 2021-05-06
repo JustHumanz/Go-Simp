@@ -1,5 +1,5 @@
 FROM go-simp
-WORKDIR /app/Go-Simp/service/pilot/
-RUN go build -o pilot
+FROM alpine as pilot
+COPY --from=go-simp /app/Go-Simp/bin/pilot /pilot
 EXPOSE 9000
 CMD ["./pilot"]

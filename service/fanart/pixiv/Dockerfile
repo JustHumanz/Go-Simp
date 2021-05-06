@@ -1,4 +1,4 @@
 FROM go-simp
-WORKDIR /app/Go-Simp/service/fanart/pixiv
-RUN go build -o pixiv
-CMD ["./pixiv"]
+FROM alpine as pixiv_fanart
+COPY --from=go-simp /app/Go-Simp/bin/pixiv_fanart /pixiv_fanart
+CMD ["./pixiv_fanart"]

@@ -1,4 +1,4 @@
 FROM go-simp
-WORKDIR /app/Go-Simp/service/utility/
-RUN go build -o utility
+FROM alpine as utility
+COPY --from=go-simp /app/Go-Simp/bin/utility /utility
 CMD ["./utility"]
