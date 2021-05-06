@@ -1,4 +1,4 @@
 FROM go-simp
-WORKDIR /app/Go-Simp/service/frontend/
-RUN go build -o frontend
+FROM alpine as frontend
+COPY --from=go-simp /app/Go-Simp/bin/frontend /frontend
 CMD ["./frontend"]

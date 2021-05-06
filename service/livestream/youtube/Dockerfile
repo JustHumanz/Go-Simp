@@ -1,4 +1,4 @@
 FROM go-simp
-WORKDIR /app/Go-Simp/service/livestream/youtube
-RUN go build -o youtube
-CMD ["./youtube"]
+FROM alpine as youtube
+COPY --from=go-simp /app/Go-Simp/bin/liveyoutube /liveyoutube
+CMD ["./liveyoutube"]

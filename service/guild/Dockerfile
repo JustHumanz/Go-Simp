@@ -1,4 +1,4 @@
 FROM go-simp
-WORKDIR /app/Go-Simp/service/guild/
-RUN go build -o guild
+FROM alpine as guild
+COPY --from=go-simp /app/Go-Simp/bin/guild /guild
 CMD ["./guild"]

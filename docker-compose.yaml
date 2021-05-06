@@ -1,10 +1,6 @@
 version: "3.7"
 
 services:
-  build_go-simp:
-    build: .
-    image: go-simp
-
   mysql:
     image: mysql:5.7
     environment:
@@ -19,114 +15,114 @@ services:
 
   multi_tor:
     build: service/multitor
+    image: go-simp-multi_tor
     networks:
       - go_simp-net
 
   db_migrate:
     build: ./service/migrate
+    image: go-simp-db_migrate
     depends_on:
       - mysql  
-
-    command: ./start.sh
     restart: on-failure    
     networks:
       - go_simp-net
 
   bilibili-fanart:
     build: ./service/fanart/bilibili
+    image: go-simp-bilibili-fanart
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
-
     restart: on-failure
     networks:
       - go_simp-net
 
   twitter-fanart:
     build: ./service/fanart/twitter
+    image: go-simp-twitter-fanart
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
-
     restart: on-failure
     networks:
       - go_simp-net
 
   pixiv-fanart:
     build: ./service/fanart/pixiv
+    image: go-simp-pixiv-fanart
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
-
     restart: on-failure
     networks:
       - go_simp-net
 
   livestream-livebili:
     build: ./service/livestream/bilibili/live
+    image: go-simp-livestream-livebili
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
-
     restart: on-failure
     networks:
       - go_simp-net
 
   livestream-spacebili:
     build: ./service/livestream/bilibili/space
+    image: go-simp-livestream-spacebili
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
-
     restart: on-failure
     networks:
       - go_simp-net
 
   livestream-youtube:
     build: ./service/livestream/youtube
+    image: go-simp-livestream-youtube
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
-
     restart: on-failure
     networks:
       - go_simp-net
 
   livestream-twitch:
     build: ./service/livestream/twitch
+    image: go-simp-livestream-twitch
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
-
     restart: on-failure
     networks:
       - go_simp-net
 
   subscriber:
     build: ./service/subscriber/
+    image: go-simp-subscriber
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
-
     restart: on-failure    
     networks:
       - go_simp-net
 
   utility:
     build: ./service/utility/
+    image: go-simp-utility
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
-
     command: go run .
     restart: on-failure    
     networks:
@@ -134,33 +130,33 @@ services:
 
   frontend:
     build: ./service/frontend/
+    image: go-simp-frontend
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
-
     restart: on-failure
     networks:
       - go_simp-net
 
   guild:
     build: ./service/guild/
+    image: go-simp-guild    
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
-
     restart: on-failure
     networks:
       - go_simp-net
 
   pilot:
     build: ./service/pilot/
+    image: go-simp-pilot
     depends_on:
       - mysql
       - db_migrate
       - multi_tor
-
     restart: on-failure
     volumes:
       - ./config.toml:/app/Go-Simp/config.toml    
@@ -175,34 +171,14 @@ services:
 #    networks:
 #      - go_simp-net         
 
-  traefik:
-    image: traefik:2.3
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./traefik.yml:/traefik.yml
-      - ./acme.json:/acme.json
-      - /var/run/docker.sock:/var/run/docker.sock
-
   static_files:
     build: ./Img/
     networks:
       - go_simp-proxy
-    labels:
-      - traefik.http.routers.static-http.rule=Host(`<YOUR_DOMAIN>`)
-      - traefik.http.routers.static-http.entrypoints=http
-      - traefik.http.routers.static-http.middlewares=redirect
-      - traefik.http.routers.static-https.rule=Host(`<YOUR_DOMAIN>`)
-      - traefik.http.routers.static-https.entrypoints=https
-      - traefik.http.routers.static-https.tls=true
-      - traefik.http.routers.static-https.tls.certresolver=letsencrypt
-      - traefik.http.services.static-service.loadbalancer.server.port=80
-      - traefik.http.middlewares.redirect.redirectscheme.scheme=https
 
   go_simp_web:
-    build: service/web
+    build: service/web-vue
+    image: go-simp-web
     env_file:
       - ./.env    
     depends_on:
@@ -210,24 +186,12 @@ services:
     restart: on-failure    
     networks:
       - go_simp-proxy
-    labels:
-      # Traefik configuration, Hostname needs to be changed
-      - traefik.http.routers.go_simp_web-http.rule=Host(`<YOUR_DOMAIN>`)
-      - traefik.http.routers.go_simp_web-http.entrypoints=http
-      - traefik.http.routers.go_simp_web-http.middlewares=redirect
-      - traefik.http.routers.go_simp_web-https.rule=Host(`<YOUR_DOMAIN>`)
-      - traefik.http.routers.go_simp_web-https.entrypoints=https
-      - traefik.http.routers.go_simp_web-https.tls=true
-      - traefik.http.routers.go_simp_web-https.tls.certresolver=letsencrypt
-      - traefik.http.services.go_simp_web.loadbalancer.server.port=8000
-      - traefik.http.middlewares.redirect.redirectscheme.scheme=https
 
   rest_api:
     build: service/rest-api
-    image: build_go-simp_rest-api
+    image: go-simp-api
     working_dir: /app/Go-Simp/service/rest-api    
     depends_on:
-
       - redis
     command: go run . 
     restart: on-failure
@@ -236,17 +200,6 @@ services:
     networks:
       - go_simp-proxy
       - go_simp-net
-    labels:
-      # Traefik configuration, Hostname needs to be changed
-      - traefik.http.routers.rest_api-http.rule=Host(`<YOUR_DOMAIN>`)
-      - traefik.http.routers.rest_api-http.entrypoints=http
-      - traefik.http.routers.rest_api-http.middlewares=redirect
-      - traefik.http.routers.rest_api-https.rule=Host(`<YOUR_DOMAIN>`)
-      - traefik.http.routers.rest_api-https.entrypoints=https
-      - traefik.http.routers.rest_api-https.tls=true
-      - traefik.http.routers.rest_api-https.tls.certresolver=letsencrypt
-      - traefik.http.services.rest_api.loadbalancer.server.port=2525
-      - traefik.http.middlewares.redirect.redirectscheme.scheme=https
 
   redis:
     image: 'bitnami/redis:latest'

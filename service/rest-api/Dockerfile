@@ -1,6 +1,5 @@
 FROM go-simp
-
-WORKDIR /app/Go-Simp/service/rest-api
+FROM alpine as api
+COPY --from=go-simp /app/Go-Simp/bin/api /api
 EXPOSE 2525
-RUN go build -o api
 CMD ["./api"]

@@ -1,4 +1,4 @@
 FROM go-simp
-WORKDIR /app/Go-Simp/service/subscriber/
-RUN go build -o subscriber
+FROM alpine as subscriber
+COPY --from=go-simp /app/Go-Simp/bin/subscriber /subscriber
 CMD ["./subscriber","-Youtube","-BiliBili","-Twitter"]

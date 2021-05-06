@@ -1,4 +1,4 @@
 FROM go-simp
-WORKDIR /app/Go-Simp/service/livestream/twitch
-RUN go build -o twitch
-CMD ["./twitch"]
+FROM alpine as twitch
+COPY --from=go-simp /app/Go-Simp/bin/livetwitch /livetwitch
+CMD ["./livetwitch"]

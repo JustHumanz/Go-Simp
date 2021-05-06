@@ -1,4 +1,4 @@
 FROM go-simp
-WORKDIR /app/Go-Simp/service/livestream/bilibili/space
-RUN go build -o spacebili
+FROM alpine as spacebili
+COPY --from=go-simp /app/Go-Simp/bin/spacebili /spacebili
 CMD ["./spacebili"]
