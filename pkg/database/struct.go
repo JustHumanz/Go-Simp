@@ -57,11 +57,19 @@ type Member struct {
 	TwitchAvatar     string
 	Region           string
 	Fanbase          string
+	Status           string
 	GroupID          int64
 }
 
 func (Data Member) IsMemberNill() bool {
 	return Data == (Member{})
+}
+
+func (Data Member) Active() bool {
+	if Data.Status == "Active" {
+		return true
+	}
+	return false
 }
 
 func (Data Member) IsYtNill() bool {
