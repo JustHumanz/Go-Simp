@@ -2388,7 +2388,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"JP",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Fuu-tan",
@@ -4569,7 +4570,8 @@
                      "Twitch_Username":""
                   },
                   "Region":"ID",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Yuya",
@@ -4880,7 +4882,8 @@
                      "Twitch_Username":"hariryu2434"
                   },
                   "Region":"KR",
-                  "Fanbase":""
+                  "Fanbase":"",
+                  "Status": "Active"
                },
                {
                   "Name":"Kiru",
