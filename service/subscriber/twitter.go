@@ -25,6 +25,11 @@ func CheckTwitter() {
 					break
 				}
 				SendNotif := func(SubsCount, Tweets string) {
+					err = Name.RemoveSubsCache()
+					if err != nil {
+						log.Error(err)
+					}
+
 					Avatar := strings.Replace(Twitter.Avatar, "_normal.jpg", ".jpg", -1)
 					Color, err := engine.GetColor(config.TmpDir, Avatar)
 					if err != nil {

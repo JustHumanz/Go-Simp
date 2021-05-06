@@ -37,6 +37,11 @@ func CheckYoutube() {
 							log.Error(err)
 						}
 						SendNotif := func(SubsCount string) {
+							err = Member.RemoveSubsCache()
+							if err != nil {
+								log.Error(err)
+							}
+
 							Color, err := engine.GetColor(config.TmpDir, Member.YoutubeAvatar)
 							if err != nil {
 								log.Error(err)

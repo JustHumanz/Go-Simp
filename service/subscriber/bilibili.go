@@ -81,6 +81,12 @@ func CheckBiliBili() {
 									if err != nil {
 										log.Error(err)
 									}
+
+									err = Name.RemoveSubsCache()
+									if err != nil {
+										log.Error(err)
+									}
+
 									SendNude(engine.NewEmbed().
 										SetAuthor(Group.GroupName, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
 										SetTitle(engine.FixName(Name.EnName, Name.JpName)).

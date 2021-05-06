@@ -158,6 +158,19 @@ func (Member Member) GetSubsCount() (*MemberSubs, error) {
 	return &Data, nil
 }
 
+//GetSubsCount Get subs,follow,view,like data from Subscriber
+func (Member Member) RemoveSubsCache() error {
+	var (
+		Key = strconv.Itoa(int(Member.ID)) + Member.Name
+	)
+
+	err := GeneralCache.Del(context.Background(), Key).Err()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 //UpBiliFollow update bilibili state
 func (Member *MemberSubs) UpBiliFollow(new int) *MemberSubs {
 	Member.BiliFollow = new
