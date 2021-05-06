@@ -30,6 +30,6 @@ require (
 	golang.org/x/text v0.3.6 // indirect
 	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba // indirect
 	google.golang.org/genproto v0.0.0-20210401141331-865547bb08e2 // indirect
-	google.golang.org/grpc v1.36.1
+	google.golang.org/grpc v1.37.0
 	google.golang.org/protobuf v1.26.0
 )
