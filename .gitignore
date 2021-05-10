@@ -1,19 +1,14 @@
 testing/
 *.log
-token.json
-__pycache__
 *.env
 docker-compose-prod.yaml
 vendor
 *.toml
 *.db
-*.mp4
-dockerfile-devel
 *prod*
 __pycache__
-lib/*
-bin/*
-db.sqlite3
+lib
+bin
 pyvenv.cfg
 node_modules/*
 

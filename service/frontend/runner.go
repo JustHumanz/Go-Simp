@@ -13,6 +13,7 @@ import (
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
+	"github.com/JustHumanz/Go-Simp/service/prediction"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
 	"github.com/olekukonko/tablewriter"
@@ -21,13 +22,14 @@ import (
 )
 
 var (
-	BotInfo    *discordgo.User
-	RegList    = make(map[string]string)
-	GroupsName []string
-	GuildList  []string
-	Payload    database.VtubersPayload
-	configfile config.ConfigFile
-	Bot        *discordgo.Session
+	BotInfo        *discordgo.User
+	RegList        = make(map[string]string)
+	GroupsName     []string
+	GuildList      []string
+	Payload        database.VtubersPayload
+	configfile     config.ConfigFile
+	Bot            *discordgo.Session
+	PredictionConn prediction.PredictionClient
 )
 
 //Prefix command
@@ -54,10 +56,12 @@ const (
 	Setup         = "setup"
 	Kings         = "kings"
 	Upvote        = "upvote"
+	Predick       = "prediction"
 )
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
+	PredictionConn = prediction.NewPredictionClient(network.InitgRPC("prediction"))
 }
 
 //StartInit running the fe
