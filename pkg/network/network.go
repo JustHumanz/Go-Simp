@@ -156,7 +156,7 @@ func InitNet() net.Listener {
 
 func InitgRPC(server string) *grpc.ClientConn {
 	var conn *grpc.ClientConn
-	conn, err := grpc.Dial(server+":9000", grpc.WithInsecure())
+	conn, err := grpc.Dial(server, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %s", err)
 	}

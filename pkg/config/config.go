@@ -55,7 +55,8 @@ const (
 	PixivUserEnd      = "https://www.pixiv.net/ajax/user/"
 	PixivProxy        = "https://cdn.humanz.moe/pixiv/?pixivURL="
 	Waiting           = 5
-	Pilot             = "pilot"
+	Pilot             = "pilot:9000"
+	Prometheus        = "prometheus:9001"
 	Indie             = "independent"
 	Fe                = "frontend"
 	Sys               = "system"

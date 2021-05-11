@@ -26,7 +26,8 @@ class Prediction(prediction_pb2_grpc.PredictionServicer):
         self.Predic.addData(x,y)
         num = self.Predic.predic(len(x)+7)
         score = self.Predic.accuracy()
-        return prediction_pb2.MessageResponse(Code=0,Prediction=str(num),Score=str(score))
+        logging.info("state %s name %s limit %s predick %s score %s",request.State,request.Name,request.Limit,num,score)
+        return prediction_pb2.MessageResponse(Code=0,Prediction=str(int(num)),Score=str(int(score *100))+"%")
 
 
 #Prometheus Query : get_subscriber{vtuber="Parerun",state="Twitter"}
@@ -59,8 +60,13 @@ def getData(state,name :str,lmt :int):
             if len(data["data"]["result"]) > 0:
                 y.append(int(data["data"]["result"][0]["value"][1]))
                 x.append(i)
+            elif len(data["data"]["result"]) == 0:
+                y = []
+                x = y
+                logging.error("data null,can't be processed")
+                break
         except requests.HTTPError as exception:
-            print(exception)
+            logging.error("%s",exception)
             break
 
     x.reverse()
@@ -68,7 +74,7 @@ def getData(state,name :str,lmt :int):
 
 
 def serve():
-    listen_addr = '[::]:9000'    
+    listen_addr = '[::]:9001'    
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     prediction_pb2_grpc.add_PredictionServicer_to_server(Prediction(), server)
     logging.info("Starting server on %s", listen_addr)
@@ -80,20 +86,3 @@ def serve():
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     serve()
-
-"""
-def main():
-    
-    x,y = getVtuberData("Twitter","Pekora")
-    if x == [] and y == []:
-        print("null data")
-
-    Predic.addData(x,y)
-    print("ID","Followers data")
-    for i,j in zip(x,y):
-        print(i,j)
-    hasil = Predic.predic(len(x)+7)
-    accuracy = Predic.accuracy()
-    print("Prediksi",len(x)+7,"Hari kedepan",int(hasil),"presentase akurasi",accuracy)
-main()
-"""

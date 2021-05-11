@@ -61,7 +61,7 @@ const (
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
-	PredictionConn = prediction.NewPredictionClient(network.InitgRPC("prediction"))
+	PredictionConn = prediction.NewPredictionClient(network.InitgRPC(config.Prometheus))
 }
 
 //StartInit running the fe
