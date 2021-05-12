@@ -267,6 +267,9 @@ func CheckYoutube() {
 func CheckLiveBiliBili() {
 	log.Info("Start check BiliBili room")
 	for _, Group := range database.GetGroups() {
+		if Group.GroupName == "Hololive" {
+			continue
+		}
 		for _, Member := range database.GetMembers(Group.ID) {
 			if Member.BiliBiliID != 0 {
 				log.WithFields(log.Fields{
@@ -399,6 +402,9 @@ func CheckSpaceBiliBili() {
 	Group := database.GetGroups()
 	loc, _ := time.LoadLocation("Asia/Shanghai")
 	for z := 0; z < len(Group); z++ {
+		if Group[z].GroupName == "Hololive" {
+			continue
+		}
 		Name := database.GetMembers(Group[z].ID)
 		for k := 0; k < len(Name); k++ {
 			if Name[k].BiliBiliID != 0 {
