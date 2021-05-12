@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package prediction;
+option go_package = "github.com/justhumanz/service/prediction";
+
+message Message{
+    string State = 1;
+    string Name = 2;
+    int32 Limit = 3;
+}
+   
+message MessageResponse{
+    int32 Code =1;
+    string  Prediction =2;
+    string Score =3;
+}
+
+service Prediction{
+ rpc GetSubscriberPrediction(Message) returns (MessageResponse) {}
+}

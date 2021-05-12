@@ -1509,15 +1509,6 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 								tableString := &strings.Builder{}
 								table := tablewriter.NewWriter(tableString)
 								table.SetHeader([]string{"Vtuber Group", "Vtuber Name", "Reminder"})
-								table.SetAutoWrapText(false)
-								table.SetAutoFormatHeaders(true)
-								table.SetCenterSeparator("")
-								table.SetColumnSeparator("")
-								table.SetRowSeparator("")
-								table.SetHeaderLine(true)
-								table.SetBorder(false)
-								table.SetTablePadding("\t")
-								table.SetNoWhiteSpace(true)
 								table.AppendBulk(list)
 								table.Render()
 
@@ -1608,7 +1599,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 
 					if Channel.IsFanart() && !Channel.IsLewd() && !Channel.IsLive() {
-						Typestr = "Art"
+						Typestr = "Fanart"
 					} else if !Channel.IsFanart() && !Channel.IsLewd() && Channel.IsLive() {
 						Typestr = "Live"
 					} else if Channel.IsFanart() && !Channel.IsLewd() && Channel.IsLive() {
