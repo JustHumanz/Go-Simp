@@ -41,7 +41,9 @@ class SubscriberPredic:
 
     def predic(self,num):
         self.lg.fit(self.x,self.y)
-        predict_x = self.lg.predict([[num]])
+        now = datetime.today()
+        nowformat = now-timedelta(days=num)    
+        predict_x = self.lg.predict([[nowformat.strftime('%y%m%d')]])
         return predict_x
     def accuracy(self):
         accuracy = self.lg.score(self.x,self.y)
@@ -52,14 +54,15 @@ def getData(state,name :str,lmt :int):
     x = []
     y = []
     for i in range(lmt,0,-1):
-        tmp = now-timedelta(days=i)
+        tmp = now.replace(hour=23,minute=59,second=59)-timedelta(days=i)
         try:
             response = requests.get(prometheus+'/api/v1/query?query=get_subscriber{state="'+state+'",vtuber="'+name+'"}&time='+tmp.strftime('%s'))
             response.raise_for_status()
             data = response.json()
+            print(data["data"]["result"],tmp)
             if len(data["data"]["result"]) > 0:
                 y.append(int(data["data"]["result"][0]["value"][1]))
-                x.append(i)
+                x.append(tmp.strftime('%y%m%d'))
             elif len(data["data"]["result"]) == 0:
                 y = []
                 x = y

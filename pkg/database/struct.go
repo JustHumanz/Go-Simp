@@ -86,6 +86,13 @@ func (Data Member) IsBiliNill() bool {
 	return true
 }
 
+func (Data Member) IsTwNill() bool {
+	if Data.TwitterName != "" {
+		return false
+	}
+	return true
+}
+
 type LiveStream struct {
 	ID           int64
 	Status       string
