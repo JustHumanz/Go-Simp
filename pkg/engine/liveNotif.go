@@ -125,7 +125,12 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 								return err
 							}
 						}
-						if !Channel.LiteMode || UserTagsList != nil {
+
+						if UserTagsList == nil {
+							return nil
+						}
+
+						if !Channel.LiteMode {
 							_, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` New upcoming Livestream\nUserTags: "+strings.Join(UserTagsList, " "))
 							if err != nil {
 								return err
@@ -283,7 +288,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						}
 
 						if UserTagsList == nil && Data.Group.GroupName != config.Indie {
-							UserTagsList = []string{"_"}
+							UserTagsList = nil
 						} else if UserTagsList == nil && Data.Group.GroupName == config.Indie && !Channel.IndieNotif {
 							return nil
 						}
@@ -313,6 +318,11 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 								return err
 							}
 						}
+
+						if UserTagsList == nil {
+							return nil
+						}
+
 						if !Channel.LiteMode {
 							_, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` Uploaded a new video\nUserTags: "+strings.Join(UserTagsList, " "))
 							if err != nil {
