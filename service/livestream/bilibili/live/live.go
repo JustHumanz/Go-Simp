@@ -19,10 +19,10 @@ import (
 )
 
 var (
-	loc         *time.Location
-	Bot         *discordgo.Session
-	VtubersData database.VtubersPayload
-	gRCPconn    pilot.PilotServiceClient
+	loc          *time.Location
+	Bot          *discordgo.Session
+	GroupPayload *[]database.Group
+	gRCPconn     pilot.PilotServiceClient
 )
 
 const (
@@ -58,7 +58,7 @@ func main() {
 			log.Error(err)
 		}
 
-		err = json.Unmarshal(res.VtuberPayload, &VtubersData)
+		err = json.Unmarshal(res.VtuberPayload, &GroupPayload)
 		if err != nil {
 			log.Error(err)
 		}
@@ -85,7 +85,7 @@ func main() {
 }
 
 func CheckLiveSchedule() {
-	for _, GroupData := range VtubersData.VtuberData {
+	for _, GroupData := range *GroupPayload {
 		var wg sync.WaitGroup
 		if GroupData.GroupName != "Hololive" {
 			for i, MemberData := range GroupData.Members {

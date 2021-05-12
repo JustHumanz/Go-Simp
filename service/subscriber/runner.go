@@ -22,7 +22,7 @@ import (
 var (
 	Bot        *discordgo.Session
 	configfile config.ConfigFile
-	Payload    database.VtubersPayload
+	Payload    *[]database.Group
 	gRCPconn   pilot.PilotServiceClient
 )
 

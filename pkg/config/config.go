@@ -77,8 +77,8 @@ const (
 	TwitterFollowers           = "@every 0h17m0s"
 	DonationMsg                = "@every 0h45m0s"
 	CheckServerCount           = "@every 0h10m0s"
-	CheckPayload               = "@every 2h0m0s"
-	PilotGetGroups             = "@every 1h30m0s"
+	CheckPayload               = "@every 1h30m0s"
+	PilotGetGroups             = "@every 1h0m0s"
 
 	//Time
 	AddUserTTL      = 5 * time.Hour

@@ -29,10 +29,10 @@ import (
 
 //Public variable
 var (
-	Bot         *discordgo.Session
-	VtubersData database.VtubersPayload
-	lewd        bool
-	gRCPconn    pilot.PilotServiceClient
+	Bot          *discordgo.Session
+	GroupPayload *[]database.Group
+	lewd         bool
+	gRCPconn     pilot.PilotServiceClient
 )
 
 const (
@@ -72,7 +72,7 @@ func main() {
 			log.Error(err)
 		}
 
-		err = json.Unmarshal(res.VtuberPayload, &VtubersData)
+		err = json.Unmarshal(res.VtuberPayload, &GroupPayload)
 		if err != nil {
 			log.Error(err)
 		}
@@ -108,7 +108,7 @@ func main() {
 
 //CheckNew Check new fanart
 func CheckPixiv() {
-	for _, Group := range VtubersData.VtuberData {
+	for _, Group := range *GroupPayload {
 		var wg sync.WaitGroup
 		for i, Member := range Group.Members {
 			wg.Add(1)

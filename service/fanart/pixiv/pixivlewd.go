@@ -11,7 +11,7 @@ import (
 )
 
 func CheckPixivLewd() {
-	for _, Group := range VtubersData.VtuberData {
+	for _, Group := range *GroupPayload {
 		var wg sync.WaitGroup
 		for i, Member := range Group.Members {
 			wg.Add(1)

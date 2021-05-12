@@ -19,9 +19,9 @@ import (
 
 //Public variable
 var (
-	Bot         *discordgo.Session
-	VtubersData database.VtubersPayload
-	gRCPconn    pilot.PilotServiceClient
+	Bot          *discordgo.Session
+	GroupPayload *[]database.Group
+	gRCPconn     pilot.PilotServiceClient
 )
 
 const (
@@ -56,7 +56,7 @@ func main() {
 			log.Error(err)
 		}
 
-		err = json.Unmarshal(res.VtuberPayload, &VtubersData)
+		err = json.Unmarshal(res.VtuberPayload, &GroupPayload)
 		if err != nil {
 			log.Error(err)
 		}
@@ -77,7 +77,7 @@ func main() {
 
 	c.AddFunc(config.CheckPayload, GetPayload)
 	c.AddFunc(config.BiliBiliFanart, func() {
-		for _, Group := range VtubersData.VtuberData {
+		for _, Group := range *GroupPayload {
 			for _, Member := range Group.Members {
 				if Member.BiliBiliHashtags != "" {
 					log.WithFields(log.Fields{

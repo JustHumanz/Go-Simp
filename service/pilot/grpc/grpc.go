@@ -15,10 +15,9 @@ import (
 )
 
 var (
-	VtubersByte []byte
+	VtubersByte *[]byte
 	confByte    []byte
 	WeebHookURL string
-	Groups      []database.Group
 )
 
 func Start() {
@@ -39,11 +38,9 @@ func Start() {
 			v.Members = database.GetMembers(v.ID)
 			Grp = append(Grp, v)
 		}
-		Groups = Grp
 
-		VtubersByte, err = json.Marshal(database.VtubersPayload{
-			VtuberData: Groups,
-		})
+		tmp, err := json.Marshal(Grp)
+		VtubersByte = &tmp
 		if err != nil {
 			log.Error(err)
 		}
@@ -89,7 +86,7 @@ func (s *Server) ReqData(ctx context.Context, in *ServiceMessage) (*VtubersData,
 	}
 
 	return &VtubersData{
-		VtuberPayload: VtubersByte,
+		VtuberPayload: *VtubersByte,
 		ConfigFile:    confByte,
 		WaitMigrate:   *s.WaitMigrate,
 	}, nil

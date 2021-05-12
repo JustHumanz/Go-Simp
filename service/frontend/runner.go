@@ -26,7 +26,7 @@ var (
 	RegList        = make(map[string]string)
 	GroupsName     []string
 	GuildList      []string
-	Payload        database.VtubersPayload
+	GroupsPayload  *[]database.Group
 	configfile     config.ConfigFile
 	Bot            *discordgo.Session
 	PredictionConn prediction.PredictionClient
@@ -77,6 +77,7 @@ func main() {
 
 	StartBot := func() {
 		GetPayload := func() {
+			log.Info("Get Payload")
 			res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
 				Message: "Send me nude",
 				Service: "Frontend",
@@ -96,14 +97,14 @@ func main() {
 
 			configfile.InitConf()
 
-			err = json.Unmarshal(res.VtuberPayload, &Payload)
+			err = json.Unmarshal(res.VtuberPayload, &GroupsPayload)
 			if err != nil {
 				log.Error(err)
 			}
 		}
 		GetPayload()
 
-		for _, Group := range Payload.VtuberData {
+		for _, Group := range *GroupsPayload {
 			GroupsName = append(GroupsName, Group.GroupName)
 			list := []string{}
 			keys := make(map[string]bool)
@@ -116,7 +117,7 @@ func main() {
 			RegList[Group.GroupName] = strings.Join(list, ",")
 		}
 
-		if !WaitMigrate || Counter == 3 {
+		if !WaitMigrate || Counter == 6 {
 			log.Info("Start Frontend")
 			var err error
 			Bot, err = discordgo.New("Bot " + configfile.Discord)
@@ -160,7 +161,9 @@ func main() {
 			Bot.AddHandler(EmojiHandler)
 			Bot.AddHandler(UpdateChannel)
 			c.Stop()
-			c.AddFunc(config.CheckPayload, GetPayload)
+			c2 := cron.New()
+			c2.Start()
+			c2.AddFunc(config.CheckPayload, GetPayload)
 
 		} else {
 			log.Info("Waiting migrate done")
@@ -171,7 +174,7 @@ func main() {
 
 	if WaitMigrate {
 		c.AddFunc("@every 0h5m0s", StartBot)
-	} else if !WaitMigrate || Counter == 10 {
+	} else if !WaitMigrate || Counter == 6 {
 		c.Stop()
 	}
 
@@ -203,42 +206,42 @@ func Module(s *discordgo.Session, m *discordgo.MessageCreate) {
 */
 
 //FindName Find a valid Vtuber name from message handler
-func FindVtuber(M interface{}) database.Member {
+func FindVtuber(M interface{}) (database.Member, error) {
 	MemberName, str := M.(string)
 	if str {
-		for _, Group := range Payload.VtuberData {
+		for _, Group := range *GroupsPayload {
 			for _, Name := range Group.Members {
 				if strings.ToLower(Name.Name) == MemberName || strings.ToLower(Name.JpName) == MemberName || MemberName == strconv.Itoa(int(Name.ID)) {
-					return Name
+					return Name, nil
 				}
 			}
 		}
 	} else {
 		MemberID := M.(int64)
-		for _, Group := range Payload.VtuberData {
+		for _, Group := range *GroupsPayload {
 			for _, Name := range Group.Members {
 				if MemberID == Name.ID {
-					return Name
+					return Name, nil
 				}
 			}
 		}
 	}
 
-	return database.Member{}
+	return database.Member{}, errors.New("not found")
 }
 
 //FindGropName Find a valid Vtuber Group from message handler
 func FindGropName(g interface{}) (database.Group, error) {
 	Grp, str := g.(string)
 	if str {
-		for _, Group := range Payload.VtuberData {
+		for _, Group := range *GroupsPayload {
 			if strings.EqualFold(Group.GroupName, Grp) || strconv.Itoa(int(Group.ID)) == Grp {
 				return Group, nil
 			}
 		}
 	} else {
 		GrpID := g.(int64)
-		for _, Group := range Payload.VtuberData {
+		for _, Group := range *GroupsPayload {
 			if Group.ID == GrpID {
 				return Group, nil
 			}

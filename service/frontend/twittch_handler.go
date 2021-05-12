@@ -24,8 +24,8 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 				for _, FindGroupArry := range Payload {
 					VTuberGroup, err := FindGropName(FindGroupArry)
 					if err != nil {
-						Member := FindVtuber(FindGroupArry)
-						if Member.IsMemberNill() {
+						Member, err := FindVtuber(FindGroupArry)
+						if err != nil {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
 						} else {
@@ -85,7 +85,11 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 							for _, LiveData := range TwitchLive {
 								FanBase := "simps"
-								LiveData.AddMember(FindVtuber(LiveData.Member.ID))
+								Member, err := FindVtuber(LiveData.Member.ID)
+								if err != nil {
+									log.Error(err)
+								}
+								LiveData.AddMember(Member)
 								loc := engine.Zawarudo(LiveData.Member.Region)
 								FixName := engine.FixName(LiveData.Member.EnName, LiveData.Member.JpName)
 								diff := time.Now().In(loc).Sub(LiveData.Schedul.In(loc))
@@ -130,8 +134,8 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 				for _, FindGroupArry := range Payload {
 					VTuberGroup, err := FindGropName(FindGroupArry)
 					if err != nil {
-						Member := FindVtuber(FindGroupArry)
-						if Member.IsMemberNill() {
+						Member, err := FindVtuber(FindGroupArry)
+						if err != nil {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
 						} else {
@@ -192,7 +196,11 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 							for _, LiveData := range TwitchLive {
 								FanBase := "simps"
-								LiveData.AddMember(FindVtuber(LiveData.Member.ID))
+								Member, err := FindVtuber(LiveData.Member.ID)
+								if err != nil {
+									log.Error(err)
+								}
+								LiveData.AddMember(Member)
 								loc := engine.Zawarudo(LiveData.Member.Region)
 
 								FixName := engine.FixName(LiveData.Member.EnName, LiveData.Member.JpName)

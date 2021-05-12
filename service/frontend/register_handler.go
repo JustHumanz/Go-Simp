@@ -60,7 +60,7 @@ func StartRegister(s *discordgo.Session, m *discordgo.MessageCreate) {
 					log.Error(err)
 				}
 
-				for _, v := range Payload.VtuberData {
+				for _, v := range *GroupsPayload {
 					table.Append([]string{strconv.Itoa(int(v.ID)), v.GroupName})
 				}
 				table.SetHeader([]string{"ID", "GroupName"})

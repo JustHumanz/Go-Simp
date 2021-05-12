@@ -15,7 +15,7 @@ import (
 
 func CheckBiliBili() {
 	BiliBiliSession := []string{"Cookie", "SESSDATA=" + configfile.BiliSess}
-	for _, Group := range Payload.VtuberData {
+	for _, Group := range *Payload {
 		Names := Group.Members
 		for _, Name := range Names {
 			if Name.BiliBiliID != 0 && Name.Active() {

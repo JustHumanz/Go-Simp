@@ -33,11 +33,6 @@ func (Data Group) IsNull() bool {
 	return Data.ID == 0
 }
 
-//VtubersPayload payload with multiple group
-type VtubersPayload struct {
-	VtuberData []Group
-}
-
 //Member Member struct
 type Member struct {
 	ID               int64

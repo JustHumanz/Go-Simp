@@ -22,7 +22,7 @@ import (
 var (
 	Bot          *discordgo.Session
 	TwitchClient *helix.Client
-	VtubersData  database.VtubersPayload
+	GroupPayload *[]database.Group
 	gRCPconn     pilot.PilotServiceClient
 )
 
@@ -58,7 +58,7 @@ func main() {
 			log.Error(err)
 		}
 
-		err = json.Unmarshal(res.VtuberPayload, &VtubersData)
+		err = json.Unmarshal(res.VtuberPayload, &GroupPayload)
 		if err != nil {
 			log.Error(err)
 		}
@@ -98,7 +98,7 @@ func main() {
 }
 
 func CheckTwitch() {
-	for _, Group := range VtubersData.VtuberData {
+	for _, Group := range *GroupPayload {
 		for _, Member := range Group.Members {
 			if Member.TwitchName != "" && Member.Active() {
 				log.WithFields(log.Fields{

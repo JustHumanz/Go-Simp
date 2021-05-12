@@ -15,7 +15,7 @@ import (
 func CheckYoutube() {
 	var YTstate Subs
 	Token := engine.GetYtToken()
-	for _, Group := range Payload.VtuberData {
+	for _, Group := range *Payload {
 		for _, Member := range Group.Members {
 			if !Member.IsYtNill() && Member.Active() {
 				body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+Member.YoutubeID+"&key="+*Token, nil)

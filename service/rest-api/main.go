@@ -51,7 +51,7 @@ func init() {
 			log.Panic(err)
 		}
 
-		var Payload database.VtubersPayload
+		var Payload []*database.Group
 		err = json.Unmarshal(res.VtuberPayload, &Payload)
 		if err != nil {
 			log.Panic(err)
@@ -60,7 +60,7 @@ func init() {
 		configfile.InitConf()
 		database.Start(configfile)
 
-		for _, Group := range Payload.VtuberData {
+		for _, Group := range Payload {
 			for _, Member := range Group.Members {
 				VtuberMembersTMP = append(VtuberMembersTMP, Member)
 				Subs, err := Member.GetSubsCount()

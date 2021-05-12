@@ -23,9 +23,9 @@ import (
 )
 
 var (
-	Bot         *discordgo.Session
-	VtubersData database.VtubersPayload
-	gRCPconn    pilot.PilotServiceClient
+	Bot          *discordgo.Session
+	GroupPayload *[]database.Group
+	gRCPconn     pilot.PilotServiceClient
 )
 
 const (
@@ -60,7 +60,7 @@ func main() {
 			log.Error(err)
 		}
 
-		err = json.Unmarshal(res.VtuberPayload, &VtubersData)
+		err = json.Unmarshal(res.VtuberPayload, &GroupPayload)
 		if err != nil {
 			log.Error(err)
 		}
@@ -104,7 +104,7 @@ func CheckYtSchedule() {
 		Counter = 1
 	}
 
-	for _, Group := range VtubersData.VtuberData {
+	for _, Group := range *GroupPayload {
 		wg.Add(1)
 		go StartCheckYT(Group, Update, &wg)
 	}
@@ -113,7 +113,7 @@ func CheckYtSchedule() {
 }
 
 func CheckYtByTime() {
-	for _, Group := range VtubersData.VtuberData {
+	for _, Group := range *GroupPayload {
 		for _, Member := range Group.Members {
 			if Member.YoutubeID != "" && Member.Active() {
 				log.WithFields(log.Fields{
@@ -261,7 +261,7 @@ func CheckPrivate() {
 
 	log.Info("Start Check Private video")
 	for _, Status := range []string{config.UpcomingStatus, config.PastStatus, config.LiveStatus, config.PrivateStatus} {
-		for _, Group := range VtubersData.VtuberData {
+		for _, Group := range *GroupPayload {
 			for _, Member := range Group.Members {
 				YtData, err := database.YtGetStatus(0, Member.ID, Status, "", config.Sys)
 				if err != nil {

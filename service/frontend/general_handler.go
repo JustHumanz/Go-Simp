@@ -76,7 +76,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 			return true
 		}
-		for _, GroupData := range Payload.VtuberData {
+		for _, GroupData := range *GroupsPayload {
 			if m.Content == strings.ToLower(Prefix+GroupData.GroupName) {
 				FanArtData, err := database.GetFanart(GroupData.ID, 0)
 				if err != nil {
@@ -180,7 +180,7 @@ func Lewd(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 				return true
 			}
-			for _, GroupData := range Payload.VtuberData {
+			for _, GroupData := range *GroupsPayload {
 				if m.Content == strings.ToLower(Prefix+GroupData.GroupName) {
 					FanArtData, err := database.GetLewd(GroupData.ID, 0)
 					if err != nil {
@@ -307,8 +307,8 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if VtuberName != "" {
 				tmp := strings.Split(VtuberName, ",")
 				for _, Name := range tmp {
-					Member := FindVtuber(Name)
-					if Member.IsMemberNill() {
+					Member, err := FindVtuber(Name)
+					if err != nil {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
 							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
@@ -474,8 +474,8 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 				tmp := strings.Split(FindInt[1], ",")
 				for _, Name := range tmp {
-					Member := FindVtuber(Name)
-					if Member.IsMemberNill() {
+					Member, err := FindVtuber(Name)
+					if err != nil {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
 							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
@@ -625,8 +625,8 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if VtuberName != "" {
 				tmp := strings.Split(VtuberName, ",")
 				for _, Name := range tmp {
-					Member := FindVtuber(Name)
-					if Member.IsMemberNill() {
+					Member, err := FindVtuber(Name)
+					if err != nil {
 						VTuberGroup, err := FindGropName(Name)
 						if err != nil {
 							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
@@ -805,8 +805,8 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				if len(VtuberName[len(VtuberName)-1:]) > 0 {
 					tmp := strings.Split(VtuberName[len(VtuberName)-1:][0], ",")
 					for _, Name := range tmp {
-						Member := FindVtuber(Name)
-						if Member.IsMemberNill() {
+						Member, err := FindVtuber(Name)
+						if err != nil {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)
@@ -982,8 +982,8 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					tmp := strings.Split(VtuberName[len(VtuberName)-1:][0], ",")
 
 					for _, Name := range tmp {
-						Member := FindVtuber(Name)
-						if Member.IsMemberNill() {
+						Member, err := FindVtuber(Name)
+						if err != nil {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)
@@ -1179,8 +1179,8 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				if len(VtuberName[len(VtuberName)-2:]) > 0 {
 					tmp := strings.Split(VtuberName[len(VtuberName)-2:][0], ",")
 					for _, Name := range tmp {
-						Member := FindVtuber(Name)
-						if Member.IsMemberNill() {
+						Member, err := FindVtuber(Name)
+						if err != nil {
 							VTuberGroup, err := FindGropName(Name)
 							if err != nil {
 								log.Error(err)
@@ -1774,7 +1774,7 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 					}
 				}
-				for _, Group := range Payload.VtuberData {
+				for _, Group := range *GroupsPayload {
 					for _, Grp := range GroupInput {
 						if Grp == strings.ToLower(Group.GroupName) {
 							for _, Member := range Group.Members {

@@ -19,9 +19,9 @@ import (
 )
 
 var (
-	loc         *time.Location
-	Bot         *discordgo.Session
-	VtubersData database.VtubersPayload
+	loc          *time.Location
+	Bot          *discordgo.Session
+	GroupPayload *[]database.Group
 )
 
 const (
@@ -57,7 +57,7 @@ func main() {
 			log.Error(err)
 		}
 
-		err = json.Unmarshal(res.VtuberPayload, &VtubersData)
+		err = json.Unmarshal(res.VtuberPayload, &GroupPayload)
 		if err != nil {
 			log.Error(err)
 		}
@@ -85,7 +85,7 @@ func main() {
 
 //CheckSpaceVideo
 func CheckSpaceVideo() {
-	for _, GroupData := range VtubersData.VtuberData {
+	for _, GroupData := range *GroupPayload {
 		if GroupData.GroupName != "Hololive" {
 			wg := new(sync.WaitGroup)
 			for i, MemberData := range GroupData.Members {

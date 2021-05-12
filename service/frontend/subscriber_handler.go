@@ -27,7 +27,12 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 		CommandArray := strings.Split(m.Content, " ")
 		if len(CommandArray) > 0 {
 			if CommandArray[0] == Prefix+Info {
-				Member := FindVtuber(CommandArray[1])
+				Member, err := FindVtuber(CommandArray[1])
+				if err != nil {
+					log.Error(err)
+					s.ChannelMessageSend(m.ChannelID, "`"+CommandArray[1]+"`,Name of Vtuber Group or Vtuber Name was not found")
+					return
+				}
 				var (
 					Avatar string
 				)
@@ -102,7 +107,11 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 
 					State := CommandArray[1]
-					Member := FindVtuber(CommandArray[2])
+					Member, err := FindVtuber(CommandArray[2])
+					if err != nil {
+						s.ChannelMessageSend(m.ChannelID, "`"+CommandArray[2]+"`,Name of Vtuber Group or Vtuber Name was not found")
+						return
+					}
 					Subs, err := Member.GetSubsCount()
 					if err != nil {
 						log.Error(err)
