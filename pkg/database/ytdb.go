@@ -30,7 +30,7 @@ func YtGetStatus(Group, Member int64, Status, Region, Uniq string) ([]LiveStream
 		}
 
 		if Region != "" {
-			rows, err = DB.Query(`SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where VtuberGroup.id=? AND Status=? AND Region=? Order by ScheduledStart DESC Limit ?`, Group, Status, Region, limit)
+			rows, err = DB.Query(`SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where VtuberGroup.id=? AND Youtube.Status=? AND Region=? Order by ScheduledStart DESC Limit ?`, Group, Status, Region, limit)
 			if err != nil {
 				return nil, err
 			} else if err == sql.ErrNoRows {
@@ -39,7 +39,7 @@ func YtGetStatus(Group, Member int64, Status, Region, Uniq string) ([]LiveStream
 			defer rows.Close()
 
 		} else if Status == config.PastStatus {
-			rows, err = DB.Query(`SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status=? Order by EndStream DESC Limit ?`, Group, Member, Status, limit)
+			rows, err = DB.Query(`SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Youtube.Status=? Order by EndStream DESC Limit ?`, Group, Member, Status, limit)
 			if err != nil {
 				return nil, err
 			} else if err == sql.ErrNoRows {
@@ -47,7 +47,7 @@ func YtGetStatus(Group, Member int64, Status, Region, Uniq string) ([]LiveStream
 			}
 			defer rows.Close()
 		} else {
-			rows, err = DB.Query(`SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status=? Order by ScheduledStart DESC Limit ?`, Group, Member, Status, limit)
+			rows, err = DB.Query(`SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Youtube.Status=? Order by ScheduledStart DESC Limit ?`, Group, Member, Status, limit)
 			if err != nil {
 				return nil, err
 			} else if err == sql.ErrNoRows {

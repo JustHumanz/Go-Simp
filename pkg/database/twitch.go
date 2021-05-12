@@ -39,7 +39,7 @@ func TwitchGet(GroupID int64, MemberID int64, Status string) []LiveStream {
 		Limit = 2525
 	}
 
-	rows, err := DB.Query(`SELECT Twitch.* FROM Vtuber.Twitch Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Status=? Order by ScheduledStart ASC Limit ?`, GroupID, MemberID, Status, Limit)
+	rows, err := DB.Query(`SELECT Twitch.* FROM Vtuber.Twitch Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Twitch.Status=? Order by ScheduledStart ASC Limit ?`, GroupID, MemberID, Status, Limit)
 	if err != nil {
 		log.Error(err)
 	}

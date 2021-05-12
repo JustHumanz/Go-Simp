@@ -16,15 +16,13 @@ import (
 
 var (
 	VtubersByte []byte
-	BotByte     []byte
-	dbByte      []byte
 	confByte    []byte
 	WeebHookURL string
 	Groups      []database.Group
 )
 
 func Start() {
-	configfile, err := config.ReadConfig("../../config.toml")
+	configfile, err := config.ReadConfig("./config.toml")
 	if err != nil {
 		log.Panic(err)
 	}
@@ -42,17 +40,17 @@ func Start() {
 			Grp = append(Grp, v)
 		}
 		Groups = Grp
+
+		VtubersByte, err = json.Marshal(database.VtubersPayload{
+			VtuberData: Groups,
+		})
+		if err != nil {
+			log.Error(err)
+		}
 	}
 	GetGroups()
 
 	c.AddFunc(config.PilotGetGroups, GetGroups)
-
-	VtubersByte, err = json.Marshal(database.VtubersPayload{
-		VtuberData: Groups,
-	})
-	if err != nil {
-		log.Error(err)
-	}
 
 	WeebHookURL = configfile.PilotReporting
 	confByte, err = json.Marshal(configfile)
