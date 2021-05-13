@@ -23,56 +23,60 @@ class Prediction(prediction_pb2_grpc.PredictionServicer):
         if x == [] and y == []:
             return prediction_pb2.MessageResponse(Code=1,Prediction="0",Score="0")
 
-        self.Predic.addData(x,y)
-        num = self.Predic.predic(len(x)+7)
-        score = self.Predic.accuracy()
+        self.Predic.SpellMagic(x,y)
+        limit = datetime.today().replace(day=len(x)+7)
+        num = self.Predic.DoBlackMagic(limit)
+        score = self.Predic.CheckBlackMagic()
         logging.info("state %s name %s limit %s predick %s score %s",request.State,request.Name,request.Limit,num,score)
         return prediction_pb2.MessageResponse(Code=0,Prediction=str(int(num)),Score=str(int(score *100))+"%")
 
+    def GetReverseSubscriberPrediction(self,request, context):
+        x,y = getData(request.State,request.Name,356)
+        self.Predic.SpellMagic(y,x)
+        num = self.Predic.DoBlackMagic(request.Limit)
+        score = self.Predic.CheckBlackMagic()
+        logging.info("state %s name %s limit %s predick %s score %s",request.State,request.Name,request.Limit,num,score)
+        return prediction_pb2.MessageResponse(Code=0,Prediction=str(int(num)),Score=str(int(score *100))+"%")
 
 #Prometheus Query : get_subscriber{vtuber="Parerun",state="Twitter"}
 class SubscriberPredic:
     def __init__(self):
         self.lg = LinearRegression()
 
-    def addData(self,x,y):
+    def SpellMagic(self,x,y):
         self.x = np.array(x).reshape((-1, 1))
         self.y = np.array(y)
 
-    def predic(self,num):
-        self.lg.fit(self.x,self.y)
-        now = datetime.today()
-        nowformat = now-timedelta(days=num)    
-        predict_x = self.lg.predict([[nowformat.strftime('%y%m%d')]])
+    def DoBlackMagic(self,num):
+        self.lg.fit(self.x,self.y)   
+        predict_x = self.lg.predict([[num]])
         return predict_x
-    def accuracy(self):
+
+    def CheckBlackMagic(self):
         accuracy = self.lg.score(self.x,self.y)
         return accuracy
 
 def getData(state,name :str,lmt :int):
-    now = datetime.today()
-    x = []
+    end = datetime.today()
+    start = end.replace(hour=23,minute=59,second=59)-timedelta(days=lmt)
     y = []
-    for i in range(lmt,0,-1):
-        tmp = now.replace(hour=23,minute=59,second=59)-timedelta(days=i)
-        try:
-            response = requests.get(prometheus+'/api/v1/query?query=get_subscriber{state="'+state+'",vtuber="'+name+'"}&time='+tmp.strftime('%s'))
-            response.raise_for_status()
-            data = response.json()
-            print(data["data"]["result"],tmp)
-            if len(data["data"]["result"]) > 0:
-                y.append(int(data["data"]["result"][0]["value"][1]))
-                x.append(tmp.strftime('%y%m%d'))
-            elif len(data["data"]["result"]) == 0:
-                y = []
-                x = y
-                logging.error("data null,can't be processed")
-                break
-        except requests.HTTPError as exception:
-            logging.error("%s",exception)
-            break
+    x = []
+    try:
+        response = requests.get(prometheus+'/api/v1/query_range?query=get_subscriber{state="'+state+'",vtuber="'+name+'"}',params={'start':start.strftime('%s'),'end':end.strftime('%s'),'step':'86400'})
+        print(response.url)
+        response.raise_for_status()
+        data = response.json()
+        if len(data["data"]["result"]) > 0:
+            for values in data["data"]["result"][0]['values']:
+                y.append(int(values[1]))
+                x.append(datetime.fromtimestamp(values[0]).toordinal())
+        elif len(data["data"]["result"]) == 0:
+            logging.error("data null,can't be processed")
+            return [],[]
+    except requests.HTTPError as exception:
+        logging.error("%s",exception)
+        return [],[]        
 
-    x.reverse()
     return x,y
 
 

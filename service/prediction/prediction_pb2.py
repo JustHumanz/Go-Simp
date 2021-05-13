@@ -17,9 +17,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='prediction.proto',
   package='prediction',
   syntax='proto3',
-  serialized_options=None,
+  serialized_options=b'Z(github.com/justhumanz/service/prediction',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x10prediction.proto\x12\nprediction\"5\n\x07Message\x12\r\n\x05State\x18\x01 \x01(\t\x12\x0c\n\x04Name\x18\x02 \x01(\t\x12\r\n\x05Limit\x18\x03 \x01(\x05\"B\n\x0fMessageResponse\x12\x0c\n\x04\x43ode\x18\x01 \x01(\x05\x12\x12\n\nPrediction\x18\x02 \x01(\t\x12\r\n\x05Score\x18\x03 \x01(\t2[\n\nPrediction\x12M\n\x17GetSubscriberPrediction\x12\x13.prediction.Message\x1a\x1b.prediction.MessageResponse\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x10prediction.proto\x12\nprediction\"5\n\x07Message\x12\r\n\x05State\x18\x01 \x01(\t\x12\x0c\n\x04Name\x18\x02 \x01(\t\x12\r\n\x05Limit\x18\x03 \x01(\x05\"B\n\x0fMessageResponse\x12\x0c\n\x04\x43ode\x18\x01 \x01(\x05\x12\x12\n\nPrediction\x18\x02 \x01(\t\x12\r\n\x05Score\x18\x03 \x01(\t2\xb1\x01\n\nPrediction\x12M\n\x17GetSubscriberPrediction\x12\x13.prediction.Message\x1a\x1b.prediction.MessageResponse\"\x00\x12T\n\x1eGetReverseSubscriberPrediction\x12\x13.prediction.Message\x1a\x1b.prediction.MessageResponse\"\x00\x42*Z(github.com/justhumanz/service/predictionb\x06proto3'
 )
 
 
@@ -135,6 +135,7 @@ MessageResponse = _reflection.GeneratedProtocolMessageType('MessageResponse', (_
 _sym_db.RegisterMessage(MessageResponse)
 
 
+DESCRIPTOR._options = None
 
 _PREDICTION = _descriptor.ServiceDescriptor(
   name='Prediction',
@@ -143,13 +144,23 @@ _PREDICTION = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=155,
-  serialized_end=246,
+  serialized_start=156,
+  serialized_end=333,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetSubscriberPrediction',
     full_name='prediction.Prediction.GetSubscriberPrediction',
     index=0,
+    containing_service=None,
+    input_type=_MESSAGE,
+    output_type=_MESSAGERESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='GetReverseSubscriberPrediction',
+    full_name='prediction.Prediction.GetReverseSubscriberPrediction',
+    index=1,
     containing_service=None,
     input_type=_MESSAGE,
     output_type=_MESSAGERESPONSE,

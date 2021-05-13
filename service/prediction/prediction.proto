@@ -17,4 +17,5 @@ message MessageResponse{
 
 service Prediction{
  rpc GetSubscriberPrediction(Message) returns (MessageResponse) {}
+ rpc GetReverseSubscriberPrediction(Message) returns (MessageResponse) {} 
 }
