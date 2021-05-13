@@ -72,7 +72,7 @@ const (
 	YoutubeCheckChannel        = "@every 0h5m0s"
 	YoutubeCheckUpcomingByTime = "@every 0h1m0s"
 	YoutubePrivateSlayer       = "@every 2h31m0s"
-	YoutubeSubscriber          = "@every 1h0m0s"
+	YoutubeSubscriber          = "@every 1h30m0s"
 	BiliBiliFollowers          = "@every 0h30m0s"
 	TwitterFollowers           = "@every 0h17m0s"
 	DonationMsg                = "@every 0h45m0s"
