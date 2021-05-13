@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'Z(github.com/justhumanz/service/prediction',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x10prediction.proto\x12\nprediction\"5\n\x07Message\x12\r\n\x05State\x18\x01 \x01(\t\x12\x0c\n\x04Name\x18\x02 \x01(\t\x12\r\n\x05Limit\x18\x03 \x01(\x05\"B\n\x0fMessageResponse\x12\x0c\n\x04\x43ode\x18\x01 \x01(\x05\x12\x12\n\nPrediction\x18\x02 \x01(\t\x12\r\n\x05Score\x18\x03 \x01(\t2\xb1\x01\n\nPrediction\x12M\n\x17GetSubscriberPrediction\x12\x13.prediction.Message\x1a\x1b.prediction.MessageResponse\"\x00\x12T\n\x1eGetReverseSubscriberPrediction\x12\x13.prediction.Message\x1a\x1b.prediction.MessageResponse\"\x00\x42*Z(github.com/justhumanz/service/predictionb\x06proto3'
+  serialized_pb=b'\n\x10prediction.proto\x12\nprediction\"5\n\x07Message\x12\r\n\x05State\x18\x01 \x01(\t\x12\x0c\n\x04Name\x18\x02 \x01(\t\x12\r\n\x05Limit\x18\x03 \x01(\x03\"Y\n\x0fMessageResponse\x12\x0c\n\x04\x43ode\x18\x01 \x01(\x05\x12\x12\n\nPrediction\x18\x02 \x01(\x03\x12\r\n\x05Score\x18\x03 \x01(\t\x12\x15\n\rNextMilestone\x18\x04 \x01(\x03\x32\xb1\x01\n\nPrediction\x12M\n\x17GetSubscriberPrediction\x12\x13.prediction.Message\x1a\x1b.prediction.MessageResponse\"\x00\x12T\n\x1eGetReverseSubscriberPrediction\x12\x13.prediction.Message\x1a\x1b.prediction.MessageResponse\"\x00\x42*Z(github.com/justhumanz/service/predictionb\x06proto3'
 )
 
 
@@ -49,7 +49,7 @@ _MESSAGE = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='Limit', full_name='prediction.Message.Limit', index=2,
-      number=3, type=5, cpp_type=1, label=1,
+      number=3, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -88,8 +88,8 @@ _MESSAGERESPONSE = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='Prediction', full_name='prediction.MessageResponse.Prediction', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
+      number=2, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
@@ -97,6 +97,13 @@ _MESSAGERESPONSE = _descriptor.Descriptor(
       name='Score', full_name='prediction.MessageResponse.Score', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='NextMilestone', full_name='prediction.MessageResponse.NextMilestone', index=3,
+      number=4, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
@@ -113,7 +120,7 @@ _MESSAGERESPONSE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=87,
-  serialized_end=153,
+  serialized_end=176,
 )
 
 DESCRIPTOR.message_types_by_name['Message'] = _MESSAGE
@@ -144,8 +151,8 @@ _PREDICTION = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=156,
-  serialized_end=333,
+  serialized_start=179,
+  serialized_end=356,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetSubscriberPrediction',

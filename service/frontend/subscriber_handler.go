@@ -117,7 +117,8 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						log.Error(err)
 					}
 					var (
-						msg    *prediction.Message
+						msg *prediction.Message
+						//msg2   *prediction.Message
 						tmp    string
 						Avatar string
 						Url    string
@@ -141,6 +142,15 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							Name:  Member.Name,
 							Limit: 7,
 						}
+
+						/*
+							msg2 = &prediction.Message{
+								State: "Twitter",
+								Name:  Member.Name,
+								Limit: int64(Subs.TwFollow),
+							}
+						*/
+
 						tmp = strconv.Itoa(Subs.TwFollow)
 						Avatar = Member.YoutubeAvatar
 						Url = "https://twitter.com/" + Member.TwitterName
@@ -163,6 +173,15 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							Name:  Member.Name,
 							Limit: 7,
 						}
+
+						/*
+							msg2 = &prediction.Message{
+								State: "Youtube",
+								Name:  Member.Name,
+								Limit: int64(Subs.YtSubs),
+							}
+						*/
+
 						tmp = strconv.Itoa(Subs.YtSubs)
 						Avatar = Member.YoutubeAvatar
 						Url = "https://www.youtube.com/channel/" + Member.YoutubeID + "?sub_confirmation=1"
@@ -184,6 +203,15 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							Name:  Member.Name,
 							Limit: 7,
 						}
+
+						/*
+							msg2 = &prediction.Message{
+								State: "BiliBili",
+								Name:  Member.Name,
+								Limit: int64(Subs.BiliFollow),
+							}
+						*/
+
 						tmp = strconv.Itoa(Subs.BiliFollow)
 						Avatar = Member.BiliBiliAvatar
 						Url = "https://space.bilibili/" + strconv.Itoa(Member.BiliBiliID)
@@ -203,6 +231,23 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 						return
 					}
+
+					/*
+						RawData2, err := PredictionConn.GetReverseSubscriberPrediction(context.Background(), msg2)
+						if err != nil {
+							log.Error(err)
+							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+								SetTitle(engine.FixName(Member.EnName, Member.JpName)).
+								SetDescription("Something error\n"+err.Error()).
+								SetImage(engine.NotFoundIMG()).
+								SetColor(Color).MessageEmbed)
+							if err != nil {
+								log.Error(err)
+							}
+							return
+						}
+					*/
 					if RawData.Code == 0 {
 						target := time.Now().AddDate(0, 0, int(msg.Limit))
 						dateFormat := fmt.Sprintf("%s/%d", target.Month().String(), target.Day())
@@ -214,7 +259,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							SetTitle(engine.FixName(Member.EnName, Member.JpName)).
 							SetURL(Url).
 							AddField("Current "+msg.State+" followes/subscriber("+nowFormat+")", tmp).
-							AddField("Next 7 days Prediction("+dateFormat+")", RawData.Prediction).
+							AddField("Next 7 days Prediction("+dateFormat+")", strconv.Itoa(int(RawData.Prediction))).
 							RemoveInline().
 							AddField("Prediction score", RawData.Score).
 							AddField("Graph", Graph).
