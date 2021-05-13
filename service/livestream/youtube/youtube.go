@@ -95,6 +95,7 @@ var exTknList []string
 
 func CheckYtSchedule() {
 	Update := false
+	Counter++
 	var (
 		wg sync.WaitGroup
 	)
@@ -109,7 +110,6 @@ func CheckYtSchedule() {
 		go StartCheckYT(Group, Update, &wg)
 	}
 	wg.Wait()
-	Counter++
 }
 
 func CheckYtByTime() {
