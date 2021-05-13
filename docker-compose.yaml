@@ -210,6 +210,15 @@ services:
     networks:
       - go_simp-net
 
+  go_simp_prediction:
+    build: service/prediction
+    image: go-simp-prediction
+    environment:
+      - PrometheusURL=https://prometheus.humanz.moe
+    restart: on-failure    
+    networks:
+      - go_simp-proxy
+
   prometheus:
     image: prom/prometheus
     ports:
