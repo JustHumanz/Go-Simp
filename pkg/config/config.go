@@ -56,7 +56,7 @@ const (
 	PixivProxy        = "https://cdn.humanz.moe/pixiv/?pixivURL="
 	Waiting           = 5
 	Pilot             = "pilot:9000"
-	Prometheus        = "prometheus:9001"
+	Prediction        = "prediction:9001"
 	Indie             = "independent"
 	Fe                = "frontend"
 	Sys               = "system"
