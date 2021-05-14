@@ -1,5 +1,4 @@
-FROM python:3.9-alpine
-RUN apk add --update --no-cache git g++
+FROM python:3.9
 RUN mkdir /app
 COPY . /app
 WORKDIR /app
