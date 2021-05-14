@@ -6887,6 +6887,160 @@
                   "Status": "Active"
                }
             ]
+         },
+         {
+            "GroupName":"Tsunderia",
+            "GroupIcon":"https://cdn.humanz.moe/Tsunderia.png",
+            "GroupChannel": {
+               "Youtube": null,
+               "BiliBili": null
+            },
+            "Members":[
+               {
+                  "Name":"Char",
+                  "EN_Name":"Hoshino Charlotte",
+                  "JP_Name":"星乃シャロ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#charmy_art",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"hoshinochar"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCdCczCYPOeP5hTfbx6tzz_A"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0  
+                  },
+                  "Twitch":{
+                     "Twitch_Username":"hoshinochar"
+                  },
+                  "Region":"US",
+                  "Fanbase":"Charmy",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Purin",
+                  "EN_Name":"Inukai Purin",
+                  "JP_Name":"犬養プリン",
+                  "Twitter":{
+                     "Twitter_Fanart":"#flanart",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"inukaipurin"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCdrQWcX7XLDSUEh9SAxnyBg"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0  
+                  },
+                  "Twitch":{
+                     "Twitch_Username":"inukaipurin"
+                  },
+                  "Region":"PH",
+                  "Fanbase":"flans",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Kallin",
+                  "EN_Name":"Yazaki Kallin",
+                  "JP_Name":"夜咲カリン",
+                  "Twitter":{
+                     "Twitter_Fanart":"#kallart",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"yazakikallin"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCbTkauz77OIO9KE5YcAKPlg"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0  
+                  },
+                  "Twitch":{
+                     "Twitch_Username":"yazakikallin"
+                  },
+                  "Region":"US",
+                  "Fanbase":"Nightblooms",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Meruru",
+                  "EN_Name":"Matsuro Meru",
+                  "JP_Name":"末路める",
+                  "Twitter":{
+                     "Twitter_Fanart":"#FanMeru",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"matsuromeru"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCIJ6TGsTcBlYGUj-zbL60EQ"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0  
+                  },
+                  "Twitch":{
+                     "Twitch_Username":"matsuromeru"
+                  },
+                  "Region":"CA",
+                  "Fanbase":"Postmates",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Miori",
+                  "EN_Name":"Miori Celesta",
+                  "JP_Name":"セレスタミオリ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#miorillust",
+                     "Twitter_Lewd":"#miolust",
+                     "Twitter_Username":"mioricelesta"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCyKsg-57XC9pyHbP7v3kCPQ"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0  
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"US",
+                  "Fanbase":"Guildmates",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Bread",
+                  "EN_Name":"Nini Yuuna",
+                  "JP_Name":"ににゆーな",
+                  "Twitter":{
+                     "Twitter_Fanart":"#niniatelier",
+                     "Twitter_Lewd":"#miolust",
+                     "Twitter_Username":"niniyuuna"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UC8CKGSvp9bRfmtWyfV5L9Jw"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0  
+                  },
+                  "Twitch":{
+                     "Twitch_Username":"niniyuuna"
+                  },
+                  "Region":"US",
+                  "Fanbase":"Guildmates",
+                  "Status": "Active"
+               }
+            ]
          }
       ]
    }
