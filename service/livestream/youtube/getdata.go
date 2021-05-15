@@ -410,6 +410,7 @@ func YtAPI(VideoID []string) (engine.YtData, error) {
 			for _, v := range exTknList {
 				if v == Token {
 					isExhaustion = true
+					break
 				}
 			}
 
