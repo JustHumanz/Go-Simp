@@ -261,11 +261,11 @@ func getPrediction(w http.ResponseWriter, r *http.Request) {
 			if Member["ID"].(int64) == int64(idint) {
 				FinalData := make(map[string]interface{})
 				FinalData["Days"] = days
-				var Fetch = func(wg *sync.WaitGroup, Name string, State string) {
+				var Fetch = func(wg *sync.WaitGroup, State string) {
 					defer wg.Done()
 					RawData, err := PredictionConn.GetSubscriberPrediction(context.Background(), &prediction.Message{
 						State: State,
-						Name:  Name,
+						Name:  Member["NickName"].(string),
 						Limit: int64(daysint),
 					})
 					if err != nil {
@@ -298,14 +298,24 @@ func getPrediction(w http.ResponseWriter, r *http.Request) {
 
 				}
 
-				if Member["Youtube"] != nil && Member["BiliBili"] != nil && Member["Twitter"] != nil {
-					var wg sync.WaitGroup
-					wg.Add(3)
-					go Fetch(&wg, Member["NickName"].(string), "Twitter")
-					go Fetch(&wg, Member["NickName"].(string), "Youtube")
-					go Fetch(&wg, Member["NickName"].(string), "BiliBili")
-					wg.Wait()
+				var wg sync.WaitGroup
+				if Member["Twitter"] != nil {
+					wg.Add(1)
+					go Fetch(&wg, "Youtube")
 				}
+
+				if Member["BiliBili"] != nil {
+					wg.Add(1)
+					go Fetch(&wg, "BiliBili")
+				}
+
+				if Member["Twitter"] != nil {
+					wg.Add(1)
+					go Fetch(&wg, "Twitter")
+
+				}
+				wg.Wait()
+
 				w.Header().Set("Access-Control-Allow-Origin", "*")
 				w.Header().Set("Content-Type", "application/json")
 				json.NewEncoder(w).Encode(FinalData)
