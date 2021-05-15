@@ -1,3 +1,9 @@
+v3.9.0
+- Add Vtuber followers/subscriber prediction
+- Change youtube channel checker interval
+- Remove usertags when no one user tagged in upcoming yt
+-  Add Tsunderia 
+
 v3.8.0
 - Change Youtube workflow
 - Add Calli lewd hashtag
