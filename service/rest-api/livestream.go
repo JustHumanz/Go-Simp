@@ -46,7 +46,7 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 						Message: err.Error(),
 						Date:    time.Now(),
 					})
-					w.WriteHeader(http.StatusInternalServerError)
+					w.WriteHeader(http.StatusBadRequest)
 					return
 				}
 				GroupID := Group["ID"].(int64)
@@ -73,7 +73,7 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 						Message: err.Error(),
 						Date:    time.Now(),
 					})
-					w.WriteHeader(http.StatusInternalServerError)
+					w.WriteHeader(http.StatusBadRequest)
 					return
 				}
 				MemberID := Member["ID"].(int64)
@@ -137,7 +137,7 @@ func getBilibili(w http.ResponseWriter, r *http.Request) {
 						Message: err.Error(),
 						Date:    time.Now(),
 					})
-					w.WriteHeader(http.StatusInternalServerError)
+					w.WriteHeader(http.StatusBadRequest)
 					return
 				}
 				GroupID := Group["ID"].(int64)
@@ -161,7 +161,7 @@ func getBilibili(w http.ResponseWriter, r *http.Request) {
 						Message: err.Error(),
 						Date:    time.Now(),
 					})
-					w.WriteHeader(http.StatusInternalServerError)
+					w.WriteHeader(http.StatusBadRequest)
 					return
 				}
 				MemberID := Member["ID"].(int64)

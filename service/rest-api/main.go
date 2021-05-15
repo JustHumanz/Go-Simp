@@ -6,12 +6,14 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
+	"github.com/JustHumanz/Go-Simp/service/prediction"
 	muxlogrus "github.com/pytimer/mux-logrus"
 	"github.com/robfig/cron/v3"
 
@@ -20,13 +22,16 @@ import (
 )
 
 var (
-	MembersData   []map[string]interface{}
-	GroupsData    []map[string]interface{}
-	VtuberMembers []database.Member
+	MembersData    []map[string]interface{}
+	GroupsData     []map[string]interface{}
+	VtuberMembers  []database.Member
+	PredictionConn prediction.PredictionClient
 )
 
 func init() {
 	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
+	PredictionConn = prediction.NewPredictionClient(network.InitgRPC(config.Prediction))
+
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
 
 	var (
@@ -168,6 +173,8 @@ func main() {
 	router.HandleFunc("/groups/", getGroup).Methods("GET")
 	router.HandleFunc("/groups/{groupID}", getGroup).Methods("GET")
 
+	router.HandleFunc("/prediction/{memberID}", getPrediction).Methods("GET")
+
 	router.HandleFunc("/members/", getMembers).Methods("GET")
 	router.HandleFunc("/members/{memberID}", getMembers).Methods("GET")
 
@@ -220,6 +227,94 @@ func invalidPath(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusBadRequest)
 }
 
+func getPrediction(w http.ResponseWriter, r *http.Request) {
+	idstr := mux.Vars(r)["memberID"]
+	days := r.FormValue("days")
+	var daysint = 7
+
+	if days != "" {
+		var err error
+		daysint, err = strconv.Atoi(days)
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(MessageError{
+				Message: err.Error(),
+				Date:    time.Now(),
+			})
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+	}
+
+	if idstr != "" {
+		idint, err := strconv.Atoi(idstr)
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(MessageError{
+				Message: err.Error(),
+				Date:    time.Now(),
+			})
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		for _, Member := range MembersData {
+			if Member["ID"].(int64) == int64(idint) {
+				FinalData := make(map[string]interface{})
+				FinalData["Days"] = days
+				var Fetch = func(wg *sync.WaitGroup, Name string, State string) {
+					defer wg.Done()
+					RawData, err := PredictionConn.GetSubscriberPrediction(context.Background(), &prediction.Message{
+						State: State,
+						Name:  Name,
+						Limit: int64(daysint),
+					})
+					if err != nil {
+						w.Header().Set("Content-Type", "application/json")
+						json.NewEncoder(w).Encode(MessageError{
+							Message: err.Error(),
+							Date:    time.Now(),
+						})
+						w.WriteHeader(http.StatusInternalServerError)
+						return
+					}
+
+					if RawData.Code == 0 {
+						Data := map[string]interface{}{}
+						if State == "Twitter" {
+							Tw := Member["Twitter"].(map[string]interface{})
+							Data["Current_followes/subscriber"] = Tw["Followers"]
+						} else if State == "Youtube" {
+							Yt := Member["Youtube"].(map[string]interface{})
+							Data["Current_followes/subscriber"] = Yt["Subscriber"]
+						} else if State == "BiliBili" {
+							Bl := Member["BiliBili"].(map[string]interface{})
+							Data["Current_followes/subscriber"] = Bl["Followers"]
+						}
+						Data["Prediction"] = RawData.Prediction
+						Data["Score"] = RawData.Score
+
+						FinalData[State] = Data
+					}
+
+				}
+
+				if Member["Youtube"] != nil && Member["BiliBili"] != nil && Member["Twitter"] != nil {
+					var wg sync.WaitGroup
+					wg.Add(3)
+					go Fetch(&wg, Member["NickName"].(string), "Twitter")
+					go Fetch(&wg, Member["NickName"].(string), "Youtube")
+					go Fetch(&wg, Member["NickName"].(string), "BiliBili")
+					wg.Wait()
+				}
+				w.Header().Set("Access-Control-Allow-Origin", "*")
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(FinalData)
+				w.WriteHeader(http.StatusOK)
+				return
+			}
+		}
+	}
+}
 func getGroup(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)["groupID"]
 	if vars != "" {
@@ -234,7 +329,7 @@ func getGroup(w http.ResponseWriter, r *http.Request) {
 						Message: err.Error(),
 						Date:    time.Now(),
 					})
-					w.WriteHeader(http.StatusInternalServerError)
+					w.WriteHeader(http.StatusBadRequest)
 					return
 				}
 				GroupID := Group["ID"].(int64)
@@ -351,7 +446,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 						Message: err.Error(),
 						Date:    time.Now(),
 					})
-					w.WriteHeader(http.StatusInternalServerError)
+					w.WriteHeader(http.StatusBadRequest)
 					return
 				}
 				if region != "" {
