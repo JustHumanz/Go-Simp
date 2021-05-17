@@ -77,19 +77,18 @@ class SubscriberPredic:
         return accuracy
 
 def getData(state,name :str,lmt :int):
-    end = datetime.today()
-    start = end.replace(hour=23,minute=59,second=59)-timedelta(days=lmt)
+    start = datetime.today().replace(hour=23,minute=59,second=59)-timedelta(days=lmt)
     y = []
     x = []
     try:
-        response = requests.get(prometheus+'/api/v1/query_range?query=get_subscriber{state="'+state+'",vtuber="'+name+'"}',params={'start':start.strftime('%s'),'end':end.strftime('%s'),'step':'86400'})
-        print(response.url)
+        response = requests.get(prometheus+'/api/v1/query_range?query=get_subscriber{state="'+state+'",vtuber="'+name+'"}',params={'start':start.strftime('%s'),'end':datetime.today().strftime('%s'),'step':'86400'})
+        logging.info("%s",response.url)
         response.raise_for_status()
         data = response.json()
         if len(data["data"]["result"]) > 0:
             for values in data["data"]["result"][0]['values']:
+                x.append(datetime.fromtimestamp(values[0]).toordinal())                
                 y.append(int(values[1]))
-                x.append(datetime.fromtimestamp(values[0]).toordinal())
         elif len(data["data"]["result"]) == 0:
             logging.error("data null,can't be processed")
             return [],[]

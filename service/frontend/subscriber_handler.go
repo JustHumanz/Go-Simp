@@ -140,7 +140,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						msg = &prediction.Message{
 							State: "Twitter",
 							Name:  Member.Name,
-							Limit: 7,
+							Limit: 356,
 						}
 
 						/*
@@ -171,7 +171,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						msg = &prediction.Message{
 							State: "Youtube",
 							Name:  Member.Name,
-							Limit: 7,
+							Limit: 356,
 						}
 
 						/*
@@ -201,7 +201,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						msg = &prediction.Message{
 							State: "BiliBili",
 							Name:  Member.Name,
-							Limit: 7,
+							Limit: 356,
 						}
 
 						/*
@@ -249,7 +249,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 					*/
 					if RawData.Code == 0 {
-						target := time.Now().AddDate(0, 0, int(msg.Limit))
+						target := time.Now().AddDate(0, 0, 7)
 						dateFormat := fmt.Sprintf("%s/%d", target.Month().String(), target.Day())
 						now := time.Now()
 						nowFormat := fmt.Sprintf("%s/%d", now.Month().String(), now.Day())
