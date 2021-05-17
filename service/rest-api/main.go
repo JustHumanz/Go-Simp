@@ -229,23 +229,6 @@ func invalidPath(w http.ResponseWriter, r *http.Request) {
 
 func getPrediction(w http.ResponseWriter, r *http.Request) {
 	idstr := mux.Vars(r)["memberID"]
-	days := r.FormValue("days")
-	var daysint = 7
-
-	if days != "" {
-		var err error
-		daysint, err = strconv.Atoi(days)
-		if err != nil {
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(MessageError{
-				Message: err.Error(),
-				Date:    time.Now(),
-			})
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-	}
-
 	if idstr != "" {
 		idint, err := strconv.Atoi(idstr)
 		if err != nil {
@@ -260,13 +243,12 @@ func getPrediction(w http.ResponseWriter, r *http.Request) {
 		for _, Member := range MembersData {
 			if Member["ID"].(int64) == int64(idint) {
 				FinalData := make(map[string]interface{})
-				FinalData["Days"] = days
 				var Fetch = func(wg *sync.WaitGroup, State string) {
 					defer wg.Done()
 					RawData, err := PredictionConn.GetSubscriberPrediction(context.Background(), &prediction.Message{
 						State: State,
 						Name:  Member["NickName"].(string),
-						Limit: int64(daysint),
+						Limit: int64(356),
 					})
 					if err != nil {
 						w.Header().Set("Content-Type", "application/json")
