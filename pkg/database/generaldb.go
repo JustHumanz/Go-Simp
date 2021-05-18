@@ -728,7 +728,19 @@ func ChannelTag(MemberID int64, typetag int, Options string, Reg string) ([]Disc
 			return nil, err
 		}
 	} else {
-		for _, result := range val {
+		unique := func(Slice []string) []string {
+			keys := make(map[string]bool)
+			list := []string{}
+			for _, entry := range Slice {
+				if _, value := keys[entry]; !value {
+					keys[entry] = true
+					list = append(list, entry)
+				}
+			}
+			return list
+		}
+
+		for _, result := range unique(val) {
 			err := json.Unmarshal([]byte(result), &DiscordChan)
 			if err != nil {
 				return nil, err
