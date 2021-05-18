@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"os"
 	"strconv"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
@@ -54,6 +55,9 @@ func CheckYoutube() {
 							if err != nil {
 								log.Error(err)
 							}
+
+							Graph := "[View as Graph](" + os.Getenv("PrometheusURL") + "/graph?g0.expr=get_subscriber%7Bstate%3D%22Youtube%22%2C%20vtuber%3D%22" + Member.Name + "%22%7D&g0.tab=0&g0.stacked=0&g0.range_input=4w)"
+
 							SendNude(engine.NewEmbed().
 								SetAuthor(Group.GroupName, Group.IconURL, "https://www.youtube.com/channel/"+Member.YoutubeID+"?sub_confirmation=1").
 								SetTitle(engine.FixName(Member.EnName, Member.JpName)).
@@ -63,6 +67,7 @@ func CheckYoutube() {
 								AddField("Viewers", engine.NearestThousandFormat(float64(ViewCount))).
 								AddField("Videos", engine.NearestThousandFormat(float64(VideoCount))).
 								InlineAllFields().
+								AddField("Graph", Graph).
 								SetURL("https://www.youtube.com/channel/"+Member.YoutubeID+"?sub_confirmation=1").
 								SetColor(Color).MessageEmbed, Group, Member)
 						}

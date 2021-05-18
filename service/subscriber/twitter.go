@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"strings"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
@@ -35,6 +36,8 @@ func CheckTwitter() {
 					if err != nil {
 						log.Error(err)
 					}
+
+					Graph := "[View as Graph](" + os.Getenv("PrometheusURL") + "/graph?g0.expr=get_subscriber%7Bstate%3D%22Twitter%22%2C%20vtuber%3D%22" + Name.Name + "%22%7D&g0.tab=0&g0.stacked=0&g0.range_input=4w)"
 					SendNude(engine.NewEmbed().
 						SetAuthor(Group.GroupName, Group.IconURL, "https://twitter.com/"+Name.TwitterName).
 						SetTitle(engine.FixName(Name.EnName, Name.JpName)).
@@ -44,6 +47,7 @@ func CheckTwitter() {
 						AddField("Tweets Count", Tweets).
 						InlineAllFields().
 						SetURL("https://twitter.com/"+Name.TwitterName).
+						AddField("Graph", Graph).
 						SetColor(Color).MessageEmbed, Group, Name)
 				}
 				if Twitter.FollowersCount != TwFollowDB.TwFollow {

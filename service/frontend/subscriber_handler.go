@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -253,7 +254,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						dateFormat := fmt.Sprintf("%s/%d", target.Month().String(), target.Day())
 						now := time.Now()
 						nowFormat := fmt.Sprintf("%s/%d", now.Month().String(), now.Day())
-						Graph := "[Views Graph](https://prometheus.humanz.moe/graph?g0.expr=get_subscriber%7Bstate%3D%22" + msg.State + "%22%2C%20vtuber%3D%22" + Member.Name + "%22%7D&g0.tab=0&g0.stacked=0&g0.range_input=1w)"
+						Graph := "[Views Graph](" + os.Getenv("PrometheusURL") + "/graph?g0.expr=get_subscriber%7Bstate%3D%22" + msg.State + "%22%2C%20vtuber%3D%22" + Member.Name + "%22%7D&g0.tab=0&g0.stacked=0&g0.range_input=1w)"
 						_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 							SetTitle(engine.FixName(Member.EnName, Member.JpName)).
