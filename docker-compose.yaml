@@ -113,6 +113,8 @@ services:
       - db_migrate
       - multi_tor
     restart: on-failure    
+    environment:
+      - PrometheusURL=https://prometheus.humanz.moe    
     networks:
       - go_simp-net
 
@@ -136,6 +138,8 @@ services:
       - db_migrate
       - multi_tor
     restart: on-failure
+    environment:
+      - PrometheusURL=https://prometheus.humanz.moe    
     networks:
       - go_simp-net
 
