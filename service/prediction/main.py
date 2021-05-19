@@ -30,34 +30,6 @@ class Prediction(prediction_pb2_grpc.PredictionServicer):
         logging.info("state %s name %s limit %s predick %s score %s",request.State,request.Name,request.Limit,num,score)
         return prediction_pb2.MessageResponse(Code=0,Prediction=int(num),Score=str(int(score *100))+"%")
 
-    def GetReverseSubscriberPrediction(self,request, context):
-        x,y = getData(request.State,request.Name,356)
-        self.Predic.SpellMagic(y,x)
-        finallimit = 0 
-        if request.Limit > 1000000:
-            finallimit = round(request.Limit,-5)
-            if finallimit < request.Limit:
-                finallimit = finallimit + 500000
-        elif request.Limit > 100000:
-            finallimit = round(request.Limit,-4)
-            if finallimit < request.Limit:
-                finallimit = finallimit + 50000
-        elif request.Limit > 10000:
-            finallimit = round(request.Limit,-3)
-            if finallimit < request.Limit:
-                finallimit = finallimit + 5000
-        elif request.Limit > 1000:
-            finallimit = round(request.Limit,-2)
-            if finallimit < request.Limit:
-                finallimit = finallimit + 500                
-
-        num = self.Predic.DoBlackMagic(finallimit)
-        score = self.Predic.CheckBlackMagic()
-        
-        datefix = date.fromordinal(int(num))
-        logging.info("[Reverse] state %s name %s limit %s predick %s score %s",request.State,request.Name,finallimit,num,score)
-        return prediction_pb2.MessageResponse(Code=0,Prediction=int(datefix.strftime('%s')),Score=str(int(score *100))+"%",NextMilestone=finallimit)
-
 #Prometheus Query : get_subscriber{vtuber="Parerun",state="Twitter"}
 class SubscriberPredic:
     def __init__(self):
