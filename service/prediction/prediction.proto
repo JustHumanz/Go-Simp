@@ -12,8 +12,7 @@ message Message{
 message MessageResponse{
     int32 Code =1;
     int64 Prediction =2;
-    string Score =3;
-    int64 NextMilestone =4;
+    float Score =3;
 }
 
 service Prediction{

@@ -141,7 +141,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						msg = &prediction.Message{
 							State: "Twitter",
 							Name:  Member.Name,
-							Limit: 356,
+							Limit: 7,
 						}
 
 						/*
@@ -172,7 +172,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						msg = &prediction.Message{
 							State: "Youtube",
 							Name:  Member.Name,
-							Limit: 356,
+							Limit: 7,
 						}
 
 						/*
@@ -202,7 +202,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						msg = &prediction.Message{
 							State: "BiliBili",
 							Name:  Member.Name,
-							Limit: 356,
+							Limit: 7,
 						}
 
 						/*
@@ -255,6 +255,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						now := time.Now()
 						nowFormat := fmt.Sprintf("%s/%d", now.Month().String(), now.Day())
 						Graph := "[Views Graph](" + os.Getenv("PrometheusURL") + "/graph?g0.expr=get_subscriber%7Bstate%3D%22" + msg.State + "%22%2C%20vtuber%3D%22" + Member.Name + "%22%7D&g0.tab=0&g0.stacked=0&g0.range_input=1w)"
+						Socre := int(RawData.Score * 100)
 						_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 							SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 							SetTitle(engine.FixName(Member.EnName, Member.JpName)).
@@ -262,7 +263,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							AddField("Current "+msg.State+" followes/subscriber("+nowFormat+")", tmp).
 							AddField("Next 7 days Prediction("+dateFormat+")", strconv.Itoa(int(RawData.Prediction))).
 							RemoveInline().
-							AddField("Prediction score", RawData.Score).
+							AddField("Prediction score", strconv.Itoa(Socre)+"%").
 							AddField("Graph", Graph).
 							InlineAllFields().
 							SetThumbnail(Avatar).

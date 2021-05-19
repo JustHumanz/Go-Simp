@@ -229,6 +229,69 @@ func invalidPath(w http.ResponseWriter, r *http.Request) {
 
 func getPrediction(w http.ResponseWriter, r *http.Request) {
 	idstr := mux.Vars(r)["memberID"]
+	days := r.FormValue("days")
+	target := r.FormValue("target")
+	state := r.FormValue("state")
+	var daysint = 7
+	var targetint int
+	if days != "" {
+		var err error
+		daysint, err = strconv.Atoi(days)
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(MessageError{
+				Message: err.Error(),
+				Date:    time.Now(),
+			})
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+	}
+
+	if target != "" {
+		var err error
+		targetint, err = strconv.Atoi(target)
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(MessageError{
+				Message: err.Error(),
+				Date:    time.Now(),
+			})
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+	}
+
+	if days != "" && target != "" {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(MessageError{
+			Message: "Not support multiple prediction",
+			Date:    time.Now(),
+		})
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if state == "" {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(MessageError{
+			Message: "Nill state",
+			Date:    time.Now(),
+		})
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if daysint > 10 || daysint < 0 {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(MessageError{
+			Message: "Can't predic more than 10 days",
+			Date:    time.Now(),
+		})
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	if idstr != "" {
 		idint, err := strconv.Atoi(idstr)
 		if err != nil {
@@ -243,21 +306,27 @@ func getPrediction(w http.ResponseWriter, r *http.Request) {
 		for _, Member := range MembersData {
 			if Member["ID"].(int64) == int64(idint) {
 				FinalData := make(map[string]interface{})
-				var Fetch = func(wg *sync.WaitGroup, State string) {
+				isError := false
+				var Fetch = func(wg *sync.WaitGroup, State string, Days bool) {
 					defer wg.Done()
-					RawData, err := PredictionConn.GetSubscriberPrediction(context.Background(), &prediction.Message{
-						State: State,
-						Name:  Member["NickName"].(string),
-						Limit: int64(356),
-					})
-					if err != nil {
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(MessageError{
-							Message: err.Error(),
-							Date:    time.Now(),
+					var RawData *prediction.MessageResponse
+					var err error
+					if Days {
+						RawData, err = PredictionConn.GetSubscriberPrediction(context.Background(), &prediction.Message{
+							State: State,
+							Name:  Member["NickName"].(string),
+							Limit: int64(daysint),
 						})
-						w.WriteHeader(http.StatusInternalServerError)
-						return
+					} else {
+						RawData, err = PredictionConn.GetReverseSubscriberPrediction(context.Background(), &prediction.Message{
+							State: State,
+							Name:  Member["NickName"].(string),
+							Limit: int64(targetint),
+						})
+					}
+					if err != nil {
+						log.Error(err)
+						isError = true
 					}
 
 					if RawData.Code == 0 {
@@ -272,41 +341,70 @@ func getPrediction(w http.ResponseWriter, r *http.Request) {
 							Bl := Member["BiliBili"].(map[string]interface{})
 							Data["Current_followes/subscriber"] = Bl["Followers"]
 						}
-						Data["Prediction"] = RawData.Prediction
+						if Days {
+							Data["Prediction"] = RawData.Prediction
+						} else {
+							if Data["Current_followes/subscriber"].(int) < targetint {
+								Data["Prediction"] = targetint
+							} else {
+								isError = true
+							}
+						}
+
 						Data["Score"] = RawData.Score
+						if targetint == 0 {
+							FinalData["Prediction_Days"] = time.Now().AddDate(0, 0, daysint)
+						} else {
+							unxtoko := time.Unix(RawData.Prediction, 0)
+							FinalData["Prediction_Days"] = unxtoko
+						}
 
 						FinalData[State] = Data
+					} else {
+						isError = true
 					}
-
 				}
 
 				var wg sync.WaitGroup
-				if Member["Twitter"] != nil {
-					wg.Add(1)
-					go Fetch(&wg, "Youtube")
+
+				for _, st := range strings.Split(state, ",") {
+					if st == "bilibili" {
+						st = "BiliBili"
+					}
+					if Member[strings.Title(st)] != nil {
+						wg.Add(1)
+						if targetint == 0 {
+							go Fetch(&wg, strings.Title(st), true)
+						} else {
+							go Fetch(&wg, strings.Title(st), false)
+							break
+						}
+					} else {
+						FinalData[strings.Title(st)] = nil
+					}
 				}
 
-				if Member["BiliBili"] != nil {
-					wg.Add(1)
-					go Fetch(&wg, "BiliBili")
-				}
-
-				if Member["Twitter"] != nil {
-					wg.Add(1)
-					go Fetch(&wg, "Twitter")
-
-				}
 				wg.Wait()
 
-				w.Header().Set("Access-Control-Allow-Origin", "*")
-				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(FinalData)
-				w.WriteHeader(http.StatusOK)
+				if !isError {
+					w.Header().Set("Access-Control-Allow-Origin", "*")
+					w.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(w).Encode(FinalData)
+					w.WriteHeader(http.StatusOK)
+				} else {
+					w.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(w).Encode(MessageError{
+						Message: "oops,something goes wrong",
+						Date:    time.Now(),
+					})
+					w.WriteHeader(http.StatusBadRequest)
+				}
 				return
 			}
 		}
 	}
 }
+
 func getGroup(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)["groupID"]
 	if vars != "" {

@@ -19,17 +19,28 @@ class Prediction(prediction_pb2_grpc.PredictionServicer):
         self.Predic = SubscriberPredic()        
 
     def GetSubscriberPrediction(self,request, context):
-        x,y = getData(request.State,request.Name,request.Limit)
+        x,y = getData(request.State,request.Name,356)
         if x == [] and y == []:
-            return prediction_pb2.MessageResponse(Code=1,Prediction="0",Score="0")
+            return prediction_pb2.MessageResponse(Code=1,Prediction=0,Score=0)
 
         self.Predic.SpellMagic(x,y)
-        limit = datetime.today().replace(day=len(x)+7)
+        limit = datetime.today().replace(day=len(x)+request.Limit)
         num = self.Predic.DoBlackMagic(limit.toordinal())
         score = self.Predic.CheckBlackMagic()
         logging.info("state %s name %s limit %s predick %s score %s",request.State,request.Name,request.Limit,num,score)
-        return prediction_pb2.MessageResponse(Code=0,Prediction=int(num),Score=str(int(score *100))+"%")
+        return prediction_pb2.MessageResponse(Code=0,Prediction=int(num),Score=score)
 
+    def GetReverseSubscriberPrediction(self,request, context):
+        x,y = getData(request.State,request.Name,356)
+        if x == [] and y == []:
+            return prediction_pb2.MessageResponse(Code=1,Prediction=0,Score=0)
+
+        self.Predic.SpellMagic(y,x)
+        num = self.Predic.DoBlackMagic(request.Limit)
+        score = self.Predic.CheckBlackMagic()
+        fromordinal = datetime.fromordinal(int(num))
+        logging.info("state %s name %s limit %s predick %s score %s",request.State,request.Name,request.Limit,fromordinal,score)
+        return prediction_pb2.MessageResponse(Code=0,Prediction=int(fromordinal.timestamp()),Score=score)
 #Prometheus Query : get_subscriber{vtuber="Parerun",state="Twitter"}
 class SubscriberPredic:
     def __init__(self):
