@@ -98,6 +98,14 @@
          <p><code>vtbot&gt;My tags</code><br>
             Shows all your info
          </p>
+         <p><code>vtbot&gt;prediction {state} {Member}</code><br>
+            Shows subscriber or followers prediction in next 7 days <br>
+            Example : <code>vtbot&gt;prediction -tw iofi</code> <br>
+            State : <br>
+            -tw => twitter <br>
+            -yt => youtube <br>
+            -bl => bilibili <br>
+         </p>         
          <p><code>art&gt;{Group/Member}</code><br>
             Show fanart with randomly with their fanart hashtag<br>
             Example: <code>art&gt;Kanochi</code> or <code>art&gt;hololive</code>
