@@ -95,7 +95,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 				break
 			}
 			for _, MemberData := range GroupData.Members {
-				if m.Content == strings.ToLower(Prefix+MemberData.Name) || m.Content == strings.ToLower(Prefix+MemberData.JpName) {
+				if m.Content == strings.ToLower(Prefix+MemberData.Name) || (MemberData.JpName != "" && m.Content == strings.ToLower(Prefix+MemberData.JpName)) {
 					FanArtData, err := database.GetFanart(0, MemberData.ID)
 					if err != nil {
 						log.Error(err)
@@ -201,7 +201,7 @@ func Lewd(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 
 				for _, MemberData := range GroupData.Members {
-					if m.Content == strings.ToLower(Prefix+MemberData.Name) || m.Content == strings.ToLower(Prefix+MemberData.JpName) {
+					if m.Content == strings.ToLower(Prefix+MemberData.Name) || (MemberData.JpName != "" && m.Content == strings.ToLower(Prefix+MemberData.JpName)) {
 						FanArtData, err := database.GetLewd(0, MemberData.ID)
 						if err != nil {
 							log.Error(err)
