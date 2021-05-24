@@ -184,7 +184,15 @@ func CheckYtByTime() {
 									})
 								}
 
+								isMemberOnly, err := regexp.MatchString("memberonly", strings.ToLower(Youtube.Title))
+								if err != nil {
+									log.Error(err)
+								}
+
 								engine.SendLiveNotif(&Youtube, Bot)
+								if isMemberOnly {
+									Youtube.UpdateYt(config.PrivateStatus)
+								}
 							}
 						}
 					}
