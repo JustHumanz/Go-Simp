@@ -39,9 +39,9 @@ var (
 		[]string{"vtuber", "group", "state"},
 	)
 
-	GetFlyingHours = prometheus.NewCounterVec(
+	GetLiveDuration = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: config.Get_Flying_Hours,
+			Name: config.Get_Live_Duration,
 			Help: "Get vtuber flying hours",
 		},
 		[]string{"vtuber", "group", "state"},
@@ -55,6 +55,6 @@ func Init() {
 		GetSubs,
 		GetViews,
 		GetLive,
-		GetFlyingHours,
+		GetLiveDuration,
 	)
 }
