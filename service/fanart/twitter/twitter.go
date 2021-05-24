@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"flag"
-	"sync"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
@@ -93,33 +92,27 @@ func main() {
 
 //CheckNew Check new fanart
 func CheckNew() {
-	wg := new(sync.WaitGroup)
-	for _, GroupData := range *GroupPayload {
-		wg.Add(1)
-		go func(Group database.Group, wg *sync.WaitGroup) {
-			defer wg.Done()
-			Fanarts, err := engine.CreatePayload(Group, config.Scraper, config.GoSimpConf.LimitConf.TwitterFanart, lewd)
-			if err != nil {
-				log.WithFields(log.Fields{
-					"Group": Group.GroupName,
-				}).Error(err)
-			} else {
-				for _, Art := range Fanarts {
-					Color, err := engine.GetColor(config.TmpDir, Art.Photos[0])
-					if err != nil {
-						log.Error(err)
-					}
-					if config.GoSimpConf.Metric {
-						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-							MetricData: Art.MarshallBin(),
-							State:      config.FanartState,
-						})
-					}
-
-					engine.SendFanArtNude(Art, Bot, Color)
+	for _, Group := range *GroupPayload {
+		Fanarts, err := engine.CreatePayload(Group, config.Scraper, config.GoSimpConf.LimitConf.TwitterFanart, lewd)
+		if err != nil {
+			log.WithFields(log.Fields{
+				"Group": Group.GroupName,
+			}).Error(err)
+		} else {
+			for _, Art := range Fanarts {
+				Color, err := engine.GetColor(config.TmpDir, Art.Photos[0])
+				if err != nil {
+					log.Error(err)
 				}
+				if config.GoSimpConf.Metric {
+					gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+						MetricData: Art.MarshallBin(),
+						State:      config.FanartState,
+					})
+				}
+
+				engine.SendFanArtNude(Art, Bot, Color)
 			}
-		}(GroupData, wg)
+		}
 	}
-	wg.Wait()
 }
