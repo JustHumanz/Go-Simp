@@ -218,19 +218,19 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 		}).Info("Update past Livestream metric")
 
 		if LiveData.State == config.YoutubeLive && !LiveData.Member.IsYtNill() {
-			metric.GetFlyingHours.WithLabelValues(
+			metric.GetLiveDuration.WithLabelValues(
 				LiveData.Member.Name,
 				LiveData.Group.GroupName,
 				"Youtube",
 			).Add(Time)
 		} else if LiveData.State == config.BiliLive && !LiveData.Member.IsBiliNill() {
-			metric.GetFlyingHours.WithLabelValues(
+			metric.GetLiveDuration.WithLabelValues(
 				LiveData.Member.Name,
 				LiveData.Group.GroupName,
 				"BiliBili",
 			).Add(Time)
 		} else if LiveData.State == config.TwitchLive {
-			metric.GetFlyingHours.WithLabelValues(
+			metric.GetLiveDuration.WithLabelValues(
 				LiveData.Member.Name,
 				LiveData.Group.GroupName,
 				"Twitch",
