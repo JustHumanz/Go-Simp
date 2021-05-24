@@ -321,9 +321,12 @@ func CountryCodetoUniCode(Region string) string {
 		return "🇺🇸"
 	} else if Region == "FL" {
 		return "🇫🇮"
-	} else {
+	} else if Region == "EN" {
 		return "🇪🇺"
+	} else if Region == "UK" {
+		return "🇬🇧"
 	}
+	return ""
 }
 
 func UniCodetoCountryCode(Region string) string {
@@ -349,6 +352,8 @@ func UniCodetoCountryCode(Region string) string {
 		return "US"
 	} else if Region == "🇫🇮" {
 		return "FI"
+	} else if Region == "🇬🇧" {
+		return "UK"
 	}
 	return ""
 }
