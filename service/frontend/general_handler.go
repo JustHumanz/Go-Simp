@@ -113,8 +113,15 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 			return
 		}
 		if !Group && !Member {
+			Name := m.Content[len(Prefix):]
+			if Name == "" {
+				s.ChannelMessageSend(m.ChannelID, "???")
+				return
+			}
 			_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-				SetDescription("`"+m.Content[len(Prefix):]+"` was invalid name").
+				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+				SetTitle("Error").
+				SetDescription("`"+Name+"` was invalid name\nuse `"+configfile.BotPrefix.General+"vtuber data [GroupName]` or see at [Web]("+config.VtubersData+")").
 				SetImage(engine.NotFoundIMG()).MessageEmbed)
 			if err != nil {
 				log.Error(err)
@@ -221,8 +228,15 @@ func Lewd(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 
 			if !Group && !Member {
+				Name := m.Content[len(Prefix):]
+				if Name == "" {
+					s.ChannelMessageSend(m.ChannelID, "???")
+					return
+				}
 				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-					SetDescription("`"+m.Content[len(Prefix):]+"` was invalid name").
+					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+					SetTitle("Error").
+					SetDescription("`"+Name+"` was invalid name\nuse `"+configfile.BotPrefix.General+"vtuber data [GroupName]` or see at [Web]("+config.VtubersData+")").
 					SetImage(engine.NotFoundIMG()).MessageEmbed)
 				if err != nil {
 					log.Error(err)
