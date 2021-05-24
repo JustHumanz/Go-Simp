@@ -466,13 +466,16 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 			}
 			if YTData != nil {
 				Member["IsYtLive"] = true
+				Member["LiveURL"] = "https://www.youtube.com/watch?v=" + YTData[0].VideoID
 			} else {
 				Member["IsYtLive"] = false
 			}
 			BiliData := database.BilGet(0, Member["ID"].(int64), config.LiveStatus)
 
 			if BiliData != nil {
+				Bili := Member["BiliBili"].(map[string]interface{})
 				Member["IsBiliLive"] = true
+				Member["LiveURL"] = "https://live.bilibili.com/" + Bili["RoomID"].(string)
 			} else {
 				Member["IsBiliLive"] = false
 			}
