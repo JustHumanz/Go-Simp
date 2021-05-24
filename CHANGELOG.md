@@ -1,3 +1,9 @@
+v3.9.1
+- Change twitter fanart workflow
+- Change twitter fanart interval
+- Add `LiveURL` in rest-api
+- Update error payload when nil payload
+
 v3.9.0
 - Add Vtuber followers/subscriber prediction
 - Change youtube channel checker interval
