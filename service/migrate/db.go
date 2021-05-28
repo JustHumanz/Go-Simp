@@ -272,9 +272,10 @@ func AddData(Data Vtuber) {
 
 			for _, ytb := range GroupRaw.GroupChannel.Youtube {
 				if ytb != nil {
+					tmp := 0
 					Youtube := ytb.(map[string]interface{})
 					row := db.QueryRow("SELECT id FROM GroupYoutube WHERE YoutubeChannel=? ", Youtube["ChannelID"])
-					err := row.Scan(&GroupData.ID)
+					err := row.Scan(&tmp)
 					if err == sql.ErrNoRows {
 						stmt, err := db.Prepare("INSERT INTO GroupYoutube (YoutubeChannel,Region,VtuberGroup_id) values(?,?,?)")
 						if err != nil {
@@ -298,9 +299,10 @@ func AddData(Data Vtuber) {
 
 			for _, bil := range GroupRaw.GroupChannel.BiliBili {
 				if bil != nil {
+					tmp := 0
 					BiliBili := bil.(map[string]interface{})
 					row := db.QueryRow("SELECT id FROM GroupBiliBili WHERE AND BiliBili_SpaceID=? ", BiliBili["BiliBili_ID"])
-					err := row.Scan(&GroupData.ID)
+					err := row.Scan(&tmp)
 					if err == sql.ErrNoRows {
 						stmt, err := db.Prepare("INSERT INTO GroupBiliBili (BiliBili_SpaceID,BiliBili_RoomID,Status,Region,VtuberGroup_id) values(?,?,?,?,?)")
 						if err != nil {
