@@ -201,12 +201,12 @@ func AddData(Data Vtuber) {
 						DeleteChannel(Channel.ID)
 					}
 				}
-				_, err = Bot.ChannelMessageSend(Channel.ChannelID, "Push "+configfile.Emoji.Livestream[0]+" to add you in `"+Vtubers+"` ping list")
+				_, err = Bot.ChannelMessageSend(Channel.ChannelID, "Push "+configfile.Emoji.Livestream[0]+" to add you in "+Vtubers+" ping list")
 				if err != nil {
 					log.Error(err)
 				}
 
-				_, err = Bot.ChannelMessageSend(Channel.ChannelID, "Update your roles with `"+configfile.BotPrefix.General+"tag roles @somesimpsroles "+Vtubers+"`")
+				_, err = Bot.ChannelMessageSend(Channel.ChannelID, "Update your roles with `"+configfile.BotPrefix.General+"tag roles @somesimpsroles` "+Vtubers)
 				if err != nil {
 					log.Error(err)
 				}
@@ -457,11 +457,11 @@ func AddData(Data Vtuber) {
 							DeleteChannel(Channel.ID)
 						}
 					}
-					_, err = Bot.ChannelMessageSend(Channel.ChannelID, "Push "+configfile.Emoji.Livestream[0]+" to add you in `"+Vtubers+"` ping list")
+					_, err = Bot.ChannelMessageSend(Channel.ChannelID, "Push "+configfile.Emoji.Livestream[0]+" to add you in "+Vtubers+" ping list")
 					if err != nil {
 						log.Error(err)
 					}
-					_, err = Bot.ChannelMessageSend(Channel.ChannelID, "Update your roles with `"+configfile.BotPrefix.General+"tag roles @somesimpsroles "+Vtubers+"`")
+					_, err = Bot.ChannelMessageSend(Channel.ChannelID, "Update your roles with `"+configfile.BotPrefix.General+"tag roles @somesimpsroles` "+Vtubers)
 					if err != nil {
 						log.Error(err)
 					}
@@ -483,35 +483,6 @@ func DeleteChannel(id int64) error {
 	}
 	return nil
 }
-
-/*
-//GetChannelByGroupGet DiscordChannelID from VtuberGroup
-func GetChannelByGroup(VtuberGroupID int64) ([]string, []int64) {
-	var (
-		channellist []string
-		ids         []int64
-	)
-	rows, err := db.Query(`SELECT id,DiscordChannelID FROM Channel WHERE VtuberGroup_id=?`, VtuberGroupID)
-	if err != nil {
-		log.Error(err)
-	}
-
-	defer rows.Close()
-	for rows.Next() {
-		var (
-			list string
-			id   int64
-		)
-		err = rows.Scan(&id, &list)
-		if err != nil {
-			log.Error(err)
-		}
-		channellist = append(channellist, list)
-		ids = append(ids, id)
-	}
-	return channellist, ids
-}
-*/
 
 func (Data Members) InputSubs(MemberID int64) {
 	var tmp int64

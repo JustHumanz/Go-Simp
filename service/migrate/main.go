@@ -242,7 +242,7 @@ func Dead(s *discordgo.Session, m *discordgo.MessageCreate) {
 		log.Error(err)
 	}
 	if m.Content != "" {
-		if len(regexp.MustCompile("(?m)("+General+"|"+Fanart+"|"+BiliBili+"|"+Youtube+")").FindAllString(m.Content, -1)) > 0 {
+		if len(regexp.MustCompile("(?m)("+General+"|"+Fanart+"|"+BiliBili+"|"+Youtube+")").FindAllString(m.Content, -1)) > 0 && !m.Author.Bot {
 			s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 				SetTitle("Bot update new Vtubers").
