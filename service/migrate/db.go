@@ -205,6 +205,11 @@ func AddData(Data Vtuber) {
 				if err != nil {
 					log.Error(err)
 				}
+
+				_, err = Bot.ChannelMessageSend(Channel.ChannelID, "Update your roles with `"+configfile.BotPrefix.General+"tag roles @somesimpsroles "+Vtubers+"`")
+				if err != nil {
+					log.Error(err)
+				}
 			}
 		}
 	}
@@ -451,6 +456,10 @@ func AddData(Data Vtuber) {
 						}
 					}
 					_, err = Bot.ChannelMessageSend(Channel.ChannelID, "Push "+configfile.Emoji.Livestream[0]+" to add you in `"+Vtubers+"` ping list")
+					if err != nil {
+						log.Error(err)
+					}
+					_, err = Bot.ChannelMessageSend(Channel.ChannelID, "Update your roles with `"+configfile.BotPrefix.General+"tag roles @somesimpsroles "+Vtubers+"`")
 					if err != nil {
 						log.Error(err)
 					}
