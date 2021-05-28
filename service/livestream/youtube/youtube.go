@@ -156,7 +156,7 @@ func CheckYtByTime() {
 								Key := "0" + strconv.Itoa(int(Member.ID)) + config.UpcomingStatus + config.Sys
 								err = database.RemoveYtCache(Key, context.Background())
 								if err != nil {
-									log.Error(err)
+									log.Panic(err)
 								}
 
 								Youtube.UpdateStatus(config.LiveStatus).
