@@ -2905,7 +2905,7 @@
                   },
                   {
                      "ChannelID": "UC-JSeFfovhNsEhftt1WHMvg",
-                     "Region":""
+                     "Region":"EN"
                   }
                ],
                "BiliBili": [
@@ -4190,6 +4190,30 @@
                   "Status": "Active"
                },
                {
+                  "Name":"Amyamya",
+                  "EN_Name":"Amamiya Kokoro",
+                  "JP_Name":"天宮こころ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#絵こころ",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"amamiya_kokoro"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCkIimWZ9gBJRamKF0rmPU8w"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
                   "Name":"Hanamaki",
                   "EN_Name":"Hana Macchia",
                   "JP_Name":"ハナ・マキア",
@@ -5005,6 +5029,78 @@
                   "Fanbase":"",
                   "Status": "Inactive"
                },
+               {
+                  "Name":"Elira",
+                  "EN_Name":"Elira Pendora",
+                  "JP_Name":"エリーラ ペンドラ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#pendorART",
+                     "Twitter_Lewd":"#elilust",
+                     "Twitter_Username":"EliraPendora"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCIeSUTOTkF9Hs7q3SGcO-Ow"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"EN",
+                  "Fanbase":"FamElira",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Pomupuff",
+                  "EN_Name":"Pomu Rainpuff",
+                  "JP_Name":"ぽむ れいんぱふ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#PomuPaint",
+                     "Twitter_Lewd":"#PomuHub",
+                     "Twitter_Username":"PomuRainpuff"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCP4nMSTdwU1KqYWu3UH5DHQ"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"EN",
+                  "Fanbase":"Pomudachi",
+                  "Status": "Active"
+               },     
+               {
+                  "Name":"Fina",
+                  "EN_Name":"Finana Ryugu",
+                  "JP_Name":"フィナーナ 竜宮",
+                  "Twitter":{
+                     "Twitter_Fanart":"#Finanart",
+                     "Twitter_Lewd":"#NSFinW",
+                     "Twitter_Username":"FinanaRyugu"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCu-J8uIXuLZh16gG-cT1naw"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":0,
+                     "BiliRoom_ID":0
+                  },
+                  "Twitch":{
+                     "Twitch_Username":""
+                  },
+                  "Region":"EN",
+                  "Fanbase":"Ryuguards",
+                  "Status": "Active"
+               },                         
                {
                   "Name":"Yukie",
                   "EN_Name":"Yukie",
