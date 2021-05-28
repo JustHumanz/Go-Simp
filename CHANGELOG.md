@@ -1,3 +1,8 @@
+v3.9.2
+- Add nijisanji EN
+- Change error to panic when drop cache
+- Update new vtuber message
+
 v3.9.1
 - Change twitter fanart workflow
 - Change twitter fanart interval
