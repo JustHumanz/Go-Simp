@@ -24,8 +24,7 @@ class Prediction(prediction_pb2_grpc.PredictionServicer):
             return prediction_pb2.MessageResponse(Code=1,Prediction=0,Score=0)
 
         self.Predic.SpellMagic(x,y)
-        limit = datetime.today().replace(day=len(x)+request.Limit)
-        num = self.Predic.DoBlackMagic(limit.toordinal())
+        num = self.Predic.DoBlackMagic(len(x)+request.Limit)
         score = self.Predic.CheckBlackMagic()
         logging.info("state %s name %s limit %s predick %s score %s",request.State,request.Name,request.Limit,num,score)
         return prediction_pb2.MessageResponse(Code=0,Prediction=int(num),Score=score)
@@ -47,7 +46,7 @@ class SubscriberPredic:
         self.lg = LinearRegression()
 
     def SpellMagic(self,x,y):
-        self.x = np.array(x).reshape((-1, 1))
+        self.x = np.array(x).reshape(-1, 1)
         self.y = np.array(y)
 
     def DoBlackMagic(self,num):
@@ -63,6 +62,7 @@ def getData(state,name :str,lmt :int):
     start = datetime.today().replace(hour=23,minute=59,second=59)-timedelta(days=lmt)
     y = []
     x = []
+    counter = 1
     try:
         response = requests.get(prometheus+'/api/v1/query_range?query=get_subscriber{state="'+state+'",vtuber="'+name+'"}',params={'start':start.strftime('%s'),'end':datetime.today().strftime('%s'),'step':'86400'})
         logging.info("%s",response.url)
@@ -70,8 +70,9 @@ def getData(state,name :str,lmt :int):
         data = response.json()
         if len(data["data"]["result"]) > 0:
             for values in data["data"]["result"][0]['values']:
-                x.append(datetime.fromtimestamp(values[0]).toordinal())                
+                x.append(counter)                
                 y.append(int(values[1]))
+                counter += 1
         elif len(data["data"]["result"]) == 0:
             logging.error("data null,can't be processed")
             return [],[]
