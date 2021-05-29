@@ -69,6 +69,7 @@ const (
 	BiliBiliLive               = "@every 0h7m0s"
 	BiliBiliSpace              = "@every 0h13m0s"
 	Twitch                     = "@every 0h11m0s"
+	TwitchFollowers            = "@every 0h30m0s"
 	YoutubeCheckChannel        = "@every 0h5m0s"
 	YoutubeCheckUpcomingByTime = "@every 0h1m0s"
 	YoutubePrivateSlayer       = "@every 2h31m0s"

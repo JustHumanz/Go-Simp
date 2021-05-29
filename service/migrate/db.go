@@ -490,6 +490,10 @@ func (Data Members) InputSubs(MemberID int64) {
 	err := row.Scan(&tmp)
 	Subs := Data.Youtube.GetYtSubs()
 	Bili := Data.BiliBili.GetBiliFolow(Data.Name)
+	TwitchFollow, TwitchViwers, err := Data.Twitch.GetTwitchFollowers()
+	if err != nil {
+		log.Error(err)
+	}
 
 	ytsubs, _ := strconv.Atoi(Subs.Items[0].Statistics.SubscriberCount)
 	ytvideos, _ := strconv.Atoi(Subs.Items[0].Statistics.VideoCount)
@@ -503,11 +507,11 @@ func (Data Members) InputSubs(MemberID int64) {
 	}
 
 	if err != nil || err == sql.ErrNoRows {
-		stmt, err := db.Prepare("INSERT INTO Subscriber (Youtube_Subscriber,Youtube_Videos,Youtube_Views,BiliBili_Followers,BiliBili_Videos,BiliBili_Views,Twitter_Followers,VtuberMember_id) values(?,?,?,?,?,?,?,?)")
+		stmt, err := db.Prepare("INSERT INTO Subscriber (Youtube_Subscriber,Youtube_Videos,Youtube_Views,BiliBili_Followers,BiliBili_Videos,BiliBili_Views,Twitter_Followers,Twitch_Followers,Twitch_Views,VtuberMember_id) values(?,?,?,?,?,?,?,?,?,?)")
 		if err != nil {
 			log.Error(err)
 		}
-		res, err := stmt.Exec(ytsubs, ytvideos, ytviews, bilifoll, bilivideos, biliview, twfollo, MemberID)
+		res, err := stmt.Exec(ytsubs, ytvideos, ytviews, bilifoll, bilivideos, biliview, twfollo, TwitchFollow, MemberID)
 		if err != nil {
 			log.Error(err)
 		}
@@ -518,17 +522,17 @@ func (Data Members) InputSubs(MemberID int64) {
 
 		defer stmt.Close()
 	} else {
-		rows, err := db.Query(`SELECT Youtube_Subscriber,Youtube_Videos,Youtube_Views,BiliBili_Followers,BiliBili_Videos,BiliBili_Views,Twitter_Followers FROM Subscriber WHERE VtuberMember_id=?`, MemberID)
+		rows, err := db.Query(`SELECT Youtube_Subscriber,Youtube_Videos,Youtube_Views,BiliBili_Followers,BiliBili_Videos,BiliBili_Views,Twitter_Followers,Twitch_Followers,Twitch_Views FROM Subscriber WHERE VtuberMember_id=?`, MemberID)
 		if err != nil {
 			log.Error(err)
 		}
 		var (
-			ytsubstmp, ytvideostmp, ytviewstmp, bilifolltmp, bilivideostmp, biliviewtmp, twfollotmp int
+			ytsubstmp, ytvideostmp, ytviewstmp, bilifolltmp, bilivideostmp, biliviewtmp, twfollotmp, twitchfollotmp, twitchviwerstmp int
 		)
 
 		defer rows.Close()
 		for rows.Next() {
-			err = rows.Scan(&ytsubstmp, &ytvideostmp, &ytviewstmp, &bilifolltmp, &bilivideostmp, &biliviewtmp, &twfollotmp)
+			err = rows.Scan(&ytsubstmp, &ytvideostmp, &ytviewstmp, &bilifolltmp, &bilivideostmp, &biliviewtmp, &twfollotmp, &twitchfollotmp, &twitchviwerstmp)
 			if err != nil {
 				log.Error(err)
 			}
@@ -555,12 +559,18 @@ func (Data Members) InputSubs(MemberID int64) {
 		if (twfollo == 0 && twfollotmp != 0) || (twfollo == 0 && twfollotmp == 0) {
 			twfollo = twfollotmp
 		}
+		if (TwitchFollow == 0 && twfollotmp != 0) || (TwitchFollow == 0 && twitchfollotmp == 0) {
+			TwitchFollow = twitchfollotmp
+		}
+		if (TwitchViwers == 0 && twitchviwerstmp != 0) || (TwitchViwers == 0 && twitchviwerstmp == 0) {
+			TwitchViwers = twitchviwerstmp
+		}
 
-		Update, err := db.Prepare(`Update Subscriber set Youtube_Subscriber=?, Youtube_Videos=?, Youtube_Views=?, BiliBili_Followers=?, BiliBili_Videos=?, BiliBili_Views=?, Twitter_Followers=? Where id=?`)
+		Update, err := db.Prepare(`Update Subscriber set Youtube_Subscriber=?, Youtube_Videos=?, Youtube_Views=?, BiliBili_Followers=?, BiliBili_Videos=?, BiliBili_Views=?, Twitter_Followers=?,Twitch_Followers=?,Twitch_Views=? Where id=?`)
 		if err != nil {
 			log.Error(err)
 		}
-		Update.Exec(ytsubs, ytvideos, ytviews, bilifoll, bilivideos, biliview, twfollo, tmp)
+		Update.Exec(ytsubs, ytvideos, ytviews, bilifoll, bilivideos, biliview, twfollo, TwitchFollow, TwitchViwers, tmp)
 	}
 }
 

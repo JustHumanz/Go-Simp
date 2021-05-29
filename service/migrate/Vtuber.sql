@@ -94,6 +94,8 @@ CREATE TABLE IF NOT EXISTS `Subscriber` (
   `BiliBili_Videos` int(11) DEFAULT NULL,
   `BiliBili_Views` int(11) DEFAULT NULL,
   `Twitter_Followers` int(11) DEFAULT NULL,
+  `Twitch_Followers` int(11) DEFAULT NULL,
+  `Twitch_Views` int(11) DEFAULT NULL,
   `VtuberMember_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

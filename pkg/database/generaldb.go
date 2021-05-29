@@ -139,7 +139,7 @@ func (Member Member) GetSubsCount() (*MemberSubs, error) {
 		defer rows.Close()
 
 		for rows.Next() {
-			err = rows.Scan(&Data.ID, &Data.YtSubs, &Data.YtVideos, &Data.YtViews, &Data.BiliFollow, &Data.BiliVideos, &Data.BiliViews, &Data.TwFollow, &Data.Member.ID)
+			err = rows.Scan(&Data.ID, &Data.YtSubs, &Data.YtVideos, &Data.YtViews, &Data.BiliFollow, &Data.BiliVideos, &Data.BiliViews, &Data.TwFollow, &Data.TwitchFollow, &Data.TwitchViews, &Data.Member.ID)
 			if err != nil {
 				return nil, err
 			}
@@ -158,7 +158,7 @@ func (Member Member) GetSubsCount() (*MemberSubs, error) {
 	return &Data, nil
 }
 
-//GetSubsCount Get subs,follow,view,like data from Subscriber
+//RemoveSubsCache
 func (Member Member) RemoveSubsCache() error {
 	var (
 		Key = strconv.Itoa(int(Member.ID)) + Member.Name
@@ -213,6 +213,18 @@ func (Member *MemberSubs) UptwFollow(new int) *MemberSubs {
 	return Member
 }
 
+//UptwitchFollow Update Twitch state
+func (Member *MemberSubs) UpTwitchFollow(new int) *MemberSubs {
+	Member.TwitchFollow = new
+	return Member
+}
+
+//UptwitchViwers Update Twitch state
+func (Member *MemberSubs) UpTwitchViwers(new int) *MemberSubs {
+	Member.TwitchViews = new
+	return Member
+}
+
 //UpdateSubs Update Subscriber data
 func (Member *MemberSubs) UpdateSubs() {
 	if Member.State == config.YoutubeLive {
@@ -222,6 +234,11 @@ func (Member *MemberSubs) UpdateSubs() {
 		}
 	} else if Member.State == config.BiliBiliArt {
 		_, err := DB.Exec(`Update Subscriber set BiliBili_Followers=?,BiliBili_Videos=?,BiliBili_Views=? Where id=? `, Member.BiliFollow, Member.BiliVideos, Member.BiliViews, Member.ID)
+		if err != nil {
+			log.Error(err)
+		}
+	} else if Member.State == config.TwitchLive {
+		_, err := DB.Exec(`Update Subscriber set Twitch_Followers=?,Twitch_Views=?, Where id=? `, Member.TwitchFollow, Member.TwitchViews, Member.ID)
 		if err != nil {
 			log.Error(err)
 		}

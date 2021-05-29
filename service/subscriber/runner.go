@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/nicklaw5/helix"
 	"github.com/robfig/cron/v3"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
@@ -20,10 +21,15 @@ import (
 )
 
 var (
-	Bot        *discordgo.Session
-	configfile config.ConfigFile
-	Payload    *[]database.Group
-	gRCPconn   pilot.PilotServiceClient
+	Bot          *discordgo.Session
+	configfile   config.ConfigFile
+	Payload      *[]database.Group
+	gRCPconn     pilot.PilotServiceClient
+	TwitchClient *helix.Client
+	Youtube      *bool
+	BiliBili     *bool
+	Twitter      *bool
+	Twitch       *bool
 )
 
 const (
@@ -31,16 +37,17 @@ const (
 )
 
 func init() {
+	Youtube = flag.Bool("Youtube", false, "Enable youtube module")
+	BiliBili = flag.Bool("BiliBili", false, "Enable bilibili module")
+	Twitter = flag.Bool("Twitter", false, "Enable twitter module")
+	Twitch = flag.Bool("Twitch", false, "Enable Twitch module")
+	flag.Parse()
+
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
 	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 }
 
 func main() {
-	Youtube := flag.Bool("Youtube", false, "Enable youtube module")
-	BiliBili := flag.Bool("BiliBili", false, "Enable bilibili module")
-	Twitter := flag.Bool("Twitter", false, "Enable twitter module")
-	flag.Parse()
-
 	GetPayload := func() {
 		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
 			Message: "Send me nude",
@@ -74,6 +81,20 @@ func main() {
 
 	database.Start(configfile)
 
+	TwitchClient, err = helix.NewClient(&helix.Options{
+		ClientID:     config.GoSimpConf.Twitch.ClientID,
+		ClientSecret: config.GoSimpConf.Twitch.ClientSecret,
+	})
+	if err != nil {
+		log.Error(err)
+	}
+	resp, err := TwitchClient.RequestAppAccessToken([]string{"user:read:email"})
+	if err != nil {
+		log.Error(err)
+	}
+
+	TwitchClient.SetAppAccessToken(resp.Data.AccessToken)
+
 	c := cron.New()
 	c.Start()
 
@@ -91,6 +112,11 @@ func main() {
 	if *Twitter {
 		c.AddFunc(config.TwitterFollowers, CheckTwitter)
 		log.Info("Add twitter followers to cronjob")
+	}
+
+	if *Twitch {
+		c.AddFunc(config.TwitchFollowers, CheckTwitch)
+		log.Info("Add twitch followers to cronjob")
 	}
 
 	_, err = gRCPconn.ModuleList(context.Background(), &pilot.ModuleData{
