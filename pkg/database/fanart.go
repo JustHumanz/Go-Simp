@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"math/rand"
 	"regexp"
 	"strings"
 
@@ -81,107 +82,21 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 		return nil
 	}
 
-	if gacha() {
-		if gacha() {
-			if gacha() {
-				err := Pixiv()
-				if err != nil {
-					return nil, err
-				}
-			} else {
-				if gacha() {
-					err := Tbilibili()
-					if err != nil {
-						return nil, err
-					}
-				} else {
-					err := Twitter()
-					if err != nil {
-						return nil, err
-					}
-				}
-			}
-		} else {
-			if gacha() {
-				err := Twitter()
-				if err != nil {
-					return nil, err
-				}
-			} else {
-				if gacha() {
-					err := Tbilibili()
-					if err != nil {
-						return nil, err
-					}
-				} else {
-					err := Pixiv()
-					if err != nil {
-						return nil, err
-					}
-				}
-			}
+	gachaint := rand.Intn(3-1) + 1
+	if gachaint == 1 {
+		err := Pixiv()
+		if err != nil {
+			return nil, err
+		}
+	} else if gachaint == 2 {
+		err := Tbilibili()
+		if err != nil {
+			return nil, err
 		}
 	} else {
-		if gacha() {
-			if gacha() {
-				if gacha() {
-					err := Tbilibili()
-					if err != nil {
-						return nil, err
-					}
-				} else {
-					if gacha() {
-						err := Pixiv()
-						if err != nil {
-							return nil, err
-						}
-					} else {
-						err := Twitter()
-						if err != nil {
-							return nil, err
-						}
-					}
-				}
-			} else {
-				if gacha() {
-					err := Twitter()
-					if err != nil {
-						return nil, err
-					}
-				} else {
-					err := Pixiv()
-					if err != nil {
-						return nil, err
-					}
-				}
-			}
-		} else {
-			if gacha() {
-				err := Twitter()
-				if err != nil {
-					return nil, err
-				}
-			} else {
-				if gacha() {
-					err := Tbilibili()
-					if err != nil {
-						return nil, err
-					}
-
-				} else {
-					if gacha() {
-						err := Tbilibili()
-						if err != nil {
-							return nil, err
-						}
-					} else {
-						err := Pixiv()
-						if err != nil {
-							return nil, err
-						}
-					}
-				}
-			}
+		err := Twitter()
+		if err != nil {
+			return nil, err
 		}
 	}
 
