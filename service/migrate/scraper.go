@@ -239,6 +239,29 @@ func (Data Twitch) GetTwitchAvatar() (string, error) {
 	return "", nil
 }
 
+func (Data Twitch) GetTwitchFollowers() (int, int, error) {
+	if Data.TwitchUsername != "" {
+		resp, err := TwitchClient.GetUsers(&helix.UsersParams{
+			Logins: []string{Data.TwitchUsername},
+		})
+		if err != nil {
+			return 0, 0, err
+		}
+
+		for _, v := range resp.Data.Users {
+			FollowRes, err := TwitchClient.GetUsersFollows(&helix.UsersFollowsParams{
+				ToID: v.ID,
+			})
+			if err != nil {
+				return 0, 0, err
+			}
+
+			return FollowRes.Data.Total, v.ViewCount, nil
+		}
+	}
+	return 0, 0, nil
+}
+
 func CheckYoutube() {
 	Data := database.GetGroups()
 	for i := 0; i < len(Data); i++ {

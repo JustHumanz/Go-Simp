@@ -249,12 +249,12 @@ type InputTW struct {
 
 //MemberSubs subscribe struct
 type MemberSubs struct {
-	YtSubs, YtVideos, YtViews         int
-	BiliFollow, BiliVideos, BiliViews int
-	ID, TwFollow                      int
-	Member                            Member
-	Group                             Group
-	State                             string
+	YtSubs, YtVideos, YtViews               int
+	BiliFollow, BiliVideos, BiliViews       int
+	ID, TwFollow, TwitchFollow, TwitchViews int
+	Member                                  Member
+	Group                                   Group
+	State                                   string
 }
 
 func (Data *MemberSubs) SetMember(new Member) *MemberSubs {
