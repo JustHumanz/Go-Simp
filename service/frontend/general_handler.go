@@ -51,6 +51,12 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					InlineAllFields().
 					SetFooter(Data.State, config.BiliBiliIMG).MessageEmbed
 			} else {
+				StateImg := ""
+				if Data.State == config.TwitterArt {
+					StateImg = config.TwitchIMG
+				} else {
+					StateImg = config.PixivIMG
+				}
 				embed = engine.NewEmbed().
 					SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 					SetTitle(Data.Author).
@@ -60,7 +66,7 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 					SetImage(Data.Photos...).
 					SetColor(Color).
 					InlineAllFields().
-					SetFooter(Data.State, config.TwitterIMG).MessageEmbed
+					SetFooter(Data.State, StateImg).MessageEmbed
 			}
 			msg, err := s.ChannelMessageSendEmbed(m.ChannelID, embed)
 			if err != nil {
