@@ -74,6 +74,13 @@ func (Data Member) IsYtNill() bool {
 	return true
 }
 
+func (Data Member) IsTwitchNill() bool {
+	if Data.TwitchAvatar != "" {
+		return false
+	}
+	return true
+}
+
 func (Data Member) IsBiliNill() bool {
 	if Data.BiliRoomID != 0 {
 		return false
