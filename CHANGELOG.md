@@ -1,13 +1,21 @@
+v3.9.3
+- Fix prediction
+- Change date to counter num in prediction
+- Fix state icon on fanart command
+- Add twitch followers & viwers
+ 
 v3.9.2
 - Add nijisanji EN
 - Change error to panic when drop cache
 - Update new vtuber message
-
-v3.9.1
 - Change twitter fanart workflow
 - Change twitter fanart interval
 - Add `LiveURL` in rest-api
+
+v3.9.1
 - Update error payload when nil payload
+- Swap X to Y in prediction
+- Remove days in api prediction
 
 v3.9.0
 - Add Vtuber followers/subscriber prediction
