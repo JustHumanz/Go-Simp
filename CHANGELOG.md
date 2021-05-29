@@ -1,9 +1,9 @@
-v3.9.3
+v3.10.0
 - Fix prediction
 - Change date to counter num in prediction
 - Fix state icon on fanart command
 - Add twitch followers & viwers
- 
+
 v3.9.2
 - Add nijisanji EN
 - Change error to panic when drop cache
