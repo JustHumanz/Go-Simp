@@ -143,6 +143,10 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						"Member": Member.Name,
 					}).Info("Checking New VideoID")
 
+					if len(Data.Items) == 0 {
+						fmt.Println("Opps something error\n", Data)
+					}
+
 					Items := Data.Items[0]
 
 					if Items.Snippet.VideoStatus == config.UpcomingStatus {
