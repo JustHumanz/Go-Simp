@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -43,6 +44,9 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 					Data, err := YtAPI([]string{ID})
 					if err != nil {
 						log.Error(err)
+					}
+					if len(Data.Items) == 0 {
+						fmt.Println("Opps something error\n", Data)
 					}
 					Items := Data.Items[0]
 
@@ -395,6 +399,9 @@ func YtAPI(VideoID []string) (engine.YtData, error) {
 	var (
 		Data engine.YtData
 	)
+	log.WithFields(log.Fields{
+		"VideoID": VideoID,
+	}).Info("Checking from youtubeAPI")
 
 	for i, Token := range config.GoSimpConf.YtToken {
 		if exTknList != nil {
@@ -426,6 +433,13 @@ func YtAPI(VideoID []string) (engine.YtData, error) {
 				}
 				continue
 			}
+
+			err := json.Unmarshal(bdy, &Data)
+			if err != nil {
+				return Data, err
+			}
+			return Data, nil
+
 		} else {
 			bdy, curlerr = network.Curl(url, nil)
 			if curlerr != nil {
@@ -438,14 +452,13 @@ func YtAPI(VideoID []string) (engine.YtData, error) {
 				}
 				continue
 			}
-		}
 
-		err := json.Unmarshal(bdy, &Data)
-		if err != nil {
-			return Data, err
+			err := json.Unmarshal(bdy, &Data)
+			if err != nil {
+				return Data, err
+			}
+			return Data, nil
 		}
-		return Data, nil
-
 	}
 	return engine.YtData{}, errors.New("exhaustion Token")
 }
