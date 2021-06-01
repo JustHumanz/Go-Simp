@@ -145,6 +145,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 
 					if len(Data.Items) == 0 {
 						fmt.Println("Opps something error\n", Data)
+						continue
 					}
 
 					Items := Data.Items[0]
