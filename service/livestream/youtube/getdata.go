@@ -410,14 +410,23 @@ func YtAPI(VideoID []string) (engine.YtData, error) {
 				continue
 			}
 		}
-		body, curlerr := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id="+strings.Join(VideoID, ",")+"&key="+Token, nil)
+		url := "https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id=" + strings.Join(VideoID, ",") + "&key=" + Token
+
+		var bdy []byte
+		var curlerr error
+		if *Proxy {
+			bdy, curlerr = network.CoolerCurl(url, nil)
+		} else {
+			bdy, curlerr = network.Curl(url, nil)
+		}
+
 		if curlerr != nil {
 			if curlerr.Error() == "403 Forbidden" {
 				exTknList = append(exTknList, Token)
 			}
 			log.Error(curlerr)
 		} else {
-			err := json.Unmarshal(body, &Data)
+			err := json.Unmarshal(bdy, &Data)
 			if err != nil {
 				return Data, err
 			}

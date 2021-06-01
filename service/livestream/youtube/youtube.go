@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"flag"
 	"math"
 	"regexp"
 	"strconv"
@@ -26,6 +27,7 @@ var (
 	Bot          *discordgo.Session
 	GroupPayload *[]database.Group
 	gRCPconn     pilot.PilotServiceClient
+	Proxy        = flag.Bool("MultiTor", false, "Enable multitor for bypass youtube limit TOS")
 )
 
 const (
