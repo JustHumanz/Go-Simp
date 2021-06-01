@@ -416,27 +416,36 @@ func YtAPI(VideoID []string) (engine.YtData, error) {
 		var curlerr error
 		if *Proxy {
 			bdy, curlerr = network.CoolerCurl(url, nil)
+			if curlerr != nil {
+				if curlerr.Error() == "403 Forbidden" {
+					exTknList = append(exTknList, Token)
+				}
+				log.Error(curlerr)
+				if i == len(config.GoSimpConf.YtToken)-1 {
+					break
+				}
+				continue
+			}
 		} else {
 			bdy, curlerr = network.Curl(url, nil)
-		}
-
-		if curlerr != nil {
-			if curlerr.Error() == "403 Forbidden" {
-				exTknList = append(exTknList, Token)
+			if curlerr != nil {
+				if curlerr.Error() == "403 Forbidden" {
+					exTknList = append(exTknList, Token)
+				}
+				log.Error(curlerr)
+				if i == len(config.GoSimpConf.YtToken)-1 {
+					break
+				}
+				continue
 			}
-			log.Error(curlerr)
-		} else {
-			err := json.Unmarshal(bdy, &Data)
-			if err != nil {
-				return Data, err
-			}
-
-			return Data, nil
 		}
 
-		if i == len(config.GoSimpConf.YtToken)-1 {
-			break
+		err := json.Unmarshal(bdy, &Data)
+		if err != nil {
+			return Data, err
 		}
+		return Data, nil
+
 	}
 	return engine.YtData{}, errors.New("exhaustion Token")
 }
