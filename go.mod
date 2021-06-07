@@ -13,13 +13,11 @@ require (
 	github.com/hako/durafmt v0.0.0-20210316092057-3a2c319c1acd
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/n0madic/twitter-scraper v0.0.0-20210428094026-3ea1f3b456cd
-	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
-	github.com/nicklaw5/helix v1.17.0
+	github.com/nicklaw5/helix v1.19.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/prometheus/client_golang v1.10.0
 	github.com/prometheus/common v0.25.0 // indirect
 	github.com/pytimer/mux-logrus v0.0.0-20200505085744-ce5a5e748151
-	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sirupsen/logrus v1.8.1
 	github.com/top-gg/go-dbl v0.0.0-20201116001615-e844586b1159
