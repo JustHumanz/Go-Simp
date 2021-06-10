@@ -7,6 +7,7 @@ import (
 	"flag"
 	"io"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"os"
@@ -108,6 +109,12 @@ func main() {
 
 //CheckNew Check new fanart
 func CheckPixiv() {
+
+	//make request to pixiv randomly
+	if rand.Float32() < 0.5 {
+		return
+	}
+
 	for _, Group := range *GroupPayload {
 		var wg sync.WaitGroup
 		for i, Member := range Group.Members {
