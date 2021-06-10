@@ -1,3 +1,6 @@
+v3.10.1
+- Change pixiv fanart workflow
+
 v3.10.0
 - Fix prediction
 - Change date to counter num in prediction

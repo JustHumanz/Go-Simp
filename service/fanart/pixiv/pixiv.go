@@ -126,88 +126,42 @@ func CheckPixiv() {
 					Group:  Group,
 					Lewd:   false,
 				}
-				var wg2 sync.WaitGroup
-				wg2.Add(3)
 
-				go func(w *sync.WaitGroup) {
-					defer w.Done()
-					if Member.JpName != "" {
-						log.WithFields(log.Fields{
-							"Member": Member.JpName,
-							"Group":  Group.GroupName,
-							"Lewd":   false,
-						}).Info("Start curl pixiv")
-						URLJP := GetPixivURL(url.QueryEscape(Member.JpName))
-						err := Pixiv(URLJP, FixFanArt, false)
-						if err != nil {
-							log.Error(err)
-						}
+				if Member.JpName != "" && Member.Region == "JP" {
+					log.WithFields(log.Fields{
+						"Member": Member.JpName,
+						"Group":  Group.GroupName,
+						"Lewd":   false,
+					}).Info("Start curl pixiv")
+					URLJP := GetPixivURL(url.QueryEscape(Member.JpName))
+					err := Pixiv(URLJP, FixFanArt, false)
+					if err != nil {
+						log.Error(err)
 					}
-				}(&wg2)
-				time.Sleep(1 * time.Second)
-
-				go func(w *sync.WaitGroup) {
-					defer w.Done()
-					if Member.EnName == Member.Name {
-						if Member.EnName != "" {
-							log.WithFields(log.Fields{
-								"Member": Member.EnName,
-								"Group":  Group.GroupName,
-								"Lewd":   false,
-							}).Info("Start curl pixiv")
-							URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
-							err := Pixiv(URLEN, FixFanArt, false)
-							if err != nil {
-								log.Error(err)
-							}
-
-						}
-					} else {
-						if Member.EnName != "" {
-							log.WithFields(log.Fields{
-								"Member": Member.EnName,
-								"Group":  Group.GroupName,
-								"Lewd":   false,
-							}).Info("Start curl pixiv")
-							URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
-							err := Pixiv(URLEN, FixFanArt, false)
-							if err != nil {
-								log.Error(err)
-							}
-
-						}
+				} else if Member.EnName != "" && Member.Region != "JP" {
+					log.WithFields(log.Fields{
+						"Member": Member.EnName,
+						"Group":  Group.GroupName,
+						"Lewd":   false,
+					}).Info("Start curl pixiv")
+					URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
+					err := Pixiv(URLEN, FixFanArt, false)
+					if err != nil {
+						log.Error(err)
 					}
-				}(&wg2)
-
-				time.Sleep(1 * time.Second)
-				go func(w *sync.WaitGroup) {
-					defer w.Done()
-					if Member.TwitterHashtags != "" {
-						log.WithFields(log.Fields{
-							"Member": Member.Name,
-							"Group":  Group.GroupName,
-							"Lewd":   false,
-						}).Info("Start curl pixiv")
-						URL := GetPixivURL(engine.UnderScoreName(Member.TwitterHashtags[1:]))
-						err := Pixiv(URL, FixFanArt, false)
-						if err != nil {
-							log.Error(err)
-						}
-					} else if Member.BiliBiliHashtags != "" {
-						log.WithFields(log.Fields{
-							"Member": Member.Name,
-							"Group":  Group.GroupName,
-							"Lewd":   false,
-						}).Info("Start curl pixiv")
-						URL := GetPixivURL(engine.UnderScoreName(Member.BiliBiliHashtags[1 : len(Member.BiliBiliHashtags)-1]))
-						err := Pixiv(URL, FixFanArt, false)
-						if err != nil {
-							log.Error(err)
-						}
+				} else {
+					log.WithFields(log.Fields{
+						"Member": Member.EnName,
+						"Group":  Group.GroupName,
+						"Lewd":   false,
+					}).Info("Start curl pixiv")
+					URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
+					err := Pixiv(URLEN, FixFanArt, false)
+					if err != nil {
+						log.Error(err)
 					}
-				}(&wg2)
+				}
 
-				wg2.Wait()
 			}(&wg, Member)
 			if i%4 == 0 {
 				wg.Wait()
@@ -223,7 +177,7 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 	if err != nil {
 		return err
 	}
-	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:87.0) Gecko/20100101 Firefox/87.0")
+	req.Header.Set("User-Agent", network.RandomAgent())
 	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
 	req.Header.Set("Accept-Language", "en-US,en;q=0.5")
 	req.Header.Set("Dnt", "1")
