@@ -15,6 +15,7 @@
 
 <script>
 import axios from 'axios'
+import Config from "../config.json";
 export default {
   name: 'Index',
   data () {
@@ -23,7 +24,7 @@ export default {
     }
   },
   mounted () {   
-    axios.get(process.env.VUE_APP_RESTAPI+'/groups/').then(response => (this.msg = response.data))
+    axios.get(Config.REST_API+'/groups/').then(response => (this.msg = response.data))
   }
 }
 </script>

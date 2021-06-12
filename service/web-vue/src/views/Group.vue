@@ -67,6 +67,7 @@
 
 <script>
 import axios from 'axios'
+import Config from "../config.json";
 export default {
   name: 'Group',
   data () {
@@ -78,7 +79,7 @@ export default {
   },
   mounted () {
     axios
-      .get(process.env.VUE_APP_RESTAPI+'/members/?groupid=' + this.$route.params.id, { crossDomain: true,params:{
+      .get(Config.REST_API+'/members/?groupid=' + this.$route.params.id, { crossDomain: true,params:{
         live: 'true'
       }})
       .then(response => {

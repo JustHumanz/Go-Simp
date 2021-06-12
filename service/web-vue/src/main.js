@@ -6,8 +6,8 @@ import 'bootswatch/dist/darkly/bootstrap.min.css';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {faTwitter,faYoutube,faTwitch} from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-require("dotenv").config();
+import Config from './config.json'
 
 library.add(faTwitter,faYoutube,faTwitch)
-console.log('env', JSON.stringify(process.env))
+console.log(Config.REST_API,Config.ENV)
 createApp(App).use(router).use(bootstrap).component('font-awesome-icon', FontAwesomeIcon).mount('#app')

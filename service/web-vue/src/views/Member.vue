@@ -61,6 +61,7 @@
 <script>
 import { CountTo } from 'vue3-count-to';
 import axios from 'axios'
+import Config from "../config.json";
 export default {
   name: 'Vtuber',
   data () {
@@ -73,7 +74,7 @@ export default {
   },
   mounted () {
     axios
-      .get(process.env.VUE_APP_RESTAPI+'/members/' + this.$route.params.id).then(response => (this.Members = response.data))
+      .get(Config.REST_API+'/members/' + this.$route.params.id).then(response => (this.Members = response.data))
   },
   methods: {
     replaceByDefault(e) {

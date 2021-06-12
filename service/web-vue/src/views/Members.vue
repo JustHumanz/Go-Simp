@@ -17,6 +17,7 @@
 
 <script>
 import axios from 'axios'
+import Config from "../config.json";
 export default {
   name: 'Members',
   data () {
@@ -33,7 +34,7 @@ export default {
         e.target.src = require('../assets/404.jpg')
     },
     getData(){
-      axios.get(process.env.VUE_APP_RESTAPI+'/members/').then(response => {
+      axios.get(Config.REST_API+'/members/').then(response => {
       for (let i = 0; i < response.data.length; i++) {
         if (response.data[i]["Youtube"] != null) {
           response.data[i]["Youtube"]["Avatar"]= response.data[i]["Youtube"]["Avatar"].replace("s800","s75")
