@@ -64,7 +64,7 @@ const (
 	//Crontab
 	TwitterFanart              = "@every 0h15m0s"
 	BiliBiliFanart             = "@every 0h6m0s"
-	PixivFanart                = "@every 0h15m0s"
+	PixivFanart                = "@every 0h30m0s"
 	PixivFanartLewd            = "@every 1h0m0s"
 	BiliBiliLive               = "@every 0h7m0s"
 	BiliBiliSpace              = "@every 0h13m0s"
