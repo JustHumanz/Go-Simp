@@ -342,26 +342,6 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 
 						YoutubeData.UpdateYt(YoutubeData.Status)
 
-					} else if (!Items.LiveDetails.EndTime.IsZero() && YoutubeData.Status == config.UpcomingStatus) || (YoutubeData.Status == config.UpcomingStatus && Items.Snippet.VideoStatus == "none") {
-						log.WithFields(log.Fields{
-							"VideoData ID": ID,
-							"Status":       config.PastStatus,
-						}).Info("Update video status from " + Items.Snippet.VideoStatus + " to past,probably member only")
-						YoutubeData.UpdateYt(config.PastStatus)
-
-						engine.RemoveEmbed(ID, Bot)
-
-						if config.GoSimpConf.Metric {
-							bit, err := YoutubeData.MarshalBinary()
-							if err != nil {
-								log.Error(err)
-							}
-							gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-								MetricData: bit,
-								State:      config.PastStatus,
-							})
-						}
-
 					} else if Items.Snippet.VideoStatus == config.UpcomingStatus && YoutubeData.Status == config.PastStatus {
 						log.WithFields(log.Fields{
 							"VideoData ID": ID,
