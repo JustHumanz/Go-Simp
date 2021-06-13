@@ -1,3 +1,7 @@
+v3.10.2
+- Change go-simp api env var to config file
+- Change pixiv cronjob from 15m to 30m
+
 v3.10.1
 - Change pixiv fanart workflow
 
