@@ -139,8 +139,10 @@ func init() {
 
 				if Member.TwitchName != "" {
 					MemberData["Twitch"] = map[string]interface{}{
-						"UserName": Member.TwitchName,
-						"Avatar":   Member.TwitchAvatar,
+						"UserName":    Member.TwitchName,
+						"Avatar":      Member.TwitchAvatar,
+						"Followers":   Subs.TwitchFollow,
+						"ViwersCount": Subs.TwitchViews,
 					}
 				} else {
 					MemberData["Twitch"] = nil

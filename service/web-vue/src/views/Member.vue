@@ -38,7 +38,7 @@
               <a v-bind:href="'https://www.youtube.com/channel/'+Member.Youtube.ID+'?sub_confirmation=1'" target="_blank" rel="noopener noreferrer">
                 <font-awesome-icon :icon="{ prefix: 'fab', iconName: 'youtube' }" size="2x" style="color: #FF0000"/></a>
                 <h2><CountTo :endVal=Member.Youtube.Subscriber></CountTo></h2>
-                <p class="count-text ">Youtube Subscriber</p>
+                <p class="count-text ">Youtube subscriber</p>
            </div>
            <div v-if="Member.Twitter != null" class="col-xs-6 col-sm-4 col-md-4 mt-4 col">
               <a v-bind:href="'https://twitter.com/' + Member.Twitter.UserName" target="_blank" rel="noopener noreferrer">
@@ -52,6 +52,12 @@
                 <h2><CountTo :endVal=Member.BiliBili.Followers></CountTo></h2>
                 <p class="count-text ">BiliBili followers</p>
            </div>
+           <div v-if="Member.Twitch != null" class="col-xs-6 col-sm-4 col-md-4 mt-4 col">
+              <a v-bind:href="'https://www.twitch.tv/' + Member.Twitch.UserName" target="_blank" rel="noopener noreferrer">
+              <font-awesome-icon :icon="{ prefix: 'fab', iconName: 'twitch' }" size="2x" style="color: #6441a5"/></a>
+                <h2><CountTo :endVal=Member.Twitch.Followers></CountTo></h2>
+                <p class="count-text ">Twitch followers</p>
+           </div>           
         </div>
       </div> 
     </div>
