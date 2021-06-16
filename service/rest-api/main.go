@@ -477,7 +477,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 			if BiliData != nil {
 				Bili := Member["BiliBili"].(map[string]interface{})
 				Member["IsBiliLive"] = true
-				Member["LiveURL"] = "https://live.bilibili.com/" + Bili["RoomID"].(string)
+				Member["LiveURL"] = "https://live.bilibili.com/" + strconv.Itoa(Bili["RoomID"].(int))
 			} else {
 				Member["IsBiliLive"] = false
 			}
