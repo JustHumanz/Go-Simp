@@ -1,5 +1,5 @@
 # build stage
-FROM node:lts-alpine as build-stage
+FROM node as build-stage
 WORKDIR /app
 COPY . .
 RUN npm install @babel/core jquery --save
