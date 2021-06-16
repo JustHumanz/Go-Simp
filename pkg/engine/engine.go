@@ -267,36 +267,76 @@ func Reacting(Data map[string]string, s *discordgo.Session) error {
 }
 
 func Zawarudo(Region string) *time.Location {
-	if Region == "ID" {
-		loc, _ := time.LoadLocation("Asia/Jakarta")
-		return loc
-	} else if Region == "JP" {
-		loc, _ := time.LoadLocation("Asia/Tokyo")
-		return loc
-	} else if Region == "CN" {
-		loc, _ := time.LoadLocation("Asia/Shanghai")
-		return loc
-	} else if Region == "KR" {
-		loc, _ := time.LoadLocation("Asia/Seoul")
-		return loc
-	} else if Region == "MY" {
-		loc, _ := time.LoadLocation("Asia/Kuala_Lumpur")
-		return loc
-	} else if Region == "IN" {
-		loc, _ := time.LoadLocation("Asia/Dhaka")
-		return loc
-	} else if Region == "PH" {
-		loc, _ := time.LoadLocation("Asia/Manila")
-		return loc
-	} else if Region == "AU" {
-		loc, _ := time.LoadLocation("Australia/Sydney")
-		return loc
-	} else if Region == "FI" {
-		loc, _ := time.LoadLocation("Europe/Helsinki")
-		return loc
-	} else {
+	Default := func() *time.Location {
 		loc, _ := time.LoadLocation("UTC")
 		return loc
+	}
+
+	if Region == "ID" {
+		loc, err := time.LoadLocation("Asia/Jakarta")
+		if err != nil {
+			log.Error(err)
+			return Default()
+		}
+		return loc
+	} else if Region == "JP" {
+		loc, err := time.LoadLocation("Asia/Tokyo")
+		if err != nil {
+			log.Error(err)
+			return Default()
+		}
+		return loc
+	} else if Region == "CN" {
+		loc, err := time.LoadLocation("Asia/Shanghai")
+		if err != nil {
+			log.Error(err)
+			return Default()
+		}
+		return loc
+	} else if Region == "KR" {
+		loc, err := time.LoadLocation("Asia/Seoul")
+		if err != nil {
+			log.Error(err)
+			return Default()
+		}
+		return loc
+	} else if Region == "MY" {
+		loc, err := time.LoadLocation("Asia/Kuala_Lumpur")
+		if err != nil {
+			log.Error(err)
+			return Default()
+		}
+		return loc
+	} else if Region == "IN" {
+		loc, err := time.LoadLocation("Asia/Dhaka")
+		if err != nil {
+			log.Error(err)
+			return Default()
+		}
+		return loc
+	} else if Region == "PH" {
+		loc, err := time.LoadLocation("Asia/Manila")
+		if err != nil {
+			log.Error(err)
+			return Default()
+		}
+		return loc
+	} else if Region == "AU" {
+		loc, err := time.LoadLocation("Australia/Sydney")
+		if err != nil {
+			log.Error(err)
+			return Default()
+		}
+		return loc
+	} else if Region == "FI" {
+		loc, err := time.LoadLocation("Europe/Helsinki")
+		if err != nil {
+			log.Error(err)
+			return Default()
+		}
+		return loc
+	} else {
+		return Default()
 	}
 }
 
