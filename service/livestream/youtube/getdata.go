@@ -428,10 +428,13 @@ func YtAPI(VideoID []string) (engine.YtData, error) {
 		} else {
 			bdy, curlerr = network.Curl(url, nil)
 			if curlerr != nil {
+				log.Error(curlerr)
 				if curlerr.Error() == "403 Forbidden" {
 					exTknList = append(exTknList, Token)
+				} else {
+					time.Sleep(10 * time.Second)
 				}
-				log.Error(curlerr)
+
 				if i == len(config.GoSimpConf.YtToken)-1 {
 					break
 				}
