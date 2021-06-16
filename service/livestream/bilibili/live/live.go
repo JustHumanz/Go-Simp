@@ -87,19 +87,20 @@ func main() {
 func CheckLiveSchedule() {
 	for _, GroupData := range *GroupPayload {
 		var wg sync.WaitGroup
-		if GroupData.GroupName != "Hololive" {
-			for i, MemberData := range GroupData.Members {
-				if MemberData.BiliRoomID != 0 && MemberData.Active() {
-					wg.Add(1)
-					log.WithFields(log.Fields{
-						"Group":  GroupData.GroupName,
-						"Vtuber": MemberData.EnName,
-					}).Info("Checking LiveBiliBili")
-					go CheckBili(GroupData, MemberData, &wg)
-					if i%10 == 0 {
-						wg.Wait()
-					}
+		for i, MemberData := range GroupData.Members {
+			if MemberData.BiliRoomID != 0 && MemberData.Active() {
+				wg.Add(1)
+				log.WithFields(log.Fields{
+					"Group":  GroupData.GroupName,
+					"Vtuber": MemberData.EnName,
+				}).Info("Checking LiveBiliBili")
+				go CheckBili(GroupData, MemberData, &wg)
+				if i%10 == 0 {
+					wg.Wait()
+					continue
 				}
+
+				wg.Wait()
 			}
 		}
 	}

@@ -111,7 +111,10 @@ func CheckSpaceVideo() {
 				}(GroupData, MemberData, wg)
 				if i%config.Waiting == 0 {
 					wg.Wait()
+					continue
 				}
+
+				wg.Wait()
 			}
 			wg.Wait()
 		}
