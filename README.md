@@ -90,6 +90,11 @@ Reminder 30 minutes before livestream start
   <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Subscount.png" alt="Subscriber count"/>
 </p>
 
+##### Lewd Fanart
+<p align="center">
+  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/Lewd.png" alt="Lewd Art"/>
+</p>
+
 
 ## Invite link
 [Invite link](https://top.gg/bot/721964514018590802)  
