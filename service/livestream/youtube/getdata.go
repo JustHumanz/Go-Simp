@@ -129,10 +129,6 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 				YoutubeData, err := Member.CheckYoutubeVideo(ID)
 				if err != nil {
 					log.Error(err)
-					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message: err.Error(),
-						Service: ModuleState,
-					})
 				}
 
 				if YoutubeData == nil {
