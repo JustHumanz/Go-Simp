@@ -97,11 +97,7 @@ func CheckNew() {
 		if err != nil {
 			log.WithFields(log.Fields{
 				"Group": Group.GroupName,
-			}).Error(err)
-			gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-				Message: err.Error(),
-				Service: ModuleState,
-			})
+			}).Warn(err)
 		} else {
 			for _, Art := range Fanarts {
 				Color, err := engine.GetColor(config.TmpDir, Art.Photos[0])
