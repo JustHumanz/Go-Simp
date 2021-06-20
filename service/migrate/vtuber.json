@@ -387,6 +387,30 @@
                "Status": "Active"
             },
             {
+               "Name":"Azulim",
+               "EN_Name":"Azuma Lim",
+               "JP_Name":"アズマリム",
+               "Twitter":{
+                  "Twitter_Fanart":"#azulimart",
+                  "Twitter_Lewd":"",
+                  "Twitter_Username":"azuma_lim"
+               },
+               "Youtube":{
+                  "Yt_ID":"UCARI2g7r-PHaxrIcAYsMfmA"
+               },
+               "BiliBili":{
+                  "BiliBili_Fanart":"",
+                  "BiliBili_ID":0,
+                  "BiliRoom_ID":0
+               },
+               "Twitch":{
+                  "Twitch_Username":""
+               },
+               "Region":"JP",
+               "Fanbase":"",
+               "Status": "Active"
+            },
+            {
                "Name":"Nabichan",
                "EN_Name":"Aoi Nabi",
                "JP_Name":"蒼彩なび",
