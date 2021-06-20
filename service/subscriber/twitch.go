@@ -17,6 +17,10 @@ func CheckTwitch() {
 				res, err := TwitchClient.GetUsers(&helix.UsersParams{Logins: []string{Name.TwitchName}})
 				if err != nil {
 					log.Error(err)
+					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+						Message: err.Error(),
+						Service: ModuleState,
+					})
 				}
 				TotalFollowers := 0
 				TotalViwers := 0
@@ -24,6 +28,10 @@ func CheckTwitch() {
 					tmp, err := TwitchClient.GetUsersFollows(&helix.UsersFollowsParams{ToID: v.ID})
 					if err != nil {
 						log.Error(err)
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message: err.Error(),
+							Service: ModuleState,
+						})
 					}
 					TotalFollowers = tmp.Data.Total
 					TotalViwers = v.ViewCount
@@ -33,6 +41,10 @@ func CheckTwitch() {
 				TwitchFollowDB, err := Name.GetSubsCount()
 				if err != nil {
 					log.Error(err)
+					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+						Message: err.Error(),
+						Service: ModuleState,
+					})
 					break
 				}
 				SendNotif := func(SubsCount, Viwers string) {

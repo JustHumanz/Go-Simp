@@ -22,6 +22,10 @@ func CheckYoutube() {
 				body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+Member.YoutubeID+"&key="+*Token, nil)
 				if err != nil {
 					log.Error(err, string(body))
+					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+						Message: err.Error(),
+						Service: ModuleState,
+					})
 				}
 				err = json.Unmarshal(body, &YTstate)
 				if err != nil {
@@ -32,6 +36,10 @@ func CheckYoutube() {
 						YtSubsDB, err := Member.GetSubsCount()
 						if err != nil {
 							log.Error(err)
+							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+								Message: err.Error(),
+								Service: ModuleState,
+							})
 						}
 						YTSubscriberCount, err := strconv.Atoi(Item.Statistics.SubscriberCount)
 						if err != nil {

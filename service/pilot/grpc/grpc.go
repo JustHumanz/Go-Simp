@@ -60,6 +60,7 @@ type Server struct {
 	ServiceList []ServiceMessage
 	ModuleData  []ModuleData
 	WaitMigrate *bool
+	UnimplementedPilotServiceServer
 }
 
 func (s *Server) ReqData(ctx context.Context, in *ServiceMessage) (*VtubersData, error) {
@@ -102,6 +103,15 @@ func (s *Server) ModuleList(ctx context.Context, in *ModuleData) (*Empty, error)
 			v.Enabled = in.Enabled
 		}
 	}
+	return &Empty{}, nil
+}
+
+func (s *Server) ReportError(ctx context.Context, in *ServiceMessage) (*Empty, error) {
+	ReportDeadService(in.Message, in.Service)
+	metric.GoSimpError.WithLabelValues(
+		in.Service,
+		in.Message,
+	)
 	return &Empty{}, nil
 }
 
@@ -294,7 +304,7 @@ func ReportDeadService(message, module string) {
 				"fields": []interface{}{
 					map[string]interface{}{
 						"name":   "Time down",
-						"value":  time.Now(),
+						"value":  time.Now().Format(time.RFC822),
 						"inline": true,
 					},
 					map[string]interface{}{

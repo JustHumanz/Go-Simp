@@ -87,6 +87,10 @@ func main() {
 					body, errcurl := network.CoolerCurl("https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_name="+url.QueryEscape(Member.BiliBiliHashtags), nil)
 					if errcurl != nil {
 						log.Error(errcurl)
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message: errcurl.Error(),
+							Service: ModuleState,
+						})
 					}
 					var (
 						TB engine.TBiliBili
@@ -123,6 +127,10 @@ func main() {
 								New, err := TBiliData.CheckTBiliBiliFanArt()
 								if err != nil {
 									log.Error(err)
+									gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+										Message: err.Error(),
+										Service: ModuleState,
+									})
 								}
 								if New {
 									Color, err := engine.GetColor(config.TmpDir, TBiliData.Photos[0])

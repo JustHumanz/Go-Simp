@@ -83,10 +83,18 @@ func main() {
 	})
 	if err != nil {
 		log.Error(err)
+		gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+			Message: err.Error(),
+			Service: ModuleState,
+		})
 	}
 	resp, err := TwitchClient.RequestAppAccessToken([]string{"user:read:email"})
 	if err != nil {
 		log.Error(err)
+		gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+			Message: err.Error(),
+			Service: ModuleState,
+		})
 	}
 
 	TwitchClient.SetAppAccessToken(resp.Data.AccessToken)
@@ -111,11 +119,19 @@ func CheckTwitch() {
 				})
 				if err != nil || result.ErrorMessage != "" {
 					log.Error(err, result.ErrorMessage)
+					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+						Message: err.Error() + " " + result.ErrorMessage,
+						Service: ModuleState,
+					})
 				}
 
 				ResultDB, err := database.GetTwitch(Member.ID)
 				if err != nil {
 					log.Error(err)
+					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+						Message: err.Error(),
+						Service: ModuleState,
+					})
 				}
 				ResultDB.AddMember(Member).AddGroup(Group).SetState(config.TwitchLive)
 

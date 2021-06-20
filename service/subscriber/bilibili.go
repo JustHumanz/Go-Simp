@@ -29,6 +29,10 @@ func CheckBiliBili() {
 					body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/relation/stat?vmid="+strconv.Itoa(Name.BiliBiliID), BiliBiliSession)
 					if curlerr != nil {
 						log.Error(curlerr)
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message: curlerr.Error(),
+							Service: ModuleState,
+						})
 					}
 					err := json.Unmarshal(body, &bilistate.Follow)
 					if err != nil {
@@ -41,6 +45,10 @@ func CheckBiliBili() {
 					body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/space/upstat?mid="+strconv.Itoa(Name.BiliBiliID), BiliBiliSession)
 					if curlerr != nil {
 						log.Error(curlerr)
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message: curlerr.Error(),
+							Service: ModuleState,
+						})
 					}
 					err := json.Unmarshal(body, &bilistate.LikeView)
 					if err != nil {
@@ -56,6 +64,10 @@ func CheckBiliBili() {
 						body, curlerr := network.CoolerCurl(url[f], BiliBiliSession)
 						if curlerr != nil {
 							log.Error(curlerr)
+							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+								Message: curlerr.Error(),
+								Service: ModuleState,
+							})
 						}
 						var video engine.SpaceVideo
 						err := json.Unmarshal(body, &video)

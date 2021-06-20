@@ -33,4 +33,5 @@ service PilotService {
   rpc ModuleList(ModuleData) returns (Empty){}
   rpc HeartBeat(ServiceMessage) returns (stream Empty){}
   rpc MetricReport(Metric) returns (Empty){}
+  rpc ReportError(ServiceMessage) returns (Empty){}
 }

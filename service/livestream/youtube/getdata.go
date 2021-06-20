@@ -37,6 +37,10 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 				YoutubeData, err := YtChan.CheckYoutubeVideo(ID)
 				if err != nil {
 					log.Error(err)
+					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+						Message: err.Error(),
+						Service: ModuleState,
+					})
 				}
 
 				if YoutubeData == nil {
@@ -44,6 +48,10 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 					Data, err := YtAPI([]string{ID})
 					if err != nil {
 						log.Error(err)
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message: err.Error(),
+							Service: ModuleState,
+						})
 					}
 					if len(Data.Items) == 0 {
 						fmt.Println("Opps something error\n", Data)
@@ -125,6 +133,10 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 				YoutubeData, err := Member.CheckYoutubeVideo(ID)
 				if err != nil {
 					log.Error(err)
+					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+						Message: err.Error(),
+						Service: ModuleState,
+					})
 				}
 
 				if YoutubeData == nil {

@@ -17,11 +17,19 @@ func CheckTwitter() {
 			if Name.TwitterName != "" && Name.Active() {
 				Twitter, err := Name.GetTwitterFollow()
 				if err != nil {
+					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+						Message: err.Error(),
+						Service: ModuleState,
+					})
 					log.Error(err)
 					break
 				}
 				TwFollowDB, err := Name.GetSubsCount()
 				if err != nil {
+					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+						Message: err.Error(),
+						Service: ModuleState,
+					})
 					log.Error(err)
 					break
 				}

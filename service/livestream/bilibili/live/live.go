@@ -116,6 +116,10 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 		LiveBiliDB, err := database.GetRoomData(Member.ID, Member.BiliRoomID)
 		if err != nil {
 			log.Error(err)
+			gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+				Message: err.Error(),
+				Service: ModuleState,
+			})
 		}
 
 		LiveBiliDB.
@@ -126,6 +130,10 @@ func CheckBili(Group database.Group, Member database.Member, wg *sync.WaitGroup)
 		Status, err := engine.GetRoomStatus(Member.BiliRoomID)
 		if err != nil {
 			log.Error(err)
+			gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+				Message: err.Error(),
+				Service: ModuleState,
+			})
 		}
 
 		if LiveBiliDB != nil {

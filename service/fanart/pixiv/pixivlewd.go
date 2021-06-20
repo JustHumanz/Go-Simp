@@ -1,11 +1,13 @@
 package main
 
 import (
+	"context"
 	"net/url"
 	"sync"
 
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/engine"
+	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -32,6 +34,10 @@ func CheckPixivLewd() {
 					err := Pixiv(URLJP, FixFanArt, true)
 					if err != nil {
 						log.Error(err)
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message: err.Error(),
+							Service: ModuleState,
+						})
 					}
 				} else if Member.EnName != "" && Member.Region != "JP" {
 					log.WithFields(log.Fields{
@@ -43,6 +49,10 @@ func CheckPixivLewd() {
 					err := Pixiv(URLEN, FixFanArt, true)
 					if err != nil {
 						log.Error(err)
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message: err.Error(),
+							Service: ModuleState,
+						})
 					}
 				} else {
 					log.WithFields(log.Fields{
@@ -54,8 +64,11 @@ func CheckPixivLewd() {
 					err := Pixiv(URLEN, FixFanArt, true)
 					if err != nil {
 						log.Error(err)
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message: err.Error(),
+							Service: ModuleState,
+						})
 					}
-
 				}
 
 			}(&wg, Member)

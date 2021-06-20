@@ -126,6 +126,10 @@ func CheckYtByTime() {
 				YoutubeStatus, err := database.YtGetStatus(0, Member.ID, config.UpcomingStatus, "", config.Sys)
 				if err != nil {
 					log.Error(err)
+					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+						Message: err.Error(),
+						Service: ModuleState,
+					})
 				}
 
 				for _, Youtube := range YoutubeStatus {

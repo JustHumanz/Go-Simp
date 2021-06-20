@@ -137,6 +137,10 @@ func CheckPixiv() {
 					err := Pixiv(URLJP, FixFanArt, false)
 					if err != nil {
 						log.Error(err)
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message: err.Error(),
+							Service: ModuleState,
+						})
 					}
 				} else if Member.EnName != "" && Member.Region != "JP" {
 					log.WithFields(log.Fields{
@@ -148,6 +152,10 @@ func CheckPixiv() {
 					err := Pixiv(URLEN, FixFanArt, false)
 					if err != nil {
 						log.Error(err)
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message: err.Error(),
+							Service: ModuleState,
+						})
 					}
 				} else {
 					log.WithFields(log.Fields{
@@ -159,6 +167,10 @@ func CheckPixiv() {
 					err := Pixiv(URLEN, FixFanArt, false)
 					if err != nil {
 						log.Error(err)
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message: err.Error(),
+							Service: ModuleState,
+						})
 					}
 				}
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"regexp"
 	"strconv"
@@ -11,6 +12,7 @@ import (
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
+	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -24,6 +26,10 @@ func CheckSpace(Data *database.LiveStream, limit string) {
 	body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/space/arc/search?mid="+strconv.Itoa(Data.Member.BiliBiliID)+"&ps="+limit, nil)
 	if curlerr != nil {
 		log.Error(curlerr)
+		gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+			Message: curlerr.Error(),
+			Service: ModuleState,
+		})
 	}
 
 	err := json.Unmarshal(body, &PushVideo)
