@@ -373,7 +373,7 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 
 					new, err := FixFanArt.CheckPixivFanArt()
 					if err != nil {
-						return err
+						log.Warn(err)
 					}
 					if new {
 						path, err := DownloadImg(Img["mini"].(string))
