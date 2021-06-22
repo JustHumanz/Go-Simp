@@ -111,7 +111,7 @@ func (s *Server) ReportError(ctx context.Context, in *ServiceMessage) (*Empty, e
 	metric.GoSimpError.WithLabelValues(
 		in.Service,
 		in.Message,
-	)
+	).Inc()
 	return &Empty{}, nil
 }
 
