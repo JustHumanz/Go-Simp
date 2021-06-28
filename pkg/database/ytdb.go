@@ -21,7 +21,10 @@ func YtGetStatus(Group, Member int64, Status, Region, Uniq string) ([]LiveStream
 		rows  *sql.Rows
 		err   error
 	)
-	val := LiveCache.LRange(context.Background(), Key, 0, -1).Val()
+	val, err := LiveCache.LRange(context.Background(), Key, 0, -1).Result()
+	if err != nil {
+		return nil, err
+	}
 	if len(val) == 0 {
 		if (Group != 0 && Status != "live") || (Member != 0 && Status == "past") {
 			limit = 3
@@ -73,7 +76,7 @@ func YtGetStatus(Group, Member int64, Status, Region, Uniq string) ([]LiveStream
 			return nil, err
 		}
 	} else {
-		for _, result := range val {
+		for _, result := range unique(val) {
 			err := json.Unmarshal([]byte(result), &list)
 			if err != nil {
 				return nil, err

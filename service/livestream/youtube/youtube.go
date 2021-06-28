@@ -201,12 +201,29 @@ func CheckYtByTime() {
 									Youtube.UpdateYt(config.PrivateStatus)
 								}
 							}
+						} else if Data.Items == nil {
+							log.WithFields(log.Fields{
+								"Vtuber":  Member.EnName,
+								"Group":   Group.GroupName,
+								"VideoID": Youtube.VideoID,
+							}).Warn("Upcoming deleted")
+							Key := strconv.Itoa(int(Member.ID)) + config.UpcomingStatus + config.Sys
+							err = database.RemoveYtCache(Key, context.Background())
+							if err != nil {
+								log.Panic(err)
+							}
+
+							Youtube.UpdateStatus(config.LiveStatus).
+								SetState(config.YoutubeLive).
+								UpdateYt(config.PrivateStatus)
 						}
 					}
 					Youtube.
 						SetState(config.YoutubeLive).
 						UpdateStatus("reminder")
 					engine.SendLiveNotif(&Youtube, Bot)
+
+					//one vtuber only have one livestream right
 					break
 				}
 			}
