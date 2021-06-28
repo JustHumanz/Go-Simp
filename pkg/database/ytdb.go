@@ -17,7 +17,7 @@ func YtGetStatus(Group, Member int64, Status, Region, Uniq string) ([]LiveStream
 		Data  []LiveStream
 		list  LiveStream
 		limit int
-		Key   = strconv.Itoa(int(Group)) + strconv.Itoa(int(Member)) + Status + Region + Uniq
+		Key   = strconv.Itoa(int(Member)) + Status + Region + Uniq
 		rows  *sql.Rows
 		err   error
 	)

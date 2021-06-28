@@ -160,7 +160,7 @@ func CheckYtByTime() {
 								if !Data.Items[0].LiveDetails.ActualStartTime.IsZero() {
 									Youtube.UpdateSchdule(Data.Items[0].LiveDetails.ActualStartTime)
 								}
-								Key := "0" + strconv.Itoa(int(Member.ID)) + config.UpcomingStatus + config.Sys
+								Key := strconv.Itoa(int(Member.ID)) + config.UpcomingStatus + config.Sys
 								err = database.RemoveYtCache(Key, context.Background())
 								if err != nil {
 									log.Panic(err)
@@ -207,6 +207,7 @@ func CheckYtByTime() {
 						SetState(config.YoutubeLive).
 						UpdateStatus("reminder")
 					engine.SendLiveNotif(&Youtube, Bot)
+					break
 				}
 			}
 		}
