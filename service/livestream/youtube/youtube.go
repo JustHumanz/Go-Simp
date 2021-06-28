@@ -217,14 +217,13 @@ func CheckYtByTime() {
 								SetState(config.YoutubeLive).
 								UpdateYt(config.PrivateStatus)
 						}
+						//one vtuber only have one livestream right
+						break
 					}
 					Youtube.
 						SetState(config.YoutubeLive).
 						UpdateStatus("reminder")
 					engine.SendLiveNotif(&Youtube, Bot)
-
-					//one vtuber only have one livestream right
-					break
 				}
 			}
 		}
