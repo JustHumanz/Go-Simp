@@ -62,46 +62,6 @@ func RanString() string {
 	return b.String()
 }
 
-/*
-//SaucenaoCheck Check image from bilibili to saucenao *cuz to many reupload on bilibili*
-func SaucenaoCheck(url string) (bool, []string, error) {
-	var (
-		data    Sauce
-		body    []byte
-		curlerr error
-		urls    = "https://saucenao.com/search.php?db=999&output_type=2&numres=1&url=" + url + "&api_key=" + config.SauceAPI
-	)
-	body, curlerr = network.Curl(urls, nil)
-	if curlerr != nil {
-		log.Error(curlerr, string(body))
-		log.Info("Trying use tor")
-
-		body, curlerr = network.CoolerCurl(urls, nil)
-		if curlerr != nil {
-			log.Error(curlerr)
-			return true, nil, curlerr
-		}
-	}
-	err := json.Unmarshal(body, &data)
-	if err != nil {
-		log.Error(err)
-		return true, nil, err
-	}
-
-	for _, res := range data.Results {
-		simi, err := strconv.Atoi(res.Header.Similarity[:1])
-		if err != nil {
-			log.Error(err)
-			return true, nil, err
-		}
-		if simi > 8 {
-			return true, res.Data.ExtUrls, nil
-		}
-	}
-	return false, nil, nil
-}
-*/
-
 //GetColor Get color from image
 func GetColor(filepath, url string) (int, error) {
 	def := 16770790

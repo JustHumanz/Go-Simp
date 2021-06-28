@@ -82,14 +82,14 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 
 				ChannelData, err := database.ChannelTag(Data.Member.ID, 2, config.NewUpcoming, Data.Member.Region)
 				if err != nil {
-					log.Error(err)
+					log.Panic(err)
 				}
 
 				for i, v := range ChannelData {
 					v.SetMember(Data.Member)
 
 					wg.Add(1)
-					go func(Channel database.DiscordChannel, wg *sync.WaitGroup) error {
+					go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
 						defer wg.Done()
 						ctx := context.Background()
 						UserTagsList, err := Channel.GetUserList(ctx)
@@ -99,7 +99,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						if UserTagsList == nil && Data.Group.GroupName != config.Indie {
 							UserTagsList = nil
 						} else if UserTagsList == nil && Data.Group.GroupName == config.Indie && !Channel.IndieNotif {
-							return nil
+							return
 						}
 						msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
 							SetAuthor(VtuberName, Avatar, YtChannel).
@@ -122,21 +122,21 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							}).Error(err)
 							err = Channel.DelChannel(err.Error())
 							if err != nil {
-								return err
+								log.Error(err)
 							}
 						}
 
 						if UserTagsList == nil {
-							return nil
+							return
 						}
 
 						if !Channel.LiteMode {
 							_, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` New upcoming Livestream\nUserTags: "+strings.Join(UserTagsList, " "))
 							if err != nil {
-								return err
+								log.Error(err)
 							}
 						}
-						return nil
+
 					}(v, &wg)
 					//Wait every ge 10 discord channel
 					if i%config.Waiting == 0 && config.GoSimpConf.LowResources {
@@ -157,14 +157,14 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 
 				ChannelData, err := database.ChannelTag(Data.Member.ID, 2, config.Default, Data.Member.Region)
 				if err != nil {
-					log.Error(err)
+					log.Panic(err)
 				}
 
 				for i, v := range ChannelData {
 					v.SetMember(Data.Member)
 
 					wg.Add(1)
-					go func(Channel database.DiscordChannel, wg *sync.WaitGroup) error {
+					go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
 						defer wg.Done()
 						ctx := context.Background()
 						UserTagsList, err := Channel.GetUserList(ctx)
@@ -175,7 +175,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						if UserTagsList == nil && Data.Group.GroupName != config.Indie {
 							UserTagsList = []string{"_"}
 						} else if UserTagsList == nil && Data.Group.GroupName == config.Indie && !Channel.IndieNotif {
-							return nil
+							return
 						}
 
 						MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
@@ -199,9 +199,9 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							}).Error(err)
 							err = Channel.DelChannel(err.Error())
 							if err != nil {
-								return err
+								log.Error(err)
 							}
-							return err
+
 						}
 
 						if Channel.Dynamic {
@@ -226,7 +226,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 
 							msgText, err := Bot.ChannelMessageSend(Channel.ChannelID, MsgFinal)
 							if err != nil {
-								return err
+								log.Error(err)
 							}
 
 							User.SetDiscordChannelID(Channel.ChannelID).
@@ -234,7 +234,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 								SetMember(Data.Member)
 							err = User.SendToCache(msgText.ID)
 							if err != nil {
-								return err
+								log.Error(err)
 							}
 
 							Channel.SetMsgTextID(msgText.ID)
@@ -245,15 +245,13 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 								"MessageID": msgText.ID,
 							}, Bot)
 							if err != nil {
-								return err
+								log.Error(err)
 							}
 						}
 
 						Channel.PushReddis()
-
-						return nil
 					}(v, &wg)
-					//Wait every ge 5 discord channel
+
 					if i%config.Waiting == 0 && config.GoSimpConf.LowResources {
 						log.WithFields(log.Fields{
 							"Func":  "Youtube",
@@ -272,14 +270,14 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 
 				ChannelData, err := database.ChannelTag(Data.Member.ID, 2, config.NotLiveOnly, Data.Member.Region)
 				if err != nil {
-					log.Error(err)
+					log.Panic(err)
 				}
 
 				for i, v := range ChannelData {
 					v.SetMember(Data.Member)
 
 					wg.Add(1)
-					go func(Channel database.DiscordChannel, wg *sync.WaitGroup) error {
+					go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
 						defer wg.Done()
 						ctx := context.Background()
 						UserTagsList, err := Channel.GetUserList(ctx)
@@ -290,7 +288,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						if UserTagsList == nil && Data.Group.GroupName != config.Indie {
 							UserTagsList = nil
 						} else if UserTagsList == nil && Data.Group.GroupName == config.Indie && !Channel.IndieNotif {
-							return nil
+							return
 						}
 
 						msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
@@ -315,22 +313,21 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							}).Error(err)
 							err = Channel.DelChannel(err.Error())
 							if err != nil {
-								return err
+								log.Error(err)
 							}
 						}
 
 						if UserTagsList == nil {
-							return nil
+							return
 						}
 
 						if !Channel.LiteMode {
 							_, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` Uploaded a new video\nUserTags: "+strings.Join(UserTagsList, " "))
 							if err != nil {
-								return err
+								log.Error(err)
 							}
 						}
 
-						return nil
 					}(v, &wg)
 					//Wait every ge 5 discord channel
 					if i%config.Waiting == 0 && config.GoSimpConf.LowResources {
@@ -404,7 +401,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 
 				ChannelData, err := database.ChannelTag(MemberID, 2, config.Default, Data.Member.Region)
 				if err != nil {
-					log.Error(err)
+					log.Panic(err)
 				}
 				for i, v := range ChannelData {
 					v.SetMember(Data.Member)
@@ -526,14 +523,14 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 
 			ChannelData, err := database.ChannelTag(Data.Member.ID, 2, config.Default, Data.Member.Region)
 			if err != nil {
-				log.Error(err)
+				log.Panic(err)
 			}
 
 			for i, v := range ChannelData {
 				v.SetMember(Data.Member)
 
 				wg.Add(1)
-				go func(Channel database.DiscordChannel, wg *sync.WaitGroup) error {
+				go func(Channel database.DiscordChannel, wg *sync.WaitGroup) {
 					defer wg.Done()
 					ctx := context.Background()
 					UserTagsList, err := Channel.GetUserList(ctx)
@@ -543,7 +540,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 					if UserTagsList == nil && Data.Group.GroupName != config.Indie {
 						UserTagsList = []string{"_"}
 					} else if UserTagsList == nil && Data.Group.GroupName == config.Indie && !Channel.IndieNotif {
-						return nil
+						return
 					}
 
 					MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
@@ -567,9 +564,9 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						}).Error(err)
 						err = Channel.DelChannel(err.Error())
 						if err != nil {
-							return err
+							log.Error(err)
 						}
-						return err
+						log.Error(err)
 					}
 
 					if Channel.Dynamic {
@@ -586,7 +583,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						Msg := "Push " + config.GoSimpConf.Emoji.Livestream[0] + " to add you in `" + Data.Member.Name + "` ping list\nPush " + config.GoSimpConf.Emoji.Livestream[1] + " to remove you from ping list"
 						msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "`"+Data.Member.Name+"` Live right now\nUserTags: "+strings.Join(UserTagsList, " ")+"\n"+Msg)
 						if err != nil {
-							return err
+							log.Error(err)
 						}
 						User.SetDiscordChannelID(Channel.ChannelID).
 							SetGroup(Data.Group).
@@ -594,7 +591,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 
 						err = User.SendToCache(msg.ID)
 						if err != nil {
-							return err
+							log.Error(err)
 						}
 
 						Channel.SetMsgTextID(msg.ID)
@@ -605,15 +602,14 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							"MessageID": msg.ID,
 						}, Bot)
 						if err != nil {
-							return err
+							log.Error(err)
 						}
 					}
 
 					Channel.PushReddis()
 
-					return nil
 				}(v, &wg)
-				//Wait every ge 5 discord channel
+
 				if i%config.Waiting == 0 && config.GoSimpConf.LowResources {
 					log.WithFields(log.Fields{
 						"Func":  "Twitch",
