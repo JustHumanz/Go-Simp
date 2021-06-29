@@ -20,8 +20,9 @@ func YtGetStatus(Group, Member int64, Status, Region, Uniq string) ([]LiveStream
 		Key   = strconv.Itoa(int(Member)) + Status + Region + Uniq
 		rows  *sql.Rows
 		err   error
+		ctx   = context.Background()
 	)
-	val, err := LiveCache.LRange(context.Background(), Key, 0, -1).Result()
+	val, err := LiveCache.LRange(ctx, Key, 0, -1).Result()
 	if err != nil {
 		return nil, err
 	}
@@ -64,14 +65,14 @@ func YtGetStatus(Group, Member int64, Status, Region, Uniq string) ([]LiveStream
 			if err != nil {
 				return nil, err
 			}
-			list.Status = Status
+
 			Data = append(Data, list)
-			err = LiveCache.LPush(context.Background(), Key, list).Err()
+			err = LiveCache.LPush(ctx, Key, list).Err()
 			if err != nil {
 				return nil, err
 			}
 		}
-		err = LiveCache.Expire(context.Background(), Key, config.YtGetStatusTTL).Err()
+		err = LiveCache.Expire(ctx, Key, config.YtGetStatusTTL).Err()
 		if err != nil {
 			return nil, err
 		}

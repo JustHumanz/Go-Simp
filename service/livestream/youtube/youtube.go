@@ -148,6 +148,14 @@ func CheckYtByTime() {
 						}
 						if len(Data.Items) > 0 {
 							if Data.Items[0].Snippet.VideoStatus != "none" {
+								Key := strconv.Itoa(int(Member.ID)) + config.UpcomingStatus + config.Sys
+								err = database.RemoveYtCache(Key, context.Background())
+								if err != nil {
+									log.Panic(err)
+								}
+
+								time.Sleep(10 * time.Second)
+
 								if Data.Items[0].Statistics.ViewCount != "" {
 									Youtube.UpdateViewers(Data.Items[0].Statistics.ViewCount)
 								} else if Data.Items[0].Statistics.ViewCount == "0" && Youtube.Viewers == "0" || Youtube.Viewers == "" {
@@ -160,11 +168,6 @@ func CheckYtByTime() {
 
 								if !Data.Items[0].LiveDetails.ActualStartTime.IsZero() {
 									Youtube.UpdateSchdule(Data.Items[0].LiveDetails.ActualStartTime)
-								}
-								Key := strconv.Itoa(int(Member.ID)) + config.UpcomingStatus + config.Sys
-								err = database.RemoveYtCache(Key, context.Background())
-								if err != nil {
-									log.Panic(err)
 								}
 
 								Youtube.UpdateStatus(config.LiveStatus).
