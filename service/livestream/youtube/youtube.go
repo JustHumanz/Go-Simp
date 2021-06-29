@@ -221,6 +221,7 @@ func CheckYtByTime() {
 								SetState(config.YoutubeLive).
 								UpdateYt(config.PrivateStatus)
 						}
+
 						//one vtuber only have one livestream right
 						break
 					}

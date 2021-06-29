@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"strconv"
+	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	log "github.com/sirupsen/logrus"
@@ -64,6 +65,17 @@ func YtGetStatus(Group, Member int64, Status, Region, Uniq string) ([]LiveStream
 			err = rows.Scan(&list.ID, &list.VideoID, &list.Type, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.End, &list.Viewers, &list.Length, &list.Member.ID)
 			if err != nil {
 				return nil, err
+			}
+
+			UpcominginHours := int(time.Until(list.Schedul).Hours())
+			if Uniq == config.Sys {
+				if UpcominginHours > 2 {
+					continue
+				}
+			} else {
+				if UpcominginHours > 36 {
+					continue
+				}
 			}
 
 			Data = append(Data, list)
