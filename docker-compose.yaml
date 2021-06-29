@@ -94,6 +94,17 @@ services:
     networks:
       - go_simp-net
 
+  livestream-youtube_counter:
+    build: ./service/livestream/youtube_counter
+    image: go-simp-livestream-youtube_counter
+    depends_on:
+      - mysql
+      - db_migrate
+      - multi_tor
+    restart: on-failure
+    networks:
+      - go_simp-net
+
   livestream-twitch:
     build: ./service/livestream/twitch
     image: go-simp-livestream-twitch

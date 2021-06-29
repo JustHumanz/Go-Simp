@@ -2,6 +2,7 @@ package engine
 
 import (
 	"context"
+	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"image"
@@ -668,4 +669,83 @@ func GetRSS(YtID string) []string {
 		}
 	}
 	return VideoID
+}
+
+var ExTknList []string
+
+//YtAPI Get data from youtube api
+func YtAPI(VideoID []string) (YtData, error) {
+	var (
+		Data YtData
+	)
+	log.WithFields(log.Fields{
+		"VideoID": VideoID,
+	}).Info("Checking from youtubeAPI")
+
+	for i, Token := range config.GoSimpConf.YtToken {
+		if ExTknList != nil {
+			isExhaustion := false
+			for _, v := range ExTknList {
+				if v == Token {
+					isExhaustion = true
+					break
+				}
+			}
+
+			if isExhaustion {
+				continue
+			}
+		}
+		url := "https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id=" + strings.Join(VideoID, ",") + "&key=" + Token
+
+		bdy, curlerr := network.Curl(url, nil)
+		if curlerr != nil {
+			log.Error(curlerr)
+			if curlerr.Error() == "403 Forbidden" {
+				ExTknList = append(ExTknList, Token)
+			} else {
+				time.Sleep(10 * time.Second)
+			}
+
+			if i == len(config.GoSimpConf.YtToken)-1 {
+				break
+			}
+			continue
+		}
+
+		err := json.Unmarshal(bdy, &Data)
+		if err != nil {
+			return Data, err
+		}
+		return Data, nil
+
+	}
+	return YtData{}, errors.New("exhaustion Token")
+}
+
+//GetWaiting get viwers by scraping yt video
+func GetWaiting(VideoID string) (string, error) {
+	var (
+		bit     []byte
+		curlerr error
+		urls    = "https://www.youtube.com/watch?v=" + VideoID
+	)
+	bit, curlerr = network.Curl(urls, nil)
+	if curlerr != nil || bit == nil {
+		bit, curlerr = network.CoolerCurl(urls, nil)
+		if curlerr != nil {
+			return config.Ytwaiting, curlerr
+		}
+	}
+	reg, err := regexp.Compile("[^a-zA-Z0-9]+")
+	if err != nil {
+		return config.Ytwaiting, err
+	}
+	for _, element := range regexp.MustCompile(`(?m)videoViewCountRenderer.*?text([0-9\s]+).+(isLive\strue)`).FindAllStringSubmatch(reg.ReplaceAllString(string(bit), " "), -1) {
+		tmp := strings.Replace(element[1], " ", "", -1)
+		if tmp != "" {
+			config.Ytwaiting = tmp
+		}
+	}
+	return config.Ytwaiting, nil
 }

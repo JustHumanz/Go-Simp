@@ -2,12 +2,9 @@ package main
 
 import (
 	"context"
-	"encoding/json"
-	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
-	"strings"
 	"sync"
 	"time"
 
@@ -41,7 +38,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 
 				if YoutubeData == nil {
 					var Thumb string
-					Data, err := YtAPI([]string{ID})
+					Data, err := engine.YtAPI([]string{ID})
 					if err != nil {
 						log.Error(err)
 						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
@@ -137,7 +134,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						Thumb   string
 					)
 
-					Data, err := YtAPI([]string{ID})
+					Data, err := engine.YtAPI([]string{ID})
 					if err != nil {
 						log.Error(err)
 					}
@@ -156,14 +153,14 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 
 					if Items.Snippet.VideoStatus == config.UpcomingStatus {
 						if YoutubeData == nil {
-							Viewers, err = GetWaiting(ID)
+							Viewers, err = engine.GetWaiting(ID)
 							if err != nil {
 								log.Error(err)
 							}
 						} else if YoutubeData.Viewers != config.Ytwaiting {
 							Viewers = YoutubeData.Viewers
 						} else {
-							Viewers, err = GetWaiting(ID)
+							Viewers, err = engine.GetWaiting(ID)
 							if err != nil {
 								log.Error(err)
 							}
@@ -298,7 +295,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						"VideoID": ID,
 					}).Info("Update VideoID")
 
-					Data, err := YtAPI([]string{ID})
+					Data, err := engine.YtAPI([]string{ID})
 					if err != nil {
 						log.Error(err)
 					}
@@ -381,78 +378,6 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 			}
 		}
 	}
-}
-
-//YtAPI Get data from youtube api
-func YtAPI(VideoID []string) (engine.YtData, error) {
-	var (
-		Data engine.YtData
-	)
-	log.WithFields(log.Fields{
-		"VideoID": VideoID,
-	}).Info("Checking from youtubeAPI")
-
-	for i, Token := range config.GoSimpConf.YtToken {
-		if exTknList != nil {
-			isExhaustion := false
-			for _, v := range exTknList {
-				if v == Token {
-					isExhaustion = true
-					break
-				}
-			}
-
-			if isExhaustion {
-				continue
-			}
-		}
-		url := "https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id=" + strings.Join(VideoID, ",") + "&key=" + Token
-
-		var bdy []byte
-		var curlerr error
-		if *Proxy {
-			bdy, curlerr = network.CoolerCurl(url, nil)
-			if curlerr != nil {
-				if curlerr.Error() == "403 Forbidden" {
-					exTknList = append(exTknList, Token)
-				}
-				log.Error(curlerr)
-				if i == len(config.GoSimpConf.YtToken)-1 {
-					break
-				}
-				continue
-			}
-
-			err := json.Unmarshal(bdy, &Data)
-			if err != nil {
-				return Data, err
-			}
-			return Data, nil
-
-		} else {
-			bdy, curlerr = network.Curl(url, nil)
-			if curlerr != nil {
-				log.Error(curlerr)
-				if curlerr.Error() == "403 Forbidden" {
-					exTknList = append(exTknList, Token)
-				} else {
-					time.Sleep(10 * time.Second)
-				}
-
-				if i == len(config.GoSimpConf.YtToken)-1 {
-					break
-				}
-				continue
-			}
-
-			err := json.Unmarshal(bdy, &Data)
-			if err != nil {
-				return Data, err
-			}
-			return Data, nil
-		}
-	}
-	return engine.YtData{}, errors.New("exhaustion Token")
 }
 
 //ParseDuration Parse video duration
