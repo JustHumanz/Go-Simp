@@ -147,10 +147,11 @@ func StartRegister(s *discordgo.Session, m *discordgo.MessageCreate) {
 							} else {
 								Indie = config.No
 							}
+							Channel.Group.RemoveNillIconURL()
 
 							_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-								SetThumbnail(config.GoSimpIMG).
+								SetThumbnail(Channel.Group.IconURL).
 								SetDescription("Channel States of "+Channel.Group.GroupName).
 								SetTitle("ID "+strconv.Itoa(int(Channel.ID))).
 								AddField("Type", Typestr).
@@ -167,7 +168,7 @@ func StartRegister(s *discordgo.Session, m *discordgo.MessageCreate) {
 						} else {
 							_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-								SetThumbnail(config.GoSimpIMG).
+								SetThumbnail(Channel.Group.IconURL).
 								SetDescription("Channel States of "+Channel.Group.GroupName).
 								SetTitle("ID "+strconv.Itoa(int(Channel.ID))).
 								AddField("Type", Typestr).
