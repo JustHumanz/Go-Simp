@@ -250,7 +250,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						}
 
 						log.WithFields(log.Fields{
-							"VtuberGroup": Data.Group,
+							"VtuberGroup": Data.Group.GroupName,
 							"Vtuber":      Data.Member.Name,
 							"YtChannel":   Data.Member.YoutubeID,
 							"Dynamic":     Channel.Dynamic,
@@ -486,7 +486,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						}
 
 						log.WithFields(log.Fields{
-							"VtuberGroup":    Data.Group,
+							"VtuberGroup":    Data.Group.GroupName,
 							"Vtuber":         Data.Member.Name,
 							"BiliBiliRoomID": BiliBiliRoomID,
 							"Dynamic":        Channel.Dynamic,
