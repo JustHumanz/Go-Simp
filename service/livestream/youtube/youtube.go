@@ -144,6 +144,7 @@ func CheckYtByTime() {
 						Data, err := YtAPI([]string{Youtube.VideoID})
 						if err != nil {
 							log.Error(err)
+							continue
 						}
 						if len(Data.Items) > 0 {
 							if Data.Items[0].Snippet.VideoStatus != "none" {

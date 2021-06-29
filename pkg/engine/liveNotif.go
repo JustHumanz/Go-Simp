@@ -249,6 +249,14 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							}
 						}
 
+						log.WithFields(log.Fields{
+							"VtuberGroup": Data.Group,
+							"Vtuber":      Data.Member.Name,
+							"YtChannel":   Data.Member.YoutubeID,
+							"Dynamic":     Channel.Dynamic,
+							"LiteMode":    Channel.LiteMode,
+						}).Info("Send Message to " + Channel.ChannelID)
+
 						Channel.PushReddis()
 					}(v, &wg)
 
@@ -447,11 +455,6 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						}
 
 						if Channel.Dynamic {
-							log.WithFields(log.Fields{
-								"DiscordChannel": Channel.ChannelID,
-								"VtuberGroupID":  Data.Group.ID,
-								"BiliBiliRoomID": BiliBiliRoomID,
-							}).Info("Set dynamic mode")
 							Channel.SetVideoID(BiliBiliRoomID).
 								SetMsgEmbedID(MsgEmbed.ID)
 						}
@@ -481,6 +484,14 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 								log.Error(err)
 							}
 						}
+
+						log.WithFields(log.Fields{
+							"VtuberGroup":    Data.Group,
+							"Vtuber":         Data.Member.Name,
+							"BiliBiliRoomID": BiliBiliRoomID,
+							"Dynamic":        Channel.Dynamic,
+							"LiteMode":       Channel.LiteMode,
+						}).Info("Send Message to " + Channel.ChannelID)
 
 						Channel.PushReddis()
 
