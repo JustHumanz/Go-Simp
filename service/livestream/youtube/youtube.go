@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"math"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -154,6 +155,11 @@ func CheckPrivate() {
 				for _, Y := range YtData {
 					Y.Status = Status
 					Check(Y)
+				}
+				Key := strconv.Itoa(int(Member.ID)) + config.UpcomingStatus + config.Sys
+				err = database.RemoveYtCache(Key, context.Background())
+				if err != nil {
+					log.Panic(err)
 				}
 			}
 		}

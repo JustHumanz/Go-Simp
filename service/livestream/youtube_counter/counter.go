@@ -35,6 +35,8 @@ func init() {
 	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 }
 
+var stillRunning = true
+
 //Start main youtube module
 func main() {
 	var (
@@ -82,15 +84,24 @@ func main() {
 		engine.ExTknList = nil
 	})
 	log.Info("Enable " + ModuleState)
+	stillRunning = false
 	go pilot.RunHeartBeat(gRCPconn, ModuleState)
 	runfunc.Run(Bot)
 }
 
 func CheckYtByTime() {
+	if stillRunning {
+		log.Info("Already run this job,waiting older job done")
+		return
+	} else {
+		stillRunning = true
+		log.Info("set job to true ", stillRunning)
+	}
+
 	for _, GroupData := range *GroupPayload {
 		for _, MemberData := range GroupData.Members {
 			if MemberData.YoutubeID != "" && MemberData.Active() {
-				func(Member database.Member, Group database.Group) {
+				Cek := func(Member database.Member, Group database.Group) {
 					log.WithFields(log.Fields{
 						"Vtuber": Member.EnName,
 						"Group":  Group.GroupName,
@@ -206,8 +217,12 @@ func CheckYtByTime() {
 							UpdateStatus("reminder")
 						engine.SendLiveNotif(&Youtube, Bot)
 					}
-				}(MemberData, GroupData)
+				}
+				Cek(MemberData, GroupData)
 			}
 		}
 	}
+
+	stillRunning = false
+	log.Info("set job to false ", stillRunning)
 }
