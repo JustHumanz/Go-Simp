@@ -96,11 +96,15 @@ func CheckYtByTime() {
 				}).Info("Checking Upcoming schedule")
 				YoutubeStatus, err := database.YtGetStatus(0, Member.ID, config.UpcomingStatus, "", config.Sys)
 				if err != nil {
-					log.Error(err)
+					log.WithFields(log.Fields{
+						"Vtuber": Member.EnName,
+						"Group":  Group.GroupName,
+					}).Error(err)
 					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 						Message: err.Error(),
 						Service: ModuleState,
 					})
+					continue
 				}
 
 				for _, Youtube := range YoutubeStatus {
