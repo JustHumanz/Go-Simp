@@ -76,7 +76,7 @@ func main() {
 
 	c := cron.New()
 	c.Start()
-	c.AddFunc(config.CheckPayload, GetPayload)
+	//c.AddFunc(config.CheckPayload, GetPayload)
 	c.AddFunc(config.YoutubeCheckUpcomingByTime, CheckYtByTime)
 	c.AddFunc("0 */13 * * *", func() {
 		engine.ExTknList = nil
@@ -87,124 +87,126 @@ func main() {
 }
 
 func CheckYtByTime() {
-	for _, Group := range *GroupPayload {
-		for _, Member := range Group.Members {
-			if Member.YoutubeID != "" && Member.Active() {
-				log.WithFields(log.Fields{
-					"Vtuber": Member.EnName,
-					"Group":  Group.GroupName,
-				}).Info("Checking Upcoming schedule")
-				YoutubeStatus, err := database.YtGetStatus(0, Member.ID, config.UpcomingStatus, "", config.Sys)
-				if err != nil {
+	for _, GroupData := range *GroupPayload {
+		for _, MemberData := range GroupData.Members {
+			if MemberData.YoutubeID != "" && MemberData.Active() {
+				func(Member database.Member, Group database.Group) {
 					log.WithFields(log.Fields{
 						"Vtuber": Member.EnName,
 						"Group":  Group.GroupName,
-					}).Error(err)
-					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message: err.Error(),
-						Service: ModuleState,
-					})
-					continue
-				}
-
-				for _, Youtube := range YoutubeStatus {
-					Youtube.AddMember(Member).AddGroup(Group)
-					if time.Since(Youtube.Schedul) > time.Until(Youtube.Schedul) {
+					}).Info("Checking Upcoming schedule")
+					YoutubeStatus, err := database.YtGetStatus(0, Member.ID, config.UpcomingStatus, "", config.Sys)
+					if err != nil {
 						log.WithFields(log.Fields{
-							"Vtuber":  Member.EnName,
-							"Group":   Group.GroupName,
-							"VideoID": Youtube.VideoID,
-						}).Info("Vtuber upcoming schedule deadline,force change to live")
+							"Vtuber": Member.EnName,
+							"Group":  Group.GroupName,
+						}).Error(err)
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message: err.Error(),
+							Service: ModuleState,
+						})
+						return
+					}
 
-						Data, err := engine.YtAPI([]string{Youtube.VideoID})
-						if err != nil {
-							log.Error(err)
-							continue
-						}
-						if len(Data.Items) > 0 {
-							if Data.Items[0].Snippet.VideoStatus != "none" {
+					for _, Youtube := range YoutubeStatus {
+						Youtube.AddMember(Member).AddGroup(Group)
+						if time.Since(Youtube.Schedul) > time.Until(Youtube.Schedul) {
+							log.WithFields(log.Fields{
+								"Vtuber":  Member.EnName,
+								"Group":   Group.GroupName,
+								"VideoID": Youtube.VideoID,
+							}).Info("Vtuber upcoming schedule deadline,force change to live")
+
+							Data, err := engine.YtAPI([]string{Youtube.VideoID})
+							if err != nil {
+								log.Error(err)
+								continue
+							}
+							if len(Data.Items) > 0 {
+								if Data.Items[0].Snippet.VideoStatus != "none" {
+									Key := strconv.Itoa(int(Member.ID)) + config.UpcomingStatus + config.Sys
+									err = database.RemoveYtCache(Key, context.Background())
+									if err != nil {
+										log.Panic(err)
+									}
+
+									time.Sleep(10 * time.Second)
+
+									if Data.Items[0].Statistics.ViewCount != "" {
+										Youtube.UpdateViewers(Data.Items[0].Statistics.ViewCount)
+									} else if Data.Items[0].Statistics.ViewCount == "0" && Youtube.Viewers == "0" || Youtube.Viewers == "" {
+										Viewers, err := engine.GetWaiting(Youtube.VideoID)
+										if err != nil {
+											log.Error(err)
+										}
+										Youtube.UpdateViewers(Viewers)
+									}
+
+									if !Data.Items[0].LiveDetails.ActualStartTime.IsZero() {
+										Youtube.UpdateSchdule(Data.Items[0].LiveDetails.ActualStartTime)
+									}
+
+									Youtube.UpdateStatus(config.LiveStatus).
+										SetState(config.YoutubeLive).
+										UpdateYt(config.LiveStatus)
+
+									if Member.BiliRoomID != 0 {
+										LiveBili, err := engine.GetRoomStatus(Member.BiliRoomID)
+										if err != nil {
+											log.Error(err)
+										}
+										if LiveBili.CheckScheduleLive() {
+											Youtube.SetBiliLive(true).UpdateBiliToLive()
+										}
+									}
+
+									if config.GoSimpConf.Metric {
+										bit, err := Youtube.MarshalBinary()
+										if err != nil {
+											log.Error(err)
+										}
+										gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+											MetricData: bit,
+											State:      config.LiveStatus,
+										})
+									}
+
+									isMemberOnly, err := regexp.MatchString("memberonly", strings.ToLower(Youtube.Title))
+									if err != nil {
+										log.Error(err)
+									}
+
+									engine.SendLiveNotif(&Youtube, Bot)
+									if isMemberOnly {
+										Youtube.UpdateYt(config.PrivateStatus)
+									}
+								}
+							} else if len(Data.Items) == 0 {
+								log.WithFields(log.Fields{
+									"Vtuber":  Member.EnName,
+									"Group":   Group.GroupName,
+									"VideoID": Youtube.VideoID,
+								}).Warn("Upcoming deleted")
 								Key := strconv.Itoa(int(Member.ID)) + config.UpcomingStatus + config.Sys
 								err = database.RemoveYtCache(Key, context.Background())
 								if err != nil {
 									log.Panic(err)
 								}
 
-								time.Sleep(10 * time.Second)
-
-								if Data.Items[0].Statistics.ViewCount != "" {
-									Youtube.UpdateViewers(Data.Items[0].Statistics.ViewCount)
-								} else if Data.Items[0].Statistics.ViewCount == "0" && Youtube.Viewers == "0" || Youtube.Viewers == "" {
-									Viewers, err := engine.GetWaiting(Youtube.VideoID)
-									if err != nil {
-										log.Error(err)
-									}
-									Youtube.UpdateViewers(Viewers)
-								}
-
-								if !Data.Items[0].LiveDetails.ActualStartTime.IsZero() {
-									Youtube.UpdateSchdule(Data.Items[0].LiveDetails.ActualStartTime)
-								}
-
 								Youtube.UpdateStatus(config.LiveStatus).
 									SetState(config.YoutubeLive).
-									UpdateYt(config.LiveStatus)
-
-								if Member.BiliRoomID != 0 {
-									LiveBili, err := engine.GetRoomStatus(Member.BiliRoomID)
-									if err != nil {
-										log.Error(err)
-									}
-									if LiveBili.CheckScheduleLive() {
-										Youtube.SetBiliLive(true).UpdateBiliToLive()
-									}
-								}
-
-								if config.GoSimpConf.Metric {
-									bit, err := Youtube.MarshalBinary()
-									if err != nil {
-										log.Error(err)
-									}
-									gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-										MetricData: bit,
-										State:      config.LiveStatus,
-									})
-								}
-
-								isMemberOnly, err := regexp.MatchString("memberonly", strings.ToLower(Youtube.Title))
-								if err != nil {
-									log.Error(err)
-								}
-
-								engine.SendLiveNotif(&Youtube, Bot)
-								if isMemberOnly {
-									Youtube.UpdateYt(config.PrivateStatus)
-								}
-							}
-						} else if len(Data.Items) == 0 {
-							log.WithFields(log.Fields{
-								"Vtuber":  Member.EnName,
-								"Group":   Group.GroupName,
-								"VideoID": Youtube.VideoID,
-							}).Warn("Upcoming deleted")
-							Key := strconv.Itoa(int(Member.ID)) + config.UpcomingStatus + config.Sys
-							err = database.RemoveYtCache(Key, context.Background())
-							if err != nil {
-								log.Panic(err)
+									UpdateYt(config.PrivateStatus)
 							}
 
-							Youtube.UpdateStatus(config.LiveStatus).
-								SetState(config.YoutubeLive).
-								UpdateYt(config.PrivateStatus)
+							//one vtuber only have one livestream right
+							break
 						}
-
-						//one vtuber only have one livestream right
-						break
+						Youtube.
+							SetState(config.YoutubeLive).
+							UpdateStatus("reminder")
+						engine.SendLiveNotif(&Youtube, Bot)
 					}
-					Youtube.
-						SetState(config.YoutubeLive).
-						UpdateStatus("reminder")
-					engine.SendLiveNotif(&Youtube, Bot)
-				}
+				}(MemberData, GroupData)
 			}
 		}
 	}
