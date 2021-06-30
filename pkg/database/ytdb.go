@@ -6,26 +6,47 @@ import (
 	"encoding/json"
 	"errors"
 	"strconv"
+	"strings"
 	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	log "github.com/sirupsen/logrus"
 )
 
-//Get Youtube data from status
-func YtGetStatus(Group, Member int64, Status, Region, Uniq string) ([]LiveStream, error) {
+//YtGetStatusMap Get Youtube data from status
+func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 	var (
 		Data  []LiveStream
 		list  LiveStream
 		limit int
-		Key   = strconv.Itoa(int(Member)) + Status + Region + Uniq
+		Key   []string //= strconv.Itoa(int(Member)) + Status + Region + Uniq
 		rows  *sql.Rows
 		err   error
 		ctx   = context.Background()
 	)
-	val, err := LiveCache.LRange(ctx, Key, 0, -1).Result()
+	var Group, Member int64
+	Status := Payload["Status"].(string)
+	var Region string
+
+	if Payload["GroupID"] != nil {
+		Group = Payload["GroupID"].(int64)
+		Key = append(Key, strconv.Itoa(int(Group)), Payload["GroupName"].(string))
+		if Payload["Region"].(string) != "" {
+			Region = Payload["Region"].(string)
+			Key = append(Key, Region)
+		}
+	} else {
+		Member = Payload["MemberID"].(int64)
+		Key = append(Key, strconv.Itoa(int(Member)), Payload["MemberName"].(string))
+	}
+
+	Key = append(Key, Status, Payload["State"].(string))
+	Key2 := strings.Join(Key, "-")
+
+	log.Info("Append new cache ", Key2)
+	val, err := LiveCache.LRange(ctx, Key2, 0, -1).Result()
 	if err != nil {
-		return nil, err
+		return nil, Key2, err
 	}
 	if len(val) == 0 {
 		if (Group != 0 && Status != "live") || (Member != 0 && Status == "past") {
@@ -38,9 +59,9 @@ func YtGetStatus(Group, Member int64, Status, Region, Uniq string) ([]LiveStream
 			rows, err = DB.Query(`SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where VtuberGroup.id=? AND Youtube.Status=? AND Region=? Order by ScheduledStart DESC Limit ?`, Group, Status, Region, limit)
 			if err != nil {
 				if err == sql.ErrNoRows {
-					return nil, errors.New("not found any schdule")
+					return nil, Key2, errors.New("not found any schdule")
 				} else {
-					return nil, err
+					return nil, Key2, err
 				}
 			}
 			defer rows.Close()
@@ -49,9 +70,9 @@ func YtGetStatus(Group, Member int64, Status, Region, Uniq string) ([]LiveStream
 			rows, err = DB.Query(`SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Youtube.Status=? Order by EndStream DESC Limit ?`, Group, Member, Status, limit)
 			if err != nil {
 				if err == sql.ErrNoRows {
-					return nil, errors.New("not found any schdule")
+					return nil, Key2, errors.New("not found any schdule")
 				} else {
-					return nil, err
+					return nil, Key2, err
 				}
 			}
 			defer rows.Close()
@@ -59,9 +80,9 @@ func YtGetStatus(Group, Member int64, Status, Region, Uniq string) ([]LiveStream
 			rows, err = DB.Query(`SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Youtube.Status=? Order by ScheduledStart DESC Limit ?`, Group, Member, Status, limit)
 			if err != nil {
 				if err == sql.ErrNoRows {
-					return nil, errors.New("not found any schdule")
+					return nil, Key2, errors.New("not found any schdule")
 				} else {
-					return nil, err
+					return nil, Key2, err
 				}
 			}
 			defer rows.Close()
@@ -70,11 +91,11 @@ func YtGetStatus(Group, Member int64, Status, Region, Uniq string) ([]LiveStream
 		for rows.Next() {
 			err = rows.Scan(&list.ID, &list.VideoID, &list.Type, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.End, &list.Viewers, &list.Length, &list.Member.ID)
 			if err != nil {
-				return nil, err
+				return nil, Key2, err
 			}
 
 			UpcominginHours := int(time.Until(list.Schedul).Hours())
-			if Uniq == config.Sys {
+			if Payload["State"].(string) == config.Sys {
 				if UpcominginHours > 2 {
 					continue
 				}
@@ -85,26 +106,26 @@ func YtGetStatus(Group, Member int64, Status, Region, Uniq string) ([]LiveStream
 			}
 
 			Data = append(Data, list)
-			err = LiveCache.LPush(ctx, Key, list).Err()
+			err = LiveCache.LPush(ctx, Key2, list).Err()
 			if err != nil {
-				return nil, err
+				return nil, Key2, err
 			}
 		}
-		err = LiveCache.Expire(ctx, Key, config.YtGetStatusTTL).Err()
+		err = LiveCache.Expire(ctx, Key2, config.YtGetStatusTTL).Err()
 		if err != nil {
-			return nil, err
+			return nil, Key2, err
 		}
 	} else {
 		for _, result := range unique(val) {
 			err := json.Unmarshal([]byte(result), &list)
 			if err != nil {
-				return nil, err
+				return nil, Key2, err
 			}
 			Data = append(Data, list)
 		}
 	}
 
-	return Data, nil
+	return Data, Key2, nil
 
 }
 

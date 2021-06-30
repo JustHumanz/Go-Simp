@@ -46,7 +46,13 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 							return
 						} else {
-							YoutubeData, err := database.YtGetStatus(0, Member.ID, config.UpcomingStatus, Region, config.Fe)
+							YoutubeData, _, err := database.YtGetStatus(map[string]interface{}{
+								"MemberID":   Member.ID,
+								"MemberName": Member.Name,
+								"Status":     config.UpcomingStatus,
+								"Region":     Region,
+								"State":      config.Fe,
+							})
 							if err != nil {
 								log.Error(err)
 							}
@@ -104,12 +110,18 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						GroupData, err := database.YtGetStatus(VTuberGroup.ID, 0, config.UpcomingStatus, Region, config.Fe)
+						YoutubeData, _, err := database.YtGetStatus(map[string]interface{}{
+							"GroupID":   VTuberGroup.ID,
+							"GroupName": VTuberGroup.GroupName,
+							"Status":    config.UpcomingStatus,
+							"Region":    Region,
+							"State":     config.Fe,
+						})
 						if err != nil {
 							log.Error(err)
 						}
-						if GroupData != nil {
-							for _, Youtube := range GroupData {
+						if YoutubeData != nil {
+							for _, Youtube := range YoutubeData {
 								Member, err := FindVtuber(Youtube.Member.ID)
 								if err != nil {
 									log.Error(err)
@@ -189,7 +201,13 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								log.Error(err)
 							}
 						} else {
-							YoutubeData, err := database.YtGetStatus(0, Member.ID, config.LiveStatus, Region, config.Fe)
+							YoutubeData, _, err := database.YtGetStatus(map[string]interface{}{
+								"MemberID":   Member.ID,
+								"MemberName": Member.Name,
+								"Status":     config.LiveStatus,
+								"Region":     Region,
+								"State":      config.Fe,
+							})
 							if err != nil {
 								log.Error(err)
 							}
@@ -250,7 +268,13 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						YoutubeData, err := database.YtGetStatus(VTuberGroup.ID, 0, config.LiveStatus, Region, config.Fe)
+						YoutubeData, _, err := database.YtGetStatus(map[string]interface{}{
+							"GroupID":   VTuberGroup.ID,
+							"GroupName": VTuberGroup.GroupName,
+							"Status":    config.LiveStatus,
+							"Region":    Region,
+							"State":     config.Fe,
+						})
 						if err != nil {
 							log.Error(err)
 						}
@@ -338,7 +362,13 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 							return
 						} else {
-							YoutubeData, err := database.YtGetStatus(0, Member.ID, config.PastStatus, Region, config.Fe)
+							YoutubeData, _, err := database.YtGetStatus(map[string]interface{}{
+								"MemberID":   Member.ID,
+								"MemberName": Member.Name,
+								"Status":     config.UpcomingStatus,
+								"Region":     Region,
+								"State":      config.Fe,
+							})
 							if err != nil {
 								log.Error(err)
 							}
@@ -394,12 +424,24 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						)
 
 						if CheckReg(VTuberGroup.GroupName, Region) {
-							YoutubeData, err = database.YtGetStatus(VTuberGroup.ID, 0, config.PastStatus, Region, config.Fe)
+							YoutubeData, _, err = database.YtGetStatus(map[string]interface{}{
+								"GroupID":   VTuberGroup.ID,
+								"GroupName": VTuberGroup.GroupName,
+								"Status":    config.PastStatus,
+								"Region":    Region,
+								"State":     config.Fe,
+							})
 							if err != nil {
 								log.Error(err)
 							}
 						} else {
-							YoutubeData, err = database.YtGetStatus(VTuberGroup.ID, 0, config.PastStatus, "", config.Fe)
+							YoutubeData, _, err = database.YtGetStatus(map[string]interface{}{
+								"GroupID":   VTuberGroup.ID,
+								"GroupName": VTuberGroup.GroupName,
+								"Status":    config.PastStatus,
+								"Region":    Region,
+								"State":     config.Fe,
+							})
 							if err != nil {
 								log.Error(err)
 							}

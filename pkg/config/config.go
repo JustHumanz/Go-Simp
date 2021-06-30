@@ -240,57 +240,6 @@ func (Data ConfigFile) CheckSQL() *sql.DB {
 	return db
 }
 
-/*
-//GetTwitchAccessToken get twitch access token
-func (Data ConfigFile) GetTwitchAccessToken() string {
-	if TwitchToken != "" {
-		return TwitchToken
-	} else {
-		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-		defer cancel()
-
-		var (
-			url  = "https://id.twitch.tv/oauth2/token?client_id=" + Data.Twitch.ClientID + "&client_secret=" + Data.Twitch.ClientSecret + "&grant_type=client_credentials"
-			body []byte
-		)
-		spaceClient := http.Client{}
-		request, err := http.NewRequest(http.MethodPost, url, nil)
-		if err != nil {
-			log.Error(err)
-		}
-		request.Header.Set("cache-control", "no-cache")
-		request.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9")
-
-		response, err := spaceClient.Do(request.WithContext(ctx))
-		if err != nil {
-			log.Error(err)
-		}
-
-		defer response.Body.Close()
-
-		if response.StatusCode != http.StatusOK {
-			log.WithFields(log.Fields{
-				"Status": response.StatusCode,
-				"Reason": response.Status,
-			}).Error("Status code not daijobu")
-		}
-
-		body, err = ioutil.ReadAll(response.Body)
-		if err != nil {
-			log.Error(err)
-
-		}
-		var result map[string]interface{}
-		err = json.Unmarshal(body, &result)
-		if err != nil {
-			log.Error(err)
-		}
-		TwitchToken = result["access_token"].(string)
-		return TwitchToken
-	}
-}
-*/
-
 //InitConf initializing config file
 func (Data ConfigFile) InitConf() {
 	GoSimpConf = Data

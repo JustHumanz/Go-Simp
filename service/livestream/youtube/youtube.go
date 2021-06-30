@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"math"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -148,7 +147,12 @@ func CheckPrivate() {
 	for _, Status := range []string{config.UpcomingStatus, config.PastStatus, config.LiveStatus, config.PrivateStatus} {
 		for _, Group := range *GroupPayload {
 			for _, Member := range Group.Members {
-				YtData, err := database.YtGetStatus(0, Member.ID, Status, "", config.Sys)
+				YtData, Key, err := database.YtGetStatus(map[string]interface{}{
+					"MemberID":   Member.ID,
+					"MemberName": Member.Name,
+					"Status":     Status,
+					"State":      config.Sys,
+				})
 				if err != nil {
 					log.Error(err)
 				}
@@ -156,7 +160,7 @@ func CheckPrivate() {
 					Y.Status = Status
 					Check(Y)
 				}
-				Key := strconv.Itoa(int(Member.ID)) + config.UpcomingStatus + config.Sys
+
 				err = database.RemoveYtCache(Key, context.Background())
 				if err != nil {
 					log.Panic(err)

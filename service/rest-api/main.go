@@ -462,7 +462,14 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 
 	var CekLiveMember = func(Member map[string]interface{}) map[string]interface{} {
 		if cekLive == "true" {
-			YTData, err := database.YtGetStatus(0, Member["ID"].(int64), config.LiveStatus, "", config.Sys)
+			MemberID := Member["ID"].(int64)
+			MemberName := Member["Name"].(string)
+			YTData, _, err := database.YtGetStatus(map[string]interface{}{
+				"MemberID":   MemberID,
+				"MemberName": MemberName,
+				"Status":     config.LiveStatus,
+				"State":      config.Sys,
+			})
 			if err != nil {
 				log.Error(err)
 			}

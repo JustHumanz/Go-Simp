@@ -51,7 +51,14 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 				}
 				GroupID := Group["ID"].(int64)
 				if GroupIDint == int(GroupID) {
-					YTData, err := database.YtGetStatus(GroupID, 0, Status, Region, config.Sys)
+					GroupName := Group["GroupName"].(string)
+					YTData, _, err := database.YtGetStatus(map[string]interface{}{
+						"GroupID":   GroupID,
+						"GroupName": GroupName,
+						"Status":    Status,
+						"Region":    Region,
+						"State":     config.Sys,
+					})
 					if err != nil {
 						log.Error(err)
 					}
@@ -78,7 +85,15 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 				}
 				MemberID := Member["ID"].(int64)
 				if MemberIDint == int(MemberID) {
-					YTData, err := database.YtGetStatus(0, MemberID, Status, Region, config.Sys)
+					MemberName := Member["Name"].(string)
+					YTData, _, err := database.YtGetStatus(map[string]interface{}{
+						"MemberID":   MemberID,
+						"MemberName": MemberName,
+						"Status":     config.UpcomingStatus,
+						"Region":     Region,
+						"State":      config.Sys,
+					})
+
 					if err != nil {
 						log.Error(err)
 					}

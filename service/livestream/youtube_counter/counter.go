@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"regexp"
-	"strconv"
 	"strings"
 	"time"
 
@@ -106,7 +105,12 @@ func CheckYtByTime() {
 						"Vtuber": Member.EnName,
 						"Group":  Group.GroupName,
 					}).Info("Checking Upcoming schedule")
-					YoutubeStatus, err := database.YtGetStatus(0, Member.ID, config.UpcomingStatus, "", config.Sys)
+					YoutubeStatus, Key, err := database.YtGetStatus(map[string]interface{}{
+						"MemberID":   Member.ID,
+						"MemberName": Member.Name,
+						"Status":     config.UpcomingStatus,
+						"State":      config.Sys,
+					})
 					if err != nil {
 						log.WithFields(log.Fields{
 							"Vtuber": Member.EnName,
@@ -135,7 +139,6 @@ func CheckYtByTime() {
 							}
 							if len(Data.Items) > 0 {
 								if Data.Items[0].Snippet.VideoStatus != "none" {
-									Key := strconv.Itoa(int(Member.ID)) + config.UpcomingStatus + config.Sys
 									err = database.RemoveYtCache(Key, context.Background())
 									if err != nil {
 										log.Panic(err)
@@ -198,7 +201,6 @@ func CheckYtByTime() {
 									"Group":   Group.GroupName,
 									"VideoID": Youtube.VideoID,
 								}).Warn("Upcoming deleted")
-								Key := strconv.Itoa(int(Member.ID)) + config.UpcomingStatus + config.Sys
 								err = database.RemoveYtCache(Key, context.Background())
 								if err != nil {
 									log.Panic(err)
