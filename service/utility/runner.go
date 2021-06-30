@@ -102,7 +102,10 @@ func main() {
 
 	Bot.AddHandler(func(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 		if (m.Emoji.MessageFormat() == configfile.Emoji.Livestream[0] || m.Emoji.MessageFormat() == configfile.Emoji.Livestream[1]) && m.UserID != BotInfo.ID {
-			UserState := database.GetChannelMessage(m.MessageID)
+			UserState, err := database.GetChannelMessage(m.MessageID)
+			if err != nil {
+				log.Error(err)
+			}
 			if UserState != nil {
 				if m.Emoji.MessageFormat() == configfile.Emoji.Livestream[0] {
 					UserInfo, err := s.User(m.MessageReaction.UserID)

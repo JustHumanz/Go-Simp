@@ -29,7 +29,15 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
 						} else {
-							LiveTwitch := database.TwitchGet(0, Member.ID, config.LiveStatus)
+							LiveTwitch, err := database.TwitchGet(0, Member.ID, config.LiveStatus)
+							if err != nil {
+								log.Error(err)
+								SendError(map[string]string{
+									"ChannelID": m.ChannelID,
+									"Username":  m.Author.Username,
+									"AvatarURL": m.Author.AvatarURL("128"),
+								})
+							}
 							FixName := engine.FixName(Member.EnName, Member.JpName)
 							if LiveTwitch != nil {
 								Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
@@ -76,7 +84,15 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						TwitchLive := database.TwitchGet(VTuberGroup.ID, 0, config.LiveStatus)
+						TwitchLive, err := database.TwitchGet(VTuberGroup.ID, 0, config.LiveStatus)
+						if err != nil {
+							log.Error(err)
+							SendError(map[string]string{
+								"ChannelID": m.ChannelID,
+								"Username":  m.Author.Username,
+								"AvatarURL": m.Author.AvatarURL("128"),
+							})
+						}
 						if TwitchLive != nil {
 							Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 							if err != nil {
@@ -139,7 +155,15 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
 						} else {
-							TwitchLive := database.TwitchGet(0, Member.ID, config.PastStatus)
+							TwitchLive, err := database.TwitchGet(0, Member.ID, config.PastStatus)
+							if err != nil {
+								log.Error(err)
+								SendError(map[string]string{
+									"ChannelID": m.ChannelID,
+									"Username":  m.Author.Username,
+									"AvatarURL": m.Author.AvatarURL("128"),
+								})
+							}
 							FixName := engine.FixName(Member.JpName, Member.EnName)
 							if TwitchLive != nil {
 								Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
@@ -187,7 +211,15 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						TwitchLive := database.TwitchGet(VTuberGroup.ID, 0, config.PastStatus)
+						TwitchLive, err := database.TwitchGet(VTuberGroup.ID, 0, config.PastStatus)
+						if err != nil {
+							log.Error(err)
+							SendError(map[string]string{
+								"ChannelID": m.ChannelID,
+								"Username":  m.Author.Username,
+								"AvatarURL": m.Author.AvatarURL("128"),
+							})
+						}
 						if TwitchLive != nil {
 							Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 							if err != nil {

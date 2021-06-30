@@ -57,34 +57,26 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 		if Region != "" {
 			rows, err = DB.Query(`SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where VtuberGroup.id=? AND Youtube.Status=? AND Region=? Order by ScheduledStart DESC Limit ?`, Group, Status, Region, limit)
 			if err != nil {
-				if err == sql.ErrNoRows {
-					return nil, Key2, errors.New("not found any schdule")
-				} else {
-					return nil, Key2, err
-				}
+				return nil, Key2, err
 			}
 			defer rows.Close()
 
 		} else if Status == config.PastStatus {
 			rows, err = DB.Query(`SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Youtube.Status=? Order by EndStream DESC Limit ?`, Group, Member, Status, limit)
 			if err != nil {
-				if err == sql.ErrNoRows {
-					return nil, Key2, errors.New("not found any schdule")
-				} else {
-					return nil, Key2, err
-				}
+				return nil, Key2, err
 			}
 			defer rows.Close()
 		} else {
 			rows, err = DB.Query(`SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Youtube.Status=? Order by ScheduledStart DESC Limit ?`, Group, Member, Status, limit)
 			if err != nil {
-				if err == sql.ErrNoRows {
-					return nil, Key2, errors.New("not found any schdule")
-				} else {
-					return nil, Key2, err
-				}
+				return nil, Key2, err
 			}
 			defer rows.Close()
+		}
+
+		if !rows.Next() {
+			return nil, Key2, errors.New("not found any schdule")
 		}
 
 		for rows.Next() {
@@ -236,11 +228,12 @@ func (Group GroupYtChannel) CheckYoutubeVideo(VideoID string) (*LiveStream, erro
 }
 
 //Update youtube data
-func (Data *LiveStream) UpdateYt(Status string) {
+func (Data *LiveStream) UpdateYt(Status string) error {
 	_, err := DB.Exec(`Update Youtube set Type=?,Status=?,Title=?,Thumbnails=?,Description=?,PublishedAt=?,ScheduledStart=?,EndStream=?,Viewers=?,Length=? where id=?`, Data.Type, Status, Data.Title, Data.Thumb, Data.Desc, Data.Published, Data.Schedul, Data.End, Data.Viewers, Data.Length, Data.ID)
 	if err != nil {
-		log.Error(err)
+		return err
 	}
+	return nil
 }
 
 func CheckReminder(Num int) bool {

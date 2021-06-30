@@ -21,7 +21,11 @@ func TwitterFanart() {
 	scraper := twitterscraper.New()
 	scraper.SetProxy(configfile.MultiTOR)
 	scraper.SetSearchMode(twitterscraper.SearchLatest)
-	for _, Group := range database.GetGroups() {
+	Groups, err := database.GetGroups()
+	if err != nil {
+		log.Error(err)
+	}
+	for _, Group := range Groups {
 		_, err := engine.CreatePayload(Group, scraper, 100, false)
 		if err != nil {
 			log.WithFields(log.Fields{
@@ -263,10 +267,17 @@ func (Data Twitch) GetTwitchFollowers() (int, int, error) {
 }
 
 func CheckYoutube() {
-	Data := database.GetGroups()
+	Data, err := database.GetGroups()
+	if err != nil {
+		log.Error(err)
+	}
 	for i := 0; i < len(Data); i++ {
 		var wg sync.WaitGroup
-		for i, NameData := range database.GetMembers(Data[i].ID) {
+		Member, err := database.GetMembers(Data[i].ID)
+		if err != nil {
+			log.Error(err)
+		}
+		for i, NameData := range Member {
 			wg.Add(1)
 			go func(Name database.Member) {
 				if Name.YoutubeID != "" {
@@ -289,11 +300,19 @@ func CheckYoutube() {
 
 func CheckLiveBiliBili() {
 	log.Info("Start check BiliBili room")
-	for _, Group := range database.GetGroups() {
+	Groups, err := database.GetGroups()
+	if err != nil {
+		log.Error(err)
+	}
+	for _, Group := range Groups {
 		if Group.GroupName == "Hololive" {
 			continue
 		}
-		for _, Member := range database.GetMembers(Group.ID) {
+		MemberData, err := database.GetMembers(Group.ID)
+		if err != nil {
+			log.Error(err)
+		}
+		for _, Member := range MemberData {
 			if Member.BiliBiliID != 0 {
 				log.WithFields(log.Fields{
 					"Group":   Group.GroupName,
@@ -360,8 +379,16 @@ func CheckLiveBiliBili() {
 
 func CheckTwitch() {
 	log.Info("Start check Twitch")
-	for _, Group := range database.GetGroups() {
-		for _, Member := range database.GetMembers(Group.ID) {
+	Groups, err := database.GetGroups()
+	if err != nil {
+		log.Error()
+	}
+	for _, Group := range Groups {
+		MembersData, err := database.GetMembers(Group.ID)
+		if err != nil {
+			log.Error(err)
+		}
+		for _, Member := range MembersData {
 			if Member.TwitchName != "" {
 				result, err := TwitchClient.GetStreams(&helix.StreamsParams{
 					UserLogins: []string{Member.TwitchName},
@@ -422,13 +449,19 @@ func CheckTwitch() {
 }
 
 func CheckSpaceBiliBili() {
-	Group := database.GetGroups()
+	Group, err := database.GetGroups()
+	if err != nil {
+		log.Error(err)
+	}
 	loc, _ := time.LoadLocation("Asia/Shanghai")
 	for z := 0; z < len(Group); z++ {
 		if Group[z].GroupName == "Hololive" {
 			continue
 		}
-		Name := database.GetMembers(Group[z].ID)
+		Name, err := database.GetMembers(Group[z].ID)
+		if err != nil {
+			log.Error(err)
+		}
 		for k := 0; k < len(Name); k++ {
 			if Name[k].BiliBiliID != 0 {
 				log.WithFields(log.Fields{

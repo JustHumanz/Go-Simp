@@ -49,10 +49,10 @@ func Start(configfile config.ConfigFile) {
 }
 
 //GetGroups Get all vtuber groupData
-func GetGroups() []Group {
+func GetGroups() ([]Group, error) {
 	rows, err := DB.Query(`SELECT id,VtuberGroupName,VtuberGroupIcon FROM VtuberGroup`)
 	if err != nil {
-		log.Error(err)
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -61,20 +61,26 @@ func GetGroups() []Group {
 		var list Group
 		err = rows.Scan(&list.ID, &list.GroupName, &list.IconURL)
 		if err != nil {
-			log.Error(err)
+			return nil, err
 		}
-		list.Members = GetMembers(list.ID)
-		list.YoutubeChannels = GetGroupsYtChannel(list.ID)
+		list.Members, err = GetMembers(list.ID)
+		if err != nil {
+			return nil, err
+		}
+		list.YoutubeChannels, err = GetGroupsYtChannel(list.ID)
+		if err != nil {
+			return nil, err
+		}
 		Data = append(Data, list)
 
 	}
-	return Data
+	return Data, nil
 }
 
-func GetGroupsYtChannel(i int64) []GroupYtChannel {
+func GetGroupsYtChannel(i int64) ([]GroupYtChannel, error) {
 	rows, err := DB.Query(`SELECT YoutubeChannel,Region FROM GroupYoutube where VtuberGroup_id=?`, i)
 	if err != nil {
-		log.Error(err)
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -85,16 +91,16 @@ func GetGroupsYtChannel(i int64) []GroupYtChannel {
 		)
 		err = rows.Scan(&list.YtChannel, &list.Region)
 		if err != nil {
-			log.Error(err)
+			return nil, err
 		}
 		list.ID = i
 		Data = append(Data, list)
 	}
-	return Data
+	return Data, nil
 }
 
 //GetMembers Get data of Vtuber member
-func GetMembers(GroupID int64) []Member {
+func GetMembers(GroupID int64) ([]Member, error) {
 	var (
 		list Member
 		Data []Member
@@ -102,20 +108,20 @@ func GetMembers(GroupID int64) []Member {
 
 	rows, err := DB.Query(`SELECT VtuberMember.* FROM Vtuber.VtuberMember WHERE VtuberGroup_id=? Order by Region,VtuberGroup_id;`, GroupID)
 	if err != nil {
-		log.Error(err)
+		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
 		err = rows.Scan(&list.ID, &list.Name, &list.EnName, &list.JpName, &list.TwitterHashtags, &list.TwitterLewd, &list.BiliBiliHashtags, &list.YoutubeID, &list.YoutubeAvatar, &list.BiliBiliID, &list.BiliRoomID, &list.BiliBiliAvatar, &list.TwitterName, &list.TwitchName, &list.TwitchAvatar, &list.Region, &list.Fanbase, &list.Status, &list.GroupID)
 		if err != nil {
-			log.Error(err)
+			return nil, err
 		}
 		if err != nil {
-			log.Error(err)
+			return nil, err
 		}
 		Data = append(Data, list)
 	}
-	return Data
+	return Data, nil
 }
 
 //gacha is gacha
@@ -226,43 +232,47 @@ func (Member *MemberSubs) UpTwitchViwers(new int) *MemberSubs {
 }
 
 //UpdateSubs Update Subscriber data
-func (Member *MemberSubs) UpdateSubs() {
+func (Member *MemberSubs) UpdateSubs() error {
 	if Member.State == config.YoutubeLive {
 		_, err := DB.Exec(`Update Subscriber set Youtube_Subscriber=?,Youtube_Videos=?,Youtube_Views=? Where id=? `, Member.YtSubs, Member.YtVideos, Member.YtViews, Member.ID)
 		if err != nil {
-			log.Error(err)
+			return err
 		}
 	} else if Member.State == config.BiliBiliArt {
 		_, err := DB.Exec(`Update Subscriber set BiliBili_Followers=?,BiliBili_Videos=?,BiliBili_Views=? Where id=? `, Member.BiliFollow, Member.BiliVideos, Member.BiliViews, Member.ID)
 		if err != nil {
-			log.Error(err)
+			return err
 		}
 	} else if Member.State == config.TwitchLive {
 		_, err := DB.Exec(`Update Subscriber set Twitch_Followers=?,Twitch_Views=?, Where id=? `, Member.TwitchFollow, Member.TwitchViews, Member.ID)
 		if err != nil {
-			log.Error(err)
+			return err
 		}
 	} else {
 		_, err := DB.Exec(`Update Subscriber set Twitter_Followers=? Where id=? `, Member.TwFollow, Member.ID)
 		if err != nil {
-			log.Error(err)
+			return err
 		}
 	}
+	return nil
 }
 
 //GetChannelID Get Channel id from Discord ChannelID and VtuberGroupID
-func GetChannelID(DiscordChannelID string, GroupID int64) int {
+func GetChannelID(DiscordChannelID string, GroupID int64) (int, error) {
 	var ChannelID int
 	err := DB.QueryRow("SELECT id from Channel where DiscordChannelID=? AND VtuberGroup_id=?", DiscordChannelID, GroupID).Scan(&ChannelID)
 	if err != nil {
-		log.Error(err)
+		return 0, err
 	}
-	return ChannelID
+	return ChannelID, nil
 }
 
 //Adduser form `tag me command`
 func (Data *UserStruct) Adduser() error {
-	ChannelID := GetChannelID(Data.Channel_ID, Data.Group.ID)
+	ChannelID, err := GetChannelID(Data.Channel_ID, Data.Group.ID)
+	if err != nil {
+		return err
+	}
 	tmp := CheckUser(Data.DiscordID, Data.Member.ID, ChannelID)
 	if tmp {
 		return errors.New("Already registered")
@@ -296,21 +306,24 @@ func (Data *UserStruct) SendToCache(MessageID string) error {
 }
 
 //GetChannelMessage get messageID from redis
-func GetChannelMessage(MessageID string) *UserStruct {
+func GetChannelMessage(MessageID string) (*UserStruct, error) {
 	var (
 		data UserStruct
 	)
 	val := GeneralCache.Get(context.Background(), MessageID).Val()
 	err := json.Unmarshal([]byte(val), &data)
 	if err != nil {
-		return nil
+		return nil, err
 	}
-	return &data
+	return &data, nil
 }
 
 //UpdateReminder Update reminder time
 func (Data UserStruct) UpdateReminder() error {
-	ChannelID := GetChannelID(Data.Channel_ID, Data.Group.ID)
+	ChannelID, err := GetChannelID(Data.Channel_ID, Data.Group.ID)
+	if err != nil {
+		return nil
+	}
 	tmp := CheckUser(Data.DiscordID, Data.Member.ID, ChannelID)
 	if tmp {
 		_, err := DB.Exec(`Update User set Reminder=? where DiscordID=? And VtuberMember_id=? And Channel_id=?`, Data.Reminder, Data.DiscordID, Data.Member.ID, ChannelID)
@@ -325,7 +338,10 @@ func (Data UserStruct) UpdateReminder() error {
 
 //Deluser Delete user from `del` command
 func (Data UserStruct) Deluser() error {
-	ChannelID := GetChannelID(Data.Channel_ID, Data.Group.ID)
+	ChannelID, err := GetChannelID(Data.Channel_ID, Data.Group.ID)
+	if err != nil {
+		return err
+	}
 	tmp := CheckUser(Data.DiscordID, Data.Member.ID, ChannelID)
 	if tmp {
 		stmt, err := DB.Prepare(`DELETE From User WHERE DiscordID=? AND VtuberMember_id=? AND Channel_id=?`)
@@ -533,7 +549,7 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 }
 
 //GetChannelByGroup Get DiscordChannelID from VtuberGroup
-func (Data Group) GetChannelByGroup(Region string) []DiscordChannel {
+func (Data Group) GetChannelByGroup(Region string) ([]DiscordChannel, error) {
 	var (
 		list        string
 		id          int64
@@ -542,14 +558,14 @@ func (Data Group) GetChannelByGroup(Region string) []DiscordChannel {
 	)
 	rows, err := DB.Query(`SELECT id,DiscordChannelID,Type FROM Channel WHERE VtuberGroup_id=? AND (Type=1 OR Type=2 OR Type=3) AND (Channel.Region like ? OR Channel.Region='') group by DiscordChannelID`, Data.ID, "%"+Region+"%")
 	if err != nil {
-		log.Error(err)
+		return nil, err
 	}
 
 	defer rows.Close()
 	for rows.Next() {
 		err = rows.Scan(&id, &list, &channeltype)
 		if err != nil {
-			log.Error(err)
+			return nil, err
 		}
 		ChannelData = append(ChannelData, DiscordChannel{
 			ID:        id,
@@ -557,7 +573,7 @@ func (Data Group) GetChannelByGroup(Region string) []DiscordChannel {
 			TypeTag:   channeltype,
 		})
 	}
-	return ChannelData
+	return ChannelData, nil
 }
 
 //ChannelCheck Check Discord Channel from VtuberGroup
@@ -606,7 +622,7 @@ func CheckChannelEnable(ChannelID, VtuberName string, GroupID int64) bool {
 }
 
 //UserStatus Get userinfo(tags) from discord channel
-func UserStatus(UserID, Channel string) [][]string {
+func UserStatus(UserID, Channel string) ([][]string, error) {
 	var (
 		GroupName  string
 		VtuberName string
@@ -615,7 +631,7 @@ func UserStatus(UserID, Channel string) [][]string {
 	)
 	rows, err := DB.Query(`SELECT VtuberGroupName,VtuberName,User.Reminder FROM User INNER JOIN VtuberMember ON User.VtuberMember_id=VtuberMember.id Join VtuberGroup ON VtuberGroup.id = VtuberMember.VtuberGroup_id Inner Join Channel on Channel.id=User.Channel_id WHERE DiscordChannelID=? And DiscordID=?`, Channel, UserID)
 	if err != nil {
-		log.Error(err)
+		return nil, err
 	}
 
 	defer rows.Close()
@@ -623,7 +639,7 @@ func UserStatus(UserID, Channel string) [][]string {
 		tmpReminder := 0
 		err = rows.Scan(&GroupName, &VtuberName, &tmpReminder)
 		if err != nil {
-			log.Error(err)
+			return nil, err
 		}
 
 		if tmpReminder == 0 {
@@ -634,18 +650,18 @@ func UserStatus(UserID, Channel string) [][]string {
 
 		taglist = append(taglist, []string{GroupName, VtuberName, Reminder})
 	}
-	return taglist
+	return taglist, nil
 }
 
 //ChannelStatus Get Discord channel status
-func ChannelStatus(ChannelID string) []DiscordChannel {
+func ChannelStatus(ChannelID string) ([]DiscordChannel, error) {
 	var (
 		Data []DiscordChannel
 	)
 	//Channel.id,VtuberGroup.id,VtuberGroupName,Channel.Type,Channel.LiveOnly,Channel.NewUpcoming,Channel.Dynamic,Channel.Region,Channel.Lite
 	rows, err := DB.Query(`SELECT Channel.*,VtuberGroup.VtuberGroupName FROM Channel INNER JOIn VtuberGroup on VtuberGroup.id=Channel.VtuberGroup_id WHERE DiscordChannelID=?`, ChannelID)
 	if err != nil {
-		log.Error(err)
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -665,7 +681,7 @@ func ChannelStatus(ChannelID string) []DiscordChannel {
 		)
 		err = rows.Scan(&id, &DiscordChannelID, &Type, &LiveOnly, &NewUpcoming, &Dynamic, &Region, &Lite, &IndieNotif, &GroupID, &GroupName)
 		if err != nil {
-			log.Error(err)
+			return nil, err
 		}
 		Data = append(Data, DiscordChannel{
 			ID: id,
@@ -682,7 +698,7 @@ func ChannelStatus(ChannelID string) []DiscordChannel {
 			IndieNotif:  IndieNotif,
 		})
 	}
-	return Data
+	return Data, nil
 }
 
 //ChannelTag get channel tags from `channel tags` command
@@ -773,15 +789,16 @@ var unique = func(Slice []string) []string {
 }
 
 //PushReddis Push DiscordChannel state to reddis
-func (Data *DiscordChannel) PushReddis() {
+func (Data *DiscordChannel) PushReddis() error {
 	err := GeneralCache.LPush(context.Background(), Data.VideoID, Data).Err()
 	if err != nil {
-		log.Error(err)
+		return err
 	}
+	return nil
 }
 
 //GetLiveNotifMsg get MessageID with live status
-func GetLiveNotifMsg(Key string) []DiscordChannel {
+func GetLiveNotifMsg(Key string) ([]DiscordChannel, error) {
 	var (
 		Data        []DiscordChannel
 		ChannelData DiscordChannel
@@ -790,16 +807,16 @@ func GetLiveNotifMsg(Key string) []DiscordChannel {
 	for _, v := range val {
 		err := json.Unmarshal([]byte(v), &ChannelData)
 		if err != nil {
-			log.Error(err)
+			return nil, err
 		}
 		Data = append(Data, ChannelData)
 	}
 	rederr := GeneralCache.Del(context.Background(), Key).Err()
 	if rederr != nil {
-		log.Error(rederr)
+		return nil, rederr
 	}
 
-	return Data
+	return Data, nil
 }
 
 //GetUserList GetUser tags
@@ -853,7 +870,7 @@ func (Data *DiscordChannel) GetUserList(ctx context.Context) ([]string, error) {
 }
 
 //GetUserReminderList get Reminder tags
-func GetUserReminderList(ChannelIDDiscord int64, Member int64, Reminder int) []string {
+func GetUserReminderList(ChannelIDDiscord int64, Member int64, Reminder int) ([]string, error) {
 	var (
 		UserTagsList  []string
 		DiscordUserID string
@@ -861,14 +878,14 @@ func GetUserReminderList(ChannelIDDiscord int64, Member int64, Reminder int) []s
 	)
 	rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id=? And Reminder=?`, ChannelIDDiscord, Member, Reminder)
 	if err != nil {
-		log.Error(err)
+		return nil, err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
 		err = rows.Scan(&DiscordUserID, &Type)
 		if err != nil {
-			log.Error(err)
+			return nil, err
 		}
 		if Type {
 			UserTagsList = append(UserTagsList, "<@"+DiscordUserID+">")
@@ -876,7 +893,7 @@ func GetUserReminderList(ChannelIDDiscord int64, Member int64, Reminder int) []s
 			UserTagsList = append(UserTagsList, "<@&"+DiscordUserID+">")
 		}
 	}
-	return UserTagsList
+	return UserTagsList, nil
 }
 
 //GetTwitterFollow Scrapping twitter followers

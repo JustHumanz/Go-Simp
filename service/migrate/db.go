@@ -61,13 +61,17 @@ func AddData(Data Vtuber) {
 		}
 
 		for _, VtuberMember := range Data.VtuberData.Independent.Members {
-			DiscordChannel := GroupData.GetChannelByGroup(VtuberMember.Region)
+			DiscordChannel, err := GroupData.GetChannelByGroup(VtuberMember.Region)
+			if err != nil {
+				log.Error(err)
+				continue
+			}
 			/*
 				Add Member
 			*/
 			var MemberID int64
 			row := db.QueryRow("SELECT id FROM VtuberMember WHERE VtuberName=? AND VtuberName_EN=? AND (Youtube_ID=? OR  BiliBili_SpaceID=? OR BiliBili_RoomID=?)", VtuberMember.Name, VtuberMember.ENName, VtuberMember.Youtube.YtID, VtuberMember.BiliBili.BiliBiliID, VtuberMember.BiliBili.BiliRoomID)
-			err := row.Scan(&MemberID)
+			err = row.Scan(&MemberID)
 			if err == sql.ErrNoRows {
 				stmt, err := db.Prepare("INSERT INTO VtuberMember (VtuberName,VtuberName_EN,VtuberName_JP,Twitter_Hashtag,Twitter_Lewd,BiliBili_Hashtag,Youtube_ID,Youtube_Avatar,VtuberGroup_id,Region,BiliBili_SpaceID,BiliBili_RoomID,BiliBili_Avatar,Twitter_Username,Twitch_Username,Twitch_Avatar,Fanbase,Status) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
 				if err != nil {
@@ -190,7 +194,10 @@ func AddData(Data Vtuber) {
 
 		if NewVtuberNamesIndependen != nil {
 			Vtubers := strings.Join(NewVtuberNamesIndependen, ",")
-			DiscordChannel := GroupData.GetChannelByGroup("")
+			DiscordChannel, err := GroupData.GetChannelByGroup("")
+			if err != nil {
+				log.Error(err)
+			}
 			for _, Channel := range DiscordChannel {
 				msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "New Update!!!! "+Vtubers)
 				if err != nil {
@@ -324,7 +331,10 @@ func AddData(Data Vtuber) {
 				}
 			}
 
-			DiscordChannel := GroupData.GetChannelByGroup("")
+			DiscordChannel, err := GroupData.GetChannelByGroup("")
+			if err != nil {
+				log.Error(err)
+			}
 			for _, v := range GroupRaw.Members {
 				/*
 					Add Member
@@ -446,7 +456,10 @@ func AddData(Data Vtuber) {
 			}
 			if NewVtuberNames != nil {
 				Vtubers := strings.Join(NewVtuberNames, ",")
-				DiscordChannel := GroupData.GetChannelByGroup("")
+				DiscordChannel, err := GroupData.GetChannelByGroup("")
+				if err != nil {
+					log.Error(err)
+				}
 				for _, Channel := range DiscordChannel {
 					msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "New Update!!!! @here "+Vtubers)
 					if err != nil {

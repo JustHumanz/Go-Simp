@@ -353,7 +353,10 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						}
 						LiveCount := durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(1).String()
 						for _, Channel := range ChanelData {
-							UserTagsList := database.GetUserReminderList(Channel.ID, Data.Member.ID, UpcominginMinutes)
+							UserTagsList, err := database.GetUserReminderList(Channel.ID, Data.Member.ID, UpcominginMinutes)
+							if err != nil {
+								log.Error(err)
+							}
 							if UserTagsList != nil {
 								MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
 									SetAuthor(VtuberName, Avatar, YtChannel).
@@ -712,7 +715,10 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 				Viewers   string
 			)
 
-			ChannelData := Data.Group.GetChannelByGroup(Data.GroupYoutube.Region)
+			ChannelData, err := Data.Group.GetChannelByGroup(Data.GroupYoutube.Region)
+			if err != nil {
+				log.Error(err)
+			}
 			for i, v := range ChannelData {
 				if v.TypeTag == 2 || v.TypeTag == 3 {
 					wg.Add(1)

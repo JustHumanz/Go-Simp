@@ -1524,7 +1524,15 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				for _, UserRoles := range RolesInput {
 					for _, Role := range guild.Roles {
 						if UserRoles == Role.Mention() {
-							list := database.UserStatus(Role.ID, m.ChannelID)
+							list, err := database.UserStatus(Role.ID, m.ChannelID)
+							if err != nil {
+								log.Error(err)
+								SendError(map[string]string{
+									"ChannelID": m.ChannelID,
+									"Username":  m.Author.Username,
+									"AvatarURL": m.Author.AvatarURL("128"),
+								})
+							}
 							if list != nil {
 								tableString := &strings.Builder{}
 								table := tablewriter.NewWriter(tableString)
@@ -1564,7 +1572,15 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 
 		} else if m.Content == Prefix+MyTags {
-			list := database.UserStatus(m.Author.ID, m.ChannelID)
+			list, err := database.UserStatus(m.Author.ID, m.ChannelID)
+			if err != nil {
+				log.Error(err)
+				SendError(map[string]string{
+					"ChannelID": m.ChannelID,
+					"Username":  m.Author.Username,
+					"AvatarURL": m.Author.AvatarURL("128"),
+				})
+			}
 
 			if list != nil {
 				table.SetHeader([]string{"Vtuber Group", "Vtuber Name", "Reminder"})
@@ -1599,7 +1615,15 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				Indie       = ""
 				Region      = "All"
 			)
-			ChannelData := database.ChannelStatus(m.ChannelID)
+			ChannelData, err := database.ChannelStatus(m.ChannelID)
+			if err != nil {
+				log.Error(err)
+				SendError(map[string]string{
+					"ChannelID": m.ChannelID,
+					"Username":  m.Author.Username,
+					"AvatarURL": m.Author.AvatarURL("128"),
+				})
+			}
 			if len(ChannelData) > 0 {
 				for _, Channel := range ChannelData {
 					ChannelRaw, err := s.Channel(m.ChannelID)
@@ -1890,5 +1914,16 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 				return
 			}
 		}
+	}
+}
+
+func SendError(Messsage map[string]string) {
+	_, err := Bot.ChannelMessageSendEmbed(Messsage["ChannelID"], engine.NewEmbed().
+		SetAuthor(Messsage["Username"], Messsage["AvatarURL"]).
+		SetTitle(Messsage["GroupName"]).
+		SetDescription("Internal error XD").
+		SetImage(engine.NotFoundIMG()).MessageEmbed)
+	if err != nil {
+		log.Error(err)
 	}
 }

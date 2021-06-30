@@ -32,7 +32,15 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
 						}
-						LiveBili := database.BilGet(0, Member.ID, config.LiveStatus)
+						LiveBili, err := database.BilGet(0, Member.ID, config.LiveStatus)
+						if err != nil {
+							log.Error(err)
+							SendError(map[string]string{
+								"ChannelID": m.ChannelID,
+								"Username":  m.Author.Username,
+								"AvatarURL": m.Author.AvatarURL("128"),
+							})
+						}
 						FixName := engine.FixName(Member.EnName, Member.JpName)
 						if LiveBili != nil {
 							Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
@@ -70,7 +78,15 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						LiveBili := database.BilGet(VTuberGroup.ID, 0, config.LiveStatus)
+						LiveBili, err := database.BilGet(VTuberGroup.ID, 0, config.LiveStatus)
+						if err != nil {
+							log.Error(err)
+							SendError(map[string]string{
+								"ChannelID": m.ChannelID,
+								"Username":  m.Author.Username,
+								"AvatarURL": m.Author.AvatarURL("128"),
+							})
+						}
 						if LiveBili != nil {
 							Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 							if err != nil {
@@ -126,7 +142,15 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
 						}
-						LiveBili := database.BilGet(0, Member.ID, config.PastStatus)
+						LiveBili, err := database.BilGet(0, Member.ID, config.PastStatus)
+						if err != nil {
+							log.Error(err)
+							SendError(map[string]string{
+								"ChannelID": m.ChannelID,
+								"Username":  m.Author.Username,
+								"AvatarURL": m.Author.AvatarURL("128"),
+							})
+						}
 						FixName := engine.FixName(Member.JpName, Member.EnName)
 						if LiveBili != nil {
 							Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
@@ -165,7 +189,15 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						LiveBili := database.BilGet(VTuberGroup.ID, 0, config.PastStatus)
+						LiveBili, err := database.BilGet(VTuberGroup.ID, 0, config.PastStatus)
+						if err != nil {
+							log.Error(err)
+							SendError(map[string]string{
+								"ChannelID": m.ChannelID,
+								"Username":  m.Author.Username,
+								"AvatarURL": m.Author.AvatarURL("128"),
+							})
+						}
 						if LiveBili != nil {
 							Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 							if err != nil {
@@ -239,7 +271,15 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 						s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 						return
 					}
-					SpaceBili := database.SpaceGet(0, Member.ID)
+					SpaceBili, err := database.SpaceGet(0, Member.ID)
+					if err != nil {
+						log.Error(err)
+						SendError(map[string]string{
+							"ChannelID": m.ChannelID,
+							"Username":  m.Author.Username,
+							"AvatarURL": m.Author.AvatarURL("128"),
+						})
+					}
 					FixName := engine.FixName(Member.EnName, Member.JpName)
 					if SpaceBili != nil {
 						Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
@@ -283,7 +323,15 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 					break
 				} else {
-					SpaceBili := database.SpaceGet(VTuberGroup.ID, 0)
+					SpaceBili, err := database.SpaceGet(VTuberGroup.ID, 0)
+					if err != nil {
+						log.Error(err)
+						SendError(map[string]string{
+							"ChannelID": m.ChannelID,
+							"Username":  m.Author.Username,
+							"AvatarURL": m.Author.AvatarURL("128"),
+						})
+					}
 					if SpaceBili != nil {
 						Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 						if err != nil {

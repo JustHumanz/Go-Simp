@@ -34,8 +34,15 @@ func Start() {
 	GetGroups := func() {
 		log.Info("Start get groups from database")
 		var Grp []database.Group
-		for _, v := range database.GetGroups() {
-			v.Members = database.GetMembers(v.ID)
+		GroupData, err := database.GetGroups()
+		if err != nil {
+			log.Error(err)
+		}
+		for _, v := range GroupData {
+			v.Members, err = database.GetMembers(v.ID)
+			if err != nil {
+				log.Error(err)
+			}
 			Grp = append(Grp, v)
 		}
 

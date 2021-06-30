@@ -459,6 +459,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 	cekLive := r.FormValue("live")
 	idstr := mux.Vars(r)["memberID"]
 	var Members []map[string]interface{}
+	var ww sync.WaitGroup
 
 	var CekLiveMember = func(Member map[string]interface{}) map[string]interface{} {
 		if cekLive == "true" {
@@ -479,7 +480,10 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 			} else {
 				Member["IsYtLive"] = false
 			}
-			BiliData := database.BilGet(0, Member["ID"].(int64), config.LiveStatus)
+			BiliData, err := database.BilGet(0, Member["ID"].(int64), config.LiveStatus)
+			if err != nil {
+				log.Error(err)
+			}
 
 			if BiliData != nil {
 				Bili := Member["BiliBili"].(map[string]interface{})
@@ -493,18 +497,61 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 	}
 	if idstr != "" {
 		key := strings.Split(idstr, ",")
-		for _, Member := range MembersData {
-			for _, MemberStr := range key {
-				MemberInt, err := strconv.Atoi(MemberStr)
-				if err != nil {
-					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(MessageError{
-						Message: err.Error(),
-						Date:    time.Now(),
-					})
-					w.WriteHeader(http.StatusBadRequest)
-					return
+		for _, M := range MembersData {
+			ww.Add(1)
+			go func(Member map[string]interface{}, wg *sync.WaitGroup) {
+				defer wg.Done()
+				for _, MemberStr := range key {
+					MemberInt, err := strconv.Atoi(MemberStr)
+					if err != nil {
+						w.Header().Set("Content-Type", "application/json")
+						json.NewEncoder(w).Encode(MessageError{
+							Message: err.Error(),
+							Date:    time.Now(),
+						})
+						w.WriteHeader(http.StatusBadRequest)
+						return
+					}
+					if grpID != "" {
+						GroupID, err := strconv.Atoi(grpID)
+						if err != nil {
+							w.Header().Set("Content-Type", "application/json")
+							json.NewEncoder(w).Encode(MessageError{
+								Message: err.Error(),
+								Date:    time.Now(),
+							})
+							w.WriteHeader(http.StatusBadRequest)
+							return
+						}
+						if region != "" {
+							if GroupID == int(Member["GroupID"].(int64)) && strings.EqualFold(region, Member["Region"].(string)) {
+								Members = append(Members, CekLiveMember(Member))
+							}
+						} else {
+							if GroupID == int(Member["GroupID"].(int64)) {
+								Members = append(Members, CekLiveMember(Member))
+							}
+						}
+					} else {
+						if region != "" {
+							if MemberInt == int(Member["ID"].(int64)) && strings.EqualFold(region, Member["Region"].(string)) {
+								Members = append(Members, CekLiveMember(Member))
+							}
+						} else {
+							if MemberInt == int(Member["ID"].(int64)) {
+								Members = append(Members, CekLiveMember(Member))
+							}
+						}
+					}
 				}
+			}(M, &ww)
+		}
+		ww.Wait()
+	} else if grpID != "" {
+		for _, M := range MembersData {
+			ww.Add(1)
+			go func(Member map[string]interface{}, wg *sync.WaitGroup) {
+				defer wg.Done()
 				if grpID != "" {
 					GroupID, err := strconv.Atoi(grpID)
 					if err != nil {
@@ -525,43 +572,10 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 							Members = append(Members, CekLiveMember(Member))
 						}
 					}
-				} else {
-					if region != "" {
-						if MemberInt == int(Member["ID"].(int64)) && strings.EqualFold(region, Member["Region"].(string)) {
-							Members = append(Members, CekLiveMember(Member))
-						}
-					} else {
-						if MemberInt == int(Member["ID"].(int64)) {
-							Members = append(Members, CekLiveMember(Member))
-						}
-					}
 				}
-			}
+			}(M, &ww)
 		}
-	} else if grpID != "" {
-		for _, Member := range MembersData {
-			if grpID != "" {
-				GroupID, err := strconv.Atoi(grpID)
-				if err != nil {
-					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(MessageError{
-						Message: err.Error(),
-						Date:    time.Now(),
-					})
-					w.WriteHeader(http.StatusBadRequest)
-					return
-				}
-				if region != "" {
-					if GroupID == int(Member["GroupID"].(int64)) && strings.EqualFold(region, Member["Region"].(string)) {
-						Members = append(Members, CekLiveMember(Member))
-					}
-				} else {
-					if GroupID == int(Member["GroupID"].(int64)) {
-						Members = append(Members, CekLiveMember(Member))
-					}
-				}
-			}
-		}
+		ww.Wait()
 	} else if region != "" {
 		for _, v := range MembersData {
 			if strings.EqualFold(region, v["Region"].(string)) {

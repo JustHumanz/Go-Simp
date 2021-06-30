@@ -508,7 +508,10 @@ func NearestThousandFormat(num float64) string {
 }
 
 func RemoveEmbed(VideoID string, Bot *discordgo.Session) {
-	ChannelState := database.GetLiveNotifMsg(VideoID)
+	ChannelState, err := database.GetLiveNotifMsg(VideoID)
+	if err != nil {
+		log.Error(err)
+	}
 	for _, v := range ChannelState {
 		log.WithFields(log.Fields{
 			"VideoID": VideoID,

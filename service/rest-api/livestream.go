@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
@@ -23,6 +24,7 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 		GroupIDs    = Vars["groupID"]
 		MemberIDs   = Vars["memberID"]
 		Rgx         = "(" + config.LiveStatus + "|" + config.PastStatus + "|" + config.UpcomingStatus + "|" + config.PrivateStatus + ")"
+		ww          sync.WaitGroup
 	)
 
 	if match, _ := regexp.MatchString(Rgx, Status); !match {
@@ -37,73 +39,83 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 
 	if GroupIDs != "" {
 		key := strings.Split(GroupIDs, ",")
-		for _, Group := range GroupsData {
-			for _, GroupIDstr := range key {
-				GroupIDint, err := strconv.Atoi(GroupIDstr)
-				if err != nil {
-					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(MessageError{
-						Message: err.Error(),
-						Date:    time.Now(),
-					})
-					w.WriteHeader(http.StatusBadRequest)
-					return
-				}
-				GroupID := Group["ID"].(int64)
-				if GroupIDint == int(GroupID) {
-					GroupName := Group["GroupName"].(string)
-					YTData, _, err := database.YtGetStatus(map[string]interface{}{
-						"GroupID":   GroupID,
-						"GroupName": GroupName,
-						"Status":    Status,
-						"Region":    Region,
-						"State":     config.Sys,
-					})
+		for _, GroupData := range GroupsData {
+			ww.Add(1)
+			go func(Group map[string]interface{}, wg *sync.WaitGroup) {
+				defer wg.Done()
+				for _, GroupIDstr := range key {
+					GroupIDint, err := strconv.Atoi(GroupIDstr)
 					if err != nil {
-						log.Error(err)
+						w.Header().Set("Content-Type", "application/json")
+						json.NewEncoder(w).Encode(MessageError{
+							Message: err.Error(),
+							Date:    time.Now(),
+						})
+						w.WriteHeader(http.StatusBadRequest)
+						return
 					}
-					for _, v := range YTData {
-						v.AddMember(GetMember(v.Member.ID)).SetState(config.YoutubeLive)
-						YoutubeData = append(YoutubeData, FixLive(v))
+					GroupID := Group["ID"].(int64)
+					if GroupIDint == int(GroupID) {
+						GroupName := Group["GroupName"].(string)
+						YTData, _, err := database.YtGetStatus(map[string]interface{}{
+							"GroupID":   GroupID,
+							"GroupName": GroupName,
+							"Status":    Status,
+							"Region":    Region,
+							"State":     config.Sys,
+						})
+						if err != nil {
+							log.Error(err)
+						}
+						for _, v := range YTData {
+							v.AddMember(GetMember(v.Member.ID)).SetState(config.YoutubeLive)
+							YoutubeData = append(YoutubeData, FixLive(v))
+						}
 					}
 				}
-			}
+			}(GroupData, &ww)
 		}
+		ww.Wait()
 	} else if MemberIDs != "" {
 		key := strings.Split(MemberIDs, ",")
-		for _, Member := range MembersData {
-			for _, MemberIDstr := range key {
-				MemberIDint, err := strconv.Atoi(MemberIDstr)
-				if err != nil {
-					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(MessageError{
-						Message: err.Error(),
-						Date:    time.Now(),
-					})
-					w.WriteHeader(http.StatusBadRequest)
-					return
-				}
-				MemberID := Member["ID"].(int64)
-				if MemberIDint == int(MemberID) {
-					MemberName := Member["Name"].(string)
-					YTData, _, err := database.YtGetStatus(map[string]interface{}{
-						"MemberID":   MemberID,
-						"MemberName": MemberName,
-						"Status":     config.UpcomingStatus,
-						"Region":     Region,
-						"State":      config.Sys,
-					})
-
+		for _, M := range MembersData {
+			ww.Add(1)
+			go func(Member map[string]interface{}, wg *sync.WaitGroup) {
+				defer wg.Done()
+				for _, MemberIDstr := range key {
+					MemberIDint, err := strconv.Atoi(MemberIDstr)
 					if err != nil {
-						log.Error(err)
+						w.Header().Set("Content-Type", "application/json")
+						json.NewEncoder(w).Encode(MessageError{
+							Message: err.Error(),
+							Date:    time.Now(),
+						})
+						w.WriteHeader(http.StatusBadRequest)
+						return
 					}
-					for _, v := range YTData {
-						v.AddMember(GetMember(v.Member.ID)).SetState(config.YoutubeLive)
-						YoutubeData = append(YoutubeData, FixLive(v))
+					MemberID := Member["ID"].(int64)
+					if MemberIDint == int(MemberID) {
+						MemberName := Member["Name"].(string)
+						YTData, _, err := database.YtGetStatus(map[string]interface{}{
+							"MemberID":   MemberID,
+							"MemberName": MemberName,
+							"Status":     config.UpcomingStatus,
+							"Region":     Region,
+							"State":      config.Sys,
+						})
+
+						if err != nil {
+							log.Error(err)
+						}
+						for _, v := range YTData {
+							v.AddMember(GetMember(v.Member.ID)).SetState(config.YoutubeLive)
+							YoutubeData = append(YoutubeData, FixLive(v))
+						}
 					}
 				}
-			}
+			}(M, &ww)
 		}
+		ww.Wait()
 	}
 
 	if YoutubeData != nil {
@@ -157,7 +169,10 @@ func getBilibili(w http.ResponseWriter, r *http.Request) {
 				}
 				GroupID := Group["ID"].(int64)
 				if GroupIDint == int(GroupID) {
-					BiliData := database.BilGet(GroupID, 0, Status)
+					BiliData, err := database.BilGet(GroupID, 0, Status)
+					if err != nil {
+						log.Error(err)
+					}
 					for _, v := range BiliData {
 						v.AddMember(GetMember(v.Member.ID)).SetState(config.BiliLive)
 						BiliBiliData = append(BiliBiliData, FixLive(v))
@@ -181,7 +196,10 @@ func getBilibili(w http.ResponseWriter, r *http.Request) {
 				}
 				MemberID := Member["ID"].(int64)
 				if MemberIDint == int(MemberID) {
-					BiliData := database.BilGet(0, MemberID, Status)
+					BiliData, err := database.BilGet(0, MemberID, Status)
+					if err != nil {
+						log.Error(err)
+					}
 					for _, v := range BiliData {
 						v.AddMember(GetMember(v.Member.ID)).SetState(config.BiliLive)
 						BiliBiliData = append(BiliBiliData, FixLive(v))

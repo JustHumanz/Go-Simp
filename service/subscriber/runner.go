@@ -149,7 +149,10 @@ func SendNude(Embed *discordgo.MessageEmbed, Group database.Group, Member databa
 	if match, _ := regexp.MatchString("404.jpg", Group.IconURL); match {
 		Embed.Author.IconURL = ""
 	}
-	ChannelData := Group.GetChannelByGroup(Member.Region)
+	ChannelData, err := Group.GetChannelByGroup(Member.Region)
+	if err != nil {
+		log.Error(err)
+	}
 	for i, Channel := range ChannelData {
 
 		Channel.SetMember(Member)

@@ -96,7 +96,14 @@ func StartRegister(s *discordgo.Session, m *discordgo.MessageCreate) {
 					Indie       = ""
 					Region      = "All"
 				)
-				ChannelData := database.ChannelStatus(m.ChannelID)
+				ChannelData, err := database.ChannelStatus(m.ChannelID)
+				if err != nil {
+					SendError(map[string]string{
+						"ChannelID": m.ChannelID,
+						"Username":  m.Author.Username,
+						"AvatarURL": m.Author.AvatarURL("128"),
+					})
+				}
 				if len(ChannelData) > 0 {
 					for _, Channel := range ChannelData {
 						if Channel.Region != "" {
