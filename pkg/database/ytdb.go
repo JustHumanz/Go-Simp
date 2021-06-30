@@ -43,7 +43,6 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 	Key = append(Key, Status, Payload["State"].(string))
 	Key2 := strings.Join(Key, "-")
 
-	log.Info("Append new cache ", Key2)
 	val, err := LiveCache.LRange(ctx, Key2, 0, -1).Result()
 	if err != nil {
 		return nil, Key2, err
@@ -111,6 +110,7 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 				return nil, Key2, err
 			}
 		}
+		log.Info("Append new cache ", Key2)
 		err = LiveCache.Expire(ctx, Key2, config.YtGetStatusTTL).Err()
 		if err != nil {
 			return nil, Key2, err
