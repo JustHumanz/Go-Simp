@@ -78,7 +78,7 @@ func main() {
 
 	c := cron.New()
 	c.Start()
-	//c.AddFunc(config.CheckPayload, GetPayload)
+	c.AddFunc(config.CheckPayload, GetPayload)
 	c.AddFunc(config.YoutubeCheckUpcomingByTime, CheckYtByTime)
 	c.AddFunc("0 */13 * * *", func() {
 		engine.ExTknList = nil
@@ -95,7 +95,7 @@ func CheckYtByTime() {
 		return
 	} else {
 		stillRunning = true
-		log.Info("set job to true ", stillRunning)
+		log.Info("set job to ", stillRunning)
 	}
 
 	for _, GroupData := range *GroupPayload {
@@ -224,5 +224,5 @@ func CheckYtByTime() {
 	}
 
 	stillRunning = false
-	log.Info("set job to false ", stillRunning)
+	log.Info("set job to ", stillRunning)
 }
