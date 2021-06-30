@@ -463,7 +463,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 	var CekLiveMember = func(Member map[string]interface{}) map[string]interface{} {
 		if cekLive == "true" {
 			MemberID := Member["ID"].(int64)
-			MemberName := Member["Name"].(string)
+			MemberName := Member["NickName"].(string)
 			YTData, _, err := database.YtGetStatus(map[string]interface{}{
 				"MemberID":   MemberID,
 				"MemberName": MemberName,
