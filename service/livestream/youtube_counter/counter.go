@@ -116,10 +116,12 @@ func CheckYtByTime() {
 							"Vtuber": Member.EnName,
 							"Group":  Group.GroupName,
 						}).Error(err)
-						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-							Message: err.Error(),
-							Service: ModuleState,
-						})
+						if err.Error() == "not found any schdule" {
+							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+								Message: err.Error(),
+								Service: ModuleState,
+							})
+						}
 						return
 					}
 
