@@ -1,0 +1,44 @@
+version: "3.7"
+
+networks:
+  go-simp-net:
+    external: true
+
+services:
+  bilibili-fanart:
+    image: justhumanz/go-simp-bilibili-fanart:${RELEASE_VERSION}
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == humanz-worker    
+    depends_on:
+      - multi_tor
+    restart: on-failure
+    networks:
+      - go-simp-net
+
+  twitter-fanart:
+    image: justhumanz/go-simp-twitter-fanart:${RELEASE_VERSION}
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == humanz-worker    
+    depends_on:
+      - multi_tor
+    restart: on-failure
+    command: ./twitter_fanart -LewdFanart
+    networks:
+      - go-simp-net
+
+  pixiv-fanart:
+    image: justhumanz/go-simp-pixiv-fanart:${RELEASE_VERSION}
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == humanz-worker    
+    depends_on:
+      - multi_tor
+    command: ./pixiv_fanart -LewdFanart
+    restart: on-failure
+    networks:
+      - go-simp-net

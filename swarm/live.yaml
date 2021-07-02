@@ -1,0 +1,62 @@
+version: "3.7"
+
+networks:
+  go-simp-net:
+    external: true
+
+services:
+  livestream-livebili:
+    image: justhumanz/go-simp-bilispace-livestream:${RELEASE_VERSION}
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == humanz-worker        
+    depends_on:
+      - multi_tor
+    restart: on-failure
+    networks:
+      - go-simp-net
+
+  livestream-spacebili:
+    image: justhumanz/go-simp-bililive-livestream:${RELEASE_VERSION}
+    depends_on:
+      - multi_tor
+    restart: on-failure
+    networks:
+      - go-simp-net
+
+  livestream-youtube:
+    image: justhumanz/go-simp-youtube-checker-livestream:${RELEASE_VERSION}
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == humanz-master
+    depends_on:
+      - multi_tor
+    restart: on-failure
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+    networks:
+      - go-simp-net
+
+  livestream-youtube_counter:
+    image: justhumanz/go-simp-youtube-counter-livestream:${RELEASE_VERSION}
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == humanz-master
+    depends_on:
+      - multi_tor
+    restart: on-failure
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+    networks:
+      - go-simp-net
+
+  livestream-twitch:
+    image: justhumanz/go-simp-twitch-livestream:${RELEASE_VERSION}
+    depends_on:
+      - multi_tor
+    restart: on-failure
+    networks:
+      - go-simp-net

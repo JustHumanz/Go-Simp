@@ -1,0 +1,67 @@
+version: "3.7"                                                                                                                                                                                                       
+                                                                                                                                                                                                                     
+networks:                                                                                                                                                                                                            
+  go-simp-net:                                                                                                                                                                                                       
+    external: true                                                                                                                                                                                                                                                                                                                                                                                                         
+                                                                                                                                                                                                                     
+services:                                                                                                                                                                                                            
+  subscriber:                                                                                                                                                                                                        
+    image: justhumanz/go-simp-subscriber:${RELEASE_VERSION}                                                                                                                                                                                                
+    depends_on:                                                                                                                                                                                                      
+      - multi_tor                                                                                                                                                                                                    
+    restart: on-failure
+    deploy:                                          
+      placement:                                     
+        constraints:                                                                                                                                                                                                                                                                                                           
+          - node.hostname == humanz-master           
+    environment:                          
+      - PrometheusURL=https://prometheus.humanz.moe  
+    networks:                                      
+      - go-simp-net    
+                                                                                                                        
+  frontend:                                          
+    image: justhumanz/go-simp-frontend:${RELEASE_VERSION}                                  
+    depends_on:                           
+      - multi_tor                                    
+    restart: on-failure
+    environment:                       
+      - PrometheusURL=https://prometheus.humanz.moe  
+    networks:                                        
+      - go-simp-net                                  
+                                                     
+  web-vue:                                           
+    image: justhumanz/go-simp-web-vue:${RELEASE_VERSION}                        
+    environment:                                     
+      - RESTAPI=https://api.humanz.moe/              
+    deploy:
+      replicas: 2                                                         
+      placement:                                                    
+        constraints:                                                
+          - node.hostname == humanz-worker                          
+    depends_on:                                                     
+    - rest_api                                                      
+    restart: on-failure                                             
+    networks:                                                       
+      - go-simp-net                                                            
+    ports:                                                                     
+      - "9292:80"                                                              
+                                                                    
+  rest_api:                                                                    
+    image: justhumanz/go-simp-rest_api:${RELEASE_VERSION}                                                            
+    restart: on-failure                                                                        
+    deploy:                                                                                    
+      placement:                                                                               
+        constraints:                                                           
+          - node.hostname == humanz-worker                                                     
+    networks:                                                                                  
+      - go-simp-net                                                                            
+    ports:                                                                                     
+      - "9393:2525"                                                                            
+
+  prediction:                                                                                  
+    build: justhumanz/go-simp-prediction:${RELEASE_VERSION}                                                                
+    environment:                                                                               
+      - PrometheusURL=http://prometheus:9090                                                   
+    restart: on-failure                                                                        
+    networks:                                                                                  
+      - go-simp-net

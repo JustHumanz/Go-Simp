@@ -64,7 +64,7 @@ jobs:
         with:
           context: ./service/livestream/bilibili/space/
           push: true
-          tags: justhumanz/go-simp-bilispace-live:${{ env.RELEASE_VERSION }}
+          tags: justhumanz/go-simp-bilispace-livestream:${{ env.RELEASE_VERSION }}
       -
         name: Build and push live bilibili livestream 
         uses: docker/build-push-action@v2
@@ -139,4 +139,29 @@ jobs:
           context: ./service/prediction
           push: true
           tags: justhumanz/go-simp-prediction:${{ env.RELEASE_VERSION }}          
-                    
+
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      - 
+        name: Set env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV   
+        
+      - 
+        name: SSH and deploy to server
+        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+        with:
+          host: go-simp.humanz.moe
+          user: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          connect_timeout: 20s
+          first_ssh: |
+            export RELEASE_VERSION=${{ env.RELEASE_VERSION }}
+            cd /data/Go-Simp/swarm
+            docker stack deploy -c live.yaml livestream
+            docker stack deploy -c fanart.yaml fanart
+            docker stack deploy -c utility.yaml utility
