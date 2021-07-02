@@ -1,7 +1,7 @@
 name: build go-simp modules
 
 on:
-  push:
+  create:
     branches:
       - 'master'
     tags:
