@@ -1,4 +1,4 @@
-name: deploy go-simp
+name: build go-simp main module
 
 on:
   push:

@@ -1,0 +1,139 @@
+name: build go-simp modules
+
+on:
+  push:
+    branches:
+      - 'master'
+    tags:        
+      - "*"
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      - 
+        name: Set env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV        
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      #### Fanart    
+      -
+        name: Build and push bilibili fanart
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/fanart/bilibili/
+          push: true
+          tags: justhumanz/go-simp-bilibili-fanart:$RELEASE_VERSION
+      -
+        name: Build and push twitter fanart
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/fanart/twitter/
+          push: true
+          tags: justhumanz/go-simp-twitter-fanart:$RELEASE_VERSION
+      -
+        name: Build and push pixiv fanart
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/fanart/pixiv/
+          push: true
+          tags: justhumanz/go-simp-pixiv-fanart:$RELEASE_VERSION
+
+
+      ### Live
+      -
+        name: Build and push space bilibili livestream
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/livestream/bilibili/space/
+          push: true
+          tags: justhumanz/go-simp-bilispace-live:$RELEASE_VERSION
+      -
+        name: Build and push live bilibili livestream 
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/livestream/bilibili/live/
+          push: true
+          tags: justhumanz/go-simp-bililive-livestream:$RELEASE_VERSION
+
+      -
+        name: Build and push youtube checker livestream
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/livestream/youtube/checker/
+          push: true
+          tags: justhumanz/go-simp-youtube-checker-livestream:$RELEASE_VERSION
+      -
+        name: Build and push youtube counter livestream
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/livestream/youtube/counter/
+          push: true
+          tags: justhumanz/go-simp-youtube-counter-livestream:$RELEASE_VERSION
+      -
+        name: Build and push twitch livestream
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/livestream/twitch/
+          push: true
+          tags: justhumanz/go-simp-twitch-livestream:$RELEASE_VERSION
+
+      ### Subscriber
+      -
+        name: Build and push Subscriber
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/subscriber/
+          push: true
+          tags: justhumanz/go-simp-subscriber:$RELEASE_VERSION
+
+      ### REST API
+      -
+        name: Build and push rest api
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/rest-api/
+          push: true
+          tags: justhumanz/go-simp-rest_api:$RELEASE_VERSION
+
+      ### Frontend
+      -
+        name: Build and push fe
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/frontend/
+          push: true
+          tags: justhumanz/go-simp-frontend:$RELEASE_VERSION
+
+      ### Web
+      -
+        name: Build and push web-vue
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/web-vue/
+          push: true
+          tags: justhumanz/go-simp-web-vue:$RELEASE_VERSION          
+          
+      ### Prediction
+      -
+        name: Build and push prediction
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/prediction
+          push: true
+          tags: justhumanz/go-simp-prediction:$RELEASE_VERSION          
+                    
