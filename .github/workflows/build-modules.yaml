@@ -31,7 +31,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - 
         name: Start build docker image
-        run: echo $GITHUB_ENV ${{ env.RELEASE_VERSION }}        
+        run: echo ${{ env.RELEASE_VERSION }}        
 
       #### Fanart    
       -
@@ -40,21 +40,21 @@ jobs:
         with:
           context: ./service/fanart/bilibili/
           push: true
-          tags: justhumanz/go-simp-bilibili-fanart:$RELEASE_VERSION
+          tags: justhumanz/go-simp-bilibili-fanart:${{ env.RELEASE_VERSION }}
       -
         name: Build and push twitter fanart
         uses: docker/build-push-action@v2
         with:
           context: ./service/fanart/twitter/
           push: true
-          tags: justhumanz/go-simp-twitter-fanart:$RELEASE_VERSION
+          tags: justhumanz/go-simp-twitter-fanart:${{ env.RELEASE_VERSION }}
       -
         name: Build and push pixiv fanart
         uses: docker/build-push-action@v2
         with:
           context: ./service/fanart/pixiv/
           push: true
-          tags: justhumanz/go-simp-pixiv-fanart:$RELEASE_VERSION
+          tags: justhumanz/go-simp-pixiv-fanart:${{ env.RELEASE_VERSION }}
 
 
       ### Live
@@ -64,14 +64,14 @@ jobs:
         with:
           context: ./service/livestream/bilibili/space/
           push: true
-          tags: justhumanz/go-simp-bilispace-live:$RELEASE_VERSION
+          tags: justhumanz/go-simp-bilispace-live:${{ env.RELEASE_VERSION }}
       -
         name: Build and push live bilibili livestream 
         uses: docker/build-push-action@v2
         with:
           context: ./service/livestream/bilibili/live/
           push: true
-          tags: justhumanz/go-simp-bililive-livestream:$RELEASE_VERSION
+          tags: justhumanz/go-simp-bililive-livestream:${{ env.RELEASE_VERSION }}
 
       -
         name: Build and push youtube checker livestream
@@ -79,21 +79,21 @@ jobs:
         with:
           context: ./service/livestream/youtube/checker/
           push: true
-          tags: justhumanz/go-simp-youtube-checker-livestream:$RELEASE_VERSION
+          tags: justhumanz/go-simp-youtube-checker-livestream:${{ env.RELEASE_VERSION }}
       -
         name: Build and push youtube counter livestream
         uses: docker/build-push-action@v2
         with:
           context: ./service/livestream/youtube/counter/
           push: true
-          tags: justhumanz/go-simp-youtube-counter-livestream:$RELEASE_VERSION
+          tags: justhumanz/go-simp-youtube-counter-livestream:${{ env.RELEASE_VERSION }}
       -
         name: Build and push twitch livestream
         uses: docker/build-push-action@v2
         with:
           context: ./service/livestream/twitch/
           push: true
-          tags: justhumanz/go-simp-twitch-livestream:$RELEASE_VERSION
+          tags: justhumanz/go-simp-twitch-livestream:${{ env.RELEASE_VERSION }}
 
       ### Subscriber
       -
@@ -102,7 +102,7 @@ jobs:
         with:
           context: ./service/subscriber/
           push: true
-          tags: justhumanz/go-simp-subscriber:$RELEASE_VERSION
+          tags: justhumanz/go-simp-subscriber:${{ env.RELEASE_VERSION }}
 
       ### REST API
       -
@@ -111,7 +111,7 @@ jobs:
         with:
           context: ./service/rest-api/
           push: true
-          tags: justhumanz/go-simp-rest_api:$RELEASE_VERSION
+          tags: justhumanz/go-simp-rest_api:${{ env.RELEASE_VERSION }}
 
       ### Frontend
       -
@@ -120,7 +120,7 @@ jobs:
         with:
           context: ./service/frontend/
           push: true
-          tags: justhumanz/go-simp-frontend:$RELEASE_VERSION
+          tags: justhumanz/go-simp-frontend:${{ env.RELEASE_VERSION }}
 
       ### Web
       -
@@ -129,7 +129,7 @@ jobs:
         with:
           context: ./service/web-vue/
           push: true
-          tags: justhumanz/go-simp-web-vue:$RELEASE_VERSION          
+          tags: justhumanz/go-simp-web-vue:${{ env.RELEASE_VERSION }}          
           
       ### Prediction
       -
@@ -138,5 +138,5 @@ jobs:
         with:
           context: ./service/prediction
           push: true
-          tags: justhumanz/go-simp-prediction:$RELEASE_VERSION          
+          tags: justhumanz/go-simp-prediction:${{ env.RELEASE_VERSION }}          
                     
