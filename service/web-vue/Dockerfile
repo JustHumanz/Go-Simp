@@ -1,8 +1,7 @@
 # build stage
-FROM node as build-stage
+FROM node:latest as build-stage
 WORKDIR /app
 COPY . .
-RUN npm install @babel/core jquery --save
 RUN npm install
 RUN npm run build
 
