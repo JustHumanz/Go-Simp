@@ -8,7 +8,7 @@ on:
       - 'v*.*.*'
 
 jobs:
-  docker:
+  build:
     runs-on: ubuntu-latest
     steps:
       -
@@ -150,18 +150,18 @@ jobs:
       - 
         name: Set env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV   
-        
+
       - 
         name: SSH and deploy to server
-        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+        uses: appleboy/ssh-action@master
         with:
           host: go-simp.humanz.moe
-          user: ${{ secrets.USER }}
+          username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          connect_timeout: 20s
-          first_ssh: |
+          script: |
             export RELEASE_VERSION=${{ env.RELEASE_VERSION }}
             cd /data/Go-Simp/swarm
+            sudo git pull
             docker stack deploy -c live.yaml livestream
             docker stack deploy -c fanart.yaml fanart
             docker stack deploy -c utility.yaml utility

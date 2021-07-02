@@ -6,7 +6,7 @@ on:
       - 'service/pilot/**'
 
 jobs:
-  docker:
+  build:
     runs-on: ubuntu-latest
     steps:
       -
@@ -65,14 +65,14 @@ jobs:
         
       - 
         name: SSH and deploy to server
-        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+        uses: appleboy/ssh-action@master
         with:
           host: go-simp.humanz.moe
-          user: ${{ secrets.USER }}
+          username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          connect_timeout: 20s
-          first_ssh: |
+          script: |
             export RELEASE_VERSION=${{ env.RELEASE_VERSION }}
             export TOPGG=${{ env.TOPGG }}
             cd /data/Go-Simp/swarm
+            sudo git pull
             docker stack deploy -c main.yaml engine
