@@ -84,7 +84,7 @@ services:
       - go_simp-net
 
   livestream-youtube:
-    build: ./service/livestream/youtube
+    build: ./service/livestream/youtube/checker
     image: go-simp-livestream-youtube
     depends_on:
       - mysql
@@ -95,7 +95,7 @@ services:
       - go_simp-net
 
   livestream-youtube_counter:
-    build: ./service/livestream/youtube_counter
+    build: ./service/livestream/youtube/counter
     image: go-simp-livestream-youtube_counter
     depends_on:
       - mysql
