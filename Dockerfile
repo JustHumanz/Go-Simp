@@ -24,8 +24,8 @@ RUN go build -o guild ../service/guild/
 #live
 RUN go build -o livebili ../service/livestream/bilibili/live
 RUN go build -o spacebili ../service/livestream/bilibili/space
-RUN go build -o liveyoutube ../service/livestream/youtube
-RUN go build -o liveyoutube_counter ../service/livestream/youtube_counter
+RUN go build -o liveyoutube ../service/livestream/youtube/checker
+RUN go build -o liveyoutube_counter ../service/livestream/youtube/counter
 RUN go build -o livetwitch ../service/livestream/twitch
 
 #migrate
