@@ -31,7 +31,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - 
         name: Start build docker image
-        run: echo $GITHUB_ENV {{GITHUB_ENV}}        
+        run: echo $GITHUB_ENV ${{ env.RELEASE_VERSION }}        
 
       #### Fanart    
       -
