@@ -102,6 +102,11 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 				return nil, Key2, err
 			}
 		}
+
+		if Data == nil {
+			return nil, Key2, errors.New("not found any schdule")
+		}
+
 		log.Info("Append new cache ", Key2)
 		err = LiveCache.Expire(ctx, Key2, config.YtGetStatusTTL).Err()
 		if err != nil {
