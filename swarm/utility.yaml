@@ -10,10 +10,6 @@ services:
     depends_on:                                                                                                                                                                                                      
       - multi_tor                                                                                                                                                                                                    
     restart: on-failure
-    deploy:                                          
-      placement:                                     
-        constraints:                                                                                                                                                                                                                                                                                                           
-          - node.hostname == humanz-master           
     environment:                          
       - PrometheusURL=https://prometheus.humanz.moe  
     networks:                                      
@@ -35,9 +31,6 @@ services:
       - RESTAPI=https://api.humanz.moe/              
     deploy:
       replicas: 2                                                         
-      placement:                                                    
-        constraints:                                                
-          - node.hostname == humanz-worker                          
     depends_on:                                                     
     - rest_api                                                      
     restart: on-failure                                             
@@ -49,10 +42,6 @@ services:
   rest_api:                                                                    
     image: justhumanz/go-simp-rest_api:${RELEASE_VERSION}                                                            
     restart: on-failure                                                                        
-    deploy:                                                                                    
-      placement:                                                                               
-        constraints:                                                           
-          - node.hostname == humanz-worker                                                     
     networks:                                                                                  
       - go-simp-net                                                                            
     ports:                                                                                     

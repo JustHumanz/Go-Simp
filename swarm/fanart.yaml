@@ -7,10 +7,6 @@ networks:
 services:
   bilibili-fanart:
     image: justhumanz/go-simp-bilibili-fanart:${RELEASE_VERSION}
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == humanz-worker    
     depends_on:
       - multi_tor
     restart: on-failure
@@ -19,10 +15,6 @@ services:
 
   twitter-fanart:
     image: justhumanz/go-simp-twitter-fanart:${RELEASE_VERSION}
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == humanz-worker    
     depends_on:
       - multi_tor
     restart: on-failure
@@ -32,10 +24,6 @@ services:
 
   pixiv-fanart:
     image: justhumanz/go-simp-pixiv-fanart:${RELEASE_VERSION}
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == humanz-worker    
     depends_on:
       - multi_tor
     command: ./pixiv_fanart -LewdFanart

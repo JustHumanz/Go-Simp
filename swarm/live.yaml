@@ -7,10 +7,6 @@ networks:
 services:
   livestream-livebili:
     image: justhumanz/go-simp-bilispace-livestream:${RELEASE_VERSION}
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == humanz-worker        
     depends_on:
       - multi_tor
     restart: on-failure
@@ -27,10 +23,6 @@ services:
 
   livestream-youtube:
     image: justhumanz/go-simp-youtube-checker-livestream:${RELEASE_VERSION}
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == humanz-master
     depends_on:
       - multi_tor
     restart: on-failure
@@ -41,10 +33,6 @@ services:
 
   livestream-youtube_counter:
     image: justhumanz/go-simp-youtube-counter-livestream:${RELEASE_VERSION}
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == humanz-master
     depends_on:
       - multi_tor
     restart: on-failure

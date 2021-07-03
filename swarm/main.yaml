@@ -51,10 +51,6 @@ services:
 
   utility:                                                                                                                                                                                                           
     image: justhumanz/go-simp-utility                                                                                                                                                                                                   
-    deploy:                                                                                                                                                                                                          
-      placement:                                                                                                                                                                                                     
-        constraints:                                                                                                                                                                                                 
-          - node.hostname == humanz-worker                                                                                                                                                                           
     depends_on:                                                                                                                                                                                                      
       - multi_tor                                                                                                                                                                                                    
     restart: on-failure                                                                                                                                                                                              
@@ -68,10 +64,6 @@ services:
     volumes:
       - ../img/nginx.conf:/etc/nginx/nginx.conf
       - ../img/:/usr/share/nginx/html
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == humanz-worker
     networks:
      - go-simp-net    
     ports:
@@ -82,10 +74,6 @@ services:
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     restart: on-failure
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == humanz-master
     volumes:
       - redis-data:/bitnami/redis/data/
     networks:
