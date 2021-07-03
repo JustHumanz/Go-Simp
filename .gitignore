@@ -5,7 +5,7 @@ docker-compose-prod.yaml
 vendor
 *.toml
 *.db
-.*mp4
+rev_proxy/
 *prod*
 __pycache__
 lib

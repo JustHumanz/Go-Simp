@@ -14,9 +14,10 @@ services:
       MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT}' # TODO: Change this
       MYSQL_USER: '${MYSQL_USER}'
       MYSQL_PASS: '${MYSQL_PASS}'
-  volumes:
-  - ./mysql_data:/var/lib/mysql
-  
+    volumes:
+    - ./mysql_data:/var/lib/mysql
+    networks:
+      - go-simp-net  
   multi_tor:
     image: evait/multitor
 #    deploy:
@@ -45,7 +46,6 @@ services:
     depends_on:
       - multi_tor
       - pilot
-    restart: on-failure
     networks:
       - go-simp-net
 
@@ -53,7 +53,6 @@ services:
     image: justhumanz/go-simp-pilot:latest
     depends_on:
       - multi_tor
-    restart: on-failure
     volumes:
       - ../config.toml:/config.toml
     networks:
@@ -63,7 +62,6 @@ services:
     image: justhumanz/go-simp-utility                                                                                                                                                                                                   
     depends_on:                                                                                                                                                                                                      
       - multi_tor                                                                                                                                                                                                    
-    restart: on-failure                                                                                                                                                                                              
     environment:                                                                                                                                                                                                     
       - TOPGG=${TOPGG}                                            
     networks:                                                                                                                                                                                                        
@@ -83,7 +81,6 @@ services:
     image: 'bitnami/redis:latest'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
-    restart: on-failure
     volumes:
       - redis-data:/bitnami/redis/data/
     networks:

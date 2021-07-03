@@ -32,25 +32,22 @@ services:
     deploy:
       replicas: 2                                                         
     depends_on:                                                     
-    - rest_api                                                      
-    restart: on-failure                                             
+    - rest_api                                                                                       
     networks:                                                       
       - go-simp-net                                                            
     ports:                                                                     
       - "9292:80"                                                              
                                                                     
   rest_api:                                                                    
-    image: justhumanz/go-simp-rest_api:${RELEASE_VERSION}                                                            
-    restart: on-failure                                                                        
+    image: justhumanz/go-simp-rest_api:${RELEASE_VERSION}                                                                                                       
     networks:                                                                                  
       - go-simp-net                                                                            
     ports:                                                                                     
       - "9393:2525"                                                                            
 
   prediction:                                                                                  
-    build: justhumanz/go-simp-prediction:${RELEASE_VERSION}                                                                
+    image: justhumanz/go-simp-prediction:${RELEASE_VERSION}                                                                
     environment:                                                                               
-      - PrometheusURL=http://prometheus:9090                                                   
-    restart: on-failure                                                                        
+      - PrometheusURL=http://prometheus:9090                                                                                                 
     networks:                                                                                  
       - go-simp-net

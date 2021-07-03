@@ -1,6 +1,3 @@
-FROM justhumanz/go-simp as go-simp 
-RUN apk --no-cache add tzdata
-
 FROM alpine
-COPY --from=go-simp /app/Go-Simp/bin/bilibili_fanart /bilibili_fanart
+COPY --from=justhumanz/go-simp /app/Go-Simp/bin/bilibili_fanart /bilibili_fanart
 CMD ["./bilibili_fanart"]

@@ -1,7 +1,7 @@
 # build stage
 FROM golang:alpine as build-stage
 
-RUN apk add git
+RUN apk --no-cache add tzdata git
 RUN export CGO_ENABLED=1
 RUN mkdir /app
 COPY . /app/Go-Simp

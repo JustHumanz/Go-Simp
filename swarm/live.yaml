@@ -9,7 +9,6 @@ services:
     image: justhumanz/go-simp-bilispace-livestream:${RELEASE_VERSION}
     depends_on:
       - multi_tor
-    restart: on-failure
     networks:
       - go-simp-net
 
@@ -17,7 +16,6 @@ services:
     image: justhumanz/go-simp-bililive-livestream:${RELEASE_VERSION}
     depends_on:
       - multi_tor
-    restart: on-failure
     networks:
       - go-simp-net
 
@@ -25,7 +23,6 @@ services:
     image: justhumanz/go-simp-youtube-checker-livestream:${RELEASE_VERSION}
     depends_on:
       - multi_tor
-    restart: on-failure
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
     networks:
@@ -35,7 +32,6 @@ services:
     image: justhumanz/go-simp-youtube-counter-livestream:${RELEASE_VERSION}
     depends_on:
       - multi_tor
-    restart: on-failure
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
     networks:
@@ -45,6 +41,5 @@ services:
     image: justhumanz/go-simp-twitch-livestream:${RELEASE_VERSION}
     depends_on:
       - multi_tor
-    restart: on-failure
     networks:
       - go-simp-net

@@ -9,7 +9,6 @@ services:
     image: justhumanz/go-simp-bilibili-fanart:${RELEASE_VERSION}
     depends_on:
       - multi_tor
-    restart: on-failure
     networks:
       - go-simp-net
 
@@ -17,7 +16,6 @@ services:
     image: justhumanz/go-simp-twitter-fanart:${RELEASE_VERSION}
     depends_on:
       - multi_tor
-    restart: on-failure
     command: ./twitter_fanart -LewdFanart
     networks:
       - go-simp-net
@@ -27,6 +25,5 @@ services:
     depends_on:
       - multi_tor
     command: ./pixiv_fanart -LewdFanart
-    restart: on-failure
     networks:
       - go-simp-net
