@@ -4,7 +4,10 @@ on:
   push:
     paths:
       - 'service/pilot/**'
-
+    branches:
+      - 'master'
+    tags-ignore:
+      - 'v*.*.*' 
 jobs:
   build:
     runs-on: ubuntu-latest
