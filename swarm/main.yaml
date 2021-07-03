@@ -70,8 +70,8 @@ services:
   static_files:
     image: nginx:alpine
     volumes:
-      - ../img/nginx.conf:/etc/nginx/nginx.conf
-      - ../img/:/usr/share/nginx/html
+      - ../Img/nginx.conf:/etc/nginx/nginx.conf
+      - ../Img/:/usr/share/nginx/html
     networks:
      - go-simp-net    
     ports:
