@@ -160,8 +160,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             export RELEASE_VERSION=${{ env.RELEASE_VERSION }}
-            cd /data/Go-Simp/swarm
-            sudo git pull
+            cd Go-Simp/swarm && git pull
             docker stack deploy -c live.yaml livestream
             docker stack deploy -c fanart.yaml fanart
             docker stack deploy -c utility.yaml utility

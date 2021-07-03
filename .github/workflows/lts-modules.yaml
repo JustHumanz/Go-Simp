@@ -73,6 +73,6 @@ jobs:
           script: |
             export RELEASE_VERSION=${{ env.RELEASE_VERSION }}
             export TOPGG=${{ env.TOPGG }}
-            cd /data/Go-Simp/swarm
+            cd Go-Simp/swarm
             sudo git pull
             docker stack deploy -c main.yaml engine
