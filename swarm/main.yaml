@@ -7,6 +7,16 @@ volumes:
   redis-data:
 
 services:
+  mysql:
+    restart: always
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT}' # TODO: Change this
+      MYSQL_USER: '${MYSQL_USER}'
+      MYSQL_PASS: '${MYSQL_PASS}'
+  volumes:
+  - ./mysql_data:/var/lib/mysql
+  
   multi_tor:
     image: evait/multitor
 #    deploy:
