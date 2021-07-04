@@ -85,14 +85,16 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 				return nil, Key2, err
 			}
 
-			UpcominginHours := int(time.Until(list.Schedul).Hours())
-			if Payload["State"].(string) == config.Sys {
-				if UpcominginHours > 2 {
-					continue
-				}
-			} else {
-				if UpcominginHours > 36 {
-					continue
+			if Status != config.PastStatus {
+				UpcominginHours := int(time.Until(list.Schedul).Hours())
+				if Payload["State"].(string) == config.Sys {
+					if UpcominginHours > 2 {
+						continue
+					}
+				} else {
+					if UpcominginHours > 36 {
+						continue
+					}
 				}
 			}
 
@@ -107,11 +109,22 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 			return nil, Key2, errors.New("not found any schdule")
 		}
 
-		log.Info("Append new cache ", Key2)
-		err = LiveCache.Expire(ctx, Key2, config.YtGetStatusTTL).Err()
-		if err != nil {
-			return nil, Key2, err
+		log.WithFields(log.Fields{
+			"State": Payload["State"],
+			"Key":   Key2,
+		}).Info("Append new cache")
+		if Payload["State"].(string) == config.Sys {
+			err = LiveCache.Expire(ctx, Key2, config.YtGetStatusTTL).Err()
+			if err != nil {
+				return nil, Key2, err
+			}
+		} else {
+			err = LiveCache.Expire(ctx, Key2, 5*time.Minute).Err()
+			if err != nil {
+				return nil, Key2, err
+			}
 		}
+
 	} else {
 		for _, result := range unique(val) {
 			err := json.Unmarshal([]byte(result), &list)

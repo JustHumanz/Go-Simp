@@ -465,32 +465,51 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 		if cekLive == "true" {
 			MemberID := Member["ID"].(int64)
 			MemberName := Member["NickName"].(string)
-			YTData, _, err := database.YtGetStatus(map[string]interface{}{
-				"MemberID":   MemberID,
-				"MemberName": MemberName,
-				"Status":     config.LiveStatus,
-				"State":      config.Sys,
-			})
-			if err != nil {
-				log.Error(err)
-			}
-			if YTData != nil {
-				Member["IsYtLive"] = true
-				Member["LiveURL"] = "https://www.youtube.com/watch?v=" + YTData[0].VideoID
-			} else {
-				Member["IsYtLive"] = false
-			}
-			BiliData, err := database.BilGet(0, Member["ID"].(int64), config.LiveStatus)
-			if err != nil {
-				log.Error(err)
+			if Member["Youtube"] != nil {
+				YTData, _, err := database.YtGetStatus(map[string]interface{}{
+					"MemberID":   MemberID,
+					"MemberName": MemberName,
+					"Status":     config.LiveStatus,
+					"State":      config.Sys,
+				})
+				if err != nil {
+					log.Error(err)
+				}
+				if YTData != nil {
+					Member["IsYtLive"] = true
+					Member["LiveURL"] = "https://www.youtube.com/watch?v=" + YTData[0].VideoID
+				} else {
+					Member["IsYtLive"] = false
+				}
 			}
 
-			if BiliData != nil {
-				Bili := Member["BiliBili"].(map[string]interface{})
-				Member["IsBiliLive"] = true
-				Member["LiveURL"] = "https://live.bilibili.com/" + strconv.Itoa(Bili["RoomID"].(int))
-			} else {
-				Member["IsBiliLive"] = false
+			if Member["BiliBili"] != nil {
+				BiliData, err := database.BilGet(0, Member["ID"].(int64), config.LiveStatus)
+				if err != nil {
+					log.Error(err)
+				}
+
+				if BiliData != nil {
+					Bili := Member["BiliBili"].(map[string]interface{})
+					Member["IsBiliLive"] = true
+					Member["LiveURL"] = "https://live.bilibili.com/" + strconv.Itoa(Bili["RoomID"].(int))
+				} else {
+					Member["IsBiliLive"] = false
+				}
+			}
+
+			if Member["Twitch"] != nil {
+				TwitchData, err := database.GetTwitch(Member["ID"].(int64))
+				if err != nil {
+					log.Error(err)
+				}
+				if TwitchData != nil {
+					Twitch := Member["Twitch"].(map[string]interface{})
+					Member["IsTwitchLive"] = true
+					Member["LiveURL"] = "https://www.twitch.tv/" + Twitch["UserName"].(string)
+				} else {
+					Member["IsTwitchLive"] = false
+				}
 			}
 		}
 		return Member

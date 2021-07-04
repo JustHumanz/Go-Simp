@@ -350,7 +350,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						}).Info("maybe yt error or human error")
 
 						YoutubeData.UpdateStatus(config.UpcomingStatus)
-					} else if (Items.Snippet.VideoStatus == "none" && YoutubeData.Viewers != Items.Statistics.ViewCount) || (Items.Snippet.VideoStatus == config.LiveStatus) {
+					} else if Items.Snippet.VideoStatus == "none" && YoutubeData.Viewers != Items.Statistics.ViewCount {
 						log.WithFields(log.Fields{
 							"VideoData ID": ID,
 							"Viwers past":  YoutubeData.Viewers,
@@ -358,6 +358,15 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 							"Status":       config.PastStatus,
 						}).Info("Update Viwers")
 						YoutubeData.UpdateYt(config.PastStatus)
+
+					} else if Items.Snippet.VideoStatus == config.LiveStatus && YoutubeData.Viewers != Items.Statistics.ViewCount {
+						log.WithFields(log.Fields{
+							"VideoData ID": ID,
+							"Viwers past":  YoutubeData.Viewers,
+							"Viwers now":   Items.Statistics.ViewCount,
+							"Status":       config.LiveStatus,
+						}).Info("Update Viwers")
+						YoutubeData.UpdateYt(config.LiveStatus)
 
 					} else if Items.Snippet.VideoStatus == config.UpcomingStatus {
 						if Items.LiveDetails.StartTime != YoutubeData.Schedul {
@@ -371,8 +380,6 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 							YoutubeData.UpdateSchdule(Items.LiveDetails.StartTime)
 							YoutubeData.UpdateYt(config.UpcomingStatus)
 						}
-					} else {
-						YoutubeData.UpdateYt(YoutubeData.Status)
 					}
 				}
 			}
