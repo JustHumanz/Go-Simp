@@ -31,7 +31,7 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 	if Payload["GroupID"] != nil {
 		Group = Payload["GroupID"].(int64)
 		Key = append(Key, strconv.Itoa(int(Group)), Payload["GroupName"].(string))
-		if Payload["Region"].(string) != "" {
+		if Payload["Region"] != nil {
 			Region = Payload["Region"].(string)
 			Key = append(Key, Region)
 		}
@@ -84,18 +84,9 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 			if err != nil {
 				return nil, Key2, err
 			}
-
-			if Status != config.PastStatus {
-				UpcominginHours := int(time.Until(list.Schedul).Hours())
-				if Payload["State"].(string) == config.Sys {
-					if UpcominginHours > 2 {
-						continue
-					}
-				} else {
-					if UpcominginHours > 36 {
-						continue
-					}
-				}
+			UpcominginHours := int(time.Until(list.Schedul).Hours())
+			if UpcominginHours > 730 && Status != config.PastStatus {
+				continue
 			}
 
 			Data = append(Data, list)

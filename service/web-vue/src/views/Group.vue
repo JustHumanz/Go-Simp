@@ -52,10 +52,11 @@
                       </div>                      
                       </div>
                     </div>
-                    <div v-if="m.IsYtLive">
+                    <div v-if="m.IsYtLive || m.IsBiliLive || m.IsTwitchLive">
+                    <a :href=m.LiveURL target="_blank" rel="noopener noreferrer">
                     <div class="card-footer">
                         <small class="text-muted">🔴 Live</small>
-                    </div>                        
+                    </div></a>                       
                     </div>
                 </div>
             </div>
