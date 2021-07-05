@@ -1,5 +1,7 @@
 package database
 
+import "errors"
+
 func GetTwitch(MemberID int64) (*LiveStream, error) {
 	var Data LiveStream
 	rows, err := DB.Query(`SELECT * FROM Vtuber.Twitch Where VtuberMember_id=?`, MemberID)
@@ -7,6 +9,10 @@ func GetTwitch(MemberID int64) (*LiveStream, error) {
 		return nil, err
 	}
 	defer rows.Close()
+
+	if !rows.Next() {
+		return nil, errors.New("not found any schdule")
+	}
 
 	for rows.Next() {
 		err = rows.Scan(&Data.ID, &Data.Game, &Data.Status, &Data.Title, &Data.Thumb, &Data.Schedul, &Data.End, &Data.Viewers, &MemberID)

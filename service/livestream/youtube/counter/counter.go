@@ -98,13 +98,16 @@ func CheckYtByTime() {
 				"State":     config.Sys,
 			})
 			if err != nil {
-				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-					Message: err.Error(),
-					Service: ModuleState,
-				})
-				log.WithFields(log.Fields{
-					"Group": Group.GroupName,
-				}).Error(err)
+				if err.Error() != "not found any schdule" {
+					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+						Message: err.Error(),
+						Service: ModuleState,
+					})
+				} else {
+					log.WithFields(log.Fields{
+						"Group": Group.GroupName,
+					}).Error(err)
+				}
 			}
 
 			for _, Youtube := range YoutubeStatus {

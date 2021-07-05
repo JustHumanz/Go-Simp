@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -72,6 +73,11 @@ func BilGet(GroupID int64, MemberID int64, Status string) ([]LiveStream, error) 
 		Data []LiveStream
 		list LiveStream
 	)
+
+	if !rows.Next() {
+		return nil, errors.New("not found any schdule")
+	}
+
 	for rows.Next() {
 		err = rows.Scan(&list.ID, &list.Member.BiliRoomID, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.Viewers, &list.End, &list.Member.ID)
 		if err != nil {
@@ -103,6 +109,11 @@ func SpaceGet(GroupID int64, MemberID int64) ([]LiveStream, error) {
 		Data []LiveStream
 		list LiveStream
 	)
+
+	if !rows.Next() {
+		return nil, errors.New("not found any new video")
+	}
+
 	for rows.Next() {
 		err = rows.Scan(&list.ID, &list.VideoID, &list.Type, &list.Title, &list.Thumb, &list.Desc, &list.Schedul, &list.Viewers, &list.Length, &list.Member.ID)
 		if err != nil {

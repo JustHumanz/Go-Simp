@@ -33,13 +33,14 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 		Key = append(Key, strconv.Itoa(int(Group)), Payload["GroupName"].(string))
 		if Payload["Region"] != nil {
 			Region = Payload["Region"].(string)
-			Key = append(Key, Region)
+			if Region != "" {
+				Key = append(Key, Region)
+			}
 		}
 	} else {
 		Member = Payload["MemberID"].(int64)
 		Key = append(Key, strconv.Itoa(int(Member)), Payload["MemberName"].(string))
 	}
-
 	Key = append(Key, Status, Payload["State"].(string))
 	Key2 := strings.Join(Key, "-")
 
@@ -54,6 +55,13 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 			limit = 2525
 		}
 
+		Query := ""
+		if Status == config.PastStatus {
+			Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Youtube.Status=? Order by EndStream DESC Limit ?"
+		} else if Status == config.UpcomingStatus {
+			Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Youtube.Status=? Order by PublishedAt DESC Limit ?"
+		}
+
 		if Region != "" {
 			rows, err = DB.Query(`SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where VtuberGroup.id=? AND Youtube.Status=? AND Region=? Order by ScheduledStart DESC Limit ?`, Group, Status, Region, limit)
 			if err != nil {
@@ -61,14 +69,8 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 			}
 			defer rows.Close()
 
-		} else if Status == config.PastStatus {
-			rows, err = DB.Query(`SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Youtube.Status=? Order by EndStream DESC Limit ?`, Group, Member, Status, limit)
-			if err != nil {
-				return nil, Key2, err
-			}
-			defer rows.Close()
 		} else {
-			rows, err = DB.Query(`SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Youtube.Status=? Order by ScheduledStart DESC Limit ?`, Group, Member, Status, limit)
+			rows, err = DB.Query(Query, Group, Member, Status, limit)
 			if err != nil {
 				return nil, Key2, err
 			}
