@@ -127,11 +127,15 @@ func CheckTwitch() {
 
 				ResultDB, err := database.GetTwitch(Member.ID)
 				if err != nil {
-					log.Error(err)
-					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message: err.Error(),
-						Service: ModuleState,
-					})
+					if err.Error() != "not found any schdule" {
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message: err.Error(),
+							Service: ModuleState,
+						})
+					} else {
+						log.Error(err)
+					}
+					continue
 				}
 				ResultDB.AddMember(Member).AddGroup(Group).SetState(config.TwitchLive)
 

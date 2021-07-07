@@ -6,6 +6,7 @@ import (
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
+	log "github.com/sirupsen/logrus"
 )
 
 //DynamicSvr for bilibili author
@@ -106,7 +107,12 @@ type DynamicSvr struct {
 	} `json:"data"`
 }
 
+type NoRegister struct {
+	Payload []*ChannelRegister
+}
+
 type ChannelRegister struct {
+	AdminID       string
 	Admin         string
 	State         string
 	MessageID     string
@@ -118,10 +124,13 @@ type ChannelRegister struct {
 	DisableState  bool
 	ChannelState  database.DiscordChannel
 	ChannelStates []database.DiscordChannel
+	Index         int
 }
 
-func NewRegister() *ChannelRegister {
-	return &ChannelRegister{}
+func NewRegister(a, b string) ChannelRegister {
+	return ChannelRegister{
+		AdminID: a + b,
+	}
 }
 func (Data *ChannelRegister) SetLiveOnly(new bool) *ChannelRegister {
 	Data.ChannelState.LiveOnly = new
@@ -238,8 +247,14 @@ func (Data *ChannelRegister) UpdateMessageID(new string) *ChannelRegister {
 	return Data
 }
 
-func CleanRegister() {
-	Register = NewRegister()
+func CleanRegister(i int) {
+	log.Info("Remove & remapping Register")
+	Register.Payload[i] = &ChannelRegister{}
+	for _, v := range Register.Payload {
+		if v != (&ChannelRegister{}) {
+			Register.Payload = append(Register.Payload, v)
+		}
+	}
 }
 
 func (Data *ChannelRegister) Stop() *ChannelRegister {

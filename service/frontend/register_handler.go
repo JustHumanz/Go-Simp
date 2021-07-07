@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	Register = &ChannelRegister{}
+	Register = &NoRegister{}
 )
 
 const (
@@ -29,12 +29,12 @@ func StartRegister(s *discordgo.Session, m *discordgo.MessageCreate) {
 	table.SetCenterSeparator("|")
 
 	Prefix := configfile.BotPrefix.General
-	Out := func() {
+	Out := func(j int) {
 		_, err := s.ChannelMessageSend(m.ChannelID, "Adios")
 		if err != nil {
 			log.Error(err)
 		}
-		CleanRegister()
+		CleanRegister(j)
 	}
 
 	if strings.HasPrefix(m.Content, Prefix) {
@@ -45,16 +45,16 @@ func StartRegister(s *discordgo.Session, m *discordgo.MessageCreate) {
 				log.Error(err)
 			}
 		}
-		Register = NewRegister()
 
 		if m.Content == Prefix+Setup {
 			if Admin {
+				RegisterPayload := NewRegister(m.Author.ID, m.ChannelID)
 				_, err := s.ChannelMessageSend(m.ChannelID, "Wellcome to setup mode\ntype `exit` to exit this mode")
 				if err != nil {
 					log.Error(err)
 				}
 
-				Register.SetAdmin(m.Author.ID).SetChannelID(m.ChannelID)
+				RegisterPayload.SetAdmin(m.Author.ID).SetChannelID(m.ChannelID)
 				_, err = s.ChannelMessageSend(m.ChannelID, "Select ID or Name of Vtuber group/agency you want to enable (Only one)")
 				if err != nil {
 					log.Error(err)
@@ -65,17 +65,19 @@ func StartRegister(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 				table.SetHeader([]string{"ID", "GroupName"})
 				table.Render()
-				_, err = s.ChannelMessageSend(m.ChannelID, "`"+tableString.String()+"`")
+				_, err = s.ChannelMessageSend(m.ChannelID, "```"+tableString.String()+"```")
 				if err != nil {
 					log.Error(err)
 				}
-				Register.UpdateState(FirstSetup)
+				RegisterPayload.UpdateState(FirstSetup)
+				Register.Payload = append(Register.Payload, &RegisterPayload)
+				return
+
 			} else {
 				_, err := s.ChannelMessageSend(m.ChannelID, "Your roles don't have permission to enable/disable/update,make sure your roles have `Manage Channels` permission")
 				if err != nil {
 					log.Error(err)
 				}
-				CleanRegister()
 				return
 			}
 
@@ -201,203 +203,209 @@ func StartRegister(s *discordgo.Session, m *discordgo.MessageCreate) {
 					return
 				}
 
-				Register.SetAdmin(m.Author.ID).SetChannelID(m.ChannelID)
-				Register.SetChannels(ChannelData)
+				RegisterPayload := NewRegister(m.Author.ID, m.ChannelID)
+
+				RegisterPayload.SetAdmin(m.Author.ID).SetChannelID(m.ChannelID)
+				RegisterPayload.SetChannels(ChannelData)
 
 				_, err = s.ChannelMessageSend(m.ChannelID, "Select ID : ")
 				if err != nil {
 					log.Error(err)
 				}
-
-				Register.UpdateState(UpdateState)
+				RegisterPayload.UpdateState(UpdateState)
+				Register.Payload = append(Register.Payload, &RegisterPayload)
+				return
 			} else {
 				_, err := s.ChannelMessageSend(m.ChannelID, "You don't have permission to enable/disable/update")
 				if err != nil {
 					log.Error(err)
 				}
-				CleanRegister()
 				return
 			}
 		}
-	} else if m.Author.ID == Register.Admin && m.ChannelID == Register.ChannelState.ChannelID {
-		if m.Content == "exit" {
-			Out()
-			return
-		}
-		if Register.State == UpdateState {
-			tmp, err := strconv.Atoi(m.Content)
-			if err != nil {
-				_, err := s.ChannelMessageSend(m.ChannelID, "Worng input ID")
-				if err != nil {
-					log.Error(err)
-				}
-				Out()
+	}
+
+	for j, RegisterPayload := range Register.Payload {
+		if RegisterPayload.AdminID == m.Author.ID+m.ChannelID {
+			if m.Content == "exit" {
+				Out(j)
 				return
-			} else {
-				for _, ChannelState := range Register.ChannelStates {
-					if int(ChannelState.ID) == tmp {
-						Register.SetChannel(ChannelState)
+			}
+			if RegisterPayload.State == UpdateState {
+				tmp, err := strconv.Atoi(m.Content)
+				if err != nil {
+					_, err := s.ChannelMessageSend(m.ChannelID, "Worng input ID")
+					if err != nil {
+						log.Error(err)
+					}
+					Out(j)
+					return
+				} else {
+					for _, ChannelState := range RegisterPayload.ChannelStates {
+						if int(ChannelState.ID) == tmp {
+							RegisterPayload.SetChannel(ChannelState)
+						}
+					}
+					if RegisterPayload.ChannelState.ID != 0 {
+						RegisterPayload.SetChannelID(m.ChannelID)
+						_, err := s.ChannelMessageSend(m.ChannelID, "You selectd `"+RegisterPayload.ChannelState.Group.GroupName+"` with ID `"+strconv.Itoa(int(RegisterPayload.ChannelState.ID))+"`")
+						if err != nil {
+							log.Error(err)
+						}
+						table.SetHeader([]string{"Menu"})
+						table.Append([]string{"Update Channel state"})
+						table.Append([]string{"Add region in this channel"})
+						table.Append([]string{"Delete region in this channel"})
+
+						if RegisterPayload.ChannelState.TypeTag == 2 || RegisterPayload.ChannelState.TypeTag == 3 {
+							table.Append([]string{"Change Livestream state"})
+						}
+
+						table.Render()
+						MsgText, err := s.ChannelMessageSend(m.ChannelID, "`"+tableString.String()+"`")
+						if err != nil {
+							log.Error(err)
+						}
+
+						if RegisterPayload.ChannelState.TypeTag == 2 || RegisterPayload.ChannelState.TypeTag == 3 {
+							err = engine.Reacting(map[string]string{
+								"ChannelID": m.ChannelID,
+								"State":     "Menu2",
+								"MessageID": MsgText.ID,
+							}, s)
+							if err != nil {
+								log.Error(err)
+							}
+						} else {
+							err = engine.Reacting(map[string]string{
+								"ChannelID": m.ChannelID,
+								"State":     "Menu",
+								"MessageID": MsgText.ID,
+							}, s)
+							if err != nil {
+								log.Error(err)
+							}
+						}
+
+						RegisterPayload.UpdateMessageID(MsgText.ID)
+
+					} else {
+						_, err := s.ChannelMessageSend(m.ChannelID, "Channel ID not found")
+						if err != nil {
+							log.Error(err)
+						}
+						Out(j)
+						return
 					}
 				}
-				if Register.ChannelState.ID != 0 {
-					Register.SetChannelID(m.ChannelID)
-					_, err := s.ChannelMessageSend(m.ChannelID, "You selectd `"+Register.ChannelState.Group.GroupName+"` with ID `"+strconv.Itoa(int(Register.ChannelState.ID))+"`")
+			}
+
+			//Fist Setup
+			if RegisterPayload.State == FirstSetup {
+				VTuberGroup, err := FindGropName(m.Content)
+				if err != nil {
+					_, err := s.ChannelMessageSend(m.ChannelID, "`"+m.Content+"`,Name of Vtuber Group was not valid")
 					if err != nil {
 						log.Error(err)
 					}
-					table.SetHeader([]string{"Menu"})
-					table.Append([]string{"Update Channel state"})
-					table.Append([]string{"Add region in this channel"})
-					table.Append([]string{"Delete region in this channel"})
-
-					if Register.ChannelState.TypeTag == 2 || Register.ChannelState.TypeTag == 3 {
-						table.Append([]string{"Change Livestream state"})
-					}
-
-					table.Render()
-					MsgText, err := s.ChannelMessageSend(m.ChannelID, "`"+tableString.String()+"`")
-					if err != nil {
-						log.Error(err)
-					}
-
-					if Register.ChannelState.TypeTag == 2 || Register.ChannelState.TypeTag == 3 {
-						err = engine.Reacting(map[string]string{
-							"ChannelID": m.ChannelID,
-							"State":     "Menu2",
-							"MessageID": MsgText.ID,
-						}, s)
-						if err != nil {
-							log.Error(err)
-						}
-					} else {
-						err = engine.Reacting(map[string]string{
-							"ChannelID": m.ChannelID,
-							"State":     "Menu",
-							"MessageID": MsgText.ID,
-						}, s)
-						if err != nil {
-							log.Error(err)
-						}
-					}
-
-					Register.UpdateMessageID(MsgText.ID)
-
-				} else {
-					_, err := s.ChannelMessageSend(m.ChannelID, "Channel ID not found")
-					if err != nil {
-						log.Error(err)
-					}
-					Out()
 					return
 				}
-			}
-		}
+				RegisterPayload.SetGroup(VTuberGroup)
 
-		//Fist Setup
-		if Register.State == FirstSetup {
-			VTuberGroup, err := FindGropName(m.Content)
-			if err != nil {
-				_, err := s.ChannelMessageSend(m.ChannelID, "`"+m.Content+"`,Name of Vtuber Group was not valid")
-				if err != nil {
-					log.Error(err)
+				if RegisterPayload.ChannelState.Group.IsNull() {
+					_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+						SetDescription("Invalid ID,Group not found").
+						SetImage(engine.NotFoundIMG()).MessageEmbed)
+					if err != nil {
+						log.Error(err)
+					}
+					Out(j)
+					return
 				}
-				return
-			}
-			Register.SetGroup(VTuberGroup)
 
-			if Register.ChannelState.Group.IsNull() {
-				_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-					SetDescription("Invalid ID,Group not found").
-					SetImage(engine.NotFoundIMG()).MessageEmbed)
-				if err != nil {
-					log.Error(err)
-				}
-				Out()
-				return
-			}
-
-			Register.Stop()
-			for Key, Val := range RegList {
-				if Key == Register.ChannelState.Group.GroupName {
-					if len(Val) > 3 {
-						MsgTxt, err := s.ChannelMessageSend(m.ChannelID, "Select `"+Key+"` region")
-						if err != nil {
-							log.Error(err)
-						}
-						Register.UpdateState(AddRegion)
-						for _, v := range strings.Split(Val, ",") {
-							err := s.MessageReactionAdd(m.ChannelID, MsgTxt.ID, engine.CountryCodetoUniCode(v))
+				RegisterPayload.Stop()
+				for Key, Val := range RegList {
+					if Key == RegisterPayload.ChannelState.Group.GroupName {
+						if len(Val) > 3 {
+							MsgTxt, err := s.ChannelMessageSend(m.ChannelID, "Select `"+Key+"` region")
 							if err != nil {
 								log.Error(err)
 							}
-						}
-						Register.UpdateMessageID(MsgTxt.ID)
-						Register.BreakPoint(5)
-
-						Register.FixRegion("add")
-						if Register.ChannelState.ChannelCheck() {
-							_, err := s.ChannelMessageSend(m.ChannelID, "Already setup `"+Register.ChannelState.Group.GroupName+"`,for add/del region use `Update` command")
-							if err != nil {
-								log.Error(err)
+							RegisterPayload.UpdateState(AddRegion)
+							for _, v := range strings.Split(Val, ",") {
+								err := s.MessageReactionAdd(m.ChannelID, MsgTxt.ID, engine.CountryCodetoUniCode(v))
+								if err != nil {
+									log.Error(err)
+								}
 							}
-							Out()
-							return
+							RegisterPayload.UpdateMessageID(MsgTxt.ID)
+							RegisterPayload.BreakPoint(5)
+
+							RegisterPayload.FixRegion("add")
+							if RegisterPayload.ChannelState.ChannelCheck() {
+								_, err := s.ChannelMessageSend(m.ChannelID, "Already setup `"+RegisterPayload.ChannelState.Group.GroupName+"`,for add/del region use `Update` command")
+								if err != nil {
+									log.Error(err)
+								}
+								Out(j)
+								return
+							}
+							RegisterPayload.Stop()
+						} else {
+							RegisterPayload.RegionTMP = strings.Split(Val, ",")
+							RegisterPayload.FixRegion("add")
 						}
-						Register.Stop()
-					} else {
-						Register.RegionTMP = strings.Split(Val, ",")
-						Register.FixRegion("add")
 					}
 				}
-			}
 
-			Register.ChoiceType()
-			Register.BreakPoint(3)
+				RegisterPayload.ChoiceType()
+				RegisterPayload.BreakPoint(3)
 
-			if Register.ChannelState.TypeTag == 3 || Register.ChannelState.TypeTag == 2 {
-				Register.Stop()
-				Register.LiveOnly()
-				Register.BreakPoint(1)
+				if RegisterPayload.ChannelState.TypeTag == 3 || RegisterPayload.ChannelState.TypeTag == 2 {
+					RegisterPayload.Stop()
+					RegisterPayload.LiveOnly()
+					RegisterPayload.BreakPoint(1)
 
-				if !Register.ChannelState.LiveOnly {
-					Register.Stop()
-					Register.NewUpcoming()
-					Register.BreakPoint(1)
+					if !RegisterPayload.ChannelState.LiveOnly {
+						RegisterPayload.Stop()
+						RegisterPayload.NewUpcoming()
+						RegisterPayload.BreakPoint(1)
+					}
+
+					RegisterPayload.Stop()
+					RegisterPayload.Dynamic()
+					RegisterPayload.BreakPoint(1)
+
+					RegisterPayload.Stop()
+					RegisterPayload.Lite()
+					RegisterPayload.BreakPoint(1)
+				} else if RegisterPayload.ChannelState.TypeTag == 69 || RegisterPayload.ChannelState.TypeTag == 70 {
+					if !RegisterPayload.CheckNSFW() {
+						Out(j)
+					}
 				}
 
-				Register.Stop()
-				Register.Dynamic()
-				Register.BreakPoint(1)
-
-				Register.Stop()
-				Register.Lite()
-				Register.BreakPoint(1)
-			} else if Register.ChannelState.TypeTag == 69 || Register.ChannelState.TypeTag == 70 {
-				if !Register.CheckNSFW() {
-					Out()
-				}
-			}
-
-			if Register.ChannelState.Group.GroupName == config.Indie {
-				Register.Stop()
-				Register.IndieNotif()
-				Register.BreakPoint(1)
-			}
-
-			if Register.ChannelState.Group.GroupName != "" {
-				err = Register.ChannelState.AddChannel()
-				if err != nil {
-					log.Error(err)
+				if RegisterPayload.ChannelState.Group.GroupName == config.Indie {
+					RegisterPayload.Stop()
+					RegisterPayload.IndieNotif()
+					RegisterPayload.BreakPoint(1)
 				}
 
-				_, err = s.ChannelMessageSend(m.ChannelID, "Done,you add `"+Register.ChannelState.Group.GroupName+"` in this channel")
-				if err != nil {
-					log.Error(err)
-				}
-			}
+				if RegisterPayload.ChannelState.Group.GroupName != "" {
+					err = RegisterPayload.ChannelState.AddChannel()
+					if err != nil {
+						log.Error(err)
+					}
 
-			CleanRegister()
-			return
+					_, err = s.ChannelMessageSend(m.ChannelID, "Done,you add `"+RegisterPayload.ChannelState.Group.GroupName+"` in this channel")
+					if err != nil {
+						log.Error(err)
+					}
+				}
+
+				CleanRegister(j)
+				return
+			}
 		}
 	}
 }

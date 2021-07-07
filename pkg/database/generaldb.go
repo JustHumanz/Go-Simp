@@ -658,8 +658,8 @@ func ChannelStatus(ChannelID string) ([]DiscordChannel, error) {
 	var (
 		Data []DiscordChannel
 	)
-	//Channel.id,VtuberGroup.id,VtuberGroupName,Channel.Type,Channel.LiveOnly,Channel.NewUpcoming,Channel.Dynamic,Channel.Region,Channel.Lite
-	rows, err := DB.Query(`SELECT Channel.*,VtuberGroup.VtuberGroupName FROM Channel INNER JOIn VtuberGroup on VtuberGroup.id=Channel.VtuberGroup_id WHERE DiscordChannelID=?`, ChannelID)
+
+	rows, err := DB.Query(`SELECT Channel.*,VtuberGroup.VtuberGroupName,VtuberGroupIcon FROM Channel INNER JOIn VtuberGroup on VtuberGroup.id=Channel.VtuberGroup_id WHERE DiscordChannelID=?`, ChannelID)
 	if err != nil {
 		return nil, err
 	}
@@ -667,36 +667,17 @@ func ChannelStatus(ChannelID string) ([]DiscordChannel, error) {
 
 	for rows.Next() {
 		var (
-			id               int64
-			GroupID          int64
-			DiscordChannelID string
-			Type             int
-			LiveOnly         bool
-			NewUpcoming      bool
-			Dynamic          bool
-			Region           string
-			Lite             bool
-			IndieNotif       bool
-			GroupName        string
+			Region      string
+			GroupData   Group
+			ChannelData DiscordChannel
 		)
-		err = rows.Scan(&id, &DiscordChannelID, &Type, &LiveOnly, &NewUpcoming, &Dynamic, &Region, &Lite, &IndieNotif, &GroupID, &GroupName)
+		err = rows.Scan(&ChannelData.ID, &ChannelData.ChannelID, &ChannelData.TypeTag, &ChannelData.LiveOnly, &ChannelData.NewUpcoming, &ChannelData.Dynamic, &Region, &ChannelData.LiteMode, &ChannelData.IndieNotif, &GroupData.ID, &GroupData.GroupName, &GroupData.IconURL)
 		if err != nil {
 			return nil, err
 		}
-		Data = append(Data, DiscordChannel{
-			ID: id,
-			Group: Group{
-				ID:        GroupID,
-				GroupName: GroupName,
-			},
-			TypeTag:     Type,
-			LiveOnly:    LiveOnly,
-			NewUpcoming: NewUpcoming,
-			Dynamic:     Dynamic,
-			Region:      strings.ToUpper(Region),
-			LiteMode:    Lite,
-			IndieNotif:  IndieNotif,
-		})
+		ChannelData.Group = GroupData
+		ChannelData.Region = strings.ToUpper(Region)
+		Data = append(Data, ChannelData)
 	}
 	return Data, nil
 }

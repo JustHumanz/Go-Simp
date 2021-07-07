@@ -456,7 +456,7 @@ func (Data *ChannelRegister) UpdateChannel(s string) error {
 			return err
 		}
 
-		if !Register.ChannelState.LiveOnly {
+		if !Register.Payload[Data.Index].ChannelState.LiveOnly {
 			err = Data.ChannelState.UpdateChannel(config.NewUpcoming)
 			if err != nil {
 				return err
@@ -468,7 +468,7 @@ func (Data *ChannelRegister) UpdateChannel(s string) error {
 			return err
 		}
 
-		if Register.ChannelState.Group.GroupName == config.Indie {
+		if Register.Payload[Data.Index].ChannelState.Group.GroupName == config.Indie {
 			err = Data.ChannelState.UpdateChannel(config.IndieNotif)
 			if err != nil {
 				return err
@@ -479,16 +479,16 @@ func (Data *ChannelRegister) UpdateChannel(s string) error {
 }
 
 func (Data *ChannelRegister) AddRegion() {
-	GroupName := Register.ChannelState.Group.GroupName
-	ChannelID := Register.ChannelState.ChannelID
+	GroupName := Register.Payload[Data.Index].ChannelState.Group.GroupName
+	ChannelID := Register.Payload[Data.Index].ChannelState.ChannelID
 
-	Register.UpdateState(AddRegion)
+	Register.Payload[Data.Index].UpdateState(AddRegion)
 	RegEmoji := []string{}
-	ChannelRegion := strings.Split(Register.ChannelState.Region, ",")
+	ChannelRegion := strings.Split(Register.Payload[Data.Index].ChannelState.Region, ",")
 	for _, v := range ChannelRegion {
 		if v != "" {
 			RegEmoji = append(RegEmoji, engine.CountryCodetoUniCode(v))
-			Register.RegionTMP = append(Register.RegionTMP, v)
+			Register.Payload[Data.Index].RegionTMP = append(Register.Payload[Data.Index].RegionTMP, v)
 		}
 	}
 	_, err := Bot.ChannelMessageSend(ChannelID, "`"+GroupName+"` Regions you already enabled: "+strings.Join(RegEmoji, "  "))
@@ -501,7 +501,7 @@ func (Data *ChannelRegister) AddRegion() {
 		log.Error(err)
 	}
 
-	Register.UpdateMessageID(MsgTxt2.ID)
+	Register.Payload[Data.Index].UpdateMessageID(MsgTxt2.ID)
 	for Key, Val := range RegList {
 		GroupRegList := strings.Split(Val, ",")
 
@@ -514,7 +514,7 @@ func (Data *ChannelRegister) AddRegion() {
 				return
 			}
 
-			Register.Stop()
+			Register.Payload[Data.Index].Stop()
 			for _, v2 := range GroupRegList {
 				skip := false
 				for _, v := range ChannelRegion {
@@ -533,30 +533,30 @@ func (Data *ChannelRegister) AddRegion() {
 		}
 	}
 
-	Register.BreakPoint(4)
-	Register.FixRegion("add")
-	Register.ChannelState.UpdateChannel(config.Region)
+	Register.Payload[Data.Index].BreakPoint(4)
+	Register.Payload[Data.Index].FixRegion("add")
+	Register.Payload[Data.Index].ChannelState.UpdateChannel(config.Region)
 
-	_, err = Bot.ChannelMessageSend(ChannelID, "Done,you added "+strings.Join(Register.AddRegionVal, ","))
+	_, err = Bot.ChannelMessageSend(ChannelID, "Done,you added "+strings.Join(Register.Payload[Data.Index].AddRegionVal, ","))
 	if err != nil {
 		log.Error(err)
 	}
-	CleanRegister()
+	CleanRegister(Data.Index)
 }
 
 func (Data *ChannelRegister) DelRegion() {
-	GroupName := Register.ChannelState.Group.GroupName
-	ChannelID := Register.ChannelState.ChannelID
+	GroupName := Register.Payload[Data.Index].ChannelState.Group.GroupName
+	ChannelID := Register.Payload[Data.Index].ChannelState.ChannelID
 
-	Register.UpdateState(DelRegion)
+	Register.Payload[Data.Index].UpdateState(DelRegion)
 	RegEmoji := []string{}
 	for Key, Val := range RegList {
 		if Key == GroupName {
 			for _, v2 := range strings.Split(Val, ",") {
-				for _, v := range strings.Split(Register.ChannelState.Region, ",") {
+				for _, v := range strings.Split(Register.Payload[Data.Index].ChannelState.Region, ",") {
 					if v == v2 {
 						RegEmoji = append(RegEmoji, engine.CountryCodetoUniCode(v2))
-						Register.RegionTMP = append(Register.RegionTMP, v2)
+						Register.Payload[Data.Index].RegionTMP = append(Register.Payload[Data.Index].RegionTMP, v2)
 					}
 				}
 			}
@@ -583,17 +583,17 @@ func (Data *ChannelRegister) DelRegion() {
 		MsgID = MsgTxt2.ID
 	}
 
-	Register.Stop()
+	Register.Payload[Data.Index].Stop()
 	for _, v := range RegEmoji {
 		err := Bot.MessageReactionAdd(ChannelID, MsgID, v)
 		if err != nil {
 			log.Error(err)
 		}
 	}
-	Register.UpdateMessageID(MsgID)
-	Register.BreakPoint(4)
-	Register.FixRegion("del")
-	err = Register.ChannelState.UpdateChannel(config.Region)
+	Register.Payload[Data.Index].UpdateMessageID(MsgID)
+	Register.Payload[Data.Index].BreakPoint(4)
+	Register.Payload[Data.Index].FixRegion("del")
+	err = Register.Payload[Data.Index].ChannelState.UpdateChannel(config.Region)
 	if err != nil {
 		log.Error(err)
 	}
@@ -602,7 +602,7 @@ func (Data *ChannelRegister) DelRegion() {
 	if err != nil {
 		log.Error(err)
 	}
-	CleanRegister()
+	CleanRegister(Data.Index)
 }
 
 func (Data *ChannelRegister) CheckNSFW() bool {
@@ -612,7 +612,7 @@ func (Data *ChannelRegister) CheckNSFW() bool {
 	}
 
 	if !ChannelRaw.NSFW {
-		if Register.ChannelState.TypeTag == 69 {
+		if Register.Payload[Data.Index].ChannelState.TypeTag == 69 {
 			_, err := Bot.ChannelMessageSend(Data.ChannelState.ChannelID, "This Channel was not a NSFW channel")
 			if err != nil {
 				log.Error(err)
@@ -623,7 +623,7 @@ func (Data *ChannelRegister) CheckNSFW() bool {
 			if err != nil {
 				log.Error(err)
 			}
-			Register.ChannelState.TypeTag = 1
+			Register.Payload[Data.Index].ChannelState.TypeTag = 1
 		}
 
 	}
