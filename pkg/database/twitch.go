@@ -20,6 +20,11 @@ func GetTwitch(MemberID int64) (*LiveStream, error) {
 			return nil, err
 		}
 	}
+
+	if Data.ID == 0 {
+		return nil, errors.New("not found any schdule")
+	}
+
 	return &Data, nil
 }
 
