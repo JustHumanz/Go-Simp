@@ -67,4 +67,4 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd Go-Simp/swarm && git pull
-            docker service update --image justhumanz/go-simp-${{ github.event.inputs.imageName }}:${{ github.event.inputs.versionTag }}
+            docker service update --image justhumanz/go-simp-${{ github.event.inputs.imageName }}:${{ github.event.inputs.versionTag }} ${{ github.event.inputs.serviceName }}
