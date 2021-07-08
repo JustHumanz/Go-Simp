@@ -1,4 +1,4 @@
-name: build go-simp lts module
+name: build & deploy manual
 
 on: 
   workflow_dispatch:
