@@ -52,8 +52,8 @@ type Twitch struct {
 }
 type Members struct {
 	Name     string   `json:"Name"`
-	ENName   string   `json:"EN_Name"`
-	JPName   string   `json:"JP_Name"`
+	EnName   string   `json:"EN_Name"`
+	JpName   string   `json:"JP_Name"`
 	Twitter  Twitter  `json:"Twitter"`
 	Youtube  Youtube  `json:"Youtube"`
 	BiliBili BiliBili `json:"BiliBili"`
