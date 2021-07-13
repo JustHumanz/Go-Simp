@@ -54,7 +54,7 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 			}
 		}
 		if Data.ID == 0 {
-			return errors.New("Vtuber don't have any fanart in Twitter")
+			return errors.New("Vtuber don't have any fanart in BiliBili")
 		}
 
 		Data.State = config.BiliBiliArt
@@ -75,7 +75,7 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 			}
 		}
 		if Data.ID == 0 {
-			return errors.New("Vtuber don't have any fanart in Twitter")
+			return errors.New("Vtuber don't have any fanart in Pixiv")
 		}
 
 		Data.State = config.PixivArt
@@ -433,4 +433,20 @@ func (Data *DataFanart) SetLewd(new bool) *DataFanart {
 func (Data *DataFanart) SetState(new string) *DataFanart {
 	Data.State = new
 	return Data
+}
+
+func (p *Group) GetRandomFanart() (*DataFanart, error) {
+	b, err := GetFanart(p.ID, 0)
+	if err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func (p *Member) GetRandomFanart() (*DataFanart, error) {
+	b, err := GetFanart(0, p.ID)
+	if err != nil {
+		return nil, err
+	}
+	return b, nil
 }

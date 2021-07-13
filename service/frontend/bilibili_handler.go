@@ -32,7 +32,11 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
 						}
-						LiveBili, err := database.BilGet(0, Member.ID, config.LiveStatus)
+						//0, Member.ID, config.LiveStatus
+						LiveBili, err := database.BilGet(map[string]interface{}{
+							"Status":   config.LiveStatus,
+							"MemberID": Member.ID,
+						})
 						if err != nil {
 							log.Error(err)
 							SendError(map[string]string{
@@ -78,7 +82,11 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						LiveBili, err := database.BilGet(VTuberGroup.ID, 0, config.LiveStatus)
+						//VTuberGroup.ID, 0, config.LiveStatus
+						LiveBili, err := database.BilGet(map[string]interface{}{
+							"GroupID": VTuberGroup.ID,
+							"Status":  config.LiveStatus,
+						})
 						if err != nil {
 							log.Error(err)
 							SendError(map[string]string{
@@ -142,7 +150,10 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
 						}
-						LiveBili, err := database.BilGet(0, Member.ID, config.PastStatus)
+						LiveBili, err := database.BilGet(map[string]interface{}{
+							"Status":   config.PastStatus,
+							"MemberID": Member.ID,
+						})
 						if err != nil {
 							log.Error(err)
 							SendError(map[string]string{
@@ -189,7 +200,10 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						LiveBili, err := database.BilGet(VTuberGroup.ID, 0, config.PastStatus)
+						LiveBili, err := database.BilGet(map[string]interface{}{
+							"GroupID": VTuberGroup.ID,
+							"Status":  config.PastStatus,
+						})
 						if err != nil {
 							log.Error(err)
 							SendError(map[string]string{

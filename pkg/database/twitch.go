@@ -1,6 +1,10 @@
 package database
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/JustHumanz/Go-Simp/pkg/config"
+)
 
 func GetTwitch(MemberID int64) (*LiveStream, error) {
 	var Data LiveStream
@@ -37,18 +41,34 @@ func (Data *LiveStream) UpdateTwitch() error {
 }
 
 //TwitchGet Get LiveBiliBili by Status (live,past)
-func TwitchGet(GroupID int64, MemberID int64, Status string) ([]LiveStream, error) {
+func TwitchGet(Payload map[string]interface{}) ([]LiveStream, error) {
+	var Group, Member int64
+	Status := Payload["Status"].(string)
+
+	if Payload["GroupID"] != nil {
+		Group = Payload["GroupID"].(int64)
+	} else {
+		Member = Payload["MemberID"].(int64)
+	}
+
 	var (
 		Limit int
 	)
 
-	if GroupID > 0 && Status != "Live" {
+	if Group > 0 && Status != "Live" {
 		Limit = 3
 	} else {
 		Limit = 2525
 	}
 
-	rows, err := DB.Query(`SELECT Twitch.* FROM Vtuber.Twitch Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Twitch.Status=? Order by ScheduledStart ASC Limit ?`, GroupID, MemberID, Status, Limit)
+	Query := ""
+	if Status == config.LiveStatus {
+		Query = "SELECT Twitch.* FROM Vtuber.Twitch Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Twitch.Status=? Order by ScheduledStart ASC Limit ?"
+	} else {
+		Query = "SELECT Twitch.* FROM Vtuber.Twitch Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Twitch.Status=? Order by ScheduledStart DESC Limit ?"
+	}
+
+	rows, err := DB.Query(Query, Group, Member, Status, Limit)
 	if err != nil {
 		return nil, err
 	}
