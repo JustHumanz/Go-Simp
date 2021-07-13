@@ -29,7 +29,10 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
 						} else {
-							LiveTwitch, err := database.TwitchGet(0, Member.ID, config.LiveStatus)
+							LiveTwitch, err := database.TwitchGet(map[string]interface{}{
+								"MemberID": Member.ID,
+								"Status":   config.LiveStatus,
+							})
 							if err != nil {
 								log.Error(err)
 								SendError(map[string]string{
@@ -84,7 +87,10 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						TwitchLive, err := database.TwitchGet(VTuberGroup.ID, 0, config.LiveStatus)
+						TwitchLive, err := database.TwitchGet(map[string]interface{}{
+							"GroupID": VTuberGroup.ID,
+							"Status":  config.LiveStatus,
+						})
 						if err != nil {
 							log.Error(err)
 							SendError(map[string]string{
@@ -155,7 +161,10 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
 						} else {
-							TwitchLive, err := database.TwitchGet(0, Member.ID, config.PastStatus)
+							TwitchLive, err := database.TwitchGet(map[string]interface{}{
+								"MemberID": Member.ID,
+								"Status":   config.PastStatus,
+							})
 							if err != nil {
 								log.Error(err)
 								SendError(map[string]string{
@@ -211,7 +220,10 @@ func TwitchMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						TwitchLive, err := database.TwitchGet(VTuberGroup.ID, 0, config.PastStatus)
+						TwitchLive, err := database.TwitchGet(map[string]interface{}{
+							"GroupID": VTuberGroup.ID,
+							"Status":  config.PastStatus,
+						})
 						if err != nil {
 							log.Error(err)
 							SendError(map[string]string{

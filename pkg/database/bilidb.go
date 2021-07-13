@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 
+	"github.com/JustHumanz/Go-Simp/pkg/config"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -52,18 +53,34 @@ func (Data *LiveStream) SetBiliLive(new bool) *LiveStream {
 }
 
 //BilGet Get LiveBiliBili by Status (live,past)
-func BilGet(GroupID int64, MemberID int64, Status string) ([]LiveStream, error) {
+func BilGet(Payload map[string]interface{}) ([]LiveStream, error) {
+	var Group, Member int64
+	Status := Payload["Status"].(string)
+
+	if Payload["GroupID"] != nil {
+		Group = Payload["GroupID"].(int64)
+	} else {
+		Member = Payload["MemberID"].(int64)
+	}
+
 	var (
 		Limit int
 	)
 
-	if GroupID > 0 && Status != "Live" {
+	if Group > 0 && Status != "Live" {
 		Limit = 3
 	} else {
 		Limit = 2525
 	}
 
-	rows, err := DB.Query(`SELECT LiveBiliBili.* FROM Vtuber.LiveBiliBili Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND LiveBiliBili.Status=? Order by ScheduledStart ASC Limit ?`, GroupID, MemberID, Status, Limit)
+	Query := ""
+	if Status == config.LiveStatus {
+		Query = "SELECT LiveBiliBili.* FROM Vtuber.LiveBiliBili Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND LiveBiliBili.Status=? Order by ScheduledStart ASC Limit ?"
+	} else {
+		Query = "SELECT LiveBiliBili.* FROM Vtuber.LiveBiliBili Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND LiveBiliBili.Status=? Order by ScheduledStart DESC Limit ?"
+	}
+
+	rows, err := DB.Query(Query, Group, Member, Status, Limit)
 	if err != nil {
 		return nil, err
 	}

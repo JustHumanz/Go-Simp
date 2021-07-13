@@ -70,7 +70,7 @@ func AddData(Data Vtuber) {
 				Add Member
 			*/
 			var MemberID int64
-			row := db.QueryRow("SELECT id FROM VtuberMember WHERE VtuberName=? AND VtuberName_EN=? AND (Youtube_ID=? OR  BiliBili_SpaceID=? OR BiliBili_RoomID=?)", VtuberMember.Name, VtuberMember.ENName, VtuberMember.Youtube.YtID, VtuberMember.BiliBili.BiliBiliID, VtuberMember.BiliBili.BiliRoomID)
+			row := db.QueryRow("SELECT id FROM VtuberMember WHERE VtuberName=? AND VtuberName_EN=? AND (Youtube_ID=? OR  BiliBili_SpaceID=? OR BiliBili_RoomID=?)", VtuberMember.Name, VtuberMember.EnName, VtuberMember.Youtube.YtID, VtuberMember.BiliBili.BiliBiliID, VtuberMember.BiliBili.BiliRoomID)
 			err = row.Scan(&MemberID)
 			if err == sql.ErrNoRows {
 				stmt, err := db.Prepare("INSERT INTO VtuberMember (VtuberName,VtuberName_EN,VtuberName_JP,Twitter_Hashtag,Twitter_Lewd,BiliBili_Hashtag,Youtube_ID,Youtube_Avatar,VtuberGroup_id,Region,BiliBili_SpaceID,BiliBili_RoomID,BiliBili_Avatar,Twitter_Username,Twitch_Username,Twitch_Avatar,Fanbase,Status) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
@@ -86,8 +86,8 @@ func AddData(Data Vtuber) {
 				if err != nil {
 					log.Error(err)
 				}
-				res, err := stmt.Exec(VtuberMember.Name, VtuberMember.ENName,
-					VtuberMember.JPName, VtuberMember.Twitter.TwitterFanart,
+				res, err := stmt.Exec(VtuberMember.Name, VtuberMember.EnName,
+					VtuberMember.JpName, VtuberMember.Twitter.TwitterFanart,
 					VtuberMember.Twitter.TwitterLewd, VtuberMember.BiliBili.BiliBiliFanart,
 					VtuberMember.Youtube.YtID, VtuberMember.Youtube.YtAvatar(),
 					GroupData.ID, VtuberMember.Region, VtuberMember.BiliBili.BiliBiliID,
@@ -126,8 +126,8 @@ func AddData(Data Vtuber) {
 							SetMember(database.Member{
 								ID:      MemberID,
 								Name:    VtuberMember.Name,
-								EnName:  VtuberMember.ENName,
-								JpName:  VtuberMember.JPName,
+								EnName:  VtuberMember.EnName,
+								JpName:  VtuberMember.JpName,
 								GroupID: GroupData.ID,
 							})
 						err = User.SendToCache(msg.ID)
@@ -162,11 +162,11 @@ func AddData(Data Vtuber) {
 				} else {
 					log.WithFields(log.Fields{
 						"VtuberGroup": "Independen",
-						"Vtuber":      VtuberMember.ENName,
+						"Vtuber":      VtuberMember.EnName,
 					}).Info("Update member")
 					_, err = db.Exec(`Update VtuberMember set VtuberName=?, VtuberName_EN=?, VtuberName_JP=? ,Twitter_Hashtag=?,Twitter_Lewd=? ,BiliBili_Hashtag=? ,Region=? ,Youtube_ID=? ,BiliBili_SpaceID=?,BiliBili_RoomID=?, BiliBili_Avatar=? ,Youtube_Avatar=?, Twitter_Username=?,Twitch_Username=?,Twitch_Avatar=?,Fanbase=?,Status=?  Where id=?`,
-						VtuberMember.Name, VtuberMember.ENName,
-						VtuberMember.JPName, VtuberMember.Twitter.TwitterFanart,
+						VtuberMember.Name, VtuberMember.EnName,
+						VtuberMember.JpName, VtuberMember.Twitter.TwitterFanart,
 						VtuberMember.Twitter.TwitterLewd,
 						VtuberMember.BiliBili.BiliBiliFanart, VtuberMember.Region,
 						VtuberMember.Youtube.YtID, VtuberMember.BiliBili.BiliBiliID,
@@ -182,7 +182,7 @@ func AddData(Data Vtuber) {
 			}
 			log.WithFields(log.Fields{
 				"VtuberGroup": "Independen",
-				"Vtuber":      VtuberMember.ENName,
+				"Vtuber":      VtuberMember.EnName,
 			}).Info("Add subs info to database")
 
 			/*
@@ -358,7 +358,7 @@ func AddData(Data Vtuber) {
 						log.Error(err)
 					}
 
-					res, err := stmt.Exec(v.Name, v.ENName, v.JPName,
+					res, err := stmt.Exec(v.Name, v.EnName, v.JpName,
 						v.Twitter.TwitterFanart, v.Twitter.TwitterLewd,
 						v.BiliBili.BiliBiliFanart, v.Youtube.YtID, v.Youtube.YtAvatar(),
 						GroupData.ID, v.Region, v.BiliBili.BiliBiliID,
@@ -394,8 +394,8 @@ func AddData(Data Vtuber) {
 							SetMember(database.Member{
 								ID:      MemberID,
 								Name:    v.Name,
-								EnName:  v.ENName,
-								JpName:  v.JPName,
+								EnName:  v.EnName,
+								JpName:  v.JpName,
 								GroupID: GroupData.ID,
 							})
 						err = User.SendToCache(msg.ID)
@@ -431,7 +431,7 @@ func AddData(Data Vtuber) {
 						log.Error(err)
 					} else {
 						_, err = db.Exec(`Update VtuberMember set VtuberName=?, VtuberName_EN=?, VtuberName_JP=? ,Twitter_Hashtag=?,Twitter_Lewd=?,BiliBili_Hashtag=? ,Region=? ,Youtube_ID=? ,BiliBili_SpaceID=?,BiliBili_RoomID=?, BiliBili_Avatar=? ,Youtube_Avatar=?, Twitter_Username=?,Twitch_Username=?,Twitch_Avatar=?,Fanbase=?,Status=? Where id=?`,
-							v.Name, v.ENName, v.JPName,
+							v.Name, v.EnName, v.JpName,
 							v.Twitter.TwitterFanart, v.Twitter.TwitterLewd,
 							v.BiliBili.BiliBiliFanart, v.Region,
 							v.Youtube.YtID, v.BiliBili.BiliBiliID,

@@ -22,14 +22,15 @@ import (
 )
 
 var (
-	BotInfo        *discordgo.User
-	RegList        = make(map[string]string)
-	GroupsName     []string
-	GuildList      []string
-	GroupsPayload  *[]database.Group
-	configfile     config.ConfigFile
-	Bot            *discordgo.Session
-	PredictionConn prediction.PredictionClient
+	BotInfo            *discordgo.User
+	RegList            = make(map[string]string)
+	GroupsName         []string
+	GuildList          []string
+	GroupsPayload      *[]database.Group
+	configfile         config.ConfigFile
+	Bot                *discordgo.Session
+	PredictionConn     prediction.PredictionClient
+	VtuberGroupChoices []*discordgo.ApplicationCommandOptionChoice
 )
 
 //Prefix command
@@ -57,6 +58,8 @@ const (
 	Kings         = "kings"
 	Upvote        = "upvote"
 	Predick       = "prediction"
+
+	CDN = "https://cdn.humanz.moe/pixiv/?pixivURL="
 )
 
 func init() {
@@ -139,6 +142,13 @@ func main() {
 				GuildList = append(GuildList, GuildID.ID)
 			}
 
+			for _, v := range *GroupsPayload {
+				VtuberGroupChoices = append(VtuberGroupChoices, &discordgo.ApplicationCommandOptionChoice{
+					Name:  v.GroupName,
+					Value: v.ID,
+				})
+			}
+
 			database.Start(configfile)
 
 			err = Bot.UpdateStreamingStatus(0, config.GoSimpConf.BotPrefix.General+"help", config.VtubersData)
@@ -179,6 +189,116 @@ func main() {
 	}
 
 	go pilot.RunHeartBeat(gRCPconn, "Frontend")
+
+	Bot.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		if h, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
+			h(s, i)
+		}
+	})
+
+	log.Info("Create Art slash command")
+	_, err := Bot.ApplicationCommandCreate(Bot.State.User.ID, "721009835889393705", &discordgo.ApplicationCommand{
+		Name:        "art",
+		Description: "get random vtuber fanart",
+		Options: []*discordgo.ApplicationCommandOption{
+
+			{
+				Type:        discordgo.ApplicationCommandOptionInteger,
+				Name:        "group-name",
+				Description: "Choice vtuber GroupName",
+				Choices:     VtuberGroupChoices,
+				Required:    true,
+			},
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "vtuber-name",
+				Description: "Choice vtuber",
+				Required:    false,
+			},
+		},
+	})
+	if err != nil {
+		log.Fatalln("Cannot create art slash command", err)
+	}
+
+	log.Info("Create live slash command")
+	_, err = Bot.ApplicationCommandCreate(Bot.State.User.ID, "721009835889393705", &discordgo.ApplicationCommand{
+		Name:        "livestream",
+		Description: "get random vtuber fanart",
+		Options: []*discordgo.ApplicationCommandOption{
+
+			{
+				Type:        discordgo.ApplicationCommandOptionInteger,
+				Name:        "state",
+				Description: "Choice livestream platform",
+				Choices: []*discordgo.ApplicationCommandOptionChoice{
+					{
+						Name:  "Youtube",
+						Value: 1,
+					},
+					{
+						Name:  "BiliBili",
+						Value: 2,
+					},
+					{
+						Name:  "Twitch",
+						Value: 3,
+					},
+				},
+				Required: true,
+			},
+			{
+				Type:        discordgo.ApplicationCommandOptionInteger,
+				Name:        "status",
+				Description: "Choice livestream status",
+				Choices: []*discordgo.ApplicationCommandOptionChoice{
+					{
+						Name:  "Live",
+						Value: 1,
+					},
+					{
+						Name:  "Upcoming",
+						Value: 2,
+					},
+					{
+						Name:  "Past",
+						Value: 3,
+					},
+				},
+				Required: true,
+			},
+			{
+				Type:        discordgo.ApplicationCommandOptionInteger,
+				Name:        "group-name",
+				Description: "Choice vtuber GroupName",
+				Choices:     VtuberGroupChoices,
+				Required:    true,
+			},
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "vtuber-name",
+				Description: "Choice vtuber",
+				Required:    false,
+			},
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "region",
+				Description: "Select region of vtuber group",
+				Required:    false,
+			},
+		},
+	})
+	if err != nil {
+		log.Fatalln("Cannot create live slash command", err)
+	}
+
+	for _, v := range commands {
+		_, err := Bot.ApplicationCommandCreate(Bot.State.User.ID, "721009835889393705", v)
+		if err != nil {
+			log.Panicf("Cannot create '%v' command: %v", v.Name, err)
+		}
+	}
+
 	runfunc.Run(Bot)
 }
 

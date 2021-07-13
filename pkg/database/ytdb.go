@@ -60,6 +60,8 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 			Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Youtube.Status=? Order by EndStream DESC Limit ?"
 		} else if Status == config.UpcomingStatus {
 			Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Youtube.Status=? Order by PublishedAt DESC Limit ?"
+		} else {
+			Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Youtube.Status=? Order by ScheduledStart DESC Limit ?"
 		}
 
 		if Region != "" {
@@ -87,7 +89,7 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 				return nil, Key2, err
 			}
 			UpcominginHours := int(time.Until(list.Schedul).Hours())
-			if UpcominginHours > 730 && Status != config.PastStatus {
+			if UpcominginHours > 730 && Status != config.PastStatus || Status == config.Live && UpcominginHours > 168 {
 				continue
 			}
 

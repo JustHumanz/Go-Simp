@@ -216,7 +216,7 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 
 	return engine.NewEmbed().
 		SetAuthor(Data.Group.GroupName, Data.Group.IconURL).
-		SetTitle(engine.FixName(Data.Member.ENName, Data.Member.JPName)).
+		SetTitle(engine.FixName(Data.Member.EnName, Data.Member.JpName)).
 		SetImage(Avatar).
 		SetDescription("New Vtuber has been added to list").
 		AddField("Nickname", Data.Member.Name).
