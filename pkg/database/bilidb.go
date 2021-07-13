@@ -30,7 +30,7 @@ func GetRoomData(MemberID int64, RoomID int) (*LiveStream, error) {
 
 //UpdateLiveBili Update LiveBiliBili Data
 func (Data *LiveStream) UpdateLiveBili() error {
-	_, err := DB.Exec(`Update LiveBiliBili set Status=? , Title=? ,Thumbnails=?, Description=?, Published=?, ScheduledStart=?, EndStream=?,Viewers=? Where id=? AND VtuberMember_id=?`, Data.Status, Data.Title, Data.Thumb, Data.Desc, Data.Published, Data.Schedul, Data.End, Data.VideoID, Data.ID, Data.Member.ID)
+	_, err := DB.Exec(`Update LiveBiliBili set Status=? , Title=? ,Thumbnails=?, Description=?, Published=?, ScheduledStart=?, EndStream=?,Viewers=? Where id=? AND VtuberMember_id=?`, Data.Status, Data.Title, Data.Thumb, Data.Desc, Data.Published, Data.Schedul, Data.End, Data.Viewers, Data.ID, Data.Member.ID)
 	if err != nil {
 		return err
 	}
