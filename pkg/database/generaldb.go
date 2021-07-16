@@ -394,7 +394,7 @@ func (Data *DiscordChannel) AddChannel() error {
 	}
 
 	if Data.Dynamic {
-		return errors.New("force to set Dynamic")
+		return errors.New("force to set Dynamic and live only true & disable new upcoming")
 	}
 
 	return nil

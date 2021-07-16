@@ -450,3 +450,19 @@ func (p *Member) GetRandomFanart() (*DataFanart, error) {
 	}
 	return b, nil
 }
+
+func (p *Group) GetRandomLewd() (*DataFanart, error) {
+	b, err := GetLewd(p.ID, 0)
+	if err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func (p *Member) GetRandomLewd() (*DataFanart, error) {
+	b, err := GetLewd(0, p.ID)
+	if err != nil {
+		return nil, err
+	}
+	return b, nil
+}

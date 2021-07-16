@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -13,129 +12,68 @@ import (
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	"github.com/bwmarrin/discordgo"
 	"github.com/hako/durafmt"
+	"github.com/olekukonko/tablewriter"
 	log "github.com/sirupsen/logrus"
 )
 
 var (
-	commands = []*discordgo.ApplicationCommand{
-		{
-			Name: "basic-command",
-			// All commands and options must have a description
-			// Commands/options without description will fail the registration
-			// of the command.
-			Description: "Basic command",
-		},
-		{
-			Name:        "options",
-			Description: "Command for demonstrating options",
-			Options: []*discordgo.ApplicationCommandOption{
-
-				{
-					Type:        discordgo.ApplicationCommandOptionString,
-					Name:        "string-option",
-					Description: "String option",
-					Required:    true,
-				},
-				{
-					Type:        discordgo.ApplicationCommandOptionInteger,
-					Name:        "integer-option",
-					Description: "Integer option",
-					Required:    true,
-				},
-				{
-					Type:        discordgo.ApplicationCommandOptionBoolean,
-					Name:        "bool-option",
-					Description: "Boolean option",
-					Required:    true,
-				},
-
-				// Required options must be listed first since optional parameters
-				// always come after when they're used.
-				// The same concept applies to Discord's Slash-commands API
-
-				{
-					Type:        discordgo.ApplicationCommandOptionChannel,
-					Name:        "channel-option",
-					Description: "Channel option",
-					Required:    false,
-				},
-				{
-					Type:        discordgo.ApplicationCommandOptionUser,
-					Name:        "user-option",
-					Description: "User option",
-					Required:    false,
-				},
-				{
-					Type:        discordgo.ApplicationCommandOptionRole,
-					Name:        "role-option",
-					Description: "Role option",
-					Required:    false,
-				},
-			},
-		},
-		{
-			Name:        "subcommands",
-			Description: "Subcommands and command groups example",
-			Options: []*discordgo.ApplicationCommandOption{
-				// When a command has subcommands/subcommand groups
-				// It must not have top-level options, they aren't accesible in the UI
-				// in this case (at least not yet), so if a command has
-				// subcommands/subcommand any groups registering top-level options
-				// will cause the registration of the command to fail
-
-				{
-					Name:        "scmd-grp",
-					Description: "Subcommands group",
-					Options: []*discordgo.ApplicationCommandOption{
-						// Also, subcommand groups aren't capable of
-						// containing options, by the name of them, you can see
-						// they can only contain subcommands
-						{
-							Name:        "nst-subcmd",
-							Description: "Nested subcommand",
-							Type:        discordgo.ApplicationCommandOptionSubCommand,
-						},
-					},
-					Type: discordgo.ApplicationCommandOptionSubCommandGroup,
-				},
-				// Also, you can create both subcommand groups and subcommands
-				// in the command at the same time. But, there's some limits to
-				// nesting, count of subcommands (top level and nested) and options.
-				// Read the intro of slash-commands docs on Discord dev portal
-				// to get more information
-				{
-					Name:        "subcmd",
-					Description: "Top-level subcommand",
-					Type:        discordgo.ApplicationCommandOptionSubCommand,
-				},
-			},
-		},
-		{
-			Name:        "responses",
-			Description: "Interaction responses testing initiative",
-			Options: []*discordgo.ApplicationCommandOption{
-				{
-					Name:        "resp-type",
-					Description: "Response type",
-					Type:        discordgo.ApplicationCommandOptionInteger,
-					Choices:     VtuberGroupChoices,
-					Required:    true,
-				},
-			},
-		},
-		{
-			Name:        "followups",
-			Description: "Followup messages",
-		},
-	}
 	commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
-		"basic-command": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseChannelMessageWithSource,
-				Data: &discordgo.InteractionResponseData{
-					Content: "Hey there! Congratulations, you just executed your first slash command",
-				},
-			})
+		"mytags": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			list, err := database.UserStatus(i.Member.User.ID, i.ChannelID)
+			if err != nil {
+				log.Error(err)
+			}
+
+			Color, err := engine.GetColor(config.TmpDir, i.Member.User.AvatarURL("128"))
+			if err != nil {
+				log.Error(err)
+			}
+
+			if list != nil {
+				tableString := &strings.Builder{}
+				table := tablewriter.NewWriter(tableString)
+				table.SetAutoWrapText(false)
+				table.SetAutoFormatHeaders(true)
+				table.SetCenterSeparator("")
+				table.SetColumnSeparator("")
+				table.SetRowSeparator("")
+				table.SetHeaderLine(true)
+				table.SetBorder(false)
+				table.SetTablePadding("\t")
+				table.SetNoWhiteSpace(true)
+				table.SetHeader([]string{"Vtuber Group", "Vtuber Name", "Reminder"})
+				table.AppendBulk(list)
+				table.Render()
+
+				err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
+							SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+							SetThumbnail(i.Member.User.AvatarURL("128")).
+							SetDescription("```" + tableString.String() + "```").
+							SetColor(Color).MessageEmbed},
+					},
+				})
+				if err != nil {
+					log.Error(err)
+				}
+			} else {
+
+				err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
+							SetDescription("Your tag list is empty.").
+							SetTitle("404 Not found").
+							SetImage(engine.NotFoundIMG()).
+							SetColor(Color).MessageEmbed},
+					},
+				})
+				if err != nil {
+					log.Error(err)
+				}
+			}
 		},
 		"livestream": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			state := i.ApplicationCommandData().Options[0].IntValue()
@@ -192,7 +130,7 @@ var (
 			if len(i.ApplicationCommandData().Options) == 4 {
 				for _, v := range *GroupsPayload {
 					for _, v2 := range v.Members {
-						if v2.ID == i.ApplicationCommandData().Options[3].IntValue() {
+						if v2.Name == i.ApplicationCommandData().Options[3].StringValue() {
 							member = v2
 						}
 					}
@@ -335,7 +273,7 @@ var (
 									AddField("Viewers", Viewers).
 									SetFooter(Youtube.Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
 									SetColor(Color).MessageEmbed)
-							} else {
+							} else if status == config.LiveStatus {
 								expiresAt := time.Now().In(loc)
 								duration := durafmt.Parse(expiresAt.In(loc).Sub(Youtube.Schedul)).LimitFirstN(2)
 								embed = append(embed, engine.NewEmbed().
@@ -344,6 +282,21 @@ var (
 									SetDescription(Youtube.Title).
 									SetImage(Youtube.Thumb).
 									SetThumbnail(member.YoutubeAvatar).
+									SetURL("https://www.youtube.com/watch?v="+Youtube.VideoID).
+									AddField("Start live in", duration.String()).
+									AddField("Viewers", Viewers+" "+FanBase).
+									InlineAllFields().
+									AddField("Type", engine.YtFindType(Youtube.Title)).
+									SetFooter(Youtube.Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
+									SetColor(Color).MessageEmbed)
+							} else {
+								duration := durafmt.Parse(Youtube.Schedul.In(loc).Sub(time.Now().In(loc))).LimitFirstN(2)
+								embed = append(embed, engine.NewEmbed().
+									SetAuthor(Nick, Avatar).
+									SetTitle(FixName).
+									SetDescription(Youtube.Title).
+									SetImage(Youtube.Thumb).
+									SetThumbnail(Member.YoutubeAvatar).
 									SetURL("https://www.youtube.com/watch?v="+Youtube.VideoID).
 									AddField("Start live in", duration.String()).
 									AddField("Viewers", Viewers+" "+FanBase).
@@ -754,169 +707,1362 @@ var (
 				}
 			}
 		},
-		"options": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			margs := []interface{}{
-				// Here we need to convert raw interface{} value to wanted type.
-				// Also, as you can see, here is used utility functions to convert the value
-				// to particular type. Yeah, you can use just switch type,
-				// but this is much simpler
-				i.ApplicationCommandData().Options[0].StringValue(),
-				i.ApplicationCommandData().Options[1].IntValue(),
-				i.ApplicationCommandData().Options[2].BoolValue(),
+		"lewd": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			ChannelRaw, err := s.Channel(i.ChannelID)
+			if err != nil {
+				log.Error(err)
 			}
-			msgformat :=
-				` Now you just learned how to use command options. Take a look to the value of which you've just entered:
-				> string_option: %s
-				> integer_option: %d
-				> bool_option: %v
-`
-			if len(i.ApplicationCommandData().Options) >= 4 {
-				margs = append(margs, i.ApplicationCommandData().Options[3].ChannelValue(nil).ID)
-				msgformat += "> channel-option: <#%s>\n"
-			}
-			if len(i.ApplicationCommandData().Options) >= 5 {
-				margs = append(margs, i.ApplicationCommandData().Options[4].UserValue(nil).ID)
-				msgformat += "> user-option: <@%s>\n"
-			}
-			if len(i.ApplicationCommandData().Options) >= 6 {
-				margs = append(margs, i.ApplicationCommandData().Options[5].RoleValue(nil, "").ID)
-				msgformat += "> role-option: <@&%s>\n"
-			}
-			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-				// Ignore type for now, we'll discuss them in "responses" part
-				Type: discordgo.InteractionResponseChannelMessageWithSource,
-				Data: &discordgo.InteractionResponseData{
-					Content: fmt.Sprintf(
-						msgformat,
-						margs...,
-					),
-				},
-			})
-		},
-		"subcommands": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			content := ""
+			if ChannelRaw.NSFW {
+				var embed *discordgo.MessageEmbed
+				Avatar := i.Member.User.AvatarURL("128")
+				Nick := i.Member.User.Username
 
-			// As you can see, the name of subcommand (nested, top-level) or subcommand group
-			// is provided through arguments.
-			switch i.ApplicationCommandData().Options[0].Name {
-			case "subcmd":
-				content =
-					"The top-level subcommand is executed. Now try to execute the nested one."
-			default:
-				if i.ApplicationCommandData().Options[0].Name != "scmd-grp" {
+				SendNude := func(Data *database.DataFanart) {
+					Color, err := engine.GetColor(config.TmpDir, Avatar)
+					if err != nil {
+						log.Error(err)
+					}
+
+					if Data.State == config.TwitterArt {
+						embed = engine.NewEmbed().
+							SetAuthor(Nick, Avatar).
+							SetTitle(Data.Author).
+							SetThumbnail(engine.GetAuthorAvatar(Data.Author)).
+							SetDescription(RemovePic(Data.Text)).
+							SetURL(Data.PermanentURL).
+							SetImage(Data.Photos...).
+							SetColor(Color).
+							InlineAllFields().
+							SetFooter(Data.State, config.TwitterIMG).MessageEmbed
+					} else {
+						embed = engine.NewEmbed().
+							SetAuthor(Nick, Avatar).
+							SetTitle(Data.Author).
+							SetDescription(Data.Text).
+							SetURL(Data.PermanentURL).
+							SetImage(CDN+Data.Photos[0]).
+							SetColor(Color).
+							InlineAllFields().
+							SetFooter(Data.State, config.PixivIMG).MessageEmbed
+
+					}
+					err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+						Type: discordgo.InteractionResponseChannelMessageWithSource,
+						Data: &discordgo.InteractionResponseData{
+							Embeds: []*discordgo.MessageEmbed{
+								embed,
+							},
+						},
+					})
+					if err != nil {
+						log.Error(err)
+					}
+
+				}
+				if len(i.ApplicationCommandData().Options) == 2 {
+					VtuberName := i.ApplicationCommandData().Options[1].StringValue()
+					log.WithFields(log.Fields{
+						"Vtuber": VtuberName,
+					}).Info("Lewd")
+					for _, GroupData := range *GroupsPayload {
+						for _, v := range GroupData.Members {
+							if strings.EqualFold(v.Name, VtuberName) || strings.EqualFold(v.EnName, VtuberName) || strings.EqualFold(v.JpName, VtuberName) {
+								FanArt, err := v.GetRandomLewd()
+								if err != nil {
+									s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+										Type: discordgo.InteractionResponseChannelMessageWithSource,
+										Data: &discordgo.InteractionResponseData{
+											Content: "Oops,something error\n" + err.Error(),
+										},
+									})
+								} else {
+									SendNude(FanArt)
+								}
+							}
+						}
+					}
+				} else {
+					GroupID := i.ApplicationCommandData().Options[0].IntValue()
+					log.WithFields(log.Fields{
+						"VtuberGroupName": GroupID,
+					}).Info("Lewd")
+					for _, v := range *GroupsPayload {
+						if v.ID == GroupID {
+							FanArt, err := v.GetRandomFanart()
+							if err != nil {
+								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+									Type: discordgo.InteractionResponseChannelMessageWithSource,
+									Data: &discordgo.InteractionResponseData{
+										Content: "Oops,something error\n" + err.Error(),
+									},
+								})
+							} else {
+								SendNude(FanArt)
+							}
+						}
+					}
+				}
+			} else {
+				err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Embeds: []*discordgo.MessageEmbed{
+							engine.NewEmbed().
+								SetDescription("i know you horny,but this channel was not a NSFW channel").
+								SetImage(engine.LewdIMG()).MessageEmbed,
+						},
+					},
+				})
+				if err != nil {
+					log.Error(err)
+				}
+			}
+		},
+		"info": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			for _, v := range *GroupsPayload {
+				for _, v2 := range v.Members {
+					if strings.EqualFold(v2.Name, i.ApplicationCommandData().Options[0].StringValue()) {
+						var (
+							Avatar string
+						)
+						SubsData, err := v2.GetSubsCount()
+						if err != nil {
+							log.Error(err)
+						}
+
+						if gacha() {
+							Avatar = v2.YoutubeAvatar
+						} else {
+							if v2.BiliRoomID != 0 {
+								Avatar = v2.BiliBiliAvatar
+							} else {
+								Avatar = v2.YoutubeAvatar
+							}
+						}
+
+						Color, err := engine.GetColor(config.TmpDir, i.Member.User.Avatar)
+						if err != nil {
+							log.Error(err)
+						}
+						YTSubs := "[Youtube](https://www.youtube.com/channel/" + v2.YoutubeID + "?sub_confirmation=1)"
+						BiliFollow := "[BiliBili](https://space.bilibili.com/" + strconv.Itoa(v2.BiliBiliID) + ")"
+						TwitterFollow := "[Twitter](https://twitter.com/" + v2.TwitterName + ")"
+						if SubsData.BiliFollow != 0 {
+							err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+								Type: discordgo.InteractionResponseChannelMessageWithSource,
+								Data: &discordgo.InteractionResponseData{
+									Embeds: []*discordgo.MessageEmbed{
+										engine.NewEmbed().
+											SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+											SetTitle(engine.FixName(v2.EnName, v2.JpName)).
+											SetImage(Avatar).
+											AddField("Youtube subscribers", engine.NearestThousandFormat(float64(SubsData.YtSubs))).
+											AddField("Youtube viewers", engine.NearestThousandFormat(float64(SubsData.YtViews))).
+											AddField("Youtube videos", engine.NearestThousandFormat(float64(SubsData.YtVideos))).
+											AddField("BiliBili followers", engine.NearestThousandFormat(float64(SubsData.YtViews))).
+											AddField("BiliBili viewers", engine.NearestThousandFormat(float64(SubsData.BiliViews))).
+											AddField("BiliBili videos", engine.NearestThousandFormat(float64(SubsData.BiliVideos))).
+											InlineAllFields().
+											AddField("Twitter followers", engine.NearestThousandFormat(float64(SubsData.TwFollow))).
+											RemoveInline().
+											AddField("<:yt:796023828723269662>", YTSubs).
+											AddField("<:bili:796025336542265344>", BiliFollow).
+											AddField("<:tw:796025611210588187>", TwitterFollow).
+											InlineAllFields().
+											SetColor(Color).MessageEmbed,
+									},
+								},
+							})
+							if err != nil {
+								log.Error(err)
+							}
+
+						} else {
+							err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+								Type: discordgo.InteractionResponseChannelMessageWithSource,
+								Data: &discordgo.InteractionResponseData{
+									Embeds: []*discordgo.MessageEmbed{
+										engine.NewEmbed().
+											SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+											SetTitle(engine.FixName(v2.EnName, v2.JpName)).
+											SetImage(Avatar).
+											AddField("Youtube subscribers", engine.NearestThousandFormat(float64(SubsData.YtSubs))).
+											AddField("Youtube viewers", engine.NearestThousandFormat(float64(SubsData.YtViews))).
+											AddField("Youtube videos", engine.NearestThousandFormat(float64(SubsData.YtVideos))).
+											InlineAllFields().
+											AddField("Twitter followers", engine.NearestThousandFormat(float64(SubsData.TwFollow))).
+											RemoveInline().
+											AddField("<:yt:796023828723269662>", YTSubs).
+											AddField("<:bili:796025336542265344>", BiliFollow).
+											AddField("<:tw:796025611210588187>", TwitterFollow).
+											InlineAllFields().
+											SetColor(Color).MessageEmbed,
+									},
+								},
+							})
+							if err != nil {
+								log.Error(err)
+							}
+						}
+					}
+				}
+			}
+		},
+		"tag-me": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			if len(i.ApplicationCommandData().Options) < 1 {
+				s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Content: "Null payload,make sure your command",
+					},
+				})
+				return
+			}
+
+			var (
+				Already    []string
+				Done       []string
+				GroupID    int
+				Reminder   int
+				MemberName string
+			)
+
+			for _, v := range i.ApplicationCommandData().Options {
+				if v.Name == "vtuber-group" {
+					GroupID = int(v.IntValue())
+				}
+				if v.Name == "reminder" {
+					Reminder = int(v.IntValue())
+				}
+				if v.Name == "vtuber-name" {
+					MemberName = v.StringValue()
+				}
+			}
+
+			Color, err := engine.GetColor(config.TmpDir, i.Member.User.Avatar)
+			if err != nil {
+				log.Error(err)
+			}
+
+			One := true
+			for _, v := range *GroupsPayload {
+				for _, v2 := range v.Members {
+					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.GroupID) && GroupID != 0) {
+						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.GroupID) {
+							if (Reminder > 60 && Reminder < 10) && Reminder != 0 {
+								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+									Type: discordgo.InteractionResponseChannelMessageWithSource,
+									Data: &discordgo.InteractionResponseData{
+										Content: "Cannot set remnder over 60 minutes",
+									},
+								})
+								return
+							}
+
+							User := &database.UserStruct{
+								DiscordID:       i.Member.User.ID,
+								DiscordUserName: i.Member.User.Username,
+								Channel_ID:      i.ChannelID,
+								Human:           true,
+								Reminder:        Reminder,
+								Group:           v,
+							}
+							err := User.SetMember(v2).Adduser()
+							if err != nil {
+								log.Error(err)
+								Already = append(Already, v2.Name)
+							} else {
+								Done = append(Done, v2.Name)
+							}
+							if One {
+								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+									Type: discordgo.InteractionResponseChannelMessageWithSource,
+									Data: &discordgo.InteractionResponseData{
+										Content: "Processing",
+									},
+								})
+								One = false
+							}
+						} else {
+							s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+								Type: discordgo.InteractionResponseChannelMessageWithSource,
+								Data: &discordgo.InteractionResponseData{
+									Content: "look like this channel not enable " + v.GroupName,
+								},
+							})
+							return
+						}
+					}
+				}
+			}
+			if Already != nil {
+				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
+						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+						SetDescription(i.Member.User.Mention() + " Already Added\n" + strings.Join(Already, " ")).
+						SetThumbnail(config.GoSimpIMG).
+						InlineAllFields().
+						SetColor(Color).MessageEmbed},
+				})
+				if err != nil {
+					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+						Content: "Something went wrong",
+					})
 					return
 				}
-				switch i.ApplicationCommandData().Options[0].Options[0].Name {
-				case "nst-subcmd":
-					content = "Nice, now you know how to execute nested commands too"
-				default:
-					// I added this in the case something might go wrong
-					content = "Oops, something gone wrong.\n" +
-						"Hol' up, you aren't supposed to see this message."
+			}
+
+			if Done != nil {
+				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
+						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+						SetDescription(i.Member.User.Mention() + " notifications have been added to these members\n" + strings.Join(Done, " ")).
+						SetThumbnail(config.GoSimpIMG).
+						InlineAllFields().
+						SetColor(Color).MessageEmbed},
+				})
+				if err != nil {
+					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+						Content: "Something went wrong",
+					})
+					return
 				}
 			}
-			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseChannelMessageWithSource,
-				Data: &discordgo.InteractionResponseData{
-					Content: content,
-				},
-			})
 		},
-		"responses": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			// Responses to a command are very important.
-			// First of all, because you need to react to the interaction
-			// by sending the response in 3 seconds after receiving, otherwise
-			// interaction will be considered invalid and you can no longer
-			// use the interaction token and ID for responding to the user's request
+		"del-tag": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			var (
+				Already    []string
+				Done       []string
+				GroupID    int
+				MemberName string
+			)
+			One := true
 
-			content := ""
-			// As you can see, the response type names used here are pretty self-explanatory,
-			// but for those who want more information see the official documentation
-			switch i.ApplicationCommandData().Options[0].IntValue() {
-			case int64(discordgo.InteractionResponseChannelMessageWithSource):
-				content =
-					"You just responded to an interaction, sent a message and showed the original one. " +
-						"Congratulations!"
-				content +=
-					"\nAlso... you can edit your response, wait 5 seconds and this message will be changed"
-			default:
+			Color, err := engine.GetColor(config.TmpDir, i.Member.User.Avatar)
+			if err != nil {
+				log.Error(err)
+			}
+
+			for _, v := range i.ApplicationCommandData().Options {
+				if v.Name == "vtuber-group" {
+					GroupID = int(v.IntValue())
+				}
+				if v.Name == "vtuber-name" {
+					MemberName = v.StringValue()
+				}
+			}
+
+			for _, v := range *GroupsPayload {
+				for _, v2 := range v.Members {
+					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.GroupID) && GroupID != 0) {
+						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.GroupID) {
+
+							User := &database.UserStruct{
+								DiscordID:       i.Member.User.ID,
+								DiscordUserName: i.Member.User.Username,
+								Channel_ID:      i.ChannelID,
+								Human:           true,
+								Group:           v,
+							}
+							err := User.SetMember(v2).Deluser()
+							if err != nil {
+								Already = append(Already, v2.Name)
+							} else {
+								Done = append(Done, v2.Name)
+							}
+
+							if One {
+								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+									Type: discordgo.InteractionResponseChannelMessageWithSource,
+									Data: &discordgo.InteractionResponseData{
+										Content: "Processing",
+									},
+								})
+								One = false
+							}
+						} else {
+							s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+								Type: discordgo.InteractionResponseChannelMessageWithSource,
+								Data: &discordgo.InteractionResponseData{
+									Content: "look like this channel not enable " + v.GroupName,
+								},
+							})
+							return
+						}
+					}
+				}
+			}
+			if Already != nil {
+				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
+						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+						SetDescription(i.Member.User.Mention() + " You already removed this Group/Member from your list, or you never added them.\n" + strings.Join(Already, " ")).
+						SetThumbnail(config.GoSimpIMG).
+						InlineAllFields().
+						SetColor(Color).MessageEmbed},
+				})
+				if err != nil {
+					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+						Content: "Something went wrong",
+					})
+					return
+				}
+			}
+
+			if Done != nil {
+				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
+						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+						SetDescription(i.Member.User.Mention() + " You removed these Members from your list.\n" + strings.Join(Done, " ")).
+						SetThumbnail(config.GoSimpIMG).
+						InlineAllFields().
+						SetColor(Color).MessageEmbed},
+				})
+				if err != nil {
+					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+						Content: "Something went wrong",
+					})
+					return
+				}
+			}
+		},
+		"tag-role": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			Admin, err := MemberHasPermission(i.GuildID, i.Member.User.ID)
+			if err != nil {
+				log.Error(err)
+			}
+			if !Admin {
+				s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Content: "You don't have permission to enable/disable/update,make sure you have `Manage Channels` Role permission",
+					},
+				})
+				return
+			}
+			if len(i.ApplicationCommandData().Options) < 1 {
+				s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Content: "Null payload,make sure your command",
+					},
+				})
+				return
+			}
+
+			var (
+				Already    []string
+				Done       []string
+				GroupID    int
+				Reminder   int
+				MemberName string
+				RoleState  *discordgo.Role
+			)
+
+			for _, v := range i.ApplicationCommandData().Options {
+				if v.Name == "vtuber-group" {
+					GroupID = int(v.IntValue())
+				}
+				if v.Name == "reminder" {
+					Reminder = int(v.IntValue())
+				}
+				if v.Name == "vtuber-name" {
+					MemberName = v.StringValue()
+				}
+				if v.Name == "role-name" {
+					RoleState = v.RoleValue(nil, "")
+				}
+			}
+
+			Color, err := engine.GetColor(config.TmpDir, i.Member.User.Avatar)
+			if err != nil {
+				log.Error(err)
+			}
+
+			One := true
+			for _, v := range *GroupsPayload {
+				for _, v2 := range v.Members {
+					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.GroupID) && GroupID != 0) {
+						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.GroupID) {
+							if (Reminder > 60 && Reminder < 10) && Reminder != 0 {
+								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+									Type: discordgo.InteractionResponseChannelMessageWithSource,
+									Data: &discordgo.InteractionResponseData{
+										Content: "Cannot set remnder over 60 minutes",
+									},
+								})
+								return
+							}
+
+							User := &database.UserStruct{
+								DiscordID:       RoleState.ID,
+								DiscordUserName: RoleState.Name,
+								Channel_ID:      i.ChannelID,
+								Human:           false,
+								Reminder:        Reminder,
+								Group:           v,
+							}
+							err := User.SetMember(v2).Adduser()
+							if err != nil {
+								log.Error(err)
+								Already = append(Already, v2.Name)
+							} else {
+								Done = append(Done, v2.Name)
+							}
+							if One {
+								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+									Type: discordgo.InteractionResponseChannelMessageWithSource,
+									Data: &discordgo.InteractionResponseData{
+										Content: "Processing",
+									},
+								})
+								One = false
+							}
+						} else {
+							s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+								Type: discordgo.InteractionResponseChannelMessageWithSource,
+								Data: &discordgo.InteractionResponseData{
+									Content: "look like this channel not enable " + v.GroupName,
+								},
+							})
+							return
+						}
+					}
+				}
+			}
+			if Already != nil {
+				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
+						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+						SetDescription(RoleState.Mention() + " Already Added\n" + strings.Join(Already, " ")).
+						SetThumbnail(config.GoSimpIMG).
+						InlineAllFields().
+						SetColor(Color).MessageEmbed},
+				})
+				if err != nil {
+					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+						Content: "Something went wrong",
+					})
+					return
+				}
+			}
+
+			if Done != nil {
+				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
+						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+						SetDescription(RoleState.Mention() + " notifications have been added to these members\n" + strings.Join(Done, " ")).
+						SetThumbnail(config.GoSimpIMG).
+						InlineAllFields().
+						SetColor(Color).MessageEmbed},
+				})
+				if err != nil {
+					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+						Content: "Something went wrong",
+					})
+					return
+				}
+			}
+		},
+		"del-role": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			Admin, err := MemberHasPermission(i.GuildID, i.Member.User.ID)
+			if err != nil {
+				log.Error(err)
+			}
+			if !Admin {
+				s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Content: "You don't have permission to enable/disable/update,make sure you have `Manage Channels` Role permission",
+					},
+				})
+				return
+			}
+
+			One := true
+
+			Color, err := engine.GetColor(config.TmpDir, i.Member.User.Avatar)
+			if err != nil {
+				log.Error(err)
+			}
+
+			var (
+				Already    []string
+				Done       []string
+				GroupID    int
+				MemberName string
+				RoleState  *discordgo.Role
+			)
+
+			for _, v := range i.ApplicationCommandData().Options {
+				if v.Name == "vtuber-group" {
+					GroupID = int(v.IntValue())
+				}
+				if v.Name == "vtuber-name" {
+					MemberName = v.StringValue()
+				}
+				if v.Name == "role-name" {
+					RoleState = v.RoleValue(nil, "")
+				}
+			}
+
+			for _, v := range *GroupsPayload {
+				for _, v2 := range v.Members {
+					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.GroupID) && GroupID != 0) {
+						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.GroupID) {
+
+							User := &database.UserStruct{
+								DiscordID:       RoleState.ID,
+								DiscordUserName: RoleState.Name,
+								Channel_ID:      i.ChannelID,
+								Human:           false,
+								Group:           v,
+							}
+							err := User.SetMember(v2).Deluser()
+							if err != nil {
+								Already = append(Already, v2.Name)
+							} else {
+								Done = append(Done, v2.Name)
+							}
+
+							if One {
+								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+									Type: discordgo.InteractionResponseChannelMessageWithSource,
+									Data: &discordgo.InteractionResponseData{
+										Content: "Processing",
+									},
+								})
+								One = false
+							}
+						} else {
+							s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+								Type: discordgo.InteractionResponseChannelMessageWithSource,
+								Data: &discordgo.InteractionResponseData{
+									Content: "look like this channel not enable " + v.GroupName,
+								},
+							})
+							return
+						}
+					}
+				}
+			}
+			if Already != nil {
+				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
+						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+						SetDescription(RoleState.Mention() + " You already removed this Group/Member from your list, or you never added them.\n" + strings.Join(Already, " ")).
+						SetThumbnail(config.GoSimpIMG).
+						InlineAllFields().
+						SetColor(Color).MessageEmbed},
+				})
+				if err != nil {
+					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+						Content: "Something went wrong",
+					})
+					return
+				}
+			}
+
+			if Done != nil {
+				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
+						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+						SetDescription(RoleState.Mention() + " You removed these Members from your list.\n" + strings.Join(Done, " ")).
+						SetThumbnail(config.GoSimpIMG).
+						InlineAllFields().
+						SetColor(Color).MessageEmbed},
+				})
+				if err != nil {
+					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+						Content: "Something went wrong",
+					})
+					return
+				}
+			}
+		},
+		"role-info": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			role := i.ApplicationCommandData().Options[0].RoleValue(nil, "")
+
+			list, err := database.UserStatus(role.ID, i.ChannelID)
+			if err != nil {
+				log.Error(err)
+			}
+
+			Color, err := engine.GetColor(config.TmpDir, i.Member.User.AvatarURL("128"))
+			if err != nil {
+				log.Error(err)
+			}
+
+			if list != nil {
+				tableString := &strings.Builder{}
+				table := tablewriter.NewWriter(tableString)
+				table.SetAutoWrapText(false)
+				table.SetAutoFormatHeaders(true)
+				table.SetCenterSeparator("")
+				table.SetColumnSeparator("")
+				table.SetRowSeparator("")
+				table.SetHeaderLine(true)
+				table.SetBorder(false)
+				table.SetTablePadding("\t")
+				table.SetNoWhiteSpace(true)
+				table.SetHeader([]string{"Vtuber Group", "Vtuber Name", "Reminder"})
+				table.AppendBulk(list)
+				table.Render()
+
 				err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-					Type: discordgo.InteractionResponseType(i.ApplicationCommandData().Options[0].IntValue()),
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
+							SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+							SetThumbnail(i.Member.User.AvatarURL("128")).
+							SetDescription("```" + tableString.String() + "```").
+							SetColor(Color).MessageEmbed},
+					},
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
-						Content: "Something went wrong",
-					})
+					log.Error(err)
 				}
+			} else {
+				err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
+							SetDescription("Your tag list is empty.").
+							SetTitle("404 Not found").
+							SetImage(engine.NotFoundIMG()).
+							SetColor(Color).MessageEmbed},
+					},
+				})
+				if err != nil {
+					log.Error(err)
+				}
+			}
+		},
+		"setup": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			Admin, err := MemberHasPermission(i.GuildID, i.Member.User.ID)
+			if err != nil {
+				log.Error(err)
+			}
+			if !Admin {
+				s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Content: "You don't have permission to enable/disable/update,make sure you have `Manage Channels` Role permission",
+					},
+				})
 				return
 			}
 
-			err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseType(i.ApplicationCommandData().Options[0].IntValue()),
-				Data: &discordgo.InteractionResponseData{
-					Content: content,
-				},
-			})
-			if err != nil {
-				s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
-					Content: "Something went wrong",
-				})
-				return
-			}
-			time.AfterFunc(time.Second*5, func() {
-				err = s.InteractionResponseEdit(s.State.User.ID, i.Interaction, &discordgo.WebhookEdit{
-					Content: content + "\n\nWell, now you know how to create and edit responses. " +
-						"But you still don't know how to delete them... so... wait 10 seconds and this " +
-						"message will be deleted.",
-				})
-				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
-						Content: "Something went wrong",
+			Add := func(ChannelData *database.DiscordChannel, Group database.Group) {
+				if ChannelData.ChannelCheck() {
+					s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+						Type: discordgo.InteractionResponseChannelMessageWithSource,
+						Data: &discordgo.InteractionResponseData{
+							Content: "Already setup `" + Group.GroupName + "`,for add/del region use `Update` command",
+						},
 					})
 					return
 				}
-				time.Sleep(time.Second * 10)
-				s.InteractionResponseDelete(s.State.User.ID, i.Interaction)
-			})
-		},
-		"followups": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			// Followup messages are basically regular messages (you can create as many of them as you wish)
-			// but work as they are created by webhooks and their functionality
-			// is for handling additional messages after sending a response.
 
-			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				err := ChannelData.AddChannel()
+				if err != nil {
+					log.Error(err)
+					s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+						Type: discordgo.InteractionResponseChannelMessageWithSource,
+						Data: &discordgo.InteractionResponseData{
+							Content: err.Error(),
+						},
+					})
+					return
+				}
+				s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Content: "Done",
+					},
+				})
+
+			}
+
+			for _, v := range i.ApplicationCommandData().Options[0].Options {
+				var (
+					Channel                                                            *discordgo.Channel
+					Group                                                              database.Group
+					liveonly, newupcoming, dynamic, liteMode, indieNotif, fanart, lewd bool
+					region                                                             string
+				)
+				if v.Name == "livestream" {
+					for _, v2 := range v.Options {
+						if v2.Name == "channel-name" {
+							Channel = v2.ChannelValue(nil)
+						}
+
+						if v2.Name == "vtuber-group" {
+							for _, v3 := range *GroupsPayload {
+								if v3.ID == v2.IntValue() {
+									Group = v3
+								}
+							}
+						}
+
+						if v2.Name == "liveonly" {
+							liveonly = v2.BoolValue()
+						}
+
+						if v2.Name == "newupcoming" {
+							newupcoming = v2.BoolValue()
+						}
+
+						if v2.Name == "dynamic" {
+							dynamic = v2.BoolValue()
+						}
+
+						if v2.Name == "lite-mode" {
+							liteMode = v2.BoolValue()
+						}
+
+						if v2.Name == "indie-notif" {
+							indieNotif = v2.BoolValue()
+						}
+
+						if v2.Name == "fanart" {
+							fanart = v2.BoolValue()
+						}
+					}
+
+					for Key, Val := range RegList {
+						if Key == Group.GroupName {
+							region = Val
+						}
+					}
+
+					ChannelData := &database.DiscordChannel{
+						ChannelID: Channel.ID,
+						TypeTag: func() int {
+							if fanart {
+								return 3
+							} else {
+								return 2
+							}
+						}(),
+						LiveOnly:    liveonly,
+						NewUpcoming: newupcoming,
+						Dynamic:     dynamic,
+						LiteMode:    liteMode,
+						IndieNotif: func() bool {
+							if Group.GroupName != config.Indie {
+								return false
+							}
+							return indieNotif
+						}(),
+						Group:  Group,
+						Region: region,
+					}
+
+					Add(ChannelData, Group)
+
+				} else if v.Name == "fanart" {
+					for _, v2 := range v.Options {
+						if v2.Name == "channel-name" {
+							Channel = v2.ChannelValue(nil)
+						}
+
+						if v2.Name == "vtuber-group" {
+							for _, v3 := range *GroupsPayload {
+								if v3.ID == v2.IntValue() {
+									Group = v3
+								}
+							}
+						}
+
+						if v2.Name == "lewd" {
+							lewd = v2.BoolValue()
+						}
+						ChannelData := &database.DiscordChannel{
+							ChannelID: Channel.ID,
+							TypeTag: func() int {
+								if lewd {
+									return 70
+								} else {
+									return 1
+								}
+							}(),
+							LiveOnly:    liveonly,
+							NewUpcoming: newupcoming,
+							Dynamic:     dynamic,
+							LiteMode:    liteMode,
+							IndieNotif: func() bool {
+								if Group.GroupName != config.Indie {
+									return false
+								}
+								return indieNotif
+							}(),
+							Group:  Group,
+							Region: region,
+						}
+						Add(ChannelData, Group)
+					}
+				} else {
+					for _, v2 := range v.Options {
+						if v2.Name == "channel-name" {
+							Channel = v2.ChannelValue(nil)
+						}
+
+						if v2.Name == "vtuber-group" {
+							for _, v3 := range *GroupsPayload {
+								if v3.ID == v2.IntValue() {
+									Group = v3
+								}
+							}
+						}
+
+						ChannelData := &database.DiscordChannel{
+							ChannelID:   Channel.ID,
+							TypeTag:     69,
+							LiveOnly:    liveonly,
+							NewUpcoming: newupcoming,
+							Dynamic:     dynamic,
+							LiteMode:    liteMode,
+							IndieNotif: func() bool {
+								if Group.GroupName != config.Indie {
+									return false
+								}
+								return indieNotif
+							}(),
+							Group:  Group,
+							Region: region,
+						}
+						Add(ChannelData, Group)
+					}
+				}
+			}
+		},
+		"channel-state": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			Color, err := engine.GetColor(config.TmpDir, i.Member.User.AvatarURL("128"))
+			if err != nil {
+				log.Error(err)
+			}
+
+			var (
+				Typestr     string
+				LiveOnly    = config.No
+				NewUpcoming = config.No
+				Dynamic     = config.No
+				LiteMode    = config.No
+				Indie       = ""
+				Region      = "All"
+				embed       []*discordgo.MessageEmbed
+				Channel     = i.ApplicationCommandData().Options[0].ChannelValue(nil)
+			)
+			ChannelData, err := database.ChannelStatus(Channel.ID)
+			if err != nil {
+				log.Error(err)
+			}
+
+			err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{
-					// Note: this isn't documented, but you can use that if you want to.
-					// This flag just allows you to create messages visible only for the caller of the command
-					// (user who triggered the command)
 					Flags:   1 << 6,
-					Content: "Surprise!",
+					Content: "Processing",
 				},
 			})
-			msg, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
-				Content: "Followup message has been created, after 5 seconds it will be edited",
-			})
+
 			if err != nil {
-				s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
-					Content: "Something went wrong",
+				log.Error(err)
+			}
+
+			if len(ChannelData) > 0 {
+				for _, Channel := range ChannelData {
+					ChannelRaw, err := s.Channel(Channel.ChannelID)
+					if err != nil {
+						log.Error(err)
+					}
+
+					if Channel.Region != "" {
+						Region = Channel.Region
+					}
+					if Channel.IndieNotif && Channel.Group.GroupName == config.Indie {
+						Indie = config.Ok
+					} else if Channel.Group.GroupName != config.Indie {
+						Indie = "-"
+					} else {
+						Indie = config.No
+					}
+
+					if Channel.IsFanart() && !Channel.IsLewd() && !Channel.IsLive() {
+						Typestr = "Fanart"
+					} else if !Channel.IsFanart() && !Channel.IsLewd() && Channel.IsLive() {
+						Typestr = "Live"
+					} else if Channel.IsFanart() && !Channel.IsLewd() && Channel.IsLive() {
+						Typestr = "Fanart & Livestream"
+					} else if Channel.IsLewd() && !Channel.IsFanart() {
+						Typestr = "Lewd"
+					} else if Channel.IsLewd() && Channel.IsFanart() {
+						Typestr = "Fanart & Lewd"
+					}
+
+					if Channel.LiveOnly {
+						LiveOnly = config.Ok
+					}
+
+					if Channel.NewUpcoming {
+						NewUpcoming = config.Ok
+					}
+
+					if Channel.Dynamic {
+						Dynamic = config.Ok
+					}
+
+					if Channel.LiteMode {
+						LiteMode = config.Ok
+					}
+
+					if Channel.IsFanart() && !Channel.IsLewd() && !Channel.IsLive() {
+						if Channel.Group.GroupName == config.Indie {
+							embed = append(embed, engine.NewEmbed().
+								SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+								SetThumbnail(config.GoSimpIMG).
+								SetDescription("Channel States of "+Channel.Group.GroupName).
+								SetTitle(ChannelRaw.Name).
+								AddField("Type", Typestr).
+								AddField("Regions", Region).
+								AddField("Independent notif", Indie).
+								InlineAllFields().
+								SetColor(Color).MessageEmbed)
+						} else {
+							embed = append(embed, engine.NewEmbed().
+								SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+								SetThumbnail(config.GoSimpIMG).
+								SetDescription("Channel States of "+Channel.Group.GroupName).
+								SetTitle(ChannelRaw.Name).
+								AddField("Type", Typestr).
+								AddField("Regions", Region).
+								InlineAllFields().
+								SetColor(Color).MessageEmbed)
+						}
+
+					} else if Channel.IsLewd() && !Channel.IsFanart() {
+						if Channel.Group.GroupName == config.Indie {
+							embed = append(embed, engine.NewEmbed().
+								SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+								SetThumbnail(config.GoSimpIMG).
+								SetDescription("Channel States of "+Channel.Group.GroupName).
+								SetTitle(ChannelRaw.Name).
+								AddField("Type", Typestr).
+								AddField("Regions", Region).
+								AddField("Independent notif", Indie).
+								InlineAllFields().
+								SetColor(Color).MessageEmbed)
+						} else {
+							embed = append(embed, engine.NewEmbed().
+								SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+								SetThumbnail(config.GoSimpIMG).
+								SetDescription("Channel States of "+Channel.Group.GroupName).
+								SetTitle(ChannelRaw.Name).
+								AddField("Type", Typestr).
+								AddField("Regions", Region).
+								InlineAllFields().
+								SetColor(Color).MessageEmbed)
+						}
+
+					} else {
+						if Channel.Group.GroupName == config.Indie {
+							embed = append(embed, engine.NewEmbed().
+								SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+								SetThumbnail(config.GoSimpIMG).
+								SetDescription("Channel States of "+Channel.Group.GroupName).
+								SetTitle(ChannelRaw.Name).
+								AddField("Type", Typestr).
+								AddField("LiveOnly", LiveOnly).
+								AddField("Dynamic", Dynamic).
+								AddField("Upcoming", NewUpcoming).
+								AddField("Lite", LiteMode).
+								AddField("Regions", Region).
+								AddField("Independent notif", Indie).
+								InlineAllFields().
+								SetColor(Color).MessageEmbed)
+						} else {
+							embed = append(embed, engine.NewEmbed().
+								SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+								SetThumbnail(config.GoSimpIMG).
+								SetDescription("Channel States of "+Channel.Group.GroupName).
+								SetTitle(ChannelRaw.Name).
+								AddField("Type", Typestr).
+								AddField("LiveOnly", LiveOnly).
+								AddField("Dynamic", Dynamic).
+								AddField("Upcoming", NewUpcoming).
+								AddField("Lite", LiteMode).
+								AddField("Regions", Region).
+								InlineAllFields().
+								SetColor(Color).MessageEmbed)
+						}
+					}
+				}
+				if len(ChannelData) >= 10 {
+					for _, v := range embed {
+						_, err := s.ChannelMessageSendEmbed(i.ChannelID, v)
+						if err != nil {
+							log.Error(err)
+						}
+					}
+				} else {
+					err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+						Type: discordgo.InteractionResponseChannelMessageWithSource,
+						Data: &discordgo.InteractionResponseData{
+							Embeds: embed,
+						},
+					})
+					if err != nil {
+						log.Error(err)
+					}
+				}
+			} else {
+				s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
+							SetTitle("404 Not found").
+							SetThumbnail(config.GoSimpIMG).
+							SetImage(engine.NotFoundIMG()).
+							SetColor(Color).MessageEmbed},
+					},
+				})
+			}
+		},
+		"channel-update": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			Admin, err := MemberHasPermission(i.GuildID, i.Member.User.ID)
+			if err != nil {
+				log.Error(err)
+			}
+			if !Admin {
+				s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Content: "You don't have permission to enable/disable/update,make sure you have `Manage Channels` Role permission",
+					},
 				})
 				return
 			}
-			time.Sleep(time.Second * 5)
 
-			s.FollowupMessageEdit(s.State.User.ID, i.Interaction, msg.ID, &discordgo.WebhookEdit{
-				Content: "Now the original message is gone and after 10 seconds this message will ~~self-destruct~~ be deleted.",
+			Channel := i.ApplicationCommandData().Options[0].ChannelValue(nil)
+
+			var (
+				Typestr     string
+				LiveOnly    = config.No
+				NewUpcoming = config.No
+				Dynamic     = config.No
+				LiteMode    = config.No
+				Indie       = ""
+				Region      = "All"
+			)
+			ChannelData, err := database.ChannelStatus(Channel.ID)
+			if err != nil {
+				log.Error(err)
+			}
+			err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Flags:   1 << 6,
+					Content: "Processing",
+				},
+			})
+			if err != nil {
+				log.Error(err)
+			}
+
+			if len(ChannelData) > 0 {
+				for _, Channel := range ChannelData {
+					if Channel.Region != "" {
+						Region = Channel.Region
+					}
+
+					if Channel.IsFanart() {
+						Typestr = "FanArt"
+					}
+
+					if Channel.IsLive() {
+						Typestr = "Live"
+					}
+
+					if Channel.IsFanart() && Channel.IsLive() {
+						Typestr = "FanArt & Livestream"
+					}
+
+					if Channel.IsLewd() {
+						Typestr = "Lewd"
+					}
+
+					if Channel.IsLewd() && Channel.IsFanart() {
+						Typestr = "FanArt & Lewd"
+					}
+
+					if Channel.LiveOnly {
+						LiveOnly = config.Ok
+					}
+
+					if Channel.NewUpcoming {
+						NewUpcoming = config.Ok
+					}
+
+					if Channel.Dynamic {
+						Dynamic = config.Ok
+					}
+
+					if Channel.LiteMode {
+						LiteMode = config.Ok
+					}
+
+					if Channel.Group.GroupName == config.Indie {
+						if Channel.IndieNotif {
+							Indie = config.Ok
+						} else if Channel.Group.GroupName != config.Indie {
+							Indie = "-"
+						} else {
+							Indie = config.No
+						}
+						Channel.Group.RemoveNillIconURL()
+
+						_, err = s.ChannelMessageSendEmbed(i.ChannelID, engine.NewEmbed().
+							SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+							SetThumbnail(Channel.Group.IconURL).
+							SetDescription("Channel States of "+Channel.Group.GroupName).
+							SetTitle("ID "+strconv.Itoa(int(Channel.ID))).
+							AddField("Type", Typestr).
+							AddField("LiveOnly", LiveOnly).
+							AddField("Dynamic", Dynamic).
+							AddField("Upcoming", NewUpcoming).
+							AddField("Lite", LiteMode).
+							AddField("Regions", Region).
+							AddField("Independent notif", Indie).
+							InlineAllFields().MessageEmbed)
+						if err != nil {
+							log.Error(err)
+						}
+					} else {
+						_, err = s.ChannelMessageSendEmbed(i.ChannelID, engine.NewEmbed().
+							SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+							SetThumbnail(Channel.Group.IconURL).
+							SetDescription("Channel States of "+Channel.Group.GroupName).
+							SetTitle("ID "+strconv.Itoa(int(Channel.ID))).
+							AddField("Type", Typestr).
+							AddField("LiveOnly", LiveOnly).
+							AddField("Dynamic", Dynamic).
+							AddField("Upcoming", NewUpcoming).
+							AddField("Lite", LiteMode).
+							AddField("Regions", Region).
+							InlineAllFields().MessageEmbed)
+						if err != nil {
+							log.Error(err)
+						}
+					}
+				}
+			} else {
+				_, err := s.ChannelMessageSendEmbed(i.ChannelID, engine.NewEmbed().
+					SetTitle("404 Not found,use `/setup` first").
+					SetThumbnail(config.GoSimpIMG).
+					SetImage(engine.NotFoundIMG()).MessageEmbed)
+				if err != nil {
+					log.Error(err)
+				}
+				return
+			}
+
+			AdminID := i.Member.User.ID
+			Register := &ChannelRegister{
+				AdminID:       AdminID,
+				State:         UpdateState,
+				ChannelStates: ChannelData,
+			}
+			_, err = s.ChannelMessageSend(i.ChannelID, "Select ID : ")
+			if err != nil {
+				log.Error(err)
+			}
+			Counter := 0
+			Bot.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
+				if m.Author.ID == Register.AdminID && Register.State == UpdateState {
+					Counter++
+					if strings.ToLower(m.Content) == "exit" {
+						Register = nil
+						return
+					}
+
+					tableString := &strings.Builder{}
+					table := tablewriter.NewWriter(tableString)
+					table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+					table.SetCenterSeparator("|")
+
+					tmp, err := strconv.Atoi(m.Content)
+					if err != nil {
+						_, err := s.ChannelMessageSend(m.ChannelID, "Worng input ID")
+						if err != nil {
+							log.Error(err)
+						}
+						return
+					} else {
+						for _, ChannelState := range Register.ChannelStates {
+							if int(ChannelState.ID) == tmp {
+								Register.SetChannel(ChannelState)
+							}
+						}
+						if Register.ChannelState.ID != 0 {
+							Register.SetChannelID(m.ChannelID)
+							_, err := s.ChannelMessageSend(m.ChannelID, "You selectd `"+Register.ChannelState.Group.GroupName+"` with ID `"+strconv.Itoa(int(Register.ChannelState.ID))+"`")
+							if err != nil {
+								log.Error(err)
+							}
+							table.SetHeader([]string{"Menu"})
+							table.Append([]string{"Update Channel state"})
+							table.Append([]string{"Add region in this channel"})
+							table.Append([]string{"Delete region in this channel"})
+
+							if Register.ChannelState.TypeTag == 2 || Register.ChannelState.TypeTag == 3 {
+								table.Append([]string{"Change Livestream state"})
+							}
+
+							table.Render()
+							MsgText, err := s.ChannelMessageSend(m.ChannelID, "```"+tableString.String()+"```")
+							if err != nil {
+								log.Error(err)
+							}
+
+							if Register.ChannelState.TypeTag == 2 || Register.ChannelState.TypeTag == 3 {
+								err = engine.Reacting(map[string]string{
+									"ChannelID": m.ChannelID,
+									"State":     "Menu2",
+									"MessageID": MsgText.ID,
+								}, s)
+								if err != nil {
+									log.Error(err)
+								}
+							} else {
+								err = engine.Reacting(map[string]string{
+									"ChannelID": m.ChannelID,
+									"State":     "Menu",
+									"MessageID": MsgText.ID,
+								}, s)
+								if err != nil {
+									log.Error(err)
+								}
+							}
+						} else {
+							_, err := s.ChannelMessageSend(m.ChannelID, "Channel ID not found")
+							if err != nil {
+								log.Error(err)
+							}
+							if Counter == 5 {
+								Register = nil
+							}
+							return
+						}
+					}
+				}
 			})
 
-			time.Sleep(time.Second * 10)
-
-			s.FollowupMessageDelete(s.State.User.ID, i.Interaction, msg.ID)
-
-			s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
-				Content: "For those, who didn't skip anything and followed tutorial along fairly, " +
-					"take a unicorn :unicorn: as reward!\n" +
-					"Also, as bonus... look at the original interaction response :D",
+			Bot.AddHandler(func(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
+				if Register != nil && Register.AdminID == m.UserID {
+					EmojiUpdate(Register, s, m)
+					EmojiHandler(Register, s, m)
+				}
 			})
 		},
 	}

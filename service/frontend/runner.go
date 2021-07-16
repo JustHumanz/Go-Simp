@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -20,6 +21,8 @@ import (
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 )
+
+var TESTINGGUILD = "721009835889393705"
 
 var (
 	BotInfo            *discordgo.User
@@ -168,8 +171,6 @@ func main() {
 			Bot.AddHandler(SubsMessage)
 			Bot.AddHandler(Lewd)
 			Bot.AddHandler(StartRegister)
-			Bot.AddHandler(EmojiHandler)
-			Bot.AddHandler(UpdateChannel)
 			c.Stop()
 			c2 := cron.New()
 			c2.Start()
@@ -196,134 +197,413 @@ func main() {
 		}
 	})
 
-	log.Info("Create Art slash command")
-	_, err := Bot.ApplicationCommandCreate(Bot.State.User.ID, "721009835889393705", &discordgo.ApplicationCommand{
-		Name:        "art",
-		Description: "get random vtuber fanart",
-		Options: []*discordgo.ApplicationCommandOption{
-
+	var (
+		commands = []*discordgo.ApplicationCommand{
 			{
-				Type:        discordgo.ApplicationCommandOptionInteger,
-				Name:        "group-name",
-				Description: "Choice vtuber GroupName",
-				Choices:     VtuberGroupChoices,
-				Required:    true,
-			},
-			{
-				Type:        discordgo.ApplicationCommandOptionString,
-				Name:        "vtuber-name",
-				Description: "Choice vtuber",
-				Required:    false,
-			},
-		},
-	})
-	if err != nil {
-		log.Fatalln("Cannot create art slash command", err)
-	}
-
-	log.Info("Create live slash command")
-	_, err = Bot.ApplicationCommandCreate(Bot.State.User.ID, "721009835889393705", &discordgo.ApplicationCommand{
-		Name:        "livestream",
-		Description: "get random vtuber fanart",
-		Options: []*discordgo.ApplicationCommandOption{
-
-			{
-				Type:        discordgo.ApplicationCommandOptionInteger,
-				Name:        "state",
-				Description: "Choice livestream platform",
-				Choices: []*discordgo.ApplicationCommandOptionChoice{
+				Name:        "setup",
+				Description: "Setup bot",
+				Options: []*discordgo.ApplicationCommandOption{
 					{
-						Name:  "Youtube",
-						Value: 1,
-					},
-					{
-						Name:  "BiliBili",
-						Value: 2,
-					},
-					{
-						Name:  "Twitch",
-						Value: 3,
+						Type:        discordgo.ApplicationCommandOptionSubCommandGroup,
+						Name:        "channel-type",
+						Description: "select channel type",
+						Options: []*discordgo.ApplicationCommandOption{
+							{
+								Name:        "livestream",
+								Description: "Enable livestream notif on this channel",
+								Type:        discordgo.ApplicationCommandOptionSubCommand,
+								Options: []*discordgo.ApplicationCommandOption{
+									{
+										Name:        "channel-name",
+										Description: "Setup channel",
+										Required:    true,
+										Type:        discordgo.ApplicationCommandOptionChannel,
+									},
+									{
+										Type:        discordgo.ApplicationCommandOptionInteger,
+										Name:        "vtuber-group",
+										Description: "select vtuber-group",
+										Choices:     VtuberGroupChoices,
+										Required:    true,
+									},
+									{
+										Type:        discordgo.ApplicationCommandOptionBoolean,
+										Name:        "liveonly",
+										Description: "Set livestreams in strict mode(ignoring covering or regular video) notification",
+										Required:    true,
+									},
+									{
+										Type:        discordgo.ApplicationCommandOptionBoolean,
+										Name:        "newupcoming",
+										Description: "Bot will send new upcoming livestream",
+										Required:    true,
+									},
+									{
+										Type:        discordgo.ApplicationCommandOptionBoolean,
+										Name:        "dynamic",
+										Description: "Livestream message will disappear after livestream ended",
+										Required:    true,
+									},
+									{
+										Type:        discordgo.ApplicationCommandOptionBoolean,
+										Name:        "lite-mode",
+										Description: "Disabling ping user/role function",
+										Required:    true,
+									},
+									{
+										Type:        discordgo.ApplicationCommandOptionBoolean,
+										Name:        "indie-notif",
+										Description: "Send all independent vtubers notification **Ignore this if you not enable indie group**",
+										Required:    true,
+									},
+									{
+										Type:        discordgo.ApplicationCommandOptionBoolean,
+										Name:        "fanart",
+										Description: "Enable vtuber fanart",
+										Required:    false,
+									},
+								},
+							},
+							{
+								Name:        "fanart",
+								Description: "Enable fanart notif on this channel",
+								Type:        discordgo.ApplicationCommandOptionSubCommand,
+								Options: []*discordgo.ApplicationCommandOption{
+									{
+										Name:        "channel-name",
+										Description: "Setup channel",
+										Required:    true,
+										Type:        discordgo.ApplicationCommandOptionChannel,
+									},
+									{
+										Type:        discordgo.ApplicationCommandOptionInteger,
+										Name:        "vtuber-group",
+										Description: "select vtuber-group",
+										Choices:     VtuberGroupChoices,
+										Required:    true,
+									},
+									{
+										Type:        discordgo.ApplicationCommandOptionBoolean,
+										Name:        "lewd",
+										Description: "Enable lewd vtuber fanart",
+										Required:    false,
+									},
+								},
+							},
+							{
+								Name:        "lewd",
+								Description: "Enable lewd fanart notif on this channel",
+								Type:        discordgo.ApplicationCommandOptionSubCommand,
+								Options: []*discordgo.ApplicationCommandOption{
+									{
+										Name:        "channel-name",
+										Description: "Setup channel",
+										Required:    true,
+										Type:        discordgo.ApplicationCommandOptionChannel,
+									},
+									{
+										Type:        discordgo.ApplicationCommandOptionInteger,
+										Name:        "vtuber-group",
+										Description: "select vtuber-group",
+										Choices:     VtuberGroupChoices,
+										Required:    true,
+									},
+								},
+							},
+						},
 					},
 				},
-				Required: true,
 			},
 			{
-				Type:        discordgo.ApplicationCommandOptionInteger,
-				Name:        "status",
-				Description: "Choice livestream status",
-				Choices: []*discordgo.ApplicationCommandOptionChoice{
+				Name:        "channel-update",
+				Description: "update channel-state information",
+				Options: []*discordgo.ApplicationCommandOption{
 					{
-						Name:  "Live",
-						Value: 1,
-					},
-					{
-						Name:  "Upcoming",
-						Value: 2,
-					},
-					{
-						Name:  "Past",
-						Value: 3,
+						Type:        discordgo.ApplicationCommandOptionChannel,
+						Name:        "channel-name",
+						Description: "Choice channel",
+						Required:    true,
 					},
 				},
-				Required: true,
 			},
 			{
-				Type:        discordgo.ApplicationCommandOptionInteger,
-				Name:        "group-name",
-				Description: "Choice vtuber GroupName",
-				Choices:     VtuberGroupChoices,
-				Required:    true,
-			},
-			{
-				Type:        discordgo.ApplicationCommandOptionString,
-				Name:        "vtuber-name",
-				Description: "Choice vtuber",
-				Required:    false,
-			},
-			{
-				Type:        discordgo.ApplicationCommandOptionString,
-				Name:        "region",
-				Description: "Select region of vtuber group",
-				Required:    false,
-			},
-		},
-	})
-	if err != nil {
-		log.Fatalln("Cannot create live slash command", err)
-	}
+				Name:        "channel-state",
+				Description: "get channel-state information",
+				Options: []*discordgo.ApplicationCommandOption{
 
-	for _, v := range commands {
-		_, err := Bot.ApplicationCommandCreate(Bot.State.User.ID, "721009835889393705", v)
-		if err != nil {
-			log.Panicf("Cannot create '%v' command: %v", v.Name, err)
+					{
+						Type:        discordgo.ApplicationCommandOptionChannel,
+						Name:        "channel-name",
+						Description: "Choice channel",
+						Required:    true,
+					},
+				},
+			},
+			{
+				Name:        "art",
+				Description: "get random vtuber fanart",
+				Options: []*discordgo.ApplicationCommandOption{
+
+					{
+						Type:        discordgo.ApplicationCommandOptionInteger,
+						Name:        "group-name",
+						Description: "Choice vtuber GroupName",
+						Choices:     VtuberGroupChoices,
+						Required:    true,
+					},
+					{
+						Type:        discordgo.ApplicationCommandOptionString,
+						Name:        "vtuber-name",
+						Description: "Choice vtuber",
+						Required:    false,
+					},
+				},
+			},
+			{
+				Name:        "lewd",
+				Description: "get random vtuber lewd",
+				Options: []*discordgo.ApplicationCommandOption{
+
+					{
+						Type:        discordgo.ApplicationCommandOptionInteger,
+						Name:        "group-name",
+						Description: "Choice vtuber GroupName",
+						Choices:     VtuberGroupChoices,
+						Required:    true,
+					},
+					{
+						Type:        discordgo.ApplicationCommandOptionString,
+						Name:        "vtuber-name",
+						Description: "Choice vtuber",
+						Required:    false,
+					},
+				},
+			},
+			{
+				Name:        "livestream",
+				Description: "get random vtuber fanart",
+				Options: []*discordgo.ApplicationCommandOption{
+
+					{
+						Type:        discordgo.ApplicationCommandOptionInteger,
+						Name:        "state",
+						Description: "Choice livestream platform",
+						Choices: []*discordgo.ApplicationCommandOptionChoice{
+							{
+								Name:  "Youtube",
+								Value: 1,
+							},
+							{
+								Name:  "BiliBili",
+								Value: 2,
+							},
+							{
+								Name:  "Twitch",
+								Value: 3,
+							},
+						},
+						Required: true,
+					},
+					{
+						Type:        discordgo.ApplicationCommandOptionInteger,
+						Name:        "status",
+						Description: "Choice livestream status",
+						Choices: []*discordgo.ApplicationCommandOptionChoice{
+							{
+								Name:  "Live",
+								Value: 1,
+							},
+							{
+								Name:  "Upcoming",
+								Value: 2,
+							},
+							{
+								Name:  "Past",
+								Value: 3,
+							},
+						},
+						Required: true,
+					},
+					{
+						Type:        discordgo.ApplicationCommandOptionInteger,
+						Name:        "group-name",
+						Description: "Choice vtuber GroupName",
+						Choices:     VtuberGroupChoices,
+						Required:    true,
+					},
+					{
+						Type:        discordgo.ApplicationCommandOptionString,
+						Name:        "vtuber-name",
+						Description: "Choice vtuber",
+						Required:    false,
+					},
+					{
+						Type:        discordgo.ApplicationCommandOptionString,
+						Name:        "region",
+						Description: "Select region of vtuber group",
+						Required:    false,
+					},
+				},
+			},
+			{
+				Name:        "info",
+				Description: "get subscriber/followers/viwers information",
+				Options: []*discordgo.ApplicationCommandOption{
+					{
+						Type:        discordgo.ApplicationCommandOptionString,
+						Name:        "vtuber-name",
+						Description: "select vtuber",
+						Required:    true,
+					},
+				},
+			},
+			{
+				Name:        "tag-me",
+				Description: "Add you to the tag list if any new fan art or live stream is uploaded",
+				Options: []*discordgo.ApplicationCommandOption{
+					{
+						Type:        discordgo.ApplicationCommandOptionInteger,
+						Name:        "vtuber-group",
+						Description: "select vtuber",
+						Choices:     VtuberGroupChoices,
+						Required:    false,
+					},
+					{
+						Type:        discordgo.ApplicationCommandOptionString,
+						Name:        "vtuber-name",
+						Description: "select vtuber",
+						Required:    false,
+					},
+					{
+						Type:        discordgo.ApplicationCommandOptionInteger,
+						Name:        "reminder",
+						Description: "remind you before livestream started",
+						Required:    false,
+					},
+				},
+			},
+			{
+				Name:        "del-tag",
+				Description: "delete a vtuber from your tag list",
+				Options: []*discordgo.ApplicationCommandOption{
+					{
+						Type:        discordgo.ApplicationCommandOptionInteger,
+						Name:        "vtuber-group",
+						Description: "select vtuber",
+						Choices:     VtuberGroupChoices,
+						Required:    false,
+					},
+					{
+						Type:        discordgo.ApplicationCommandOptionString,
+						Name:        "vtuber-name",
+						Description: "select vtuber",
+						Required:    false,
+					},
+					{
+						Type:        discordgo.ApplicationCommandOptionInteger,
+						Name:        "reminder",
+						Description: "remind you before livestream started",
+						Required:    false,
+					},
+				},
+			},
+			{
+				Name:        "mytags",
+				Description: "Shows all your info on this bot",
+			},
+			{
+				Name:        "tag-role",
+				Description: "Same like tag-me command,but this will tag roles",
+				Options: []*discordgo.ApplicationCommandOption{
+					{
+						Type:        discordgo.ApplicationCommandOptionRole,
+						Name:        "role-name",
+						Description: "Role",
+						Required:    true,
+					},
+					{
+						Type:        discordgo.ApplicationCommandOptionInteger,
+						Name:        "vtuber-group",
+						Description: "select vtuber",
+						Choices:     VtuberGroupChoices,
+						Required:    false,
+					},
+					{
+						Type:        discordgo.ApplicationCommandOptionString,
+						Name:        "vtuber-name",
+						Description: "select vtuber",
+						Required:    false,
+					},
+					{
+						Type:        discordgo.ApplicationCommandOptionInteger,
+						Name:        "reminder",
+						Description: "remind you before livestream started",
+						Required:    false,
+					},
+				},
+			},
+			{
+				Name:        "del-role",
+				Description: "Same like del-tag command,but this will tag roles",
+				Options: []*discordgo.ApplicationCommandOption{
+					{
+						Type:        discordgo.ApplicationCommandOptionRole,
+						Name:        "role-name",
+						Description: "Role",
+						Required:    true,
+					},
+					{
+						Type:        discordgo.ApplicationCommandOptionInteger,
+						Name:        "vtuber-group",
+						Description: "select vtuber",
+						Choices:     VtuberGroupChoices,
+						Required:    false,
+					},
+					{
+						Type:        discordgo.ApplicationCommandOptionString,
+						Name:        "vtuber-name",
+						Description: "select vtuber",
+						Required:    false,
+					},
+					{
+						Type:        discordgo.ApplicationCommandOptionInteger,
+						Name:        "reminder",
+						Description: "remind you before livestream started",
+						Required:    false,
+					},
+				},
+			},
+			{
+				Name:        "role-info",
+				Description: "Get role info",
+				Options: []*discordgo.ApplicationCommandOption{
+					{
+						Type:        discordgo.ApplicationCommandOptionRole,
+						Name:        "role-name",
+						Description: "Role",
+						Required:    true,
+					},
+				},
+			},
+		}
+	)
+
+	for _, Guild := range Bot.State.Guilds {
+		log.WithFields(log.Fields{
+			"GuildName":    Guild.Name,
+			"GuildID":      Guild.ID,
+			"GuildOwnerID": Guild.OwnerID,
+		}).Info("Create bot command")
+		for _, v := range commands {
+			_, err := Bot.ApplicationCommandCreate(Bot.State.User.ID, Guild.ID, v)
+			if err != nil {
+				log.Panicf("Cannot create '%v' command: %v guild: %v", v.Name, err, Guild.ID)
+			}
 		}
 	}
-
+	log.Info("Done")
 	runfunc.Run(Bot)
 }
-
-/*
-func Module(s *discordgo.Session, m *discordgo.MessageCreate) {
-	m.Content = strings.ToLower(m.Content)
-	Prefix := configfile.BotPrefix.General
-	if strings.HasPrefix(m.Content, Prefix) {
-		if m.Content == Prefix+ModuleInfo {
-			list := []string{}
-			keys := make(map[string]bool)
-			for _, Member := range database.GetModule() {
-				if _, value := keys[Member]; !value {
-					keys[Member] = true
-					list = append(list, Member)
-				}
-			}
-			_, err := Bot.ChannelMessageSend(m.ChannelID, strings.Join(list, "\n"))
-			if err != nil {
-				log.Error(err)
-			}
-		}
-	}
-}
-*/
 
 //FindName Find a valid Vtuber name from message handler
 func FindVtuber(M interface{}) (database.Member, error) {
@@ -451,7 +731,7 @@ func (Data *ChannelRegister) ChoiceType() *ChannelRegister {
 	table.Append([]string{"Lewd Fanart", config.Lewd, Lewd})
 	table.Render()
 
-	MsgText, err := Bot.ChannelMessageSend(Data.ChannelState.ChannelID, "`"+tableString.String()+"`")
+	MsgText, err := Bot.ChannelMessageSend(Data.ChannelState.ChannelID, "```"+tableString.String()+"```")
 	if err != nil {
 		Bot.ChannelMessageSend(Data.ChannelState.ChannelID, "Something error, "+err.Error())
 		log.Error(err)
@@ -576,7 +856,7 @@ func (Data *ChannelRegister) UpdateChannel(s string) error {
 			return err
 		}
 
-		if !Register.Payload[Data.Index].ChannelState.LiveOnly {
+		if !Data.ChannelState.LiveOnly {
 			err = Data.ChannelState.UpdateChannel(config.NewUpcoming)
 			if err != nil {
 				return err
@@ -588,7 +868,7 @@ func (Data *ChannelRegister) UpdateChannel(s string) error {
 			return err
 		}
 
-		if Register.Payload[Data.Index].ChannelState.Group.GroupName == config.Indie {
+		if Data.ChannelState.Group.GroupName == config.Indie {
 			err = Data.ChannelState.UpdateChannel(config.IndieNotif)
 			if err != nil {
 				return err
@@ -599,16 +879,16 @@ func (Data *ChannelRegister) UpdateChannel(s string) error {
 }
 
 func (Data *ChannelRegister) AddRegion() {
-	GroupName := Register.Payload[Data.Index].ChannelState.Group.GroupName
-	ChannelID := Register.Payload[Data.Index].ChannelState.ChannelID
+	GroupName := Data.ChannelState.Group.GroupName
+	ChannelID := Data.ChannelState.ChannelID
 
-	Register.Payload[Data.Index].UpdateState(AddRegion)
+	Data.UpdateState(AddRegion)
 	RegEmoji := []string{}
-	ChannelRegion := strings.Split(Register.Payload[Data.Index].ChannelState.Region, ",")
+	ChannelRegion := strings.Split(Data.ChannelState.Region, ",")
 	for _, v := range ChannelRegion {
 		if v != "" {
 			RegEmoji = append(RegEmoji, engine.CountryCodetoUniCode(v))
-			Register.Payload[Data.Index].RegionTMP = append(Register.Payload[Data.Index].RegionTMP, v)
+			Data.RegionTMP = append(Data.RegionTMP, v)
 		}
 	}
 	_, err := Bot.ChannelMessageSend(ChannelID, "`"+GroupName+"` Regions you already enabled: "+strings.Join(RegEmoji, "  "))
@@ -621,7 +901,7 @@ func (Data *ChannelRegister) AddRegion() {
 		log.Error(err)
 	}
 
-	Register.Payload[Data.Index].UpdateMessageID(MsgTxt2.ID)
+	Data.UpdateMessageID(MsgTxt2.ID)
 	for Key, Val := range RegList {
 		GroupRegList := strings.Split(Val, ",")
 
@@ -634,7 +914,7 @@ func (Data *ChannelRegister) AddRegion() {
 				return
 			}
 
-			Register.Payload[Data.Index].Stop()
+			Data.Stop()
 			for _, v2 := range GroupRegList {
 				skip := false
 				for _, v := range ChannelRegion {
@@ -653,30 +933,29 @@ func (Data *ChannelRegister) AddRegion() {
 		}
 	}
 
-	Register.Payload[Data.Index].BreakPoint(4)
-	Register.Payload[Data.Index].FixRegion("add")
-	Register.Payload[Data.Index].ChannelState.UpdateChannel(config.Region)
+	Data.BreakPoint(4)
+	Data.FixRegion("add")
+	Data.ChannelState.UpdateChannel(config.Region)
 
-	_, err = Bot.ChannelMessageSend(ChannelID, "Done,you added "+strings.Join(Register.Payload[Data.Index].AddRegionVal, ","))
+	_, err = Bot.ChannelMessageSend(ChannelID, "Done,you added "+strings.Join(Data.AddRegionVal, ","))
 	if err != nil {
 		log.Error(err)
 	}
-	CleanRegister(Data.Index)
 }
 
 func (Data *ChannelRegister) DelRegion() {
-	GroupName := Register.Payload[Data.Index].ChannelState.Group.GroupName
-	ChannelID := Register.Payload[Data.Index].ChannelState.ChannelID
+	GroupName := Data.ChannelState.Group.GroupName
+	ChannelID := Data.ChannelState.ChannelID
 
-	Register.Payload[Data.Index].UpdateState(DelRegion)
+	Data.UpdateState(DelRegion)
 	RegEmoji := []string{}
 	for Key, Val := range RegList {
 		if Key == GroupName {
 			for _, v2 := range strings.Split(Val, ",") {
-				for _, v := range strings.Split(Register.Payload[Data.Index].ChannelState.Region, ",") {
+				for _, v := range strings.Split(Data.ChannelState.Region, ",") {
 					if v == v2 {
 						RegEmoji = append(RegEmoji, engine.CountryCodetoUniCode(v2))
-						Register.Payload[Data.Index].RegionTMP = append(Register.Payload[Data.Index].RegionTMP, v2)
+						Data.RegionTMP = append(Data.RegionTMP, v2)
 					}
 				}
 			}
@@ -703,17 +982,17 @@ func (Data *ChannelRegister) DelRegion() {
 		MsgID = MsgTxt2.ID
 	}
 
-	Register.Payload[Data.Index].Stop()
+	Data.Stop()
 	for _, v := range RegEmoji {
 		err := Bot.MessageReactionAdd(ChannelID, MsgID, v)
 		if err != nil {
 			log.Error(err)
 		}
 	}
-	Register.Payload[Data.Index].UpdateMessageID(MsgID)
-	Register.Payload[Data.Index].BreakPoint(4)
-	Register.Payload[Data.Index].FixRegion("del")
-	err = Register.Payload[Data.Index].ChannelState.UpdateChannel(config.Region)
+	Data.UpdateMessageID(MsgID)
+	Data.BreakPoint(4)
+	Data.FixRegion("del")
+	err = Data.ChannelState.UpdateChannel(config.Region)
 	if err != nil {
 		log.Error(err)
 	}
@@ -722,7 +1001,6 @@ func (Data *ChannelRegister) DelRegion() {
 	if err != nil {
 		log.Error(err)
 	}
-	CleanRegister(Data.Index)
 }
 
 func (Data *ChannelRegister) CheckNSFW() bool {
@@ -732,20 +1010,25 @@ func (Data *ChannelRegister) CheckNSFW() bool {
 	}
 
 	if !ChannelRaw.NSFW {
-		if Register.Payload[Data.Index].ChannelState.TypeTag == 69 {
-			_, err := Bot.ChannelMessageSend(Data.ChannelState.ChannelID, "This Channel was not a NSFW channel")
+		if Data.ChannelState.TypeTag == 69 {
+			_, err := Bot.ChannelMessageSend(Data.ChannelState.ChannelID, "[error]This Channel was not a NSFW channel")
 			if err != nil {
 				log.Error(err)
 			}
 			return false
 		} else {
-			_, err := Bot.ChannelMessageSend(Data.ChannelState.ChannelID, "This Channel was not a NSFW channel,change channel type to fanart")
+			_, err := Bot.ChannelMessageSend(Data.ChannelState.ChannelID, "[error]This Channel was not a NSFW channel,change channel type to fanart")
 			if err != nil {
 				log.Error(err)
 			}
-			Register.Payload[Data.Index].ChannelState.TypeTag = 1
+			return false
 		}
 
 	}
 	return true
+}
+
+func Clear(v interface{}) {
+	p := reflect.ValueOf(v).Elem()
+	p.Set(reflect.Zero(p.Type()))
 }
