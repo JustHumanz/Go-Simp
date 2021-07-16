@@ -8,6 +8,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
@@ -588,20 +589,30 @@ func main() {
 		}
 	)
 
-	for _, Guild := range Bot.State.Guilds {
-		log.WithFields(log.Fields{
-			"GuildName":    Guild.Name,
-			"GuildID":      Guild.ID,
-			"GuildOwnerID": Guild.OwnerID,
-		}).Info("Create bot command")
-		for _, v := range commands {
-			_, err := Bot.ApplicationCommandCreate(Bot.State.User.ID, Guild.ID, v)
-			if err != nil {
-				log.Errorf("Cannot create '%v' command: %v guild: %v", v.Name, err, Guild.ID)
-				continue
+	var wg sync.WaitGroup
+	for i, G := range Bot.State.Guilds {
+		wg.Add(1)
+		go func(wg *sync.WaitGroup, Guild *discordgo.Guild) {
+			defer wg.Done()
+			log.WithFields(log.Fields{
+				"GuildName":    Guild.Name,
+				"GuildID":      Guild.ID,
+				"GuildOwnerID": Guild.OwnerID,
+			}).Info("Create bot command")
+			for _, v := range commands {
+				_, err := Bot.ApplicationCommandCreate(Bot.State.User.ID, Guild.ID, v)
+				if err != nil {
+					log.Errorf("Cannot create '%v' command: %v guild: %v", v.Name, err, Guild.ID)
+					continue
+				}
 			}
+
+		}(&wg, G)
+		if (i % 20) == 0 {
+			wg.Wait()
 		}
 	}
+	wg.Wait()
 	log.Info("Done")
 	runfunc.Run(Bot)
 }
