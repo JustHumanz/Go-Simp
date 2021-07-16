@@ -23,96 +23,117 @@ import (
 func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	if Group.YoutubeChannels != nil {
-		for _, YtChan := range Group.YoutubeChannels {
-			log.WithFields(log.Fields{
-				"Group": Group.GroupName,
-			}).Info("Checking Group channel")
+	/*
+		if Group.YoutubeChannels != nil {
+			for _, YtChan := range Group.YoutubeChannels {
+				log.WithFields(log.Fields{
+					"Group": Group.GroupName,
+				}).Info("Checking Group channel")
 
-			VideoID := engine.GetRSS(YtChan.YtChannel)
-			for _, ID := range VideoID {
-				YoutubeData, err := YtChan.CheckYoutubeVideo(ID)
-				if err != nil {
-					log.Warn(err)
-				}
-
-				if YoutubeData == nil {
-					var Thumb string
-					Data, err := engine.YtAPI([]string{ID})
+				VideoID := engine.GetRSS(YtChan.YtChannel)
+				for _, ID := range VideoID {
+					YoutubeData, err := YtChan.CheckYoutubeVideo(ID)
 					if err != nil {
-						log.Error(err)
-						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-							Message: err.Error(),
-							Service: ModuleState,
-						})
-					}
-					if len(Data.Items) == 0 {
-						fmt.Println("Opps something error\n", Data)
-					}
-					Items := Data.Items[0]
-
-					_, err = network.Curl("http://i3.ytimg.com/vi/"+ID+"/maxresdefault.jpg", nil)
-					if err != nil {
-						Thumb = "http://i3.ytimg.com/vi/" + ID + "/hqdefault.jpg"
-					} else {
-						Thumb = "http://i3.ytimg.com/vi/" + ID + "/maxresdefault.jpg"
+						log.Warn(err)
 					}
 
-					YtType := engine.YtFindType(Items.Snippet.Title)
-					if YtType == "Streaming" && Items.ContentDetails.Duration != "P0D" && Items.LiveDetails.StartTime.IsZero() {
-						YtType = "Regular video"
-					}
+					if YoutubeData == nil {
+						Data, err := engine.YtAPI([]string{ID})
+						if err != nil {
+							log.Error(err)
+							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+								Message: err.Error(),
+								Service: ModuleState,
+							})
+						}
+						if len(Data.Items) == 0 {
+							fmt.Println("Opps something error\n", Data)
+						}
+						Items := Data.Items[0]
 
-					NewYoutubeData := &database.LiveStream{
-						Status:       Items.Snippet.VideoStatus,
-						VideoID:      ID,
-						Title:        Items.Snippet.Title,
-						Thumb:        Thumb,
-						Desc:         Items.Snippet.Description,
-						Schedul:      Items.LiveDetails.StartTime,
-						Published:    Items.Snippet.PublishedAt,
-						Type:         YtType,
-						Viewers:      Items.Statistics.ViewCount,
-						Length:       durafmt.Parse(ParseDuration(Items.ContentDetails.Duration)).String(),
-						Group:        Group,
-						GroupYoutube: YtChan,
-						State:        config.YoutubeLive,
-					}
-					if Items.Snippet.VideoStatus == "none" {
-						if YtType == "Covering" {
-							log.WithFields(log.Fields{
-								"YtID":      ID,
-								"GroupName": Group.GroupName,
-							}).Info("New MV or Cover")
-
-							NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
-							engine.SendLiveNotif(NewYoutubeData, Bot)
-
-						} else if !Items.Snippet.PublishedAt.IsZero() {
-							log.WithFields(log.Fields{
-								"YtID":      ID,
-								"GroupName": Group.GroupName,
-							}).Info("Suddenly upload new video")
-							if NewYoutubeData.Schedul.IsZero() {
-								NewYoutubeData.UpdateSchdule(NewYoutubeData.Published)
+						Thumb := func() string {
+							_, err = network.Curl("http://i3.ytimg.com/vi/"+ID+"/maxresdefault.jpg", nil)
+							if err != nil {
+								return "http://i3.ytimg.com/vi/" + ID + "/hqdefault.jpg"
+							} else {
+								return "http://i3.ytimg.com/vi/" + ID + "/maxresdefault.jpg"
 							}
 
-							NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
-							engine.SendLiveNotif(NewYoutubeData, Bot)
+						}()
 
-						} else {
+						YtType := engine.YtFindType(Items.Snippet.Title)
+						if YtType == "Streaming" && Items.ContentDetails.Duration != "P0D" && Items.LiveDetails.StartTime.IsZero() {
+							YtType = "Regular video"
+						}
+
+						NewYoutubeData := &database.LiveStream{
+							Status:       Items.Snippet.VideoStatus,
+							VideoID:      ID,
+							Title:        Items.Snippet.Title,
+							Thumb:        Thumb,
+							Desc:         Items.Snippet.Description,
+							Schedul:      Items.LiveDetails.StartTime,
+							Published:    Items.Snippet.PublishedAt,
+							Type:         YtType,
+							Viewers:      Items.Statistics.ViewCount,
+							Length:       durafmt.Parse(ParseDuration(Items.ContentDetails.Duration)).String(),
+							Group:        Group,
+							GroupYoutube: YtChan,
+							State:        config.YoutubeLive,
+						}
+						if Items.Snippet.VideoStatus == "none" {
+							if YtType == "Covering" {
+								log.WithFields(log.Fields{
+									"YtID":      ID,
+									"GroupName": Group.GroupName,
+								}).Info("New MV or Cover")
+
+								NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
+								engine.SendLiveNotif(NewYoutubeData, Bot)
+
+							} else if !Items.Snippet.PublishedAt.IsZero() {
+								log.WithFields(log.Fields{
+									"YtID":      ID,
+									"GroupName": Group.GroupName,
+								}).Info("Suddenly upload new video")
+								if NewYoutubeData.Schedul.IsZero() {
+									NewYoutubeData.UpdateSchdule(NewYoutubeData.Published)
+								}
+
+								NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
+								engine.SendLiveNotif(NewYoutubeData, Bot)
+
+							} else {
+								log.WithFields(log.Fields{
+									"YtID":      ID,
+									"GroupName": Group.GroupName,
+								}).Info("Past live stream")
+								NewYoutubeData.UpdateStatus(config.PastStatus)
+								engine.SendLiveNotif(NewYoutubeData, Bot)
+							}
+						} else if Items.Snippet.VideoStatus == config.UpcomingStatus {
 							log.WithFields(log.Fields{
 								"YtID":      ID,
 								"GroupName": Group.GroupName,
-							}).Info("Past live stream")
-							NewYoutubeData.UpdateStatus(config.PastStatus)
-							engine.SendLiveNotif(NewYoutubeData, Bot)
+								"Message":   "Send to notify",
+							}).Info("New Upcoming live schedule")
+
+							NewYoutubeData.UpdateStatus(config.UpcomingStatus)
+							_, err := NewYoutubeData.InputYt()
+							if err != nil {
+								log.Error(err)
+							}
+
+							UpcominginHours := int(time.Until(NewYoutubeData.Schedul).Hours())
+							if UpcominginHours > 6 {
+								engine.SendLiveNotif(NewYoutubeData, Bot)
+							}
 						}
 					}
 				}
 			}
 		}
-	}
+	*/
 
 	for _, Member := range Group.Members {
 		if !Member.IsYtNill() && Member.Active() {
@@ -131,7 +152,6 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 				if YoutubeData == nil {
 					var (
 						Viewers string
-						Thumb   string
 					)
 
 					Data, err := engine.YtAPI([]string{ID})
@@ -171,13 +191,15 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						Viewers = Items.LiveDetails.Viewers
 					}
 
-					_, err = network.Curl("http://i3.ytimg.com/vi/"+ID+"/maxresdefault.jpg", nil)
-					if err != nil {
-						Thumb = "http://i3.ytimg.com/vi/" + ID + "/hqdefault.jpg"
-					} else {
-						Thumb = "http://i3.ytimg.com/vi/" + ID + "/maxresdefault.jpg"
-					}
+					Thumb := func() string {
+						_, err = network.Curl("http://i3.ytimg.com/vi/"+ID+"/maxresdefault.jpg", nil)
+						if err != nil {
+							return "http://i3.ytimg.com/vi/" + ID + "/hqdefault.jpg"
+						} else {
+							return "http://i3.ytimg.com/vi/" + ID + "/maxresdefault.jpg"
+						}
 
+					}()
 					YtType := engine.YtFindType(Items.Snippet.Title)
 					if YtType == "Streaming" && Items.ContentDetails.Duration != "P0D" && Items.LiveDetails.StartTime.IsZero() {
 						YtType = "Regular video"

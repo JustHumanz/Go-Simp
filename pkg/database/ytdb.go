@@ -13,16 +13,74 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+func YtGetStatusGroup(Payload map[string]interface{}) ([]LiveStream, string, error) {
+	GroupID := Payload["GroupID"].(int64)
+	GroupName := Payload["GroupName"].(string)
+	GroupRegion := Payload["Region"].(string)
+	Limit := Payload["Limit"].(int64)
+	Status := Payload["Status"].(string)
+	State := Payload["State"].(string)
+	var (
+		list LiveStream
+		Data []LiveStream
+	)
+	Key := State + "-" + Status + "-" + GroupName + "-" + GroupRegion
+
+	val, err := LiveCache.LRange(context.Background(), Key, 0, -1).Result()
+	if err != nil {
+		return nil, Key, err
+	}
+	if len(val) == 0 {
+		if State == "yt" {
+			rows, err := DB.Query("SELECT * FROM Vtuber.GroupVideos Where VtuberGroup_id=? AND Status=? Order by PublishedAt DESC Limit ?", GroupID, Status, Limit)
+			if err != nil {
+				return nil, Key, err
+			}
+			defer rows.Close()
+
+			if !rows.Next() {
+				return nil, Key, errors.New("not found any schdule")
+			}
+
+			for rows.Next() {
+				tmp := 0
+				err = rows.Scan(&list.ID, &list.VideoID, &list.Type, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.End, &list.Viewers, &list.Length, &tmp, &list.Group.ID)
+				if err != nil {
+					return nil, Key, err
+				}
+
+				Data = append(Data, list)
+				err = LiveCache.LPush(context.Background(), Key, list).Err()
+				if err != nil {
+					return nil, Key, err
+				}
+			}
+
+			if Data == nil {
+				return nil, Key, errors.New("not found any schdule")
+			}
+		}
+	} else {
+		for _, result := range unique(val) {
+			err := json.Unmarshal([]byte(result), &list)
+			if err != nil {
+				return nil, Key, err
+			}
+			Data = append(Data, list)
+		}
+	}
+	return Data, Key, nil
+}
+
 //YtGetStatusMap Get Youtube data from status
 func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 	var (
-		Data  []LiveStream
-		list  LiveStream
-		limit int
-		Key   []string //= strconv.Itoa(int(Member)) + Status + Region + Uniq
-		rows  *sql.Rows
-		err   error
-		ctx   = context.Background()
+		Data []LiveStream
+		list LiveStream
+		Key  []string //= strconv.Itoa(int(Member)) + Status + Region + Uniq
+		rows *sql.Rows
+		err  error
+		ctx  = context.Background()
 	)
 	var Group, Member int64
 	Status := Payload["Status"].(string)
@@ -49,12 +107,18 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 		return nil, Key2, err
 	}
 	if len(val) == 0 {
-		if (Group != 0 && Status != "live") || (Member != 0 && Status == "past") {
-			limit = 3
-		} else {
-			limit = 2525
-		}
+		limit := func() int {
+			if Payload["State"].(string) == config.Sys {
+				return 20
+			} else {
+				if (Group != 0 && Status != "live") || (Member != 0 && Status == "past") {
+					return 3
+				} else {
+					return 2525
+				}
+			}
 
+		}()
 		Query := ""
 		if Status == config.PastStatus {
 			Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Youtube.Status=? Order by EndStream DESC Limit ?"
