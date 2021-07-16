@@ -33,7 +33,7 @@ var (
 )
 
 const (
-	ModuleState = "Twitter Fanart"
+	ModuleState = "Subscriber"
 )
 
 func init() {
