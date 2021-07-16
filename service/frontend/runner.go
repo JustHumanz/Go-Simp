@@ -597,7 +597,8 @@ func main() {
 		for _, v := range commands {
 			_, err := Bot.ApplicationCommandCreate(Bot.State.User.ID, Guild.ID, v)
 			if err != nil {
-				log.Panicf("Cannot create '%v' command: %v guild: %v", v.Name, err, Guild.ID)
+				log.Errorf("Cannot create '%v' command: %v guild: %v", v.Name, err, Guild.ID)
+				continue
 			}
 		}
 	}
