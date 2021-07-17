@@ -343,7 +343,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 					}
 				}
 			} else if Status == "reminder" {
-				UpcominginMinutes := int(Timestart.Sub(time.Now()).Minutes())
+				UpcominginMinutes := int(time.Until(Timestart).Minutes())
 				if UpcominginMinutes > 10 && UpcominginMinutes < 70 {
 					if database.CheckReminder(UpcominginMinutes) {
 						GetView()
@@ -400,7 +400,6 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 			if Data.Status == config.LiveStatus {
 
 				MemberID := Data.Member.ID
-				//id, DiscordChannelID
 				var (
 					wg sync.WaitGroup
 				)

@@ -17,7 +17,7 @@ func YtGetStatusGroup(Payload map[string]interface{}) ([]LiveStream, string, err
 	GroupID := Payload["GroupID"].(int64)
 	GroupName := Payload["GroupName"].(string)
 	GroupRegion := Payload["Region"].(string)
-	Limit := Payload["Limit"].(int64)
+	YtChannelID := Payload["YtChannel"].(string)
 	Status := Payload["Status"].(string)
 	State := Payload["State"].(string)
 	var (
@@ -32,7 +32,7 @@ func YtGetStatusGroup(Payload map[string]interface{}) ([]LiveStream, string, err
 	}
 	if len(val) == 0 {
 		if State == "yt" {
-			rows, err := DB.Query("SELECT * FROM Vtuber.GroupVideos Where VtuberGroup_id=? AND Status=? Order by PublishedAt DESC Limit ?", GroupID, Status, Limit)
+			rows, err := DB.Query("SELECT * FROM Vtuber.GroupVideos inner join GroupYoutube on GroupYoutube.VtuberGroup_id=GroupVideos.VtuberGroup_id Where VtuberGroup_id=? AND Status=? AND YoutubeChannel=? Order by PublishedAt DESC", GroupID, Status, YtChannelID)
 			if err != nil {
 				return nil, Key, err
 			}
@@ -43,7 +43,7 @@ func YtGetStatusGroup(Payload map[string]interface{}) ([]LiveStream, string, err
 			}
 
 			for rows.Next() {
-				tmp := 0
+				tmp := false
 				err = rows.Scan(&list.ID, &list.VideoID, &list.Type, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.End, &list.Viewers, &list.Length, &tmp, &list.Group.ID)
 				if err != nil {
 					return nil, Key, err

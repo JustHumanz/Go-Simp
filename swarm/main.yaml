@@ -8,7 +8,6 @@ volumes:
 
 services:
   mysql:
-    restart: always
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT}' # TODO: Change this

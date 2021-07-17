@@ -32,7 +32,7 @@ import (
 var (
 	Bot          *discordgo.Session
 	GroupPayload *[]database.Group
-	lewd         bool
+	lewd         = flag.Bool("LewdFanart", false, "Enable lewd fanart module")
 	gRCPconn     pilot.PilotServiceClient
 )
 
@@ -44,9 +44,6 @@ const (
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
-	Lewd := flag.Bool("LewdFanart", false, "Enable lewd fanart module")
-	flag.Parse()
-	lewd = *Lewd
 	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 }
 
@@ -94,7 +91,7 @@ func main() {
 
 	c.AddFunc(config.CheckPayload, GetPayload)
 	c.AddFunc(config.PixivFanart, CheckPixiv)
-	if lewd {
+	if *lewd {
 		c.AddFunc(config.PixivFanartLewd, CheckPixivLewd)
 		log.Info("Enable lewd " + ModuleState)
 

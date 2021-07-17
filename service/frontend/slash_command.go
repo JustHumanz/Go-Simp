@@ -1982,7 +1982,7 @@ var (
 				if m.Author.ID == Register.AdminID && Register.State == UpdateState {
 					Counter++
 					if strings.ToLower(m.Content) == "exit" {
-						Register = nil
+						Clear(Register)
 						return
 					}
 
@@ -2050,7 +2050,7 @@ var (
 								log.Error(err)
 							}
 							if Counter == 5 {
-								Register = nil
+								Clear(Register)
 							}
 							return
 						}

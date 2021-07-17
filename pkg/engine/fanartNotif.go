@@ -1,9 +1,7 @@
 package engine
 
 import (
-	"context"
 	"strings"
-	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
@@ -18,7 +16,6 @@ func SendFanArtNude(Art database.DataFanart, Bot *discordgo.Session, Color int) 
 			var (
 				ChannelData []database.DiscordChannel
 				err1        error
-				EmbedMsg    *discordgo.MessageEmbed
 			)
 			if Art.Lewd {
 				ChannelData, err1 = database.ChannelTag(Member.ID, 1, config.LewdChannel, Member.Region)
@@ -41,62 +38,35 @@ func SendFanArtNude(Art database.DataFanart, Bot *discordgo.Session, Color int) 
 				icon = config.BiliBiliIMG
 			}
 
-			tags := ""
-			for i, Channel := range ChannelData {
+			for _, Channel := range ChannelData {
 				Channel.SetMember(Member)
-				UserTagsList, err := Channel.GetUserList(context.Background())
-				if err != nil {
-					log.Error(err)
-				} else {
-					if UserTagsList != nil {
-						tags = strings.Join(UserTagsList, " ")
-						EmbedMsg = NewEmbed().
-							SetAuthor(strings.Title(Art.Group.GroupName), Art.Group.IconURL).
-							SetTitle(Art.Author).
-							SetURL(Art.PermanentURL).
-							SetThumbnail(Art.AuthorAvatar).
-							SetDescription(Art.Text).
-							SetImage(Art.Photos...).
-							AddField("User Tags", tags).
-							SetFooter(Art.State, icon).
-							InlineAllFields().
-							SetColor(Color).MessageEmbed
-					} else {
-						EmbedMsg = NewEmbed().
-							SetAuthor(strings.Title(Art.Group.GroupName), Art.Group.IconURL).
-							SetTitle(Art.Author).
-							SetURL(Art.PermanentURL).
-							SetThumbnail(Art.AuthorAvatar).
-							SetDescription(Art.Text).
-							SetImage(Art.Photos...).
-							SetFooter(Art.State, icon).
-							InlineAllFields().
-							SetColor(Color).MessageEmbed
-					}
 
-					if tags == "" && Art.Group.GroupName == config.Indie && !Channel.IndieNotif {
-						//do nothing,like my life
-					} else {
-						tmp, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, EmbedMsg)
-						if err != nil {
-							log.Error(tmp, err.Error())
-							err = Channel.DelChannel(err.Error())
-							if err != nil {
-								log.Error(err)
-							}
-						}
-						err = Reacting(map[string]string{
-							"ChannelID": Channel.ChannelID,
-						}, Bot)
+				if Art.Group.GroupName == config.Indie && !Channel.IndieNotif {
+					//do nothing,like my life
+					continue
+				} else {
+					tmp, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
+						SetAuthor(strings.Title(Art.Group.GroupName), Art.Group.IconURL).
+						SetTitle(Art.Author).
+						SetURL(Art.PermanentURL).
+						SetThumbnail(Art.AuthorAvatar).
+						SetDescription(Art.Text).
+						SetImage(Art.Photos...).
+						SetFooter(Art.State, icon).
+						InlineAllFields().
+						SetColor(Color).MessageEmbed)
+					if err != nil {
+						log.Error(tmp, err.Error())
+						err = Channel.DelChannel(err.Error())
 						if err != nil {
 							log.Error(err)
 						}
 					}
-					if i%config.Waiting == 0 && config.GoSimpConf.LowResources {
-						log.WithFields(log.Fields{
-							"State": Art.State + " Fanart",
-						}).Warn(config.FanartSleep)
-						time.Sleep(config.FanartSleep)
+					err = Reacting(map[string]string{
+						"ChannelID": Channel.ChannelID,
+					}, Bot)
+					if err != nil {
+						log.Error(err)
 					}
 				}
 			}

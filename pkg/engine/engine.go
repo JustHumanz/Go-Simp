@@ -16,6 +16,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
@@ -549,94 +550,106 @@ func CreatePayload(Group database.Group, Scraper *twitterscraper.Scraper, Limit 
 		Fanarts []database.DataFanart
 	)
 
-	for _, Member := range Group.Members {
-		if Member.TwitterHashtags != "" {
-			log.WithFields(log.Fields{
-				"Hashtag": Member.TwitterHashtags,
-				"Group":   Group.GroupName,
-				"Lewd":    false,
-			}).Info("Start curl twitter")
-			for tweet := range Scraper.SearchTweets(context.Background(), Member.TwitterHashtags+" AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)", Limit) {
-				if tweet.Error != nil {
-					log.Error(tweet.Error)
-				}
-				for _, MemberHashtag := range Group.Members {
-					for _, TweetHashtag := range tweet.Hashtags {
-						if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterHashtags) && !tweet.IsQuoted && !tweet.IsReply && MemberHashtag.Name != "Kaichou" && len(tweet.Photos) > 0 {
-							TweetArt := database.DataFanart{
-								PermanentURL: tweet.PermanentURL,
-								Author:       tweet.Username,
-								AuthorAvatar: GetAuthorAvatar(tweet.Username),
-								TweetID:      tweet.ID,
-								Text:         RemoveTwitterShortLink(tweet.Text),
-								Photos:       tweet.Photos,
-								Likes:        tweet.Likes,
-								Member:       MemberHashtag,
-								Group:        Group,
-								State:        config.TwitterArt,
-							}
-							if tweet.Videos != nil {
-								TweetArt.Videos = tweet.Videos[0].Preview
-							}
+	for _, M := range Group.Members {
+		var wg sync.WaitGroup
+		wg.Add(1)
+		go func(w *sync.WaitGroup, Member database.Member) {
+			defer w.Done()
+			if Member.TwitterHashtags != "" {
+				log.WithFields(log.Fields{
+					"Hashtag": Member.TwitterHashtags,
+					"Group":   Group.GroupName,
+					"Lewd":    false,
+				}).Info("Start curl twitter")
+				for tweet := range Scraper.SearchTweets(context.Background(), Member.TwitterHashtags+" AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)", Limit) {
+					if tweet.Error != nil {
+						log.Error(tweet.Error)
+						continue
+					}
+					for _, MemberHashtag := range Group.Members {
+						for _, TweetHashtag := range tweet.Hashtags {
+							if strings.EqualFold("#"+TweetHashtag, MemberHashtag.TwitterHashtags) && !tweet.IsQuoted && !tweet.IsReply && MemberHashtag.Name != "Kaichou" && len(tweet.Photos) > 0 {
+								TweetArt := database.DataFanart{
+									PermanentURL: tweet.PermanentURL,
+									Author:       tweet.Username,
+									AuthorAvatar: GetAuthorAvatar(tweet.Username),
+									TweetID:      tweet.ID,
+									Text:         RemoveTwitterShortLink(tweet.Text),
+									Photos:       tweet.Photos,
+									Likes:        tweet.Likes,
+									Member:       MemberHashtag,
+									Group:        Group,
+									State:        config.TwitterArt,
+								}
+								if tweet.Videos != nil {
+									TweetArt.Videos = tweet.Videos[0].Preview
+								}
 
-							New, err := TweetArt.CheckTweetFanArt()
-							if err != nil {
-								log.Error(err)
-							}
+								New, err := TweetArt.CheckTweetFanArt()
+								if err != nil {
+									log.Error(err)
+								}
 
-							if New {
-								Fanarts = append(Fanarts, TweetArt)
+								if New {
+									Fanarts = append(Fanarts, TweetArt)
+								}
 							}
 						}
 					}
 				}
 			}
-		}
+		}(&wg, M)
 
-		if lewd && Member.TwitterLewd != "" {
-			log.WithFields(log.Fields{
-				"Hashtag": Member.TwitterLewd,
-				"Group":   Group.GroupName,
-				"Lewd":    true,
-			}).Info("Start curl twitter")
-			for tweet := range Scraper.SearchTweets(context.Background(), Member.TwitterLewd+" AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)", Limit) {
-				if tweet.Error != nil {
-					log.Error(tweet.Error)
-				}
-				for _, MemberHashtag := range Group.Members {
-					for _, TweetHashtag := range tweet.Hashtags {
-						if strings.ToLower("#"+TweetHashtag) == strings.ToLower(MemberHashtag.TwitterLewd) && !tweet.IsQuoted && !tweet.IsReply && len(tweet.Photos) > 0 {
-							TweetArt := database.DataFanart{
-								PermanentURL: tweet.PermanentURL,
-								Author:       tweet.Username,
-								AuthorAvatar: GetAuthorAvatar(tweet.Username),
-								TweetID:      tweet.ID,
-								Text:         RemoveTwitterShortLink(tweet.Text),
-								Photos:       tweet.Photos,
-								Likes:        tweet.Likes,
-								Member:       MemberHashtag,
-								Group:        Group,
-								State:        config.TwitterArt,
-								Lewd:         true,
-							}
+		wg.Add(1)
+		go func(w *sync.WaitGroup, Member database.Member) {
+			defer w.Done()
+			if lewd && Member.TwitterLewd != "" {
+				log.WithFields(log.Fields{
+					"Hashtag": Member.TwitterLewd,
+					"Group":   Group.GroupName,
+					"Lewd":    true,
+				}).Info("Start curl twitter")
+				for tweet := range Scraper.SearchTweets(context.Background(), Member.TwitterLewd+" AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)", Limit) {
+					if tweet.Error != nil {
+						log.Error(tweet.Error)
+						continue
+					}
+					for _, MemberHashtag := range Group.Members {
+						for _, TweetHashtag := range tweet.Hashtags {
+							if strings.EqualFold("#"+TweetHashtag, MemberHashtag.TwitterLewd) && !tweet.IsQuoted && !tweet.IsReply && len(tweet.Photos) > 0 {
+								TweetArt := database.DataFanart{
+									PermanentURL: tweet.PermanentURL,
+									Author:       tweet.Username,
+									AuthorAvatar: GetAuthorAvatar(tweet.Username),
+									TweetID:      tweet.ID,
+									Text:         RemoveTwitterShortLink(tweet.Text),
+									Photos:       tweet.Photos,
+									Likes:        tweet.Likes,
+									Member:       MemberHashtag,
+									Group:        Group,
+									State:        config.TwitterArt,
+									Lewd:         true,
+								}
 
-							if tweet.Videos != nil {
-								TweetArt.Videos = tweet.Videos[0].Preview
-							}
+								if tweet.Videos != nil {
+									TweetArt.Videos = tweet.Videos[0].Preview
+								}
 
-							New, err := TweetArt.CheckTweetFanArt()
-							if err != nil {
-								log.Error(err)
-							}
+								New, err := TweetArt.CheckTweetFanArt()
+								if err != nil {
+									log.Error(err)
+								}
 
-							if New {
-								Fanarts = append(Fanarts, TweetArt)
+								if New {
+									Fanarts = append(Fanarts, TweetArt)
+								}
 							}
 						}
 					}
 				}
 			}
-		}
+		}(&wg, M)
+		wg.Wait()
 	}
 
 	if len(Fanarts) > 0 {

@@ -9,7 +9,6 @@ services:
     image: justhumanz/go-simp-subscriber:${RELEASE_VERSION}                                                                                                                                                                                                
     depends_on:                                                                                                                                                                                                      
       - multi_tor                                                                                                                                                                                                    
-    restart: on-failure
     environment:                          
       - PrometheusURL=https://prometheus.humanz.moe  
     networks:                                      
@@ -19,7 +18,6 @@ services:
     image: justhumanz/go-simp-frontend:${RELEASE_VERSION}                                  
     depends_on:                           
       - multi_tor                                    
-    restart: on-failure
     environment:                       
       - PrometheusURL=https://prometheus.humanz.moe  
     networks:                                        

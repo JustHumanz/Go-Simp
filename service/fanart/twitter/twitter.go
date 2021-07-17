@@ -4,10 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"flag"
+	"sync"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
-	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
+	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
@@ -20,7 +21,7 @@ import (
 var (
 	Bot          *discordgo.Session
 	GroupPayload *[]database.Group
-	lewd         bool
+	lewd         = flag.Bool("LewdFanart", false, "Enable lewd fanart module")
 	gRCPconn     pilot.PilotServiceClient
 )
 
@@ -30,9 +31,7 @@ const (
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
-	Lewd := flag.Bool("LewdFanart", false, "Enable lewd fanart module")
 	flag.Parse()
-	lewd = *Lewd
 	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 }
 
@@ -79,8 +78,36 @@ func main() {
 	c.Start()
 
 	c.AddFunc(config.CheckPayload, GetPayload)
-	c.AddFunc(config.TwitterFanart, CheckNew)
-	if lewd {
+	c.AddFunc(config.TwitterFanart, func() {
+		var wg sync.WaitGroup
+		for _, G := range *GroupPayload {
+			wg.Add(1)
+			go func(Group database.Group, w *sync.WaitGroup) {
+				defer w.Done()
+				Fanarts, err := engine.CreatePayload(Group, config.Scraper, config.GoSimpConf.LimitConf.TwitterFanart, *lewd)
+				if err != nil {
+					log.WithFields(log.Fields{
+						"Group": Group.GroupName,
+					}).Error(err)
+				}
+				for _, Art := range Fanarts {
+					Color, err := engine.GetColor(config.TmpDir, Art.Photos[0])
+					if err != nil {
+						log.Error(err)
+					}
+					if config.GoSimpConf.Metric {
+						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+							MetricData: Art.MarshallBin(),
+							State:      config.FanartState,
+						})
+					}
+					engine.SendFanArtNude(Art, Bot, Color)
+				}
+			}(G, &wg)
+		}
+		wg.Wait()
+	})
+	if *lewd {
 		log.Info("Enable lewd" + ModuleState)
 	} else {
 		log.Info("Enable " + ModuleState)
@@ -88,31 +115,4 @@ func main() {
 
 	go pilot.RunHeartBeat(gRCPconn, ModuleState)
 	runfunc.Run(Bot)
-}
-
-//CheckNew Check new fanart
-func CheckNew() {
-	for _, Group := range *GroupPayload {
-		Fanarts, err := engine.CreatePayload(Group, config.Scraper, config.GoSimpConf.LimitConf.TwitterFanart, lewd)
-		if err != nil {
-			log.WithFields(log.Fields{
-				"Group": Group.GroupName,
-			}).Warn(err)
-		} else {
-			for _, Art := range Fanarts {
-				Color, err := engine.GetColor(config.TmpDir, Art.Photos[0])
-				if err != nil {
-					log.Error(err)
-				}
-				if config.GoSimpConf.Metric {
-					gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-						MetricData: Art.MarshallBin(),
-						State:      config.FanartState,
-					})
-				}
-
-				engine.SendFanArtNude(Art, Bot, Color)
-			}
-		}
-	}
 }

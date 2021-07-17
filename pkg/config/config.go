@@ -62,7 +62,7 @@ const (
 	Sys               = "system"
 
 	//Crontab
-	TwitterFanart              = "@every 0h15m0s"
+	TwitterFanart              = "@every 0h5m0s"
 	BiliBiliFanart             = "@every 0h6m0s"
 	PixivFanart                = "@every 0h30m0s"
 	PixivFanartLewd            = "@every 1h0m0s"

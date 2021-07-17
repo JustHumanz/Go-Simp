@@ -163,6 +163,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             export RELEASE_VERSION=${{ env.RELEASE_VERSION }}
+            export TOPGG=${{ env.TOPGG }}
             cd Go-Simp/swarm && git pull
             docker stack deploy -c live.yaml livestream
             docker stack deploy -c fanart.yaml fanart
