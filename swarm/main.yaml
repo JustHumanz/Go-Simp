@@ -18,10 +18,7 @@ services:
     networks:
       - go-simp-net  
   multi_tor:
-    image: evait/multitor
-#    deploy:
-#      replicas: 2    
-    build: service/multitor
+    image: justhumanz/go-multitor
     networks:
       - go-simp-net
 
