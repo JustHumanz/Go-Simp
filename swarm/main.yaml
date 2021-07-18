@@ -17,6 +17,8 @@ services:
     - ./mysql_data:/var/lib/mysql
     networks:
       - go-simp-net  
+    ports:
+      - 3306:3306  
   multi_tor:
     image: justhumanz/go-multitor
     networks:
