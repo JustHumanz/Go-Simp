@@ -39,8 +39,6 @@ func SendFanArtNude(Art database.DataFanart, Bot *discordgo.Session, Color int) 
 			}
 
 			for _, Channel := range ChannelData {
-				Channel.SetMember(Member)
-
 				if Art.Group.GroupName == config.Indie && !Channel.IndieNotif {
 					//do nothing,like my life
 					continue

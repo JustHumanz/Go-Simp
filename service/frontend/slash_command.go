@@ -1806,14 +1806,14 @@ var (
 						}
 					}
 				} else {
-					err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-						Type: discordgo.InteractionResponseChannelMessageWithSource,
-						Data: &discordgo.InteractionResponseData{
-							Embeds: embed,
-						},
+					_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+						Embeds: embed,
 					})
 					if err != nil {
-						log.Error(err)
+						s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+							Content: "Something went wrong",
+						})
+						return
 					}
 				}
 			} else {
