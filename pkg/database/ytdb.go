@@ -32,7 +32,7 @@ func YtGetStatusGroup(Payload map[string]interface{}) ([]LiveStream, string, err
 	}
 	if len(val) == 0 {
 		if State == "yt" {
-			rows, err := DB.Query("SELECT * FROM Vtuber.GroupVideos inner join GroupYoutube on GroupYoutube.VtuberGroup_id=GroupVideos.VtuberGroup_id Where GroupVideos.VtuberGroup_id=? AND Status=? AND YoutubeChannel=? Order by PublishedAt DESC", GroupID, Status, YtChannelID)
+			rows, err := DB.Query("SELECT GroupVideos.* FROM Vtuber.GroupVideos inner join GroupYoutube on GroupYoutube.VtuberGroup_id=GroupVideos.VtuberGroup_id Where GroupVideos.VtuberGroup_id=? AND Status=? AND YoutubeChannel=? Order by PublishedAt DESC", GroupID, Status, YtChannelID)
 			if err != nil {
 				return nil, Key, err
 			}
