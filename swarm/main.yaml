@@ -9,6 +9,7 @@ volumes:
 services:
   mysql:
     image: mysql:latest
+    command: --sql_mode=""
     environment:
       MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT}' # TODO: Change this
       MYSQL_USER: '${MYSQL_USER}'
