@@ -708,7 +708,6 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 		expiresAt := time.Now().In(loc)
 		if Data.State == config.YoutubeLive {
 			var (
-				wg        sync.WaitGroup
 				YtChannel = "https://www.youtube.com/channel/" + Data.GroupYoutube.YtChannel + "?sub_confirmation=1"
 				YtURL     = "https://www.youtube.com/watch?v=" + Data.VideoID
 				Viewers   string
@@ -718,26 +717,25 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 			if err != nil {
 				log.Error(err)
 			}
-			for i, v := range ChannelData {
-				if v.TypeTag == 2 || v.TypeTag == 3 {
-					wg.Add(1)
-					view, err := strconv.Atoi(Data.Viewers)
-					if err != nil {
-						log.Error(err)
-					}
 
-					if Data.Viewers == "" || Data.Viewers == "0" {
-						Data.Viewers = config.Ytwaiting
-					} else {
-						Viewers = NearestThousandFormat(float64(view))
-					}
+			if Data.Status == config.UpcomingStatus {
+				for _, Channel := range ChannelData {
+					if Channel.TypeTag == 2 || Channel.TypeTag == 3 {
+						view, err := strconv.Atoi(Data.Viewers)
+						if err != nil {
+							log.Error(err)
+						}
 
-					if Viewers == "" || view < 100 {
-						Viewers = "???"
-					}
+						if Data.Viewers == "" || Data.Viewers == "0" {
+							Data.Viewers = config.Ytwaiting
+						} else {
+							Viewers = NearestThousandFormat(float64(view))
+						}
 
-					go func(Channel database.DiscordChannel, wg *sync.WaitGroup) error {
-						defer wg.Done()
+						if Viewers == "" || view < 100 {
+							Viewers = "???"
+						}
+
 						msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
 							SetAuthor(Data.Group.GroupName+" "+Data.GroupYoutube.Region, Data.Group.IconURL, YtChannel).
 							SetTitle("Uploaded a new video").
@@ -760,23 +758,65 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							}).Error(err)
 							err = Channel.DelChannel(err.Error())
 							if err != nil {
-								return err
+								log.Error(err)
 							}
 						}
-						return nil
-					}(v, &wg)
-					//Wait every ge 5 discord channel
-					if i%config.Waiting == 0 && config.GoSimpConf.LowResources {
-						log.WithFields(log.Fields{
-							"Func":  "Youtube",
-							"Value": config.Waiting,
-						}).Warn("Waiting send message")
-						wg.Wait()
-						expiresAt = time.Now().In(loc)
+					}
+				}
+			} else if Data.Status == config.LiveStatus {
+				for _, Channel := range ChannelData {
+					if Channel.TypeTag == 2 || Channel.TypeTag == 3 {
+						view, err := strconv.Atoi(Data.Viewers)
+						if err != nil {
+							log.Error(err)
+						}
+
+						if Data.Viewers == "" || Data.Viewers == "0" {
+							Data.Viewers = config.Ytwaiting
+						} else {
+							Viewers = NearestThousandFormat(float64(view))
+						}
+
+						if Viewers == "" || view < 100 {
+							Viewers = "???"
+						}
+						Timestart := func() time.Time {
+							if !Data.Schedul.IsZero() {
+								return Data.Schedul
+							} else if Data.Schedul.IsZero() && !Data.Published.IsZero() {
+								return Data.Published
+							} else {
+								return time.Now()
+							}
+						}()
+
+						msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
+							SetAuthor(Data.Group.GroupName+" "+Data.GroupYoutube.Region, Data.Group.IconURL, YtChannel).
+							SetTitle("New upcoming Livestream").
+							SetDescription(Data.Title).
+							SetImage(Data.Thumb).
+							SetThumbnail(Data.Group.IconURL).
+							SetURL(YtURL).
+							AddField("Type ", Data.Type).
+							AddField("Start live in", durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(1).String()).
+							AddField("Viewers", Viewers+" "+FanBase).
+							InlineAllFields().
+							SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
+							SetColor(Color()).MessageEmbed)
+						if err != nil {
+							log.WithFields(log.Fields{
+								"Message":          msg,
+								"ChannelID":        Channel.ID,
+								"DiscordChannelID": Channel.ChannelID,
+							}).Error(err)
+							err = Channel.DelChannel(err.Error())
+							if err != nil {
+								log.Error(err)
+							}
+						}
 					}
 				}
 			}
 		}
-
 	}
 }
