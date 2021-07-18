@@ -1,0 +1,17 @@
+version: "3.7"
+
+networks:
+  go-simp-net:
+    external: true
+
+services:
+
+  db_migrate:
+    image: justhumanz/go-simp-migrate
+    volumes:
+      - ../service/migrate/vtuber.json:/vtuber.json
+    environment:
+      - PROMETHEUS="http://prometheus:9090"
+    restart: on-failure
+    networks:
+      - go-simp-net
