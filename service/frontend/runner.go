@@ -322,7 +322,7 @@ func main() {
 					{
 						Type:        discordgo.ApplicationCommandOptionChannel,
 						Name:        "channel-name",
-						Description: "Choice channel",
+						Description: "Select channel",
 						Required:    true,
 					},
 				},
@@ -335,7 +335,20 @@ func main() {
 					{
 						Type:        discordgo.ApplicationCommandOptionChannel,
 						Name:        "channel-name",
-						Description: "Choice channel",
+						Description: "Select channel",
+						Required:    true,
+					},
+				},
+			},
+			{
+				Name:        "channel-delete",
+				Description: "delete channel",
+				Options: []*discordgo.ApplicationCommandOption{
+
+					{
+						Type:        discordgo.ApplicationCommandOptionChannel,
+						Name:        "channel-delete",
+						Description: "Select channel",
 						Required:    true,
 					},
 				},
@@ -348,14 +361,14 @@ func main() {
 					{
 						Type:        discordgo.ApplicationCommandOptionInteger,
 						Name:        "group-name",
-						Description: "Choice vtuber GroupName",
+						Description: "Select vtuber GroupName",
 						Choices:     VtuberGroupChoices,
 						Required:    true,
 					},
 					{
 						Type:        discordgo.ApplicationCommandOptionString,
 						Name:        "vtuber-name",
-						Description: "Choice vtuber",
+						Description: "Select vtuber",
 						Required:    false,
 					},
 				},
@@ -368,14 +381,14 @@ func main() {
 					{
 						Type:        discordgo.ApplicationCommandOptionInteger,
 						Name:        "group-name",
-						Description: "Choice vtuber GroupName",
+						Description: "Select vtuber GroupName",
 						Choices:     VtuberGroupChoices,
 						Required:    true,
 					},
 					{
 						Type:        discordgo.ApplicationCommandOptionString,
 						Name:        "vtuber-name",
-						Description: "Choice vtuber",
+						Description: "Select vtuber",
 						Required:    false,
 					},
 				},
@@ -388,7 +401,7 @@ func main() {
 					{
 						Type:        discordgo.ApplicationCommandOptionInteger,
 						Name:        "state",
-						Description: "Choice livestream platform",
+						Description: "Select livestream platform",
 						Choices: []*discordgo.ApplicationCommandOptionChoice{
 							{
 								Name:  "Youtube",
@@ -408,7 +421,7 @@ func main() {
 					{
 						Type:        discordgo.ApplicationCommandOptionInteger,
 						Name:        "status",
-						Description: "Choice livestream status",
+						Description: "Select livestream status",
 						Choices: []*discordgo.ApplicationCommandOptionChoice{
 							{
 								Name:  "Live",
@@ -428,14 +441,14 @@ func main() {
 					{
 						Type:        discordgo.ApplicationCommandOptionInteger,
 						Name:        "group-name",
-						Description: "Choice vtuber GroupName",
+						Description: "Select vtuber GroupName",
 						Choices:     VtuberGroupChoices,
 						Required:    true,
 					},
 					{
 						Type:        discordgo.ApplicationCommandOptionString,
 						Name:        "vtuber-name",
-						Description: "Choice vtuber",
+						Description: "Select vtuber",
 						Required:    false,
 					},
 					{
@@ -583,6 +596,38 @@ func main() {
 						Name:        "role-name",
 						Description: "Role",
 						Required:    true,
+					},
+				},
+			},
+			{
+				Name:        "prediction",
+				Description: "prediction vtuber subs/followers in next week",
+				Options: []*discordgo.ApplicationCommandOption{
+					{
+						Type:        discordgo.ApplicationCommandOptionString,
+						Name:        "platform",
+						Description: "Select platform",
+						Required:    true,
+						Choices: []*discordgo.ApplicationCommandOptionChoice{
+							{
+								Name:  "Twitter",
+								Value: "tw",
+							},
+							{
+								Name:  "BiliBili",
+								Value: "bl",
+							},
+							{
+								Name:  "Youtube",
+								Value: "yt",
+							},
+						},
+					},
+					{
+						Type:        discordgo.ApplicationCommandOptionString,
+						Required:    true,
+						Name:        "vtuber-name",
+						Description: "select vtuber name",
 					},
 				},
 			},

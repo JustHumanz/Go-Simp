@@ -377,7 +377,7 @@ func (Data *DiscordChannel) AddChannel() error {
 	if Data.Dynamic {
 		Data.SetNewUpcoming(false).SetLiveOnly(true)
 	}
-	stmt, err := DB.Prepare(`INSERT INTO Channel (DiscordChannelID,Type,LiveOnly,NewUpcoming,Dynamic,Region,IndieNotif,Lite,VtuberGroup_id) values(?,?,?,?,?,?,?,?)`)
+	stmt, err := DB.Prepare(`INSERT INTO Channel (DiscordChannelID,Type,LiveOnly,NewUpcoming,Dynamic,Region,IndieNotif,Lite,VtuberGroup_id) values(?,?,?,?,?,?,?,?,?)`)
 	if err != nil {
 		return err
 	}

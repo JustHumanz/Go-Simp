@@ -1,7 +1,10 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -10,6 +13,7 @@ import (
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
+	"github.com/JustHumanz/Go-Simp/service/prediction"
 	"github.com/bwmarrin/discordgo"
 	"github.com/hako/durafmt"
 	"github.com/olekukonko/tablewriter"
@@ -2064,6 +2068,232 @@ var (
 					EmojiHandler(Register, s, m)
 				}
 			})
+		},
+		"channel-delete": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			Admin, err := MemberHasPermission(i.GuildID, i.Member.User.ID)
+			if err != nil {
+				log.Error(err)
+			}
+			if !Admin {
+				s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Content: "You don't have permission to enable/disable/update,make sure you have `Manage Channels` Role permission",
+					},
+				})
+				return
+			}
+
+			Channel := i.ApplicationCommandData().Options[0].ChannelValue(nil)
+			ChannelData, err := database.ChannelStatus(Channel.ID)
+			if err != nil {
+				log.Error(err)
+			}
+			err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Flags:   1 << 6,
+					Content: "Processing",
+				},
+			})
+			if err != nil {
+				log.Error(err)
+			}
+
+			for _, v := range ChannelData {
+				if v.ChannelCheck() {
+					err := v.DelChannel("Delete")
+					if err != nil {
+						log.Error(err)
+						_, err := s.ChannelMessageSend(i.ChannelID, "Something error XD")
+						if err != nil {
+							log.Error(err)
+						}
+						return
+					}
+					_, err = s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+						Content: "<@" + i.Member.User.ID + "> is disabled " + v.Group.GroupName + " from this channel",
+					})
+					if err != nil {
+						s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+							Content: "Something went wrong",
+						})
+						return
+					}
+				}
+			}
+		},
+		"prediction": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			var tw, bl, yt bool
+
+			if i.ApplicationCommandData().Options[0].Name == "tw" {
+				tw = true
+			}
+
+			if i.ApplicationCommandData().Options[0].Name == "bl" {
+				bl = true
+			}
+
+			if i.ApplicationCommandData().Options[0].Name == "yt" {
+				yt = true
+			}
+
+			VtuberInput := i.ApplicationCommandData().Options[1].StringValue()
+			for _, v := range *GroupsPayload {
+				for k, v2 := range v.Members {
+					if strings.EqualFold(VtuberInput, v2.EnName) || strings.EqualFold(VtuberInput, v2.JpName) || strings.EqualFold(VtuberInput, v2.Name) {
+						var (
+							msg    *prediction.Message
+							tmp    string
+							Avatar string
+							Url    string
+						)
+
+						Color, err := engine.GetColor(config.TmpDir, i.Member.User.AvatarURL("128"))
+						if err != nil {
+							log.Error(err)
+						}
+
+						Data, err := v2.GetSubsCount()
+						if err != nil {
+							log.Error(err)
+						}
+
+						if tw && v2.TwitterName == "" {
+							s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+								Type: discordgo.InteractionResponseChannelMessageWithSource,
+								Data: &discordgo.InteractionResponseData{
+									Content: VtuberInput + " don't have twitter account",
+								},
+							})
+							return
+						} else if tw && v2.TwitterName != "" {
+							msg = &prediction.Message{
+								State: "Twitter",
+								Name:  v2.Name,
+								Limit: 7,
+							}
+							tmp = strconv.Itoa(Data.TwFollow)
+							Avatar = v2.YoutubeAvatar
+							Url = "https://twitter.com/" + v2.TwitterName
+
+						}
+
+						if bl && v2.BiliBiliID == 0 {
+							s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+								Type: discordgo.InteractionResponseChannelMessageWithSource,
+								Data: &discordgo.InteractionResponseData{
+									Content: VtuberInput + " don't have bilibili account",
+								},
+							})
+							return
+						} else if bl && v2.BiliBiliID != 0 {
+							msg = &prediction.Message{
+								State: "BiliBili",
+								Name:  v2.Name,
+								Limit: 7,
+							}
+							tmp = strconv.Itoa(Data.BiliFollow)
+							Avatar = v2.BiliBiliAvatar
+							Url = "https://space.bilibili/" + strconv.Itoa(v2.BiliBiliID)
+
+						}
+
+						if yt && v2.YoutubeID == "" {
+							s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+								Type: discordgo.InteractionResponseChannelMessageWithSource,
+								Data: &discordgo.InteractionResponseData{
+									Content: VtuberInput + " don't have youtube account",
+								},
+							})
+							return
+						} else if yt && v2.YoutubeID != "" {
+							msg = &prediction.Message{
+								State: "Youtube",
+								Name:  v2.Name,
+								Limit: 7,
+							}
+							tmp = strconv.Itoa(Data.YtSubs)
+							Avatar = v2.YoutubeAvatar
+							Url = "https://www.youtube.com/channel/" + v2.YoutubeID + "?sub_confirmation=1"
+
+						}
+
+						RawData, err := PredictionConn.GetSubscriberPrediction(context.Background(), msg)
+						if err != nil {
+							s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+								Type: discordgo.InteractionResponseChannelMessageWithSource,
+								Data: &discordgo.InteractionResponseData{
+									Content: "Something error\n" + err.Error(),
+								},
+							})
+
+							log.Error(err)
+							return
+						}
+
+						if RawData.Code == 0 {
+							target := time.Now().AddDate(0, 0, 7)
+							dateFormat := fmt.Sprintf("%s/%d", target.Month().String(), target.Day())
+							now := time.Now()
+							nowFormat := fmt.Sprintf("%s/%d", now.Month().String(), now.Day())
+							Graph := "[Views Graph](" + os.Getenv("PrometheusURL") + "/graph?g0.expr=get_subscriber%7Bstate%3D%22" + msg.State + "%22%2C%20vtuber%3D%22" + v2.Name + "%22%7D&g0.tab=0&g0.stacked=0&g0.range_input=1w)"
+							Socre := int(RawData.Score * 100)
+							err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+								Type: discordgo.InteractionResponseChannelMessageWithSource,
+								Data: &discordgo.InteractionResponseData{
+									Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
+										SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+										SetTitle(engine.FixName(v2.EnName, v2.JpName)).
+										SetURL(Url).
+										AddField("Current "+msg.State+" followes/subscriber("+nowFormat+")", tmp).
+										AddField("Next 7 days Prediction("+dateFormat+")", strconv.Itoa(int(RawData.Prediction))).
+										RemoveInline().
+										AddField("Prediction score", strconv.Itoa(Socre)+"%").
+										AddField("Graph", Graph).
+										InlineAllFields().
+										SetThumbnail(Avatar).
+										SetColor(Color).
+										SetFooter("algorithm : Linear regression").MessageEmbed},
+								},
+							})
+							if err != nil {
+								log.Error(err)
+							}
+
+						} else {
+							err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+								Type: discordgo.InteractionResponseChannelMessageWithSource,
+								Data: &discordgo.InteractionResponseData{
+									Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
+										SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+										SetTitle(engine.FixName(v2.EnName, v2.JpName)).
+										SetDescription("Something error\ncan't make prediction,Bot still need more subscriber/followers data").
+										SetImage(engine.NotFoundIMG()).
+										SetColor(Color).MessageEmbed},
+								},
+							})
+							if err != nil {
+								log.Error(err)
+							}
+							return
+						}
+					}
+
+					if k == len(v.Members)-1 {
+						err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+							Type: discordgo.InteractionResponseChannelMessageWithSource,
+							Data: &discordgo.InteractionResponseData{
+								Content: "Invalid vtuber name",
+							},
+						})
+						if err != nil {
+							log.Error(err)
+						}
+						return
+					}
+				}
+			}
 		},
 	}
 )
