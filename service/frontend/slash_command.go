@@ -2126,15 +2126,15 @@ var (
 		"prediction": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			var tw, bl, yt bool
 
-			if i.ApplicationCommandData().Options[0].Name == "tw" {
+			if i.ApplicationCommandData().Options[0].StringValue() == "tw" {
 				tw = true
 			}
 
-			if i.ApplicationCommandData().Options[0].Name == "bl" {
+			if i.ApplicationCommandData().Options[0].StringValue() == "bl" {
 				bl = true
 			}
 
-			if i.ApplicationCommandData().Options[0].Name == "yt" {
+			if i.ApplicationCommandData().Options[0].StringValue() == "yt" {
 				yt = true
 			}
 
