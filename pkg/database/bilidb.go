@@ -10,21 +10,15 @@ import (
 
 //GetRoomData get RoomData from LiveBiliBili
 func GetRoomData(MemberID int64, RoomID int) (*LiveStream, error) {
-	rows, err := DB.Query(`SELECT * FROM LiveBiliBili Where VtuberMember_id=? AND RoomID=?`, MemberID, RoomID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
 
 	var (
 		Data LiveStream
 	)
-	for rows.Next() {
-		err = rows.Scan(&Data.ID, &Data.Member.BiliRoomID, &Data.Status, &Data.Title, &Data.Thumb, &Data.Desc, &Data.Published, &Data.Schedul, &Data.Viewers, &Data.End, &Data.Member.ID)
-		if err != nil {
-			return nil, err
-		}
+	err := DB.QueryRow("SELECT * FROM LiveBiliBili Where VtuberMember_id=? AND RoomID=?", MemberID, RoomID).Scan(&Data.ID, &Data.Member.BiliRoomID, &Data.Status, &Data.Title, &Data.Thumb, &Data.Desc, &Data.Published, &Data.Schedul, &Data.Viewers, &Data.End, &Data.Member.ID)
+	if err != nil {
+		return nil, err
 	}
+
 	return &Data, nil
 }
 

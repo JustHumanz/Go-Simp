@@ -114,6 +114,13 @@ func CheckTwitch() {
 					"VtuberName": Member.Name,
 				}).Info("Checking Twitch")
 
+				ResultDB, err := database.GetTwitch(Member.ID)
+				if err != nil {
+					log.Error(err)
+					continue
+				}
+				ResultDB.AddMember(Member).AddGroup(Group).SetState(config.TwitchLive)
+
 				result, err := TwitchClient.GetStreams(&helix.StreamsParams{
 					UserLogins: []string{Member.TwitchName},
 				})
@@ -124,20 +131,6 @@ func CheckTwitch() {
 						Service: ModuleState,
 					})
 				}
-
-				ResultDB, err := database.GetTwitch(Member.ID)
-				if err != nil {
-					if err.Error() != "not found any schdule" {
-						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-							Message: err.Error(),
-							Service: ModuleState,
-						})
-					} else {
-						log.Error(err)
-					}
-					continue
-				}
-				ResultDB.AddMember(Member).AddGroup(Group).SetState(config.TwitchLive)
 
 				if len(result.Data.Streams) > 0 {
 					for _, Stream := range result.Data.Streams {
