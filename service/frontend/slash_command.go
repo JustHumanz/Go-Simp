@@ -2139,8 +2139,8 @@ var (
 			}
 
 			VtuberInput := i.ApplicationCommandData().Options[1].StringValue()
-			for _, v := range *GroupsPayload {
-				for k, v2 := range v.Members {
+			for k, v := range *GroupsPayload {
+				for _, v2 := range v.Members {
 					if strings.EqualFold(VtuberInput, v2.EnName) || strings.EqualFold(VtuberInput, v2.JpName) || strings.EqualFold(VtuberInput, v2.Name) {
 						var (
 							msg    *prediction.Message
@@ -2279,19 +2279,18 @@ var (
 							return
 						}
 					}
-
-					if k == len(v.Members)-1 {
-						err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-							Type: discordgo.InteractionResponseChannelMessageWithSource,
-							Data: &discordgo.InteractionResponseData{
-								Content: "Invalid vtuber name",
-							},
-						})
-						if err != nil {
-							log.Error(err)
-						}
-						return
+				}
+				if k == len(*GroupsPayload)-1 {
+					err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+						Type: discordgo.InteractionResponseChannelMessageWithSource,
+						Data: &discordgo.InteractionResponseData{
+							Content: "Invalid vtuber name",
+						},
+					})
+					if err != nil {
+						log.Error(err)
 					}
+					return
 				}
 			}
 		},
