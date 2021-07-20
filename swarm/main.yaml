@@ -20,8 +20,10 @@ services:
       - go-simp-net  
     ports:
       - 3306:3306  
+
   multi_tor:
     image: justhumanz/go-multitor
+    command: ["./MultiTOR","-privoxy","/usr/sbin/privoxy","-key","${KEY}"]    
     networks:
       - go-simp-net
 
