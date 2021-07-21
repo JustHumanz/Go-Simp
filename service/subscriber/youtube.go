@@ -21,11 +21,14 @@ func CheckYoutube() {
 			if !Member.IsYtNill() && Member.Active() {
 				body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+Member.YoutubeID+"&key="+*Token, nil)
 				if err != nil {
-					log.Error(err, string(body))
-					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message: err.Error(),
-						Service: ModuleState,
-					})
+					if err.Error() == "403 Forbidden" {
+						log.Error(err, string(body))
+					} else {
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message: err.Error(),
+							Service: ModuleState,
+						})
+					}
 				}
 				err = json.Unmarshal(body, &YTstate)
 				if err != nil {
