@@ -12,7 +12,7 @@ require (
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/n0madic/twitter-scraper v0.0.0-20210428094026-3ea1f3b456cd
-	github.com/nicklaw5/helix v1.21.0
+	github.com/nicklaw5/helix v1.24.1
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/prometheus/client_golang v1.11.0
 	github.com/prometheus/common v0.29.0 // indirect
