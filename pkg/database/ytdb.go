@@ -32,7 +32,7 @@ func YtGetStatusGroup(Payload map[string]interface{}) ([]LiveStream, string, err
 	}
 	if len(val) == 0 {
 		if State == "yt" {
-			rows, err := DB.Query("SELECT GroupVideos.* FROM Vtuber.GroupVideos inner join GroupYoutube on GroupYoutube.VtuberGroup_id=GroupVideos.VtuberGroup_id Where GroupVideos.VtuberGroup_id=? AND Status=? AND YoutubeChannel=? Order by PublishedAt DESC", GroupID, Status, YtChannelID)
+			rows, err := DB.Query("SELECT GroupVideos.*,GroupYoutube.YoutubeChannel,GroupYoutube.Region FROM Vtuber.GroupVideos inner join GroupYoutube on GroupYoutube.VtuberGroup_id=GroupVideos.VtuberGroup_id Where GroupVideos.VtuberGroup_id=? AND Status=? AND YoutubeChannel=? Order by PublishedAt DESC", GroupID, Status, YtChannelID)
 			if err != nil {
 				return nil, Key, err
 			}
@@ -44,7 +44,7 @@ func YtGetStatusGroup(Payload map[string]interface{}) ([]LiveStream, string, err
 
 			for rows.Next() {
 				tmp := false
-				err = rows.Scan(&list.ID, &list.VideoID, &list.Type, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.End, &list.Viewers, &list.Length, &tmp, &list.Group.ID)
+				err = rows.Scan(&list.ID, &list.VideoID, &list.Type, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.End, &list.Viewers, &list.Length, &tmp, &list.Group.ID, &list.GroupYoutube.YtChannel, &list.GroupYoutube.Region)
 				if err != nil {
 					return nil, Key, err
 				}
@@ -307,6 +307,15 @@ func (Group GroupYtChannel) CheckYoutubeVideo(VideoID string) (*LiveStream, erro
 //Update youtube data
 func (Data *LiveStream) UpdateYt(Status string) error {
 	_, err := DB.Exec(`Update Youtube set Type=?,Status=?,Title=?,Thumbnails=?,Description=?,PublishedAt=?,ScheduledStart=?,EndStream=?,Viewers=?,Length=? where id=?`, Data.Type, Status, Data.Title, Data.Thumb, Data.Desc, Data.Published, Data.Schedul, Data.End, Data.Viewers, Data.Length, Data.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//Update youtube data
+func (Data *LiveStream) UpdateGroupYt(Status string) error {
+	_, err := DB.Exec(`Update GroupVideos set Type=?,Status=?,Title=?,Thumbnails=?,Description=?,PublishedAt=?,ScheduledStart=?,EndStream=?,Viewers=?,Length=? where id=?`, Data.Type, Status, Data.Title, Data.Thumb, Data.Desc, Data.Published, Data.Schedul, Data.End, Data.Viewers, Data.Length, Data.ID)
 	if err != nil {
 		return err
 	}

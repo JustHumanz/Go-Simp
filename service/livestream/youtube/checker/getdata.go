@@ -122,11 +122,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						if err != nil {
 							log.Error(err)
 						}
-
-						UpcominginHours := int(time.Until(NewYoutubeData.Schedul).Hours())
-						if UpcominginHours > 6 {
-							engine.SendLiveNotif(NewYoutubeData, Bot)
-						}
+						engine.SendLiveNotif(NewYoutubeData, Bot)
 					}
 				} else if Update {
 					log.WithFields(log.Fields{
@@ -157,7 +153,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 							"VideoData ID": ID,
 							"Status":       config.PastStatus,
 						}).Info("Update video status from " + Items.Snippet.VideoStatus + " to past")
-						YoutubeData.UpdateYt(config.PastStatus)
+						YoutubeData.UpdateGroupYt(config.PastStatus)
 
 						engine.RemoveEmbed(ID, Bot)
 
@@ -184,7 +180,8 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 							YoutubeData.UpdateSchdule(Items.LiveDetails.ActualStartTime)
 						}
 
-						YoutubeData.UpdateYt(YoutubeData.Status)
+						YoutubeData.UpdateGroupYt(YoutubeData.Status)
+						engine.SendLiveNotif(YoutubeData, Bot)
 
 					} else if Items.Snippet.VideoStatus == config.UpcomingStatus && YoutubeData.Status == config.PastStatus {
 						log.WithFields(log.Fields{
@@ -200,7 +197,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 							"Viwers now":   Items.Statistics.ViewCount,
 							"Status":       config.PastStatus,
 						}).Info("Update Viwers")
-						YoutubeData.UpdateYt(config.PastStatus)
+						YoutubeData.UpdateGroupYt(config.PastStatus)
 
 					} else if Items.Snippet.VideoStatus == config.LiveStatus && YoutubeData.Viewers != Items.Statistics.ViewCount {
 						log.WithFields(log.Fields{
@@ -209,7 +206,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 							"Viwers now":   Items.Statistics.ViewCount,
 							"Status":       config.LiveStatus,
 						}).Info("Update Viwers")
-						YoutubeData.UpdateYt(config.LiveStatus)
+						YoutubeData.UpdateGroupYt(config.LiveStatus)
 
 					} else if Items.Snippet.VideoStatus == config.UpcomingStatus {
 						if Items.LiveDetails.StartTime != YoutubeData.Schedul {
@@ -221,7 +218,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 							}).Info("Livestream schdule changed")
 
 							YoutubeData.UpdateSchdule(Items.LiveDetails.StartTime)
-							YoutubeData.UpdateYt(config.UpcomingStatus)
+							YoutubeData.UpdateGroupYt(config.UpcomingStatus)
 						}
 					}
 				}
