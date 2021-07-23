@@ -80,7 +80,7 @@ func main() {
 	c.AddFunc("0 */13 * * *", func() {
 		engine.ExTknList = nil
 	})
-	c.AddJob("@every 1s", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(&checkYtJob{}))
+	c.AddJob("@every 1m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(&checkYtJob{}))
 	log.Info("Enable " + ModuleState)
 	go pilot.RunHeartBeat(gRCPconn, ModuleState)
 	runfunc.Run(Bot)
