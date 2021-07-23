@@ -248,7 +248,7 @@ func (i *checkYtJob) Run() {
 										})
 									}
 
-									isMemberOnly, err := regexp.MatchString("(memberonly|member)", strings.ToLower(Youtube.Title))
+									isMemberOnly, err := regexp.MatchString("(memberonly|member|メン限)", strings.ToLower(Youtube.Title))
 									if err != nil {
 										log.Error(err)
 									}
@@ -259,9 +259,6 @@ func (i *checkYtJob) Run() {
 									}
 								}
 							}
-
-							//one vtuber only have one livestream right
-							break
 						}
 						Youtube.
 							SetState(config.YoutubeLive).
