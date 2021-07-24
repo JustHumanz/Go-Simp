@@ -416,17 +416,17 @@ func (k *checkPxJob) Run() {
 		FixFanArt := &database.DataFanart{
 			Member: Member,
 			Group:  Group,
-			Lewd:   false,
+			Lewd:   l,
 		}
 
 		if Member.JpName != "" && Member.Region == "JP" {
 			log.WithFields(log.Fields{
 				"Member": Member.JpName,
 				"Group":  Group.GroupName,
-				"Lewd":   false,
+				"Lewd":   l,
 			}).Info("Start curl pixiv")
 			URLJP := GetPixivURL(url.QueryEscape(Member.JpName))
-			err := Pixiv(URLJP, FixFanArt, false)
+			err := Pixiv(URLJP, FixFanArt, l)
 			if err != nil {
 				log.Error(err)
 				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
@@ -438,10 +438,10 @@ func (k *checkPxJob) Run() {
 			log.WithFields(log.Fields{
 				"Member": Member.EnName,
 				"Group":  Group.GroupName,
-				"Lewd":   false,
+				"Lewd":   l,
 			}).Info("Start curl pixiv")
 			URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
-			err := Pixiv(URLEN, FixFanArt, false)
+			err := Pixiv(URLEN, FixFanArt, l)
 			if err != nil {
 				log.Error(err)
 				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
@@ -453,10 +453,10 @@ func (k *checkPxJob) Run() {
 			log.WithFields(log.Fields{
 				"Member": Member.EnName,
 				"Group":  Group.GroupName,
-				"Lewd":   false,
+				"Lewd":   l,
 			}).Info("Start curl pixiv")
 			URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
-			err := Pixiv(URLEN, FixFanArt, false)
+			err := Pixiv(URLEN, FixFanArt, l)
 			if err != nil {
 				log.Error(err)
 				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
