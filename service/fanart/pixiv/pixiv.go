@@ -91,9 +91,9 @@ func main() {
 	c.Start()
 
 	c.AddFunc(config.CheckPayload, GetPayload)
-	c.AddFunc(config.PixivFanart, CheckPixiv)
+	c.AddJob("@every 30m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(&checkPxJob{}))
+
 	if *lewd {
-		c.AddFunc(config.PixivFanartLewd, CheckPixivLewd)
 		log.Info("Enable lewd " + ModuleState)
 
 	} else {
@@ -103,82 +103,6 @@ func main() {
 
 	go pilot.RunHeartBeat(gRCPconn, ModuleState)
 	runfunc.Run(Bot)
-}
-
-//CheckNew Check new fanart
-func CheckPixiv() {
-
-	//make request to pixiv randomly
-	if rand.Float32() < 0.5 {
-		return
-	}
-
-	for _, Group := range *GroupPayload {
-		var wg sync.WaitGroup
-		for i, Member := range Group.Members {
-			wg.Add(1)
-			go func(wg *sync.WaitGroup, Member database.Member) {
-				defer wg.Done()
-				FixFanArt := &database.DataFanart{
-					Member: Member,
-					Group:  Group,
-					Lewd:   false,
-				}
-
-				if Member.JpName != "" && Member.Region == "JP" {
-					log.WithFields(log.Fields{
-						"Member": Member.JpName,
-						"Group":  Group.GroupName,
-						"Lewd":   false,
-					}).Info("Start curl pixiv")
-					URLJP := GetPixivURL(url.QueryEscape(Member.JpName))
-					err := Pixiv(URLJP, FixFanArt, false)
-					if err != nil {
-						log.Error(err)
-						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-							Message: err.Error(),
-							Service: ModuleState,
-						})
-					}
-				} else if Member.EnName != "" && Member.Region != "JP" {
-					log.WithFields(log.Fields{
-						"Member": Member.EnName,
-						"Group":  Group.GroupName,
-						"Lewd":   false,
-					}).Info("Start curl pixiv")
-					URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
-					err := Pixiv(URLEN, FixFanArt, false)
-					if err != nil {
-						log.Error(err)
-						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-							Message: err.Error(),
-							Service: ModuleState,
-						})
-					}
-				} else {
-					log.WithFields(log.Fields{
-						"Member": Member.EnName,
-						"Group":  Group.GroupName,
-						"Lewd":   false,
-					}).Info("Start curl pixiv")
-					URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
-					err := Pixiv(URLEN, FixFanArt, false)
-					if err != nil {
-						log.Error(err)
-						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-							Message: err.Error(),
-							Service: ModuleState,
-						})
-					}
-				}
-
-			}(&wg, Member)
-			if i%4 == 0 {
-				wg.Wait()
-			}
-		}
-		wg.Wait()
-	}
 }
 
 func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
@@ -473,4 +397,108 @@ func DownloadImg(u string) (string, error) {
 		return "", err
 	}
 	return dir, nil
+}
+
+type checkPxJob struct {
+	wg      sync.WaitGroup
+	Reverse bool
+}
+
+func (k *checkPxJob) Run() {
+
+	//make request to pixiv randomly
+	if rand.Float32() < 0.5 {
+		return
+	}
+
+	cek := func(wg *sync.WaitGroup, Member database.Member, Group database.Group, l bool) {
+		defer wg.Done()
+		FixFanArt := &database.DataFanart{
+			Member: Member,
+			Group:  Group,
+			Lewd:   false,
+		}
+
+		if Member.JpName != "" && Member.Region == "JP" {
+			log.WithFields(log.Fields{
+				"Member": Member.JpName,
+				"Group":  Group.GroupName,
+				"Lewd":   false,
+			}).Info("Start curl pixiv")
+			URLJP := GetPixivURL(url.QueryEscape(Member.JpName))
+			err := Pixiv(URLJP, FixFanArt, false)
+			if err != nil {
+				log.Error(err)
+				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+					Message: err.Error(),
+					Service: ModuleState,
+				})
+			}
+		} else if Member.EnName != "" && Member.Region != "JP" {
+			log.WithFields(log.Fields{
+				"Member": Member.EnName,
+				"Group":  Group.GroupName,
+				"Lewd":   false,
+			}).Info("Start curl pixiv")
+			URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
+			err := Pixiv(URLEN, FixFanArt, false)
+			if err != nil {
+				log.Error(err)
+				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+					Message: err.Error(),
+					Service: ModuleState,
+				})
+			}
+		} else {
+			log.WithFields(log.Fields{
+				"Member": Member.EnName,
+				"Group":  Group.GroupName,
+				"Lewd":   false,
+			}).Info("Start curl pixiv")
+			URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
+			err := Pixiv(URLEN, FixFanArt, false)
+			if err != nil {
+				log.Error(err)
+				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+					Message: err.Error(),
+					Service: ModuleState,
+				})
+			}
+		}
+
+	}
+
+	if k.Reverse {
+		for j := len(*GroupPayload) - 1; j >= 0; j-- {
+			Group := *GroupPayload
+			for _, Member := range Group[j].Members {
+				k.wg.Add(1)
+
+				go cek(&k.wg, Member, Group[j], false)
+				if *lewd {
+					go cek(&k.wg, Member, Group[j], true)
+				}
+				if j%4 == 0 {
+					k.wg.Wait()
+				}
+			}
+		}
+		k.Reverse = false
+	} else {
+		for _, Group := range *GroupPayload {
+			for i, Member := range Group.Members {
+				k.wg.Add(1)
+
+				go cek(&k.wg, Member, Group, false)
+				if *lewd {
+					go cek(&k.wg, Member, Group, true)
+				}
+				if i%4 == 0 {
+					k.wg.Wait()
+				}
+			}
+		}
+		k.Reverse = true
+	}
+	k.wg.Wait()
 }

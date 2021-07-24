@@ -78,35 +78,7 @@ func main() {
 	c.Start()
 
 	c.AddFunc(config.CheckPayload, GetPayload)
-	c.AddFunc(config.TwitterFanart, func() {
-		var wg sync.WaitGroup
-		for _, G := range *GroupPayload {
-			wg.Add(1)
-			go func(Group database.Group, w *sync.WaitGroup) {
-				defer w.Done()
-				Fanarts, err := engine.CreatePayload(Group, config.Scraper, config.GoSimpConf.LimitConf.TwitterFanart, *lewd)
-				if err != nil {
-					log.WithFields(log.Fields{
-						"Group": Group.GroupName,
-					}).Error(err)
-				}
-				for _, Art := range Fanarts {
-					Color, err := engine.GetColor(config.TmpDir, Art.Photos[0])
-					if err != nil {
-						log.Error(err)
-					}
-					if config.GoSimpConf.Metric {
-						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-							MetricData: Art.MarshallBin(),
-							State:      config.FanartState,
-						})
-					}
-					engine.SendFanArtNude(Art, Bot, Color)
-				}
-			}(G, &wg)
-		}
-		wg.Wait()
-	})
+	c.AddJob("@every 5m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(&checkTwJob{}))
 	if *lewd {
 		log.Info("Enable lewd" + ModuleState)
 	} else {
@@ -115,4 +87,53 @@ func main() {
 
 	go pilot.RunHeartBeat(gRCPconn, ModuleState)
 	runfunc.Run(Bot)
+}
+
+type checkTwJob struct {
+	wg      sync.WaitGroup
+	Reverse bool
+}
+
+func (i *checkTwJob) Run() {
+	Cek := func(Group database.Group, w *sync.WaitGroup) {
+		defer w.Done()
+		Fanarts, err := engine.CreatePayload(Group, config.Scraper, config.GoSimpConf.LimitConf.TwitterFanart, *lewd)
+		if err != nil {
+			log.WithFields(log.Fields{
+				"Group": Group.GroupName,
+			}).Error(err)
+		}
+		for _, Art := range Fanarts {
+			Color, err := engine.GetColor(config.TmpDir, Art.Photos[0])
+			if err != nil {
+				log.Error(err)
+			}
+			if config.GoSimpConf.Metric {
+				gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+					MetricData: Art.MarshallBin(),
+					State:      config.FanartState,
+				})
+			}
+			engine.SendFanArtNude(Art, Bot, Color)
+		}
+
+	}
+
+	if i.Reverse {
+		for j := len(*GroupPayload) - 1; j >= 0; j-- {
+			i.wg.Add(1)
+			Grp := *GroupPayload
+			go Cek(Grp[j], &i.wg)
+		}
+		i.Reverse = false
+
+	} else {
+		for _, G := range *GroupPayload {
+			i.wg.Add(1)
+			go Cek(G, &i.wg)
+		}
+		i.Reverse = true
+	}
+	i.wg.Wait()
+
 }
