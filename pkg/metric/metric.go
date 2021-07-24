@@ -46,14 +46,6 @@ var (
 		},
 		[]string{"vtuber", "group", "state"},
 	)
-
-	GoSimpError = prometheus.NewCounterVec(
-		prometheus.CounterOpts{
-			Name: "go_simp_error",
-			Help: "go simp error log",
-		},
-		[]string{"service", "error"},
-	)
 )
 
 // Init will register a Prometheus metrics with the specified variables
@@ -64,6 +56,5 @@ func Init() {
 		GetViews,
 		GetLive,
 		GetLiveDuration,
-		GoSimpError,
 	)
 }

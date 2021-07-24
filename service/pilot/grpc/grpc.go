@@ -115,10 +115,6 @@ func (s *Server) ModuleList(ctx context.Context, in *ModuleData) (*Empty, error)
 
 func (s *Server) ReportError(ctx context.Context, in *ServiceMessage) (*Empty, error) {
 	ReportDeadService(in.Message, in.Service)
-	metric.GoSimpError.WithLabelValues(
-		in.Service,
-		in.Message,
-	).Inc()
 	return &Empty{}, nil
 }
 
