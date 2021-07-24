@@ -23,7 +23,9 @@ services:
 
   multi_tor:
     image: justhumanz/go-multitor
-    command: ["./MultiTOR","-privoxy","/usr/sbin/privoxy","-key","${KEY}"]    
+    command: ["./MultiTOR","-privoxy","/usr/sbin/privoxy","-key","${KEY}"]
+    ports:
+      - 8080:8080          
     networks:
       - go-simp-net
 
