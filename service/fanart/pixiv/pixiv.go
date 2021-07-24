@@ -476,6 +476,7 @@ func (k *checkPxJob) Run() {
 
 				go cek(&k.wg, Member, Group[j], false)
 				if *lewd {
+					k.wg.Add(1)
 					go cek(&k.wg, Member, Group[j], true)
 				}
 				if j%4 == 0 {
@@ -491,6 +492,7 @@ func (k *checkPxJob) Run() {
 
 				go cek(&k.wg, Member, Group, false)
 				if *lewd {
+					k.wg.Add(1)
 					go cek(&k.wg, Member, Group, true)
 				}
 				if i%4 == 0 {
