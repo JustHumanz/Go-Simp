@@ -15,6 +15,7 @@ import (
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
+	"github.com/hako/durafmt"
 	"github.com/robfig/cron/v3"
 
 	log "github.com/sirupsen/logrus"
@@ -184,6 +185,46 @@ func (i *checkYtJob) Run() {
 									engine.SendLiveNotif(&Youtube, Bot)
 									if isMemberOnly {
 										Youtube.UpdateYt(config.PrivateStatus)
+									}
+								} else if Data.Items[0].Snippet.VideoStatus == "none" {
+									err = database.RemoveLiveCache(Key, context.Background())
+									if err != nil {
+										log.Panic(err)
+									}
+
+									if Data.Items[0].Statistics.ViewCount != "" {
+										Youtube.UpdateViewers(Data.Items[0].Statistics.ViewCount)
+									} else if Data.Items[0].Statistics.ViewCount == "0" && Youtube.Viewers == "0" || Youtube.Viewers == "" {
+										Viewers, err := engine.GetWaiting(Youtube.VideoID)
+										if err != nil {
+											log.Error(err)
+										}
+										Youtube.UpdateViewers(Viewers)
+									}
+
+									if !Data.Items[0].LiveDetails.ActualStartTime.IsZero() {
+										Youtube.UpdateSchdule(Data.Items[0].LiveDetails.ActualStartTime)
+									}
+
+									log.WithFields(log.Fields{
+										"VideoID": Youtube.VideoID,
+										"Status":  config.PastStatus,
+									}).Info("Update video status from " + Data.Items[0].Snippet.VideoStatus + " to past")
+
+									LiveDur := durafmt.Parse(engine.ParseDuration(Data.Items[0].ContentDetails.Duration)).String()
+
+									Youtube.UpdateLength(LiveDur).UpdateYt(config.PastStatus)
+									engine.RemoveEmbed(Youtube.VideoID, Bot)
+
+									if config.GoSimpConf.Metric {
+										bit, err := Youtube.MarshalBinary()
+										if err != nil {
+											log.Error(err)
+										}
+										gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+											MetricData: bit,
+											State:      config.PastStatus,
+										})
 									}
 								}
 							}
