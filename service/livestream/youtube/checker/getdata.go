@@ -362,6 +362,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 								State:      config.LiveStatus,
 							})
 						}
+						engine.SendLiveNotif(NewYoutubeData, Bot)
 
 						if !Items.LiveDetails.ActualStartTime.IsZero() {
 							NewYoutubeData.UpdateSchdule(Items.LiveDetails.ActualStartTime)
