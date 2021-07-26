@@ -817,6 +817,39 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						}
 					}
 				}
+			} else if Data.Status == config.PastStatus {
+				ChannelData, err := database.ChannelTag(Data.Member.ID, 2, config.NotLiveOnly, Data.Member.Region)
+				if err != nil {
+					log.Panic(err)
+				}
+
+				for _, v := range ChannelData {
+					msg, err := Bot.ChannelMessageSendEmbed(v.ChannelID, NewEmbed().
+						SetAuthor(Data.Group.GroupName+" "+Data.GroupYoutube.Region, Data.Group.IconURL, YtChannel).
+						SetTitle("Uploaded a new video").
+						SetDescription(Data.Title).
+						SetImage(Data.Thumb).
+						SetThumbnail(Data.Group.IconURL).
+						SetURL(YtURL).
+						AddField("Type ", Data.Type).
+						AddField("Upload", durafmt.Parse(expiresAt.Sub(Data.Schedul.In(loc))).LimitFirstN(1).String()+" Ago").
+						AddField("Viewers", Viewers+" "+FanBase).
+						AddField("Duration", Data.Length).
+						InlineAllFields().
+						SetFooter(Data.Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
+						SetColor(Color()).MessageEmbed)
+					if err != nil {
+						log.WithFields(log.Fields{
+							"Message":          msg,
+							"ChannelID":        v.ID,
+							"DiscordChannelID": v.ChannelID,
+						}).Error(err)
+						err = v.DelChannel(err.Error())
+						if err != nil {
+							log.Error(err)
+						}
+					}
+				}
 			}
 		}
 	}
