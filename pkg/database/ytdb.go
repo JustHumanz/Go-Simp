@@ -109,7 +109,7 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 	if len(val) == 0 {
 		limit := func() int {
 			if Payload["State"].(string) == config.Sys {
-				return 20
+				return 40
 			} else {
 				if (Group != 0 && Status != "live") || (Member != 0 && Status == "past") {
 					return 3
