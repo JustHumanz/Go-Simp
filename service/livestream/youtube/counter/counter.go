@@ -132,7 +132,7 @@ func (i *checkYtJob) Run() {
 							}
 							if len(Data.Items) > 0 {
 								if Data.Items[0].Snippet.VideoStatus != "none" {
-									err = database.RemoveYtCache(Key, context.Background())
+									err = database.RemoveLiveCache(Key, context.Background())
 									if err != nil {
 										log.Panic(err)
 									}

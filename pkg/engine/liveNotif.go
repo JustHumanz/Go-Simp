@@ -124,6 +124,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							if err != nil {
 								log.Error(err)
 							}
+							return
 						}
 
 						if UserTagsList == nil {
@@ -201,7 +202,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							if err != nil {
 								log.Error(err)
 							}
-
+							return
 						}
 
 						if Channel.Dynamic {
@@ -318,6 +319,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							if err != nil {
 								log.Error(err)
 							}
+							return
 						}
 
 						if UserTagsList == nil {

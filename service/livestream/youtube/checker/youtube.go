@@ -161,7 +161,7 @@ func CheckPrivate() {
 					Check(Y)
 				}
 
-				err = database.RemoveYtCache(Key, context.Background())
+				err = database.RemoveLiveCache(Key, context.Background())
 				if err != nil {
 					log.Panic(err)
 				}

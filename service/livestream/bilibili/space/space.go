@@ -3,11 +3,14 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"regexp"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
+	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
@@ -88,32 +91,75 @@ func CheckSpaceVideo() {
 	for _, GroupData := range *GroupPayload {
 		wg := new(sync.WaitGroup)
 		for i, MemberData := range GroupData.Members {
-			wg.Add(1)
-			go func(Group database.Group, Member database.Member, wg *sync.WaitGroup) {
-				defer wg.Done()
-				if Member.BiliBiliID != 0 && Member.Active() {
-					log.WithFields(log.Fields{
-						"Group":      Group.GroupName,
-						"Vtuber":     Member.EnName,
-						"BiliBiliID": Member.BiliBiliID,
-					}).Info("Checking Space BiliBili")
-
-					Group.RemoveNillIconURL()
-					SpaceBiliLimit := strconv.Itoa(config.GoSimpConf.LimitConf.SpaceBiliBili)
-					Data := &database.LiveStream{
-						Member: Member,
-						Group:  Group,
-					}
-					CheckSpace(Data, SpaceBiliLimit)
-
-				}
-			}(GroupData, MemberData, wg)
-			if i%config.Waiting == 0 {
-				wg.Wait()
+			if MemberData.BiliBiliID == 0 && MemberData.Active() {
 				continue
 			}
 
-			wg.Wait()
+			wg.Add(1)
+			go func(Group database.Group, Member database.Member, wg *sync.WaitGroup) {
+				defer wg.Done()
+				log.WithFields(log.Fields{
+					"Group":      Group.GroupName,
+					"Vtuber":     Member.EnName,
+					"BiliBiliID": Member.BiliBiliID,
+				}).Info("Checking Space BiliBili")
+
+				Group.RemoveNillIconURL()
+				Data := &database.LiveStream{
+					Member: Member,
+					Group:  Group,
+				}
+				var (
+					Videotype string
+					PushVideo engine.SpaceVideo
+				)
+
+				body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/space/arc/search?mid="+strconv.Itoa(Data.Member.BiliBiliID)+"&ps="+strconv.Itoa(config.GoSimpConf.LimitConf.SpaceBiliBili), nil)
+				if curlerr != nil {
+					log.Error(curlerr)
+					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+						Message: curlerr.Error(),
+						Service: ModuleState,
+					})
+					return
+				}
+
+				err := json.Unmarshal(body, &PushVideo)
+				if err != nil {
+					log.Error(err)
+				}
+
+				for _, video := range PushVideo.Data.List.Vlist {
+					if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|翻唱|mv|歌曲)", strings.ToLower(video.Title)); Cover || video.Typeid == 31 {
+						Videotype = "Covering"
+					} else {
+						Videotype = "Streaming"
+					}
+
+					Data.AddVideoID(video.Bvid).SetType(Videotype).
+						UpdateTitle(video.Title).
+						UpdateThumbnail(video.Pic).UpdateSchdule(time.Unix(int64(video.Created), 0).In(loc)).
+						UpdateViewers(strconv.Itoa(video.Play)).UpdateLength(video.Length).SetState(config.SpaceBili)
+					new, id := Data.CheckVideo()
+					if new {
+						log.WithFields(log.Fields{
+							"Vtuber": Data.Member.Name,
+						}).Info("New video uploaded")
+
+						Data.InputSpaceVideo()
+						video.VideoType = Videotype
+						engine.SendLiveNotif(Data, Bot)
+					} else {
+						if !config.GoSimpConf.LowResources {
+							Data.UpdateSpaceViews(id)
+						}
+					}
+				}
+
+			}(GroupData, MemberData, wg)
+			if i%config.Waiting == 0 {
+				wg.Wait()
+			}
 		}
 		wg.Wait()
 	}

@@ -465,7 +465,6 @@ func (k *checkPxJob) Run() {
 				})
 			}
 		}
-
 	}
 
 	if k.Reverse {

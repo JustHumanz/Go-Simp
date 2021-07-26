@@ -913,3 +913,15 @@ func DbStop() {
 		log.Error(err)
 	}
 }
+
+func RemoveLiveCache(Key string, ctx context.Context) error {
+	log.WithFields(log.Fields{
+		"Key": Key,
+	}).Info("Drop cache")
+
+	err := LiveCache.Del(ctx, Key).Err()
+	if err != nil {
+		return err
+	}
+	return nil
+}

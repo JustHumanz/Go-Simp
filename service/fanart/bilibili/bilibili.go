@@ -168,9 +168,10 @@ func (k *checkBlJob) Run() {
 		for j := len(*GroupPayload) - 1; j >= 0; j-- {
 			Group := *GroupPayload
 			for _, Member := range Group[j].Members {
-				k.wg.Add(1)
-				go Cek(&k.wg, Member, Group[j])
-
+				if Member.BiliBiliID != 0 {
+					k.wg.Add(1)
+					go Cek(&k.wg, Member, Group[j])
+				}
 			}
 		}
 		k.Reverse = false
@@ -178,8 +179,10 @@ func (k *checkBlJob) Run() {
 	} else {
 		for _, G := range *GroupPayload {
 			for _, Member := range G.Members {
-				k.wg.Add(1)
-				go Cek(&k.wg, Member, G)
+				if Member.BiliBiliID != 0 {
+					k.wg.Add(1)
+					go Cek(&k.wg, Member, G)
+				}
 			}
 		}
 		k.Reverse = true

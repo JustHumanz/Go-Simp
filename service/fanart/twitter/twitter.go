@@ -116,7 +116,6 @@ func (i *checkTwJob) Run() {
 			}
 			engine.SendFanArtNude(Art, Bot, Color)
 		}
-
 	}
 
 	if i.Reverse {

@@ -198,18 +198,6 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 
 }
 
-func RemoveYtCache(Key string, ctx context.Context) error {
-	log.WithFields(log.Fields{
-		"Key": Key,
-	}).Info("Drop cache")
-
-	err := LiveCache.Del(ctx, Key).Err()
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 //Input youtube new video
 func (Data *LiveStream) InputYt() (int64, error) {
 	if !Data.Member.IsMemberNill() {

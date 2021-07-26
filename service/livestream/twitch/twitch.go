@@ -114,13 +114,6 @@ func CheckTwitch() {
 					"VtuberName": Member.Name,
 				}).Info("Checking Twitch")
 
-				ResultDB, err := database.GetTwitch(Member.ID)
-				if err != nil {
-					log.Error(err)
-					continue
-				}
-				ResultDB.AddMember(Member).AddGroup(Group).SetState(config.TwitchLive)
-
 				result, err := TwitchClient.GetStreams(&helix.StreamsParams{
 					UserLogins: []string{Member.TwitchName},
 				})
@@ -130,7 +123,15 @@ func CheckTwitch() {
 						Message: err.Error() + " " + result.ErrorMessage,
 						Service: ModuleState,
 					})
+					continue
 				}
+
+				ResultDB, err := database.GetTwitch(Member.ID)
+				if err != nil {
+					log.Error(err)
+					continue
+				}
+				ResultDB.AddMember(Member).AddGroup(Group).SetState(config.TwitchLive)
 
 				if len(result.Data.Streams) > 0 {
 					for _, Stream := range result.Data.Streams {

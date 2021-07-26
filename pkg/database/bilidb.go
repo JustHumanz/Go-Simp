@@ -1,25 +1,58 @@
 package database
 
 import (
+	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
+	"strconv"
+	"strings"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	log "github.com/sirupsen/logrus"
 )
 
 //GetRoomData get RoomData from LiveBiliBili
-func GetRoomData(MemberID int64, RoomID int) (*LiveStream, error) {
-
+func GetRoomData(MemberID int64, RoomID int) (*LiveStream, string, error) {
 	var (
 		Data LiveStream
+		Key  []string
+		ctx  = context.Background()
 	)
-	err := DB.QueryRow("SELECT * FROM LiveBiliBili Where VtuberMember_id=? AND RoomID=?", MemberID, RoomID).Scan(&Data.ID, &Data.Member.BiliRoomID, &Data.Status, &Data.Title, &Data.Thumb, &Data.Desc, &Data.Published, &Data.Schedul, &Data.Viewers, &Data.End, &Data.Member.ID)
+	Key = append(Key, strconv.Itoa(RoomID), config.Sys)
+
+	Key2 := strings.Join(Key, "-")
+	val, err := LiveCache.LRange(ctx, Key2, 0, -1).Result()
 	if err != nil {
-		return nil, err
+		return nil, Key2, err
 	}
 
-	return &Data, nil
+	if len(val) == 0 {
+		err := DB.QueryRow("SELECT * FROM LiveBiliBili Where VtuberMember_id=? AND RoomID=?", MemberID, RoomID).Scan(&Data.ID, &Data.Member.BiliRoomID, &Data.Status, &Data.Title, &Data.Thumb, &Data.Desc, &Data.Published, &Data.Schedul, &Data.Viewers, &Data.End, &Data.Member.ID)
+		if err != nil {
+			return nil, Key2, err
+		}
+
+		err = LiveCache.LPush(ctx, Key2, Data).Err()
+		if err != nil {
+			return nil, Key2, err
+		}
+
+		err = LiveCache.Expire(ctx, Key2, config.YtGetStatusTTL).Err()
+		if err != nil {
+			return nil, Key2, err
+		}
+
+	} else {
+		for _, result := range unique(val) {
+			err := json.Unmarshal([]byte(result), &Data)
+			if err != nil {
+				return nil, Key2, err
+			}
+		}
+	}
+
+	return &Data, Key2, nil
 }
 
 //UpdateLiveBili Update LiveBiliBili Data

@@ -321,7 +321,7 @@ func CheckLiveBiliBili() {
 				var (
 					ScheduledStart time.Time
 				)
-				DataDB, err := database.GetRoomData(Member.ID, Member.BiliRoomID)
+				DataDB, _, err := database.GetRoomData(Member.ID, Member.BiliRoomID)
 				if err != nil {
 					log.Error(err)
 				}
