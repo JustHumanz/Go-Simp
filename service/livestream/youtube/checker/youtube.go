@@ -77,7 +77,7 @@ func main() {
 	c := cron.New()
 	c.Start()
 	c.AddFunc(config.CheckPayload, GetPayload)
-	c.AddFunc(config.YoutubeCheckChannel, CheckYtSchedule)
+	c.AddJob("@every 5m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(&checkYtCekJob{}))
 	c.AddFunc(config.YoutubePrivateSlayer, CheckPrivate)
 	c.AddFunc("0 */13 * * *", func() {
 		engine.ExTknList = nil
@@ -87,25 +87,37 @@ func main() {
 	runfunc.Run(Bot)
 }
 
-var Counter = 1
+type checkYtCekJob struct {
+	wg      sync.WaitGroup
+	Reverse bool
+	Update  bool
+	Counter int
+}
 
-func CheckYtSchedule() {
-	Update := false
-	Counter++
-	var (
-		wg sync.WaitGroup
-	)
+func (i *checkYtCekJob) Run() {
+	i.Counter++
 
-	if Counter == 4 {
-		Update = true
-		Counter = 1
+	if i.Counter == 3 {
+		i.Update = true
+		i.Counter = 0
 	}
 
-	for _, Group := range *GroupPayload {
-		wg.Add(1)
-		go StartCheckYT(Group, Update, &wg)
+	if i.Reverse {
+		for j := len(*GroupPayload) - 1; j >= 0; j-- {
+			i.wg.Add(1)
+			Grp := *GroupPayload
+			go StartCheckYT(Grp[j], i.Update, &i.wg)
+		}
+		i.Reverse = false
+
+	} else {
+		for _, G := range *GroupPayload {
+			i.wg.Add(1)
+			StartCheckYT(G, i.Update, &i.wg)
+		}
+		i.Reverse = true
 	}
-	wg.Wait()
+	i.wg.Wait()
 }
 
 func CheckPrivate() {

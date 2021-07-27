@@ -80,24 +80,22 @@ func main() {
 	c.Start()
 
 	c.AddFunc(config.CheckPayload, GetPayload)
-	c.AddFunc(config.BiliBiliSpace, CheckSpaceVideo)
+	c.AddJob("@every 12m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(&checkBlSpaceJob{}))
 	log.Info("Enable " + ModuleState)
 	go pilot.RunHeartBeat(gRCPconn, ModuleState)
 	runfunc.Run(Bot)
 }
 
-//CheckSpaceVideo
-func CheckSpaceVideo() {
-	for _, GroupData := range *GroupPayload {
-		wg := new(sync.WaitGroup)
-		for i, MemberData := range GroupData.Members {
-			if MemberData.BiliBiliID == 0 && MemberData.Active() {
-				continue
-			}
+type checkBlSpaceJob struct {
+	wg      sync.WaitGroup
+	Reverse bool
+}
 
-			wg.Add(1)
-			go func(Group database.Group, Member database.Member, wg *sync.WaitGroup) {
-				defer wg.Done()
+func (i *checkBlSpaceJob) Run() {
+	Cek := func(Group database.Group, wg *sync.WaitGroup) {
+		defer wg.Done()
+		for _, Member := range Group.Members {
+			if Member.BiliBiliID != 0 && Member.Active() {
 				log.WithFields(log.Fields{
 					"Group":      Group.GroupName,
 					"Vtuber":     Member.EnName,
@@ -155,12 +153,24 @@ func CheckSpaceVideo() {
 						}
 					}
 				}
-
-			}(GroupData, MemberData, wg)
-			if i%config.Waiting == 0 {
-				wg.Wait()
 			}
 		}
-		wg.Wait()
 	}
+
+	if i.Reverse {
+		for j := len(*GroupPayload) - 1; j >= 0; j-- {
+			i.wg.Add(1)
+			Grp := *GroupPayload
+			go Cek(Grp[j], &i.wg)
+		}
+		i.Reverse = false
+
+	} else {
+		for _, G := range *GroupPayload {
+			i.wg.Add(1)
+			go Cek(G, &i.wg)
+		}
+		i.Reverse = true
+	}
+	i.wg.Wait()
 }

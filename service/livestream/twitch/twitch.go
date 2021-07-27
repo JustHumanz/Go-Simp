@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
@@ -99,14 +100,22 @@ func main() {
 
 	TwitchClient.SetAppAccessToken(resp.Data.AccessToken)
 	c.AddFunc(config.CheckPayload, GetPayload)
-	c.AddFunc(config.Twitch, CheckTwitch)
+	c.AddJob("@every 10m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(&checkTwcJob{}))
+
 	log.Info("Enable " + ModuleState)
 	go pilot.RunHeartBeat(gRCPconn, ModuleState)
 	runfunc.Run(Bot)
 }
 
-func CheckTwitch() {
-	for _, Group := range *GroupPayload {
+type checkTwcJob struct {
+	wg      sync.WaitGroup
+	Reverse bool
+}
+
+func (i *checkTwcJob) Run() {
+
+	Cek := func(Group database.Group, wg *sync.WaitGroup) {
+		defer wg.Done()
 		for _, Member := range Group.Members {
 			if Member.TwitchName != "" && Member.Active() {
 				log.WithFields(log.Fields{
@@ -123,13 +132,13 @@ func CheckTwitch() {
 						Message: err.Error() + " " + result.ErrorMessage,
 						Service: ModuleState,
 					})
-					continue
+					return
 				}
 
 				ResultDB, err := database.GetTwitch(Member.ID)
 				if err != nil {
 					log.Error(err)
-					continue
+					return
 				}
 				ResultDB.AddMember(Member).AddGroup(Group).SetState(config.TwitchLive)
 
@@ -214,6 +223,24 @@ func CheckTwitch() {
 					}
 				}
 			}
+
 		}
 	}
+	if i.Reverse {
+		for j := len(*GroupPayload) - 1; j >= 0; j-- {
+			i.wg.Add(1)
+
+			Grp := *GroupPayload
+			go Cek(Grp[j], &i.wg)
+		}
+		i.Reverse = false
+
+	} else {
+		for _, G := range *GroupPayload {
+			i.wg.Add(1)
+			Cek(G, &i.wg)
+		}
+		i.Reverse = true
+	}
+	i.wg.Wait()
 }
