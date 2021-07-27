@@ -921,11 +921,7 @@ func (i *LiveStream) RemoveCache(Key string, ctx context.Context) error {
 			"VideoID": i.VideoID,
 		}).Info("Drop cache")
 		//Yt
-		bit, err := i.MarshalBinary()
-		if err != nil {
-			return err
-		}
-		err = LiveCache.LRem(ctx, Key, 0, bit).Err()
+		err := LiveCache.LRem(ctx, Key, 0, i).Err()
 		if err != nil {
 			return err
 		}
