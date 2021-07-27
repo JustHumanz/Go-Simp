@@ -171,11 +171,10 @@ func CheckPrivate() {
 				for _, Y := range YtData {
 					Y.Status = Status
 					Check(Y)
-				}
-
-				err = database.RemoveLiveCache(Key, context.Background())
-				if err != nil {
-					log.Panic(err)
+					err = Y.RemoveCache(Key, context.Background())
+					if err != nil {
+						log.Panic(err)
+					}
 				}
 			}
 		}

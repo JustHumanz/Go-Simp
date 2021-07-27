@@ -158,7 +158,7 @@ func (i *checkBlLiveeJob) Run() {
 							log.Error(err)
 						}
 
-						err = database.RemoveLiveCache(Key, context.Background())
+						err = LiveBiliDB.RemoveCache(Key, context.Background())
 						if err != nil {
 							log.Panic(err)
 						}
@@ -191,7 +191,7 @@ func (i *checkBlLiveeJob) Run() {
 							log.Error(err)
 						}
 
-						err = database.RemoveLiveCache(Key, context.Background())
+						err = LiveBiliDB.RemoveCache(Key, context.Background())
 						if err != nil {
 							log.Panic(err)
 						}

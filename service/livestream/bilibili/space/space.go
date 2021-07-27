@@ -79,16 +79,39 @@ func main() {
 	c := cron.New()
 	c.Start()
 
+	SpaceBiliBili := &checkBlSpaceJob{
+		VideoIDTMP: make(map[string]string),
+	}
 	c.AddFunc(config.CheckPayload, GetPayload)
-	c.AddJob("@every 12m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(&checkBlSpaceJob{}))
+	c.AddJob("@every 12m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(SpaceBiliBili))
 	log.Info("Enable " + ModuleState)
 	go pilot.RunHeartBeat(gRCPconn, ModuleState)
 	runfunc.Run(Bot)
 }
 
 type checkBlSpaceJob struct {
-	wg      sync.WaitGroup
-	Reverse bool
+	wg         sync.WaitGroup
+	mutex      sync.Mutex
+	Reverse    bool
+	VideoIDTMP map[string]string
+}
+
+func (i *checkBlSpaceJob) AddVideoID(Member, VideoID string) {
+	i.mutex.Lock()
+	defer i.mutex.Unlock()
+	i.VideoIDTMP[Member] = VideoID
+}
+
+func (i *checkBlSpaceJob) CekFirstVideoID(Member, VideoID string) bool {
+	i.mutex.Lock()
+	defer i.mutex.Unlock()
+	if i.VideoIDTMP[Member] == VideoID {
+		log.WithFields(log.Fields{
+			"Vtuber": Member,
+		}).Warn("Video Still same")
+		return true
+	}
+	return false
 }
 
 func (i *checkBlSpaceJob) Run() {
@@ -98,7 +121,7 @@ func (i *checkBlSpaceJob) Run() {
 			if Member.BiliBiliID != 0 && Member.Active() {
 				log.WithFields(log.Fields{
 					"Group":      Group.GroupName,
-					"Vtuber":     Member.EnName,
+					"Vtuber":     Member.Name,
 					"BiliBiliID": Member.BiliBiliID,
 				}).Info("Checking Space BiliBili")
 
@@ -127,31 +150,40 @@ func (i *checkBlSpaceJob) Run() {
 					log.Error(err)
 				}
 
-				for _, video := range PushVideo.Data.List.Vlist {
-					if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|翻唱|mv|歌曲)", strings.ToLower(video.Title)); Cover || video.Typeid == 31 {
-						Videotype = "Covering"
-					} else {
-						Videotype = "Streaming"
+				if len(PushVideo.Data.List.Vlist) > 0 {
+					FirstVideoID := PushVideo.Data.List.Vlist[0].Bvid
+
+					if i.CekFirstVideoID(Member.Name, FirstVideoID) {
+						continue
 					}
 
-					Data.AddVideoID(video.Bvid).SetType(Videotype).
-						UpdateTitle(video.Title).
-						UpdateThumbnail(video.Pic).UpdateSchdule(time.Unix(int64(video.Created), 0).In(loc)).
-						UpdateViewers(strconv.Itoa(video.Play)).UpdateLength(video.Length).SetState(config.SpaceBili)
-					new, id := Data.CheckVideo()
-					if new {
-						log.WithFields(log.Fields{
-							"Vtuber": Data.Member.Name,
-						}).Info("New video uploaded")
+					for _, video := range PushVideo.Data.List.Vlist {
+						if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|翻唱|mv|歌曲)", strings.ToLower(video.Title)); Cover || video.Typeid == 31 {
+							Videotype = "Covering"
+						} else {
+							Videotype = "Streaming"
+						}
 
-						Data.InputSpaceVideo()
-						video.VideoType = Videotype
-						engine.SendLiveNotif(Data, Bot)
-					} else {
-						if !config.GoSimpConf.LowResources {
-							Data.UpdateSpaceViews(id)
+						Data.AddVideoID(video.Bvid).SetType(Videotype).
+							UpdateTitle(video.Title).
+							UpdateThumbnail(video.Pic).UpdateSchdule(time.Unix(int64(video.Created), 0).In(loc)).
+							UpdateViewers(strconv.Itoa(video.Play)).UpdateLength(video.Length).SetState(config.SpaceBili)
+						new, id := Data.CheckVideo()
+						if new {
+							log.WithFields(log.Fields{
+								"Vtuber": Data.Member.Name,
+							}).Info("New video uploaded")
+
+							Data.InputSpaceVideo()
+							video.VideoType = Videotype
+							engine.SendLiveNotif(Data, Bot)
+						} else {
+							if !config.GoSimpConf.LowResources {
+								Data.UpdateSpaceViews(id)
+							}
 						}
 					}
+					i.AddVideoID(Member.Name, FirstVideoID)
 				}
 			}
 		}

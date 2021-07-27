@@ -411,7 +411,7 @@ func (k *checkPxJob) Run() {
 		return
 	}
 
-	cek := func(wg *sync.WaitGroup, Member database.Member, Group database.Group, l bool) {
+	Cek := func(wg *sync.WaitGroup, Member database.Member, Group database.Group, l bool) {
 		defer wg.Done()
 		FixFanArt := &database.DataFanart{
 			Member: Member,
@@ -473,10 +473,10 @@ func (k *checkPxJob) Run() {
 			for _, Member := range Group[j].Members {
 				k.wg.Add(1)
 
-				go cek(&k.wg, Member, Group[j], false)
+				go Cek(&k.wg, Member, Group[j], false)
 				if *lewd {
 					k.wg.Add(1)
-					go cek(&k.wg, Member, Group[j], true)
+					go Cek(&k.wg, Member, Group[j], true)
 				}
 				if j%4 == 0 {
 					k.wg.Wait()
@@ -489,10 +489,10 @@ func (k *checkPxJob) Run() {
 			for i, Member := range Group.Members {
 				k.wg.Add(1)
 
-				go cek(&k.wg, Member, Group, false)
+				go Cek(&k.wg, Member, Group, false)
 				if *lewd {
 					k.wg.Add(1)
-					go cek(&k.wg, Member, Group, true)
+					go Cek(&k.wg, Member, Group, true)
 				}
 				if i%4 == 0 {
 					k.wg.Wait()

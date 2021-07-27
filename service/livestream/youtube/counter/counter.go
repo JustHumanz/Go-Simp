@@ -133,7 +133,7 @@ func (i *checkYtJob) Run() {
 							}
 							if len(Data.Items) > 0 {
 								if Data.Items[0].Snippet.VideoStatus != "none" {
-									err = database.RemoveLiveCache(Key, context.Background())
+									err = Youtube.RemoveCache(Key, context.Background())
 									if err != nil {
 										log.Panic(err)
 									}
@@ -187,7 +187,7 @@ func (i *checkYtJob) Run() {
 										Youtube.UpdateYt(config.PrivateStatus)
 									}
 								} else if Data.Items[0].Snippet.VideoStatus == "none" {
-									err = database.RemoveLiveCache(Key, context.Background())
+									err = Youtube.RemoveCache(Key, context.Background())
 									if err != nil {
 										log.Panic(err)
 									}

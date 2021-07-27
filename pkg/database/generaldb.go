@@ -914,14 +914,30 @@ func DbStop() {
 	}
 }
 
-func RemoveLiveCache(Key string, ctx context.Context) error {
-	log.WithFields(log.Fields{
-		"Key": Key,
-	}).Info("Drop cache")
+func (i *LiveStream) RemoveCache(Key string, ctx context.Context) error {
+	if i.VideoID != "" {
+		log.WithFields(log.Fields{
+			"Key":     Key,
+			"VideoID": i.VideoID,
+		}).Info("Drop cache")
+		//Yt
+		bit, err := i.MarshalBinary()
+		if err != nil {
+			return err
+		}
+		err = LiveCache.LRem(ctx, Key, 0, bit).Err()
+		if err != nil {
+			return err
+		}
+	} else {
+		log.WithFields(log.Fields{
+			"Key": Key,
+		}).Info("Drop cache")
 
-	err := LiveCache.Del(ctx, Key).Err()
-	if err != nil {
-		return err
+		err := LiveCache.Del(ctx, Key).Err()
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
