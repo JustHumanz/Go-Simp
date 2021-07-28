@@ -78,17 +78,22 @@ func main() {
 	c := cron.New()
 	c.Start()
 	c.AddFunc(config.CheckPayload, GetPayload)
-	c.AddFunc("0 */13 * * *", func() {
+	c.AddFunc("0 */2 * * *", func() {
 		engine.ExTknList = nil
 	})
-	c.AddJob("@every 1m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(&checkYtJob{}))
+	YoutubeCounter := &checkYtJob{
+		CekCounter: make(map[string]int),
+	}
+	c.AddJob("@every 1m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(YoutubeCounter))
 	log.Info("Enable " + ModuleState)
 	go pilot.RunHeartBeat(gRCPconn, ModuleState)
 	runfunc.Run(Bot)
 }
 
 type checkYtJob struct {
-	wg sync.WaitGroup
+	wg         sync.WaitGroup
+	mutex      sync.Mutex
+	CekCounter map[string]int
 }
 
 func (i *checkYtJob) Run() {
@@ -120,6 +125,20 @@ func (i *checkYtJob) Run() {
 					if Member.ID == Youtube.Member.ID {
 						Youtube.AddMember(Member).AddGroup(Group)
 						if time.Since(Youtube.Schedul) > time.Until(Youtube.Schedul) {
+							if i.CekCounterCount(Youtube.VideoID) {
+								gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+									Message: ModuleState + " error,loop notif detect,force remove cache & update livestream status to live",
+									Service: ModuleState,
+								})
+
+								err = Youtube.RemoveCache(Key, true)
+								if err != nil {
+									log.Panic(err)
+								}
+
+								Youtube.UpdateYt(config.LiveStatus)
+								return
+							}
 							log.WithFields(log.Fields{
 								"Vtuber":  Member.EnName,
 								"Group":   Group.GroupName,
@@ -129,11 +148,11 @@ func (i *checkYtJob) Run() {
 							Data, err := engine.YtAPI([]string{Youtube.VideoID})
 							if err != nil {
 								log.Error(err)
-								continue
+								return
 							}
 							if len(Data.Items) > 0 {
 								if Data.Items[0].Snippet.VideoStatus != "none" {
-									err = Youtube.RemoveCache(Key, context.Background())
+									err = Youtube.RemoveCache(Key, false)
 									if err != nil {
 										log.Panic(err)
 									}
@@ -187,7 +206,7 @@ func (i *checkYtJob) Run() {
 										Youtube.UpdateYt(config.PrivateStatus)
 									}
 								} else if Data.Items[0].Snippet.VideoStatus == "none" {
-									err = Youtube.RemoveCache(Key, context.Background())
+									err = Youtube.RemoveCache(Key, false)
 									if err != nil {
 										log.Panic(err)
 									}
@@ -227,7 +246,16 @@ func (i *checkYtJob) Run() {
 										})
 									}
 								}
+
+							} else if Data.Items == nil || len(Data.Items) == 0 {
+								log.WithFields(log.Fields{
+									"VideoID": Youtube.VideoID,
+									"Status":  config.PastStatus,
+								}).Info("Update video status from " + Data.Items[0].Snippet.VideoStatus + " to private")
+								Youtube.UpdateYt(config.PrivateStatus)
 							}
+
+							i.UpCek(Youtube.VideoID)
 						}
 						Youtube.
 							SetState(config.YoutubeLive).
@@ -239,4 +267,19 @@ func (i *checkYtJob) Run() {
 		}
 		i.wg.Wait()
 	}
+}
+
+func (i *checkYtJob) UpCek(VideoID string) {
+	i.mutex.Lock()
+	defer i.mutex.Unlock()
+	i.CekCounter[VideoID]++
+}
+
+func (i *checkYtJob) CekCounterCount(VideoID string) bool {
+	i.mutex.Lock()
+	defer i.mutex.Unlock()
+	if i.CekCounter[VideoID] > 1 {
+		return true
+	}
+	return false
 }

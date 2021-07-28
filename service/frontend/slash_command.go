@@ -327,7 +327,7 @@ var (
 
 				loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
 				if !member.IsMemberNill() {
-					LiveBili, err := database.BilGet(map[string]interface{}{
+					LiveBili, _, err := database.BilGet(map[string]interface{}{
 						"MemberID": member.ID,
 						"Status":   status,
 					})
@@ -388,7 +388,7 @@ var (
 					}
 					SendMessage(embed)
 				} else {
-					LiveBili, err := database.BilGet(map[string]interface{}{
+					LiveBili, _, err := database.BilGet(map[string]interface{}{
 						"GroupID": group.ID,
 						"Status":  status,
 					})

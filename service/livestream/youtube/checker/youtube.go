@@ -79,7 +79,7 @@ func main() {
 	c.AddFunc(config.CheckPayload, GetPayload)
 	c.AddJob("@every 5m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(&checkYtCekJob{}))
 	c.AddFunc(config.YoutubePrivateSlayer, CheckPrivate)
-	c.AddFunc("0 */13 * * *", func() {
+	c.AddFunc("0 */2 * * *", func() {
 		engine.ExTknList = nil
 	})
 	log.Info("Enable " + ModuleState)
@@ -171,7 +171,7 @@ func CheckPrivate() {
 				for _, Y := range YtData {
 					Y.Status = Status
 					Check(Y)
-					err = Y.RemoveCache(Key, context.Background())
+					err = Y.RemoveCache(Key, false)
 					if err != nil {
 						log.Panic(err)
 					}

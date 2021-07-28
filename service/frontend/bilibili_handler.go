@@ -33,7 +33,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							return
 						}
 						//0, Member.ID, config.LiveStatus
-						LiveBili, err := database.BilGet(map[string]interface{}{
+						LiveBili, _, err := database.BilGet(map[string]interface{}{
 							"Status":   config.LiveStatus,
 							"MemberID": Member.ID,
 						})
@@ -83,7 +83,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						}
 					} else {
 						//VTuberGroup.ID, 0, config.LiveStatus
-						LiveBili, err := database.BilGet(map[string]interface{}{
+						LiveBili, _, err := database.BilGet(map[string]interface{}{
 							"GroupID": VTuberGroup.ID,
 							"Status":  config.LiveStatus,
 						})
@@ -150,7 +150,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
 						}
-						LiveBili, err := database.BilGet(map[string]interface{}{
+						LiveBili, _, err := database.BilGet(map[string]interface{}{
 							"Status":   config.PastStatus,
 							"MemberID": Member.ID,
 						})
@@ -200,7 +200,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						LiveBili, err := database.BilGet(map[string]interface{}{
+						LiveBili, _, err := database.BilGet(map[string]interface{}{
 							"GroupID": VTuberGroup.ID,
 							"Status":  config.PastStatus,
 						})

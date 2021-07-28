@@ -169,7 +169,7 @@ func getBilibili(w http.ResponseWriter, r *http.Request) {
 				}
 				GroupID := Group["ID"].(int64)
 				if GroupIDint == int(GroupID) {
-					BiliData, err := database.BilGet(map[string]interface{}{
+					BiliData, _, err := database.BilGet(map[string]interface{}{
 						"GroupID": GroupID,
 						"Status":  Status,
 					})
@@ -199,7 +199,7 @@ func getBilibili(w http.ResponseWriter, r *http.Request) {
 				}
 				MemberID := Member["ID"].(int64)
 				if MemberIDint == int(MemberID) {
-					BiliData, err := database.BilGet(map[string]interface{}{
+					BiliData, _, err := database.BilGet(map[string]interface{}{
 						"MemberID": MemberID,
 						"Status":   config.LiveStatus,
 					})

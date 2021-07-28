@@ -484,7 +484,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 			}
 
 			if Member["BiliBili"] != nil {
-				BiliData, err := database.BilGet(map[string]interface{}{
+				BiliData, _, err := database.BilGet(map[string]interface{}{
 					"MemberID": Member["ID"].(int64),
 					"Status":   config.LiveStatus,
 				})

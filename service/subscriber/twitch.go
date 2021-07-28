@@ -67,7 +67,7 @@ func CheckTwitch() {
 						SetImage(Name.TwitchAvatar).
 						AddField("Twitch viwers count", Viwers).
 						InlineAllFields().
-						SetURL("https://twitch.tv/"+Name.TwitchAvatar).
+						SetURL("https://twitch.tv/"+Name.TwitchName).
 						SetColor(Color).MessageEmbed, Group, Name)
 				}
 				if TotalFollowers != TwitchFollowDB.TwitchFollow {

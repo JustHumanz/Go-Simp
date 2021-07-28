@@ -93,125 +93,120 @@ type checkBlLiveeJob struct {
 func (i *checkBlLiveeJob) Run() {
 	Cek := func(Group database.Group, wg *sync.WaitGroup) {
 		defer wg.Done()
-		for _, Member := range Group.Members {
-			if Member.BiliBiliID != 0 && Member.Active() {
-				log.WithFields(log.Fields{
-					"Group":  Group.GroupName,
-					"Vtuber": Member.EnName,
-				}).Info("Checking LiveBiliBili")
 
-				Status, err := engine.GetRoomStatus(Member.BiliRoomID)
-				if err != nil {
-					log.Error(err)
-					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message: err.Error(),
-						Service: ModuleState,
-					})
-					return
-				}
+		for _, v := range []string{config.PastStatus, config.LiveStatus} {
+			LiveBili, Key, err := database.BilGet(map[string]interface{}{
+				"GroupID": Group.ID,
+				"Status":  v,
+			})
+			if err != nil {
+				log.Error(err)
+			}
 
-				var (
-					ScheduledStart time.Time
-				)
-
-				LiveBiliDB, Key, err := database.GetRoomData(Member.ID, Member.BiliRoomID)
-				if err != nil {
-					log.Error(err)
-					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message: err.Error(),
-						Service: ModuleState,
-					})
-					return
-				}
-
-				LiveBiliDB.
-					AddMember(Member).
-					AddGroup(Group).
-					SetState(config.BiliLive)
-
-				if LiveBiliDB != nil {
-					LiveBiliDB.AddMember(Member).AddGroup(Group)
-					if Status.CheckScheduleLive() && LiveBiliDB.Status != config.LiveStatus {
-						//Live
-						if Status.Data.RoomInfo.LiveStartTime != 0 {
-							ScheduledStart = time.Unix(int64(Status.Data.RoomInfo.LiveStartTime), 0).In(loc)
-						} else {
-							ScheduledStart = time.Now().In(loc)
-						}
-
-						Group.RemoveNillIconURL()
-
-						log.WithFields(log.Fields{
-							"Group":  Group.GroupName,
-							"Vtuber": Member.EnName,
-							"Start":  ScheduledStart,
-						}).Info("Start live right now")
-
-						LiveBiliDB.UpdateStatus(config.LiveStatus).
-							UpdateSchdule(ScheduledStart).
-							UpdateViewers(strconv.Itoa(Status.Data.RoomInfo.Online)).
-							UpdateThumbnail(Status.Data.RoomInfo.Cover).
-							UpdateTitle(Status.Data.RoomInfo.Title)
-
-						err := LiveBiliDB.UpdateLiveBili()
-						if err != nil {
-							log.Error(err)
-						}
-
-						err = LiveBiliDB.RemoveCache(Key, context.Background())
-						if err != nil {
-							log.Panic(err)
-						}
-
-						if config.GoSimpConf.Metric {
-							bit, err := LiveBiliDB.MarshalBinary()
+			if len(LiveBili) > 0 {
+				for _, Bili := range LiveBili {
+					for _, Member := range Group.Members {
+						if Bili.Member.ID == Member.ID {
+							Bili.AddGroup(Group).AddMember(Member)
+							log.WithFields(log.Fields{
+								"Group":  Group.GroupName,
+								"Vtuber": Member.Name,
+							}).Info("Checking LiveBiliBili")
+							Status, err := engine.GetRoomStatus(Member.BiliRoomID)
 							if err != nil {
 								log.Error(err)
+								gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+									Message: err.Error(),
+									Service: ModuleState,
+								})
+								continue
 							}
-							gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-								MetricData: bit,
-								State:      config.LiveStatus,
-							})
-						}
+							var (
+								ScheduledStart time.Time
+							)
+							if Status.CheckScheduleLive() && Bili.Status != config.LiveStatus {
+								//Live
+								if Status.Data.RoomInfo.LiveStartTime != 0 {
+									ScheduledStart = time.Unix(int64(Status.Data.RoomInfo.LiveStartTime), 0).In(loc)
+								} else {
+									ScheduledStart = time.Now().In(loc)
+								}
 
-						engine.SendLiveNotif(LiveBiliDB, Bot)
+								Group.RemoveNillIconURL()
 
-					} else if !Status.CheckScheduleLive() && LiveBiliDB.Status == config.LiveStatus {
-						log.WithFields(log.Fields{
-							"Group":  Group.GroupName,
-							"Vtuber": Member.EnName,
-							"Start":  LiveBiliDB.Schedul,
-						}).Info("Past live stream")
-						engine.RemoveEmbed(strconv.Itoa(LiveBiliDB.Member.BiliRoomID), Bot)
-						LiveBiliDB.UpdateEnd(time.Now().In(loc)).
-							UpdateStatus(config.PastStatus)
+								log.WithFields(log.Fields{
+									"Group":  Group.GroupName,
+									"Vtuber": Member.EnName,
+									"Start":  ScheduledStart,
+								}).Info("Start live right now")
 
-						err = LiveBiliDB.UpdateLiveBili()
-						if err != nil {
-							log.Error(err)
-						}
+								Bili.UpdateStatus(config.LiveStatus).
+									UpdateSchdule(ScheduledStart).
+									UpdateViewers(strconv.Itoa(Status.Data.RoomInfo.Online)).
+									UpdateThumbnail(Status.Data.RoomInfo.Cover).
+									UpdateTitle(Status.Data.RoomInfo.Title)
 
-						err = LiveBiliDB.RemoveCache(Key, context.Background())
-						if err != nil {
-							log.Panic(err)
-						}
+								err := Bili.UpdateLiveBili()
+								if err != nil {
+									log.Error(err)
+								}
 
-						if config.GoSimpConf.Metric {
-							bit, err := LiveBiliDB.MarshalBinary()
-							if err != nil {
-								log.Error(err)
+								err = Bili.RemoveCache(Key, true)
+								if err != nil {
+									log.Panic(err)
+								}
+
+								if config.GoSimpConf.Metric {
+									bit, err := Bili.MarshalBinary()
+									if err != nil {
+										log.Error(err)
+									}
+									gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+										MetricData: bit,
+										State:      config.LiveStatus,
+									})
+								}
+
+								engine.SendLiveNotif(&Bili, Bot)
+
+							} else if !Status.CheckScheduleLive() && Bili.Status == config.LiveStatus {
+								log.WithFields(log.Fields{
+									"Group":  Group.GroupName,
+									"Vtuber": Member.EnName,
+									"Start":  Bili.Schedul,
+								}).Info("Past live stream")
+								engine.RemoveEmbed(strconv.Itoa(Bili.Member.BiliRoomID), Bot)
+								Bili.UpdateEnd(time.Now().In(loc)).
+									UpdateStatus(config.PastStatus)
+
+								err = Bili.UpdateLiveBili()
+								if err != nil {
+									log.Error(err)
+								}
+
+								err = Bili.RemoveCache(Key, true)
+								if err != nil {
+									log.Panic(err)
+								}
+
+								if config.GoSimpConf.Metric {
+									bit, err := Bili.MarshalBinary()
+									if err != nil {
+										log.Error(err)
+									}
+									gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+										MetricData: bit,
+										State:      config.PastStatus,
+									})
+								}
+
+							} else {
+								Bili.UpdateViewers(strconv.Itoa(Status.Data.RoomInfo.Online))
+								err := Bili.UpdateLiveBili()
+								if err != nil {
+									log.Error(err)
+								}
 							}
-							gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-								MetricData: bit,
-								State:      config.PastStatus,
-							})
-						}
-
-					} else {
-						LiveBiliDB.UpdateViewers(strconv.Itoa(Status.Data.RoomInfo.Online))
-						err := LiveBiliDB.UpdateLiveBili()
-						if err != nil {
-							log.Error(err)
 						}
 					}
 				}

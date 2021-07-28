@@ -52,12 +52,13 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 		log.Error(err)
 	}
 	for i := 0; i < len(Data.Items); i++ {
+		yttype = "Streaming"
 		if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|mv)", Data.Items[i].Snippet.Title); Cover {
 			yttype = "Covering"
-		} else if Chat, _ := regexp.MatchString("(?m)(free|chat|room)", Data.Items[i].Snippet.Title); Chat {
+		}
+
+		if Chat, _ := regexp.MatchString("(?m)(free|chat|room)", Data.Items[i].Snippet.Title); Chat {
 			yttype = "ChatRoom"
-		} else {
-			yttype = "Streaming"
 		}
 
 		YtData, err := Dat.CheckYoutubeVideo(VideoID[i])
@@ -321,7 +322,10 @@ func CheckLiveBiliBili() {
 				var (
 					ScheduledStart time.Time
 				)
-				DataDB, _, err := database.GetRoomData(Member.ID, Member.BiliRoomID)
+				DataDB, _, err := database.BilGet(map[string]interface{}{
+					"Status":   config.PastStatus,
+					"MemberID": Member.ID,
+				})
 				if err != nil {
 					log.Error(err)
 				}
@@ -356,7 +360,7 @@ func CheckLiveBiliBili() {
 					}).Info("Status Live")
 					Data["Status"] = config.LiveStatus
 					LiveBiliBili(Data)
-				} else if !Status.CheckScheduleLive() && DataDB.Status == config.LiveStatus {
+				} else if !Status.CheckScheduleLive() && DataDB[0].Status == config.LiveStatus {
 					//prob past
 					log.WithFields(log.Fields{
 						"Group":      Group.GroupName,
@@ -364,7 +368,7 @@ func CheckLiveBiliBili() {
 					}).Info("Status Past")
 					Data["Status"] = config.PastStatus
 					LiveBiliBili(Data)
-				} else if DataDB.Member.BiliRoomID == 0 {
+				} else if DataDB[0].Member.BiliRoomID == 0 {
 					log.WithFields(log.Fields{
 						"Group":      Group.GroupName,
 						"VtuberName": Member.Name,
@@ -398,7 +402,7 @@ func CheckTwitch() {
 				}
 				if len(result.Data.Streams) > 0 {
 					for _, Stream := range result.Data.Streams {
-						if strings.ToLower(Stream.UserName) == strings.ToLower(Member.TwitchName) {
+						if strings.EqualFold(Stream.UserName, Member.TwitchName) {
 							GameResult, err := TwitchClient.GetGames(&helix.GamesParams{
 								IDs: []string{Stream.GameID},
 							})
@@ -485,9 +489,7 @@ func CheckSpaceBiliBili() {
 					if err != nil {
 						log.Error(err)
 					}
-					for _, Vlist := range tmp.Data.List.Vlist {
-						PushVideo.Data.List.Vlist = append(PushVideo.Data.List.Vlist, Vlist)
-					}
+					PushVideo.Data.List.Vlist = append(PushVideo.Data.List.Vlist, tmp.Data.List.Vlist...)
 				}
 
 				for _, video := range PushVideo.Data.List.Vlist {
