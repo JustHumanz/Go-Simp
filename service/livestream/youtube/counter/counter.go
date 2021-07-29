@@ -127,7 +127,8 @@ func (i *checkYtJob) Run() {
 						if time.Since(Youtube.Schedul) > time.Until(Youtube.Schedul) {
 							if i.CekCounterCount(Youtube.VideoID) {
 								gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-									Message: ModuleState + " error,loop notif detect,force remove cache & update livestream status to live",
+									Message: ModuleState + " error,loop notif detect,force remove cache & update livestream status to live,VideoID=" + Youtube.VideoID,
+									Alive:   true,
 									Service: ModuleState,
 								})
 
