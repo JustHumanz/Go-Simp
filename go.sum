@@ -182,8 +182,8 @@ github.com/n0madic/twitter-scraper v0.0.0-20210428094026-3ea1f3b456cd h1:wDvdE6C
 github.com/n0madic/twitter-scraper v0.0.0-20210428094026-3ea1f3b456cd/go.mod h1:uzFP7WK9gCykBnULzfmxScXgIbs+423tWjbHRLYVq/g=
 github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 h1:zYyBkD/k9seD2A7fsi6Oo2LfFZAehjjQMERAvZLEDnQ=
 github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646/go.mod h1:jpp1/29i3P1S/RLdc7JQKbRpFeM1dOBd8T9ki5s+AY8=
-github.com/nicklaw5/helix v1.21.0 h1:EPrWQG4un3g6Fq+RD9O6Kgeg1rODxuAW9tpNc7HWzfo=
-github.com/nicklaw5/helix v1.21.0/go.mod h1:XeeXY7oY5W+MVMu6wF4qGm8uvjZ1/Nss0FqprVkXKrg=
+github.com/nicklaw5/helix v1.24.2 h1:3AriXD3RLTuBzqcX/fgIrTGavmaNk2K3JDec7kWof0o=
+github.com/nicklaw5/helix v1.24.2/go.mod h1:XeeXY7oY5W+MVMu6wF4qGm8uvjZ1/Nss0FqprVkXKrg=
 github.com/nxadm/tail v1.4.4 h1:DQuhQpB1tVlglWS2hLQ5OV6B5r8aGxSrPc5Qo6uTN78=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=
 github.com/olekukonko/tablewriter v0.0.5 h1:P2Ga83D34wi1o9J6Wh1mRuqd4mF/x/lgBS7N7AbDhec=
