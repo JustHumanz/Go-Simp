@@ -306,9 +306,6 @@ func CheckLiveBiliBili() {
 		log.Error(err)
 	}
 	for _, Group := range Groups {
-		if Group.GroupName == "Hololive" {
-			continue
-		}
 		MemberData, err := database.GetMembers(Group.ID)
 		if err != nil {
 			log.Error(err)
@@ -322,59 +319,76 @@ func CheckLiveBiliBili() {
 				var (
 					ScheduledStart time.Time
 				)
-				DataDB, _, err := database.BilGet(map[string]interface{}{
-					"Status":   config.PastStatus,
-					"MemberID": Member.ID,
-				})
-				if err != nil {
-					log.Error(err)
-				}
-				Status, err := engine.GetRoomStatus(Member.BiliRoomID)
-				if err != nil {
-					log.Error(err)
-				}
-				loc, _ := time.LoadLocation("Asia/Shanghai")
-				if Status.Data.RoomInfo.LiveStartTime != 0 {
-					ScheduledStart = time.Unix(int64(Status.Data.RoomInfo.LiveStartTime), 0).In(loc)
-				} else {
-					ScheduledStart = time.Time{}
-				}
-				Data := map[string]interface{}{
-					"LiveRoomID":     Member.BiliRoomID,
-					"Status":         "",
-					"Title":          Status.Data.RoomInfo.Title,
-					"Thumbnail":      Status.Data.RoomInfo.Cover,
-					"Description":    Status.Data.NewsInfo.Content,
-					"PublishedAt":    time.Time{},
-					"ScheduledStart": ScheduledStart,
-					"Face":           Status.Data.AnchorInfo.BaseInfo.Face,
-					"Online":         Status.Data.RoomInfo.Online,
-					"BiliBiliID":     Member.BiliBiliID,
-					"MemberID":       Member.ID,
-				}
-				if Status.CheckScheduleLive() {
-					//Live
-					log.WithFields(log.Fields{
-						"Group":      Group.GroupName,
-						"VtuberName": Member.Name,
-					}).Info("Status Live")
-					Data["Status"] = config.LiveStatus
-					LiveBiliBili(Data)
-				} else if !Status.CheckScheduleLive() && DataDB[0].Status == config.LiveStatus {
-					//prob past
-					log.WithFields(log.Fields{
-						"Group":      Group.GroupName,
-						"VtuberName": Member.Name,
-					}).Info("Status Past")
-					Data["Status"] = config.PastStatus
-					LiveBiliBili(Data)
-				} else if DataDB[0].Member.BiliRoomID == 0 {
-					log.WithFields(log.Fields{
-						"Group":      Group.GroupName,
-						"VtuberName": Member.Name,
-					}).Info("Status Unknown")
-					Data["Status"] = config.UnknownStatus
-					LiveBiliBili(Data)
+				for _, v := range []string{config.PastStatus, config.LiveStatus} {
+					DataDB, _, err := database.BilGet(map[string]interface{}{
+						"Status":   v,
+						"MemberID": Member.ID,
+					})
+					if err != nil {
+						log.Error(err)
+					}
+					Status, err := engine.GetRoomStatus(Member.BiliRoomID)
+					if err != nil {
+						log.Error(err)
+					}
+					loc, _ := time.LoadLocation("Asia/Shanghai")
+					if Status.Data.RoomInfo.LiveStartTime != 0 {
+						ScheduledStart = time.Unix(int64(Status.Data.RoomInfo.LiveStartTime), 0).In(loc)
+					} else {
+						ScheduledStart = time.Time{}
+					}
+
+					Data := map[string]interface{}{
+						"LiveRoomID":     Member.BiliRoomID,
+						"Status":         "",
+						"Title":          Status.Data.RoomInfo.Title,
+						"Thumbnail":      Status.Data.RoomInfo.Cover,
+						"Description":    Status.Data.NewsInfo.Content,
+						"PublishedAt":    time.Time{},
+						"ScheduledStart": ScheduledStart,
+						"Face":           Status.Data.AnchorInfo.BaseInfo.Face,
+						"Online":         Status.Data.RoomInfo.Online,
+						"BiliBiliID":     Member.BiliBiliID,
+						"MemberID":       Member.ID,
+					}
+
+					if DataDB == nil {
+						if Status.CheckScheduleLive() {
+							//Live
+							log.WithFields(log.Fields{
+								"Group":      Group.GroupName,
+								"VtuberName": Member.Name,
+							}).Info("Status Live")
+							Data["Status"] = config.LiveStatus
+							LiveBiliBili(Data)
+						} else {
+							//prob past
+							log.WithFields(log.Fields{
+								"Group":      Group.GroupName,
+								"VtuberName": Member.Name,
+							}).Info("Status Past")
+							Data["Status"] = config.PastStatus
+							LiveBiliBili(Data)
+						}
+					} else {
+						if Status.CheckScheduleLive() {
+							//Live
+							log.WithFields(log.Fields{
+								"Group":      Group.GroupName,
+								"VtuberName": Member.Name,
+							}).Info("Status Live")
+							Data["Status"] = config.LiveStatus
+							LiveBiliBili(Data)
+						} else if !Status.CheckScheduleLive() && DataDB[0].Status == config.LiveStatus {
+							//prob past
+							log.WithFields(log.Fields{
+								"Group":      Group.GroupName,
+								"VtuberName": Member.Name,
+							}).Info("Status Past")
+							Data["Status"] = config.PastStatus
+							LiveBiliBili(Data)
+						}
+					}
 				}
 			}
 		}

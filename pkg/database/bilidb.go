@@ -47,17 +47,18 @@ func BilGet(Payload map[string]interface{}) ([]LiveStream, string, error) {
 	}
 
 	var (
-		Limit int
-		ctx   = context.Background()
-		Data  []LiveStream
-		list  LiveStream
+		ctx  = context.Background()
+		Data []LiveStream
+		list LiveStream
 	)
 
-	if Group > 0 && Status != "Live" {
-		Limit = 3
-	} else {
-		Limit = 2525
-	}
+	var Limit = func() int {
+		if Group > 0 && Status != config.LiveStatus {
+			return 3
+		} else {
+			return 2525
+		}
+	}()
 
 	var Key = func() string {
 		if Group != 0 {
