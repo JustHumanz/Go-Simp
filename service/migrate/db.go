@@ -499,8 +499,6 @@ func DeleteChannel(id int64) error {
 
 func (Data Members) InputSubs(MemberID int64) {
 	var tmp int64
-	row := db.QueryRow("SELECT id FROM Subscriber WHERE VtuberMember_id=? ", MemberID)
-	err := row.Scan(&tmp)
 	Subs := Data.Youtube.GetYtSubs()
 	Bili := Data.BiliBili.GetBiliFolow(Data.Name)
 	TwitchFollow, TwitchViwers, err := Data.Twitch.GetTwitchFollowers()
@@ -519,6 +517,8 @@ func (Data Members) InputSubs(MemberID int64) {
 		log.Error(err)
 	}
 
+	row := db.QueryRow("SELECT id FROM Subscriber WHERE VtuberMember_id=? ", MemberID)
+	err = row.Scan(&tmp)
 	if err != nil || err == sql.ErrNoRows {
 		stmt, err := db.Prepare("INSERT INTO Subscriber (Youtube_Subscriber,Youtube_Videos,Youtube_Views,BiliBili_Followers,BiliBili_Videos,BiliBili_Views,Twitter_Followers,Twitch_Followers,Twitch_Views,VtuberMember_id) values(?,?,?,?,?,?,?,?,?,?)")
 		if err != nil {

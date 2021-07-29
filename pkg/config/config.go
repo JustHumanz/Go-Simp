@@ -54,7 +54,6 @@ const (
 	PixivIllustsEnd   = "https://www.pixiv.net/ajax/illust/"
 	PixivUserEnd      = "https://www.pixiv.net/ajax/user/"
 	PixivProxy        = "https://cdn.humanz.moe/pixiv/?pixivURL="
-	Waiting           = 5
 	Pilot             = "pilot:9000"
 	Prediction        = "prediction:9001"
 	Indie             = "independent"

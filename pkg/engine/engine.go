@@ -25,6 +25,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/cenkalti/dominantcolor"
 	twitterscraper "github.com/n0madic/twitter-scraper"
+	"github.com/pbnjay/memory"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -793,4 +794,8 @@ func ParseInt64(value string) int64 {
 		return 0
 	}
 	return int64(parsed)
+}
+
+func GetMaxSqlConn() int {
+	return int((int64(memory.FreeMemory()/1024/1024) * 1024 * 1024) / 12582880)
 }

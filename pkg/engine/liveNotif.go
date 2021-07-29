@@ -139,11 +139,12 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						}
 
 					}(v, &wg)
-					//Wait every ge 10 discord channel
-					if i%config.Waiting == 0 && config.GoSimpConf.LowResources {
+
+					Wait := GetMaxSqlConn()
+					if i%Wait == 0 && config.GoSimpConf.LowResources {
 						log.WithFields(log.Fields{
 							"Func":  "Youtube",
-							"Value": config.Waiting,
+							"Value": Wait,
 						}).Warn("Waiting send message")
 						wg.Wait()
 						expiresAt = time.Now().In(loc)
@@ -256,10 +257,11 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						Channel.PushReddis()
 					}(v, &wg)
 
-					if i%config.Waiting == 0 && config.GoSimpConf.LowResources {
+					Wait := GetMaxSqlConn()
+					if i%Wait == 0 && config.GoSimpConf.LowResources {
 						log.WithFields(log.Fields{
 							"Func":  "Youtube",
-							"Value": config.Waiting,
+							"Value": Wait,
 						}).Warn("Waiting send message")
 						wg.Wait()
 						expiresAt = time.Now().In(loc)
@@ -334,11 +336,11 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						}
 
 					}(v, &wg)
-					//Wait every ge 5 discord channel
-					if i%config.Waiting == 0 && config.GoSimpConf.LowResources {
+					Wait := GetMaxSqlConn()
+					if i%Wait == 0 && config.GoSimpConf.LowResources {
 						log.WithFields(log.Fields{
 							"Func":  "Youtube",
-							"Value": config.Waiting,
+							"Value": Wait,
 						}).Warn("Waiting send message")
 						wg.Wait()
 						expiresAt = time.Now().In(loc)
@@ -495,11 +497,11 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						Channel.PushReddis()
 
 					}(v, &wg)
-					//Wait every ge 5 discord channel
-					if i%config.Waiting == 0 && config.GoSimpConf.LowResources {
+					Wait := GetMaxSqlConn()
+					if i%Wait == 0 && config.GoSimpConf.LowResources {
 						log.WithFields(log.Fields{
 							"Func":  "BiliBili Live",
-							"Value": config.Waiting,
+							"Value": Wait,
 						}).Warn("Waiting send message")
 						wg.Wait()
 						expiresAt = time.Now().In(loc)
@@ -623,10 +625,11 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 
 				}(v, &wg)
 
-				if i%config.Waiting == 0 && config.GoSimpConf.LowResources {
+				Wait := GetMaxSqlConn()
+				if i%Wait == 0 && config.GoSimpConf.LowResources {
 					log.WithFields(log.Fields{
 						"Func":  "Twitch",
-						"Value": config.Waiting,
+						"Value": Wait,
 					}).Warn("Waiting send message")
 					wg.Wait()
 					expiresAt = time.Now().In(loc)
@@ -693,11 +696,11 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						}
 					}
 				}(v, &wg)
-				//Wait every ge 5 discord channel
-				if i%config.Waiting == 0 && config.GoSimpConf.LowResources {
+				Wait := GetMaxSqlConn()
+				if i%Wait == 0 && config.GoSimpConf.LowResources {
 					log.WithFields(log.Fields{
 						"Func":  "BiliBili space",
-						"Value": config.Waiting,
+						"Value": Wait,
 					}).Warn("Waiting send message")
 					wg.Wait()
 					expiresAt = time.Now().In(loc)

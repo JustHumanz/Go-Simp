@@ -14,6 +14,7 @@ import (
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
+	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
@@ -172,10 +173,12 @@ func SendNude(Embed *discordgo.MessageEmbed, Group database.Group, Member databa
 				log.Error(msg, err)
 			}
 		}
-		if i%config.Waiting == 0 && configfile.LowResources {
+
+		Wait := engine.GetMaxSqlConn()
+		if i%Wait == 0 && configfile.LowResources {
 			log.WithFields(log.Fields{
 				"Func":  "Subscriber",
-				"Value": config.Waiting,
+				"Value": Wait,
 			}).Warn("Waiting send message")
 			time.Sleep(100 * time.Millisecond)
 		}
