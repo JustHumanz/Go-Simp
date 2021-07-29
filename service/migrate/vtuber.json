@@ -3536,6 +3536,78 @@
                   "Status": "Active"
                },
                {
+                  "Name":"Axia",
+                  "EN_Name":"Axia Krone",
+                  "JP_Name":"アクシア・クローネ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#AXIART",
+                     "Twitter_Lewd":"#隠しアート",
+                     "Twitter_Username":"AXIA_96NE"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UC8oPnditPSp5lZu45fnXWCA"
+                  },
+                  "BiliBili": null,
+                  "Twitch": null,
+                  "Region":"JP",
+                  "Fanbase":"AXIAID",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Lauren",
+                  "EN_Name":"Lauren Iroas",
+                  "JP_Name":"ローレン・イロアス",
+                  "Twitter":{
+                     "Twitter_Fanart":"#イロ絵す",
+                     "Twitter_Lewd":"#秘密の鍵穴",
+                     "Twitter_Username":"Lauren_iroas"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCgmFrRcyH7d1zR9sIVQhFow"
+                  },
+                  "BiliBili": null,
+                  "Twitch": null,
+                  "Region":"JP",
+                  "Fanbase":"WANTED",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Professor",
+                  "EN_Name":"Oliver Evans",
+                  "JP_Name":"オリバー・エバンス",
+                  "Twitter":{
+                     "Twitter_Fanart":"#絵バンス",
+                     "Twitter_Lewd":"#絵BANス",
+                     "Twitter_Username":"oliverD_23"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCqjTqdVlvIipZXIKeCkHKUA"
+                  },
+                  "BiliBili": null,
+                  "Twitch": null,
+                  "Region":"JP",
+                  "Fanbase":"Evans-semisei",
+                  "Status": "Active"
+               },       
+               {
+                  "Name":"Pater-san",
+                  "EN_Name":"Lain Paterson",
+                  "JP_Name":"レイン・パターソン",
+                  "Twitter":{
+                     "Twitter_Fanart":"#レインの依頼書",
+                     "Twitter_Lewd":"#厳重な依頼書",
+                     "Twitter_Username":"Lain_Paterson"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCRm6lqtdxs_Qo6HeL-SRQ-w"
+                  },
+                  "BiliBili": null,
+                  "Twitch": null,
+                  "Region":"JP",
+                  "Fanbase":"Iraisha",
+                  "Status": "Active"
+               },                                                
+               {
                   "Name":"Hanamaki",
                   "EN_Name":"Hana Macchia",
                   "JP_Name":"ハナ・マキア",
@@ -4218,7 +4290,61 @@
                   "Region":"EN",
                   "Fanbase":"Ryuguards",
                   "Status": "Active"
-               },                         
+               },
+               {
+                  "Name":"Tzatziki",
+                  "EN_Name":"Selen Tatsuki",
+                  "JP_Name":"セレン 龍月",
+                  "Twitter":{
+                     "Twitter_Fanart":"#Artsuki",
+                     "Twitter_Lewd":"#Lewdsuki",
+                     "Twitter_Username":"Selen_Tatsuki"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCV1xUwfM2v2oBtT3JNvic3w"
+                  },
+                  "BiliBili": null,
+                  "Twitch": null,
+                  "Region":"EN",
+                  "Fanbase":"Dragoons",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Rosemi",
+                  "EN_Name":"Rosemi Lovelock",
+                  "JP_Name":"ロゼミ ラブロック",
+                  "Twitter":{
+                     "Twitter_Fanart":"#GalleryOfRoses",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"Rosemi_Lovelock"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UC4WvIIAo89_AzGUh1AZ6Dkg"
+                  },
+                  "BiliBili": null,
+                  "Twitch": null,
+                  "Region":"EN",
+                  "Fanbase":"Rosebuds",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Petra",
+                  "EN_Name":"Petra Gurin",
+                  "JP_Name":"ペトラ グリン",
+                  "Twitter":{
+                     "Twitter_Fanart":"#PetraArt",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"Petra_Gurin"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCgA2jKRkqpY_8eysPUs8sjw"
+                  },
+                  "BiliBili": null,
+                  "Twitch": null,
+                  "Region":"EN",
+                  "Fanbase":"PenTomo",
+                  "Status": "Active"
+               },                                                       
                {
                   "Name":"Yukie",
                   "EN_Name":"Yukie",
