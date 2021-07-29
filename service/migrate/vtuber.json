@@ -6021,14 +6021,8 @@
                   "Region": "JP",
                   "Fanbase": "Renavants",
                   "Status": "Active",
-                  "BiliBili": {
-                    "BiliBili_Fanart": "",
-                    "BiliBili_ID": "",
-                    "BiliRoom_ID": ""
-                  },
-                  "Twitch": {
-                    "Twitch_Username": ""
-                  },
+                  "BiliBili": null,
+                  "Twitch": null,
                   "Twitter": {
                     "Twitter_Fanart": "#れなーぶる",
                     "Twitter_Lewd": "",
@@ -6042,14 +6036,8 @@
                   "Name": "Kogane",
                   "EN_Name": "Himukai Kogane",
                   "JP_Name": "日向こがね",
-                  "BiliBili": {
-                    "BiliBili_Fanart": "",
-                    "BiliBili_ID": "",
-                    "BiliRoom_ID": ""
-                  },
-                  "Twitch": {
-                    "Twitch_Username": ""
-                  },
+                  "BiliBili": null,
+                  "Twitch": null,
                   "Twitter": {
                     "Twitter_Fanart": "#5000兆絵ん欲しい",
                     "Twitter_Lewd": "",
@@ -6066,14 +6054,8 @@
                   "EN_Name": "Aoi Mizuki",
                   "JP_Name": "蒼井美月",
                   "Name": "Mizuki",
-                  "BiliBili": {
-                    "BiliBili_Fanart": "",
-                    "BiliBili_ID": "",
-                    "BiliRoom_ID": ""
-                  },
-                  "Twitch": {
-                    "Twitch_Username": ""
-                  },
+                  "BiliBili": null,
+                  "Twitch": null,
                   "Twitter": {
                     "Twitter_Fanart": "#美月見",
                     "Twitter_Lewd": "",
@@ -6093,14 +6075,8 @@
                   "Region": "JP",
                   "Fanbase": "",
                   "Status": "Active",
-                  "BiliBili": {
-                    "BiliBili_Fanart": "",
-                    "BiliBili_ID": "",
-                    "BiliRoom_ID": ""
-                  },
-                  "Twitch": {
-                    "Twitch_Username": ""
-                  },
+                  "BiliBili": null,
+                  "Twitch": null,
                   "Twitter": {
                     "Twitter_Fanart": "#絵ももも",
                     "Twitter_Lewd": "",
@@ -6115,14 +6091,8 @@
                   "EN_Name": "Asagi Saki",
                   "JP_Name": "浅葱サキ",
                   "Region": "JP",
-                  "BiliBili": {
-                    "BiliBili_Fanart": "",
-                    "BiliBili_ID": "",
-                    "BiliRoom_ID": ""
-                  },
-                  "Twitch": {
-                    "Twitch_Username": ""
-                  },
+                  "BiliBili": null,
+                  "Twitch": null,
                   "Twitter": {
                     "Twitter_Fanart": "#浅葱図録",
                     "Twitter_Lewd": "",
@@ -6139,14 +6109,8 @@
                   "JP_Name": "菫崎リン",
                   "Name": "SumirezakiRin",
                   "Region": "JP",
-                  "BiliBili": {
-                    "BiliBili_Fanart": "",
-                    "BiliBili_ID": "",
-                    "BiliRoom_ID": ""
-                  },
-                  "Twitch": {
-                    "Twitch_Username": ""
-                  },
+                  "BiliBili": null,
+                  "Twitch": null,
                   "Twitter": {
                     "Twitter_Fanart": "#みてすみリン",
                     "Twitter_Lewd": "#罪リン",
