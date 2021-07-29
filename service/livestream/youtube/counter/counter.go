@@ -97,6 +97,7 @@ type checkYtJob struct {
 }
 
 func (i *checkYtJob) Run() {
+	var RemovedCache []database.LiveStream
 	for _, Group := range *GroupPayload {
 		YoutubeStatus, Key, err := database.YtGetStatus(map[string]interface{}{
 			"GroupID":   Group.ID,
@@ -138,6 +139,7 @@ func (i *checkYtJob) Run() {
 								}
 
 								Youtube.UpdateYt(config.LiveStatus)
+								RemovedCache = append(RemovedCache, Youtube)
 								return
 							}
 							log.WithFields(log.Fields{
@@ -153,10 +155,7 @@ func (i *checkYtJob) Run() {
 							}
 							if len(Data.Items) > 0 {
 								if Data.Items[0].Snippet.VideoStatus != "none" {
-									err = Youtube.RemoveCache(Key, false)
-									if err != nil {
-										log.Panic(err)
-									}
+									RemovedCache = append(RemovedCache, Youtube)
 
 									if Data.Items[0].Statistics.ViewCount != "" {
 										Youtube.UpdateViewers(Data.Items[0].Statistics.ViewCount)
@@ -207,10 +206,7 @@ func (i *checkYtJob) Run() {
 										Youtube.UpdateYt(config.PrivateStatus)
 									}
 								} else if Data.Items[0].Snippet.VideoStatus == "none" {
-									err = Youtube.RemoveCache(Key, false)
-									if err != nil {
-										log.Panic(err)
-									}
+									RemovedCache = append(RemovedCache, Youtube)
 
 									if Data.Items[0].Statistics.ViewCount != "" {
 										Youtube.UpdateViewers(Data.Items[0].Statistics.ViewCount)
@@ -266,7 +262,14 @@ func (i *checkYtJob) Run() {
 				}
 			}(Y, &i.wg)
 		}
+
 		i.wg.Wait()
+		for _, v := range RemovedCache {
+			err := v.RemoveCache(Key, false)
+			if err != nil {
+				log.Error(err)
+			}
+		}
 	}
 }
 

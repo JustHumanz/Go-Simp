@@ -8,7 +8,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/go-redis/redis/v8"
@@ -913,46 +912,13 @@ func (i *LiveStream) RemoveCache(Key string, drop bool) error {
 	ctx := context.Background()
 
 	if !drop {
-		OldKey := Key + "-old"
 		log.WithFields(log.Fields{
 			"Key":     Key,
 			"VideoID": i.VideoID,
-			"OldKey":  OldKey,
-		}).Info("Reslice Cache")
-		//Yt
-		val, err := LiveCache.LRange(ctx, Key, 0, -1).Result()
+		}).Info("Remove cache from list")
+		err := LiveCache.LRem(ctx, Key, 0, i).Err()
 		if err != nil {
 			return err
-		}
-
-		var Data []LiveStream
-		for _, result := range unique(val) {
-			var list LiveStream
-			err := json.Unmarshal([]byte(result), &list)
-			if err != nil {
-				return err
-			}
-			Data = append(Data, list)
-		}
-
-		err = LiveCache.Rename(ctx, Key, OldKey).Err()
-		if err != nil {
-			return err
-		}
-
-		err = LiveCache.Expire(ctx, OldKey, 5*time.Minute).Err()
-		if err != nil {
-			return err
-		}
-
-		for _, v := range Data {
-			if v.VideoID == i.VideoID {
-				continue
-			}
-			err = LiveCache.LPush(ctx, Key, v).Err()
-			if err != nil {
-				return err
-			}
 		}
 	} else {
 		log.WithFields(log.Fields{
