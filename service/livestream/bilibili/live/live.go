@@ -151,7 +151,7 @@ func (i *checkBlLiveeJob) Run() {
 									log.Error(err)
 								}
 
-								err = Bili.RemoveCache(Key, true)
+								err = Bili.RemoveCache(Key)
 								if err != nil {
 									log.Panic(err)
 								}
@@ -184,7 +184,7 @@ func (i *checkBlLiveeJob) Run() {
 									log.Error(err)
 								}
 
-								err = Bili.RemoveCache(Key, true)
+								err = Bili.RemoveCache(Key)
 								if err != nil {
 									log.Panic(err)
 								}

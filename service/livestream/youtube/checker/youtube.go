@@ -172,7 +172,7 @@ func CheckPrivate() {
 				for _, Y := range YtData {
 					Y.Status = Status
 					Check(Y)
-					err = Y.RemoveCache(Key, false)
+					err = Y.RemoveCache(Key)
 					if err != nil {
 						log.Panic(err)
 					}
