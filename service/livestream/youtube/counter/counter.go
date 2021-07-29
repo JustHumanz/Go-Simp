@@ -82,7 +82,7 @@ func main() {
 		engine.ExTknList = nil
 	})
 	YoutubeCounter := &checkYtJob{
-		CekCounter: make(map[string]int),
+		CekCounter: make(map[string]bool),
 	}
 	c.AddJob("@every 1m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(YoutubeCounter))
 	log.Info("Enable " + ModuleState)
@@ -93,7 +93,7 @@ func main() {
 type checkYtJob struct {
 	wg         sync.WaitGroup
 	mutex      sync.Mutex
-	CekCounter map[string]int
+	CekCounter map[string]bool
 }
 
 func (i *checkYtJob) Run() {
@@ -272,13 +272,13 @@ func (i *checkYtJob) Run() {
 func (i *checkYtJob) UpCek(VideoID string) {
 	i.mutex.Lock()
 	defer i.mutex.Unlock()
-	i.CekCounter[VideoID]++
+	i.CekCounter[VideoID] = true
 }
 
 func (i *checkYtJob) CekCounterCount(VideoID string) bool {
 	i.mutex.Lock()
 	defer i.mutex.Unlock()
-	if i.CekCounter[VideoID] > 1 {
+	if i.CekCounter[VideoID] {
 		return true
 	}
 	return false

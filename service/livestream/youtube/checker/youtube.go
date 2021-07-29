@@ -96,6 +96,7 @@ type checkYtCekJob struct {
 
 func (i *checkYtCekJob) Run() {
 	i.Counter++
+	i.Update = false
 
 	if i.Counter == 3 {
 		i.Update = true
