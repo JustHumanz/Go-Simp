@@ -6,7 +6,7 @@ require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/bwmarrin/discordgo v0.23.3-0.20210627161652-421e14965030
 	github.com/cenkalti/dominantcolor v0.0.0-20210411190141-70117844b8ca
-	github.com/go-redis/redis/v8 v8.11.0
+	github.com/go-redis/redis/v8 v8.11.1
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gorilla/mux v1.8.0
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
@@ -14,7 +14,7 @@ require (
 	github.com/n0madic/twitter-scraper v0.0.0-20210428094026-3ea1f3b456cd
 	github.com/nicklaw5/helix v1.21.0
 	github.com/olekukonko/tablewriter v0.0.5
-	github.com/pbnjay/memory v0.0.0-20210728143218-7b4eea64cf58 // indirect
+	github.com/pbnjay/memory v0.0.0-20210728143218-7b4eea64cf58
 	github.com/prometheus/client_golang v1.11.0
 	github.com/prometheus/common v0.29.0 // indirect
 	github.com/pytimer/mux-logrus v0.0.0-20200505085744-ce5a5e748151
