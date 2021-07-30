@@ -252,8 +252,12 @@ func (i *checkYtJob) Run() {
 								log.WithFields(log.Fields{
 									"VideoID": Youtube.VideoID,
 									"Status":  config.PastStatus,
-								}).Info("Update video status from " + Data.Items[0].Snippet.VideoStatus + " to private")
+								}).Info("Update video status from " + config.UpcomingStatus + " to private")
 								Youtube.UpdateYt(config.PrivateStatus)
+								err = Youtube.RemoveCache(Key)
+								if err != nil {
+									log.Panic(err)
+								}
 							}
 
 							i.UpCek(Youtube.VideoID)
