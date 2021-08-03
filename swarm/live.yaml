@@ -5,21 +5,21 @@ networks:
     external: true
 
 services:
-  livestream-livebili:
+  spacebili:
     image: justhumanz/go-simp-bilispace-livestream:${RELEASE_VERSION}
     depends_on:
       - multi_tor
     networks:
       - go-simp-net
 
-  livestream-spacebili:
+  livebili:
     image: justhumanz/go-simp-bililive-livestream:${RELEASE_VERSION}
     depends_on:
       - multi_tor
     networks:
       - go-simp-net
 
-  livestream-youtube:
+  youtube:
     image: justhumanz/go-simp-youtube-checker-livestream:${RELEASE_VERSION}
     depends_on:
       - multi_tor
@@ -28,7 +28,7 @@ services:
     networks:
       - go-simp-net
 
-  livestream-youtube_counter:
+  youtube_counter:
     image: justhumanz/go-simp-youtube-counter-livestream:${RELEASE_VERSION}
     depends_on:
       - multi_tor
@@ -37,7 +37,7 @@ services:
     networks:
       - go-simp-net
 
-  livestream-twitch:
+  twitch:
     image: justhumanz/go-simp-twitch-livestream:${RELEASE_VERSION}
     depends_on:
       - multi_tor

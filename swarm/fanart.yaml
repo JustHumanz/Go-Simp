@@ -5,14 +5,14 @@ networks:
     external: true
 
 services:
-  bilibili-fanart:
+  bilibili:
     image: justhumanz/go-simp-bilibili-fanart:${RELEASE_VERSION}
     depends_on:
       - multi_tor
     networks:
       - go-simp-net
 
-  twitter-fanart:
+  twitter:
     image: justhumanz/go-simp-twitter-fanart:${RELEASE_VERSION}
     depends_on:
       - multi_tor
@@ -20,7 +20,7 @@ services:
     networks:
       - go-simp-net
 
-  pixiv-fanart:
+  pixiv:
     image: justhumanz/go-simp-pixiv-fanart:${RELEASE_VERSION}
     depends_on:
       - multi_tor

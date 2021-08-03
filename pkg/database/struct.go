@@ -191,6 +191,11 @@ func (Data *LiveStream) UpdateGame(new string) *LiveStream {
 	return Data
 }
 
+func (Data *LiveStream) UpdateDesc(new string) *LiveStream {
+	Data.Desc = new
+	return Data
+}
+
 //UserStruct user struct
 type UserStruct struct {
 	DiscordID, DiscordUserName, Channel_ID string

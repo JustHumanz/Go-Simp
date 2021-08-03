@@ -144,7 +144,14 @@ func (i *checkBlLiveeJob) Run() {
 									UpdateSchdule(ScheduledStart).
 									UpdateViewers(strconv.Itoa(Status.Data.RoomInfo.Online)).
 									UpdateThumbnail(Status.Data.RoomInfo.Cover).
-									UpdateTitle(Status.Data.RoomInfo.Title)
+									UpdateTitle(Status.Data.RoomInfo.Title).
+									UpdateDesc(func() string {
+										if Status.Data.RoomInfo.Description == "" {
+											return "????"
+										} else {
+											return Status.Data.RoomInfo.Description
+										}
+									}())
 
 								err := Bili.UpdateLiveBili()
 								if err != nil {
