@@ -49,7 +49,9 @@ func BilGet(Payload map[string]interface{}) ([]LiveStream, string, error) {
 	var (
 		ctx  = context.Background()
 		Data []LiveStream
-		list LiveStream
+		list = LiveStream{
+			State: config.BiliLive,
+		}
 	)
 
 	var Limit = func() int {
