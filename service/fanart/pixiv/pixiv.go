@@ -39,7 +39,7 @@ var (
 const (
 	BaseURL     = "https://www.pixiv.net/en/artworks/"
 	Limit       = 10
-	ModuleState = "Pixiv Fanart"
+	ModuleState = config.PixivModule
 )
 
 func init() {
@@ -48,11 +48,10 @@ func init() {
 	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 }
 
-//Start start twitter module
+//Start start pixiv module
 func main() {
 	var (
 		configfile config.ConfigFile
-		err        error
 	)
 
 	GetPayload := func() {
@@ -80,10 +79,7 @@ func main() {
 	GetPayload()
 	configfile.InitConf()
 
-	Bot, err = discordgo.New("Bot " + configfile.Discord)
-	if err != nil {
-		log.Error(err)
-	}
+	Bot = configfile.StartBot()
 
 	database.Start(configfile)
 
@@ -91,7 +87,6 @@ func main() {
 	c.Start()
 
 	c.AddFunc(config.CheckPayload, GetPayload)
-	c.AddJob("@every 30m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(&checkPxJob{}))
 
 	if *lewd {
 		log.Info("Enable lewd " + ModuleState)
@@ -102,6 +97,7 @@ func main() {
 	}
 
 	go pilot.RunHeartBeat(gRCPconn, ModuleState)
+	go ReqRunningJob(gRCPconn)
 	runfunc.Run(Bot)
 }
 
@@ -402,6 +398,46 @@ func DownloadImg(u string) (string, error) {
 type checkPxJob struct {
 	wg      sync.WaitGroup
 	Reverse bool
+}
+
+func ReqRunningJob(client pilot.PilotServiceClient) {
+	for {
+		log.WithFields(log.Fields{
+			"Service": ModuleState,
+			"Running": true,
+		}).Info("request for running job")
+
+		res, err := client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
+			Service: ModuleState,
+			Message: "Request",
+			Alive:   true,
+		})
+		if err != nil {
+			log.Error(err)
+		}
+
+		if res.Run {
+			log.WithFields(log.Fields{
+				"Service": ModuleState,
+				"Running": false,
+			}).Info(res.Message)
+
+			Pix := &checkPxJob{}
+			Pix.Run()
+			_, _ = client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
+				Service: ModuleState,
+				Message: "Done",
+				Alive:   false,
+			})
+			log.WithFields(log.Fields{
+				"Service": ModuleState,
+				"Running": false,
+			}).Info("reporting job was done")
+
+		}
+
+		time.Sleep(1 * time.Minute)
+	}
 }
 
 func (k *checkPxJob) Run() {

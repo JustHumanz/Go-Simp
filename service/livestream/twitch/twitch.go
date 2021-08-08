@@ -28,7 +28,7 @@ var (
 )
 
 const (
-	ModuleState = "Twitch"
+	ModuleState = config.TwitchModule
 )
 
 func init() {
@@ -40,7 +40,6 @@ func init() {
 func main() {
 	var (
 		configfile config.ConfigFile
-		err        error
 	)
 
 	GetPayload := func() {
@@ -67,31 +66,17 @@ func main() {
 
 	GetPayload()
 	configfile.InitConf()
-
-	Bot, err = discordgo.New("Bot " + configfile.Discord)
-	if err != nil {
-		log.Error(err)
-	}
+	Bot = configfile.StartBot()
+	TwitchClient = configfile.GetTwitchTkn()
 
 	database.Start(configfile)
 
 	c := cron.New()
 	c.Start()
 
-	TwitchClient, err = helix.NewClient(&helix.Options{
-		ClientID:     config.GoSimpConf.Twitch.ClientID,
-		ClientSecret: config.GoSimpConf.Twitch.ClientSecret,
-	})
-	if err != nil {
-		log.Error(err)
-		gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-			Message: err.Error(),
-			Service: ModuleState,
-		})
-	}
 	resp, err := TwitchClient.RequestAppAccessToken([]string{"user:read:email"})
 	if err != nil {
-		log.Error(err)
+		log.Panic(err)
 		gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 			Message: err.Error(),
 			Service: ModuleState,
@@ -100,16 +85,56 @@ func main() {
 
 	TwitchClient.SetAppAccessToken(resp.Data.AccessToken)
 	c.AddFunc(config.CheckPayload, GetPayload)
-	c.AddJob("@every 10m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(&checkTwcJob{}))
 
 	log.Info("Enable " + ModuleState)
 	go pilot.RunHeartBeat(gRCPconn, ModuleState)
+	go ReqRunningJob(gRCPconn)
 	runfunc.Run(Bot)
 }
 
 type checkTwcJob struct {
 	wg      sync.WaitGroup
 	Reverse bool
+}
+
+func ReqRunningJob(client pilot.PilotServiceClient) {
+	for {
+		log.WithFields(log.Fields{
+			"Service": ModuleState,
+			"Running": true,
+		}).Info("request for running job")
+
+		res, err := client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
+			Service: ModuleState,
+			Message: "Request",
+			Alive:   true,
+		})
+		if err != nil {
+			log.Error(err)
+		}
+
+		if res.Run {
+			log.WithFields(log.Fields{
+				"Service": ModuleState,
+				"Running": false,
+			}).Info(res.Message)
+
+			Twitch := &checkTwcJob{}
+			Twitch.Run()
+			_, _ = client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
+				Service: ModuleState,
+				Message: "Done",
+				Alive:   false,
+			})
+			log.WithFields(log.Fields{
+				"Service": ModuleState,
+				"Running": false,
+			}).Info("reporting job was done")
+
+		}
+
+		time.Sleep(1 * time.Minute)
+	}
 }
 
 func (i *checkTwcJob) Run() {

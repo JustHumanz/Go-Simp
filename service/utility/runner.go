@@ -75,10 +75,11 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
-	Bot, err := discordgo.New("Bot " + configfile.Discord)
-	if err != nil {
-		log.Error(err)
-	}
+	configfile.InitConf()
+	database.Start(configfile)
+
+	Bot := configfile.StartBot()
+
 	err = Bot.Open()
 	if err != nil {
 		log.Panic(err)
@@ -97,8 +98,6 @@ func main() {
 	}
 	GuildCount()
 	Donation := configfile.DonationLink
-	configfile.InitConf()
-	database.Start(configfile)
 
 	Bot.AddHandler(func(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 		if (m.Emoji.MessageFormat() == configfile.Emoji.Livestream[0] || m.Emoji.MessageFormat() == configfile.Emoji.Livestream[1]) && m.UserID != BotInfo.ID {

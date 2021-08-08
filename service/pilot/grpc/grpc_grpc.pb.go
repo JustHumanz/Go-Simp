@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type PilotServiceClient interface {
 	ReqData(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*VtubersData, error)
 	ModuleList(ctx context.Context, in *ModuleData, opts ...grpc.CallOption) (*Empty, error)
+	RunModuleJob(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*RunJob, error)
 	HeartBeat(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (PilotService_HeartBeatClient, error)
 	MetricReport(ctx context.Context, in *Metric, opts ...grpc.CallOption) (*Empty, error)
 	ReportError(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*Empty, error)
@@ -45,6 +46,15 @@ func (c *pilotServiceClient) ReqData(ctx context.Context, in *ServiceMessage, op
 func (c *pilotServiceClient) ModuleList(ctx context.Context, in *ModuleData, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
 	err := c.cc.Invoke(ctx, "/pilot.PilotService/ModuleList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pilotServiceClient) RunModuleJob(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*RunJob, error) {
+	out := new(RunJob)
+	err := c.cc.Invoke(ctx, "/pilot.PilotService/RunModuleJob", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -107,6 +117,7 @@ func (c *pilotServiceClient) ReportError(ctx context.Context, in *ServiceMessage
 type PilotServiceServer interface {
 	ReqData(context.Context, *ServiceMessage) (*VtubersData, error)
 	ModuleList(context.Context, *ModuleData) (*Empty, error)
+	RunModuleJob(context.Context, *ServiceMessage) (*RunJob, error)
 	HeartBeat(*ServiceMessage, PilotService_HeartBeatServer) error
 	MetricReport(context.Context, *Metric) (*Empty, error)
 	ReportError(context.Context, *ServiceMessage) (*Empty, error)
@@ -122,6 +133,9 @@ func (UnimplementedPilotServiceServer) ReqData(context.Context, *ServiceMessage)
 }
 func (UnimplementedPilotServiceServer) ModuleList(context.Context, *ModuleData) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ModuleList not implemented")
+}
+func (UnimplementedPilotServiceServer) RunModuleJob(context.Context, *ServiceMessage) (*RunJob, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RunModuleJob not implemented")
 }
 func (UnimplementedPilotServiceServer) HeartBeat(*ServiceMessage, PilotService_HeartBeatServer) error {
 	return status.Errorf(codes.Unimplemented, "method HeartBeat not implemented")
@@ -177,6 +191,24 @@ func _PilotService_ModuleList_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PilotServiceServer).ModuleList(ctx, req.(*ModuleData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PilotService_RunModuleJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ServiceMessage)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PilotServiceServer).RunModuleJob(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pilot.PilotService/RunModuleJob",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PilotServiceServer).RunModuleJob(ctx, req.(*ServiceMessage))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -252,6 +284,10 @@ var PilotService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ModuleList",
 			Handler:    _PilotService_ModuleList_Handler,
+		},
+		{
+			MethodName: "RunModuleJob",
+			Handler:    _PilotService_RunModuleJob_Handler,
 		},
 		{
 			MethodName: "MetricReport",

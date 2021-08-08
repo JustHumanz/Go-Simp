@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/url"
 	"sync"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/robfig/cron/v3"
@@ -26,7 +27,7 @@ var (
 )
 
 const (
-	ModuleState = "BiliBili Fanart"
+	ModuleState = config.TBiliBiliModule
 )
 
 func init() {
@@ -34,11 +35,10 @@ func init() {
 	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 }
 
-//Start start twitter module
+//Start start tbilibili module
 func main() {
 	var (
 		configfile config.ConfigFile
-		err        error
 	)
 
 	GetPayload := func() {
@@ -65,11 +65,7 @@ func main() {
 
 	GetPayload()
 	configfile.InitConf()
-
-	Bot, err = discordgo.New("Bot " + configfile.Discord)
-	if err != nil {
-		log.Error(err)
-	}
+	Bot = configfile.StartBot()
 
 	database.Start(configfile)
 
@@ -77,9 +73,9 @@ func main() {
 	c.Start()
 
 	c.AddFunc(config.CheckPayload, GetPayload)
-	c.AddJob("@every 6m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(&checkBlJob{}))
 	log.Info("Enable " + ModuleState)
 	go pilot.RunHeartBeat(gRCPconn, ModuleState)
+	go ReqRunningJob(gRCPconn)
 	runfunc.Run(Bot)
 }
 
@@ -88,6 +84,46 @@ type checkBlJob struct {
 	mutex       sync.Mutex
 	Reverse     bool
 	FanArtIDTMP map[string]string
+}
+
+func ReqRunningJob(client pilot.PilotServiceClient) {
+	for {
+		log.WithFields(log.Fields{
+			"Service": ModuleState,
+			"Running": true,
+		}).Info("request for running job")
+
+		res, err := client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
+			Service: ModuleState,
+			Message: "Request",
+			Alive:   true,
+		})
+		if err != nil {
+			log.Error(err)
+		}
+
+		if res.Run {
+			log.WithFields(log.Fields{
+				"Service": ModuleState,
+				"Running": false,
+			}).Info(res.Message)
+
+			Bili := &checkBlJob{}
+			Bili.Run()
+			_, _ = client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
+				Service: ModuleState,
+				Message: "Done",
+				Alive:   false,
+			})
+			log.WithFields(log.Fields{
+				"Service": ModuleState,
+				"Running": false,
+			}).Info("reporting job was done")
+
+		}
+
+		time.Sleep(1 * time.Minute)
+	}
 }
 
 func (i *checkBlJob) AddPostID(Member, VideoID string) {

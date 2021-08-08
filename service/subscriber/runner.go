@@ -34,7 +34,7 @@ var (
 )
 
 const (
-	ModuleState = "Subscriber"
+	ModuleState = config.SubscriberModule
 )
 
 func init() {
@@ -73,25 +73,14 @@ func main() {
 
 	GetPayload()
 	configfile.InitConf()
-
-	var err error
-	Bot, err = discordgo.New("Bot " + configfile.Discord)
-	if err != nil {
-		log.Error(err)
-	}
+	Bot = configfile.StartBot()
+	TwitchClient = configfile.GetTwitchTkn()
 
 	database.Start(configfile)
 
-	TwitchClient, err = helix.NewClient(&helix.Options{
-		ClientID:     config.GoSimpConf.Twitch.ClientID,
-		ClientSecret: config.GoSimpConf.Twitch.ClientSecret,
-	})
-	if err != nil {
-		log.Error(err)
-	}
 	resp, err := TwitchClient.RequestAppAccessToken([]string{"user:read:email"})
 	if err != nil {
-		log.Error(err)
+		log.Panic(err)
 	}
 
 	TwitchClient.SetAppAccessToken(resp.Data.AccessToken)

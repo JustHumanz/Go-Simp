@@ -126,13 +126,9 @@ func main() {
 
 		if !WaitMigrate || Counter == 6 {
 			log.Info("Start Frontend")
-			var err error
-			Bot, err = discordgo.New("Bot " + configfile.Discord)
-			if err != nil {
-				log.Error(err)
-			}
+			Bot = configfile.StartBot()
 
-			err = Bot.Open()
+			err := Bot.Open()
 			if err != nil {
 				log.Error(err)
 			}

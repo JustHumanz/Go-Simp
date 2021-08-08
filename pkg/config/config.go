@@ -7,8 +7,10 @@ import (
 	"time"
 
 	"github.com/BurntSushi/toml"
+	"github.com/bwmarrin/discordgo"
 	_ "github.com/go-sql-driver/mysql"
 	twitterscraper "github.com/n0madic/twitter-scraper"
+	"github.com/nicklaw5/helix"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -60,11 +62,17 @@ const (
 	Fe                = "frontend"
 	Sys               = "system"
 
+	PixivModule          = "Pixiv Fanart"
+	TwitterModule        = "Twitter Fanart"
+	TBiliBiliModule      = "BiliBili Fanart"
+	LiveBiliBiliModule   = "LiveBiliBili"
+	SpaceBiliBiliModule  = "SpaceBiliBili"
+	TwitchModule         = "Twitch"
+	YoutubeCheckerModule = "Youtube_Checker"
+	YoutubeCounterModule = "Youtube_Counter"
+	SubscriberModule     = "Subscriber"
+
 	//Crontab
-	TwitterFanart              = "@every 0h5m0s"
-	BiliBiliFanart             = "@every 0h6m0s"
-	PixivFanart                = "@every 0h30m0s"
-	PixivFanartLewd            = "@every 1h0m0s"
 	BiliBiliLive               = "@every 0h7m0s"
 	BiliBiliSpace              = "@every 0h13m0s"
 	Twitch                     = "@every 0h11m0s"
@@ -296,4 +304,23 @@ func (Data ConfigFile) InitConf() {
 	if Data.BotPrefix.Youtube == "" {
 		log.Fatal("Youtube Prefix not found")
 	}
+}
+
+func (i *ConfigFile) StartBot() *discordgo.Session {
+	tmp, err := discordgo.New("Bot " + i.Discord)
+	if err != nil {
+		log.Panic(err)
+	}
+	return tmp
+}
+
+func (i *ConfigFile) GetTwitchTkn() *helix.Client {
+	TwitchClient, err := helix.NewClient(&helix.Options{
+		ClientID:     i.Twitch.ClientID,
+		ClientSecret: i.Twitch.ClientSecret,
+	})
+	if err != nil {
+		log.Panic(err)
+	}
+	return TwitchClient
 }
