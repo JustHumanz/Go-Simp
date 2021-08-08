@@ -444,7 +444,6 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							SetAuthor(VtuberName, Data.Member.BiliBiliAvatar, BiliBiliAccount).
 							SetTitle(Data.Title).
 							SetThumbnail(Data.Group.IconURL).
-							SetDescription(Data.Desc).
 							SetImage(Data.Thumb).
 							SetURL(BiliBiliURL).
 							AddField("Start live", Start.String()+" Ago").

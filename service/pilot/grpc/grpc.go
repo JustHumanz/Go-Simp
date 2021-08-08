@@ -113,6 +113,146 @@ func (s *Server) ModuleList(ctx context.Context, in *ModuleData) (*Empty, error)
 	return &Empty{}, nil
 }
 
+type ModuleList struct {
+	Name    string
+	Counter int
+	CronJob int
+	Note    string
+	Run     bool
+}
+
+func (i *ModuleList) SetRun(a bool) *ModuleList {
+	i.Run = a
+	return i
+}
+
+func (i *ModuleList) SetNote(n string) *ModuleList {
+	i.Note = n
+	return i
+}
+
+var M = []*ModuleList{
+	//Fanart
+	{
+		Name:    config.TBiliBiliModule,
+		Counter: 1,
+		CronJob: 7, //every 7 minutes
+	},
+	{
+		Name:    config.TwitterModule,
+		Counter: 1,
+		CronJob: 5, //every 5 minutes
+	},
+	{
+		Name:    config.PixivModule,
+		Counter: 1,
+		CronJob: 5, //every 5 minutes
+	},
+
+	//Live
+	{
+		Name:    config.SpaceBiliBiliModule,
+		Counter: 1,
+		CronJob: 12, //every 7 minutes
+	},
+	{
+		Name:    config.LiveBiliBiliModule,
+		Counter: 1,
+		CronJob: 7, //every 7 minutes
+	},
+	{
+		Name:    config.TwitchModule,
+		Counter: 1,
+		CronJob: 10, //every 10 minutes
+	},
+	{
+		Name:    config.YoutubeCheckerModule,
+		Counter: 1,
+		CronJob: 5, //every 5 minutes
+	},
+	{
+		Name:    config.YoutubeCounterModule,
+		Counter: 1,
+		CronJob: 1, //every 1 minutes
+	},
+}
+
+func isYtCheckerRunning() bool {
+	for _, v := range M {
+		if v.Name == config.YoutubeCheckerModule {
+			if v.Run && v.Note == "Update" {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func (s *Server) RunModuleJob(ctx context.Context, in *ServiceMessage) (*RunJob, error) {
+	for _, v := range M {
+		if v.Name == in.Service {
+			if in.Service == config.YoutubeCheckerModule {
+				v.SetNote(in.Message)
+			}
+
+			if in.Service == config.YoutubeCounterModule && isYtCheckerRunning() {
+				log.WithFields(log.Fields{
+					"Counter": v.CronJob,
+					"Service": in.Service,
+				}).Warn("Youtube Checker still running,skip Youtube Counter")
+
+				return &RunJob{
+					Run:     false,
+					Message: "skip Youtube Counter",
+				}, nil
+			}
+
+			if in.Alive && v.Counter%v.CronJob == 0 {
+				log.WithFields(log.Fields{
+					"Counter": v.CronJob,
+					"Service": in.Service,
+					"Running": v.Run,
+					"Note":    in.Message,
+				}).Info("Module request for running job")
+
+				if v.Run {
+					log.WithFields(log.Fields{
+						"Counter": v.CronJob,
+						"Service": in.Service,
+					}).Warn("Job still running")
+
+					return &RunJob{
+						Run:     false,
+						Message: "job still running",
+					}, nil
+				}
+
+				log.WithFields(log.Fields{
+					"Counter": v.CronJob,
+					"Service": in.Service,
+				}).Info("Approval request")
+
+				v.SetRun(true)
+				return &RunJob{
+					Message: "OK,module approved",
+					Run:     true,
+				}, nil
+
+			} else if !in.Alive && in.Message == "Done" {
+				log.WithFields(log.Fields{
+					"Counter": v.Counter,
+					"Service": in.Service,
+					"Running": v.Run,
+					"Note":    v.Note,
+				}).Info("Module complete running job")
+				v.SetRun(false)
+			}
+			v.Counter++
+		}
+	}
+	return &RunJob{}, nil
+}
+
 func (s *Server) ReportError(ctx context.Context, in *ServiceMessage) (*Empty, error) {
 	ReportDeadService(in.Message, in.Service)
 	return &Empty{}, nil

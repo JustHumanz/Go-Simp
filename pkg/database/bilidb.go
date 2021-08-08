@@ -7,7 +7,7 @@ import (
 	"errors"
 	"strconv"
 
-	"github.com/JustHumanz/Go-Simp/pkg/config"
+	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	log "github.com/sirupsen/logrus"
 )
 

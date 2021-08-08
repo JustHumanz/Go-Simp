@@ -37,10 +37,7 @@ func main() {
 		log.Panic(err)
 	}
 
-	Bot, err := discordgo.New("Bot " + configfile.Discord)
-	if err != nil {
-		log.Error(err)
-	}
+	Bot := configfile.StartBot()
 
 	err = Bot.Open()
 	if err != nil {

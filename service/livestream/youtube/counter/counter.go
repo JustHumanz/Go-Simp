@@ -28,7 +28,7 @@ var (
 )
 
 const (
-	ModuleState = "Youtube_Counter"
+	ModuleState = config.YoutubeCounterModule
 )
 
 func init() {
@@ -40,7 +40,6 @@ func init() {
 func main() {
 	var (
 		configfile config.ConfigFile
-		err        error
 	)
 
 	GetPayload := func() {
@@ -67,11 +66,7 @@ func main() {
 
 	GetPayload()
 	configfile.InitConf()
-
-	Bot, err = discordgo.New("Bot " + configfile.Discord)
-	if err != nil {
-		log.Error(err)
-	}
+	Bot = configfile.StartBot()
 
 	database.Start(configfile)
 
@@ -81,12 +76,9 @@ func main() {
 	c.AddFunc("0 */2 * * *", func() {
 		engine.ExTknList = nil
 	})
-	YoutubeCounter := &checkYtJob{
-		CekCounter: make(map[string]bool),
-	}
-	c.AddJob("@every 1m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(YoutubeCounter))
 	log.Info("Enable " + ModuleState)
 	go pilot.RunHeartBeat(gRCPconn, ModuleState)
+	go ReqRunningJob(gRCPconn)
 	runfunc.Run(Bot)
 }
 
@@ -94,6 +86,49 @@ type checkYtJob struct {
 	wg         sync.WaitGroup
 	mutex      sync.Mutex
 	CekCounter map[string]bool
+}
+
+func ReqRunningJob(client pilot.PilotServiceClient) {
+	YoutubeCounter := &checkYtJob{
+		CekCounter: make(map[string]bool),
+	}
+	for {
+		log.WithFields(log.Fields{
+			"Service": ModuleState,
+			"Running": true,
+		}).Info("request for running job")
+
+		res, err := client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
+			Service: ModuleState,
+			Message: "Request",
+			Alive:   true,
+		})
+
+		if err != nil {
+			log.Error(err)
+		}
+
+		if res.Run {
+			log.WithFields(log.Fields{
+				"Service": ModuleState,
+				"Running": false,
+			}).Info(res.Message)
+
+			YoutubeCounter.Run()
+			_, _ = client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
+				Service: ModuleState,
+				Message: "Done",
+				Alive:   false,
+			})
+			log.WithFields(log.Fields{
+				"Service": ModuleState,
+				"Running": false,
+			}).Info("reporting job was done")
+
+		}
+
+		time.Sleep(1 * time.Minute)
+	}
 }
 
 func (i *checkYtJob) Run() {

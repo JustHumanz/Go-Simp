@@ -29,7 +29,7 @@ var (
 )
 
 const (
-	ModuleState = "SpaceBiliBili"
+	ModuleState = config.LiveBiliBiliModule
 )
 
 func init() {
@@ -41,7 +41,6 @@ func init() {
 func main() {
 	var (
 		configfile config.ConfigFile
-		err        error
 	)
 
 	GetPayload := func() {
@@ -68,24 +67,17 @@ func main() {
 
 	GetPayload()
 	configfile.InitConf()
-
-	Bot, err = discordgo.New("Bot " + configfile.Discord)
-	if err != nil {
-		log.Error(err)
-	}
+	Bot = configfile.StartBot()
 
 	database.Start(configfile)
 
 	c := cron.New()
 	c.Start()
 
-	SpaceBiliBili := &checkBlSpaceJob{
-		VideoIDTMP: make(map[string]string),
-	}
 	c.AddFunc(config.CheckPayload, GetPayload)
-	c.AddJob("@every 12m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(SpaceBiliBili))
 	log.Info("Enable " + ModuleState)
 	go pilot.RunHeartBeat(gRCPconn, ModuleState)
+	go ReqRunningJob(gRCPconn)
 	runfunc.Run(Bot)
 }
 
@@ -112,6 +104,50 @@ func (i *checkBlSpaceJob) CekFirstVideoID(Member, VideoID string) bool {
 		return true
 	}
 	return false
+}
+
+func ReqRunningJob(client pilot.PilotServiceClient) {
+	SpaceBiliBili := &checkBlSpaceJob{
+		VideoIDTMP: make(map[string]string),
+	}
+
+	for {
+		log.WithFields(log.Fields{
+			"Service": ModuleState,
+			"Running": true,
+		}).Info("request for running job")
+
+		res, err := client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
+			Service: ModuleState,
+			Message: "Request",
+			Alive:   true,
+		})
+		if err != nil {
+			log.Error(err)
+		}
+
+		if res.Run {
+			log.WithFields(log.Fields{
+				"Service": ModuleState,
+				"Running": false,
+			}).Info(res.Message)
+
+			Bili := SpaceBiliBili
+			Bili.Run()
+			_, _ = client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
+				Service: ModuleState,
+				Message: "Done",
+				Alive:   false,
+			})
+			log.WithFields(log.Fields{
+				"Service": ModuleState,
+				"Running": false,
+			}).Info("reporting job was done")
+
+		}
+
+		time.Sleep(1 * time.Minute)
+	}
 }
 
 func (i *checkBlSpaceJob) Run() {

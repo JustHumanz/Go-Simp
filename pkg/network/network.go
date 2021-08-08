@@ -11,7 +11,7 @@ import (
 	"net/url"
 	"time"
 
-	config "github.com/JustHumanz/Go-Simp/pkg/config"
+	"github.com/JustHumanz/Go-Simp/pkg/config"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )

@@ -27,7 +27,7 @@ var (
 )
 
 const (
-	ModuleState = "Youtube"
+	ModuleState = config.YoutubeCheckerModule
 )
 
 func init() {
@@ -39,7 +39,6 @@ func init() {
 func main() {
 	var (
 		configfile config.ConfigFile
-		err        error
 	)
 
 	GetPayload := func() {
@@ -66,24 +65,20 @@ func main() {
 
 	GetPayload()
 	configfile.InitConf()
-
-	Bot, err = discordgo.New("Bot " + configfile.Discord)
-	if err != nil {
-		log.Error(err)
-	}
+	Bot = configfile.StartBot()
 
 	database.Start(configfile)
 
 	c := cron.New()
 	c.Start()
 	c.AddFunc(config.CheckPayload, GetPayload)
-	c.AddJob("@every 5m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(&checkYtCekJob{}))
 	c.AddFunc(config.YoutubePrivateSlayer, CheckPrivate)
 	c.AddFunc("0 */2 * * *", func() {
 		engine.ExTknList = nil
 	})
 	log.Info("Enable " + ModuleState)
 	go pilot.RunHeartBeat(gRCPconn, ModuleState)
+	go ReqRunningJob(gRCPconn)
 	runfunc.Run(Bot)
 }
 
@@ -94,15 +89,74 @@ type checkYtCekJob struct {
 	Counter int
 }
 
-func (i *checkYtCekJob) Run() {
-	i.Counter++
-	i.Update = false
-
-	if i.Counter == 3 {
-		i.Update = true
-		i.Counter = 0
+func ReqRunningJob(client pilot.PilotServiceClient) {
+	YoutubeChecker := &checkYtCekJob{
+		Counter: 1,
+		Update:  true,
 	}
+	for {
 
+		if YoutubeChecker.Counter == 3 {
+			YoutubeChecker.Update = true
+			YoutubeChecker.Counter = 1
+		}
+
+		res := func() *pilot.RunJob {
+			log.WithFields(log.Fields{
+				"Service":  ModuleState,
+				"Running":  true,
+				"YtUpdate": YoutubeChecker.Update,
+			}).Info("request for running job")
+
+			if YoutubeChecker.Update {
+				tmp, err := client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
+					Service: ModuleState,
+					Message: "Update",
+					Alive:   true,
+				})
+				if err != nil {
+					log.Error(err)
+				}
+				return tmp
+			} else {
+				tmp, err := client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
+					Service: ModuleState,
+					Message: "New",
+					Alive:   true,
+				})
+				if err != nil {
+					log.Error(err)
+				}
+				return tmp
+			}
+		}()
+
+		if res.Run {
+			log.WithFields(log.Fields{
+				"Service": ModuleState,
+				"Running": false,
+			}).Info(res.Message)
+
+			YoutubeChecker.Run()
+			_, _ = client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
+				Service: ModuleState,
+				Message: "Done",
+				Alive:   false,
+			})
+			log.WithFields(log.Fields{
+				"Service": ModuleState,
+				"Running": false,
+			}).Info("reporting job was done")
+
+		}
+
+		YoutubeChecker.Counter++
+		YoutubeChecker.Update = false
+		time.Sleep(1 * time.Minute)
+	}
+}
+
+func (i *checkYtCekJob) Run() {
 	if i.Reverse {
 		for j := len(*GroupPayload) - 1; j >= 0; j-- {
 			i.wg.Add(1)

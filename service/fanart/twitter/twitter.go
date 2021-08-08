@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"sync"
+	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
@@ -26,7 +27,7 @@ var (
 )
 
 const (
-	ModuleState = "Twitter Fanart"
+	ModuleState = config.TwitterModule
 )
 
 func init() {
@@ -39,7 +40,6 @@ func init() {
 func main() {
 	var (
 		configfile config.ConfigFile
-		err        error
 	)
 
 	GetPayload := func() {
@@ -67,10 +67,7 @@ func main() {
 	GetPayload()
 	configfile.InitConf()
 
-	Bot, err = discordgo.New("Bot " + configfile.Discord)
-	if err != nil {
-		log.Error(err)
-	}
+	Bot = configfile.StartBot()
 
 	database.Start(configfile)
 
@@ -78,7 +75,6 @@ func main() {
 	c.Start()
 
 	c.AddFunc(config.CheckPayload, GetPayload)
-	c.AddJob("@every 5m", cron.NewChain(cron.SkipIfStillRunning(cron.DefaultLogger)).Then(&checkTwJob{}))
 	if *lewd {
 		log.Info("Enable lewd" + ModuleState)
 	} else {
@@ -86,7 +82,49 @@ func main() {
 	}
 
 	go pilot.RunHeartBeat(gRCPconn, ModuleState)
+	go ReqRunningJob(gRCPconn)
 	runfunc.Run(Bot)
+}
+
+func ReqRunningJob(client pilot.PilotServiceClient) {
+	for {
+		log.WithFields(log.Fields{
+			"Service": ModuleState,
+			"Running": true,
+		}).Info("request for running job")
+
+		res, err := client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
+			Service: ModuleState,
+			Message: "Request",
+			Alive:   true,
+		})
+		if err != nil {
+			log.Error(err)
+		}
+
+		if res.Run {
+			log.WithFields(log.Fields{
+				"Service": ModuleState,
+				"Running": false,
+			}).Info(res.Message)
+
+			Twit := &checkTwJob{}
+			Twit.Run()
+			time.Sleep(10 * time.Second)
+			_, _ = client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
+				Service: ModuleState,
+				Message: "Done",
+				Alive:   false,
+			})
+			log.WithFields(log.Fields{
+				"Service": ModuleState,
+				"Running": false,
+			}).Info("reporting job was done")
+
+		}
+
+		time.Sleep(1 * time.Minute)
+	}
 }
 
 type checkTwJob struct {

@@ -27,10 +27,17 @@ message Metric {
 message Empty {
 
 }
+
+message RunJob {
+  string Message = 1;
+  string Module = 2;
+  bool Run = 3;
+}
     
 service PilotService {
   rpc ReqData(ServiceMessage) returns (VtubersData) {}
   rpc ModuleList(ModuleData) returns (Empty){}
+  rpc RunModuleJob(ServiceMessage) returns (RunJob){}
   rpc HeartBeat(ServiceMessage) returns (stream Empty){}
   rpc MetricReport(Metric) returns (Empty){}
   rpc ReportError(ServiceMessage) returns (Empty){}
