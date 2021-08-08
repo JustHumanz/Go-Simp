@@ -24,6 +24,9 @@ services:
   multi_tor:
     image: justhumanz/go-multitor
     command: ["./MultiTOR","-privoxy","/usr/sbin/privoxy","-key","${KEY}"]
+    sysctls:
+      net.ipv4.ip_local_port_range: "15000 61000"
+      net.ipv4.tcp_fin_timeout: 30    
     ports:
       - 8080:8080          
     networks:
