@@ -458,7 +458,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						}
 
 						YoutubeData.UpdateYt(YoutubeData.Status)
-						engine.SendLiveNotif(YoutubeData, Bot)
+						//engine.SendLiveNotif(YoutubeData, Bot)
 
 					} else if Items.Snippet.VideoStatus == config.UpcomingStatus && YoutubeData.Status == config.PastStatus {
 						log.WithFields(log.Fields{
