@@ -4,6 +4,7 @@ import (
 	"flag"
 	"net/http"
 
+	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/metric"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
@@ -11,6 +12,52 @@ import (
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
+
+var M = []*pilot.ModuleList{
+	//Fanart
+	{
+		Name:    config.TBiliBiliModule,
+		Counter: 1,
+		CronJob: 7, //every 7 minutes
+	},
+	{
+		Name:    config.TwitterModule,
+		Counter: 1,
+		CronJob: 5, //every 5 minutes
+	},
+	{
+		Name:    config.PixivModule,
+		Counter: 1,
+		CronJob: 5, //every 5 minutes
+	},
+
+	//Live
+	{
+		Name:    config.SpaceBiliBiliModule,
+		Counter: 1,
+		CronJob: 12, //every 7 minutes
+	},
+	{
+		Name:    config.LiveBiliBiliModule,
+		Counter: 1,
+		CronJob: 7, //every 7 minutes
+	},
+	{
+		Name:    config.TwitchModule,
+		Counter: 1,
+		CronJob: 10, //every 10 minutes
+	},
+	{
+		Name:    config.YoutubeCheckerModule,
+		Counter: 1,
+		CronJob: 5, //every 5 minutes
+	},
+	{
+		Name:    config.YoutubeCounterModule,
+		Counter: 1,
+		CronJob: 1, //every 1 minutes
+	},
+}
 
 func main() {
 	pilot.Start()
@@ -74,6 +121,7 @@ func main() {
 				Module: "TwitterFollowers",
 			},
 		},
+		Modules: M,
 	}
 
 	grpcServer := grpc.NewServer()

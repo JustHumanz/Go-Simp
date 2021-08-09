@@ -124,7 +124,10 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 				"Service": ModuleState,
 				"Running": false,
 			}).Info("reporting job was done")
-
+		} else {
+			log.WithFields(log.Fields{
+				"Service": ModuleState,
+			}).Info(res.Message)
 		}
 
 		time.Sleep(1 * time.Minute)

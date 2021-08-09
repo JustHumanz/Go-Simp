@@ -96,7 +96,7 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 	}
 	for {
 
-		if YoutubeChecker.Counter == 3 {
+		if YoutubeChecker.Counter == 15 {
 			YoutubeChecker.Update = true
 			YoutubeChecker.Counter = 1
 		}
@@ -147,7 +147,6 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 				"Service": ModuleState,
 				"Running": false,
 			}).Info("reporting job was done")
-
 		}
 
 		YoutubeChecker.Counter++

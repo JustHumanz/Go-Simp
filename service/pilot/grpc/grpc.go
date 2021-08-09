@@ -63,9 +63,18 @@ func Start() {
 	}
 }
 
+type ModuleList struct {
+	Name    string
+	Counter int
+	CronJob int
+	Note    string
+	Run     bool
+}
+
 type Server struct {
 	ServiceList []ServiceMessage
 	ModuleData  []ModuleData
+	Modules     []*ModuleList
 	WaitMigrate *bool
 	UnimplementedPilotServiceServer
 }
@@ -113,14 +122,6 @@ func (s *Server) ModuleList(ctx context.Context, in *ModuleData) (*Empty, error)
 	return &Empty{}, nil
 }
 
-type ModuleList struct {
-	Name    string
-	Counter int
-	CronJob int
-	Note    string
-	Run     bool
-}
-
 func (i *ModuleList) SetRun(a bool) *ModuleList {
 	i.Run = a
 	return i
@@ -131,54 +132,8 @@ func (i *ModuleList) SetNote(n string) *ModuleList {
 	return i
 }
 
-var M = []*ModuleList{
-	//Fanart
-	{
-		Name:    config.TBiliBiliModule,
-		Counter: 1,
-		CronJob: 7, //every 7 minutes
-	},
-	{
-		Name:    config.TwitterModule,
-		Counter: 1,
-		CronJob: 5, //every 5 minutes
-	},
-	{
-		Name:    config.PixivModule,
-		Counter: 1,
-		CronJob: 5, //every 5 minutes
-	},
-
-	//Live
-	{
-		Name:    config.SpaceBiliBiliModule,
-		Counter: 1,
-		CronJob: 12, //every 7 minutes
-	},
-	{
-		Name:    config.LiveBiliBiliModule,
-		Counter: 1,
-		CronJob: 7, //every 7 minutes
-	},
-	{
-		Name:    config.TwitchModule,
-		Counter: 1,
-		CronJob: 10, //every 10 minutes
-	},
-	{
-		Name:    config.YoutubeCheckerModule,
-		Counter: 1,
-		CronJob: 5, //every 5 minutes
-	},
-	{
-		Name:    config.YoutubeCounterModule,
-		Counter: 1,
-		CronJob: 1, //every 1 minutes
-	},
-}
-
-func isYtCheckerRunning() bool {
-	for _, v := range M {
+func (s *Server) isYtCheckerRunning() bool {
+	for _, v := range s.Modules {
 		if v.Name == config.YoutubeCheckerModule {
 			if v.Run && v.Note == "Update" {
 				return true
@@ -189,13 +144,13 @@ func isYtCheckerRunning() bool {
 }
 
 func (s *Server) RunModuleJob(ctx context.Context, in *ServiceMessage) (*RunJob, error) {
-	for _, v := range M {
+	for _, v := range s.Modules {
 		if v.Name == in.Service {
 			if in.Service == config.YoutubeCheckerModule {
 				v.SetNote(in.Message)
 			}
 
-			if in.Service == config.YoutubeCounterModule && isYtCheckerRunning() {
+			if in.Service == config.YoutubeCounterModule && s.isYtCheckerRunning() {
 				log.WithFields(log.Fields{
 					"Counter": v.CronJob,
 					"Service": in.Service,
@@ -239,13 +194,13 @@ func (s *Server) RunModuleJob(ctx context.Context, in *ServiceMessage) (*RunJob,
 				}, nil
 
 			} else if !in.Alive && in.Message == "Done" {
+				v.SetRun(false)
 				log.WithFields(log.Fields{
 					"Counter": v.Counter,
 					"Service": in.Service,
 					"Running": v.Run,
 					"Note":    v.Note,
 				}).Info("Module complete running job")
-				v.SetRun(false)
 			}
 			v.Counter++
 		}
@@ -413,7 +368,7 @@ func (s *Server) HeartBeat(in *ServiceMessage, stream PilotService_HeartBeatServ
 				"Service":  in.Service,
 				"Messsage": in.Message,
 				"Status":   "Running",
-			}).Info("HeartBeat")
+			}).Debug("HeartBeat")
 		}
 
 		err := stream.Send(&Empty{})
