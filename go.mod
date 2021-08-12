@@ -14,7 +14,7 @@ require (
 	github.com/n0madic/twitter-scraper v0.0.0-20210428094026-3ea1f3b456cd
 	github.com/nicklaw5/helix v1.21.0
 	github.com/olekukonko/tablewriter v0.0.5
-	github.com/pbnjay/memory v0.0.0-20210728143218-7b4eea64cf58 // indirect
+	github.com/pbnjay/memory v0.0.0-20210728143218-7b4eea64cf58
 	github.com/prometheus/client_golang v1.11.0
 	github.com/prometheus/common v0.29.0 // indirect
 	github.com/pytimer/mux-logrus v0.0.0-20200505085744-ce5a5e748151
@@ -27,7 +27,7 @@ require (
 	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c // indirect
 	golang.org/x/time v0.0.0-20210611083556-38a9dc6acbc6 // indirect
 	google.golang.org/genproto v0.0.0-20210624195500-8bfb893ecb84 // indirect
-	google.golang.org/grpc v1.38.0
+	google.golang.org/grpc v1.40.0
 	google.golang.org/protobuf v1.27.1
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
