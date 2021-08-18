@@ -3,6 +3,28 @@
       "independent":{
          "Members":[
             {
+               "Name":"Mana",
+               "EN_Name":"Alice Mana",
+               "JP_Name":"有栖マナ",
+               "Twitter":{
+                  "Twitter_Fanart":"#マナート",
+                  "Twitter_Lewd":"",
+                  "Twitter_Username":"Alicemana_v"
+               },
+               "Youtube":{
+                  "Yt_ID":"UCIaC5td9nGG6JeKllWLwFLA"
+               },
+               "BiliBili":{
+                  "BiliBili_Fanart":"",
+                  "BiliBili_ID":3149619,
+                  "BiliRoom_ID":3822389
+               },
+               "Twitch": null,
+               "Region":"KR",
+               "Fanbase":"Foxfire",
+               "Status": "Active"
+            },               
+            {
                "Name":"YuNi",
                "EN_Name":"YuNi",
                "JP_Name":"",
