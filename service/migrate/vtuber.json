@@ -2162,6 +2162,28 @@
                   "Status": "Active"
                },
                {
+                  "Name":"Rushia",
+                  "EN_Name":"Uruha Rushia",
+                  "JP_Name":"潤羽るしあ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#絵クロマンサー",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"uruharushia"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCl_gCybOJRIgOXw6Qb4qJzQ"
+                  },
+                  "BiliBili":{
+                     "BiliBili_Fanart":"",
+                     "BiliBili_ID":443300418,
+                     "BiliRoom_ID":21545232
+                  },
+                   "Twitch": null,
+                  "Region":"JP",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
                   "Name":"Gura",
                   "EN_Name":"Gawr Gura",
                   "JP_Name":"がうる・ぐら",
@@ -2272,24 +2294,110 @@
                   "Status": "Active"
                },
                {
-                  "Name":"Rushia",
-                  "EN_Name":"Uruha Rushia",
-                  "JP_Name":"潤羽るしあ",
+                  "Name":"IRyS",
+                  "EN_Name":"IRyS",
+                  "JP_Name":"アイリス",
                   "Twitter":{
-                     "Twitter_Fanart":"#絵クロマンサー",
+                     "Twitter_Fanart":"#IRySart",
                      "Twitter_Lewd":"",
-                     "Twitter_Username":"uruharushia"
+                     "Twitter_Username":"irys_en"
                   },
                   "Youtube":{
-                     "Yt_ID":"UCl_gCybOJRIgOXw6Qb4qJzQ"
+                     "Yt_ID":"UC8rcEBzJSleTkf_-agPM20g"
                   },
-                  "BiliBili":{
-                     "BiliBili_Fanart":"",
-                     "BiliBili_ID":443300418,
-                     "BiliRoom_ID":21545232
+                  "BiliBili": null,
+                  "Twitch": null,
+                  "Region":"EN",
+                  "Fanbase":"IRyStocrats",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Sana",
+                  "EN_Name":"Tsukumo Sana",
+                  "JP_Name":"九十九 佐命",
+                  "Twitter":{
+                     "Twitter_Fanart":"#galaxillust",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"tsukumosana"
                   },
-                   "Twitch": null,
-                  "Region":"JP",
+                  "Youtube":{
+                     "Yt_ID":"UCsUj0dszADCGbF3gNrQEuSQ"
+                  },
+                  "BiliBili": null,
+                  "Twitch": null,
+                  "Region":"EN",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Konfauna",
+                  "EN_Name":"Ceres Fauna",
+                  "JP_Name":"セレス・ファウナ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#faunline",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"ceresfauna"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCO_aKKYxn4tvrqPjcTzZ6EQ"
+                  },
+                  "BiliBili": null,
+                  "Twitch": null,
+                  "Region":"EN",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Kronii",
+                  "EN_Name":"Ouro Kronii",
+                  "JP_Name":"オーロ・クロニー",
+                  "Twitter":{
+                     "Twitter_Fanart":"#kronillust",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"ourokronii"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCmbs8T6MWqUHP1tIQvSgKrg"
+                  },
+                  "BiliBili": null,
+                  "Twitch": null,
+                  "Region":"EN",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Mumei",
+                  "EN_Name":"Nanashi Mumei",
+                  "JP_Name":"七詩・ムメイ",
+                  "Twitter":{
+                     "Twitter_Fanart":"",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"nanashimumei_en"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UC3n5uGu18FoCy23ggWWp8tA"
+                  },
+                  "BiliBili": null,
+                  "Twitch": null,
+                  "Region":"EN",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Chaos",
+                  "EN_Name":"Hakos Baelz",
+                  "JP_Name":"ハコス・ベールズ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#illustrayBAE",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"hakosbaelz"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCgmPnx-EEeOrZSg5Tiw7ZRQ"
+                  },
+                  "BiliBili": null,
+                  "Twitch": null,
+                  "Region":"EN",
                   "Fanbase":"",
                   "Status": "Active"
                }
