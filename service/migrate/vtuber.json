@@ -2326,7 +2326,7 @@
                   "BiliBili": null,
                   "Twitch": null,
                   "Region":"EN",
-                  "Fanbase":"",
+                  "Fanbase":"Sanallite",
                   "Status": "Active"
                },
                {
@@ -2362,7 +2362,7 @@
                   "BiliBili": null,
                   "Twitch": null,
                   "Region":"EN",
-                  "Fanbase":"",
+                  "Fanbase":"Kronies",
                   "Status": "Active"
                },
                {
@@ -2370,7 +2370,7 @@
                   "EN_Name":"Nanashi Mumei",
                   "JP_Name":"七詩・ムメイ",
                   "Twitter":{
-                     "Twitter_Fanart":"",
+                     "Twitter_Fanart":"#drawMEI",
                      "Twitter_Lewd":"",
                      "Twitter_Username":"nanashimumei_en"
                   },
@@ -2398,7 +2398,7 @@
                   "BiliBili": null,
                   "Twitch": null,
                   "Region":"EN",
-                  "Fanbase":"",
+                  "Fanbase":"Baerats",
                   "Status": "Active"
                }
             ]
