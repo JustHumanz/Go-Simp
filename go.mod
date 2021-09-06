@@ -12,9 +12,9 @@ require (
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/n0madic/twitter-scraper v0.0.0-20210428094026-3ea1f3b456cd
-	github.com/nicklaw5/helix v1.21.0
+	github.com/nicklaw5/helix v1.25.0
 	github.com/olekukonko/tablewriter v0.0.5
-	github.com/pbnjay/memory v0.0.0-20210728143218-7b4eea64cf58 // indirect
+	github.com/pbnjay/memory v0.0.0-20210728143218-7b4eea64cf58
 	github.com/prometheus/client_golang v1.11.0
 	github.com/prometheus/common v0.29.0 // indirect
 	github.com/pytimer/mux-logrus v0.0.0-20200505085744-ce5a5e748151
