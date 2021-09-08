@@ -37,6 +37,12 @@ func main() {
 		log.Panic(err)
 	}
 
+	var GroupsPayload *[]database.Group
+	err = json.Unmarshal(res.VtuberPayload, &GroupsPayload)
+	if err != nil {
+		log.Error(err)
+	}
+
 	Bot, err := discordgo.New("Bot " + configfile.Discord)
 	if err != nil {
 		log.Error(err)
@@ -95,6 +101,8 @@ func main() {
 		if err != nil {
 			log.Error(err)
 		}
+
+		engine.InitSlash(Bot, *GroupsPayload, g.Guild)
 
 		for _, Channel := range g.Guild.Channels {
 			if Channel.ID == g.Guild.ID && Channel.Type == 0 {
