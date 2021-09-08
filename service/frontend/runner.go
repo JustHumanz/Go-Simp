@@ -187,12 +187,12 @@ func main() {
 
 	go pilot.RunHeartBeat(gRCPconn, "Frontend")
 
-	engine.InitSlash(Bot, *GroupsPayload, nil)
 	Bot.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		if h, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
 			h(s, i)
 		}
 	})
+	engine.InitSlash(Bot, *GroupsPayload, nil)
 	runfunc.Run(Bot)
 }
 
