@@ -227,7 +227,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 	for _, Member := range Group.Members {
 		if !Member.IsYtNill() && Member.Active() {
 			log.WithFields(log.Fields{
-				"Vtuber": Member.EnName,
+				"Vtuber": Member.Name,
 				"Group":  Group.GroupName,
 			}).Info("Checking Vtuber channel")
 
@@ -255,6 +255,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 
 					if len(Data.Items) == 0 {
 						fmt.Println("Opps something error\n", Data)
+						pilot.ReportDeadService("Yt Item Nill", ModuleState)
 						continue
 					}
 
@@ -312,7 +313,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 					if Items.Snippet.VideoStatus == config.UpcomingStatus {
 						log.WithFields(log.Fields{
 							"YtID":       ID,
-							"MemberName": Member.EnName,
+							"MemberName": Member.Name,
 							"Message":    "Send to notify",
 						}).Info("New Upcoming live schedule")
 
@@ -330,9 +331,9 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 					} else if Items.Snippet.VideoStatus == config.LiveStatus {
 						log.WithFields(log.Fields{
 							"YtID":       ID,
-							"MemberName": Member.EnName,
+							"MemberName": Member.Name,
 							"Message":    "Send to notify",
-						}).Info("New live stream right now")
+						}).Info("Suddenly live stream")
 
 						NewYoutubeData.UpdateStatus(config.LiveStatus)
 						_, err := NewYoutubeData.InputYt()
@@ -360,7 +361,6 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 								State:      config.LiveStatus,
 							})
 						}
-						engine.SendLiveNotif(NewYoutubeData, Bot)
 
 						if !Items.LiveDetails.ActualStartTime.IsZero() {
 							NewYoutubeData.UpdateSchdule(Items.LiveDetails.ActualStartTime)
@@ -373,7 +373,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 					} else if Items.Snippet.VideoStatus == "none" && YtType == "Covering" {
 						log.WithFields(log.Fields{
 							"YtID":       ID,
-							"MemberName": Member.EnName,
+							"MemberName": Member.Name,
 						}).Info("New MV or Cover")
 
 						NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
@@ -382,7 +382,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 					} else if !Items.Snippet.PublishedAt.IsZero() && Items.Snippet.VideoStatus == "none" {
 						log.WithFields(log.Fields{
 							"YtID":       ID,
-							"MemberName": Member.EnName,
+							"MemberName": Member.Name,
 						}).Info("Suddenly upload new video")
 						if NewYoutubeData.Schedul.IsZero() {
 							NewYoutubeData.UpdateSchdule(NewYoutubeData.Published)
@@ -394,7 +394,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 					} else {
 						log.WithFields(log.Fields{
 							"YtID":       ID,
-							"MemberName": Member.EnName,
+							"MemberName": Member.Name,
 						}).Info("Past live stream")
 						NewYoutubeData.UpdateStatus(config.PastStatus)
 						engine.SendLiveNotif(NewYoutubeData, Bot)

@@ -107,6 +107,10 @@ func AddData(Data Vtuber) {
 				defer stmt.Close()
 
 				for _, Channel := range DiscordChannel {
+					log.WithFields(log.Fields{
+						"ChannelID": Channel.ChannelID,
+					}).Info("Send notif")
+
 					msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewVtuber{
 						Group:  GroupData,
 						Member: VtuberMember,
@@ -377,6 +381,10 @@ func AddData(Data Vtuber) {
 					defer stmt.Close()
 
 					for _, Channel := range DiscordChannel {
+						log.WithFields(log.Fields{
+							"ChannelID": Channel.ChannelID,
+						}).Info("Send notif")
+
 						msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewVtuber{
 							Group:  GroupData,
 							Member: v,
