@@ -101,11 +101,7 @@ services:
       - ../prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
       - ./prometheus_data:/opt/bitnami/prometheus/data
       - "/etc/localtime:/etc/localtime:ro"
-<<<<<<< HEAD
     command: ["--config.file=/etc/prometheus/prometheus.yml","--storage.tsdb.path=/prometheus","--web.console.libraries=/usr/share/prometheus/console_libraries","--web.console.templates=/usr/share/prometheus/consoles","--storage.tsdb.retention.time=365d"]
-=======
-    command: ["--config.file=/etc/prometheus/prometheus.yml","--storage.tsdb.path=/prometheus","--web.console.libraries=/usr/share/prometheus/console_libraries","--web.console.templates=/usr/share/prometheus/consoles","--storage.tsdb.retention.time=365d"]   
->>>>>>> 4af9363415ebf27e2bddf7c64f6bf4b4db0d214b
     networks:
       - go-simp-net
 
