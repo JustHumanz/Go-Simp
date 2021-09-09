@@ -457,7 +457,7 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 		}
 	)
 
-	if NewGuild != nil {
+	if NewGuild == nil {
 		log.Info("Start init slash command")
 		var wg sync.WaitGroup
 		for i, G := range Bot.State.Guilds {
