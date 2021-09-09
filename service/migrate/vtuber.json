@@ -878,7 +878,7 @@
                },
                "Region":"PH",
                "Fanbase":"",
-               "Status": "Active"
+               "Status": "Inactive"
             },
             {
                "Name":"Kira",
@@ -4311,6 +4311,64 @@
                    "Twitch": null,
                   "Region":"KR",
                   "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Seffyna",
+                  "EN_Name":"Seffyna",
+                  "JP_Name":"せふぃな",
+                  "Twitter":{
+                     "Twitter_Fanart":"#Seffynart",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"Seffyna2434"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCnzZmBOSrQf2wDBbnsDajVw"
+                  },
+                  "BiliBili": null,
+                   "Twitch": null,
+                  "Region":"KR",
+                  "Fanbase":"SeffyNite",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"ban-hada",
+                  "EN_Name":"Ban Hada",
+                  "JP_Name":"ばん はだ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#hada_art",
+                     "Twitter_Lewd":"#netoreru",
+                     "Twitter_Username":"BanHada2434"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCLjx3lqIkYkPCBJop8czJ2A"
+                  },
+                  "BiliBili": null,
+                  "Twitch":{
+                     "Twitch_Username":"banhada2434"
+                  },
+                  "Region":"KR",
+                  "Fanbase":"kaizocrew",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"song-mia",
+                  "EN_Name":"Song Mia",
+                  "JP_Name":"そん みあ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#mi_art",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"SongMia2434"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCyqzU2nq7eGNi4kN0uHx7TA"
+                  },
+                  "BiliBili": null,
+                  "Twitch":{
+                     "Twitch_Username":"songmia2434"
+                  },
+                  "Region":"KR",
+                  "Fanbase":"Purimia",
                   "Status": "Active"
                },
                {
