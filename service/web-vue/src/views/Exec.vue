@@ -17,6 +17,11 @@
             Independent groups have a strict rule, if no [Users/roles] are tagged than [live/fan art/lewd art] won't send anything. <br>
             recommended that you enable "independent notif" so notifications will be send even if no [users/roles] are tagged.
          </p>
+         <h4>Type command will deprecated,use Slash command</h4><br>
+
+
+
+
          <h4>Main</h4><br>
          <p><code>vtbot&gt;Channel state</code><br>
             This command shows the state of the channel, what is enabled or disabled in this channel. <br>
