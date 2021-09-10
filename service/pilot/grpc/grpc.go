@@ -267,7 +267,7 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 				Subs.Group.GroupName,
 				"Youtube",
 			).Set(float64(Subs.YtViews))
-		} else if Subs.State == config.YoutubeLive && !Subs.Member.IsTwitchNill() {
+		} else if Subs.State == config.TwitchLive && !Subs.Member.IsTwitchNill() {
 			metric.GetSubs.WithLabelValues(
 				Subs.Member.Name,
 				Subs.Group.GroupName,
