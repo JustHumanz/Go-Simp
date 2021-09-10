@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"flag"
 	"math"
 	"strings"
 	"sync"
@@ -24,6 +25,7 @@ var (
 	Bot          *discordgo.Session
 	GroupPayload *[]database.Group
 	gRCPconn     pilot.PilotServiceClient
+	proxy        = flag.Bool("MultiTOR", false, "Enable MultiTOR for scrapping yt rss")
 )
 
 const (
@@ -32,6 +34,7 @@ const (
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
+	flag.Parse()
 	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 }
 

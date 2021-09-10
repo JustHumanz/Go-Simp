@@ -27,6 +27,7 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
     networks:
       - go-simp-net
+    command: ./liveyoutube -MultiTOR  
 
   youtube_counter:
     image: justhumanz/go-simp-youtube-counter-livestream:${RELEASE_VERSION}

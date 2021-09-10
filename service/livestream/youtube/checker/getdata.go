@@ -27,7 +27,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 				"Group": Group.GroupName,
 			}).Info("Checking Group channel")
 
-			VideoID := engine.GetRSS(YtChan.YtChannel)
+			VideoID := engine.GetRSS(YtChan.YtChannel, *proxy)
 			for _, ID := range VideoID {
 				YoutubeData, err := YtChan.CheckYoutubeVideo(ID)
 				if err != nil {
@@ -231,7 +231,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 				"Group":  Group.GroupName,
 			}).Info("Checking Vtuber channel")
 
-			VideoID := engine.GetRSS(Member.YoutubeID)
+			VideoID := engine.GetRSS(Member.YoutubeID, *proxy)
 			for _, ID := range VideoID {
 				YoutubeData, err := Member.CheckYoutubeVideo(ID)
 				if err != nil {
