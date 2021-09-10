@@ -27,7 +27,14 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 				"Group": Group.GroupName,
 			}).Info("Checking Group channel")
 
-			VideoID := engine.GetRSS(YtChan.YtChannel, *proxy)
+			VideoID, err := engine.GetRSS(YtChan.YtChannel, *proxy)
+			if err != nil {
+				log.Error(err)
+				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+					Message: err.Error(),
+					Service: ModuleState,
+				})
+			}
 			for _, ID := range VideoID {
 				YoutubeData, err := YtChan.CheckYoutubeVideo(ID)
 				if err != nil {
@@ -130,6 +137,10 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 
 					Data, err := engine.YtAPI([]string{ID})
 					if err != nil {
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message: err.Error(),
+							Service: ModuleState,
+						})
 						log.Error(err)
 					}
 
@@ -231,7 +242,14 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 				"Group":  Group.GroupName,
 			}).Info("Checking Vtuber channel")
 
-			VideoID := engine.GetRSS(Member.YoutubeID, *proxy)
+			VideoID, err := engine.GetRSS(Member.YoutubeID, *proxy)
+			if err != nil {
+				log.Error(err)
+				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+					Message: err.Error(),
+					Service: ModuleState,
+				})
+			}
 			for _, ID := range VideoID {
 				YoutubeData, err := Member.CheckYoutubeVideo(ID)
 				if err != nil {
@@ -245,6 +263,10 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 
 					Data, err := engine.YtAPI([]string{ID})
 					if err != nil {
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message: err.Error(),
+							Service: ModuleState,
+						})
 						log.Error(err)
 					}
 
@@ -408,6 +430,10 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 
 					Data, err := engine.YtAPI([]string{ID})
 					if err != nil {
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message: err.Error(),
+							Service: ModuleState,
+						})
 						log.Error(err)
 					}
 

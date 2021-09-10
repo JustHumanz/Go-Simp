@@ -186,6 +186,10 @@ func (i *checkYtJob) Run() {
 
 							Data, err := engine.YtAPI([]string{Youtube.VideoID})
 							if err != nil {
+								gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+									Message: err.Error(),
+									Service: ModuleState,
+								})
 								log.Error(err)
 								return
 							}

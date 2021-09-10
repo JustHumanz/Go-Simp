@@ -36,7 +36,10 @@ func TwitterFanart() {
 }
 
 func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
-	VideoID := engine.GetRSS(Dat.YoutubeID, false)
+	VideoID, err := engine.GetRSS(Dat.YoutubeID, false)
+	if err != nil {
+		log.Error(err)
+	}
 	defer wg.Done()
 	body, err := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,actualEndTime),statistics(viewCount))&id="+strings.Join(VideoID, ",")+"&key="+*YoutubeToken, nil)
 	if err != nil {

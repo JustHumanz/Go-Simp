@@ -666,29 +666,25 @@ func RemoveTwitterShortLink(text string) string {
 }
 
 //GetRSS GetRSS from Channel
-func GetRSS(YtID string, proxy bool) []string {
+func GetRSS(YtID string, proxy bool) ([]string, error) {
 	var (
 		DataXML YtXML
 		VideoID []string
 		URL     = "https://www.youtube.com/feeds/videos.xml?channel_id=" + YtID + "&q=searchterms"
+		Data    []byte
+		err     error
 	)
 
-	Data := func() []byte {
-		if proxy {
+	if proxy {
+		Data, err = network.CoolerCurl(URL, nil)
+	} else {
+		Data, err = network.Curl(URL, nil)
+	}
 
-			D, err := network.CoolerCurl(URL, nil)
-			if err != nil {
-				log.Error(err, string(D))
-			}
-			return D
-		} else {
-			D, err := network.Curl(URL, nil)
-			if err != nil {
-				log.Error(err, string(D))
-			}
-			return D
-		}
-	}()
+	if err != nil {
+		log.Error(err, string(Data))
+		return nil, err
+	}
 
 	xml.Unmarshal(Data, &DataXML)
 
@@ -698,7 +694,7 @@ func GetRSS(YtID string, proxy bool) []string {
 			break
 		}
 	}
-	return VideoID
+	return VideoID, nil
 }
 
 var ExTknList []string
