@@ -8,12 +8,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var (
-	VtuberGroupChoices []*discordgo.ApplicationCommandOptionChoice
-)
-
 //Start slash command
 func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild *discordgo.Guild) {
+	var (
+		VtuberGroupChoices []*discordgo.ApplicationCommandOptionChoice
+	)
 	for _, v := range GroupsPayload {
 		VtuberGroupChoices = append(VtuberGroupChoices, &discordgo.ApplicationCommandOptionChoice{
 			Name:  v.GroupName,
