@@ -675,13 +675,14 @@ func GetRSS(YtID string, proxy bool) []string {
 
 	Data := func() []byte {
 		if proxy {
-			D, err := network.Curl(URL, nil)
+
+			D, err := network.CoolerCurl(URL, nil)
 			if err != nil {
 				log.Error(err, string(D))
 			}
 			return D
 		} else {
-			D, err := network.CoolerCurl(URL, nil)
+			D, err := network.Curl(URL, nil)
 			if err != nil {
 				log.Error(err, string(D))
 			}
