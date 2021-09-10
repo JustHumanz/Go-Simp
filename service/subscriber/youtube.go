@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 	"strconv"
+	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
@@ -48,7 +50,7 @@ func CheckYoutube() {
 						if err != nil {
 							log.Error(err)
 						}
-						SendNotif := func(SubsCount string) {
+						SendNotif := func(SubsCount, NextCount string, nextdt, score int64) {
 							err = Member.RemoveSubsCache()
 							if err != nil {
 								log.Error(err)
@@ -69,42 +71,110 @@ func CheckYoutube() {
 
 							Graph := "[View as Graph](" + os.Getenv("PrometheusURL") + "/graph?g0.expr=get_subscriber%7Bstate%3D%22Youtube%22%2C%20vtuber%3D%22" + Member.Name + "%22%7D&g0.tab=0&g0.stacked=0&g0.range_input=4w)"
 
-							SendNude(engine.NewEmbed().
-								SetAuthor(Group.GroupName, Group.IconURL, "https://www.youtube.com/channel/"+Member.YoutubeID+"?sub_confirmation=1").
-								SetTitle(engine.FixName(Member.EnName, Member.JpName)).
-								SetThumbnail(config.YoutubeIMG).
-								SetDescription("Congratulation for "+SubsCount+" subscriber").
-								SetImage(Member.YoutubeAvatar).
-								AddField("Viewers", engine.NearestThousandFormat(float64(ViewCount))).
-								AddField("Videos", engine.NearestThousandFormat(float64(VideoCount))).
-								InlineAllFields().
-								AddField("Graph", Graph).
-								SetURL("https://www.youtube.com/channel/"+Member.YoutubeID+"?sub_confirmation=1").
-								SetColor(Color).MessageEmbed, Group, Member)
+							if nextdt != 0 && score != 0 {
+								datePredic := time.Unix(nextdt, 0)
+								datePredicStr := fmt.Sprintf("%s/%d", datePredic.Month().String(), datePredic.Day())
+								SendNude(engine.NewEmbed().
+									SetAuthor(Group.GroupName, Group.IconURL, "https://www.youtube.com/channel/"+Member.YoutubeID+"?sub_confirmation=1").
+									SetTitle(engine.FixName(Member.EnName, Member.JpName)).
+									SetThumbnail(config.YoutubeIMG).
+									SetDescription("Congratulation for "+SubsCount+" subscriber").
+									SetImage(Member.YoutubeAvatar).
+									AddField("Viewers", engine.NearestThousandFormat(float64(ViewCount))).
+									AddField("Videos", engine.NearestThousandFormat(float64(VideoCount))).
+									InlineAllFields().
+									AddField("Graph", Graph).
+									SetURL("https://www.youtube.com/channel/"+Member.YoutubeID+"?sub_confirmation=1").
+									AddField("Next Milestone Prediction", datePredicStr+" - "+NextCount).
+									SetFooter("Prediction Score "+strconv.Itoa(int(score))+"%").
+									SetColor(Color).MessageEmbed, Group, Member)
+							} else {
+								SendNude(engine.NewEmbed().
+									SetAuthor(Group.GroupName, Group.IconURL, "https://www.youtube.com/channel/"+Member.YoutubeID+"?sub_confirmation=1").
+									SetTitle(engine.FixName(Member.EnName, Member.JpName)).
+									SetThumbnail(config.YoutubeIMG).
+									SetDescription("Congratulation for "+SubsCount+" subscriber").
+									SetImage(Member.YoutubeAvatar).
+									AddField("Viewers", engine.NearestThousandFormat(float64(ViewCount))).
+									AddField("Videos", engine.NearestThousandFormat(float64(VideoCount))).
+									InlineAllFields().
+									AddField("Graph", Graph).
+									SetURL("https://www.youtube.com/channel/"+Member.YoutubeID+"?sub_confirmation=1").
+									SetColor(Color).MessageEmbed, Group, Member)
+							}
+
 						}
 						if YtSubsDB.YtSubs != YTSubscriberCount {
 							if YTSubscriberCount >= 1000000 {
 								for i := 0; i < 10000001; i += 1000000 {
 									if i == YTSubscriberCount && !Item.Statistics.HiddenSubscriberCount {
-										SendNotif(engine.NearestThousandFormat(float64(i)))
+										NextCount := YTSubscriberCount + 1000000
+										dt, sc, err := SubsPreDick(NextCount, "Youtube", Member.Name)
+										if err != nil {
+											log.Error(err)
+											gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+												Message: err.Error(),
+												Service: ModuleState,
+											})
+										}
+										SendNotif(
+											engine.NearestThousandFormat(float64(i)),
+											engine.NearestThousandFormat(float64(NextCount)),
+											dt, sc)
 									}
 								}
 							} else if YTSubscriberCount >= 100000 {
 								for i := 0; i < 1000001; i += 100000 {
 									if i == YTSubscriberCount && !Item.Statistics.HiddenSubscriberCount {
-										SendNotif(engine.NearestThousandFormat(float64(i)))
+										NextCount := YTSubscriberCount + 100000
+										dt, sc, err := SubsPreDick(NextCount, "Youtube", Member.Name)
+										if err != nil {
+											log.Error(err)
+											gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+												Message: err.Error(),
+												Service: ModuleState,
+											})
+										}
+										SendNotif(
+											engine.NearestThousandFormat(float64(i)),
+											engine.NearestThousandFormat(float64(NextCount)),
+											dt, sc)
 									}
 								}
 							} else if YTSubscriberCount >= 10000 {
 								for i := 0; i < 100001; i += 10000 {
 									if i == YTSubscriberCount && !Item.Statistics.HiddenSubscriberCount {
-										SendNotif(engine.NearestThousandFormat(float64(i)))
+										NextCount := YTSubscriberCount + 10000
+										dt, sc, err := SubsPreDick(NextCount, "Youtube", Member.Name)
+										if err != nil {
+											log.Error(err)
+											gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+												Message: err.Error(),
+												Service: ModuleState,
+											})
+										}
+										SendNotif(
+											engine.NearestThousandFormat(float64(i)),
+											engine.NearestThousandFormat(float64(NextCount)),
+											dt, sc)
 									}
 								}
 							} else if YTSubscriberCount >= 1000 {
 								for i := 0; i < 10001; i += 1000 {
 									if i == YTSubscriberCount && !Item.Statistics.HiddenSubscriberCount {
-										SendNotif(engine.NearestThousandFormat(float64(i)))
+										NextCount := YTSubscriberCount + 1000
+										dt, sc, err := SubsPreDick(NextCount, "Youtube", Member.Name)
+										if err != nil {
+											log.Error(err)
+											gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+												Message: err.Error(),
+												Service: ModuleState,
+											})
+										}
+										SendNotif(
+											engine.NearestThousandFormat(float64(i)),
+											engine.NearestThousandFormat(float64(NextCount)),
+											dt, sc)
 									}
 								}
 							}
