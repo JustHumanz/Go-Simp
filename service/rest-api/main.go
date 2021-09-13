@@ -502,7 +502,10 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 			}
 
 			if Member["Twitch"] != nil {
-				TwitchData, err := database.GetTwitch(Member["ID"].(int64))
+				TwitchData, err := database.TwitchGet(map[string]interface{}{
+					"MemberID": Member["ID"].(int64),
+					"Status":   config.LiveStatus,
+				})
 				if err != nil {
 					log.Error(err)
 				}
