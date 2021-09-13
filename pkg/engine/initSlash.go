@@ -472,7 +472,11 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 					_, err := Bot.ApplicationCommandCreate(Bot.State.User.ID, Guild.ID, v)
 					if err != nil {
 						log.Errorf("Cannot create '%v' command: %v guild: %v", v.Name, err, Guild.ID)
-						continue
+						if err.Error() == "HTTP 403 Forbidden" {
+							return
+						} else {
+							continue
+						}
 					}
 				}
 
@@ -497,6 +501,5 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 				continue
 			}
 		}
-
 	}
 }

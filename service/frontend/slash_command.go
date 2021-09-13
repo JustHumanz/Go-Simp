@@ -98,14 +98,23 @@ var (
 			}
 
 			SendMessage := func(e []*discordgo.MessageEmbed) {
-				err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-					Type: discordgo.InteractionResponseChannelMessageWithSource,
-					Data: &discordgo.InteractionResponseData{
-						Embeds: e,
-					},
-				})
-				if err != nil {
-					log.Error(err)
+				if len(e) > 10 {
+					for _, v := range e {
+						_, err := s.ChannelMessageSendEmbed(i.ChannelID, v)
+						if err != nil {
+							log.Error(err)
+						}
+					}
+				} else {
+					err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+						Type: discordgo.InteractionResponseChannelMessageWithSource,
+						Data: &discordgo.InteractionResponseData{
+							Embeds: e,
+						},
+					})
+					if err != nil {
+						log.Error(err)
+					}
 				}
 			}
 
