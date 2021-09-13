@@ -105,6 +105,20 @@ var (
 							log.Error(err)
 						}
 					}
+				} else if len(e) == 0 {
+					err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+						Type: discordgo.InteractionResponseChannelMessageWithSource,
+						Data: &discordgo.InteractionResponseData{
+							Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
+								SetAuthor(Nick, Avatar).
+								SetDescription("It looks like doesn't have a livestream schedule for now").
+								SetImage(engine.NotFoundIMG()).MessageEmbed},
+						},
+					})
+					if err != nil {
+						log.Error(err)
+					}
+
 				} else {
 					err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 						Type: discordgo.InteractionResponseChannelMessageWithSource,
