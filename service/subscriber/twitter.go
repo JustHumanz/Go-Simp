@@ -42,6 +42,13 @@ func CheckTwitter() {
 						log.Error(err)
 					}
 
+					log.WithFields(log.Fields{
+						"Vtuber":             Name.Name,
+						"Group":              Group.GroupName,
+						"TimeSampPrediction": nextdt,
+						"Score":              score,
+					}).Info("Congratulation for " + SubsCount + " subscriber")
+
 					Avatar := strings.Replace(Twitter.Avatar, "_normal.jpg", ".jpg", -1)
 					Color, err := engine.GetColor(config.TmpDir, Avatar)
 					if err != nil {

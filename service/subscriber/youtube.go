@@ -55,6 +55,12 @@ func CheckYoutube() {
 							if err != nil {
 								log.Error(err)
 							}
+							log.WithFields(log.Fields{
+								"Vtuber":             Member.Name,
+								"Group":              Group.GroupName,
+								"TimeSampPrediction": nextdt,
+								"Score":              score,
+							}).Info("Congratulation for " + SubsCount + " subscriber")
 
 							Color, err := engine.GetColor(config.TmpDir, Member.YoutubeAvatar)
 							if err != nil {

@@ -64,7 +64,7 @@ def getData(state,name :str,lmt :int):
     x = []
     counter = 1
     try:
-        response = requests.get(prometheus+'/api/v1/query_range?query=get_subscriber{state="'+state+'",vtuber="'+name+'"}',params={'start':start.strftime('%s'),'end':datetime.today().strftime('%s'),'step':'86400'})
+        response = requests.get(prometheus+'/api/v1/query_range?query=get_subscriber{state="'+state+'",vtuber="'+name+'"}',params={'start':start.strftime('%s'),'end':datetime.today().strftime('%s'),'step':'5889'})
         logging.info("%s",response.url)
         response.raise_for_status()
         data = response.json()
