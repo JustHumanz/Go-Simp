@@ -749,9 +749,7 @@
                   "Twitter_Lewd":"",
                   "Twitter_Username":"LeaflitVT"
                },
-               "Youtube":{
-                  "Yt_ID":"UC69r9S_ZCtpJc06xAowcK2A"
-               },
+               "Youtube": null,
                "BiliBili": null,
                "Twitch":{
                   "Twitch_Username":"Leaflit"
