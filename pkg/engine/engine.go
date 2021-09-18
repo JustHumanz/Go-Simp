@@ -542,6 +542,10 @@ func LewdIMG() string {
 	return config.CdnDomain + "Lewd/" + strconv.Itoa(RandomNum(1, 5)) + ".png"
 }
 
+func Gif() string {
+	return config.CdnDomain + "Gif/" + strconv.Itoa(RandomNum(1, 4)) + ".gif"
+}
+
 func RandomNum(min, max int) int {
 	return rand.Intn(max-min) + min
 }

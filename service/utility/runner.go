@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"math/rand"
 	"os"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
@@ -48,6 +47,9 @@ var (
 		"vxZtflYGjA8",
 		"RfDN1JMMCM4",
 		"eyiYja05RAI",
+		"_PVZr0iJiug",
+		"cLJL6uRezSI",
+		"6XZek8E_SiE",
 	}
 )
 
@@ -165,26 +167,22 @@ func main() {
 
 	c := cron.New()
 	c.Start()
-	if configfile.DonationLink != "" {
-		c.AddFunc(config.DonationMsg, func() {
-			Img := config.GoSimpIMG
-			if rand.Float32() < 0.5 {
-				if rand.Float32() < 0.5 {
-					Img = engine.LewdIMG()
-				} else {
-					Img = engine.MaintenanceIMG()
-				}
-				Img = engine.NotFoundIMG()
-			} else {
-				if rand.Float32() < 0.5 {
-					Img = engine.NotFoundIMG()
-				} else {
-					Img = engine.MaintenanceIMG()
-				}
-				Img = engine.LewdIMG()
-			}
+	c.AddFunc(config.DonationMsg, func() {
+		Img := config.GoSimpIMG
+		Num := engine.RandomNum(1, 4)
+		if Num == 1 {
+			Img = engine.LewdIMG()
+		} else if Num == 2 {
+			Img = engine.MaintenanceIMG()
+		} else if Num == 3 {
+			Img = engine.NotFoundIMG()
+		} else {
+			Img = engine.Gif()
+		}
 
-			Music := "https://www.youtube.com/watch?v=" + KanoPayload[engine.RandomNum(0, len(KanoPayload)-1)]
+		Music := "https://www.youtube.com/watch?v=" + KanoPayload[engine.RandomNum(0, len(KanoPayload)-1)]
+
+		if configfile.DonationLink != "" {
 			Bot.ChannelMessageSendEmbed(database.GetRanChannel(), engine.NewEmbed().
 				SetTitle("Donate").
 				SetURL(Donation).
@@ -196,8 +194,22 @@ func main() {
 				AddField("if you a broke gang,you can upvote "+BotInfo.Username, "[Top.gg]("+configfile.TopGG+")").
 				AddField("or help dev simping kano/鹿乃 with listening her music", "[鹿乃チャンネルofficial]("+Music+")\nHope you like her voice ❤️").
 				SetFooter("~advertisement").MessageEmbed)
-		})
-	}
+
+		} else {
+			Bot.ChannelMessageSendEmbed(database.GetRanChannel(), engine.NewEmbed().
+				SetTitle("Donate").
+				SetURL(Donation).
+				SetThumbnail(BotInfo.AvatarURL("128")).
+				SetImage(Img).
+				SetColor(14807034).
+				SetDescription("Enjoy the bot?\nhelp dev to pay server,domain and database for development of "+BotInfo.Username).
+				AddField("if you a broke gang,you can upvote "+BotInfo.Username, "[Top.gg]("+configfile.TopGG+")").
+				AddField("or help dev simping kano/鹿乃 with listening her music", "[鹿乃チャンネルofficial]("+Music+")\nHope you like her voice ❤️").
+				SetFooter("~advertisement").MessageEmbed)
+
+		}
+	})
+
 	c.AddFunc(config.CheckServerCount, func() {
 		log.Info("POST bot info to top.gg")
 		dblClient, err := dbl.NewClient(os.Getenv("TOPGG"))
