@@ -1479,6 +1479,10 @@ var (
 				})
 				return
 			}
+			log.WithFields(log.Fields{
+				"Admin":     Admin,
+				"ChannelID": i.ChannelID,
+			}).Info("request for setup channel")
 
 			Add := func(ChannelData *database.DiscordChannel, Group database.Group) {
 				if ChannelData.ChannelCheck() {
@@ -1528,9 +1532,17 @@ var (
 							for _, v3 := range *GroupsPayload {
 								if v3.ID == v2.IntValue() {
 									Group = v3
+									break
 								}
 							}
 						}
+
+						log.WithFields(log.Fields{
+							"Admin":     Admin,
+							"ChannelID": i.ChannelID,
+							"Group":     Group.GroupName,
+							"State":     "Livestream",
+						}).Info("setup livestream")
 
 						if v2.Name == "liveonly" {
 							liveonly = v2.BoolValue()
@@ -1598,6 +1610,7 @@ var (
 							for _, v3 := range *GroupsPayload {
 								if v3.ID == v2.IntValue() {
 									Group = v3
+									break
 								}
 							}
 						}
@@ -1605,6 +1618,37 @@ var (
 						if v2.Name == "lewd" {
 							lewd = v2.BoolValue()
 						}
+
+						log.WithFields(log.Fields{
+							"Admin":     Admin,
+							"ChannelID": i.ChannelID,
+							"Group":     Group.GroupName,
+							"State":     "Fanart",
+							"Lewd":      lewd,
+						}).Info("setup fanart")
+
+						if lewd {
+							ChannelRaw, err := s.Channel(Channel.ID)
+							if err != nil {
+								log.Error(err)
+							}
+							if !ChannelRaw.NSFW {
+								err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+									Type: discordgo.InteractionResponseChannelMessageWithSource,
+									Data: &discordgo.InteractionResponseData{
+										Embeds: []*discordgo.MessageEmbed{
+											engine.NewEmbed().
+												SetDescription("i know you horny,but this channel was not a NSFW channel").
+												SetImage(engine.LewdIMG()).MessageEmbed,
+										},
+									},
+								})
+								if err != nil {
+									log.Error(err)
+								}
+							}
+						}
+
 						ChannelData := &database.DiscordChannel{
 							ChannelID: Channel.ID,
 							TypeTag: func() int {
@@ -1639,10 +1683,38 @@ var (
 							for _, v3 := range *GroupsPayload {
 								if v3.ID == v2.IntValue() {
 									Group = v3
+									break
 								}
 							}
 						}
 
+						log.WithFields(log.Fields{
+							"Admin":     Admin,
+							"ChannelID": i.ChannelID,
+							"Group":     Group.GroupName,
+							"State":     "Fanart",
+							"Lewd":      lewd,
+						}).Info("setup lewd")
+
+						ChannelRaw, err := s.Channel(Channel.ID)
+						if err != nil {
+							log.Error(err)
+						}
+						if !ChannelRaw.NSFW {
+							err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+								Type: discordgo.InteractionResponseChannelMessageWithSource,
+								Data: &discordgo.InteractionResponseData{
+									Embeds: []*discordgo.MessageEmbed{
+										engine.NewEmbed().
+											SetDescription("i know you horny,but this channel was not a NSFW channel").
+											SetImage(engine.LewdIMG()).MessageEmbed,
+									},
+								},
+							})
+							if err != nil {
+								log.Error(err)
+							}
+						}
 						ChannelData := &database.DiscordChannel{
 							ChannelID:   Channel.ID,
 							TypeTag:     69,
