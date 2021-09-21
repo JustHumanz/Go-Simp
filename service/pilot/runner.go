@@ -35,7 +35,7 @@ var M = []*pilot.ModuleList{
 	{
 		Name:    config.SpaceBiliBiliModule,
 		Counter: 1,
-		CronJob: 12, //every 7 minutes
+		CronJob: 12, //every 12 minutes
 	},
 	{
 		Name:    config.LiveBiliBiliModule,

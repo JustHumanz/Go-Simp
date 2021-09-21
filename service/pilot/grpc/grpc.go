@@ -143,6 +143,8 @@ func (s *Server) isYtCheckerRunning() bool {
 	return false
 }
 
+var ModuleWatcher = make(map[string]int)
+
 func (s *Server) RunModuleJob(ctx context.Context, in *ServiceMessage) (*RunJob, error) {
 	for _, v := range s.Modules {
 		if v.Name == in.Service {
@@ -171,10 +173,25 @@ func (s *Server) RunModuleJob(ctx context.Context, in *ServiceMessage) (*RunJob,
 				}).Info("Module request for running job")
 
 				if v.Run {
+					if ModuleWatcher[in.Service] > v.Counter*4 {
+						log.WithFields(log.Fields{
+							"Counter": v.CronJob,
+							"Service": in.Service,
+						}).Warn("Job running too long,force acc next request")
+						v.SetRun(false)
+						ModuleWatcher[in.Service] = 0
+						return &RunJob{
+							Run:     false,
+							Message: "Job running too long,force acc next request",
+						}, nil
+					}
+
 					log.WithFields(log.Fields{
 						"Counter": v.CronJob,
 						"Service": in.Service,
 					}).Warn("Job still running")
+
+					ModuleWatcher[in.Service]++
 
 					return &RunJob{
 						Run:     false,

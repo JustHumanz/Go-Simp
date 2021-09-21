@@ -75,7 +75,7 @@ func main() {
 	c := cron.New()
 	c.Start()
 	c.AddFunc(config.CheckPayload, GetPayload)
-	c.AddFunc(config.YoutubePrivateSlayer, CheckPrivate)
+	//c.AddFunc(config.YoutubePrivateSlayer, CheckPrivate) //TODO make new service for private slayer
 	c.AddFunc("0 */2 * * *", func() {
 		engine.ExTknList = nil
 	})
@@ -137,7 +137,7 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 		if res.Run {
 			log.WithFields(log.Fields{
 				"Service": ModuleState,
-				"Running": false,
+				"Running": true,
 			}).Info(res.Message)
 
 			YoutubeChecker.Run()
@@ -150,6 +150,11 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 				"Service": ModuleState,
 				"Running": false,
 			}).Info("reporting job was done")
+		} else {
+			log.WithFields(log.Fields{
+				"Service": ModuleState,
+				"Running": false,
+			}).Info(res.Message)
 		}
 
 		YoutubeChecker.Counter++
