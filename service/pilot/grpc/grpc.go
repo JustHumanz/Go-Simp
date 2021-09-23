@@ -173,10 +173,11 @@ func (s *Server) RunModuleJob(ctx context.Context, in *ServiceMessage) (*RunJob,
 				}).Info("Module request for running job")
 
 				if v.Run {
-					if ModuleWatcher[in.Service] > v.Counter*4 {
+					if ModuleWatcher[in.Service] > v.CronJob*2 {
 						log.WithFields(log.Fields{
-							"Counter": v.CronJob,
-							"Service": in.Service,
+							"Counter":       v.CronJob,
+							"Service":       in.Service,
+							"ModuleWatcher": ModuleWatcher[in.Service],
 						}).Warn("Job running too long,force acc next request")
 						v.SetRun(false)
 						ModuleWatcher[in.Service] = 0
@@ -187,8 +188,9 @@ func (s *Server) RunModuleJob(ctx context.Context, in *ServiceMessage) (*RunJob,
 					}
 
 					log.WithFields(log.Fields{
-						"Counter": v.CronJob,
-						"Service": in.Service,
+						"Counter":       v.CronJob,
+						"Service":       in.Service,
+						"ModuleWatcher": ModuleWatcher[in.Service],
 					}).Warn("Job still running")
 
 					ModuleWatcher[in.Service]++
