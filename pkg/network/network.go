@@ -17,7 +17,7 @@ import (
 )
 
 //Curl make a http request
-func Curl(url string, addheader []string) ([]byte, error) {
+func Curl(url string, addheader map[string]string) ([]byte, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
@@ -30,10 +30,13 @@ func Curl(url string, addheader []string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	request.Header.Set("cache-control", "no-cache")
 	request.Header.Set("User-Agent", RandomAgent())
-	if addheader != nil {
-		request.Header.Set(addheader[0], addheader[1])
+	if len(addheader) > 0 {
+		for k, v := range addheader {
+			request.Header.Set(k, v)
+		}
 	}
 
 	response, err := spaceClient.Do(request.WithContext(ctx))
@@ -62,54 +65,50 @@ func Curl(url string, addheader []string) ([]byte, error) {
 }
 
 //CoolerCurl make a cooler http request *with multitor*
-func CoolerCurl(urls string, addheader []string) ([]byte, error) {
-	counter := 0
-	for {
-		counter++
-		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-		defer cancel()
-		proxyURL, err := url.Parse(config.GoSimpConf.MultiTOR)
-		if err != nil || counter == 3 {
-			return nil, err
-		}
+func CoolerCurl(urls string, addheader map[string]string) ([]byte, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	proxyURL, err := url.Parse(config.GoSimpConf.MultiTOR)
+	if err != nil {
+		return nil, err
+	}
 
-		client := &http.Client{
-			Transport: &http.Transport{
-				Proxy: http.ProxyURL(proxyURL),
-				DialContext: (&net.Dialer{
-					Timeout: 10 * time.Second,
-				}).DialContext,
-			},
-		}
+	client := &http.Client{
+		Transport: &http.Transport{
+			Proxy: http.ProxyURL(proxyURL),
+			DialContext: (&net.Dialer{
+				Timeout: 10 * time.Second,
+			}).DialContext,
+		},
+	}
 
-		request, err := http.NewRequest("GET", urls, nil)
-		if err != nil || counter == 3 {
-			return nil, err
-		}
-		request.Header.Set("cache-control", "no-cache")
-		request.Header.Set("User-Agent", RandomAgent())
-		if addheader != nil {
-			request.Header.Set(addheader[0], addheader[1])
-		}
-		response, err := client.Do(request.WithContext(ctx))
-		if err != nil || counter == 3 {
-			return nil, err
-		}
-		defer response.Body.Close()
-
-		if response.StatusCode != http.StatusOK && counter == 3 {
-			return nil, errors.New("Multi Tor get Error")
-		}
-
-		data, err := ioutil.ReadAll(response.Body)
-		if err != nil || counter == 3 {
-			return nil, err
-		}
-
-		if data != nil {
-			return data, nil
+	request, err := http.NewRequest("GET", urls, nil)
+	if err != nil {
+		return nil, err
+	}
+	request.Header.Set("cache-control", "no-cache")
+	request.Header.Set("User-Agent", RandomAgent())
+	if len(addheader) > 0 {
+		for k, v := range addheader {
+			request.Header.Set(k, v)
 		}
 	}
+	response, err := client.Do(request.WithContext(ctx))
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusOK {
+		return nil, errors.New("multi Tor get Error")
+	}
+
+	data, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }
 
 //RandomAgent Create random useragent for bypass some IDS

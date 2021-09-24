@@ -32,7 +32,7 @@ var (
 	YoutubeToken    *string
 	Publish         time.Time
 	Roomstatus      string
-	BiliBiliSession []string
+	BiliBiliSession map[string]string
 	Bot             *discordgo.Session
 	TwitchClient    *helix.Client
 	configfile      config.ConfigFile
@@ -83,7 +83,9 @@ func init() {
 	configfile.InitConf()
 
 	YoutubeToken = engine.GetYtToken()
-	BiliBiliSession = []string{"Cookie", "SESSDATA=" + configfile.BiliSess}
+	BiliBiliSession = map[string]string{
+		"Cookie": "SESSDATA=" + configfile.BiliSess,
+	} //[]string{"Cookie", "SESSDATA=" + configfile.BiliSess}
 	Limit = 100
 
 	err = Bot.Open()

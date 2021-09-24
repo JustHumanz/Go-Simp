@@ -15,7 +15,9 @@ import (
 )
 
 func CheckBiliBili() {
-	BiliBiliSession := []string{"Cookie", "SESSDATA=" + configfile.BiliSess}
+	BiliBiliSession := map[string]string{
+		"Cookie": "SESSDATA=" + configfile.BiliSess,
+	}
 	for _, Group := range *Payload {
 		Names := Group.Members
 		for _, Name := range Names {
