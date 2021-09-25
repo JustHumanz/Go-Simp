@@ -3,7 +3,10 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"math"
 	"os"
+	"strings"
+	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
@@ -16,6 +19,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/top-gg/go-dbl"
 )
+
+const ModuleState = "Utility"
 
 var (
 	KanoPayload = []string{
@@ -223,6 +228,90 @@ func main() {
 		if err != nil {
 			log.Error(err)
 		}
+	})
+
+	c.AddFunc(config.YoutubePrivateSlayer, func() {
+		log.Info("Start Video private slayer")
+		var GroupPayload *[]database.Group
+		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+			Message: "Send me nude",
+			Service: ModuleState,
+		})
+		if err != nil {
+			if configfile.Discord != "" {
+				pilot.ReportDeadService(err.Error(), ModuleState)
+			}
+			log.Error("Error when request payload: %s", err)
+		}
+		err = json.Unmarshal(res.ConfigFile, &configfile)
+		if err != nil {
+			log.Error(err)
+		}
+
+		err = json.Unmarshal(res.VtuberPayload, &GroupPayload)
+		if err != nil {
+			log.Error(err)
+		}
+
+		Check := func(Youtube database.LiveStream) {
+			if Youtube.Status == "upcoming" && time.Since(Youtube.Schedul) > time.Until(Youtube.Schedul) {
+				log.WithFields(log.Fields{
+					"VideoID": Youtube.VideoID,
+				}).Info("Member only video")
+				Youtube.UpdateYt("past")
+				engine.RemoveEmbed(Youtube.VideoID, Bot)
+			} else if Youtube.Status == "live" && Youtube.Viewers == "0" || Youtube.Status == "live" && int(math.Round(time.Since(Youtube.Schedul).Hours())) > 30 {
+				log.WithFields(log.Fields{
+					"VideoID": Youtube.VideoID,
+				}).Info("Member only video")
+				Youtube.UpdateYt("past")
+				engine.RemoveEmbed(Youtube.VideoID, Bot)
+			}
+
+			_, err := network.Curl("https://i3.ytimg.com/vi/"+Youtube.VideoID+"/hqdefault.jpg", nil)
+			if err != nil && strings.HasPrefix(err.Error(), "404") && Youtube.Status != "private" {
+				log.WithFields(log.Fields{
+					"VideoID": Youtube.VideoID,
+				}).Info("Private Video")
+				Youtube.UpdateYt("private")
+			} else if err == nil && Youtube.Status == "private" {
+				log.WithFields(log.Fields{
+					"VideoID": Youtube.VideoID,
+				}).Info("From Private Video to past")
+				Youtube.UpdateYt("past")
+			} else {
+				log.WithFields(log.Fields{
+					"VideoID": Youtube.VideoID,
+				}).Info("Video was daijobu")
+			}
+		}
+
+		log.Info("Start Check Private video")
+		for _, Status := range []string{config.UpcomingStatus, config.PastStatus, config.LiveStatus, config.PrivateStatus} {
+			for _, Group := range *GroupPayload {
+				for _, Member := range Group.Members {
+					YtData, Key, err := database.YtGetStatus(map[string]interface{}{
+						"MemberID":   Member.ID,
+						"MemberName": Member.Name,
+						"Status":     Status,
+						"State":      config.Sys,
+					})
+					if err != nil {
+						log.Error(err)
+					}
+					for _, Y := range YtData {
+						Y.Status = Status
+						Check(Y)
+						err = Y.RemoveCache(Key)
+						if err != nil {
+							log.Panic(err)
+						}
+					}
+				}
+			}
+			time.Sleep(10 * time.Second)
+		}
+		log.Info("Done")
 	})
 
 	go pilot.RunHeartBeat(gRCPconn, "Utility")
