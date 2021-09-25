@@ -8,11 +8,11 @@ import (
 	"math/rand"
 	"net"
 	"net/http"
-	"net/url"
 	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/net/proxy"
 	"google.golang.org/grpc"
 )
 
@@ -68,17 +68,15 @@ func Curl(url string, addheader map[string]string) ([]byte, error) {
 func CoolerCurl(urls string, addheader map[string]string) ([]byte, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	proxyURL, err := url.Parse(config.GoSimpConf.MultiTOR)
+
+	dialSocksProxy, err := proxy.SOCKS5("tcp", config.GoSimpConf.MultiTOR, nil, proxy.Direct)
 	if err != nil {
-		return nil, err
+		log.Error(err)
 	}
 
 	client := &http.Client{
 		Transport: &http.Transport{
-			Proxy: http.ProxyURL(proxyURL),
-			DialContext: (&net.Dialer{
-				Timeout: 10 * time.Second,
-			}).DialContext,
+			Dial: dialSocksProxy.Dial,
 		},
 	}
 
