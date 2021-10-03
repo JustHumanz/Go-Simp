@@ -532,7 +532,7 @@ func (Data Members) InputSubs(MemberID int64) {
 		if err != nil {
 			log.Error(err)
 		}
-		res, err := stmt.Exec(ytsubs, ytvideos, ytviews, bilifoll, bilivideos, biliview, twfollo, TwitchFollow, MemberID)
+		res, err := stmt.Exec(ytsubs, ytvideos, ytviews, bilifoll, bilivideos, biliview, twfollo, TwitchFollow, TwitchViwers, MemberID)
 		if err != nil {
 			log.Error(err)
 		}
