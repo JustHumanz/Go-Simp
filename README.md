@@ -2,7 +2,7 @@
 
 ![alt text](https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/go-simp.png "Go-Simp")  
 ##### [Original Source](https://twitter.com/any_star_/status/1288184424320790528)
-![Inline docs](https://gitlab.com/JustHumanz/Go-Simp/badges/master/pipeline.svg)
+[![build go-simp main module](https://github.com/JustHumanz/Go-Simp/actions/workflows/build-main.yaml/badge.svg)](https://github.com/JustHumanz/Go-Simp/actions/workflows/build-main.yaml)
 ----
 
 ## Introduction
@@ -47,7 +47,7 @@ See at [Exec](https://go-simp.humanz.moe/Exec/)
 ##### Fanart
 - [x] Pixiv and Pixiv R-18
 - [x] Twitter And Twitter with Lewd hashtag
-- ~~[ ] Danbooru~~ 
+- [ ] ~~Danbooru~~ 
 - [x] BiliBili
 
 ##### Livestream
