@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -13,7 +12,6 @@ import (
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
-	"github.com/JustHumanz/Go-Simp/service/prediction"
 	"github.com/bwmarrin/discordgo"
 	"github.com/hako/durafmt"
 	"github.com/olekukonko/tablewriter"
@@ -27,6 +25,11 @@ var (
 			if err != nil {
 				log.Error(err)
 			}
+
+			log.WithFields(log.Fields{
+				"User":    i.Member.User.Username,
+				"Channel": i.ChannelID,
+			}).Info("mytags")
 
 			Color, err := engine.GetColor(config.TmpDir, i.Member.User.AvatarURL("128"))
 			if err != nil {
@@ -96,6 +99,12 @@ var (
 			} else {
 				status = config.PastStatus
 			}
+
+			log.WithFields(log.Fields{
+				"User":    i.Member.User.Username,
+				"Channel": i.ChannelID,
+				"Status":  status,
+			}).Info("livestream")
 
 			SendMessage := func(e []*discordgo.MessageEmbed) {
 				if len(e) > 10 {
@@ -698,7 +707,15 @@ var (
 				for _, GroupData := range *GroupsPayload {
 					for _, v := range GroupData.Members {
 						if strings.EqualFold(v.Name, VtuberName) || strings.EqualFold(v.EnName, VtuberName) || strings.EqualFold(v.JpName, VtuberName) {
+
+							log.WithFields(log.Fields{
+								"User":    i.Member.User.Username,
+								"Channel": i.ChannelID,
+								"Vtuber":  v.Name,
+							}).Info("art")
+
 							FanArt, err := v.GetRandomFanart()
+
 							if err != nil {
 								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 									Type: discordgo.InteractionResponseChannelMessageWithSource,
@@ -794,6 +811,13 @@ var (
 					for _, GroupData := range *GroupsPayload {
 						for _, v := range GroupData.Members {
 							if strings.EqualFold(v.Name, VtuberName) || strings.EqualFold(v.EnName, VtuberName) || strings.EqualFold(v.JpName, VtuberName) {
+
+								log.WithFields(log.Fields{
+									"User":    i.Member.User.Username,
+									"Channel": i.ChannelID,
+									"Vtuber":  v.Name,
+								}).Info("lewd")
+
 								FanArt, err := v.GetRandomLewd()
 								if err != nil {
 									s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -852,6 +876,13 @@ var (
 						var (
 							Avatar string
 						)
+
+						log.WithFields(log.Fields{
+							"User":    i.Member.User.Username,
+							"Channel": i.ChannelID,
+							"Vtuber":  v2.Name,
+						}).Info("info")
+
 						SubsData, err := v2.GetSubsCount()
 						if err != nil {
 							log.Error(err)
@@ -953,6 +984,11 @@ var (
 				Reminder   int
 				MemberName string
 			)
+
+			log.WithFields(log.Fields{
+				"User":    i.Member.User.Username,
+				"Channel": i.ChannelID,
+			}).Info("tag-me")
 
 			for _, v := range i.ApplicationCommandData().Options {
 				if v.Name == "vtuber-group" {
@@ -1065,6 +1101,11 @@ var (
 			)
 			One := true
 
+			log.WithFields(log.Fields{
+				"User":    i.Member.User.Username,
+				"Channel": i.ChannelID,
+			}).Info("add-tag")
+
 			Color, err := engine.GetColor(config.TmpDir, i.Member.User.Avatar)
 			if err != nil {
 				log.Error(err)
@@ -1176,6 +1217,11 @@ var (
 				})
 				return
 			}
+
+			log.WithFields(log.Fields{
+				"User":    i.Member.User.Username,
+				"Channel": i.ChannelID,
+			}).Info("tag-role")
 
 			var (
 				Already    []string
@@ -1306,6 +1352,11 @@ var (
 				return
 			}
 
+			log.WithFields(log.Fields{
+				"User":    i.Member.User.Username,
+				"Channel": i.ChannelID,
+			}).Info("del-role")
+
 			One := true
 
 			Color, err := engine.GetColor(config.TmpDir, i.Member.User.Avatar)
@@ -1415,6 +1466,11 @@ var (
 				log.Error(err)
 			}
 
+			log.WithFields(log.Fields{
+				"User":    i.Member.User.Username,
+				"Channel": i.ChannelID,
+			}).Info("role-info")
+
 			Color, err := engine.GetColor(config.TmpDir, i.Member.User.AvatarURL("128"))
 			if err != nil {
 				log.Error(err)
@@ -1514,6 +1570,11 @@ var (
 				})
 
 			}
+
+			log.WithFields(log.Fields{
+				"User":    i.Member.User.Username,
+				"Channel": i.ChannelID,
+			}).Info("setup")
 
 			for _, v := range i.ApplicationCommandData().Options[0].Options {
 				var (
@@ -1770,6 +1831,11 @@ var (
 				log.Error(err)
 			}
 
+			log.WithFields(log.Fields{
+				"User":    i.Member.User.Username,
+				"Channel": Channel.ID,
+			}).Info("channel-state")
+
 			if len(ChannelData) > 0 {
 				for _, Channel := range ChannelData {
 					ChannelRaw, err := s.Channel(Channel.ChannelID)
@@ -1958,6 +2024,12 @@ var (
 			if err != nil {
 				log.Error(err)
 			}
+
+			log.WithFields(log.Fields{
+				"User":    i.Member.User.Username,
+				"Channel": Channel.ID,
+			}).Info("channel-Update")
+
 			err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{
@@ -2197,6 +2269,11 @@ var (
 
 			for _, v := range ChannelData {
 				if v.ChannelCheck() {
+					log.WithFields(log.Fields{
+						"User":    i.Member.User.Username,
+						"Channel": v.ChannelID,
+					}).Info("channel-delete")
+
 					err := v.DelChannel("Delete")
 					if err != nil {
 						log.Error(err)
@@ -2234,14 +2311,34 @@ var (
 			}
 
 			VtuberInput := i.ApplicationCommandData().Options[1].StringValue()
+
+			PredictionCount := func() int {
+				if len(i.ApplicationCommandData().Options) > 2 {
+					return int(i.ApplicationCommandData().Options[2].IntValue())
+				} else {
+					return 7
+				}
+			}()
+
+			if PredictionCount < 0 || PredictionCount > 100 {
+				s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Content: "Invalid number,must lower than 100",
+					},
+				})
+				return
+			}
+
 			for k, v := range *GroupsPayload {
 				for _, v2 := range v.Members {
 					if strings.EqualFold(VtuberInput, v2.EnName) || strings.EqualFold(VtuberInput, v2.JpName) || strings.EqualFold(VtuberInput, v2.Name) {
 						var (
-							msg    *prediction.Message
-							tmp    string
-							Avatar string
-							Url    string
+							tmp            string
+							Avatar         string
+							Url            string
+							PredictionData int
+							State          string
 						)
 
 						Color, err := engine.GetColor(config.TmpDir, i.Member.User.AvatarURL("128"))
@@ -2254,6 +2351,13 @@ var (
 							log.Error(err)
 						}
 
+						log.WithFields(log.Fields{
+							"VtuberName": v2.Name,
+							"User":       i.Member.User.Username,
+							"State":      i.ApplicationCommandData().Options[0].StringValue(),
+							"Limit":      PredictionCount,
+						}).Info("Prediction")
+
 						if tw && v2.TwitterName == "" {
 							s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 								Type: discordgo.InteractionResponseChannelMessageWithSource,
@@ -2263,15 +2367,20 @@ var (
 							})
 							return
 						} else if tw && v2.TwitterName != "" {
-							msg = &prediction.Message{
-								State: "Twitter",
-								Name:  v2.Name,
-								Limit: 7,
+							PredictionData, err = engine.Prediction(v2, "Twitter", PredictionCount)
+							if err != nil {
+								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+									Type: discordgo.InteractionResponseChannelMessageWithSource,
+									Data: &discordgo.InteractionResponseData{
+										Content: "Something error\n" + err.Error(),
+									},
+								})
+								return
 							}
 							tmp = strconv.Itoa(Data.TwFollow)
 							Avatar = v2.YoutubeAvatar
 							Url = "https://twitter.com/" + v2.TwitterName
-
+							State = "Twitter"
 						}
 
 						if bl && v2.BiliBiliID == 0 {
@@ -2283,15 +2392,20 @@ var (
 							})
 							return
 						} else if bl && v2.BiliBiliID != 0 {
-							msg = &prediction.Message{
-								State: "BiliBili",
-								Name:  v2.Name,
-								Limit: 7,
+							PredictionData, err = engine.Prediction(v2, "BiliBili", PredictionCount)
+							if err != nil {
+								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+									Type: discordgo.InteractionResponseChannelMessageWithSource,
+									Data: &discordgo.InteractionResponseData{
+										Content: "Something error\n" + err.Error(),
+									},
+								})
+								return
 							}
 							tmp = strconv.Itoa(Data.BiliFollow)
 							Avatar = v2.BiliBiliAvatar
 							Url = "https://space.bilibili/" + strconv.Itoa(v2.BiliBiliID)
-
+							State = "BiliBili"
 						}
 
 						if yt && v2.YoutubeID == "" {
@@ -2303,75 +2417,48 @@ var (
 							})
 							return
 						} else if yt && v2.YoutubeID != "" {
-							msg = &prediction.Message{
-								State: "Youtube",
-								Name:  v2.Name,
-								Limit: 7,
+							PredictionData, err = engine.Prediction(v2, "Youtube", PredictionCount)
+							if err != nil {
+								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+									Type: discordgo.InteractionResponseChannelMessageWithSource,
+									Data: &discordgo.InteractionResponseData{
+										Content: "Something error\n" + err.Error(),
+									},
+								})
+								return
 							}
+
 							tmp = strconv.Itoa(Data.YtSubs)
 							Avatar = v2.YoutubeAvatar
 							Url = "https://www.youtube.com/channel/" + v2.YoutubeID + "?sub_confirmation=1"
+							State = "Youtube"
 
 						}
 
-						RawData, err := PredictionConn.GetSubscriberPrediction(context.Background(), msg)
+						target := time.Now().AddDate(0, 0, PredictionCount)
+						dateFormat := fmt.Sprintf("%s/%d", target.Month().String(), target.Day())
+						now := time.Now()
+						nowFormat := fmt.Sprintf("%s/%d", now.Month().String(), now.Day())
+						Graph := "[Views Graph](" + os.Getenv("PrometheusURL") + "/graph?g0.expr=get_subscriber%7Bstate%3D%22" + State + "%22%2C%20vtuber%3D%22" + v2.Name + "%22%7D&g0.tab=0&g0.stacked=0&g0.range_input=1w)"
+						err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+							Type: discordgo.InteractionResponseChannelMessageWithSource,
+							Data: &discordgo.InteractionResponseData{
+								Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
+									SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+									SetTitle(engine.FixName(v2.EnName, v2.JpName)).
+									SetURL(Url).
+									AddField("Current "+State+" followes/subscriber("+nowFormat+")", tmp).
+									AddField("Next "+strconv.Itoa(PredictionCount)+" days Prediction("+dateFormat+")", strconv.Itoa(PredictionData)).
+									RemoveInline().
+									AddField("Graph", Graph).
+									InlineAllFields().
+									SetThumbnail(Avatar).
+									SetColor(Color).
+									SetFooter("algorithm : Linear regression").MessageEmbed},
+							},
+						})
 						if err != nil {
-							s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-								Type: discordgo.InteractionResponseChannelMessageWithSource,
-								Data: &discordgo.InteractionResponseData{
-									Content: "Something error\n" + err.Error(),
-								},
-							})
-
 							log.Error(err)
-							return
-						}
-
-						if RawData.Code == 0 {
-							target := time.Now().AddDate(0, 0, 7)
-							dateFormat := fmt.Sprintf("%s/%d", target.Month().String(), target.Day())
-							now := time.Now()
-							nowFormat := fmt.Sprintf("%s/%d", now.Month().String(), now.Day())
-							Graph := "[Views Graph](" + os.Getenv("PrometheusURL") + "/graph?g0.expr=get_subscriber%7Bstate%3D%22" + msg.State + "%22%2C%20vtuber%3D%22" + v2.Name + "%22%7D&g0.tab=0&g0.stacked=0&g0.range_input=1w)"
-							Socre := int(RawData.Score * 100)
-							err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-								Type: discordgo.InteractionResponseChannelMessageWithSource,
-								Data: &discordgo.InteractionResponseData{
-									Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
-										SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
-										SetTitle(engine.FixName(v2.EnName, v2.JpName)).
-										SetURL(Url).
-										AddField("Current "+msg.State+" followes/subscriber("+nowFormat+")", tmp).
-										AddField("Next 7 days Prediction("+dateFormat+")", strconv.Itoa(int(RawData.Prediction))).
-										RemoveInline().
-										AddField("Prediction score", strconv.Itoa(Socre)+"%").
-										AddField("Graph", Graph).
-										InlineAllFields().
-										SetThumbnail(Avatar).
-										SetColor(Color).
-										SetFooter("algorithm : Linear regression").MessageEmbed},
-								},
-							})
-							if err != nil {
-								log.Error(err)
-							}
-
-						} else {
-							err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-								Type: discordgo.InteractionResponseChannelMessageWithSource,
-								Data: &discordgo.InteractionResponseData{
-									Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
-										SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
-										SetTitle(engine.FixName(v2.EnName, v2.JpName)).
-										SetDescription("Something error\ncan't make prediction,Bot still need more subscriber/followers data").
-										SetImage(engine.NotFoundIMG()).
-										SetColor(Color).MessageEmbed},
-								},
-							})
-							if err != nil {
-								log.Error(err)
-							}
-							return
 						}
 					}
 				}

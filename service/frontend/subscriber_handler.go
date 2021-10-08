@@ -1,24 +1,7 @@
 package main
 
-import (
-	"context"
-	"fmt"
-	"math/rand"
-	"os"
-	"strconv"
-	"strings"
-	"time"
+/*
 
-	config "github.com/JustHumanz/Go-Simp/pkg/config"
-	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
-	"github.com/JustHumanz/Go-Simp/service/prediction"
-	"github.com/bwmarrin/discordgo"
-	log "github.com/sirupsen/logrus"
-)
-
-func gacha() bool {
-	return rand.Float32() < 0.5
-}
 
 //SubsMessage subscriber message handler
 func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -118,8 +101,7 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						log.Error(err)
 					}
 					var (
-						msg *prediction.Message
-						//msg2   *prediction.Message
+						msg    *prediction.Message
 						tmp    string
 						Avatar string
 						Url    string
@@ -144,14 +126,6 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							Limit: 7,
 						}
 
-						/*
-							msg2 = &prediction.Message{
-								State: "Twitter",
-								Name:  Member.Name,
-								Limit: int64(Subs.TwFollow),
-							}
-						*/
-
 						tmp = strconv.Itoa(Subs.TwFollow)
 						Avatar = Member.YoutubeAvatar
 						Url = "https://twitter.com/" + Member.TwitterName
@@ -175,14 +149,6 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							Limit: 7,
 						}
 
-						/*
-							msg2 = &prediction.Message{
-								State: "Youtube",
-								Name:  Member.Name,
-								Limit: int64(Subs.YtSubs),
-							}
-						*/
-
 						tmp = strconv.Itoa(Subs.YtSubs)
 						Avatar = Member.YoutubeAvatar
 						Url = "https://www.youtube.com/channel/" + Member.YoutubeID + "?sub_confirmation=1"
@@ -205,14 +171,6 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							Limit: 7,
 						}
 
-						/*
-							msg2 = &prediction.Message{
-								State: "BiliBili",
-								Name:  Member.Name,
-								Limit: int64(Subs.BiliFollow),
-							}
-						*/
-
 						tmp = strconv.Itoa(Subs.BiliFollow)
 						Avatar = Member.BiliBiliAvatar
 						Url = "https://space.bilibili/" + strconv.Itoa(Member.BiliBiliID)
@@ -233,22 +191,6 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						return
 					}
 
-					/*
-						RawData2, err := PredictionConn.GetReverseSubscriberPrediction(context.Background(), msg2)
-						if err != nil {
-							log.Error(err)
-							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-								SetTitle(engine.FixName(Member.EnName, Member.JpName)).
-								SetDescription("Something error\n"+err.Error()).
-								SetImage(engine.NotFoundIMG()).
-								SetColor(Color).MessageEmbed)
-							if err != nil {
-								log.Error(err)
-							}
-							return
-						}
-					*/
 					if RawData.Code == 0 {
 						target := time.Now().AddDate(0, 0, 7)
 						dateFormat := fmt.Sprintf("%s/%d", target.Month().String(), target.Day())
@@ -303,3 +245,4 @@ func SubsMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 	}
 }
+*/
