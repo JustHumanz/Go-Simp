@@ -28,16 +28,16 @@ func Prediction(vtuber database.Member, state string, tar int) (int, error) {
 
 	RawData, err := network.Curl(config.GoSimpConf.PrometheusURL+RawQuery, nil)
 	if err != nil {
-		return 0, nil
+		return 0, err
 	}
 	err = json.Unmarshal(RawData, &Data)
 	if err != nil {
-		return 0, nil
+		return 0, err
 	}
 	val := Data.Data.Result[0].Value[1].(string)
 	valInt, err := strconv.ParseFloat(val, 64)
 	if err != nil {
-		return 0, nil
+		return 0, err
 	}
 	return int(valInt), nil
 
