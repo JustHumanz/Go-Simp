@@ -24,7 +24,7 @@ require (
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/top-gg/go-dbl v0.0.0-20201116001615-e844586b1159
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
-	golang.org/x/net v0.0.0-20210908191846-a5e095526f91 // indirect
+	golang.org/x/net v0.0.0-20210908191846-a5e095526f91
 	golang.org/x/sys v0.0.0-20210908160347-a851e7ddeee0 // indirect
 	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac // indirect
 	google.golang.org/genproto v0.0.0-20210903162649-d08c68adba83 // indirect

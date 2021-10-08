@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"math/rand"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -14,7 +15,6 @@ import (
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
-	"github.com/JustHumanz/Go-Simp/service/prediction"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
 	"github.com/olekukonko/tablewriter"
@@ -32,7 +32,6 @@ var (
 	GroupsPayload      *[]database.Group
 	configfile         config.ConfigFile
 	Bot                *discordgo.Session
-	PredictionConn     prediction.PredictionClient
 	VtuberGroupChoices []*discordgo.ApplicationCommandOptionChoice
 )
 
@@ -67,7 +66,6 @@ const (
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
-	PredictionConn = prediction.NewPredictionClient(network.InitgRPC(config.Prediction))
 }
 
 //StartInit running the fe
@@ -164,7 +162,6 @@ func main() {
 			Bot.AddHandler(BiliBiliSpace)
 			Bot.AddHandler(YoutubeMessage)
 			Bot.AddHandler(TwitchMessage)
-			Bot.AddHandler(SubsMessage)
 			Bot.AddHandler(Lewd)
 			Bot.AddHandler(StartRegister)
 			c.Stop()
@@ -186,7 +183,7 @@ func main() {
 	}
 
 	go pilot.RunHeartBeat(gRCPconn, "Frontend")
-	go engine.InitSlash(Bot, *GroupsPayload, nil)
+	//go engine.InitSlash(Bot, *GroupsPayload, nil)
 
 	Bot.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		if h, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
@@ -623,4 +620,8 @@ func (Data *ChannelRegister) CheckNSFW() bool {
 func Clear(v interface{}) {
 	p := reflect.ValueOf(v).Elem()
 	p.Set(reflect.Zero(p.Type()))
+}
+
+func gacha() bool {
+	return rand.Float32() < 0.5
 }
