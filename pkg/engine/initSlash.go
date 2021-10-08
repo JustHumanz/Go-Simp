@@ -449,13 +449,7 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 						Type:        discordgo.ApplicationCommandOptionString,
 						Required:    true,
 						Name:        "vtuber-name",
-						Description: "input vtuber name",
-					},
-					{
-						Type:        discordgo.ApplicationCommandOptionInteger,
-						Required:    false,
-						Name:        "prediction-count",
-						Description: "imput prediction-count(days)\nexample,1 is tomorrow or 7 is next week",
+						Description: "select vtuber name",
 					},
 				},
 			},
@@ -479,6 +473,11 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 					if err != nil {
 						log.Errorf("Cannot create '%v' command: %v guild: %v", v.Name, err, Guild.ID)
 						if err.Error() == "HTTP 403 Forbidden" {
+							log.Info("Leave 403 guild")
+							err = Bot.GuildLeave(G.ID)
+							if err != nil {
+								log.Error(err)
+							}
 							return
 						} else {
 							continue
