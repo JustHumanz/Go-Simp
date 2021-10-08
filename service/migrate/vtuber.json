@@ -6554,6 +6554,118 @@
                }                                                    
             ]
          }
+         ,
+         {
+            "GroupName":"Kamitsubaki",
+            "GroupIcon":"https://cdn.humanz.moe/Kamitsubaki_Studio.png",
+            "GroupChannel": {
+               "Youtube": null,
+               "BiliBili": null
+            },
+            "Members":[
+               {
+                  "EN_Name": "Kaf",
+                  "Fanbase": "",
+                  "JP_Name": "花譜",
+                  "Name": "Kaf",
+                  "Region": "JP",
+                  "BiliBili": {
+                    "BiliBili_Fanart": "",
+                    "BiliBili_ID": "488970166",
+                    "BiliRoom_ID": "22030718"
+                  },
+                  "Twitch": null,
+                  "Twitter": {
+                    "Twitter_Fanart": "",
+                    "Twitter_Lewd": "",
+                    "Twitter_Username": "virtual_kaf"
+                  },
+                  "Youtube": {
+                    "Yt_ID": "UCQ1U65-CQdIoZ2_NA4Z4F7A"
+                  }
+               },
+               {
+                  "EN_Name": "Rim",
+                  "Fanbase": "",
+                  "JP_Name": "理芽",
+                  "Name": "Rim",
+                  "Region": "JP",
+                  "BiliBili": {
+                    "BiliBili_Fanart": "",
+                    "BiliBili_ID": "489046950",
+                    "BiliRoom_ID": "23088755"
+                  },
+                  "Twitch": null,
+                  "Twitter": {
+                    "Twitter_Fanart": "",
+                    "Twitter_Lewd": "",
+                    "Twitter_Username": "RIM_virtual"
+                  },
+                  "Youtube": {
+                    "Yt_ID": "UCfBkUgaJ6eqYA9_TX2cmq9A"
+                  }
+               },
+               {
+                  "EN_Name": "harusaruhi",
+                  "Fanbase": "",
+                  "JP_Name": "春猿火",
+                  "Name": "harusaruhi",
+                  "Region": "JP",
+                  "BiliBili": {
+                    "BiliBili_Fanart": "",
+                    "BiliBili_ID": "488976992",
+                    "BiliRoom_ID": "23354166"
+                  },
+                  "Twitch": null,
+                  "Twitter": {
+                    "Twitter_Fanart": "",
+                    "Twitter_Lewd": "",
+                    "Twitter_Username": "harusaruhi"
+                  },
+                  "Youtube": {
+                    "Yt_ID": "UCE7gtjLeZKNXLp5YURzYYeg"
+                  }
+                },
+                {
+                  "EN_Name": "isekaijoucho",
+                  "Fanbase": "",
+                  "JP_Name": "ヰ世界情緒",
+                  "Name": "isekaijoucho",
+                  "Region": "JP",
+                  "BiliBili": {
+                    "BiliBili_Fanart": "",
+                    "BiliBili_ID": "488978908",
+                    "BiliRoom_ID": "23601103"
+                  },
+                  "Twitch": null,
+                  "Twitter": {
+                    "Twitter_Fanart": "",
+                    "Twitter_Lewd": "",
+                    "Twitter_Username": "isekaijoucho"
+                  },
+                  "Youtube": {
+                    "Yt_ID": "UCah4_WVjmr8XA7i5aigwV-Q"
+                  }
+                },
+                {
+                  "EN_Name": "Koko",
+                  "Fanbase": "",
+                  "JP_Name": "幸祜",
+                  "Name": "Koko",
+                  "Region": "JP",
+                  "BiliBili": null,
+                  "Twitch": null,
+                  "Twitter": {
+                    "Twitter_Fanart": "",
+                    "Twitter_Lewd": "",
+                    "Twitter_Username": "KOKO__virtual"
+                  },
+                  "Youtube": {
+                    "Yt_ID": "UC7Gow-kNHq21oejSIDg9PAg"
+                  }
+                }                                                
+            ]
+         }
       ]
    }
 }
