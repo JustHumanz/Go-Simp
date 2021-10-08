@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"flag"
 	"regexp"
 	"strings"
@@ -15,7 +14,6 @@ import (
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
-	"github.com/JustHumanz/Go-Simp/service/prediction"
 
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
@@ -25,16 +23,15 @@ import (
 )
 
 var (
-	Bot            *discordgo.Session
-	configfile     config.ConfigFile
-	Payload        *[]database.Group
-	gRCPconn       pilot.PilotServiceClient
-	TwitchClient   *helix.Client
-	Youtube        *bool
-	BiliBili       *bool
-	Twitter        *bool
-	Twitch         *bool
-	PredictionConn prediction.PredictionClient
+	Bot          *discordgo.Session
+	configfile   config.ConfigFile
+	Payload      *[]database.Group
+	gRCPconn     pilot.PilotServiceClient
+	TwitchClient *helix.Client
+	Youtube      *bool
+	BiliBili     *bool
+	Twitter      *bool
+	Twitch       *bool
 )
 
 const (
@@ -50,7 +47,6 @@ func init() {
 
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
 	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
-	PredictionConn = prediction.NewPredictionClient(network.InitgRPC(config.Prediction))
 
 }
 
@@ -180,21 +176,25 @@ func SendNude(Embed *discordgo.MessageEmbed, Group database.Group, Member databa
 	}
 }
 
+//Still in dev
 func SubsPreDick(target int, state, vtname string) (int64, int64, error) {
-	RawData, err := PredictionConn.GetSubscriberPrediction(context.Background(), &prediction.Message{
-		State: state,
-		Name:  vtname,
-		Limit: int64(target),
-	})
-	if err != nil {
-		return 0, 0, err
-	}
+	/*
+		RawData, err := PredictionConn.GetSubscriberPrediction(context.Background(), &prediction.Message{
+			State: state,
+			Name:  vtname,
+			Limit: int64(target),
+		})
+		if err != nil {
+			return 0, 0, err
+		}
 
-	if RawData.Code == 0 {
-		return RawData.Prediction, int64(RawData.Score), nil
-	} else {
-		return 0, 0, errors.New("prediction error")
-	}
+		if RawData.Code == 0 {
+			return RawData.Prediction, int64(RawData.Score), nil
+		} else {
+			return 0, 0, errors.New("prediction error")
+		}
+	*/
+	return 0, 0, nil
 }
 
 type Subs struct {

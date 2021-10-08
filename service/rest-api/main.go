@@ -11,9 +11,9 @@ import (
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
+	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
-	"github.com/JustHumanz/Go-Simp/service/prediction"
 	muxlogrus "github.com/pytimer/mux-logrus"
 	"github.com/robfig/cron/v3"
 
@@ -22,15 +22,13 @@ import (
 )
 
 var (
-	MembersData    []map[string]interface{}
-	GroupsData     []map[string]interface{}
-	VtuberMembers  []database.Member
-	PredictionConn prediction.PredictionClient
+	MembersData   []map[string]interface{}
+	GroupsData    []map[string]interface{}
+	VtuberMembers []database.Member
 )
 
 func init() {
 	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
-	PredictionConn = prediction.NewPredictionClient(network.InitgRPC(config.Prediction))
 
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
 
@@ -311,60 +309,46 @@ func getPrediction(w http.ResponseWriter, r *http.Request) {
 				isError := false
 				var Fetch = func(wg *sync.WaitGroup, State string, Days bool) {
 					defer wg.Done()
-					var RawData *prediction.MessageResponse
+					var DataPredic int
 					var err error
 					if Days {
-						RawData, err = PredictionConn.GetSubscriberPrediction(context.Background(), &prediction.Message{
-							State: State,
-							Name:  Member["NickName"].(string),
-							Limit: int64(daysint),
-						})
-					} else {
-						RawData, err = PredictionConn.GetReverseSubscriberPrediction(context.Background(), &prediction.Message{
-							State: State,
-							Name:  Member["NickName"].(string),
-							Limit: int64(targetint),
-						})
+						DataPredic, err = engine.Prediction(database.Member{Name: Member["NickName"].(string)}, State, daysint)
+						if err != nil {
+							log.Error(err)
+							isError = true
+						}
 					}
 					if err != nil {
 						log.Error(err)
 						isError = true
 					}
 
-					if RawData.Code == 0 {
-						Data := map[string]interface{}{}
-						if State == "Twitter" {
-							Tw := Member["Twitter"].(map[string]interface{})
-							Data["Current_followes/subscriber"] = Tw["Followers"]
-						} else if State == "Youtube" {
-							Yt := Member["Youtube"].(map[string]interface{})
-							Data["Current_followes/subscriber"] = Yt["Subscriber"]
-						} else if State == "BiliBili" {
-							Bl := Member["BiliBili"].(map[string]interface{})
-							Data["Current_followes/subscriber"] = Bl["Followers"]
-						}
-						if Days {
-							Data["Prediction"] = RawData.Prediction
-						} else {
-							if Data["Current_followes/subscriber"].(int) < targetint {
-								Data["Prediction"] = targetint
-							} else {
-								isError = true
-							}
-						}
-
-						Data["Score"] = RawData.Score
-						if targetint == 0 {
-							FinalData["Prediction_Days"] = time.Now().AddDate(0, 0, daysint)
-						} else {
-							unxtoko := time.Unix(RawData.Prediction, 0)
-							FinalData["Prediction_Days"] = unxtoko
-						}
-
-						FinalData[State] = Data
-					} else {
-						isError = true
+					Data := map[string]interface{}{}
+					if State == "Twitter" {
+						Tw := Member["Twitter"].(map[string]interface{})
+						Data["Current_followes/subscriber"] = Tw["Followers"]
+					} else if State == "Youtube" {
+						Yt := Member["Youtube"].(map[string]interface{})
+						Data["Current_followes/subscriber"] = Yt["Subscriber"]
+					} else if State == "BiliBili" {
+						Bl := Member["BiliBili"].(map[string]interface{})
+						Data["Current_followes/subscriber"] = Bl["Followers"]
 					}
+					if Days {
+						Data["Prediction"] = DataPredic
+					} else {
+						if Data["Current_followes/subscriber"].(int) < targetint {
+							Data["Prediction"] = targetint
+						} else {
+							isError = true
+						}
+					}
+
+					if targetint == 0 {
+						FinalData["Prediction_Days"] = time.Now().AddDate(0, 0, daysint)
+					}
+
+					FinalData[State] = Data
 				}
 
 				var wg sync.WaitGroup
