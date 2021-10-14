@@ -4024,6 +4024,60 @@
                   "Status": "Active"
                },
                {
+                  "Name":"Hyona",
+                  "EN_Name":"Hyona Elatiora",
+                  "JP_Name":"ヒョナ・エラティオラ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#Elatiorart",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"HyonaElatiora"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCIBj1-d71vKjRftiauF50pg"
+                  },
+                  "BiliBili": null,
+                   "Twitch": null,
+                  "Region":"ID",
+                  "Fanbase":"Pawtients",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Mika",
+                  "EN_Name":"Mika Melatika",
+                  "JP_Name":"ミカ・メラティカ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#Melatikaart",
+                     "Twitter_Lewd":"#Mikawin",
+                     "Twitter_Username":"MikaMelatika"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCahgMxSIQ2zIRrPKhM6Mjvg"
+                  },
+                  "BiliBili": null,
+                   "Twitch": null,
+                  "Region":"ID",
+                  "Fanbase":"Melaticult",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Xia",
+                  "EN_Name":"Xia Ekavira",
+                  "JP_Name":"しあ・えかふぃら",
+                  "Twitter":{
+                     "Twitter_Fanart":"#Xiart_Wangy",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"Xia_Ekavira"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCoJ0Ct-jdas4cLPpSp06gZg"
+                  },
+                  "BiliBili": null,
+                   "Twitch": null,
+                  "Region":"ID",
+                  "Fanbase":"Tim mu lawak",
+                  "Status": "Active"
+               },
+               {
                   "Name":"Yuya",
                   "EN_Name":"Shin Yuya",
                   "JP_Name":"シン・ユヤ",
@@ -4370,6 +4424,86 @@
                   "Status": "Active"
                },
                {
+                  "Name":"Yami",
+                  "EN_Name":"Ko Yami",
+                  "JP_Name":"コ・ヤミ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#Yamiart",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"KoYami2434"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UC9oudjCTHL2BfwxfDwI18eg"
+                  },
+                  "BiliBili": null,
+                  "Twitch":{
+                     "Twitch_Username":"koyami2434"
+                  },
+                  "Region":"KR",
+                  "Fanbase":"Can Opener",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"HaYun",
+                  "EN_Name":"Ha Yun",
+                  "JP_Name":"ハ・ユン",
+                  "Twitter":{
+                     "Twitter_Fanart":"#HayunArt",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"HaYun2434"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCrhhJPNsOqzNIkUfTABoSpg"
+                  },
+                  "BiliBili": null,
+                  "Twitch":{
+                     "Twitch_Username":"hayun2434"
+                  },
+                  "Region":"KR",
+                  "Fanbase":"Munya",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Sera",
+                  "EN_Name":"Na Sera",
+                  "JP_Name":"ナ・セラ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#Sera_art",
+                     "Twitter_Lewd":"#Yarasera",
+                     "Twitter_Username":"NaSera2434"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCX88Pe54pxbJDSGIyGrzNdg"
+                  },
+                  "BiliBili": null,
+                  "Twitch":{
+                     "Twitch_Username":"nasera2434"
+                  },
+                  "Region":"KR",
+                  "Fanbase":"Kesera",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"LeeOn",
+                  "EN_Name":"Lee On",
+                  "JP_Name":"イ・オン",
+                  "Twitter":{
+                     "Twitter_Fanart":"#Leeonart",
+                     "Twitter_Lewd":"#Dark_On",
+                     "Twitter_Username":"LeeOn2434"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCCJcCWrbQzz6eDhX4M1CUwg"
+                  },
+                  "BiliBili": null,
+                  "Twitch":{
+                     "Twitch_Username":"leeon2434"
+                  },
+                  "Region":"KR",
+                  "Fanbase":"IRION",
+                  "Status": "Active"
+               },
+               {
                   "Name":"Aadya",
                   "EN_Name":"Aadya",
                   "JP_Name":"アディア",
@@ -4530,7 +4664,79 @@
                   "Region":"EN",
                   "Fanbase":"PenTomo",
                   "Status": "Active"
-               },                                                       
+               },
+               {
+                  "Name":"Enna",
+                  "EN_Name":"Enna Alouette",
+                  "JP_Name":"エナー・アールウェット",
+                  "Twitter":{
+                     "Twitter_Fanart":"#Palouette",
+                     "Twitter_Lewd":"#Alouwet",
+                     "Twitter_Username":"EnnaAlouette"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCR6qhsLpn62WVxCBK1dkLow"
+                  },
+                  "BiliBili": null,
+                  "Twitch": null,
+                  "Region":"EN",
+                  "Fanbase":"Aloupeeps",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Nina",
+                  "EN_Name":"Nina Kosaka",
+                  "JP_Name":"狐坂ニナ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#DrawKosaka",
+                     "Twitter_Lewd":"",
+                     "Twitter_Username":"NinaKosaka"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCkieJGn3pgJikVW8gmMXE2w"
+                  },
+                  "BiliBili": null,
+                  "Twitch": null,
+                  "Region":"EN",
+                  "Fanbase":"",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Reimu",
+                  "EN_Name":"Reimu Endou",
+                  "JP_Name":"遠藤霊夢",
+                  "Twitter":{
+                     "Twitter_Fanart":"#Reimural",
+                     "Twitter_Lewd":"#Reimundies",
+                     "Twitter_Username":"ReimuEndou"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UCBURM8S4LH7cRZ0Clea9RDA"
+                  },
+                  "BiliBili": null,
+                  "Twitch": null,
+                  "Region":"EN",
+                  "Fanbase":"Phantomos",
+                  "Status": "Active"
+               },
+               {
+                  "Name":"Millie",
+                  "EN_Name":"Millie Parfait",
+                  "JP_Name":"ミリー・パフェ",
+                  "Twitter":{
+                     "Twitter_Fanart":"#DrawMillie",
+                     "Twitter_Lewd":"#CreaMillie",
+                     "Twitter_Username":"MillieParfait"
+                  },
+                  "Youtube":{
+                     "Yt_ID":"UC47rNmkDcNgbOcM-2BwzJTQ"
+                  },
+                  "BiliBili": null,
+                  "Twitch": null,
+                  "Region":"EN",
+                  "Fanbase":"FaMillie",
+                  "Status": "Active"
+               },                                                     
                {
                   "Name":"Yukie",
                   "EN_Name":"Yukie",
