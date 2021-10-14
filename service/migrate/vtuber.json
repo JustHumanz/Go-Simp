@@ -6777,8 +6777,8 @@
                   "Region": "JP",
                   "BiliBili": {
                     "BiliBili_Fanart": "",
-                    "BiliBili_ID": "488970166",
-                    "BiliRoom_ID": "22030718"
+                    "BiliBili_ID": 488970166,
+                    "BiliRoom_ID": 22030718
                   },
                   "Twitch": null,
                   "Twitter": {
@@ -6798,8 +6798,8 @@
                   "Region": "JP",
                   "BiliBili": {
                     "BiliBili_Fanart": "",
-                    "BiliBili_ID": "489046950",
-                    "BiliRoom_ID": "23088755"
+                    "BiliBili_ID": 489046950,
+                    "BiliRoom_ID": 23088755
                   },
                   "Twitch": null,
                   "Twitter": {
@@ -6819,8 +6819,8 @@
                   "Region": "JP",
                   "BiliBili": {
                     "BiliBili_Fanart": "",
-                    "BiliBili_ID": "488976992",
-                    "BiliRoom_ID": "23354166"
+                    "BiliBili_ID": 488976992,
+                    "BiliRoom_ID": 23354166
                   },
                   "Twitch": null,
                   "Twitter": {
@@ -6840,8 +6840,8 @@
                   "Region": "JP",
                   "BiliBili": {
                     "BiliBili_Fanart": "",
-                    "BiliBili_ID": "488978908",
-                    "BiliRoom_ID": "23601103"
+                    "BiliBili_ID": 488978908,
+                    "BiliRoom_ID": 23601103
                   },
                   "Twitch": null,
                   "Twitter": {
