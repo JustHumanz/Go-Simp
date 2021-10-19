@@ -9,7 +9,7 @@ services:
   db_migrate:
     image: justhumanz/go-simp-migrate
     volumes:
-      - ../service/migrate/vtuber.json:/vtuber.json
+      - ../service/migrate/json:/json
     environment:
       - PROMETHEUS="http://prometheus:9090"
     restart: on-failure
