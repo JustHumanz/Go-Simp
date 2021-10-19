@@ -59,19 +59,46 @@ func RequestPay(Message string) {
 }
 
 func init() {
-	fmt.Println("Reading hashtag file...")
-	log.SetFormatter(&log.TextFormatter{FullTimestamp: true})
-	file, err := ioutil.ReadFile("./vtuber.json")
+	fmt.Println("Reading json files...")
+
+	files, err := ioutil.ReadDir("json/")
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 
-	fmt.Println(string(file))
-	err = json.Unmarshal(file, &JsonData)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+	var (
+		Indie  Independent
+		Groups []Group
+	)
+
+	for _, f := range files {
+		file, err := ioutil.ReadFile("json/" + f.Name())
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		fmt.Println(string(file))
+
+		if f.Name() == "Independent.json" {
+			err = json.Unmarshal(file, &Indie)
+			if err != nil {
+				fmt.Println(err)
+			}
+
+		} else {
+			var Gtmp Group
+			err = json.Unmarshal(file, &Gtmp)
+			if err != nil {
+				fmt.Println(err)
+			}
+			Groups = append(Groups, Gtmp)
+		}
+	}
+	JsonData = Vtuber{
+		VtuberData: Data{
+			Independent: Indie,
+			Group:       Groups,
+		},
 	}
 
 	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))

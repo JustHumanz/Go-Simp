@@ -1,0 +1,86 @@
+{
+	"GroupName": "VOMS",
+	"GroupIcon": "https://cdn.humanz.moe/vox.png",
+	"GroupChannel": {
+		"Youtube": [
+			null
+		],
+		"BiliBili": [
+			null
+		]
+	},
+	"Members": [
+		{
+			"Name": "Pikamee",
+			"EN_Name": "Amano Pikamee",
+			"JP_Name": "天野ピカミィ",
+			"Twitter": {
+				"Twitter_Fanart": "#pikart",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "amanopikamee"
+			},
+			"Youtube": {
+				"Yt_ID": "UCajhBT4nMrg3DLS-bLL2RCg"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Tomoshika",
+			"EN_Name": "Hikasa Tomoshika",
+			"JP_Name": "緋笠トモシカ",
+			"Twitter": {
+				"Twitter_Fanart": "#トモシ画",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "Tomoshika_H"
+			},
+			"Youtube": {
+				"Yt_ID": "UC3vzVK_N_SUVKqbX69L_X4g"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Monoe",
+			"EN_Name": "Jitomi Monoe",
+			"JP_Name": "磁富モノエ",
+			"Twitter": {
+				"Twitter_Fanart": "#磁っとみて",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "Jitomi_Monoe"
+			},
+			"Youtube": {
+				"Yt_ID": "UCaFhsCKSSS821N-EcWmPkUQ"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Inactive"
+		}
+	]
+}

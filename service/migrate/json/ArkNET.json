@@ -1,0 +1,86 @@
+{
+	"GroupName": "ArkNET",
+	"GroupIcon": "https://cdn.humanz.moe/ArkNet.png",
+	"GroupChannel": {
+		"Youtube": [
+			null
+		],
+		"BiliBili": [
+			null
+		]
+	},
+	"Members": [
+		{
+			"Name": "Enji_NC",
+			"EN_Name": "Enji Notokunchoro",
+			"JP_Name": "",
+			"Twitter": {
+				"Twitter_Fanart": "#Enji_Art",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "Enji_NC"
+			},
+			"Youtube": {
+				"Yt_ID": "UCoKQhFQUtg6H09u6fHFN1AA"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "ID",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Rawrska",
+			"EN_Name": "Raska Malendra",
+			"JP_Name": "",
+			"Twitter": {
+				"Twitter_Fanart": "#RaskArt",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "raska_malendra"
+			},
+			"Youtube": {
+				"Yt_ID": "UCSZn0PHX6eo5zhC9RyyeRYg"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "ID",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Chiwawa",
+			"EN_Name": "Rania Chiwawa",
+			"JP_Name": "",
+			"Twitter": {
+				"Twitter_Fanart": "#GambaRanran",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "RaniaChiwawa"
+			},
+			"Youtube": {
+				"Yt_ID": "UCaQod6Hl4_3OBWsvSHaRVMQ"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "ID",
+			"Fanbase": "",
+			"Status": "Active"
+		}
+	]
+}

@@ -1,0 +1,154 @@
+{
+	"GroupName": "VoiceOre",
+	"GroupIcon": "https://cdn.humanz.moe/Voice_Ore.png",
+	"GroupChannel": {
+		"Youtube": null,
+		"BiliBili": null
+	},
+	"Members": [
+		{
+			"Name": "ShiratoriRena",
+			"EN_Name": "Shiratori Rena",
+			"JP_Name": "白鳥怜奈",
+			"Twitter": {
+				"Twitter_Fanart": "#れなーぶる",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "shiratori_rena_"
+			},
+			"Youtube": {
+				"Yt_ID": "UCL4UZHX-26xAtVT4Jys5A1Q"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "Renavants",
+			"Status": "Active"
+		},
+		{
+			"Name": "Kogane",
+			"EN_Name": "Himukai Kogane",
+			"JP_Name": "日向こがね",
+			"Twitter": {
+				"Twitter_Fanart": "#5000兆絵ん欲しい",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "himukai_kogane_"
+			},
+			"Youtube": {
+				"Yt_ID": "UCQgi2mK2f9l0Dky2-YhVTYQ"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Mizuki",
+			"EN_Name": "Aoi Mizuki",
+			"JP_Name": "蒼井美月",
+			"Twitter": {
+				"Twitter_Fanart": "#美月見",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "aoi_mizuki__"
+			},
+			"Youtube": {
+				"Yt_ID": "UCupxrBQzU803Gzm05ECJffw"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Inactive"
+		},
+		{
+			"Name": "AizawaMomo",
+			"EN_Name": "Aizawa Momo",
+			"JP_Name": "藍沢もも",
+			"Twitter": {
+				"Twitter_Fanart": "#絵ももも",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "aizawa_momo_"
+			},
+			"Youtube": {
+				"Yt_ID": "UCYQgNMUfReVWZspzSSexMGQ"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "AsagiSaki",
+			"EN_Name": "Asagi Saki",
+			"JP_Name": "浅葱サキ",
+			"Twitter": {
+				"Twitter_Fanart": "#浅葱図録",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "asagi_saki_"
+			},
+			"Youtube": {
+				"Yt_ID": "UCZ2rFJTs3IPJzYfxtvbKp8Q"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "SumirezakiRin",
+			"EN_Name": "Sumirezaki Rin",
+			"JP_Name": "菫崎リン",
+			"Twitter": {
+				"Twitter_Fanart": "#みてすみリン",
+				"Twitter_Lewd": "#罪リン",
+				"Twitter_Username": "sumirezaki_rin"
+			},
+			"Youtube": {
+				"Yt_ID": "UCymJsbvAMc3j-bcsoxI7NZQ"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		}
+	]
+}

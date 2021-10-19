@@ -1,0 +1,130 @@
+{
+	"GroupName": "Kamitsubaki",
+	"GroupIcon": "https://cdn.humanz.moe/Kamitsubaki_Studio.png",
+	"GroupChannel": {
+		"Youtube": null,
+		"BiliBili": null
+	},
+	"Members": [
+		{
+			"Name": "Kaf",
+			"EN_Name": "Kaf",
+			"JP_Name": "花譜",
+			"Twitter": {
+				"Twitter_Fanart": "",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "virtual_kaf"
+			},
+			"Youtube": {
+				"Yt_ID": "UCQ1U65-CQdIoZ2_NA4Z4F7A"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 488970166,
+				"BiliRoom_ID": 22030718
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": ""
+		},
+		{
+			"Name": "Rim",
+			"EN_Name": "Rim",
+			"JP_Name": "理芽",
+			"Twitter": {
+				"Twitter_Fanart": "",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "RIM_virtual"
+			},
+			"Youtube": {
+				"Yt_ID": "UCfBkUgaJ6eqYA9_TX2cmq9A"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 489046950,
+				"BiliRoom_ID": 23088755
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": ""
+		},
+		{
+			"Name": "harusaruhi",
+			"EN_Name": "harusaruhi",
+			"JP_Name": "春猿火",
+			"Twitter": {
+				"Twitter_Fanart": "",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "harusaruhi"
+			},
+			"Youtube": {
+				"Yt_ID": "UCE7gtjLeZKNXLp5YURzYYeg"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 488976992,
+				"BiliRoom_ID": 23354166
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": ""
+		},
+		{
+			"Name": "isekaijoucho",
+			"EN_Name": "isekaijoucho",
+			"JP_Name": "ヰ世界情緒",
+			"Twitter": {
+				"Twitter_Fanart": "",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "isekaijoucho"
+			},
+			"Youtube": {
+				"Yt_ID": "UCah4_WVjmr8XA7i5aigwV-Q"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 488978908,
+				"BiliRoom_ID": 23601103
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": ""
+		},
+		{
+			"Name": "Koko",
+			"EN_Name": "Koko",
+			"JP_Name": "幸祜",
+			"Twitter": {
+				"Twitter_Fanart": "",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "KOKO__virtual"
+			},
+			"Youtube": {
+				"Yt_ID": "UC7Gow-kNHq21oejSIDg9PAg"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": ""
+		}
+	]
+}
