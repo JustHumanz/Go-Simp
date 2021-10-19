@@ -1,0 +1,254 @@
+{
+	"GroupName": "NoriPro",
+	"GroupIcon": "https://cdn.humanz.moe/noripro.png",
+	"GroupChannel": {
+		"Youtube": [
+			null
+		],
+		"BiliBili": [
+			null
+		]
+	},
+	"Members": [
+		{
+			"Name": "Tamakin",
+			"EN_Name": "Inuyama Tamaki",
+			"JP_Name": "犬山たまき",
+			"Twitter": {
+				"Twitter_Fanart": "#たまきあーと",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "norioo_"
+			},
+			"Youtube": {
+				"Yt_ID": "UC8NZiqKx6fsDT3AVcMiVFyA"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 12362451,
+				"BiliRoom_ID": 4634167
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Enomiya",
+			"EN_Name": "Enomiya Milk",
+			"JP_Name": "愛宮みるく",
+			"Twitter": {
+				"Twitter_Fanart": "#みるくあるばむ",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "Enomiya_MILK"
+			},
+			"Youtube": {
+				"Yt_ID": "UCJCzy0Fyrm0UhIrGQ7tHpjg"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 419429042,
+				"BiliRoom_ID": 22111399
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Shirayuki",
+			"EN_Name": "Shirayuki Mishiro",
+			"JP_Name": "白雪みしろ",
+			"Twitter": {
+				"Twitter_Fanart": "#みしろんあーと",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "mishiro_seiso"
+			},
+			"Youtube": {
+				"Yt_ID": "UCC0i9nECi4Gz7TU63xZwodg"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 405981431,
+				"BiliRoom_ID": 21708004
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Himesaki",
+			"EN_Name": "Himesaki Yuzuru",
+			"JP_Name": "姫咲ゆずる",
+			"Twitter": {
+				"Twitter_Fanart": "#ゆずるあーと",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "Himesaki_yuzuru"
+			},
+			"Youtube": {
+				"Yt_ID": "UCle1cz6rcyH0a-xoMYwLlAg"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 493724848,
+				"BiliRoom_ID": 22534525
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Kumakuma",
+			"EN_Name": "Kumagaya Takuma",
+			"JP_Name": "熊谷タクマ",
+			"Twitter": {
+				"Twitter_Fanart": "#くまくま絵",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "KUMAgaya_taKUMA"
+			},
+			"Youtube": {
+				"Yt_ID": "UCCXME7oZmXB2VFHJbz5496A"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Warabe",
+			"EN_Name": "Hoozuki Warabe",
+			"JP_Name": "鬼灯わらべ",
+			"Twitter": {
+				"Twitter_Fanart": "#ばあちゃんこれ見て",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "hoozukiwarabe"
+			},
+			"Youtube": {
+				"Yt_ID": "UCLyTXfCZtl7dyhta9Jg3pZg"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Lilith",
+			"EN_Name": "Yumeno Lilith",
+			"JP_Name": "夢乃リリス",
+			"Twitter": {
+				"Twitter_Fanart": "#夢の中絵",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "yumenolilith"
+			},
+			"Youtube": {
+				"Yt_ID": "UCH11P1Hq4PXdznyw1Hhr3qw"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Lilith",
+			"EN_Name": "Yumeno Lilith",
+			"JP_Name": "夢乃リリス",
+			"Twitter": {
+				"Twitter_Fanart": "#夢の中絵",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "yumenolilith"
+			},
+			"Youtube": {
+				"Yt_ID": "UCH11P1Hq4PXdznyw1Hhr3qw"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Kirara",
+			"EN_Name": "Ouma Kirara",
+			"JP_Name": "逢魔きらら",
+			"Twitter": {
+				"Twitter_Fanart": "#あくまびじゅつかん",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "omakirara"
+			},
+			"Youtube": {
+				"Yt_ID": "UCBAeKqEIugv69Q2GIgcH7oA"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Momo",
+			"EN_Name": "Kurumizawa Momo",
+			"JP_Name": "胡桃澤もも",
+			"Twitter": {
+				"Twitter_Fanart": "#魔法少女活動報告書",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "kurumizawamomo"
+			},
+			"Youtube": {
+				"Yt_ID": "UCxrmkJf_X1Yhte_a4devFzA"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		}
+	]
+}

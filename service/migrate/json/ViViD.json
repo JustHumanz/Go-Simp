@@ -1,0 +1,165 @@
+{
+	"GroupName": "ViViD",
+	"GroupIcon": "https://cdn.humanz.moe/ViViD.png",
+	"GroupChannel": {
+		"Youtube": [
+			{
+				"ChannelID": "UCaB_QHyYJriERPLKxSXqZKw",
+				"Region": "JP"
+			}
+		],
+		"BiliBili": [
+			{
+				"BiliBili_ID": 392214433,
+				"BiliRoom_ID": 21421874,
+				"Region": "JP"
+			}
+		]
+	},
+	"Members": [
+		{
+			"Name": "Shirayuri",
+			"EN_Name": "Shirayuri Lily",
+			"JP_Name": "白百合リリィ",
+			"Twitter": {
+				"Twitter_Fanart": "#白百合アート",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "SRYR_0"
+			},
+			"Youtube": {
+				"Yt_ID": "UCl-3q6t6zdZwgIsFZELb7Zg"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "布丁天使絵画",
+				"BiliBili_ID": 421347849,
+				"BiliRoom_ID": 21415012
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "Pomaera",
+			"Status": "Active"
+		},
+		{
+			"Name": "Elena",
+			"EN_Name": "Elena Yunagi",
+			"JP_Name": "勇凪エレナ",
+			"Twitter": {
+				"Twitter_Fanart": "#絵レナ",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "ELENA_YUNAGI"
+			},
+			"Youtube": {
+				"Yt_ID": "UCKwATdrcjyzNv9c56PqJbWA"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "Honey",
+			"Status": "Active"
+		},
+		{
+			"Name": "Fuwamochi_Anko",
+			"EN_Name": "Fuwamochi Anko",
+			"JP_Name": "二和餅あんこ",
+			"Twitter": {
+				"Twitter_Fanart": "#あんこ絵巻",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "ANKOchan_01"
+			},
+			"Youtube": {
+				"Yt_ID": "UCBKxF1PHQtT78ypcVYmBtBA"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "Dan-in",
+			"Status": "Active"
+		},
+		{
+			"Name": "Memory",
+			"EN_Name": "Utakata Memory",
+			"JP_Name": "泡沫メモリ",
+			"Twitter": {
+				"Twitter_Fanart": "#メモリのアルバム",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "Memory_Utakata"
+			},
+			"Youtube": {
+				"Yt_ID": "UClV7gDF9sUzu4jJCK7rCYkQ"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "泡沫美术馆",
+				"BiliBili_ID": 487551829,
+				"BiliRoom_ID": 21955596
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "Kotoricchi",
+			"Status": "Active"
+		},
+		{
+			"Name": "Bell",
+			"EN_Name": "Bell Nekonogi",
+			"JP_Name": "猫芒ベル",
+			"Twitter": {
+				"Twitter_Fanart": "#ベルピク",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "Bell_Nekonogi"
+			},
+			"Youtube": {
+				"Yt_ID": "UCflNPJUJ4VQh1hGDNK7bsFg"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 487550002,
+				"BiliRoom_ID": 21811136
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "Okyaku-syan",
+			"Status": "Active"
+		},
+		{
+			"Name": "Maou",
+			"EN_Name": "Chrono Lock",
+			"JP_Name": "クロノロク",
+			"Twitter": {
+				"Twitter_Fanart": "#クロノガロク",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "cHRONO_lock"
+			},
+			"Youtube": {
+				"Yt_ID": "UCAvgFoTWEisO5Pp7eYVDgEw"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "Rokudenashi",
+			"Status": "Active"
+		}
+	]
+}

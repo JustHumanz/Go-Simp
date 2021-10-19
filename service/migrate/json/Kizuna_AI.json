@@ -1,0 +1,62 @@
+{
+	"GroupName": "Kizuna_AI",
+	"GroupIcon": "https://cdn.humanz.moe/kizuna.png",
+	"GroupChannel": {
+		"Youtube": [
+			null
+		],
+		"BiliBili": [
+			null
+		]
+	},
+	"Members": [
+		{
+			"Name": "Ai-chan",
+			"EN_Name": "Kizuna AI",
+			"JP_Name": "キズナアイ",
+			"Twitter": {
+				"Twitter_Fanart": "#きずなーぽすと",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "aichan_nel"
+			},
+			"Youtube": {
+				"Yt_ID": "UC4YaOt1yT-ZeyB0OmxHgolA"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 1473830,
+				"BiliRoom_ID": 1485080
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Love-chan",
+			"EN_Name": "Love-chan",
+			"JP_Name": "Loveちゃん",
+			"Twitter": {
+				"Twitter_Fanart": "#らぶりえ",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "lovechan_lp"
+			},
+			"Youtube": {
+				"Yt_ID": "UCYm8zALd2uHqyy6C1tb4_zA"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		}
+	]
+}

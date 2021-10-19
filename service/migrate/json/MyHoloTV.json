@@ -1,0 +1,113 @@
+{
+	"GroupName": "MyHoloTV",
+	"GroupIcon": "https://cdn.humanz.moe/MyHolo.png",
+	"GroupChannel": {
+		"Youtube": [
+			{
+				"ChannelID": "UCS1IqPUpSTzxuCvoPLqocFA",
+				"Region": ""
+			}
+		],
+		"BiliBili": [
+			null
+		]
+	},
+	"Members": [
+		{
+			"Name": "Lili",
+			"EN_Name": "Liliana Vampaia",
+			"JP_Name": "吸血鬼 リリアナ",
+			"Twitter": {
+				"Twitter_Fanart": "#lilisuu",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "lilianavampaia"
+			},
+			"Youtube": {
+				"Yt_ID": "UCHz3PeU1RRcY9vJDSqsigIA"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "MY",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Virion",
+			"EN_Name": "Virion Kisei",
+			"JP_Name": "寄星 ビリオン",
+			"Twitter": {
+				"Twitter_Fanart": "#RionGallery",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "virionkisei"
+			},
+			"Youtube": {
+				"Yt_ID": "UCtfVp4B9rBl1zF3wKI-oK_A"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "FR",
+			"Fanbase": "Slives",
+			"Status": "Active"
+		},
+		{
+			"Name": "Lunaris",
+			"EN_Name": "Lunaris Urufi",
+			"JP_Name": "人狼 ルナリス",
+			"Twitter": {
+				"Twitter_Fanart": "#lunAAArt",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "LunarisUrufi"
+			},
+			"Youtube": {
+				"Yt_ID": "UCf5X1k-R3Vk-2OYYKraJ7dQ"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "MY",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Athelia",
+			"EN_Name": "Athelia Hiroyuki",
+			"JP_Name": "博之 アテリア",
+			"Twitter": {
+				"Twitter_Fanart": "#AtheliArt",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "AtheliaHiroyuki"
+			},
+			"Youtube": {
+				"Yt_ID": "UCptFEtQFy6u0_hReq9i8DCQ"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "PH",
+			"Fanbase": "Athelings",
+			"Status": "Active"
+		}
+	]
+}

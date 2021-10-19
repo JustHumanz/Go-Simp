@@ -1,0 +1,58 @@
+{
+	"GroupName": "WePlanet",
+	"GroupIcon": "https://cdn.humanz.moe/WePlanet.png",
+	"GroupChannel": {
+		"Youtube": null,
+		"BiliBili": null
+	},
+	"Members": [
+		{
+			"Name": "manarenewal",
+			"EN_Name": "Мана Ренью",
+			"JP_Name": "",
+			"Twitter": {
+				"Twitter_Fanart": "#ManaRenewArt",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "ManaRenewal"
+			},
+			"Youtube": {
+				"Yt_ID": "UC3czs41x7HD5-nk_cZ-Eo3g"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 0,
+				"BiliRoom_ID": 0
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "RU",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Planya",
+			"EN_Name": "Планя",
+			"JP_Name": "",
+			"Twitter": {
+				"Twitter_Fanart": "",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "ChanPlanya"
+			},
+			"Youtube": {
+				"Yt_ID": "UCQaGj_l3dqmGWJLEbEmwgFQ"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 562037265,
+				"BiliRoom_ID": 22830078
+			},
+			"Twitch": {
+				"Twitch_Username": ""
+			},
+			"Region": "RU",
+			"Fanbase": "",
+			"Status": "Active"
+		}
+	]
+}
