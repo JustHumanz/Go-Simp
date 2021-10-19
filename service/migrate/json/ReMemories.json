@@ -1,0 +1,111 @@
+{
+  "GroupName": "Re:Memories",
+  "GroupIcon": "https://cdn.humanz.moe/ReMemories.png",
+  "GroupChannel": {
+    "Youtube": [
+      {
+        "ChannelID": "UCJZnhqz3mNpWJJ1FGrAy_qA",
+        "Region": ""
+      }
+    ],
+    "BiliBili": [null]
+  },
+  "Members": [
+    {
+      "Name": "Evelyn",
+      "EN_Name": "Evelyn",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#PienEpelPaint",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "EvelynVtuber"
+      },
+      "Youtube": {
+        "Yt_ID": "UCMxxFFeuhFQ30quuePTym0A"
+      },
+      "BiliBili": {
+        "BiliBili_Fanart": "",
+        "BiliBili_ID": 0,
+        "BiliRoom_ID": 0
+      },
+      "Twitch": {
+        "Twitch_Username": ""
+      },
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Chloe",
+      "EN_Name": "Chloe Pawapua",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#PawapuArt",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "ChloePawapua"
+      },
+      "Youtube": {
+        "Yt_ID": "UCrKS2bOUZDXA_R3qhCux7ow"
+      },
+      "BiliBili": {
+        "BiliBili_Fanart": "",
+        "BiliBili_ID": 0,
+        "BiliRoom_ID": 0
+      },
+      "Twitch": {
+        "Twitch_Username": ""
+      },
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Reynard",
+      "EN_Name": "Reynard Blanc",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#BlanCanvas",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "ReynardBlanc"
+      },
+      "Youtube": {
+        "Yt_ID": "UCoUFv7APM1XOo4TUaWbRekw"
+      },
+      "BiliBili": {
+        "BiliBili_Fanart": "",
+        "BiliBili_ID": 0,
+        "BiliRoom_ID": 0
+      },
+      "Twitch": {
+        "Twitch_Username": ""
+      },
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Lily",
+      "EN_Name": "Lily Ifeta",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#GambarLily",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "LilyIfeta"
+      },
+      "Youtube": {
+        "Yt_ID": "UCXSbl3XQYtx1u4Gvvca7NUA"
+      },
+      "BiliBili": {
+        "BiliBili_Fanart": "",
+        "BiliBili_ID": 0,
+        "BiliRoom_ID": 0
+      },
+      "Twitch": {
+        "Twitch_Username": ""
+      },
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    }
+  ]
+}
