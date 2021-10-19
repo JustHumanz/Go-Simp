@@ -1,17 +1,6 @@
 #### Contributors
-| Kings |             |
-| ----------- | ----------- |
-| Malditodan#4983  | <img src="https://cdn.discordapp.com/avatars/407171239959068693/6b2f80f2c13b2cce3166d7f6d9b834c6.png?size=128" alt="Malditodan#4983" width="128"/>       |
-| PeTrolejTV#7608     | <img src="https://cdn.discordapp.com/avatars/357937677372358666/797b8baa575a4ea927e713376035ed63.png?size=128" alt="PeTrolejTV#7608" width="128"/>        |
-| jj_leo#1628  | <img src="https://cdn.discordapp.com/avatars/621634633364406296/901059136fd9ca5a715d0cd0cf8f9f06.png?size=128" alt="jj_leo#1628" width="128"/>            |
-| yansaan#7608  | <img src="https://cdn.discordapp.com/avatars/240078760173371396/cdfd93783f40e55ac77e09a476772b9d.png?size=128" alt="yansaan#7608" width="128"/>           |
-| suei#6989     | <img src="https://cdn.discordapp.com/avatars/257786271802327042/a6d3d60c1f304e19cebfd04a195db53d.png?size=128" alt="suei#6989" width="128"/>           |
-| 高木 Huguera#0001  |  <img src="https://cdn.discordapp.com/avatars/688171471624863782/a_319ecbfc476e0a9efc130cc0a2eb8caf.gif?size=128" alt="高木 Huguera#0001" width="128"/>        |
-| Definal#5063      | <img src="https://cdn.discordapp.com/avatars/334712294288392203/4a71947eee54d5e01b7de5561aec1413.png?size=128" alt="Definal#5063" width="128"/>  |
-| Plopistico#2571    | <img src="https://cdn.discordapp.com/avatars/94280136651702272/09e5fc7d1245c8f8a680c8b92341b3c5.png?size=128" alt="Plopistico#2571" width="128"/>     |
-| GotchaGru#6110 | <img src="https://cdn.discordapp.com/avatars/308125310438866946/97e08a39c0c718760dedccecec7a1d05.png?size=128" alt="GotchaGru#6110" width="128"/>       |
-| dazed#4675 |  <img src="https://cdn.discordapp.com/embed/avatars/0.png?size=128" alt="GotchaGru#6110" width="128"/>    |
-| シー#1373 | <img src="https://cdn.discordapp.com/embed/avatars/0.png?size=128" alt="シー#1373" width="128"/>   |
-| yuqi#1 | <img src="https://cdn.discordapp.com/embed/avatars/0.png?size=128" alt="yuqi#1" width="128"/>     |   
-| Luijaro#8470 | <img src="https://cdn.discordapp.com/embed/avatars/0.png?size=128" alt="Luijaro#8470" width="128"/> | | Yutyu#7878 | <img src="https://cdn.discordapp.com/embed/avatars/0.png?size=128" alt="Yutyu#7878" width="128"/>   
-| dp247 | <img src="https://avatars.githubusercontent.com/u/9065463" alt="dp247" width="128"/>   
+|<img src="https://cdn.discordapp.com/avatars/407171239959068693/c6c238d2072b93fc9643669adc77f325.png?size=1024" alt="Malditodan#4983" width="128"/>|<img src="https://cdn.discordapp.com/avatars/357937677372358666/b6d30b407c1ce96bac595ef7ccb1155e.png?size=1024" alt="PeTrolejTV#7608" width="128"/>|<img src="https://cdn.discordapp.com/avatars/621634633364406296/33d79800f169b4d6d007dba0940b736c.png?size=1024" alt="jj_leo#1628" width="128"/>|<img src="https://cdn.discordapp.com/avatars/240078760173371396/577634f6ed2e71bc657a322db7ba3236.png?size=1024" alt="yansaan#7608" width="128"/>|<img src="https://cdn.discordapp.com/avatars/371092240329736193/9bb2d525daf28a410983e189825651ed.png?size=1024" alt="yansaan#7608" width="128"/>|								
+|-----|-----|-----|-----|-----|
+|<b>Malditodan#4983</b>|<b>PeTrolejTV#7608 <b>|<b>jj_leo#1628<b>|<b>yansaan#7608 </b>|<b>Dahazed#2136</b>|
+|<img src="https://cdn.discordapp.com/avatars/334712294288392203/4a71947eee54d5e01b7de5561aec1413.png?size=128" alt="Definal#5063" width="128"/>|<img src="https://cdn.discordapp.com/avatars/94280136651702272/09e5fc7d1245c8f8a680c8b92341b3c5.png?size=128" alt="Plopistico#2571" width="128"/>|<img src="https://cdn.discordapp.com/avatars/308125310438866946/69caa7927d025aae763e9252bf2954ac.png?size=1024" alt="GotchaGru#6110" width="128"/>|<img src="https://cdn.discordapp.com/avatars/428979132706324482/e271b39122164a0c0829e812640e082e.png?size=1024" alt="Go D. Coli#3996" width="128"/>|<img src="https://cdn.discordapp.com/avatars/257786271802327042/1f0a439d3af4f5b5d48e79161774e14f.png?size=1024" alt="スエイ#6989" width="128"/>|
+|<b>Definal#5063</b> | <b>Plopistico#2571</b> | <b>GotchaGru#6110</b> | <b>Go D. Coli#3996</b> | <b>スエイ#6989</b>|
