@@ -1,27 +1,27 @@
 {
-  "GroupName": "Re:Memories",
-  "GroupIcon": "https://cdn.humanz.moe/ReMemories.png",
+  "GroupName": "Yume Reality",
+  "GroupIcon": "https://cdn.humanz.moe/Yume.png",
   "GroupChannel": {
     "Youtube": [
       {
-        "ChannelID": "UCJZnhqz3mNpWJJ1FGrAy_qA",
-        "Region": ""
+        "ChannelID": "UCYepjIkHoQeG316vTz1dAEQ",
+        "Region": "ID"
       }
     ],
     "BiliBili": [null]
   },
   "Members": [
     {
-      "Name": "Evelyn",
-      "EN_Name": "Evelyn",
+      "Name": "Sena",
+      "EN_Name": "Nekoyama Sena",
       "JP_Name": "",
       "Twitter": {
-        "Twitter_Fanart": "#PienEpelPaint",
-        "Twitter_Lewd": "#Evelewd",
-        "Twitter_Username": "EvelynVtuber"
+        "Twitter_Fanart": "#Senaart",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "NekoyamaSena"
       },
       "Youtube": {
-        "Yt_ID": "UCMxxFFeuhFQ30quuePTym0A"
+        "Yt_ID": "UCdVOby6CAPrKCiJBoxUYQ5g"
       },
       "BiliBili": {
         "BiliBili_Fanart": "",
@@ -36,16 +36,16 @@
       "Status": "Active"
     },
     {
-      "Name": "Chloe",
-      "EN_Name": "Chloe Pawapua",
+      "Name": "Yuta",
+      "EN_Name": "Nemutaka Yuta",
       "JP_Name": "",
       "Twitter": {
-        "Twitter_Fanart": "#PawapuArt",
+        "Twitter_Fanart": "",
         "Twitter_Lewd": "",
-        "Twitter_Username": "ChloePawapua"
+        "Twitter_Username": "NemutakaYuta"
       },
       "Youtube": {
-        "Yt_ID": "UCrKS2bOUZDXA_R3qhCux7ow"
+        "Yt_ID": "UCos71NPh5m9XYUqFhLCLAgw"
       },
       "BiliBili": {
         "BiliBili_Fanart": "",
@@ -60,16 +60,16 @@
       "Status": "Active"
     },
     {
-      "Name": "Reynard",
-      "EN_Name": "Reynard Blanc",
+      "Name": "Cece",
+      "EN_Name": "Cerys Lobelia",
       "JP_Name": "",
       "Twitter": {
-        "Twitter_Fanart": "#BlanCanvas",
+        "Twitter_Fanart": "#CerysLiart",
         "Twitter_Lewd": "",
-        "Twitter_Username": "ReynardBlanc"
+        "Twitter_Username": "CerysLobelia"
       },
       "Youtube": {
-        "Yt_ID": "UCoUFv7APM1XOo4TUaWbRekw"
+        "Yt_ID": "UCbD_f85AMHomsGVFAgtpE5A"
       },
       "BiliBili": {
         "BiliBili_Fanart": "",
@@ -84,16 +84,40 @@
       "Status": "Active"
     },
     {
-      "Name": "Lily",
-      "EN_Name": "Lily Ifeta",
+      "Name": "Shia",
+      "EN_Name": "Tsuyu Hortenshia",
       "JP_Name": "",
       "Twitter": {
-        "Twitter_Fanart": "#GambarLily",
+        "Twitter_Fanart": "#HortenshiArt",
         "Twitter_Lewd": "",
-        "Twitter_Username": "LilyIfeta"
+        "Twitter_Username": "TsuyuHortenshia"
       },
       "Youtube": {
-        "Yt_ID": "UCXSbl3XQYtx1u4Gvvca7NUA"
+        "Yt_ID": "UC59t349CdSDtqNS0hNzwBjQ"
+      },
+      "BiliBili": {
+        "BiliBili_Fanart": "",
+        "BiliBili_ID": 0,
+        "BiliRoom_ID": 0
+      },
+      "Twitch": {
+        "Twitch_Username": ""
+      },
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Ryuuki",
+      "EN_Name": "Ryuuki Tatsuya",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#Tatsuyart",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "ryuuki_tatsuya"
+      },
+      "Youtube": {
+        "Yt_ID": "UCzrzCkvQVCaOz3ZYnKCRnVw"
       },
       "BiliBili": {
         "BiliBili_Fanart": "",
