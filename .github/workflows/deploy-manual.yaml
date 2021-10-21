@@ -60,10 +60,10 @@ jobs:
 
       - 
         name: SSH and deploy to server
-        uses: appleboy/ssh-action@master
+        uses: fifsky/ssh-action@master
         with:
           host: go-simp.humanz.moe
-          username: ${{ secrets.USER }}
+          user: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd Go-Simp/swarm && git pull
