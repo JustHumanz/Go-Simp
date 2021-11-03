@@ -34,9 +34,7 @@
 				"BiliBili_ID": 421347849,
 				"BiliRoom_ID": 21415012
 			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "Pomaera",
 			"Status": "Active"
@@ -53,14 +51,8 @@
 			"Youtube": {
 				"Yt_ID": "UCKwATdrcjyzNv9c56PqJbWA"
 			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 0,
-				"BiliRoom_ID": 0
-			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"BiliBili": null,
+			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "Honey",
 			"Status": "Active"
@@ -77,14 +69,8 @@
 			"Youtube": {
 				"Yt_ID": "UCBKxF1PHQtT78ypcVYmBtBA"
 			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 0,
-				"BiliRoom_ID": 0
-			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"BiliBili": null,
+			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "Dan-in",
 			"Status": "Active"
@@ -106,9 +92,7 @@
 				"BiliBili_ID": 487551829,
 				"BiliRoom_ID": 21955596
 			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "Kotoricchi",
 			"Status": "Active"
@@ -130,9 +114,7 @@
 				"BiliBili_ID": 487550002,
 				"BiliRoom_ID": 21811136
 			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "Okyaku-syan",
 			"Status": "Active"
@@ -149,14 +131,8 @@
 			"Youtube": {
 				"Yt_ID": "UCAvgFoTWEisO5Pp7eYVDgEw"
 			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 0,
-				"BiliRoom_ID": 0
-			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"BiliBili": null,
+			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "Rokudenashi",
 			"Status": "Active"

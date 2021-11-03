@@ -27,9 +27,7 @@
 				"BiliBili_ID": 1473830,
 				"BiliRoom_ID": 1485080
 			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "",
 			"Status": "Active"
@@ -46,14 +44,8 @@
 			"Youtube": {
 				"Yt_ID": "UCYm8zALd2uHqyy6C1tb4_zA"
 			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 0,
-				"BiliRoom_ID": 0
-			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"BiliBili": null,
+			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "",
 			"Status": "Active"

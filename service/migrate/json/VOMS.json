@@ -18,14 +18,8 @@
       "Youtube": {
         "Yt_ID": "UCajhBT4nMrg3DLS-bLL2RCg"
       },
-      "BiliBili": {
-        "BiliBili_Fanart": "",
-        "BiliBili_ID": 0,
-        "BiliRoom_ID": 0
-      },
-      "Twitch": {
-        "Twitch_Username": ""
-      },
+      "BiliBili": null,
+      "Twitch": null,
       "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
@@ -42,14 +36,8 @@
       "Youtube": {
         "Yt_ID": "UC3vzVK_N_SUVKqbX69L_X4g"
       },
-      "BiliBili": {
-        "BiliBili_Fanart": "",
-        "BiliBili_ID": 0,
-        "BiliRoom_ID": 0
-      },
-      "Twitch": {
-        "Twitch_Username": ""
-      },
+      "BiliBili": null,
+      "Twitch": null,
       "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
@@ -66,14 +54,8 @@
       "Youtube": {
         "Yt_ID": "UCaFhsCKSSS821N-EcWmPkUQ"
       },
-      "BiliBili": {
-        "BiliBili_Fanart": "",
-        "BiliBili_ID": 0,
-        "BiliRoom_ID": 0
-      },
-      "Twitch": {
-        "Twitch_Username": ""
-      },
+      "BiliBili": null,
+      "Twitch": null,
       "Region": "JP",
       "Fanbase": "",
       "Status": "Inactive"
@@ -90,14 +72,8 @@
       "Youtube": {
         "Yt_ID": "UCE5VgVGRPfNCjXPeTe1QJHA"
       },
-      "BiliBili": {
-        "BiliBili_Fanart": "",
-        "BiliBili_ID": 0,
-        "BiliRoom_ID": 0
-      },
-      "Twitch": {
-        "Twitch_Username": ""
-      },
+      "BiliBili": null,
+      "Twitch": null,
       "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
@@ -114,14 +90,8 @@
       "Youtube": {
         "Yt_ID": "UCivDgaCAh7WPBoKA24WNwJQ"
       },
-      "BiliBili": {
-        "BiliBili_Fanart": "",
-        "BiliBili_ID": 0,
-        "BiliRoom_ID": 0
-      },
-      "Twitch": {
-        "Twitch_Username": ""
-      },
+      "BiliBili": null,
+      "Twitch": null,
       "Region": "JP",
       "Fanbase": "",
       "Status": "Active"

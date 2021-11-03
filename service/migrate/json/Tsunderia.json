@@ -18,11 +18,7 @@
 			"Youtube": {
 				"Yt_ID": "UCdCczCYPOeP5hTfbx6tzz_A"
 			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 0,
-				"BiliRoom_ID": 0
-			},
+			"BiliBili": null,
 			"Twitch": {
 				"Twitch_Username": "hoshinochar"
 			},
@@ -42,11 +38,7 @@
 			"Youtube": {
 				"Yt_ID": "UCdrQWcX7XLDSUEh9SAxnyBg"
 			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 0,
-				"BiliRoom_ID": 0
-			},
+			"BiliBili": null,
 			"Twitch": {
 				"Twitch_Username": "inukaipurin"
 			},
@@ -66,11 +58,7 @@
 			"Youtube": {
 				"Yt_ID": "UCbTkauz77OIO9KE5YcAKPlg"
 			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 0,
-				"BiliRoom_ID": 0
-			},
+			"BiliBili": null,
 			"Twitch": {
 				"Twitch_Username": "yazakikallin"
 			},
@@ -90,11 +78,7 @@
 			"Youtube": {
 				"Yt_ID": "UCIJ6TGsTcBlYGUj-zbL60EQ"
 			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 0,
-				"BiliRoom_ID": 0
-			},
+			"BiliBili": null,
 			"Twitch": {
 				"Twitch_Username": "matsuromeru"
 			},
@@ -114,14 +98,8 @@
 			"Youtube": {
 				"Yt_ID": "UCyKsg-57XC9pyHbP7v3kCPQ"
 			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 0,
-				"BiliRoom_ID": 0
-			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"BiliBili": null,
+			"Twitch": null,
 			"Region": "US",
 			"Fanbase": "Guildmates",
 			"Status": "Active"
@@ -138,11 +116,7 @@
 			"Youtube": {
 				"Yt_ID": "UC8CKGSvp9bRfmtWyfV5L9Jw"
 			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 0,
-				"BiliRoom_ID": 0
-			},
+			"BiliBili": null,
 			"Twitch": {
 				"Twitch_Username": "niniyuuna"
 			},

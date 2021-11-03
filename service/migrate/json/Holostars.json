@@ -30,9 +30,7 @@
 				"BiliBili_ID": 456232604,
 				"BiliRoom_ID": 21749477
 			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "",
 			"Status": "Active"
@@ -54,9 +52,7 @@
 				"BiliBili_ID": 647375262,
 				"BiliRoom_ID": 22422987
 			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "",
 			"Status": "Active"
@@ -73,14 +69,8 @@
 			"Youtube": {
 				"Yt_ID": "UCEzsociuFqVwgZuMaZqaCsg"
 			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 0,
-				"BiliRoom_ID": 0
-			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"BiliBili": null,
+			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "",
 			"Status": "Active"
@@ -102,9 +92,7 @@
 				"BiliBili_ID": 551114700,
 				"BiliRoom_ID": 22171183
 			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "",
 			"Status": "Active"
@@ -126,9 +114,7 @@
 				"BiliBili_ID": 350631685,
 				"BiliRoom_ID": 13009645
 			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "",
 			"Status": "Active"
@@ -145,14 +131,8 @@
 			"Youtube": {
 				"Yt_ID": "UCANDOlYTJT7N5jlRC3zfzVA"
 			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 0,
-				"BiliRoom_ID": 0
-			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"BiliBili": null,
+			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "",
 			"Status": "Active"
@@ -174,9 +154,7 @@
 				"BiliBili_ID": 647375261,
 				"BiliRoom_ID": 22423010
 			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "",
 			"Status": "Active"
@@ -198,9 +176,7 @@
 				"BiliBili_ID": 551114698,
 				"BiliRoom_ID": 22171189
 			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "",
 			"Status": "Active"
@@ -217,14 +193,8 @@
 			"Youtube": {
 				"Yt_ID": "UCwL7dgTxKo8Y4RFIKWaf8gA"
 			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 0,
-				"BiliRoom_ID": 0
-			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"BiliBili": null,
+			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "",
 			"Status": "Active"
@@ -241,14 +211,8 @@
 			"Youtube": {
 				"Yt_ID": "UChSvpZYRPh0FvG4SJGSga3g"
 			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 0,
-				"BiliRoom_ID": 0
-			},
-			"Twitch": {
-				"Twitch_Username": ""
-			},
+			"BiliBili": null,
+			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "",
 			"Status": "Active"
