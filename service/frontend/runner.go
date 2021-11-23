@@ -155,7 +155,7 @@ func main() {
 
 			Bot.AddHandler(Fanart)
 			Bot.AddHandler(Tags)
-			Bot.AddHandler(EnableState)
+			//Bot.AddHandler(EnableState)
 			Bot.AddHandler(Status)
 			Bot.AddHandler(Help)
 			Bot.AddHandler(BiliBiliMessage)
