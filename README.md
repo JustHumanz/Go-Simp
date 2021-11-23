@@ -10,14 +10,14 @@ A simple VTuber bot which pings you or your roles if any new Videos, Fanarts, or
 for setup see at [Guide](https://github.com/JustHumanz/Go-Simp/blob/master/Guide.md)
 
 ## Simple Setup
-First create a channel for this bot,Example `holosimps_channel`
-then execute `vtbot>setup`
+First create a channel for this bot,Example `holosimps_channel`  
+then execute `/setup channel-type livestream` and fill the form
 <p align="center">
-  <img src="https://raw.githubusercontent.com/JustHumanz/Go-simp/master/Img/RemakeSetup.png" alt="Setup"/>
+  <img src="Img/Setup_Slash.png" alt="Setup"/>
 </p>  
 
 And if you want ping some roles you can execute  
-`vtbot>tag roles <Rolename> hololive`
+`/tag-role role-name: <Roleame>`
 
 
 **Important rule**  
