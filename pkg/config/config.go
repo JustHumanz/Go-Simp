@@ -280,7 +280,7 @@ func (Data ConfigFile) InitConf() {
 	Scraper = twitterscraper.New()
 	Scraper.SetSearchMode(twitterscraper.SearchLatest)
 	if Data.MultiTOR != "" {
-		err := Scraper.SetProxy("http://" + GoSimpConf.MultiTOR)
+		err := Scraper.SetProxy("socks5://" + GoSimpConf.MultiTOR)
 		if err != nil {
 			log.Error(err)
 		}
