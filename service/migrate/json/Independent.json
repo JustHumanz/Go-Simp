@@ -811,20 +811,20 @@
 			"Status": "Active"
 		},
 		{
-			"Name": "Moomoo",
-			"EN_Name": "Carmen The Moomoo",
-			"JP_Name": "かわいい牛",
+			"Name": "Dahlia",
+			"EN_Name": "Dahlia The Siren",
+			"JP_Name": "",
 			"Twitter": {
-				"Twitter_Fanart": "#CarmenMooFanart",
+				"Twitter_Fanart": "#DahliaSirenFanArt",
 				"Twitter_Lewd": "",
-				"Twitter_Username": "CarmenTheMoomoo"
+				"Twitter_Username": "Dahliathesiren"
 			},
 			"Youtube": {
 				"Yt_ID": "UC-N5fgKEKSZDMCQm8vbNYQw"
 			},
 			"BiliBili": null,
 			"Twitch": {
-				"Twitch_Username": "carmenthemoomoo"
+				"Twitch_Username": "dahliathesiren"
 			},
 			"Region": "UK",
 			"Fanbase": "",
