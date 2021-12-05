@@ -14,8 +14,7 @@ services:
       - go_simp-net    
 
   multi_tor:
-    build: service/multitor
-    image: go-simp-multi_tor
+    image: justhumanz/go-multitor
     networks:
       - go_simp-net
 
