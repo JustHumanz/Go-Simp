@@ -156,14 +156,14 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 			for _, tag := range v2["tags"].([]interface{}) {
 				Tag := strings.ToLower(tag.(string))
 				GrpName := strings.ToLower(FixFanArt.Group.GroupName)
-				HashTag := "vtuber"
+				HashTag := FixFanArt.Member.EnName
 				if FixFanArt.Member.TwitterHashtags != "" {
 					HashTag = FixFanArt.Member.TwitterHashtags[1:]
 				} else if FixFanArt.Member.BiliBiliHashtags != "" {
 					HashTag = FixFanArt.Member.BiliBiliHashtags[1 : len(FixFanArt.Member.BiliBiliHashtags)-1]
 				}
 
-				match, _ := regexp.MatchString("(youtube|vtuber|"+strings.ToLower(HashTag)+"|"+GrpName+")", Tag)
+				match, _ := regexp.MatchString("("+strings.ToLower(HashTag)+"|"+GrpName+")", Tag)
 				if match {
 					IsVtuber = true
 				}
