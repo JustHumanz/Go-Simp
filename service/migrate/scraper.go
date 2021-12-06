@@ -19,7 +19,7 @@ import (
 
 func TwitterFanart() {
 	scraper := twitterscraper.New()
-	scraper.SetProxy(configfile.MultiTOR)
+	scraper.SetProxy("socks5://" + configfile.MultiTOR)
 	scraper.SetSearchMode(twitterscraper.SearchLatest)
 	Groups, err := database.GetGroups()
 	if err != nil {

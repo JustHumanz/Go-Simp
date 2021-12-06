@@ -162,6 +162,8 @@ func main() {
 		}
 	}()
 	AddData(JsonData)
+	time.Sleep(1 * time.Minute)
+
 	go CheckYoutube()
 	go CheckLiveBiliBili()
 	go CheckTwitch()
