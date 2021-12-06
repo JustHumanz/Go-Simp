@@ -123,13 +123,13 @@ jobs:
           tags: justhumanz/go-simp-frontend:${{ env.RELEASE_VERSION }}
 
       ### Web
-      -
-        name: Build and push web-vue
-        uses: docker/build-push-action@v2
-        with:
-          context: ./service/web-vue/
-          push: true
-          tags: justhumanz/go-simp-web-vue:${{ env.RELEASE_VERSION }}               
+      #-
+      #  name: Build and push web-vue
+      #  uses: docker/build-push-action@v2
+      #  with:
+      #    context: ./service/web-vue/
+      #    push: true
+      #    tags: justhumanz/go-simp-web-vue:${{ env.RELEASE_VERSION }}               
 
       ### Migrate
       -

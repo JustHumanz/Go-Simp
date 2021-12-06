@@ -170,8 +170,6 @@ func main() {
 	time.Sleep(5 * time.Minute)
 
 	go CheckSpaceBiliBili()
-	time.Sleep(5 * time.Minute)
-
 	go TwitterFanart()
 	time.Sleep(5 * time.Minute)
 	log.Info("Done")
