@@ -2114,6 +2114,96 @@
 			"Status": "Active"
 		},
 		{
+			"Name": "Luca",
+			"EN_Name": "Luca Kaneshiro",
+			"JP_Name": "ルカ・カネシロ",
+			"Twitter": {
+				"Twitter_Fanart": "#drawluca",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "luca_kaneshiro"
+			},
+			"Youtube": {
+				"Yt_ID": "UC7Gb7Uawe20QyFibhLl1lzA"
+			},
+			"BiliBili": null,
+			"Twitch": null,
+			"Region": "EN",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Shu",
+			"EN_Name": "Shu Yamino",
+			"JP_Name": "闇ノシュウ",
+			"Twitter": {
+				"Twitter_Fanart": "#YaminoArt",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "shu_yamino"
+			},
+			"Youtube": {
+				"Yt_ID": "UC7Gb7Uawe20QyFibhLl1lzA"
+			},
+			"BiliBili": null,
+			"Twitch": null,
+			"Region": "EN",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Ike",
+			"EN_Name": "Ike Eveland",
+			"JP_Name": "アイク・イーヴランド",
+			"Twitter": {
+				"Twitter_Fanart": "#Ikenography",
+				"Twitter_Lewd": "#SpicyIkey",
+				"Twitter_Username": "ike_eveland"
+			},
+			"Youtube": {
+				"Yt_ID": "UC4yNIKGvy-YUrwYupVdLDXA"
+			},
+			"BiliBili": null,
+			"Twitch": null,
+			"Region": "EN",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Mysta",
+			"EN_Name": "Mysta Rias",
+			"JP_Name": "ミスタ・リアス",
+			"Twitter": {
+				"Twitter_Fanart": "#MystArt",
+				"Twitter_Lewd": "#MystariASS",
+				"Twitter_Username": "Mysta_Rias"
+			},
+			"Youtube": {
+				"Yt_ID": "UCIM92Ok_spNKLVB5TsgwseQ"
+			},
+			"BiliBili": null,
+			"Twitch": null,
+			"Region": "EN",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Vox",
+			"EN_Name": "Vox Akuma",
+			"JP_Name": "ヴォックス・アクマ",
+			"Twitter": {
+				"Twitter_Fanart": "#AkumArt",
+				"Twitter_Lewd": "#VoXxX",
+				"Twitter_Username": "Vox_Akuma"
+			},
+			"Youtube": {
+				"Yt_ID": "UCckdfYDGrjojJM28n5SHYrA"
+			},
+			"BiliBili": null,
+			"Twitch": null,
+			"Region": "EN",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
 			"Name": "Yukie",
 			"EN_Name": "Yukie",
 			"JP_Name": "ユキエ",
