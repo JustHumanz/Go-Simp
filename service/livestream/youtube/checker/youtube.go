@@ -66,7 +66,7 @@ func main() {
 
 	GetPayload()
 	configfile.InitConf()
-	Bot = configfile.StartBot()
+	Bot = engine.StartBot()
 
 	database.Start(configfile)
 

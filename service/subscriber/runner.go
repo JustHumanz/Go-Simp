@@ -75,8 +75,8 @@ func main() {
 
 	GetPayload()
 	configfile.InitConf()
-	Bot = configfile.StartBot()
-	TwitchClient = configfile.GetTwitchTkn()
+	Bot = engine.StartBot()
+	TwitchClient = engine.GetTwitchTkn()
 
 	database.Start(configfile)
 

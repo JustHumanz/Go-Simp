@@ -25,6 +25,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/cenkalti/dominantcolor"
 	twitterscraper "github.com/n0madic/twitter-scraper"
+	"github.com/nicklaw5/helix"
 	"github.com/pbnjay/memory"
 	log "github.com/sirupsen/logrus"
 )
@@ -378,11 +379,20 @@ func YtFindType(title string) string {
 
 //GetAuthorAvatar Get twitter avatar
 func GetAuthorAvatar(username string) string {
-	profile, err := config.Scraper.GetProfile(username)
+	profile, err := InitTwitterScraper().GetProfile(username)
 	if err != nil {
 		log.Error(err)
 	}
 	return strings.Replace(profile.Avatar, "normal.jpg", "400x400.jpg", -1)
+}
+
+//GetTwitterFollow Scrapping twitter followers
+func GetTwitterFollow(UserName string) (twitterscraper.Profile, error) {
+	profile, err := InitTwitterScraper().GetProfile(UserName)
+	if err != nil {
+		return twitterscraper.Profile{}, err
+	}
+	return profile, nil
 }
 
 func RoundPrec(x float64, prec int) float64 {
@@ -811,4 +821,37 @@ func ParseInt64(value string) int64 {
 
 func GetMaxSqlConn() int {
 	return int((int64(memory.FreeMemory()/1024/1024) * 1024 * 1024) / 12582880)
+}
+
+func InitTwitterScraper() *twitterscraper.Scraper {
+	Scraper := twitterscraper.New()
+	Scraper.SetSearchMode(twitterscraper.SearchLatest)
+	if config.GoSimpConf.MultiTOR != "" {
+		err := Scraper.SetProxy("socks5://" + config.GoSimpConf.MultiTOR)
+		if err != nil {
+			log.Error(err)
+		}
+	}
+	return Scraper
+}
+
+func StartBot() *discordgo.Session {
+	i := config.GoSimpConf
+	tmp, err := discordgo.New("Bot " + i.Discord)
+	if err != nil {
+		log.Panic(err)
+	}
+	return tmp
+}
+
+func GetTwitchTkn() *helix.Client {
+	i := config.GoSimpConf
+	TwitchClient, err := helix.NewClient(&helix.Options{
+		ClientID:     i.Twitch.ClientID,
+		ClientSecret: i.Twitch.ClientSecret,
+	})
+	if err != nil {
+		log.Panic(err)
+	}
+	return TwitchClient
 }

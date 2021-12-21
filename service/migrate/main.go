@@ -104,7 +104,7 @@ func init() {
 	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 	RequestPay("Start migrate new vtuber")
 
-	Bot = configfile.StartBot()
+	Bot = engine.StartBot()
 	db = configfile.CheckSQL()
 	database.Start(configfile)
 	configfile.InitConf()

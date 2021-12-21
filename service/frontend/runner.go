@@ -123,7 +123,7 @@ func main() {
 
 		if !WaitMigrate || Counter == 6 {
 			log.Info("Start Frontend")
-			Bot = configfile.StartBot()
+			Bot = engine.StartBot()
 
 			err := Bot.Open()
 			if err != nil {

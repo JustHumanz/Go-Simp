@@ -18,7 +18,7 @@ func CheckTwitter() {
 	for _, Group := range *Payload {
 		for _, Name := range Group.Members {
 			if Name.TwitterName != "" && Name.Active() {
-				Twitter, err := Name.GetTwitterFollow()
+				Twitter, err := engine.GetTwitterFollow(Name.TwitterName)
 				if err != nil {
 					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 						Message: err.Error(),

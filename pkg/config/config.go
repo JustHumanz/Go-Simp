@@ -7,10 +7,7 @@ import (
 	"time"
 
 	"github.com/BurntSushi/toml"
-	"github.com/bwmarrin/discordgo"
 	_ "github.com/go-sql-driver/mysql"
-	twitterscraper "github.com/n0madic/twitter-scraper"
-	"github.com/nicklaw5/helix"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -39,7 +36,6 @@ var (
 	CommandURL  string
 	GuideURL    string
 	VtubersData string
-	Scraper     *twitterscraper.Scraper
 	Ytwaiting   = "???"
 	CdnDomain   string
 
@@ -169,7 +165,7 @@ type ConfigFile struct {
 	TopGG          string `toml:"TOPGG"`
 	Domain         string `toml:"Domain"`
 	PrometheusURL  string `toml:"PrometheusURL"`
-	LowResources   bool   `toml:"LowResources"` //Disable update like fanart & set wait every 5 counter
+	LowResources   bool   `toml:"LowResources"` //Disable update like clout fanart & set wait every 5 counter
 	Metric         bool   `toml:"Metric"`
 	Twitch         struct {
 		ClientID     string `toml:"ClientID"`
@@ -243,7 +239,7 @@ func (Data ConfigFile) CheckSQL() *sql.DB {
 	//make sure can access database
 	_, err = db.Exec(`SELECT NOW()`)
 	if err != nil {
-		log.Panic(err, " Something worng with database,make sure you create Vtuber database first")
+		log.Panic(err, " Something worng with database,i can't query")
 	}
 	return db
 }
@@ -277,15 +273,6 @@ func (Data ConfigFile) InitConf() {
 		GoSimpConf.LimitConf.YoutubeLimit = 15
 	}
 
-	Scraper = twitterscraper.New()
-	Scraper.SetSearchMode(twitterscraper.SearchLatest)
-	if Data.MultiTOR != "" {
-		err := Scraper.SetProxy("socks5://" + GoSimpConf.MultiTOR)
-		if err != nil {
-			log.Error(err)
-		}
-	}
-
 	if Data.BotPrefix.Bilibili == "" {
 		log.Fatal("Bilibili Prefix not found")
 	}
@@ -305,23 +292,4 @@ func (Data ConfigFile) InitConf() {
 	if Data.BotPrefix.Youtube == "" {
 		log.Fatal("Youtube Prefix not found")
 	}
-}
-
-func (i *ConfigFile) StartBot() *discordgo.Session {
-	tmp, err := discordgo.New("Bot " + i.Discord)
-	if err != nil {
-		log.Panic(err)
-	}
-	return tmp
-}
-
-func (i *ConfigFile) GetTwitchTkn() *helix.Client {
-	TwitchClient, err := helix.NewClient(&helix.Options{
-		ClientID:     i.Twitch.ClientID,
-		ClientSecret: i.Twitch.ClientSecret,
-	})
-	if err != nil {
-		log.Panic(err)
-	}
-	return TwitchClient
 }

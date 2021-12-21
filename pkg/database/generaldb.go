@@ -11,7 +11,6 @@ import (
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/go-redis/redis/v8"
-	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -869,15 +868,6 @@ func GetUserReminderList(ChannelIDDiscord int64, Member int64, Reminder int) ([]
 		}
 	}
 	return UserTagsList, nil
-}
-
-//GetTwitterFollow Scrapping twitter followers
-func (Data Member) GetTwitterFollow() (twitterscraper.Profile, error) {
-	profile, err := config.Scraper.GetProfile(Data.TwitterName)
-	if err != nil {
-		return twitterscraper.Profile{}, err
-	}
-	return profile, nil
 }
 
 //GetRanChannel get random id channel

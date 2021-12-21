@@ -67,7 +67,7 @@ func main() {
 	GetPayload()
 	configfile.InitConf()
 
-	Bot = configfile.StartBot()
+	Bot = engine.StartBot()
 
 	database.Start(configfile)
 
@@ -135,7 +135,7 @@ type checkTwJob struct {
 func (i *checkTwJob) Run() {
 	Cek := func(Group database.Group, w *sync.WaitGroup) {
 		defer w.Done()
-		Fanarts, err := engine.CreatePayload(Group, config.Scraper, config.GoSimpConf.LimitConf.TwitterFanart, *lewd)
+		Fanarts, err := engine.CreatePayload(Group, engine.InitTwitterScraper(), config.GoSimpConf.LimitConf.TwitterFanart, *lewd)
 		if err != nil {
 			log.WithFields(log.Fields{
 				"Group": Group.GroupName,
