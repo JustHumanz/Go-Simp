@@ -12,7 +12,7 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
 	github.com/mattn/go-runewidth v0.0.13 // indirect
-	github.com/n0madic/twitter-scraper v0.0.0-20211018203357-a2fb4f82473d
+	github.com/n0madic/twitter-scraper v0.0.0-20211207081801-e9df7a49736e
 	github.com/nicklaw5/helix v1.25.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/pbnjay/memory v0.0.0-20210728143218-7b4eea64cf58
@@ -24,7 +24,7 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 	github.com/top-gg/go-dbl v0.0.0-20201116001615-e844586b1159
 	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3 // indirect
-	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2
+	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac // indirect
