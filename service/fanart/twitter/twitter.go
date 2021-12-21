@@ -87,6 +87,8 @@ func main() {
 }
 
 func ReqRunningJob(client pilot.PilotServiceClient) {
+	Twit := &checkTwJob{}
+
 	for {
 		log.WithFields(log.Fields{
 			"Service": ModuleState,
@@ -108,7 +110,6 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 				"Running": false,
 			}).Info(res.Message)
 
-			Twit := &checkTwJob{}
 			Twit.Run()
 			time.Sleep(10 * time.Second)
 			_, _ = client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
@@ -172,5 +173,4 @@ func (i *checkTwJob) Run() {
 		i.Reverse = true
 	}
 	i.wg.Wait()
-
 }

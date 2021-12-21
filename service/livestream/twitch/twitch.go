@@ -98,6 +98,8 @@ type checkTwcJob struct {
 }
 
 func ReqRunningJob(client pilot.PilotServiceClient) {
+	Twitch := &checkTwcJob{}
+
 	for {
 		log.WithFields(log.Fields{
 			"Service": ModuleState,
@@ -119,7 +121,6 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 				"Running": false,
 			}).Info(res.Message)
 
-			Twitch := &checkTwcJob{}
 			Twitch.Run()
 			_, _ = client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
 				Service: ModuleState,

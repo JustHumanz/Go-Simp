@@ -87,6 +87,8 @@ type checkBlJob struct {
 }
 
 func ReqRunningJob(client pilot.PilotServiceClient) {
+	Bili := &checkBlJob{}
+
 	for {
 		log.WithFields(log.Fields{
 			"Service": ModuleState,
@@ -108,7 +110,6 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 				"Running": false,
 			}).Info(res.Message)
 
-			Bili := &checkBlJob{}
 			Bili.Run()
 			_, _ = client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
 				Service: ModuleState,
