@@ -172,6 +172,78 @@
 			"Region": "JP",
 			"Fanbase": "Yuragumi",
 			"Status": "Active"
+		},
+		{
+			"Name": "Naki",
+			"EN_Name": "Naki Kamizuki",
+			"JP_Name": "上月なき",
+			"Twitter": {
+				"Twitter_Fanart": "#NakiPaint",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "nakikamizuki"
+			},
+			"Youtube": {
+				"Yt_ID": "UCgM1sly6rnxqWe8GLbceEag"
+			},
+			"BiliBili": null,
+			"Twitch": null,
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Sumi",
+			"EN_Name": "Sumi Ushio",
+			"JP_Name": "海潮すみ",
+			"Twitter": {
+				"Twitter_Fanart": "#SumiDoArt",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "sumiushio"
+			},
+			"Youtube": {
+				"Yt_ID": "UCKRGwowORbvAnoeZ-G06duQ"
+			},
+			"BiliBili": null,
+			"Twitch": null,
+			"Region": "JP",
+			"Fanbase": "Sushimis",
+			"Status": "Active"
+		},
+		{
+			"Name": "Nagare",
+			"EN_Name": "Sara Nagare",
+			"JP_Name": "流サラ",
+			"Twitter": {
+				"Twitter_Fanart": "#SaraSketch",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "saranagare"
+			},
+			"Youtube": {
+				"Yt_ID": "UCkJ64W0J7R0zCSAsZfRIhVQ"
+			},
+			"BiliBili": null,
+			"Twitch": null,
+			"Region": "JP",
+			"Fanbase": "Saramours",
+			"Status": "Active"
+		},
+		{
+			"Name": "Anon",
+			"EN_Name": "Non Anon",
+			"JP_Name": "亜音ノン",
+			"Twitter": {
+				"Twitter_Fanart": "#NonArtNon",
+				"Twitter_Lewd": "#NonThingHere",
+				"Twitter_Username": "non_a_non"
+			},
+			"Youtube": {
+				"Yt_ID": "UCx_A6fns9qKjybu-6k0ur1g"
+			},
+			"BiliBili": null,
+			"Twitch": null,
+			"Region": "JP",
+			"Fanbase": "NonBunlievers",
+			"Status": "Active"
 		}
 	]
 }
