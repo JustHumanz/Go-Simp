@@ -38,6 +38,7 @@ var (
 	VtubersData string
 	Ytwaiting   = "???"
 	CdnDomain   string
+	PixivProxy  string
 
 	//LewdBlacklist
 	BlackList = []string{"loli", "gore"}
@@ -51,7 +52,6 @@ const (
 	GuildSupport      = "https://discord.com/invite/ydWC5knbJT"
 	PixivIllustsEnd   = "https://www.pixiv.net/ajax/illust/"
 	PixivUserEnd      = "https://www.pixiv.net/ajax/user/"
-	PixivProxy        = "https://cdn.humanz.moe/pixiv/?pixivURL="
 	Pilot             = "pilot:9000"
 	Prediction        = "prediction:9001"
 	Indie             = "independent"
@@ -268,6 +268,7 @@ func (Data ConfigFile) InitConf() {
 	CommandURL = fmt.Sprintf("https://go-simp.%s/Exec/", Data.Domain)
 	GuideURL = fmt.Sprintf("https://go-simp.%s/Guide/", Data.Domain)
 	VtubersData = fmt.Sprintf("https://go-simp.%s", Data.Domain)
+	PixivProxy = fmt.Sprintf("https://cdn.%s/pixiv/?pixivURL=", Data.Domain)
 
 	if Data.LimitConf.YoutubeLimit >= 15 {
 		GoSimpConf.LimitConf.YoutubeLimit = 15

@@ -24,7 +24,7 @@ services:
       - go-simp-net                                  
                                                      
   web-vue:                                           
-    image: justhumanz/go-simp-web-vue:${RELEASE_VERSION}                        
+    image: justhumanz/go-simp-web-vue:latest                        
     environment:                                     
       - RESTAPI=https://api.humanz.moe/              
     deploy:

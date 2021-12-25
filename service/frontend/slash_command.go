@@ -680,7 +680,7 @@ var (
 						SetTitle(Data.Author).
 						SetDescription(Data.Text).
 						SetURL(Data.PermanentURL).
-						SetImage(CDN+Data.Photos[0]).
+						SetImage(config.PixivProxy+Data.Photos[0]).
 						SetColor(Color).
 						InlineAllFields().
 						SetFooter(Data.State, config.PixivIMG).MessageEmbed
@@ -784,7 +784,7 @@ var (
 							SetTitle(Data.Author).
 							SetDescription(Data.Text).
 							SetURL(Data.PermanentURL).
-							SetImage(CDN+Data.Photos[0]).
+							SetImage(config.PixivProxy+Data.Photos[0]).
 							SetColor(Color).
 							InlineAllFields().
 							SetFooter(Data.State, config.PixivIMG).MessageEmbed

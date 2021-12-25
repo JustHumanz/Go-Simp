@@ -60,8 +60,6 @@ const (
 	Kings         = "kings"
 	Upvote        = "upvote"
 	Predick       = "prediction"
-
-	CDN = "https://cdn.humanz.moe/pixiv/?pixivURL="
 )
 
 func init() {

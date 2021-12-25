@@ -1,11 +1,13 @@
-name: build go-simp modules
+name: build & deploy go-simp modules manuals
 
-on:
-  create:
-    branches:
-      - 'master'
-    tags:
-      - 'v*.*.*'
+
+on: 
+  workflow_dispatch:
+    inputs:
+      versionTag:
+        description: 'new version of this build'
+        required: true  
+        default: 'latest'
 
 jobs:
   build:
@@ -13,10 +15,7 @@ jobs:
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v2
-      - 
-        name: Set env
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV        
+        uses: actions/checkout@v2        
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -31,7 +30,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - 
         name: Start build docker image
-        run: echo ${{ env.RELEASE_VERSION }}        
+        run: echo ${{ github.event.inputs.versionTag }}        
 
       #### Fanart    
       -
