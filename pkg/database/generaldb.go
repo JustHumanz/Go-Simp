@@ -695,7 +695,7 @@ func ChannelTag(MemberID int64, typetag int, Options string, Reg string) ([]Disc
 	if err != nil {
 		return nil, err
 	}
-	if len(val) == 0 {
+	if err == redis.Nil || len(val) == 0 {
 		if Options == "NotLiveOnly" {
 			rows, err = DB.Query(`Select Channel.id,DiscordChannelID,Dynamic,Lite,IndieNotif,VtuberGroup.id FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where VtuberMember.id=? AND (Channel.type=2 OR Channel.type=3) AND LiveOnly=0 AND (Channel.Region like ? OR Channel.Region='')`, MemberID, "%"+Reg+"%")
 			if err != nil {
@@ -849,24 +849,42 @@ func GetUserReminderList(ChannelIDDiscord int64, Member int64, Reminder int) ([]
 		UserTagsList  []string
 		DiscordUserID string
 		Type          bool
+		Key           = strconv.Itoa(int(ChannelIDDiscord)) + strconv.Itoa(int(Member)) + strconv.Itoa(int(Reminder))
+		rds           = UserTagCache
+		ctx           = context.Background()
 	)
-	rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id=? And Reminder=?`, ChannelIDDiscord, Member, Reminder)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		err = rows.Scan(&DiscordUserID, &Type)
+	val2, err := rds.LRange(ctx, Key, 0, -1).Result()
+	if err == redis.Nil || len(val2) == 0 {
+		rows, err := DB.Query(`SELECT DiscordID,Human From User WHERE Channel_id=? And VtuberMember_id=? And Reminder=?`, ChannelIDDiscord, Member, Reminder)
 		if err != nil {
 			return nil, err
 		}
-		if Type {
-			UserTagsList = append(UserTagsList, "<@"+DiscordUserID+">")
-		} else {
-			UserTagsList = append(UserTagsList, "<@&"+DiscordUserID+">")
+		defer rows.Close()
+
+		for rows.Next() {
+			err = rows.Scan(&DiscordUserID, &Type)
+			if err != nil {
+				return nil, err
+			}
+			if Type {
+				UserTagsList = append(UserTagsList, "<@"+DiscordUserID+">")
+			} else {
+				UserTagsList = append(UserTagsList, "<@&"+DiscordUserID+">")
+			}
 		}
+		err = rds.LPush(ctx, Key, UserTagsList).Err()
+		if err != nil {
+			log.Error(err)
+		}
+
+		err = rds.Expire(ctx, Key, config.GetUserListTTL).Err()
+		if err != nil {
+			log.Error(err)
+		}
+	} else {
+		UserTagsList = val2
 	}
+
 	return UserTagsList, nil
 }
 

@@ -820,7 +820,12 @@ func ParseInt64(value string) int64 {
 }
 
 func GetMaxSqlConn() int {
-	return int((int64(memory.FreeMemory()/1024/1024) * 1024 * 1024) / 12582880)
+	a := int((int64(memory.FreeMemory()/1024/1024) * 1024 * 1024) / 12582880)
+	//Avoid discord Rate Limit
+	if a > 100 {
+		return 100
+	}
+	return a
 }
 
 func InitTwitterScraper() *twitterscraper.Scraper {
