@@ -73,7 +73,7 @@ jobs:
         name: SSH and deploy to server
         uses: fifsky/ssh-action@master
         with:
-          host: go-simp.humanz.moe
+          host: ${{ secrets.REMOTE_HOST }}
           user: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           command: |
