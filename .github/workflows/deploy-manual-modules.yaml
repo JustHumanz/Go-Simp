@@ -156,9 +156,8 @@ jobs:
           user: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           command: |
-            export RELEASE_VERSION=${{ env.RELEASE_VERSION }}
-            export TOPGG=${{ env.TOPGG }}
+            export RELEASE_VERSION=${{ github.event.inputs.versionTag }}
             cd Go-Simp/swarm && git pull
-            docker stack deploy -c live.yaml livestream
-            docker stack deploy -c fanart.yaml fanart
-            docker stack deploy -c utility.yaml utility
+            docker stack deploy -c live.yaml livestream --with-registry-auth
+            docker stack deploy -c fanart.yaml fanart --with-registry-auth
+            docker stack deploy -c utility.yaml utility --with-registry-auth

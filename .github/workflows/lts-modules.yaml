@@ -81,4 +81,4 @@ jobs:
             export TOPGG=${{ env.TOPGG }}
             cd Go-Simp/swarm
             sudo git pull
-            docker stack deploy -c main.yaml engine
+            docker stack deploy -c main.yaml engine --with-registry-auth
