@@ -862,19 +862,22 @@ func GetUserReminderList(ChannelIDDiscord int64, Member int64, Reminder int) ([]
 		defer rows.Close()
 
 		for rows.Next() {
+			tmp := ""
 			err = rows.Scan(&DiscordUserID, &Type)
 			if err != nil {
 				return nil, err
 			}
 			if Type {
-				UserTagsList = append(UserTagsList, "<@"+DiscordUserID+">")
+				tmp = "<@" + DiscordUserID + ">"
 			} else {
-				UserTagsList = append(UserTagsList, "<@&"+DiscordUserID+">")
+				tmp = "<@&" + DiscordUserID + ">"
 			}
-		}
-		err = rds.LPush(ctx, Key, UserTagsList).Err()
-		if err != nil {
-			log.Error(err)
+
+			UserTagsList = append(UserTagsList, tmp)
+			err = rds.LPush(ctx, Key, tmp).Err()
+			if err != nil {
+				log.Error(err)
+			}
 		}
 
 		err = rds.Expire(ctx, Key, config.GetUserListTTL).Err()
