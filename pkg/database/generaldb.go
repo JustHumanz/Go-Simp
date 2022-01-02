@@ -268,7 +268,7 @@ func (Data *UserStruct) Adduser() error {
 	}
 	tmp := CheckUser(Data.DiscordID, Data.Member.ID, ChannelID)
 	if tmp {
-		return errors.New("Already registered")
+		return errors.New("already registered")
 	} else {
 		stmt, err := DB.Prepare(`INSERT INTO User (DiscordID,DiscordUserName,Human,Reminder,VtuberMember_id,Channel_id) values(?,?,?,?,?,?)`)
 		if err != nil {
@@ -346,7 +346,7 @@ func (Data UserStruct) Deluser() error {
 		stmt.Exec(Data.DiscordID, Data.Member.ID, ChannelID)
 		return nil
 	} else {
-		return errors.New("Already removed or you not in tag list")
+		return errors.New("already removed or you not in tag list")
 	}
 }
 

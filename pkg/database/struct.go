@@ -61,38 +61,23 @@ func (Data Member) IsMemberNill() bool {
 }
 
 func (Data Member) Active() bool {
-	if Data.Status == "Active" {
-		return true
-	}
-	return false
+	return Data.Status == "Active"
 }
 
 func (Data Member) IsYtNill() bool {
-	if Data.YoutubeAvatar != "" {
-		return false
-	}
-	return true
+	return Data.YoutubeAvatar != ""
 }
 
 func (Data Member) IsTwitchNill() bool {
-	if Data.TwitchAvatar != "" {
-		return false
-	}
-	return true
+	return Data.TwitchAvatar != ""
 }
 
 func (Data Member) IsBiliNill() bool {
-	if Data.BiliRoomID != 0 {
-		return false
-	}
-	return true
+	return Data.BiliRoomID != 0
 }
 
 func (Data Member) IsTwNill() bool {
-	if Data.TwitterName != "" {
-		return false
-	}
-	return true
+	return Data.TwitterName != ""
 }
 
 type LiveStream struct {

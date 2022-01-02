@@ -35,7 +35,7 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 		}
 
 		if Data.ID == 0 {
-			return errors.New("Vtuber don't have any fanart in Twitter")
+			return errors.New("vtuber don't have any fanart in Twitter")
 		}
 		Data.State = config.TwitterArt
 		return nil
@@ -54,7 +54,7 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 			}
 		}
 		if Data.ID == 0 {
-			return errors.New("Vtuber don't have any fanart in BiliBili")
+			return errors.New("vtuber don't have any fanart in BiliBili")
 		}
 
 		Data.State = config.BiliBiliArt
@@ -75,7 +75,7 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 			}
 		}
 		if Data.ID == 0 {
-			return errors.New("Vtuber don't have any fanart in Pixiv")
+			return errors.New("vtuber don't have any fanart in Pixiv")
 		}
 
 		Data.State = config.PixivArt
@@ -118,7 +118,7 @@ func GetLewd(GroupID, MemberID int64) (*DataFanart, error) {
 	if err != nil {
 		return nil, err
 	} else if err == sql.ErrNoRows {
-		return nil, errors.New("Vtuber don't have any fanart in Twitter")
+		return nil, errors.New("vtuber don't have any fanart in Twitter")
 	}
 
 	defer rows.Close()
