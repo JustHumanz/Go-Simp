@@ -9,6 +9,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+//Send new fanart to discord channel
 func SendFanArtNude(Art database.DataFanart, Bot *discordgo.Session, Color int) {
 	Art.Group.RemoveNillIconURL()
 	for _, Member := range Art.Group.Members {

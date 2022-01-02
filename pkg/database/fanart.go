@@ -167,6 +167,7 @@ func (Data DataFanart) DeleteFanart(e string) error {
 	}
 }
 
+//Add new lewd fanart
 func AddLewd(Data DataFanart) error {
 	stmt, err := DB.Prepare(`INSERT INTO Lewd (PermanentURL,Author,Photos,Videos,Text,TweetID,PixivID,VtuberMember_id) values(?,?,?,?,?,?,?,?)`)
 	if err != nil {
@@ -255,6 +256,7 @@ func (FanArt DataFanart) CheckTweetFanArt() (bool, error) {
 	return false, nil
 }
 
+//Check if `this` was a new fanart
 func (FanArt DataFanart) CheckTBiliBiliFanArt() (bool, error) {
 	var tmp int64
 	row := DB.QueryRow("SELECT id FROM Vtuber.TBiliBili where Dynamic_id=?", FanArt.Dynamic_id)
@@ -287,6 +289,7 @@ func (FanArt DataFanart) CheckTBiliBiliFanArt() (bool, error) {
 
 }
 
+//Check if `this` was a new fanart
 func (FanArt DataFanart) CheckPixivFanArt() (bool, error) {
 	if FanArt.Lewd {
 		var tmp int64
@@ -435,6 +438,7 @@ func (Data *DataFanart) SetState(new string) *DataFanart {
 	return Data
 }
 
+//Get random fanart from group struct
 func (p *Group) GetRandomFanart() (*DataFanart, error) {
 	b, err := GetFanart(p.ID, 0)
 	if err != nil {
@@ -443,6 +447,7 @@ func (p *Group) GetRandomFanart() (*DataFanart, error) {
 	return b, nil
 }
 
+//Get random fanart from member struct
 func (p *Member) GetRandomFanart() (*DataFanart, error) {
 	b, err := GetFanart(0, p.ID)
 	if err != nil {
@@ -451,6 +456,7 @@ func (p *Member) GetRandomFanart() (*DataFanart, error) {
 	return b, nil
 }
 
+//Get random lewd fanart from group struct
 func (p *Group) GetRandomLewd() (*DataFanart, error) {
 	b, err := GetLewd(p.ID, 0)
 	if err != nil {
@@ -459,6 +465,7 @@ func (p *Group) GetRandomLewd() (*DataFanart, error) {
 	return b, nil
 }
 
+//Get random lewd fanart from member struct
 func (p *Member) GetRandomLewd() (*DataFanart, error) {
 	b, err := GetLewd(0, p.ID)
 	if err != nil {

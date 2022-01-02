@@ -13,78 +13,19 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func YtGetStatusGroup(Payload map[string]interface{}) ([]LiveStream, string, error) {
-	GroupID := Payload["GroupID"].(int64)
-	GroupName := Payload["GroupName"].(string)
-	GroupRegion := Payload["Region"].(string)
-	YtChannelID := Payload["YtChannel"].(string)
-	Status := Payload["Status"].(string)
-	State := Payload["State"].(string)
-	var (
-		list LiveStream
-		Data []LiveStream
-	)
-	Key := State + "-" + Status + "-" + GroupName + "-" + GroupRegion
-
-	val, err := LiveCache.LRange(context.Background(), Key, 0, -1).Result()
-	if err != nil {
-		return nil, Key, err
-	}
-	if len(val) == 0 {
-		if State == "yt" {
-			rows, err := DB.Query("SELECT GroupVideos.*,GroupYoutube.YoutubeChannel,GroupYoutube.Region FROM Vtuber.GroupVideos inner join GroupYoutube on GroupYoutube.VtuberGroup_id=GroupVideos.VtuberGroup_id Where GroupVideos.VtuberGroup_id=? AND Status=? AND YoutubeChannel=? Order by PublishedAt DESC", GroupID, Status, YtChannelID)
-			if err != nil {
-				return nil, Key, err
-			}
-			defer rows.Close()
-
-			if !rows.Next() {
-				return nil, Key, errors.New("not found any schdule")
-			}
-
-			for rows.Next() {
-				tmp := false
-				err = rows.Scan(&list.ID, &list.VideoID, &list.Type, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.End, &list.Viewers, &list.Length, &tmp, &list.Group.ID, &list.GroupYoutube.YtChannel, &list.GroupYoutube.Region)
-				if err != nil {
-					return nil, Key, err
-				}
-
-				Data = append(Data, list)
-				err = LiveCache.LPush(context.Background(), Key, list).Err()
-				if err != nil {
-					return nil, Key, err
-				}
-			}
-
-			if Data == nil {
-				return nil, Key, errors.New("not found any schdule")
-			}
-		}
-	} else {
-		for _, result := range unique(val) {
-			err := json.Unmarshal([]byte(result), &list)
-			if err != nil {
-				return nil, Key, err
-			}
-			Data = append(Data, list)
-		}
-	}
-	return Data, Key, nil
-}
-
 //YtGetStatusMap Get Youtube data from status
 func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 	var (
-		Data []LiveStream
-		list LiveStream
-		Key  []string //= strconv.Itoa(int(Member)) + Status + Region + Uniq
-		rows *sql.Rows
-		err  error
-		ctx  = context.Background()
+		Data          []LiveStream
+		list          LiveStream
+		Key           []string //= strconv.Itoa(int(Member)) + Status + Region + Uniq
+		rows          *sql.Rows
+		err           error
+		ctx           = context.Background()
+		Group, Member int64
+		Status        = Payload["Status"].(string)
+		Region        string
 	)
-	var Group, Member int64
-	Status := Payload["Status"].(string)
-	var Region string
 
 	if Payload["GroupID"] != nil {
 		Group = Payload["GroupID"].(int64)
@@ -99,8 +40,8 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 		Member = Payload["MemberID"].(int64)
 		Key = append(Key, strconv.Itoa(int(Member)), Payload["MemberName"].(string))
 	}
-	Key = append(Key, Status, Payload["State"].(string))
-	Key2 := strings.Join(Key, "-")
+
+	Key2 := strings.Join(append(Key, Status, Payload["State"].(string)), "-")
 
 	val, err := LiveCache.LRange(ctx, Key2, 0, -1).Result()
 	if err != nil {
@@ -144,28 +85,32 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 		}
 
 		if !rows.Next() {
-			return nil, Key2, errors.New("not found any schdule")
-		}
-
-		for rows.Next() {
-			err = rows.Scan(&list.ID, &list.VideoID, &list.Type, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.End, &list.Viewers, &list.Length, &list.Member.ID)
+			log.WithFields(log.Fields{
+				"State": Payload["State"],
+				"Key":   Key2,
+			}).Warn("not found any schdule,set value to empty")
+			err = LiveCache.LPush(ctx, Key2, LiveStream{}).Err()
 			if err != nil {
 				return nil, Key2, err
 			}
-			UpcominginHours := int(time.Until(list.Schedul).Hours())
-			if UpcominginHours > 730 && Status != config.PastStatus || Status == config.Live && UpcominginHours > 168 {
-				continue
-			}
 
-			Data = append(Data, list)
-			err = LiveCache.LPush(ctx, Key2, list).Err()
-			if err != nil {
-				return nil, Key2, err
-			}
-		}
+		} else {
+			for rows.Next() {
+				err = rows.Scan(&list.ID, &list.VideoID, &list.Type, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.End, &list.Viewers, &list.Length, &list.Member.ID)
+				if err != nil {
+					return nil, Key2, err
+				}
+				UpcominginHours := int(time.Until(list.Schedul).Hours())
+				if UpcominginHours > 730 && Status != config.PastStatus || Status == config.Live && UpcominginHours > 168 {
+					continue
+				}
 
-		if Data == nil {
-			return nil, Key2, errors.New("not found any schdule")
+				Data = append(Data, list)
+				err = LiveCache.LPush(ctx, Key2, list).Err()
+				if err != nil {
+					return nil, Key2, err
+				}
+			}
 		}
 
 		log.WithFields(log.Fields{
@@ -190,6 +135,12 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 			if err != nil {
 				return nil, Key2, err
 			}
+
+			//Skip empty data
+			if list.YtIsEmpty() {
+				continue
+			}
+
 			Data = append(Data, list)
 		}
 	}
@@ -239,12 +190,9 @@ func (Data *LiveStream) InputYt() (int64, error) {
 	}
 }
 
+//YtIsEmpty?
 func (Data LiveStream) YtIsEmpty() bool {
-	if Data.VideoID != "" {
-		return false
-	} else {
-		return true
-	}
+	return Data.VideoID != ""
 }
 
 //Check new video or not

@@ -75,6 +75,7 @@ func GetGroups() ([]Group, error) {
 	return Data, nil
 }
 
+//Get vtuber agency yt channel
 func GetGroupsYtChannel(i int64) ([]GroupYtChannel, error) {
 	rows, err := DB.Query(`SELECT YoutubeChannel,Region FROM GroupYoutube where VtuberGroup_id=?`, i)
 	if err != nil {

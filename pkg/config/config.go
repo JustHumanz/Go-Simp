@@ -244,7 +244,7 @@ func (Data ConfigFile) CheckSQL() *sql.DB {
 	return db
 }
 
-//InitConf initializing config file
+//InitConf initializing config file with your domain
 func (Data ConfigFile) InitConf() {
 	GoSimpConf = Data
 	CdnDomain = fmt.Sprintf("https://cdn.%s/", Data.Domain)

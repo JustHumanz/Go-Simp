@@ -14,6 +14,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+//Send live notif to discord channel
 func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 	FanBase := "simps"
 	Color := func() int {

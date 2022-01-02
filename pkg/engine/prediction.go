@@ -9,6 +9,7 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/network"
 )
 
+//Get Prediction from prometheus
 func Prediction(vtuber database.Member, state string, tar int) (int, error) {
 
 	type PromeMetric struct {

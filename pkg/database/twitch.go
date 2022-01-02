@@ -4,6 +4,7 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 )
 
+//Get data of member twitch
 func GetTwitch(MemberID int64) (*LiveStream, error) {
 	var Data LiveStream
 	err := DB.QueryRow("SELECT * FROM Vtuber.Twitch Where VtuberMember_id=?", MemberID).Scan(&Data.ID, &Data.Game, &Data.Status, &Data.Title, &Data.Thumb, &Data.Schedul, &Data.End, &Data.Viewers, &MemberID)

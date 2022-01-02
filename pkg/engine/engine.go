@@ -828,6 +828,7 @@ func GetMaxSqlConn() int {
 	return a
 }
 
+//Init twitter scrapper with or without proxy
 func InitTwitterScraper() *twitterscraper.Scraper {
 	Scraper := twitterscraper.New()
 	Scraper.SetSearchMode(twitterscraper.SearchLatest)
@@ -840,6 +841,7 @@ func InitTwitterScraper() *twitterscraper.Scraper {
 	return Scraper
 }
 
+//Start bot
 func StartBot() *discordgo.Session {
 	i := config.GoSimpConf
 	tmp, err := discordgo.New("Bot " + i.Discord)
@@ -849,6 +851,7 @@ func StartBot() *discordgo.Session {
 	return tmp
 }
 
+//Get twitch token
 func GetTwitchTkn() *helix.Client {
 	i := config.GoSimpConf
 	TwitchClient, err := helix.NewClient(&helix.Options{
