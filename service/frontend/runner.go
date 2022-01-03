@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
@@ -520,7 +521,7 @@ func (Data *ChannelRegister) AddRegion() {
 		}
 	}
 
-	Data.BreakPoint(4)
+	Data.BreakPoint(time.Duration(len(RegEmoji)) * time.Second)
 	Data.FixRegion("add")
 	Data.ChannelState.UpdateChannel(config.Region)
 
@@ -577,7 +578,7 @@ func (Data *ChannelRegister) DelRegion() {
 		}
 	}
 	Data.UpdateMessageID(MsgID)
-	Data.BreakPoint(4)
+	Data.BreakPoint(time.Duration(len(RegEmoji)) * time.Second)
 	Data.FixRegion("del")
 	err = Data.ChannelState.UpdateChannel(config.Region)
 	if err != nil {
