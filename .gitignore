@@ -9,6 +9,7 @@ rev_proxy/
 *prod*
 __pycache__
 lib
+lib64
 bin
 pyvenv.cfg
 node_modules/*
