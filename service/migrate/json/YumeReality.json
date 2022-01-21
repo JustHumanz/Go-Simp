@@ -100,6 +100,60 @@
       "Region": "ID",
       "Fanbase": "",
       "Status": "Active"
+    },
+    {
+      "Name": "Suika",
+      "EN_Name": "Keroro Suika",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#Keroative",
+        "Twitter_Lewd": "#CuiYabe",
+        "Twitter_Username": "KeroroSuika"
+      },
+      "Youtube": {
+        "Yt_ID": "UChbnRHntm3eSvUazYBjy6_Q"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Aika",
+      "EN_Name": "Aika Meru",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#Pandraw",
+        "Twitter_Lewd": "#MeLewd",
+        "Twitter_Username": "aikamewu"
+      },
+      "Youtube": {
+        "Yt_ID": "UC3tZI-nRXL6wRZjmNoHZ9dA"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Keiya",
+      "EN_Name": "Koguma Keiya",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#keiyatip",
+        "Twitter_Lewd": "#keiyabai",
+        "Twitter_Username": "KogumaKeiya"
+      },
+      "Youtube": {
+        "Yt_ID": "UC7-rH4CNst59je-r0D7ZWpg"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
     }
   ]
 }
