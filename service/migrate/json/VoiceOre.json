@@ -113,6 +113,24 @@
 			"Region": "JP",
 			"Fanbase": "",
 			"Status": "Active"
-		}
+		},
+		{
+			"Name": "BenikabaSakura",
+			"EN_Name": "Benikaba Sakura",
+			"JP_Name": "紅樺さくら",
+			"Twitter": {
+				"Twitter_Fanart": "#さくらすけっち",
+				"Twitter_Lewd": "#紅色リップ",
+				"Twitter_Username": "benikaba_sakura"
+			},
+			"Youtube": {
+				"Yt_ID": "UCsvLzyduqA3GZC7cBRixxRg"
+			},
+			"BiliBili": null,
+			"Twitch": null,
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		}		
 	]
 }
