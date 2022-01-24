@@ -280,6 +280,14 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 					log.Panic(err)
 				}
 
+				oneWeek := time.Now()
+				if expiresAt.Hour() > oneWeek.Hour() {
+					log.WithFields(log.Fields{
+						"Past video": "video more than 1 week",
+					}).Warn("From private to past")
+					return
+				}
+
 				for i, v := range ChannelData {
 					v.SetMember(Data.Member)
 
