@@ -18,12 +18,6 @@ app.debug = True
 app.config['SECRET_KEY'] = OAUTH2_CLIENT_SECRET
 
 groups = get_groups()
-all_region = []
-
-for i in groups:
-    for k in i["Region"]:
-        if k not in all_region:
-            all_region.append(k)
 
 if 'http://' in OAUTH2_REDIRECT_URI:
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = 'true'
@@ -67,7 +61,7 @@ def callback():
         client_secret=OAUTH2_CLIENT_SECRET,
         authorization_response=request.url)
     session['oauth2_token'] = token
-    return redirect(url_for('.guilds'))
+    return redirect("http://localhost:8080/#/guilds")
 
 
 @app.route('/guilds')
@@ -78,9 +72,13 @@ def guilds():
         if int(i["permissions"]) & 8208:
             isVtbot = requests.get(API_BASE_URL+f'/guilds/{i["id"]}',headers=bot_headers)
             if isVtbot.status_code == 200:
-                guilds.append(i)
-    #return jsonify(guilds=guilds)
-    return render_template("guilds.html",guilds = guilds)
+                guilds.append(i)            
+
+    response = jsonify({'guilds': guilds})
+    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:8080')    
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response
+    #return render_template("guilds.html",guilds = guilds)
 
 @app.route('/guilds/<guild_id>/channels')
 def channels(guild_id):
@@ -89,57 +87,61 @@ def channels(guild_id):
         return redirect("/")
     channels = requests.get(API_BASE_URL + f'/guilds/{guild_id}/channels',headers=bot_headers).json()
     channels_info = {
-        "agency" : {},
         "guild_channel": [],
-        "all_region": all_region,
     }
-    
+
     for i in channels:
         if i["parent_id"] is None:
             continue
         channels_info["guild_channel"].append(i)
-        
-    channels_info["agency"] =  groups
 
-    #return jsonify(channels_info=channels_info)
-    return render_template("channels.html",channels_info=channels_info)
+    response = jsonify(channels_info)
+    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:8080')    
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response
 
-@app.route('/channel/<channel_id>/<agency_id>',methods=['GET'])
-def channel(channel_id,agency_id):
+@app.route('/channel/<channel_id>/agency',methods=['GET'])
+def channel(channel_id):
     discord = make_session(token=session.get('oauth2_token'))
     if len(discord.token.keys()) < 1:
         return redirect("/")
     
-    channel_data = get_channel_info(agency_id,channel_id)
-
-    region = {}
-    for i in groups:
-        if int(i["id"]) == int(agency_id):
-            if channel_data == []:
-                return  jsonify(channel_data={
+    agency_list = []
+    for k in groups:
+        agency_id = k["id"]
+        channel_data = get_channel_info(agency_id,channel_id)
+        if channel_data == []:
+            agency_list.append({
+                "agency_name": k["VtuberGroupName"],
+                "agency_id": agency_id,
+                "agency_icon": k["VtuberGroupIcon"],
+                "agency_region": k["Region"],
+                "channel_region": [],
                 "channel_id": channel_id,
-                "dynamic": None,
-                "indie_notif": None,
-                "upcoming": None,
-                "lite": None,
-                "region": i["Region"],
-                "type" : None,
-            })            
+                "dynamic": False,
+                "indie_notif": False,
+                "lite": False,
+                "upcoming": False,
+                "type" : False})
 
-            for k in i["Region"]:
-                region[k] = False
-                if k in channel_data[0]["Region"]:
-                    region[k] = True
+        else:
+            agency_list.append({
+                "agency_name": k["VtuberGroupName"],
+                "agency_id": agency_id,                
+                "agency_icon": k["VtuberGroupIcon"],
+                "channel_id": channel_data[0]["DiscordChannelID"],
+                "dynamic": bool(channel_data[0]["Dynamic"]),
+                "indie_notif": bool(channel_data[0]["IndieNotif"]),
+                "lite": bool(channel_data[0]["Lite"]),
+                "upcoming": bool(channel_data[0]["NewUpcoming"]),
+                "agency_region": k["Region"],
+                "channel_region": channel_data[0]["Region"].split(","),                
+                "type" : channel_data[0]["Type"],})
 
-    return jsonify(channel_data={
-        "channel_id": channel_data[0]["DiscordChannelID"],
-        "dynamic": bool(channel_data[0]["Dynamic"]),
-        "indie_notif": bool(channel_data[0]["IndieNotif"]),
-        "lite": bool(channel_data[0]["Lite"]),
-        "upcoming": bool(channel_data[0]["NewUpcoming"]),
-        "region": channel_data[0]["Region"].split(","),
-        "type" : channel_data[0]["Type"],
-    })
+    response = jsonify(agency_list)
+    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:8080')    
+    response.headers.add('Access-Control-Allow-Credentials', 'true')                
+    return response
 
 
 

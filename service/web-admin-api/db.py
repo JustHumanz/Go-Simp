@@ -1,4 +1,5 @@
 import mysql.connector
+import os
 
 VTDB = mysql.connector.connect(
   host="localhost",
