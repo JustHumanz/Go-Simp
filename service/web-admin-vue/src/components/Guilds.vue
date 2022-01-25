@@ -18,6 +18,7 @@
 
 <script>
 import axios from 'axios';
+import Config from "../config.json";
 
 export default {
   name: 'Guilds',
@@ -27,12 +28,17 @@ export default {
     }
   },
   mounted(){
-      axios.get("http://localhost:5000/guilds",{
+      axios.get(Config.REST_API+"/guilds",{
           withCredentials: true,
       })
       .then(response => {
           this.msg = response.data
-      })
+      }).catch((error) => {
+        // error.response.status Check status code
+        console.log(error)
+    }).finally(() => {
+        //Perform action in always
+    });
   }
 }
 </script>

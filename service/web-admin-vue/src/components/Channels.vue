@@ -19,6 +19,7 @@
 
 <script>
 import axios from 'axios';
+import Config from "../config.json";
 
 export default {
   name: 'Channel',
@@ -28,12 +29,17 @@ export default {
     }
   },
   mounted(){
-      axios.get("http://localhost:5000/guilds/"+this.$route.params.id+"/channels",{
+      axios.get(Config.REST_API+"/guilds/"+this.$route.params.id+"/channels",{
           withCredentials: true,
       })
       .then(response => {
           this.msg = response.data
-      })
+      }).catch((error) => {
+            // error.response.status Check status code
+            console.log(error)
+        }).finally(() => {
+            //Perform action in always
+        });
   },
 }
 </script>

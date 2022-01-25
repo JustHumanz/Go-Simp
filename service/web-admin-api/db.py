@@ -29,3 +29,35 @@ def get_groups():
       agency.append(i)
 
     return agency
+
+def update_channel_db(data):
+  if get_channel_info(data["agency_id"],data["channel_id"]) != []:
+    print("Update channel",data["channel_id"],"agency",data["agency_id"])
+    query = "UPDATE Channel SET Type = %s,NewUpcoming = %s,Dynamic = %s,Region = %s,Lite= %s,IndieNotif= %s WHERE DiscordChannelID = %s and VtuberGroup_id = %s"
+    var = (
+      data["channel_type"],
+      data["upcoming"],
+      data["dynamic"],
+      data["region"],
+      data["lite"],
+      data["indie"],
+      data["channel_id"],
+      data["agency_id"]
+    )
+    VTcursor.execute(query,var)
+    VTDB.commit()
+  else:
+    print("Add new channel",data["channel_id"],"agency",data["agency_id"])
+    query = "INSERT INTO Channel (Type,NewUpcoming,Dynamic,Region,Lite,IndieNotif,DiscordChannelID,VtuberGroup_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
+    var = (
+      data["channel_type"],
+      data["upcoming"],
+      data["dynamic"],
+      data["region"],
+      data["lite"],
+      data["indie"],
+      data["channel_id"],
+      data["agency_id"]      
+    )
+    VTcursor.execute(query,var)
+    VTDB.commit()    

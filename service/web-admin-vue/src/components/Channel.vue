@@ -1,7 +1,7 @@
 <template>
     <div class="container p-5">
       <div class="text-center">
-        <h1> {{this.$route.params.id}}</h1>
+        <h1> {{channel_name}}</h1>
       </div>
     <div class="row row-cols-1 row-cols-md-4">
         <div class="col mb-4" v-for="v in msg" :key="v.agency_id">
@@ -34,7 +34,7 @@
                           <b-icon v-b-popover.hover.top="'Enable new livestreams notification'" title="Upcoming" icon="info-circle"></b-icon>
                         </div>                        
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="lite_mode" v-model="v.lite_mode">
+                            <input class="form-check-input" type="checkbox" name="lite_mode" v-model="v.lite">
                             <label class="form-check-label" for="checkbox">
                                 lite mode 
                             </label>
@@ -114,7 +114,7 @@
                           <b-icon v-b-popover.hover.top="'Enable new livestreams notification'" title="Upcoming" icon="info-circle"></b-icon>
                         </div>                        
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="lite_mode" v-model="v.lite_mode">
+                            <input class="form-check-input" type="checkbox" name="lite_mode" v-model="v.lite">
                             <label class="form-check-label" for="checkbox">
                                 lite mode 
                             </label>
@@ -171,27 +171,41 @@
 
 <script>
 import axios from 'axios';
+import Config from "../config.json";
 
 export default {
   name: 'Channel',
   data () {
     return {
-      msg: []
+      msg: [],
+      channel_name: '',
+      is_nsfw: '',
     }
   },
   mounted(){
-      axios.get("http://localhost:5000/channel/"+this.$route.params.id+"/agency",{
+      axios.get(Config.REST_API+"/channel/"+this.$route.params.id+"/agency",{
           withCredentials: true,
       })
       .then(response => {
-        response.data.forEach((element) => {
+        this.channel_name = response.data['channel_name']
+        this.is_nsfw = response.data['is_nsfw']
+
+        response.data['agency_list'].forEach((element) => {
+          if (response.data['is_nsfw']) {
           element.channel_type = [
-          {text: "Fanart"},
-          {text: "Livestream"},
-          {text: "Lewd"},
-          {text: "Fanart & Livestream"},
-          {text: "Fanart & Lewd"},
-        ]
+            {text: "Fanart"},
+            {text: "Livestream"},
+            {text: "Lewd"},
+            {text: "Fanart & Livestream"},
+            {text: "Fanart & Lewd"},
+          ]
+          } else{
+          element.channel_type = [
+            {text: "Fanart"},
+            {text: "Livestream"},
+            {text: "Fanart & Livestream"},
+          ]            
+          }
         element.modal = false
           this.msg.push(element)
         });
@@ -200,7 +214,7 @@ export default {
       submitForm(agency_id){
         this.msg.forEach((element) => {
           if (element.agency_id == agency_id) {            
-            axios.post('http://localhost:5000/channel/'+this.$route.params.id+'/update', element,{withCredentials: true,})
+            axios.post(Config.REST_API+'/channel/'+this.$route.params.id+'/update', element,{withCredentials: true,})
                   .then((res) => {
                       console.log(res)
                   })
