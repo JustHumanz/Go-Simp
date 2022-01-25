@@ -104,7 +104,6 @@ func init() {
 	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 	RequestPay("Start migrate new vtuber")
 
-	Bot = engine.StartBot()
 	db = configfile.CheckSQL()
 	database.Start(configfile)
 	configfile.InitConf()
@@ -115,6 +114,7 @@ func init() {
 	} //[]string{"Cookie", "SESSDATA=" + configfile.BiliSess}
 	Limit = 100
 
+	Bot = engine.StartBot()
 	err = Bot.Open()
 	if err != nil {
 		log.Error(err)
