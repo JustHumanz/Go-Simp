@@ -25,7 +25,17 @@ if 'http://' in OAUTH2_REDIRECT_URI:
 def token_updater(token):
     session['oauth2_token'] = token
 
-
+def channel_type(num):
+    if num == 1:
+        return "Fanart"    
+    elif num == 2:
+        return "Livestream"
+    elif num == 3:
+        return "Fanart & Livestream"
+    elif num == 69:
+        return  "Lewd"
+    else:
+        return "Fanart & Lewd"           
 def make_session(token=None, state=None, scope=None):
     return OAuth2Session(
         client_id=OAUTH2_CLIENT_ID,
@@ -122,7 +132,7 @@ def channel(channel_id):
                 "indie_notif": False,
                 "lite": False,
                 "upcoming": False,
-                "type" : False})
+                "type" : None})
 
         else:
             agency_list.append({
@@ -136,7 +146,7 @@ def channel(channel_id):
                 "upcoming": bool(channel_data[0]["NewUpcoming"]),
                 "agency_region": k["Region"],
                 "channel_region": channel_data[0]["Region"].split(","),                
-                "type" : channel_data[0]["Type"],})
+                "type" : channel_type(channel_data[0]["Type"]),})
 
     response = jsonify(agency_list)
     response.headers.add('Access-Control-Allow-Origin', 'http://localhost:8080')    
@@ -145,13 +155,19 @@ def channel(channel_id):
 
 
 
-@app.route('/channel/<channel_id>/update',methods=['POST'])
+@app.route('/channel/<channel_id>/update',methods=['POST','GET','OPTIONS'])
 def update_channel(channel_id):
-    discord = make_session(token=session.get('oauth2_token'))
-    if len(discord.token.keys()) < 1:
-        return redirect("/")
-    print(channel_id,request.form)
-    return "ok"
+    response = jsonify({"Status":"OK"})
+    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:8080')    
+    response.headers.add('Access-Control-Allow-Credentials', 'true')     
+    if request.method == "OPTIONS":
+        response.headers.add('Access-Control-Allow-Headers', 'content-type')  
+        response.headers.add('Access-Control-Allow-Methods', 'POST')
+        return response
+
+    print(request.json)
+    response.headers.add('Access-Control-Allow-Credentials', 'true')           
+    return response
 
 if __name__ == '__main__':
     app.run()
