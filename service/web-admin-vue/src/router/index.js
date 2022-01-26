@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import Guilds from '../components/Guilds.vue'
 import Channels from '../components/Channels.vue'
 import Channel from '../components/Channel.vue'
+import Config from "../config.json";
+
 
 Vue.use(Router)
 
@@ -11,7 +13,7 @@ export default new Router({
     {
       path: '/',
       beforeEnter(to, from, next) {
-        window.location.href = "http://localhost:5000";
+        window.location.href = Config.REST_API;
       }
     },
     {
