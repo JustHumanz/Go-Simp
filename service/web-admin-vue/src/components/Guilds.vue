@@ -34,7 +34,7 @@ export default {
       .then(response => {
           this.msg = response.data
       }).catch((error) => {
-        // error.response.status Check status code
+        this.$toasted.show("Oops somethings error "+error);
         console.log(error)
     }).finally(() => {
         //Perform action in always

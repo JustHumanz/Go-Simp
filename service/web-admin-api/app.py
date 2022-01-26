@@ -249,20 +249,20 @@ def update_channel(channel_id):
     if len(discord.token.keys()) < 1:
         return prepare_response({"message":"Missing token"},401)
 
-    logging.info('%s %s',discord_user.verify_user(discord),channel_id,discord_user.channel_id)
+    logging.info('%s %s %s',"update channel",discord_user.verify_user(discord),channel_id,discord_user.channel_id)
     if discord_user.verify_user(discord) and channel_id == discord_user.channel_id:
         form = request.json
         if form["agency_id"] != 10:
             form["indie_notif"] = False
 
-        if form["agency_region"] == []:
-            return prepare_response({"message":"Invalid region"},401)
+        if form["channel_region"] == []:
+            form["channel_region"] = form["agency_region"]
 
         data = {
             "channel_type": channel_type_rev(form["type"]),
             "upcoming": bool(form["upcoming"]),
             "dynamic": bool(form["dynamic"]),
-            "region": str(','.join(form["agency_region"])),
+            "region": str(','.join(form["channel_region"])),
             "lite": bool(form["lite"]),
             "indie": bool(form["indie_notif"]),
             "channel_id": channel_id,
@@ -277,6 +277,46 @@ def update_channel(channel_id):
     
     return prepare_response({"message":"ok"},200)
     
+@app.route('/channel/<channel_id>/delete',methods=['POST','OPTIONS'])
+def delete_channel(channel_id):
+    if request.method == "OPTIONS":
+        response = jsonify({"message":"OK"})
+        response.headers.add('Access-Control-Allow-Headers', 'content-type')  
+        response.headers.add('Access-Control-Allow-Methods', 'POST')
+        response.headers.add('Access-Control-Allow-Origin', URL)    
+        response.headers.add('Access-Control-Allow-Credentials', 'true')        
+        return response
+
+    discord = make_session(token=session.get('oauth2_token'))
+    if len(discord.token.keys()) < 1:
+        return prepare_response({"message":"Missing token"},401)
+
+    logging.info('%s %s %s',"delete channel",discord_user.verify_user(discord),channel_id,discord_user.channel_id)
+    if discord_user.verify_user(discord) and channel_id == discord_user.channel_id:
+        form = request.json
+        if form["agency_id"] != 10:
+            form["indie_notif"] = False
+
+        data = {
+            "channel_type": channel_type_rev(form["type"]),
+            "upcoming": bool(form["upcoming"]),
+            "dynamic": bool(form["dynamic"]),
+            "region": str(','.join(form["channel_region"])),
+            "lite": bool(form["lite"]),
+            "indie": bool(form["indie_notif"]),
+            "channel_id": channel_id,
+            "agency_id": form["agency_id"]
+        }
+        
+        logging.info(data)
+
+        delete_channel_db(data)
+    else:
+        return prepare_response({"message":"Missmatch channel id"},401)
+    
+    return prepare_response({"message":"ok"},200)
+    
+
 
 if __name__ == '__main__':
     app.run()

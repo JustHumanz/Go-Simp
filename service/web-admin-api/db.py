@@ -61,3 +61,13 @@ def update_channel_db(data):
     )
     VTcursor.execute(query,var)
     VTDB.commit()    
+
+def delete_channel_db(data):
+    print("Add new channel",data["channel_id"],"agency",data["agency_id"])
+    query = "DELETE FROM Channel where DiscordChannelID = %s and VtuberGroup_id = %s"
+    var = (
+      data["channel_id"],
+      data["agency_id"]      
+    )
+    VTcursor.execute(query,var)
+    VTDB.commit()    

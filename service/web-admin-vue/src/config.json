@@ -1,4 +1,4 @@
 {
     "ENV": "production",
     "REST_API": "https://admin-api.humanz.moe"
-  }
+}

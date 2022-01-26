@@ -76,7 +76,7 @@
                         </div>                                                 
                       </div>               
                       <div class="container p-1">
-                        <b-button variant="danger">Disable agency</b-button>
+                        <b-button v-on:click="remove(v.agency_id)" variant="danger">Disable agency</b-button>
                       </div>
                       </form>                          
                       </div>
@@ -154,9 +154,6 @@
                         <div class="form-group">
                             <b-button type="submit">Update</b-button> 
                         </div>                                                 
-                      </div>               
-                      <div class="container p-1">
-                        <b-button variant="danger">Disable agency</b-button>
                       </div>
                       </form>                          
                       </div>                      
@@ -219,7 +216,25 @@ export default {
                       console.log(res)
                   })
                   .catch((error) => {
-                      // error.response.status Check status code
+                      this.$toasted.show("Oops somethings error "+error)
+                      console.log(error)
+                  }).finally(() => {
+                      //Perform action in always
+                  });                    
+          }
+        });
+      }, 
+      remove: function(agency_id){
+        console.log(agency_id)
+        this.msg.forEach((element) => {
+          if (element.agency_id == agency_id) {            
+            axios.post(Config.REST_API+'/channel/'+this.$route.params.id+'/delete', element,{withCredentials: true,})
+                  .then((res) => {
+                      console.log(res)
+                      element.type = null
+                  })
+                  .catch((error) => {
+                      this.$toasted.show("Oops somethings error "+error)
                       console.log(error)
                   }).finally(() => {
                       //Perform action in always
