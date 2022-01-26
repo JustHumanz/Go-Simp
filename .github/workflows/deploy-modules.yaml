@@ -131,6 +131,24 @@ jobs:
       #    push: true
       #    tags: justhumanz/go-simp-web-vue:${{ env.RELEASE_VERSION }}               
 
+      ### Web admin api
+      -
+        name: Build and push web admin
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/web-admin-api
+          push: true
+          tags: justhumanz/go-simp-web-admin-api:latest       
+
+      ### Web admin vue
+      -
+        name: Build and push web admin
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/web-admin-vue
+          push: true
+          tags: justhumanz/go-simp-web-admin-vue:latest       
+
       ### Migrate
       -
         name: Build and push migrate
