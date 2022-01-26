@@ -2,8 +2,8 @@ import mysql.connector
 import os
 
 VTDB = mysql.connector.connect(
-  host="localhost",
-  user="root",
+  host=os.environ['DB_HOST'],
+  user=os.environ['DB_USER'],
   password= os.environ['DB_PASS'],
   database="Vtuber"
 )
