@@ -1,0 +1,51 @@
+{
+  "GroupName": "Virtunix",
+  "GroupIcon": "https://cdn.humanz.moe/Virtunix.png",
+  "GroupChannel": {
+    "Youtube": [
+      {
+        "ChannelID": "UC5eJpD8TbIhnTfiBXMiAV4w",
+        "Region": "ID"
+      }
+    ],
+    "BiliBili": null
+  },
+  "Members": [
+    {
+      "Name": "Mira",
+      "EN_Name": "Mira Fridayanti",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#Mira_Ku",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "mira_frdynt"
+      },
+      "Youtube": {
+        "Yt_ID": "UCKI3MdO4a1QvLrT_DWkH9eQ"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Kuuki",
+      "EN_Name": "Kuuki Tsuki",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#KUUKILLUST",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "kuukivt"
+      },
+      "Youtube": {
+        "Yt_ID": "UC0O0-Th0plo8YADhx71eO5g"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    }
+  ]
+}
