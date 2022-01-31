@@ -1,107 +1,141 @@
 {
-	"GroupName": "MAHA5",
-	"GroupIcon": "https://cdn.humanz.moe/MAHA5.png",
-	"GroupChannel": {
-		"Youtube": [
-			{
-				"ChannelID": "UCzc8GwjUvecxpjhGtuewYOQ",
-				"Region": "ID"
-			}
-		],
-		"BiliBili": [
-			null
-		]
-	},
-	"Members": [
-		{
-			"Name": "Adelia",
-			"EN_Name": "Alia Adelia",
-			"JP_Name": "",
-			"Twitter": {
-				"Twitter_Fanart": "#aliaadelia_art",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "aliaadelia_v"
-			},
-			"Youtube": {
-				"Yt_ID": "UCK4t1P3Aqqe6NDyRS92Opcg"
-			},
-			"BiliBili": null,
-			"Twitch": null,
-			"Region": "ID",
-			"Fanbase": "",
-			"Status": "Active"
-		},
-		{
-			"Name": "Andi",
-			"EN_Name": "Andi Adinata",
-			"JP_Name": "",
-			"Twitter": {
-				"Twitter_Fanart": "#andiadinata_art",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "andiadinata_id"
-			},
-			"Youtube": {
-				"Yt_ID": "UC9QnAjC7mT4ggHuedr1_kqQ"
-			},
-			"BiliBili": null,
-			"Twitch": null,
-			"Region": "ID",
-			"Fanbase": "",
-			"Status": "Active"
-		},
-		{
-			"Name": "Lumi",
-			"EN_Name": "Lumi Celestia",
-			"JP_Name": "",
-			"Twitter": {
-				"Twitter_Fanart": "#Lumicelestia_art",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "LumiCelestia"
-			},
-			"Youtube": {
-				"Yt_ID": "UCge_6FJHyeOCxRtWCmaVTAQ"
-			},
-			"BiliBili": null,
-			"Twitch": null,
-			"Region": "ID",
-			"Fanbase": "",
-			"Status": "Active"
-		},
-		{
-			"Name": "Zen",
-			"EN_Name": "Zen Gunawan",
-			"JP_Name": "",
-			"Twitter": {
-				"Twitter_Fanart": "#zeni_rupa",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "ZenGunawan"
-			},
-			"Youtube": {
-				"Yt_ID": "UCUummegUoc-w7EDdk8Ps7BQ"
-			},
-			"BiliBili": null,
-			"Twitch": null,
-			"Region": "ID",
-			"Fanbase": "",
-			"Status": "Active"
-		},
-		{
-			"Name": "Nia",
-			"EN_Name": "Nia Redalion",
-			"JP_Name": "",
-			"Twitter": {
-				"Twitter_Fanart": "#Niaredalion_Art",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "NiaRedalion"
-			},
-			"Youtube": {
-				"Yt_ID": "UCD2W-dcuukl4oChTKATdSiw"
-			},
-			"BiliBili": null,
-			"Twitch": null,
-			"Region": "ID",
-			"Fanbase": "",
-			"Status": "Active"
-		}
-	]
+  "GroupName": "MAHA5",
+  "GroupIcon": "https://cdn.humanz.moe/MAHA5.png",
+  "GroupChannel": {
+    "Youtube": [
+      {
+        "ChannelID": "UCzc8GwjUvecxpjhGtuewYOQ",
+        "Region": "ID"
+      }
+    ],
+    "BiliBili": [null]
+  },
+  "Members": [
+    {
+      "Name": "Adelia",
+      "EN_Name": "Alia Adelia",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#aliaadelia_art",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "aliaadelia_v"
+      },
+      "Youtube": {
+        "Yt_ID": "UCK4t1P3Aqqe6NDyRS92Opcg"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Andi",
+      "EN_Name": "Andi Adinata",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#andiadinata_art",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "andiadinata_id"
+      },
+      "Youtube": {
+        "Yt_ID": "UC9QnAjC7mT4ggHuedr1_kqQ"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Lumi",
+      "EN_Name": "Lumi Celestia",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#Lumicelestia_art",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "LumiCelestia"
+      },
+      "Youtube": {
+        "Yt_ID": "UCge_6FJHyeOCxRtWCmaVTAQ"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Zen",
+      "EN_Name": "Zen Gunawan",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#zeni_rupa",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "ZenGunawan"
+      },
+      "Youtube": {
+        "Yt_ID": "UCUummegUoc-w7EDdk8Ps7BQ"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Nia",
+      "EN_Name": "Nia Redalion",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#Niaredalion_Art",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "NiaRedalion"
+      },
+      "Youtube": {
+        "Yt_ID": "UCD2W-dcuukl4oChTKATdSiw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Rena",
+      "EN_Name": "Rena Anggraeni",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#RenaMaha5Art",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "Rena__Anggraeni"
+      },
+      "Youtube": {
+        "Yt_ID": "UCjQyHnE_Q58jYTaP8gRHv4g"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Kevin",
+      "EN_Name": "Kevin Vangardo",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#VangardoArt",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "KevinVangardo"
+      },
+      "Youtube": {
+        "Yt_ID": "UCAnKiHbZhEayttn6p-sxfbg"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    }
+  ]
 }
