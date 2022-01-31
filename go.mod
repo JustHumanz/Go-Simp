@@ -16,16 +16,13 @@ require (
 	github.com/nicklaw5/helix v1.25.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/pbnjay/memory v0.0.0-20210728143218-7b4eea64cf58
-	github.com/prometheus/client_golang v1.11.0
-	github.com/prometheus/common v0.31.1 // indirect
-	github.com/prometheus/procfs v0.7.3 // indirect
+	github.com/prometheus/client_golang v1.12.1
 	github.com/pytimer/mux-logrus v0.0.0-20200505085744-ce5a5e748151
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sirupsen/logrus v1.8.1
 	github.com/top-gg/go-dbl v0.0.0-20201116001615-e844586b1159
 	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3 // indirect
 	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f
-	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac // indirect
 	google.golang.org/genproto v0.0.0-20211018162055-cf77aa76bad2 // indirect
