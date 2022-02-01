@@ -18,7 +18,6 @@
 
 <script>
 import axios from 'axios';
-import Config from "../config.json";
 
 export default {
   name: 'Guilds',
@@ -28,7 +27,7 @@ export default {
     }
   },
   mounted(){
-      axios.get(Config.REST_API+"/guilds",{
+      axios.get(process.env.REST_API+"/guilds",{
           withCredentials: true,
       })
       .then(response => {

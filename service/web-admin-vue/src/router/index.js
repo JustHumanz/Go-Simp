@@ -3,19 +3,19 @@ import Router from 'vue-router'
 import Guilds from '../components/Guilds.vue'
 import Channels from '../components/Channels.vue'
 import Channel from '../components/Channel.vue'
-import Config from "../config.json";
 
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    {
+/*    {
       path: '/',
       beforeEnter(to, from, next) {
-        window.location.href = Config.REST_API;
+        window.location.href = process.env.CALLBACK_URL;
       }
     },
+*/    
     {
       path: '/guilds',
       name: 'Guilds',

@@ -19,7 +19,6 @@
 
 <script>
 import axios from 'axios';
-import Config from "../config.json";
 
 export default {
   name: 'Channel',
@@ -29,7 +28,7 @@ export default {
     }
   },
   mounted(){
-      axios.get(Config.REST_API+"/guilds/"+this.$route.params.id+"/channels",{
+      axios.get(process.env.REST_API+"/guilds/"+this.$route.params.id+"/channels",{
           withCredentials: true,
       })
       .then(response => {
