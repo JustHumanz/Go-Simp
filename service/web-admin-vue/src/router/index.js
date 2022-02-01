@@ -9,13 +9,12 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-/*    {
-      path: '/',
+    {
+      path: '/login',
       beforeEnter(to, from, next) {
         window.location.href = process.env.CALLBACK_URL;
       }
     },
-*/    
     {
       path: '/guilds',
       name: 'Guilds',
