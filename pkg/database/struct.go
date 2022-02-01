@@ -65,7 +65,7 @@ func (Data Member) Active() bool {
 }
 
 func (Data Member) IsYtNill() bool {
-	return Data.YoutubeAvatar != ""
+	return Data.YoutubeID != ""
 }
 
 func (Data Member) IsTwitchNill() bool {
