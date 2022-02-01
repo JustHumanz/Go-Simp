@@ -27,7 +27,7 @@ export default {
     }
   },
   mounted(){
-      axios.get("/guilds",{
+      axios.get("/v1/guilds",{
           withCredentials: true,
       })
       .then(response => {

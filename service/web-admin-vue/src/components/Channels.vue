@@ -28,7 +28,7 @@ export default {
     }
   },
   mounted(){
-      axios.get("/guilds/"+this.$route.params.id+"/channels",{
+      axios.get("/v1/guilds/"+this.$route.params.id+"/channels",{
           withCredentials: true,
       })
       .then(response => {
