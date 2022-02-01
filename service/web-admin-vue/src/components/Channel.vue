@@ -212,6 +212,7 @@ export default {
           if (element.agency_id == agency_id) {            
             axios.post('/v1/channel/'+this.$route.params.id+'/update', element,{withCredentials: true,})
                   .then((res) => {
+                      this.$toasted.show("Agency updated")
                       console.log(res)
                   })
                   .catch((error) => {
@@ -229,6 +230,7 @@ export default {
           if (element.agency_id == agency_id) {            
             axios.post('/v1/channel/'+this.$route.params.id+'/delete', element,{withCredentials: true,})
                   .then((res) => {
+                      this.$toasted.show("agency deleted")
                       console.log(res)
                       element.type = null
                   })
