@@ -3,7 +3,7 @@ from flask import Flask, g, session, redirect, request, url_for, jsonify,render_
 from requests_oauthlib import OAuth2Session
 from db import *
 
-OAUTH2_CLIENT_ID = "719540207552167936"
+OAUTH2_CLIENT_ID = os.environ['CLIENTID']
 OAUTH2_CLIENT_SECRET =  os.environ['SECRET']
 OAUTH2_REDIRECT_URI =  os.environ['CALLBACK_URL']
 URL = os.environ['URL']
