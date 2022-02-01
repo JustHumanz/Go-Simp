@@ -27,7 +27,7 @@ export default {
     }
   },
   mounted(){
-      axios.get(process.env.REST_API+"/guilds",{
+      axios.get("/guilds",{
           withCredentials: true,
       })
       .then(response => {

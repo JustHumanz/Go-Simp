@@ -179,7 +179,7 @@ export default {
     }
   },
   mounted(){
-      axios.get(process.env.REST_API+"/channel/"+this.$route.params.id+"/agency",{
+      axios.get("/channel/"+this.$route.params.id+"/agency",{
           withCredentials: true,
       })
       .then(response => {
@@ -210,7 +210,7 @@ export default {
       submitForm(agency_id){
         this.msg.forEach((element) => {
           if (element.agency_id == agency_id) {            
-            axios.post(process.env.REST_API+'/channel/'+this.$route.params.id+'/update', element,{withCredentials: true,})
+            axios.post('/channel/'+this.$route.params.id+'/update', element,{withCredentials: true,})
                   .then((res) => {
                       console.log(res)
                   })
@@ -227,7 +227,7 @@ export default {
         console.log(agency_id)
         this.msg.forEach((element) => {
           if (element.agency_id == agency_id) {            
-            axios.post(process.env.REST_API+'/channel/'+this.$route.params.id+'/delete', element,{withCredentials: true,})
+            axios.post('/channel/'+this.$route.params.id+'/delete', element,{withCredentials: true,})
                   .then((res) => {
                       console.log(res)
                       element.type = null
