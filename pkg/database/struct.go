@@ -65,19 +65,19 @@ func (Data Member) Active() bool {
 }
 
 func (Data Member) IsYtNill() bool {
-	return Data.YoutubeAvatar != ""
+	return Data.YoutubeID == ""
 }
 
 func (Data Member) IsTwitchNill() bool {
-	return Data.TwitchAvatar != ""
+	return Data.TwitchAvatar == ""
 }
 
 func (Data Member) IsBiliNill() bool {
-	return Data.BiliRoomID != 0
+	return Data.BiliRoomID == 0
 }
 
 func (Data Member) IsTwNill() bool {
-	return Data.TwitterName != ""
+	return Data.TwitterName == ""
 }
 
 type LiveStream struct {
