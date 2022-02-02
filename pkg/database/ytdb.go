@@ -84,48 +84,38 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 			defer rows.Close()
 		}
 
-		if !rows.Next() {
-			log.WithFields(log.Fields{
-				"State": Payload["State"],
-				"Key":   Key2,
-			}).Warn("not found any schdule,set value to empty")
-			err = LiveCache.LPush(ctx, Key2, LiveStream{}).Err()
+		for rows.Next() {
+			err = rows.Scan(&list.ID, &list.VideoID, &list.Type, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.End, &list.Viewers, &list.Length, &list.Member.ID)
 			if err != nil {
 				return nil, Key2, err
 			}
+			UpcominginHours := int(time.Until(list.Schedul).Hours())
+			if UpcominginHours > 730 && Status != config.PastStatus || Status == config.Live && UpcominginHours > 168 {
+				continue
+			}
 
-		} else {
-			for rows.Next() {
-				err = rows.Scan(&list.ID, &list.VideoID, &list.Type, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.End, &list.Viewers, &list.Length, &list.Member.ID)
-				if err != nil {
-					return nil, Key2, err
-				}
-				UpcominginHours := int(time.Until(list.Schedul).Hours())
-				if UpcominginHours > 730 && Status != config.PastStatus || Status == config.Live && UpcominginHours > 168 {
-					continue
-				}
-
-				Data = append(Data, list)
-				err = LiveCache.LPush(ctx, Key2, list).Err()
-				if err != nil {
-					return nil, Key2, err
-				}
+			Data = append(Data, list)
+			err = LiveCache.LPush(ctx, Key2, list).Err()
+			if err != nil {
+				return nil, Key2, err
 			}
 		}
 
-		log.WithFields(log.Fields{
-			"State": Payload["State"],
-			"Key":   Key2,
-		}).Info("Append new cache")
-		if Payload["State"].(string) == config.Sys {
-			err = LiveCache.Expire(ctx, Key2, config.YtGetStatusTTL).Err()
-			if err != nil {
-				return nil, Key2, err
-			}
-		} else {
-			err = LiveCache.Expire(ctx, Key2, 5*time.Minute).Err()
-			if err != nil {
-				return nil, Key2, err
+		if len(Data) > 0 {
+			log.WithFields(log.Fields{
+				"State": Payload["State"],
+				"Key":   Key2,
+			}).Info("Append new cache")
+			if Payload["State"].(string) == config.Sys {
+				err = LiveCache.Expire(ctx, Key2, config.YtGetStatusTTL).Err()
+				if err != nil {
+					return nil, Key2, err
+				}
+			} else {
+				err = LiveCache.Expire(ctx, Key2, 5*time.Minute).Err()
+				if err != nil {
+					return nil, Key2, err
+				}
 			}
 		}
 
