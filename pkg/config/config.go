@@ -83,6 +83,7 @@ const (
 	CheckServerCount           = "@every 0h10m0s"
 	CheckPayload               = "@every 1h30m0s"
 	PilotGetGroups             = "@every 1h0m0s"
+	CheckUser                  = "0 1 * * *"
 
 	//Time
 	AddUserTTL      = 5 * time.Hour

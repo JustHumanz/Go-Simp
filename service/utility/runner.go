@@ -314,6 +314,46 @@ func main() {
 		log.Info("Done")
 	})
 
+	c.AddFunc(config.CheckUser, func() {
+		log.Info("Start check deleted user")
+		UsersDeleted := []string{}
+		Users := database.GetAllUser()
+		for _, v := range Users {
+			User, err := Bot.User(v)
+			if err != nil {
+				log.Error(err, v)
+			}
+			if strings.HasPrefix(User.Username, "Deleted") {
+				log.WithFields(log.Fields{
+					"userId": v,
+				}).Info("User not found or user deleted ther account")
+				UsersDeleted = append(UsersDeleted, v)
+			}
+		}
+
+		log.Info("Start deleting user ", UsersDeleted)
+		database.DeleteDeletedUser(UsersDeleted)
+	})
+
+	log.Info("Start check deleted user")
+	UsersDeleted := []string{}
+	Users := database.GetAllUser()
+	for _, v := range Users {
+		User, err := Bot.User(v)
+		if err != nil {
+			log.Error(err, v)
+		}
+		if strings.HasPrefix(User.Username, "Deleted") {
+			log.WithFields(log.Fields{
+				"userId": v,
+			}).Info("User not found or user deleted ther account")
+			UsersDeleted = append(UsersDeleted, v)
+		}
+	}
+
+	log.Info("Start deleting user ", UsersDeleted)
+	database.DeleteDeletedUser(UsersDeleted)
+
 	go pilot.RunHeartBeat(gRCPconn, "Utility")
 	runfunc.Run(Bot)
 }

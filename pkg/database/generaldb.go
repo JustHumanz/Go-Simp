@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -931,4 +932,33 @@ func (i *LiveStream) RemoveCache(Key string) error {
 		return err
 	}
 	return nil
+}
+
+func GetAllUser() []string {
+	var (
+		UserID []string
+	)
+	rows, err := DB.Query(`SELECT DiscordID FROM Vtuber.User where Human=1 group by DiscordID;`)
+	if err != nil {
+		log.Error(err)
+	}
+
+	defer rows.Close()
+	for rows.Next() {
+		id := ""
+		err = rows.Scan(&id)
+		if err != nil {
+			log.Error(err)
+		}
+		UserID = append(UserID, id)
+	}
+	return UserID
+}
+
+func DeleteDeletedUser(users []string) {
+	sqlq := fmt.Sprintf(`Delete FROM User where DiscordID in ('%s')`, strings.Join(users, "','"))
+	_, err := DB.Query(sqlq)
+	if err != nil {
+		log.Error(err)
+	}
 }
