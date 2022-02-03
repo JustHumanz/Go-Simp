@@ -956,7 +956,7 @@ func GetAllUser() []string {
 }
 
 func DeleteDeletedUser(users []string) {
-	sqlq := fmt.Sprintf("Delete FROM User where DiscordID in (%s)", strings.Join(users, "','"))
+	sqlq := fmt.Sprintf(`Delete FROM User where DiscordID in ('%s')`, strings.Join(users, "','"))
 	_, err := DB.Query(sqlq)
 	if err != nil {
 		log.Error(err)
