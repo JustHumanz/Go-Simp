@@ -182,7 +182,7 @@ func (Data *LiveStream) InputYt() (int64, error) {
 
 //YtIsEmpty?
 func (Data LiveStream) YtIsEmpty() bool {
-	return Data.VideoID != ""
+	return Data.VideoID == ""
 }
 
 //Check new video or not
