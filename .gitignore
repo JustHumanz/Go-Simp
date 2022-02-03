@@ -6,7 +6,6 @@ vendor
 *.toml
 *.db
 rev_proxy/
-*prod*
 __pycache__
 lib
 lib64
