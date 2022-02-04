@@ -35,7 +35,7 @@ services:
       - "9292:80"                                                              
                              
   web-admin-api:                                           
-    image: web-admin-api:testing                       
+    image: justhumanz/go-simp-web-admin-api:latest         
     environment:                                     
       - SECRET=${SECRET}
       - CLIENTID=${CLIENTID}
