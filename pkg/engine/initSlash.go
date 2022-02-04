@@ -18,6 +18,11 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 			Name:  v.GroupName,
 			Value: v.ID,
 		})
+
+		//Discord slash command limit is 25 item
+		if len(VtuberGroupChoices) == 24 {
+			break
+		}
 	}
 
 	var (
