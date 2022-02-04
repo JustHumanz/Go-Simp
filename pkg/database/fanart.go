@@ -86,17 +86,37 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 	if gachaint == 1 {
 		err := Pixiv()
 		if err != nil {
-			return nil, err
+			err = Twitter()
+			if err != nil {
+				err = Tbilibili()
+				if err != nil {
+					return nil, errors.New("vtuber don't have any fanart in Pixiv/Twitter/BiliBili")
+				}
+			}
 		}
 	} else if gachaint == 2 {
 		err := Tbilibili()
 		if err != nil {
+			err = Twitter()
+			if err != nil {
+				err = Pixiv()
+				if err != nil {
+					return nil, errors.New("vtuber don't have any fanart in Pixiv/Twitter/BiliBili")
+				}
+			}
 			return nil, err
 		}
 	} else {
 		err := Twitter()
 		if err != nil {
-			return nil, err
+			err = Pixiv()
+			if err != nil {
+				err = Tbilibili()
+				if err != nil {
+					return nil, errors.New("vtuber don't have any fanart in Pixiv/Twitter/BiliBili")
+				}
+			}
+
 		}
 	}
 
@@ -106,7 +126,7 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 
 }
 
-//GetFanart Get Member fanart URL from TBiliBili and Twitter
+//GetFanart Get Member lewd fanart URL from and Twitter and Pixiv
 func GetLewd(GroupID, MemberID int64) (*DataFanart, error) {
 	var (
 		Data     DataFanart
@@ -118,7 +138,7 @@ func GetLewd(GroupID, MemberID int64) (*DataFanart, error) {
 	if err != nil {
 		return nil, err
 	} else if err == sql.ErrNoRows {
-		return nil, errors.New("vtuber don't have any fanart in Twitter")
+		return nil, errors.New("vtuber don't have any lewd fanart in Twitter or Pixiv")
 	}
 
 	defer rows.Close()
