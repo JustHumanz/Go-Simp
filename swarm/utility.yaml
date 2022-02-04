@@ -15,7 +15,7 @@ services:
       - go-simp-net    
                                                                                                                         
   frontend:                                          
-    image: justhumanz/go-simp-frontend:${RELEASE_VERSION}                                  
+    image: justhumanz/go-simp-frontend:${RELEASE_VERSION}
     depends_on:                           
       - multi_tor                                    
     environment:                       
@@ -24,9 +24,7 @@ services:
       - go-simp-net                                  
                                                      
   web-vue:                                           
-    image: justhumanz/go-simp-web-vue:latest                        
-    environment:                                     
-      - RESTAPI=https://api.humanz.moe/              
+    image: justhumanz/go-simp-web-vue:latest
     deploy:
       replicas: 2                                                         
     depends_on:                                                     
@@ -35,7 +33,26 @@ services:
       - go-simp-net                                                            
     ports:                                                                     
       - "9292:80"                                                              
-                                                                    
+                             
+  web-admin-api:                                           
+    image: web-admin-api:testing                       
+    environment:                                     
+      - SECRET=${SECRET}
+      - CLIENTID=${CLIENTID}
+      - CALLBACK_URL=${CALLBACK_URL}
+      - URL=${URL}
+      - BOT=${BOT}
+      - DB_PASS=${DB_PASS}
+      - DB_USER=root
+      - DB_HOST=mysql              
+    networks:                                                       
+      - go-simp-net
+
+  web-admin-vue:                                           
+    image: justhumanz/go-simp-web-admin-vue:latest
+    networks:                                                       
+      - go-simp-net                                                            
+      
   rest_api:                                                                    
     image: justhumanz/go-simp-rest_api:${RELEASE_VERSION}                                                                                                       
     networks:                                                                                  
