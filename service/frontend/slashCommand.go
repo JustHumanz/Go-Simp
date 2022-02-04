@@ -732,7 +732,7 @@ var (
 			} else {
 				GroupID := i.ApplicationCommandData().Options[0].IntValue()
 				log.WithFields(log.Fields{
-					"VtuberGroupName": GroupID,
+					"VtuberGroupID": GroupID,
 				}).Info("FanArt")
 				for _, v := range *GroupsPayload {
 					if v.ID == GroupID {

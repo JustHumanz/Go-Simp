@@ -104,7 +104,6 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 					return nil, errors.New("vtuber don't have any fanart in Pixiv/Twitter/BiliBili")
 				}
 			}
-			return nil, err
 		}
 	} else {
 		err := Twitter()
@@ -116,7 +115,6 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 					return nil, errors.New("vtuber don't have any fanart in Pixiv/Twitter/BiliBili")
 				}
 			}
-
 		}
 	}
 
@@ -126,7 +124,7 @@ func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
 
 }
 
-//GetFanart Get Member lewd fanart URL from and Twitter and Pixiv
+//GetLewd Get Member lewd fanart URL from and Twitter and Pixiv
 func GetLewd(GroupID, MemberID int64) (*DataFanart, error) {
 	var (
 		Data     DataFanart
