@@ -98,7 +98,7 @@ func CoolerCurl(urls string, addheader map[string]string) ([]byte, error) {
 	defer response.Body.Close()
 
 	if response.StatusCode != http.StatusOK {
-		return nil, errors.New("multi Tor get Error")
+		return nil, errors.New("multi Tor get Error " + response.Status)
 	}
 
 	data, err := ioutil.ReadAll(response.Body)
