@@ -19,7 +19,6 @@ func SendFanArtNude(Art database.DataFanart, Bot *discordgo.Session, Color int) 
 				ChannelData []database.DiscordChannel
 				err1        error
 				wg          sync.WaitGroup
-				counter     int
 			)
 			if Art.Lewd {
 				ChannelData, err1 = database.ChannelTag(Member.ID, 1, config.LewdChannel, Member.Region)
@@ -42,13 +41,13 @@ func SendFanArtNude(Art database.DataFanart, Bot *discordgo.Session, Color int) 
 				icon = config.BiliBiliIMG
 			}
 
-			for _, C := range ChannelData {
+			for i, C := range ChannelData {
 				wg.Add(1)
 
-				if counter%50 == 0 {
+				if i%10 == 0 {
 					log.WithFields(log.Fields{
 						"Func":  "Fanart",
-						"Value": counter,
+						"Value": i,
 					}).Warn("Waiting send message")
 					wg.Wait()
 				}
@@ -58,6 +57,10 @@ func SendFanArtNude(Art database.DataFanart, Bot *discordgo.Session, Color int) 
 						//do nothing,like my life
 						return
 					} else {
+						log.WithFields(log.Fields{
+							"channelId": Channel.ChannelID,
+							"vtuber":    Member.Name,
+						}).Info("Send pic")
 						tmp, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
 							SetAuthor(strings.Title(Art.Group.GroupName), Art.Group.IconURL).
 							SetTitle(Art.Author).
@@ -83,7 +86,6 @@ func SendFanArtNude(Art database.DataFanart, Bot *discordgo.Session, Color int) 
 						}
 					}
 				}(C, &wg)
-				counter++
 			}
 			wg.Wait()
 		}
