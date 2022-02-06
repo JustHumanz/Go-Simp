@@ -135,30 +135,20 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 }
 
 func (i *checkYtJob) Run() {
-	for _, Group := range *GroupPayload {
-		YoutubeStatus, Key, err := database.YtGetStatus(map[string]interface{}{
-			"GroupID":   Group.ID,
-			"GroupName": Group.GroupName,
-			"Status":    config.UpcomingStatus,
-			"State":     config.Sys,
-		})
-		if err != nil {
-			if err.Error() != "not found any schdule" {
-				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-					Message: err.Error(),
-					Service: ModuleState,
-				})
-			} else {
-				log.WithFields(log.Fields{
-					"Group": Group.GroupName,
-				}).Error(err)
-			}
-		}
+	upcomingLiveStream, err := database.GetUpcomingFromCache()
+	if err != nil {
+		log.Error(err)
+	}
 
-		for _, Y := range YoutubeStatus {
-			i.wg.Add(1)
-			go func(Youtube database.LiveStream, w *sync.WaitGroup) {
-				defer w.Done()
+	for key, val := range upcomingLiveStream {
+		log.WithFields(log.Fields{
+			"VideoID": key,
+		}).Info("Count video")
+
+		i.wg.Add(1)
+		go func(Youtube database.LiveStream, Key string, w *sync.WaitGroup) {
+			defer w.Done()
+			for _, Group := range *GroupPayload {
 				for _, Member := range Group.Members {
 					if Member.ID == Youtube.Member.ID {
 						Youtube.AddMember(Member).AddGroup(Group)
@@ -170,7 +160,7 @@ func (i *checkYtJob) Run() {
 									Service: ModuleState,
 								})
 
-								err = Youtube.RemoveCache(Key)
+								err = Youtube.RemoveUpcomingCache(Key)
 								if err != nil {
 									log.Panic(err)
 								}
@@ -195,7 +185,7 @@ func (i *checkYtJob) Run() {
 							}
 							if len(Data.Items) > 0 {
 								if Data.Items[0].Snippet.VideoStatus != "none" {
-									err = Youtube.RemoveCache(Key)
+									err = Youtube.RemoveUpcomingCache(Key)
 									if err != nil {
 										log.Panic(err)
 									}
@@ -249,7 +239,7 @@ func (i *checkYtJob) Run() {
 										Youtube.UpdateYt(config.PrivateStatus)
 									}
 								} else if Data.Items[0].Snippet.VideoStatus == "none" {
-									err = Youtube.RemoveCache(Key)
+									err = Youtube.RemoveUpcomingCache(Key)
 									if err != nil {
 										log.Panic(err)
 									}
@@ -296,7 +286,7 @@ func (i *checkYtJob) Run() {
 									"Status":  config.PastStatus,
 								}).Info("Update video status from " + config.UpcomingStatus + " to private")
 								Youtube.UpdateYt(config.PrivateStatus)
-								err = Youtube.RemoveCache(Key)
+								err = Youtube.RemoveUpcomingCache(Key)
 								if err != nil {
 									log.Panic(err)
 								}
@@ -310,11 +300,12 @@ func (i *checkYtJob) Run() {
 						engine.SendLiveNotif(&Youtube, Bot)
 					}
 				}
-			}(Y, &i.wg)
-		}
-
-		i.wg.Wait()
+			}
+		}(val.(database.LiveStream), key, &i.wg)
 	}
+
+	i.wg.Wait()
+
 }
 
 func (i *checkYtJob) UpCek(VideoID string) {

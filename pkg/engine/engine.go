@@ -670,7 +670,7 @@ func CreatePayload(Group database.Group, Scraper *twitterscraper.Scraper, Limit 
 	if len(Fanarts) > 0 {
 		return Fanarts, nil
 	} else {
-		return []database.DataFanart{}, errors.New("Still same")
+		return []database.DataFanart{}, errors.New("still same")
 	}
 }
 
