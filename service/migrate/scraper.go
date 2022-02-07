@@ -96,10 +96,20 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 
 			if Data.Items[i].Snippet.VideoStatus != "upcoming" || Data.Items[i].Snippet.VideoStatus != config.LiveStatus {
 				NewData.Status = config.PastStatus
-				NewData.InputYt()
-			} else {
-				NewData.InputYt()
 			}
+
+			if Data.Items[i].Snippet.VideoStatus == config.UpcomingStatus {
+				err := NewData.SendToCache(false)
+				if err != nil {
+					log.Error(err)
+				}
+			}
+
+			_, err := NewData.InputYt()
+			if err != nil {
+				log.Error(err)
+			}
+
 		}
 	}
 }
