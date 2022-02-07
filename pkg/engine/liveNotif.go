@@ -168,7 +168,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 					}(ctx, v, &wgg)
 
 					Wait := GetMaxSqlConn()
-					if i%Wait == 0 && config.GoSimpConf.LowResources {
+					if i != 0 && i%Wait == 0 && config.GoSimpConf.LowResources {
 						log.WithFields(log.Fields{
 							"Type":  "Sleep",
 							"Value": Wait,
@@ -312,7 +312,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 					}(ctx, v, &wgg)
 
 					Wait := GetMaxSqlConn()
-					if i%Wait == 0 && config.GoSimpConf.LowResources {
+					if i != 0 && i%Wait == 0 && config.GoSimpConf.LowResources {
 						log.WithFields(log.Fields{
 							"Type":  "Sleep",
 							"Value": Wait,
@@ -435,7 +435,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 
 					}(v, &wgg)
 					Wait := GetMaxSqlConn()
-					if i%Wait == 0 && config.GoSimpConf.LowResources {
+					if i != 0 && i%Wait == 0 && config.GoSimpConf.LowResources {
 						log.WithFields(log.Fields{
 							"Type":  "Sleep",
 							"Value": Wait,
@@ -622,7 +622,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 
 					}(ctx, v, &wgg)
 					Wait := GetMaxSqlConn()
-					if i%Wait == 0 && config.GoSimpConf.LowResources {
+					if i != 0 && i%Wait == 0 && config.GoSimpConf.LowResources {
 						log.WithFields(log.Fields{
 							"Type":  "Sleep",
 							"Value": Wait,
@@ -779,7 +779,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 				}(ctx, v, &wg)
 
 				Wait := GetMaxSqlConn()
-				if i%Wait == 0 && config.GoSimpConf.LowResources {
+				if i != 0 && i%Wait == 0 && config.GoSimpConf.LowResources {
 					log.WithFields(log.Fields{
 						"Func":  "Twitch",
 						"Value": Wait,
@@ -876,7 +876,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 
 				}(ctx, v, &wgg)
 				Wait := GetMaxSqlConn()
-				if i%Wait == 0 && config.GoSimpConf.LowResources {
+				if i != 0 && i%Wait == 0 && config.GoSimpConf.LowResources {
 					log.WithFields(log.Fields{
 						"Type":  "Sleep",
 						"Value": Wait,
