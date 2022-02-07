@@ -127,9 +127,10 @@ func SendFanArtNude(Art database.DataFanart, Bot *discordgo.Session) {
 
 				if i%10 == 0 && config.GoSimpConf.LowResources && i != 0 {
 					log.WithFields(log.Fields{
-						"Type": "Sleep",
+						"Type":  "Sleep",
+						"Value": 1 * time.Minute,
 					}).Info("Waiting send message")
-					time.Sleep(10 * time.Second)
+					time.Sleep(1 * time.Minute)
 				}
 
 			}

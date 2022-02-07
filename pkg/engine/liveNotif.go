@@ -25,6 +25,15 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 		return clr
 	}()
 
+	getWaitingDur := func(lenChannel int) int {
+		Wait := GetMaxSqlConn()
+		if lenChannel > 100 && Wait > 50 {
+			return 20
+		} else {
+			return 10
+		}
+	}
+
 	var (
 		wgg sync.WaitGroup
 	)
@@ -175,7 +184,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 
 					}(ctx, v, &wgg)
 
-					Wait := GetMaxSqlConn()
+					Wait := getWaitingDur(len(ChannelData))
 					if i != 0 && i%Wait == 0 && config.GoSimpConf.LowResources {
 						log.WithFields(log.Fields{
 							"Type":  "Sleep",
@@ -319,13 +328,13 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 
 					}(ctx, v, &wgg)
 
-					Wait := GetMaxSqlConn()
+					Wait := getWaitingDur(len(ChannelData))
 					if i != 0 && i%Wait == 0 && config.GoSimpConf.LowResources {
 						log.WithFields(log.Fields{
 							"Type":  "Sleep",
 							"Value": Wait,
 						}).Info("Waiting send message")
-						time.Sleep(10 * time.Second)
+						time.Sleep(time.Duration(Wait) * time.Second)
 						expiresAt = time.Now().In(loc)
 					}
 				}
@@ -442,7 +451,8 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						}
 
 					}(v, &wgg)
-					Wait := GetMaxSqlConn()
+
+					Wait := getWaitingDur(len(ChannelData))
 					if i != 0 && i%Wait == 0 && config.GoSimpConf.LowResources {
 						log.WithFields(log.Fields{
 							"Type":  "Sleep",
@@ -629,13 +639,13 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						}
 
 					}(ctx, v, &wgg)
-					Wait := GetMaxSqlConn()
+					Wait := getWaitingDur(len(ChannelData))
 					if i != 0 && i%Wait == 0 && config.GoSimpConf.LowResources {
 						log.WithFields(log.Fields{
 							"Type":  "Sleep",
 							"Value": Wait,
 						}).Info("Waiting send message")
-						time.Sleep(10 * time.Second)
+						time.Sleep(time.Duration(Wait) * time.Second)
 						expiresAt = time.Now().In(loc)
 					}
 				}
@@ -786,13 +796,13 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 
 				}(ctx, v, &wg)
 
-				Wait := GetMaxSqlConn()
+				Wait := getWaitingDur(len(ChannelData))
 				if i != 0 && i%Wait == 0 && config.GoSimpConf.LowResources {
 					log.WithFields(log.Fields{
 						"Func":  "Twitch",
 						"Value": Wait,
 					}).Info("Waiting send message")
-					wg.Wait()
+					time.Sleep(time.Duration(Wait) * time.Second)
 					expiresAt = time.Now().In(loc)
 				}
 			}
@@ -883,13 +893,13 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 					}
 
 				}(ctx, v, &wgg)
-				Wait := GetMaxSqlConn()
+				Wait := getWaitingDur(len(ChannelData))
 				if i != 0 && i%Wait == 0 && config.GoSimpConf.LowResources {
 					log.WithFields(log.Fields{
 						"Type":  "Sleep",
 						"Value": Wait,
 					}).Info("Waiting send message")
-					time.Sleep(10 * time.Second)
+					time.Sleep(time.Duration(Wait) * time.Second)
 					expiresAt = time.Now().In(loc)
 				}
 			}
