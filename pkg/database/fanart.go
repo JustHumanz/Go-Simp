@@ -381,6 +381,7 @@ type DataFanart struct {
 	PixivID      string
 	Lewd         bool
 	State        string
+	FilePath     string
 }
 
 func (Data *DataFanart) MarshallBin() []byte {

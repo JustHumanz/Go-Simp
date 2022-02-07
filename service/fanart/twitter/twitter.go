@@ -143,17 +143,13 @@ func (i *checkTwJob) Run() {
 			}).Error(err)
 		}
 		for _, Art := range Fanarts {
-			Color, err := engine.GetColor(config.TmpDir, Art.Photos[0])
-			if err != nil {
-				log.Error(err)
-			}
 			if config.GoSimpConf.Metric {
 				gRCPconn.MetricReport(context.Background(), &pilot.Metric{
 					MetricData: Art.MarshallBin(),
 					State:      config.FanartState,
 				})
 			}
-			engine.SendFanArtNude(Art, Bot, Color)
+			engine.SendFanArtNude(Art, Bot)
 		}
 	}
 

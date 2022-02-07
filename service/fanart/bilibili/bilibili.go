@@ -209,10 +209,6 @@ func (k *checkBlJob) Run() {
 								})
 							}
 							if New {
-								Color, err := engine.GetColor(config.TmpDir, TBiliData.Photos[0])
-								if err != nil {
-									log.Error(err)
-								}
 
 								if config.GoSimpConf.Metric {
 									gRCPconn.MetricReport(context.Background(), &pilot.Metric{
@@ -221,7 +217,7 @@ func (k *checkBlJob) Run() {
 									})
 								}
 
-								engine.SendFanArtNude(TBiliData, Bot, Color)
+								engine.SendFanArtNude(TBiliData, Bot)
 							}
 						}
 					}

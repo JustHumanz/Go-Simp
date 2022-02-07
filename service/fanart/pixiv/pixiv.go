@@ -236,18 +236,16 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 							log.Error(err)
 						}
 
-						Color, err := engine.GetColor("", path)
-						if err != nil {
-							return err
-						}
 						FixFanArt.Photos[0] = config.PixivProxy + FixImg
+						FixFanArt.FilePath = path
+
 						if config.GoSimpConf.Metric {
 							gRCPconn.MetricReport(context.Background(), &pilot.Metric{
 								MetricData: FixFanArt.MarshallBin(),
 								State:      config.FanartState,
 							})
 						}
-						engine.SendFanArtNude(*FixFanArt, Bot, Color)
+						engine.SendFanArtNude(*FixFanArt, Bot)
 					}
 				} else if l && v2["xRestrict"].(float64) == 1 && IsNotLoli {
 					illusbyte, err := network.Curl(config.PixivIllustsEnd+v2["id"].(string), nil)
@@ -298,10 +296,6 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 							log.Error(err)
 						}
 
-						Color, err := engine.GetColor("", path)
-						if err != nil {
-							return err
-						}
 						if config.GoSimpConf.Metric {
 							gRCPconn.MetricReport(context.Background(), &pilot.Metric{
 								MetricData: FixFanArt.MarshallBin(),
@@ -310,7 +304,8 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 						}
 
 						FixFanArt.Photos[0] = config.PixivProxy + FixImg
-						engine.SendFanArtNude(*FixFanArt, Bot, Color)
+						FixFanArt.FilePath = path
+						engine.SendFanArtNude(*FixFanArt, Bot)
 					}
 				}
 				if i == Limit {
