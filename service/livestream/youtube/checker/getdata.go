@@ -25,8 +25,10 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 	if Group.YoutubeChannels != nil {
 		for _, YtChan := range Group.YoutubeChannels {
 			log.WithFields(log.Fields{
-				"Group": Group.GroupName,
-			}).Info("Checking Group channel")
+				"agency":    Group.GroupName,
+				"channelID": YtChan.YtChannel,
+				"region":    YtChan.Region,
+			}).Info("Checking agency channel")
 
 			VideoID, err := engine.GetRSS(YtChan.YtChannel, *proxy)
 			if err != nil {
