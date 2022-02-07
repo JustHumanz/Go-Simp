@@ -21,6 +21,7 @@ import (
 func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 	defer wg.Done()
 
+	//check vtuber agency youtube channel
 	if Group.YoutubeChannels != nil {
 		for _, YtChan := range Group.YoutubeChannels {
 			log.WithFields(log.Fields{
@@ -127,6 +128,12 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						if err != nil {
 							log.Error(err)
 						}
+
+						err = NewYoutubeData.SendToCache(true)
+						if err != nil {
+							log.Error(err)
+						}
+
 						engine.SendLiveNotif(NewYoutubeData, Bot)
 					}
 				} else if Update {
@@ -235,6 +242,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 		}
 	}
 
+	//check vtuber agency members youtube channel
 	for _, Member := range Group.Members {
 		if !Member.IsYtNill() && Member.Active() {
 			log.WithFields(log.Fields{
@@ -341,6 +349,11 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 
 						NewYoutubeData.UpdateStatus(config.UpcomingStatus)
 						_, err := NewYoutubeData.InputYt()
+						if err != nil {
+							log.Error(err)
+						}
+
+						err = NewYoutubeData.SendToCache(false)
 						if err != nil {
 							log.Error(err)
 						}

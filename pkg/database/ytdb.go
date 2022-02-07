@@ -139,6 +139,47 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 
 }
 
+func (Data *LiveStream) SendToCache(isAgency bool) error {
+	key := []string{}
+	if isAgency {
+		key = append(key, Data.Group.GroupName, Data.VideoID)
+	} else {
+		key = append(key, Data.Member.Name, Data.VideoID)
+	}
+
+	err := UpcomingCache.Set(context.Background(), strings.Join(key, "-"), Data, 0).Err()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func GetUpcomingFromCache() (map[string]interface{}, error) {
+	ctx := context.Background()
+	liveData := make(map[string]interface{})
+
+	iter := UpcomingCache.Scan(ctx, 0, "*", 0).Iterator()
+	for iter.Next(ctx) {
+		val, err := UpcomingCache.Get(ctx, iter.Val()).Result()
+		if err != nil {
+			return nil, err
+		}
+
+		var Data LiveStream
+		err = json.Unmarshal([]byte(val), &Data)
+		if err != nil {
+			return nil, err
+		}
+
+		liveData[iter.Val()] = Data
+	}
+	if err := iter.Err(); err != nil {
+		return nil, err
+	}
+	return liveData, nil
+}
+
 //Input youtube new video
 func (Data *LiveStream) InputYt() (int64, error) {
 	if !Data.Member.IsMemberNill() {

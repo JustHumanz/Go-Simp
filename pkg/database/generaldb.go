@@ -17,10 +17,11 @@ import (
 
 //Public variable
 var (
-	DB           *sql.DB
-	UserTagCache *redis.Client
-	LiveCache    *redis.Client
-	GeneralCache *redis.Client
+	DB            *sql.DB
+	UserTagCache  *redis.Client
+	LiveCache     *redis.Client
+	GeneralCache  *redis.Client
+	UpcomingCache *redis.Client
 )
 
 //Start Database session
@@ -43,6 +44,12 @@ func Start(configfile config.ConfigFile) {
 		Addr:     RedisHost,
 		Password: "",
 		DB:       2,
+	})
+
+	UpcomingCache = redis.NewClient(&redis.Options{
+		Addr:     RedisHost,
+		Password: "",
+		DB:       3,
 	})
 	log.Info("Database module ready")
 }
@@ -928,6 +935,19 @@ func (i *LiveStream) RemoveCache(Key string) error {
 	}).Info("Drop cache")
 
 	err := LiveCache.Del(ctx, Key).Err()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (i *LiveStream) RemoveUpcomingCache(Key string) error {
+	ctx := context.Background()
+	log.WithFields(log.Fields{
+		"Key": Key,
+	}).Info("Drop cache")
+
+	err := UpcomingCache.Del(ctx, Key).Err()
 	if err != nil {
 		return err
 	}
