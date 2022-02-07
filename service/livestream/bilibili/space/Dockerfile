@@ -1,4 +1,7 @@
+ARG base_image=justhumanz/go-simp:latest
+FROM ${base_image} as base
+
 FROM alpine
-COPY --from=justhumanz/go-simp:${RELEASE_VERSION:-latest} /app/Go-Simp/bin/spacebili /spacebili
+COPY --from=base /app/Go-Simp/bin/spacebili /spacebili
 RUN apk --no-cache add tzdata
 CMD ["./spacebili"]
