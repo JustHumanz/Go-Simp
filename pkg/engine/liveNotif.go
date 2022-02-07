@@ -758,10 +758,10 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 
 						log.WithFields(log.Fields{
 							"vtuberAgency": Data.Group.GroupName,
-							"Vtuber":       Data.Member.Name,
-							"TwitchID":     Data.Member.TwitchName,
-							"Dynamic":      Channel.Dynamic,
-							"LiteMode":     Channel.LiteMode,
+							"vtuber":       Data.Member.Name,
+							"twitchID":     Data.Member.TwitchName,
+							"dynamic":      Channel.Dynamic,
+							"liteMode":     Channel.LiteMode,
 						}).Info("Send Message to " + Channel.ChannelID)
 
 						Channel.PushReddis()
@@ -915,110 +915,208 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 			}
 
 			if Data.Status == config.UpcomingStatus {
-				for _, Channel := range ChannelData {
-					if Channel.TypeTag == 2 || Channel.TypeTag == 3 {
-						view, err := strconv.Atoi(Data.Viewers)
-						if err != nil {
-							log.Error(err)
-						}
+				view, err := strconv.Atoi(Data.Viewers)
+				if err != nil {
+					log.Error(err)
+				}
 
-						if Data.Viewers == "" || Data.Viewers == "0" {
-							Data.Viewers = config.Ytwaiting
-						} else {
-							Viewers = NearestThousandFormat(float64(view))
-						}
+				if Data.Viewers == "" || Data.Viewers == "0" {
+					Data.Viewers = config.Ytwaiting
+				} else {
+					Viewers = NearestThousandFormat(float64(view))
+				}
 
-						if Viewers == "" || view < 100 {
-							Viewers = "???"
-						}
+				if Viewers == "" || view < 100 {
+					Viewers = "???"
+				}
 
-						Timestart := func() time.Time {
-							if !Data.Schedul.IsZero() {
-								return Data.Schedul
-							} else if Data.Schedul.IsZero() && !Data.Published.IsZero() {
-								return Data.Published
-							} else {
-								return time.Now()
-							}
-						}()
-
-						msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
-							SetAuthor(Data.Group.GroupName+" "+Data.GroupYoutube.Region, Data.Group.IconURL, YtChannel).
-							SetTitle("New upcoming Livestream").
-							SetDescription(Data.Title).
-							SetImage(Data.Thumb).
-							SetThumbnail(Data.Group.IconURL).
-							SetURL(YtURL).
-							AddField("Type ", Data.Type).
-							AddField("Start live in", durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(1).String()).
-							AddField("Viewers", Viewers+" "+FanBase).
-							InlineAllFields().
-							SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
-							SetColor(Color).MessageEmbed)
-						if err != nil {
-							log.WithFields(log.Fields{
-								"Message":          msg,
-								"ChannelID":        Channel.ID,
-								"DiscordChannelID": Channel.ChannelID,
-							}).Error(err)
-							err = Channel.DelChannel(err.Error())
-							if err != nil {
-								log.Error(err)
-							}
-						}
-
+				Timestart := func() time.Time {
+					if !Data.Schedul.IsZero() {
+						return Data.Schedul
+					} else if Data.Schedul.IsZero() && !Data.Published.IsZero() {
+						return Data.Published
+					} else {
+						return time.Now()
 					}
+				}()
+
+				for i, C := range ChannelData {
+					if C.TypeTag == 2 || C.TypeTag == 3 {
+						ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
+						defer cancel()
+
+						wgg.Add(1)
+
+						go func(ctx context.Context, Channel database.DiscordChannel, wg *sync.WaitGroup) {
+							defer wg.Done()
+
+							done := make(chan struct{})
+							go func() {
+								msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
+									SetAuthor(Data.Group.GroupName+" "+Data.GroupYoutube.Region, Data.Group.IconURL, YtChannel).
+									SetTitle("New upcoming Livestream").
+									SetDescription(Data.Title).
+									SetImage(Data.Thumb).
+									SetThumbnail(Data.Group.IconURL).
+									SetURL(YtURL).
+									AddField("Type ", Data.Type).
+									AddField("Start live in", durafmt.Parse(Timestart.In(loc).Sub(expiresAt)).LimitFirstN(1).String()).
+									AddField("Viewers", Viewers+" "+FanBase).
+									InlineAllFields().
+									SetFooter(Timestart.In(loc).Format(time.RFC822), config.YoutubeIMG).
+									SetColor(Color).MessageEmbed)
+								if err != nil {
+									log.WithFields(log.Fields{
+										"Message":          msg,
+										"ChannelID":        Channel.ID,
+										"DiscordChannelID": Channel.ChannelID,
+									}).Error(err)
+									err = Channel.DelChannel(err.Error())
+									if err != nil {
+										log.Error(err)
+									}
+								}
+
+								log.WithFields(log.Fields{
+									"vtuberAgency": Data.Group.GroupName,
+									"vtuberRegion": Data.GroupYoutube.Region,
+									"dynamic":      Channel.Dynamic,
+									"liteMode":     Channel.LiteMode,
+								}).Info("Send Message to " + Channel.ChannelID)
+
+								done <- struct{}{}
+							}()
+
+							select {
+							case <-done:
+								{
+								}
+							case <-ctx.Done():
+								{
+									log.WithFields(log.Fields{
+										"channelID":      Channel.ID,
+										"discordChannel": Channel.ChannelID,
+										"vtuber":         Data.Member.Name,
+										"videoID":        Data.VideoID,
+									}).Error(ctx.Err())
+								}
+							}
+						}(ctx, C, &wgg)
+
+						Wait := 10
+						if i != 0 && i%Wait == 0 && config.GoSimpConf.LowResources {
+							log.WithFields(log.Fields{
+								"Type":  "Sleep",
+								"Value": Wait,
+							}).Info("Waiting send message")
+							time.Sleep(10 * time.Second)
+							expiresAt = time.Now().In(loc)
+						}
+					}
+					log.WithFields(log.Fields{
+						"Type": "Wait",
+					}).Info("Waiting send message")
+					wgg.Wait()
+
 				}
 			} else if Data.Status == config.LiveStatus {
-				for _, Channel := range ChannelData {
-					if Channel.TypeTag == 2 || Channel.TypeTag == 3 {
-						view, err := strconv.Atoi(Data.Viewers)
-						if err != nil {
-							log.Error(err)
-						}
+				view, err := strconv.Atoi(Data.Viewers)
+				if err != nil {
+					log.Error(err)
+				}
 
-						if Data.Viewers == "" || Data.Viewers == "0" {
-							Data.Viewers = config.Ytwaiting
-						} else {
-							Viewers = NearestThousandFormat(float64(view))
-						}
+				if Data.Viewers == "" || Data.Viewers == "0" {
+					Data.Viewers = config.Ytwaiting
+				} else {
+					Viewers = NearestThousandFormat(float64(view))
+				}
 
-						if Viewers == "" || view < 100 {
-							Viewers = "???"
-						}
+				if Viewers == "" || view < 100 {
+					Viewers = "???"
+				}
 
-						msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
-							SetAuthor(Data.Group.GroupName+" "+Data.GroupYoutube.Region, Data.Group.IconURL, YtChannel).
-							SetTitle("Live right now").
-							SetDescription(Data.Title).
-							SetImage(Data.Thumb).
-							SetThumbnail(Data.Group.IconURL).
-							SetURL(YtURL).
-							AddField("Type ", Data.Type).
-							AddField("Start live", durafmt.Parse(expiresAt.Sub(Data.Schedul.In(loc))).LimitFirstN(1).String()+" Ago").
-							InlineAllFields().
-							AddField("Viewers", Viewers+" "+FanBase).
-							SetFooter(Data.Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
-							SetColor(Color).MessageEmbed)
-						if err != nil {
-							log.WithFields(log.Fields{
-								"Message":          msg,
-								"ChannelID":        Channel.ID,
-								"DiscordChannelID": Channel.ChannelID,
-							}).Error(err)
-							err = Channel.DelChannel(err.Error())
-							if err != nil {
-								log.Error(err)
+				for i, C := range ChannelData {
+					if C.TypeTag == 2 || C.TypeTag == 3 {
+						ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
+						defer cancel()
+
+						wgg.Add(1)
+
+						go func(ctx context.Context, Channel database.DiscordChannel, wg *sync.WaitGroup) {
+							defer wg.Done()
+
+							done := make(chan struct{})
+
+							go func() {
+								msg, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
+									SetAuthor(Data.Group.GroupName+" "+Data.GroupYoutube.Region, Data.Group.IconURL, YtChannel).
+									SetTitle("Live right now").
+									SetDescription(Data.Title).
+									SetImage(Data.Thumb).
+									SetThumbnail(Data.Group.IconURL).
+									SetURL(YtURL).
+									AddField("Type ", Data.Type).
+									AddField("Start live", durafmt.Parse(expiresAt.Sub(Data.Schedul.In(loc))).LimitFirstN(1).String()+" Ago").
+									InlineAllFields().
+									AddField("Viewers", Viewers+" "+FanBase).
+									SetFooter(Data.Schedul.In(loc).Format(time.RFC822), config.YoutubeIMG).
+									SetColor(Color).MessageEmbed)
+								if err != nil {
+									log.WithFields(log.Fields{
+										"Message":          msg,
+										"ChannelID":        Channel.ID,
+										"DiscordChannelID": Channel.ChannelID,
+									}).Error(err)
+									err = Channel.DelChannel(err.Error())
+									if err != nil {
+										log.Error(err)
+									}
+								}
+
+								log.WithFields(log.Fields{
+									"vtuberAgency": Data.Group.GroupName,
+									"vtuberRegion": Data.GroupYoutube.Region,
+									"dynamic":      Channel.Dynamic,
+									"liteMode":     Channel.LiteMode,
+								}).Info("Send Message to " + Channel.ChannelID)
+
+								done <- struct{}{}
+
+							}()
+
+							select {
+							case <-done:
+								{
+								}
+							case <-ctx.Done():
+								{
+									log.WithFields(log.Fields{
+										"channelID":      Channel.ID,
+										"discordChannel": Channel.ChannelID,
+										"vtuber":         Data.Member.Name,
+										"videoID":        Data.VideoID,
+									}).Error(ctx.Err())
+								}
 							}
+
+						}(ctx, C, &wgg)
+
+						Wait := 10
+						if i != 0 && i%Wait == 0 && config.GoSimpConf.LowResources {
+							log.WithFields(log.Fields{
+								"Type":  "Sleep",
+								"Value": Wait,
+							}).Info("Waiting send message")
+							time.Sleep(10 * time.Second)
+							expiresAt = time.Now().In(loc)
 						}
+						log.WithFields(log.Fields{
+							"Type": "Wait",
+						}).Info("Waiting send message")
+						wgg.Wait()
 					}
 				}
 			} else if Data.Status == config.PastStatus {
-				ChannelData, err := database.ChannelTag(Data.Member.ID, 2, config.NotLiveOnly, Data.Member.Region)
-				if err != nil {
-					log.Panic(err)
-				}
-
 				for _, v := range ChannelData {
 					msg, err := Bot.ChannelMessageSendEmbed(v.ChannelID, NewEmbed().
 						SetAuthor(Data.Group.GroupName+" "+Data.GroupYoutube.Region, Data.Group.IconURL, YtChannel).
