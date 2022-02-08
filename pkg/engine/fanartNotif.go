@@ -126,11 +126,12 @@ func SendFanArtNude(Art database.DataFanart, Bot *discordgo.Session) {
 				}(ctx, C, &wgg)
 
 				if i%10 == 0 && config.GoSimpConf.LowResources && i != 0 {
+					tidur := 10 * time.Second
 					log.WithFields(log.Fields{
 						"Type":  "Sleep",
-						"Value": 1 * time.Minute,
+						"Value": tidur,
 					}).Info("Waiting send message")
-					time.Sleep(1 * time.Minute)
+					time.Sleep(tidur)
 				}
 
 			}
