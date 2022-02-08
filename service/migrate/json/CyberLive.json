@@ -1,236 +1,215 @@
 {
-	"GroupName": "CyberLive",
-	"GroupIcon": "https://cdn.humanz.moe/cyberlive.png",
-	"GroupChannel": {
-		"Youtube": [
-			{
-				"ChannelID": "UCutuOO0MBRhlvUclzFMaO0g",
-				"Region": "EN"
-			}
-		],
-		"BiliBili": null
-	},
-	"Members": [
-		{
-			"Name": "Hylo",
-			"EN_Name": "Ayane Hylo",
-			"JP_Name": "",
-			"Twitter": {
-				"Twitter_Fanart": "#Hyillust",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "ayanehylo"
-			},
-			"Youtube": {
-				"Yt_ID": "UC-ENagPkiLO3u2nlhTZVDHQ"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "ayanehylo"
-			},
-			"Region": "EN",
-			"Fanbase": "Hylarem",
-			"Status": "Active"
-		},
-		{
-			"Name": "Yuri",
-			"EN_Name": "Amaris Yuri",
-			"JP_Name": "アマリス 百合",
-			"Twitter": {
-				"Twitter_Fanart": "#Leopart",
-				"Twitter_Lewd": "#Yuricchi",
-				"Twitter_Username": "amarisyuri"
-			},
-			"Youtube": {
-				"Yt_ID": "UCUC1EIq0MtF-kctHPtQzIjQ"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "AmarisYuri"
-			},
-			"Region": "EN",
-			"Fanbase": "Famyuri",
-			"Status": "Active"
-		},
-		{
-		
-			"Name": "Lumi667C",
-			"EN_Name": "Kaneko Lumi",
-			"JP_Name": "金子瑠美",
-			"Twitter": {
-				"Twitter_Fanart": "#Lumillust",
-				"Twitter_Lewd": "#Lewdmi",
-				"Twitter_Username": "lumikaneko"
-			},
-			"Youtube": {
-				"Yt_ID": "UCx_zwZuGIS4jxO07kFk8G6Q"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "kanekolumi"
-			},
-			"Region": "EN",
-			"Fanbase": "LumiNation",
-			"Status": "Active"
-		},
-		{
-			"Name": "Seina",
-			"EN_Name": "Momozora Seina",
-			"JP_Name": "",
-			"Twitter": {
-				"Twitter_Fanart": "#SeinART",
-				"Twitter_Lewd": "#SeinaSINS",
-				"Twitter_Username": "momozoraseina"
-			},
-			"Youtube": {
-				"Yt_ID": "UCUIAL_OAPtNmlAlKfj-ZuRQ"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "momozoraseina"
-			},
-			"Region": "EN",
-			"Fanbase": "SeinARMY",
-			"Status": "Active"
-		},
-		{
-			"Name": "Pan-chan",
-			"EN_Name": "Utano Pandora",
-			"JP_Name": "",
-			"Twitter": {
-				"Twitter_Fanart": "#PAINTdora",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "UtanoPandora"
-			},
-			"Youtube": {
-				"Yt_ID": "UCt4YLAed3VpZnh9mJgkLyCw"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "utanopandora"
-			},
-			"Region": "EN",
-			"Fanbase": "FANdora",
-			"Status": "Active"
-		},
-		{
-			"Name": "Misaki",
-			"EN_Name": "Sato Misaki",
-			"JP_Name": "",
-			"Twitter": {
-				"Twitter_Fanart": "#Misakillust",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "SatoMisakien"
-			},
-			"Youtube": {
-				"Yt_ID": "UCPXwReYYAchBkbO6mzLrq9g"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "satomisakien"
-			},
-			"Region": "EN",
-			"Fanbase": "",
-			"Status": "Active"
-		},
-		{
-			"Name": "Emma",
-			"EN_Name": "Oumiya Emma",
-			"JP_Name": "大宮えま",
-			"Twitter": {
-				"Twitter_Fanart": "#OumiArt",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "OumiyaEmma"
-			},
-			"Youtube": {
-				"Yt_ID": "UCDdmoA79bfI8DHDnE_Yy2dg"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "oumiyaemma"
-			},
-			"Region": "EN",
-			"Fanbase": "EmMates",
-			"Status": "Active"
-		},
-		{
-			"Name": "Yoki",
-			"EN_Name": "Inami Yoki",
-			"JP_Name": "いなみ よき",
-			"Twitter": {
-				"Twitter_Fanart": "#Yokillust",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "inamiyoki"
-			},
-			"Youtube": {
-				"Yt_ID": "UCKnts8S_hayjQIOXtQKCVIg"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "inamiyoki"
-			},
-			"Region": "EN",
-			"Fanbase": "",
-			"Status": "Active"
-		},
-		{
-			"Name": "Menace",
-			"EN_Name": "Alchemilla Menace",
-			"JP_Name": "アルケミラメナス",
-			"Twitter": {
-				"Twitter_Fanart": "#ARTchemilla",
-				"Twitter_Lewd": "#Alcoomilla",
-				"Twitter_Username": "MAlchemilla"
-			},
-			"Youtube": {
-				"Yt_ID": "UCfcizLIjD-OMeWbdeC8UPUw"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "menacealchemilla"
-			},
-			"Region": "EN",
-			"Fanbase": "",
-			"Status": "Active"
-		},
-		{
-			"Name": "Inori",
-			"EN_Name": "Kurohana Inori",
-			"JP_Name": "黒花いのり",
-			"Twitter": {
-				"Twitter_Fanart": "#illustnori",
-				"Twitter_Lewd": "#kurohorni",
-				"Twitter_Username": "KurohanaInori"
-			},
-			"Youtube": {
-				"Yt_ID": "UCTM9UNM9o4lYmQpRJp0QL1A"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "KurohanaInori"
-			},
-			"Region": "EN",
-			"Fanbase": "",
-			"Status": "Active"
-		},
-		{
-			"Name": "Pipi",
-			"EN_Name": "Iekushi Chapipi",
-			"JP_Name": "イエクシチャピピ",
-			"Twitter": {
-				"Twitter_Fanart": "#ChaPNG",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "IekushiChapipi"
-			},
-			"Youtube": {
-				"Yt_ID": "UC_4UpVnvdG53p3b9VKqTFPQ"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "iekushichapipi"
-			},
-			"Region": "EN",
-			"Fanbase": "",
-			"Status": "Active"
-		}
-	]
+  "GroupName": "CyberLive",
+  "GroupIcon": "https://cdn.humanz.moe/cyberlive.png",
+  "GroupChannel": {
+    "Youtube": [
+      {
+        "ChannelID": "UCutuOO0MBRhlvUclzFMaO0g",
+        "Region": "EN"
+      }
+    ],
+    "BiliBili": null
+  },
+  "Members": [
+    {
+      "Name": "Yuri",
+      "EN_Name": "Amaris Yuri",
+      "JP_Name": "アマリス 百合",
+      "Twitter": {
+        "Twitter_Fanart": "#Leopart",
+        "Twitter_Lewd": "#Yuricchi",
+        "Twitter_Username": "amarisyuri"
+      },
+      "Youtube": {
+        "Yt_ID": "UCUC1EIq0MtF-kctHPtQzIjQ"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "AmarisYuri"
+      },
+      "Region": "EN",
+      "Fanbase": "Famyuri",
+      "Status": "Active"
+    },
+    {
+      "Name": "Lumi667C",
+      "EN_Name": "Kaneko Lumi",
+      "JP_Name": "金子瑠美",
+      "Twitter": {
+        "Twitter_Fanart": "#Lumillust",
+        "Twitter_Lewd": "#Lewdmi",
+        "Twitter_Username": "lumikaneko"
+      },
+      "Youtube": {
+        "Yt_ID": "UCx_zwZuGIS4jxO07kFk8G6Q"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "kanekolumi"
+      },
+      "Region": "EN",
+      "Fanbase": "LumiNation",
+      "Status": "Active"
+    },
+    {
+      "Name": "Seina",
+      "EN_Name": "Momozora Seina",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#SeinART",
+        "Twitter_Lewd": "#SeinaSINS",
+        "Twitter_Username": "momozoraseina"
+      },
+      "Youtube": {
+        "Yt_ID": "UCUIAL_OAPtNmlAlKfj-ZuRQ"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "momozoraseina"
+      },
+      "Region": "EN",
+      "Fanbase": "SeinARMY",
+      "Status": "Active"
+    },
+    {
+      "Name": "Pan-chan",
+      "EN_Name": "Utano Pandora",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#PAINTdora",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "UtanoPandora"
+      },
+      "Youtube": {
+        "Yt_ID": "UCt4YLAed3VpZnh9mJgkLyCw"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "utanopandora"
+      },
+      "Region": "EN",
+      "Fanbase": "FANdora",
+      "Status": "Active"
+    },
+    {
+      "Name": "Misaki",
+      "EN_Name": "Sato Misaki",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#Misakillust",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "SatoMisakien"
+      },
+      "Youtube": {
+        "Yt_ID": "UCPXwReYYAchBkbO6mzLrq9g"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "satomisakien"
+      },
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Emma",
+      "EN_Name": "Oumiya Emma",
+      "JP_Name": "大宮えま",
+      "Twitter": {
+        "Twitter_Fanart": "#OumiArt",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "OumiyaEmma"
+      },
+      "Youtube": {
+        "Yt_ID": "UCDdmoA79bfI8DHDnE_Yy2dg"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "oumiyaemma"
+      },
+      "Region": "EN",
+      "Fanbase": "EmMates",
+      "Status": "Active"
+    },
+    {
+      "Name": "Yoki",
+      "EN_Name": "Inami Yoki",
+      "JP_Name": "いなみ よき",
+      "Twitter": {
+        "Twitter_Fanart": "#Yokillust",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "inamiyoki"
+      },
+      "Youtube": {
+        "Yt_ID": "UCKnts8S_hayjQIOXtQKCVIg"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "inamiyoki"
+      },
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Menace",
+      "EN_Name": "Alchemilla Menace",
+      "JP_Name": "アルケミラメナス",
+      "Twitter": {
+        "Twitter_Fanart": "#ARTchemilla",
+        "Twitter_Lewd": "#Alcoomilla",
+        "Twitter_Username": "MAlchemilla"
+      },
+      "Youtube": {
+        "Yt_ID": "UCfcizLIjD-OMeWbdeC8UPUw"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "menacealchemilla"
+      },
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Inori",
+      "EN_Name": "Kurohana Inori",
+      "JP_Name": "黒花いのり",
+      "Twitter": {
+        "Twitter_Fanart": "#illustnori",
+        "Twitter_Lewd": "#kurohorni",
+        "Twitter_Username": "KurohanaInori"
+      },
+      "Youtube": {
+        "Yt_ID": "UCTM9UNM9o4lYmQpRJp0QL1A"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "KurohanaInori"
+      },
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Pipi",
+      "EN_Name": "Iekushi Chapipi",
+      "JP_Name": "イエクシチャピピ",
+      "Twitter": {
+        "Twitter_Fanart": "#ChaPNG",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "IekushiChapipi"
+      },
+      "Youtube": {
+        "Yt_ID": "UC_4UpVnvdG53p3b9VKqTFPQ"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "iekushichapipi"
+      },
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    }
+  ]
 }

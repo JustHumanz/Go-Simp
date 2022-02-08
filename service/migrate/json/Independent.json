@@ -927,6 +927,26 @@
       "Region": "ID",
       "Fanbase": "",
       "Status": "Active"
+    },
+    {
+      "Name": "Hylo",
+      "EN_Name": "Ayane Hylo",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#Hyillust",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "ayanehylo"
+      },
+      "Youtube": {
+        "Yt_ID": "UC-ENagPkiLO3u2nlhTZVDHQ"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "ayanehylo"
+      },
+      "Region": "EN",
+      "Fanbase": "Hylarem",
+      "Status": "Active"
     }
   ]
 }
