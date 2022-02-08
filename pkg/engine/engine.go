@@ -28,6 +28,7 @@ import (
 	"github.com/nicklaw5/helix"
 	"github.com/pbnjay/memory"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/net/proxy"
 )
 
 //GetYtToken Get a valid token
@@ -842,11 +843,18 @@ func InitTwitterScraper() *twitterscraper.Scraper {
 }
 
 //Start bot
-func StartBot() *discordgo.Session {
+func StartBot(torTransport bool) *discordgo.Session {
 	i := config.GoSimpConf
 	tmp, err := discordgo.New("Bot " + i.Discord)
 	if err != nil {
 		log.Panic(err)
+	}
+	if torTransport {
+		dialSocksProxy, err := proxy.SOCKS5("tcp", config.GoSimpConf.MultiTOR, nil, proxy.Direct)
+		if err != nil {
+			log.Error(err)
+		}
+		tmp.Client.Transport = &http.Transport{Dial: dialSocksProxy.Dial}
 	}
 	return tmp
 }

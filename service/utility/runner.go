@@ -85,7 +85,7 @@ func main() {
 	configfile.InitConf()
 	database.Start(configfile)
 
-	Bot := engine.StartBot()
+	Bot := engine.StartBot(false)
 
 	err = Bot.Open()
 	if err != nil {

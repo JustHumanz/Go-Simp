@@ -7,6 +7,7 @@ networks:
 services:
   bilibili:
     image: justhumanz/go-simp-bilibili-fanart:${RELEASE_VERSION}
+    command: ./bilibili_fanart -Tor
     depends_on:
       - multi_tor
     networks:
@@ -16,7 +17,7 @@ services:
     image: justhumanz/go-simp-twitter-fanart:${RELEASE_VERSION}
     depends_on:
       - multi_tor
-    command: ./twitter_fanart -LewdFanart
+    command: ./twitter_fanart -LewdFanart -Tor
     networks:
       - go-simp-net
 
@@ -24,6 +25,6 @@ services:
     image: justhumanz/go-simp-pixiv-fanart:${RELEASE_VERSION}
     depends_on:
       - multi_tor
-    command: ./pixiv_fanart -LewdFanart
+    command: ./pixiv_fanart -LewdFanart -Tor
     networks:
       - go-simp-net

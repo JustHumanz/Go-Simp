@@ -114,7 +114,7 @@ func init() {
 	} //[]string{"Cookie", "SESSDATA=" + configfile.BiliSess}
 	Limit = 100
 
-	Bot = engine.StartBot()
+	Bot = engine.StartBot(false)
 	err = Bot.Open()
 	if err != nil {
 		log.Error(err)

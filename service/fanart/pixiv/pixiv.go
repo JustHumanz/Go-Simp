@@ -33,6 +33,7 @@ var (
 	Bot          *discordgo.Session
 	GroupPayload *[]database.Group
 	lewd         = flag.Bool("LewdFanart", false, "Enable lewd fanart module")
+	torTransport = flag.Bool("Tor", false, "Enable multiTor for bot transport")
 	gRCPconn     pilot.PilotServiceClient
 )
 
@@ -78,7 +79,7 @@ func main() {
 
 	GetPayload()
 	configfile.InitConf()
-	Bot = engine.StartBot()
+	Bot = engine.StartBot(*torTransport)
 
 	database.Start(configfile)
 
