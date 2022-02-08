@@ -23,10 +23,7 @@ services:
 
   multi_tor:
     image: justhumanz/go-multitor
-    command: ["./MultiTOR","-key","${KEY}"]
-    sysctls:
-      net.ipv4.ip_local_port_range: "15000 61000"
-      net.ipv4.tcp_fin_timeout: 30      
+    command: ["./MultiTOR","-key","${KEY}"]   
 #    ports:
 #      - 8080:8080          
     networks:
