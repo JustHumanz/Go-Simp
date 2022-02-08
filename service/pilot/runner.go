@@ -18,17 +18,17 @@ var M = []*pilot.ModuleList{
 	{
 		Name:    config.TBiliBiliModule,
 		Counter: 1,
-		CronJob: 17, //every 7 minutes
+		CronJob: 7, //every 7 minutes
 	},
 	{
 		Name:    config.TwitterModule,
 		Counter: 1,
-		CronJob: 10, //every 30 minutes
+		CronJob: 10, //every 10 minutes
 	},
 	{
 		Name:    config.PixivModule,
 		Counter: 1,
-		CronJob: 7, //every 5 minutes
+		CronJob: 7, //every 7 minutes
 	},
 
 	//Live
