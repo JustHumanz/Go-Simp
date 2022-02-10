@@ -1,21 +1,30 @@
 import { createRouter, createWebHistory } from "vue-router"
 import HomeView from "../views/HomeView.vue"
+import VtuberView from "../views/VtuberView.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior(to, from, savedPosition) {
+    // always scroll to top
+    return { top: 0 }
+  },
   routes: [
     {
       path: "/",
-      name: "home",
+      name: "Home",
       component: HomeView,
     },
     {
-      path: "/about",
-      name: "about",
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import("../views/AboutView.vue"),
+      path: "/vtuber",
+      name: "Vtuber List",
+
+      component: VtuberView,
+    },
+    {
+      path: "/vtuber/:id",
+      name: "Group Vtuber List",
+
+      component: VtuberView,
     },
     {
       path: "/invite",
