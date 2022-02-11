@@ -33,7 +33,12 @@ import "./index.css"
         </ul>
       </div>
 
-      <a class="dashboard-btn">Dashboard</a>
+      <a
+        class="dashboard-btn"
+        href="https://web-admin.humanz.moe/login"
+        target="_blank"
+        >Dashboard</a
+      >
     </div>
   </nav>
 
