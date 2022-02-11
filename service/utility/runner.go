@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"math"
 	"os"
 	"strings"
@@ -289,23 +290,16 @@ func main() {
 		log.Info("Start Check Private video")
 		for _, Status := range []string{config.UpcomingStatus, config.PastStatus, config.LiveStatus, config.PrivateStatus} {
 			for _, Group := range *GroupPayload {
-				for _, Member := range Group.Members {
-					YtData, Key, err := database.YtGetStatus(map[string]interface{}{
-						"MemberID":   Member.ID,
-						"MemberName": Member.Name,
-						"Status":     Status,
-						"State":      config.Sys,
-					})
+				YtData, err := Group.GetYtLiveStream(Status, nil)
+				if err != nil {
+					log.Error(err)
+				}
+				for _, Y := range YtData {
+					Y.Status = Status
+					Check(Y)
+					err = Y.RemoveCache(fmt.Sprintf("%d-%s-%s", Group.ID, Group.GroupName, Status))
 					if err != nil {
-						log.Error(err)
-					}
-					for _, Y := range YtData {
-						Y.Status = Status
-						Check(Y)
-						err = Y.RemoveCache(Key)
-						if err != nil {
-							log.Panic(err)
-						}
+						log.Panic(err)
 					}
 				}
 			}

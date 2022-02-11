@@ -73,6 +73,7 @@ func main() {
 	c := cron.New()
 	c.Start()
 	c.AddFunc(config.CheckPayload, GetPayload)
+	c.AddFunc("@every 0h15m0s", CacheChcker)
 	c.AddFunc("0 */2 * * *", func() {
 		engine.ExTknList = nil
 	})

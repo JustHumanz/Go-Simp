@@ -46,13 +46,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 							return
 						} else {
-							YoutubeData, _, err := database.YtGetStatus(map[string]interface{}{
-								"MemberID":   Member.ID,
-								"MemberName": Member.Name,
-								"Status":     config.UpcomingStatus,
-								"Region":     Region,
-								"State":      config.Fe,
-							})
+							YoutubeData, err := Member.GetYtLiveStream(config.UpcomingStatus)
 							if err != nil {
 								log.Error(err)
 							}
@@ -110,13 +104,13 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						YoutubeData, _, err := database.YtGetStatus(map[string]interface{}{
-							"GroupID":   VTuberGroup.ID,
-							"GroupName": VTuberGroup.GroupName,
-							"Status":    config.UpcomingStatus,
-							"Region":    Region,
-							"State":     config.Fe,
-						})
+						YoutubeData, err := VTuberGroup.GetYtLiveStream(config.UpcomingStatus, func() []string {
+							if Region != "" {
+								return []string{Region}
+							} else {
+								return nil
+							}
+						}())
 						if err != nil {
 							log.Error(err)
 						}
@@ -201,13 +195,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								log.Error(err)
 							}
 						} else {
-							YoutubeData, _, err := database.YtGetStatus(map[string]interface{}{
-								"MemberID":   Member.ID,
-								"MemberName": Member.Name,
-								"Status":     config.LiveStatus,
-								"Region":     Region,
-								"State":      config.Fe,
-							})
+							YoutubeData, err := Member.GetYtLiveStream(config.LiveStatus)
 							if err != nil {
 								log.Error(err)
 							}
@@ -268,13 +256,15 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						YoutubeData, _, err := database.YtGetStatus(map[string]interface{}{
-							"GroupID":   VTuberGroup.ID,
-							"GroupName": VTuberGroup.GroupName,
-							"Status":    config.LiveStatus,
-							"Region":    Region,
-							"State":     config.Fe,
-						})
+						YoutubeData, err := VTuberGroup.GetYtLiveStream(
+							config.LiveStatus,
+							func() []string {
+								if Region != "" {
+									return []string{Region}
+								} else {
+									return nil
+								}
+							}())
 						if err != nil {
 							log.Error(err)
 						}
@@ -362,13 +352,7 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 							return
 						} else {
-							YoutubeData, _, err := database.YtGetStatus(map[string]interface{}{
-								"MemberID":   Member.ID,
-								"MemberName": Member.Name,
-								"Status":     config.UpcomingStatus,
-								"Region":     Region,
-								"State":      config.Fe,
-							})
+							YoutubeData, err := Member.GetYtLiveStream(config.UpcomingStatus)
 							if err != nil {
 								log.Error(err)
 							}
@@ -424,27 +408,19 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						)
 
 						if CheckReg(VTuberGroup.GroupName, Region) {
-							YoutubeData, _, err = database.YtGetStatus(map[string]interface{}{
-								"GroupID":   VTuberGroup.ID,
-								"GroupName": VTuberGroup.GroupName,
-								"Status":    config.PastStatus,
-								"Region":    Region,
-								"State":     config.Fe,
-							})
-							if err != nil {
-								log.Error(err)
-							}
+							YoutubeData, err = VTuberGroup.GetYtLiveStream(config.PastStatus, func() []string {
+								if Region != "" {
+									return []string{Region}
+								} else {
+									return nil
+								}
+							}())
 						} else {
-							YoutubeData, _, err = database.YtGetStatus(map[string]interface{}{
-								"GroupID":   VTuberGroup.ID,
-								"GroupName": VTuberGroup.GroupName,
-								"Status":    config.PastStatus,
-								"Region":    Region,
-								"State":     config.Fe,
-							})
-							if err != nil {
-								log.Error(err)
-							}
+							YoutubeData, err = VTuberGroup.GetYtLiveStream(config.PastStatus, nil)
+						}
+
+						if err != nil {
+							log.Error(err)
 						}
 
 						if YoutubeData != nil {
