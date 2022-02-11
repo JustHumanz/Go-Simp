@@ -26,6 +26,7 @@ const router = createRouter({
 
       component: VtuberView,
     },
+    { path: "*", component: NotFound, name: "NotFound" },
     {
       path: "/invite",
       name: "invite",
