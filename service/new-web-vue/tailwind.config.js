@@ -15,6 +15,13 @@ module.exports = {
         "ipad-agency": "60vw 0%",
         "post-default": "0 0",
       },
+
+      boxShadow: {
+        "center": "0 0.5rem 1rem rgba(0, 0, 0, 0.2)",
+      },
+
+      colors: {
+      },
     },
   },
   plugins: [],

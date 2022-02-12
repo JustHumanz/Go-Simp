@@ -70,7 +70,7 @@
     }
 
     .btn-invite {
-      @apply bg-orange-400 my-3 py-2 px-4 text-xl rounded-md font-semibold text-white cursor-pointer shadow-none hover:shadow-md hover:shadow-orange-400/75;
+      @apply bg-orange-400 my-3 py-2 px-4 text-xl rounded-md font-semibold text-white cursor-pointer shadow-none transition-shadow hover:shadow-md hover:shadow-orange-400/75;
     }
     .link-source {
       @apply text-sm text-center text-gray-500 hover:text-gray-700 cursor-pointer;

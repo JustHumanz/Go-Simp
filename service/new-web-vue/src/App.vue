@@ -22,9 +22,13 @@ import "./index.css"
             ></path></svg
         ></a>
         <ul>
-          <li><router-link to="/vtuber">Vtubers</router-link></li>
-          <li><router-link to="">Docs</router-link></li>
-          <li><router-link to="">Support</router-link></li>
+          <li>
+            <router-link to="/vtuber" :class="{ active: isActive }"
+              >Vtubers</router-link
+            >
+          </li>
+          <li><router-link to="/docs">Docs</router-link></li>
+          <li><router-link to="/support">Support</router-link></li>
           <li class="mobile-dashboard">
             <a href="https://web-admin.humanz.moe/login" target="_blank"
               >Dashboard</a
@@ -56,6 +60,22 @@ import "./index.css"
   </footer>
 </template>
 
+<script>
+export default {
+  data() {
+    return {
+      isActive: false,
+    }
+  },
+  // function when vue loaded
+  async mounted() {
+    // make sleep using promise
+    await new Promise((resolve) => setTimeout(resolve, 500))
+    this.isActive = this.$route.path.includes("/vtuber/")
+  },
+}
+</script>
+
 <style lang="scss">
 nav {
   font-family: "Nunito", sans-serif;
@@ -82,29 +102,40 @@ nav {
 
       ul {
         // make nav-menu items using tailwind
-        @apply flex items-start sm:items-center flex-col sm:flex-row bg-red-700 rounded-md sm:bg-transparent w-[13rem] sm:w-auto absolute top-2 right-2 sm:top-auto sm:right-auto sm:relative invisible sm:visible;
+        @apply flex items-start sm:items-center flex-col sm:flex-row bg-cyan-500 rounded-md sm:bg-transparent w-[13rem] sm:w-auto absolute top-2 right-2 sm:top-auto sm:right-auto sm:relative invisible sm:visible shadow-center sm:shadow-none shadow-cyan-600/75;
 
         li {
-          @apply p-3 text-white hover:text-cyan-100 w-full sm:w-auto
-        hover:bg-red-800 sm:hover:bg-transparent first:rounded-t-md last:rounded-b-md;
+          @apply w-full sm:w-auto sm:mx-1;
+
+          &:first-child a {
+            @apply rounded-t-md;
+          }
+          &:last-child a {
+            @apply rounded-b-md;
+          }
 
           a {
-            @apply w-full h-full inline-block cursor-pointer;
+            @apply w-full inline-block cursor-pointer text-white py-2 sm:py-1 px-2 sm:rounded-md transition-shadow sm:hover:shadow-sm sm:hover:shadow-cyan-600/75 hover:bg-cyan-600/50 sm:hover:bg-transparent;
 
-            & .active {
-              @apply font-semibold;
+            &.router-link-active,
+            &.active {
+              @apply sm:shadow-md bg-cyan-600 sm:bg-transparent sm:shadow-cyan-600/75 font-semibold;
             }
           }
 
           &.mobile-dashboard {
-            @apply bg-orange-400 hover:bg-orange-600 block sm:hidden;
+            @apply block sm:hidden;
+
+            a {
+              @apply bg-rose-500 hover:bg-rose-600;
+            }
           }
         }
       }
     }
 
     .dashboard-btn {
-      @apply bg-orange-400 my-3 py-1 px-2 rounded-md font-semibold text-white cursor-pointer shadow-none hover:shadow-md hover:shadow-orange-400/75 hidden sm:block;
+      @apply bg-rose-500 my-3 py-1 px-2 rounded-md font-semibold text-white cursor-pointer shadow-none transition-shadow hover:shadow-md hover:shadow-rose-500/75 hidden sm:block;
     }
   }
 }
