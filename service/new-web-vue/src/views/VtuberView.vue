@@ -24,14 +24,20 @@ import { RouterLink } from "vue-router"
         <li class="filter">
           <a href="#" class="link-filter">Regions</a>
           <ul class="filter-submenu">
-            <li>Hi</li>
-            <li>Hi</li>
-          </ul>
-        </li>
-        <li class="filter">
-          <a href="#" class="link-filter">More</a>
-          <ul class="filter-submenu">
-            <li>Hi</li>
+            <li class="pending" v-if="regions.length < 1">
+              <img src="/src/assets/amelia-watson-spin.gif" alt="" />
+            </li>
+            <li v-for="region in regions" :key="region">
+              <a
+                :href="
+                  $route.href.replace(/reg=.{2}/, '') + `?reg=${region.code}`
+                "
+                ><img
+                  :src="`/src/assets/flags/${region.flagCode}.svg`"
+                  alt=""
+                />{{ region.name }}</a
+              >
+            </li>
           </ul>
         </li>
       </ul>
@@ -44,12 +50,72 @@ import { RouterLink } from "vue-router"
   <section class="ame-page" :class="{ hide: loaded }">
     <img src="/src/assets/amelia-watson-spin.gif" alt="" />
   </section>
-  <section class="vtuber-page" :class="{ hide: !loaded }"></section>
+  <section class="vtuber-page" :class="{ hide: !loaded }">
+    <!-- make 1 data dummy card for vtubers-->
+    <div class="card-vtubers" v-for="vtuber in show_vtuber" :key="vtuber.ID">
+      <router-link to="/vtuber/members/1">
+        <div class="card-vtuber-img">
+          <div class="tags">
+            <!-- Get groupicon from group id -->
+            <img
+              v-bind:src="vtuber.Group.GroupIcon"
+              :alt="vtuber.Group.GroupName"
+            />
+            <!-- Get flag icon from Region -->
+            <img
+              v-bind:src="`/src/assets/flags/${vtuber.Regions.flagCode}.svg`"
+              :alt="vtuber.Regions.name"
+            />
+            <div
+              :class="{
+                hide:
+                  !vtuber.IsBiliLive &&
+                  !vtuber.IsYtLive &&
+                  !vtuber.IsTwitchLive,
+              }"
+              class="live-indicator"
+            >
+              LIVE
+            </div>
+          </div>
+          <div class="profile-pic" v-if="vtuber.Youtube !== null">
+            <img
+              class="card-img-top"
+              v-bind:src="vtuber.Youtube.Avatar"
+              onerror="this.src='/src/assets/smolame.png'"
+              alt="Card image cap"
+            />
+          </div>
+          <div class="profile-pic" v-else-if="vtuber.BiliBili !== null">
+            <img
+              class="card-img-top"
+              v-bind:src="vtuber.BiliBili.Avatar"
+              onerror="this.src='/src/assets/smolame.png'"
+              alt="Card image cap"
+            />
+          </div>
+          <div v-else class="profile-pic">
+            <img
+              class="card-img-top"
+              src="/src/assets/smolame.png"
+              alt="Card image cap"
+            />
+          </div>
+        </div>
+        <div class="card-vtuber-name">
+          <h4>{{ vtuber.EnName }}</h4>
+          <small>{{ vtuber.NickName }}</small>
+        </div>
+      </router-link>
+    </div>
+  </section>
 </template>
 
 <script>
 import axios from "axios"
 import Config from "../config.json"
+import regionConfig from "../region.json"
+
 export default {
   name: "Vtubers",
   data() {
@@ -59,6 +125,7 @@ export default {
       group_id: -1,
       regions: [],
       vtubers: [],
+      show_vtuber: [],
     }
   },
   async mounted() {
@@ -84,11 +151,13 @@ export default {
 
       { immediate: true }
     )
+    this.ExtendVtuberData()
   },
   beforeRouteEnter(to, from, next) {
     console.log(from)
     next()
   },
+  computed: {},
   methods: {
     async fetchVtubers() {
       if (
@@ -118,15 +187,45 @@ export default {
       this.group_id = this.$route.params.id
       this.loaded = false
 
-      await axios
+      const vtuber_data = await axios
         .get(Config.REST_API + "/members/", groupIdExist)
-        .then((response) => {
-          this.vtubers = response.data
+        .then((response) => response.data)
+
+      vtuber_data.forEach((vtuber) => {
+        this.groups.forEach((group) => {
+          if (group.ID === vtuber.GroupID) vtuber.Group = group
         })
-        .catch((error) => {
-          console.log(error)
+
+        regionConfig.forEach((region) => {
+          if (region.code === vtuber.Region) {
+            vtuber.Regions = region
+          }
         })
+      })
+
+      // sort vtuber_data from nameen
+      vtuber_data.sort((a, b) => {
+        if (a.EnName < b.EnName) return -1
+        if (a.EnName > b.EnName) return 1
+        return 0
+      })
+
+      // sort vtuber_data when IsYtLive true or IsBiliLive true or IsTwitchLive true first
+      vtuber_data.sort((a, b) => {
+        if (a.IsYtLive && !b.IsYtLive) return -1
+        if (!a.IsYtLive && b.IsYtLive) return 1
+        if (a.IsBiliLive && !b.IsBiliLive) return -1
+        if (!a.IsBiliLive && b.IsBiliLive) return 1
+        if (a.IsTwitchLive && !b.IsTwitchLive) return -1
+        if (!a.IsTwitchLive && b.IsTwitchLive) return 1
+        return 0
+      })
+
+      this.vtubers = vtuber_data
+
       console.log(`Total data: ${this.vtubers.length}`)
+      //push vtubers to show_vtuber only 50 data
+      this.show_vtuber = this.vtubers.slice(0, 50)
       this.loaded = true
     },
 
@@ -141,13 +240,40 @@ export default {
       }
 
       await this.fetchVtubers()
+      console.log("Get regions...")
 
       await this.vtubers.forEach((vtuber) => {
-        if (!this.regions.includes(vtuber.Region))
-          this.regions.push(vtuber.Region)
+        // loop regionConfig
+        regionConfig.forEach((region) => {
+          if (region.code === vtuber.Region) {
+            // check if region already exist
+            if (this.regions.find((region) => region.code === vtuber.Region)) {
+              return
+            }
+
+            this.regions.push({
+              code: vtuber.Region,
+              name: region.name,
+              flagCode: region.flagCode,
+            })
+          }
+        })
       })
 
       console.log(this.regions)
+    },
+    ExtendVtuberData() {
+      window.onscroll = () => {
+        let bottomOfWindow =
+          document.documentElement.scrollTop + window.innerHeight ===
+          document.documentElement.offsetHeight
+
+        if (bottomOfWindow) {
+          // count vtuber_show, then add 50 more
+          let vtuber_show = this.show_vtuber.length
+          this.show_vtuber = this.vtubers.slice(0, vtuber_show + 50)
+        }
+      }
     },
   },
 }
@@ -155,7 +281,7 @@ export default {
 
 <style lang="scss">
 .filter-nav {
-  @apply bg-blue-400 fixed top-16 w-screen py-3 px-3 md:px-[15%] lg:px-[17%] flex flex-wrap items-center sm:justify-between;
+  @apply bg-blue-400 fixed top-16 w-screen py-3 px-3 md:px-[15%] lg:px-[17%] flex flex-wrap items-center sm:justify-between z-10;
 
   .menu-filter {
     @apply flex-none;
@@ -199,7 +325,7 @@ export default {
                 @apply flex text-white w-full px-7 sm:pl-1 sm:pr-3 py-1 hover:bg-blue-500/50 font-semibold;
 
                 img {
-                  @apply w-6 h-auto drop-shadow-md mr-1;
+                  @apply w-6 object-contain drop-shadow-md mr-1;
                 }
               }
             }
@@ -228,7 +354,51 @@ export default {
 }
 
 .vtuber-page {
-  @apply w-full md:w-[80%] lg:w-[75%] m-auto pt-[4.2rem];
+  @apply w-full md:w-[80%] lg:w-[75%] p-4 m-auto pt-[4.2rem] mb-3 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-[1.5rem];
+
+  .card-vtubers {
+    @apply bg-white shadow-md rounded-md overflow-hidden transition-transform;
+
+    // scale up when hover using tailwind
+    &:hover {
+      @apply transform scale-105;
+    }
+
+    .card-vtuber-img {
+      @apply relative;
+
+      .tags {
+        @apply absolute bg-gray-200 rounded-br-md overflow-hidden h-8 flex items-center;
+
+        img {
+          @apply object-contain w-8 mx-1 drop-shadow-md;
+        }
+        .live-indicator {
+          @apply bg-red-500 text-white px-2 py-1;
+        }
+      }
+
+      .profile-pic {
+        // size width and height square and fit to card
+        @apply object-contain h-full aspect-square bg-smolame bg-cover;
+        img {
+          @apply object-contain h-full;
+        }
+      }
+    }
+
+    .card-vtuber-name {
+      @apply px-4 py-2 mt-2;
+
+      h4 {
+        @apply font-semibold text-lg text-gray-800 leading-4;
+      }
+
+      small {
+        @apply text-gray-600 leading-3;
+      }
+    }
+  }
 }
 
 .hide {
