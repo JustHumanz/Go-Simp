@@ -56,19 +56,25 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 					}
 					GroupID := Group["ID"].(int64)
 					if GroupIDint == int(GroupID) {
-						GroupName := Group["GroupName"].(string)
-						YTData, _, err := database.YtGetStatus(map[string]interface{}{
-							"GroupID":   GroupID,
-							"GroupName": GroupName,
-							"Status":    Status,
-							"Region":    Region,
-							"State":     config.Sys,
-						})
+						Agency := database.Group{
+							ID:        GroupID,
+							GroupName: Group["GroupName"].(string),
+						}
+
+						YTData, err := Agency.GetYtLiveStream(
+							Status,
+							func() []string {
+								if Region != "" {
+									return []string{Region}
+								} else {
+									return nil
+								}
+							}())
 						if err != nil {
 							log.Error(err)
 						}
 						for _, v := range YTData {
-							v.AddMember(GetMember(v.Member.ID)).SetState(config.YoutubeLive)
+							v.SetState(config.YoutubeLive)
 							YoutubeData = append(YoutubeData, FixLive(v))
 						}
 					}
@@ -96,19 +102,17 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 					MemberID := Member["ID"].(int64)
 					if MemberIDint == int(MemberID) {
 						MemberName := Member["Name"].(string)
-						YTData, _, err := database.YtGetStatus(map[string]interface{}{
-							"MemberID":   MemberID,
-							"MemberName": MemberName,
-							"Status":     config.UpcomingStatus,
-							"Region":     Region,
-							"State":      config.Sys,
-						})
+						Vtuber := database.Member{
+							ID:   MemberID,
+							Name: MemberName,
+						}
 
+						YTData, err := Vtuber.GetYtLiveStream(Status)
 						if err != nil {
 							log.Error(err)
 						}
 						for _, v := range YTData {
-							v.AddMember(GetMember(v.Member.ID)).SetState(config.YoutubeLive)
+							v.SetState(config.YoutubeLive)
 							YoutubeData = append(YoutubeData, FixLive(v))
 						}
 					}

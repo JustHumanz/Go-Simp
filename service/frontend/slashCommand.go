@@ -178,12 +178,7 @@ var (
 
 			if state == 1 {
 				if !member.IsMemberNill() {
-					YoutubeData, _, err := database.YtGetStatus(map[string]interface{}{
-						"MemberID":   member.ID,
-						"MemberName": member.Name,
-						"Status":     status,
-						"State":      config.Fe,
-					})
+					YoutubeData, err := member.GetYtLiveStream(status)
 					if err != nil {
 						log.Error(err)
 					}
@@ -254,13 +249,13 @@ var (
 					}
 					SendMessage(embed)
 				} else {
-					YoutubeData, _, err := database.YtGetStatus(map[string]interface{}{
-						"GroupID":   group.ID,
-						"GroupName": group.GroupName,
-						"Status":    status,
-						"Region":    region,
-						"State":     config.Fe,
-					})
+					YoutubeData, err := group.GetYtLiveStream(status, func() []string {
+						if region != "" {
+							return []string{region}
+						} else {
+							return nil
+						}
+					}())
 					if err != nil {
 						log.Error(err)
 					}

@@ -450,12 +450,12 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 			MemberID := Member["ID"].(int64)
 			MemberName := Member["NickName"].(string)
 			if Member["Youtube"] != nil {
-				YTData, _, err := database.YtGetStatus(map[string]interface{}{
-					"MemberID":   MemberID,
-					"MemberName": MemberName,
-					"Status":     config.LiveStatus,
-					"State":      config.Sys,
-				})
+				Vtuber := database.Member{
+					ID:   MemberID,
+					Name: MemberName,
+				}
+
+				YTData, err := Vtuber.GetYtLiveStream(config.LiveStatus)
 				if err != nil {
 					log.Error(err)
 				}
