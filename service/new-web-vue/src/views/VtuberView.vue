@@ -41,10 +41,10 @@ import { RouterLink } from "vue-router"
       <input type="text" placeholder="Search..." />
     </div>
   </div>
-  <section class="ame-page">
+  <section class="ame-page" :class="{ hide: loaded }">
     <img src="/src/assets/amelia-watson-spin.gif" alt="" />
   </section>
-  <!-- <section class="vtuber-page"></section> -->
+  <section class="vtuber-page" :class="{ hide: !loaded }"></section>
 </template>
 
 <script>
@@ -54,6 +54,7 @@ export default {
   name: "Vtubers",
   data() {
     return {
+      loaded: false,
       groups: null,
       group_id: -1,
       regions: [],
@@ -90,12 +91,16 @@ export default {
   },
   methods: {
     async fetchVtubers() {
-      if (this.group_id === this.$route.params.id || !this.$route.path.includes("vtuber")) {
+      if (
+        this.group_id === this.$route.params.id ||
+        !this.$route.path.includes("vtuber")
+      ) {
         console.log("Clicked")
         return
       }
 
       this.vtubers = []
+      this.regions = []
 
       const groupIdExist = this.$route.params.id
         ? {
@@ -110,6 +115,9 @@ export default {
       // List vtuber
       console.log("Fetching data...")
 
+      this.group_id = this.$route.params.id
+      this.loaded = false
+
       await axios
         .get(Config.REST_API + "/members/", groupIdExist)
         .then((response) => {
@@ -118,12 +126,19 @@ export default {
         .catch((error) => {
           console.log(error)
         })
-      this.group_id = this.$route.params.id
       console.log(`Total data: ${this.vtubers.length}`)
+      this.loaded = true
     },
 
     async getRegions() {
-      this.regions = []
+      if (
+        this.group_id === this.$route.params.id ||
+        !this.$route.path.includes("vtuber") ||
+        this.vtubers === []
+      ) {
+        console.log("Clicked")
+        return
+      }
 
       await this.fetchVtubers()
 
@@ -154,12 +169,13 @@ export default {
     }
 
     .filters {
-      @apply flex absolute sm:relative flex-col sm:flex-row invisible sm:visible;
+      @apply flex absolute sm:relative flex-col sm:flex-row invisible sm:visible bg-blue-400 sm:bg-transparent left-0 sm:left-auto mt-4 sm:m-0 w-screen sm:w-auto max-h-[86.5vh] sm:max-h-[none] overflow-y-auto overflow-x-hidden sm:overflow-visible;
 
       .filter {
-        @apply mx-1;
+        @apply sm:mx-1;
         .link-filter {
-          @apply font-semibold text-white  px-2 py-1 rounded-md transition-shadow sm:hover:shadow-sm sm:hover:shadow-blue-600/75;
+          @apply font-semibold text-white px-3 py-1 sm:px-2 md:rounded-md transition-shadow
+          w-full h-full inline-block hover:bg-blue-500/50 sm:hover:bg-transparent sm:hover:shadow-sm sm:hover:shadow-blue-600/75;
         }
 
         &:focus-within {
@@ -180,7 +196,7 @@ export default {
 
             li {
               a {
-                @apply flex text-white w-full sm:pl-1 sm:pr-3 sm:py-1 sm:hover:bg-blue-500 font-semibold;
+                @apply flex text-white w-full px-7 sm:pl-1 sm:pr-3 py-1 hover:bg-blue-500/50 font-semibold;
 
                 img {
                   @apply w-6 h-auto drop-shadow-md mr-1;
@@ -213,5 +229,9 @@ export default {
 
 .vtuber-page {
   @apply w-full md:w-[80%] lg:w-[75%] m-auto pt-[4.2rem];
+}
+
+.hide {
+  @apply hidden;
 }
 </style>

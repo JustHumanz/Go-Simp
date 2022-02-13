@@ -67,11 +67,15 @@ export default {
       isActive: false,
     }
   },
-  // function when vue loaded
-  async mounted() {
-    // make sleep using promise
-    await new Promise((resolve) => setTimeout(resolve, 500))
-    this.isActive = this.$route.path.includes("/vtuber/")
+  async created() {
+    this.$watch(
+      () => this.$route.params,
+      async () => {
+        this.isActive = this.$route.path.includes("/vtuber/")
+      },
+
+      { immediate: true }
+    )
   },
 }
 </script>
