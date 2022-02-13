@@ -1,6 +1,3 @@
-<script setup>
-import { RouterLink } from "vue-router"
-</script>
 
 <template>
   <div class="filter-nav">
@@ -120,6 +117,7 @@ import { RouterLink } from "vue-router"
 </template>
 
 <script>
+import { RouterLink } from "vue-router"
 import axios from "axios"
 import Config from "../config.json"
 import regionConfig from "../region.json"
