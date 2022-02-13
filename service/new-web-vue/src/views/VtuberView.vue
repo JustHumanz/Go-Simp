@@ -13,7 +13,11 @@ import { RouterLink } from "vue-router"
             <li class="pending" v-if="groups == null">
               <img src="/src/assets/amelia-watson-spin.gif" alt="" />
             </li>
-            <li v-for="group in groups" :key="group._id">
+            <li
+              v-for="group in groups"
+              :key="group._id"
+              class="filter-submenu-item"
+            >
               <router-link :to="`/vtuber/${group.ID}`">
                 <img v-bind:src="group.GroupIcon" :alt="group.GroupName" />
                 {{ group.GroupName }}
@@ -27,7 +31,11 @@ import { RouterLink } from "vue-router"
             <li class="pending" v-if="regions.length < 1">
               <img src="/src/assets/amelia-watson-spin.gif" alt="" />
             </li>
-            <li v-for="region in regions" :key="region">
+            <li
+              v-for="region in regions"
+              :key="region"
+              class="filter-submenu-item"
+            >
               <a
                 :href="
                   $route.href.replace(/reg=.{2}/, '') + `?reg=${region.code}`
@@ -129,18 +137,8 @@ export default {
     }
   },
   async mounted() {
-    const data_groups = await axios
-      .get(Config.REST_API + "/groups/")
-      .then((response) => response.data)
-
-    // add "all vtubers" in the first position of "groups"
-    data_groups.unshift({
-      ID: "",
-      GroupName: "All Vtubers",
-      GroupIcon: "https://i.imgur.com/XqQZQZL.png",
-    })
-
-    this.groups = data_groups
+    await this.getGroupData()
+    this.ExtendVtuberData()
   },
   async created() {
     this.$watch(
@@ -151,7 +149,6 @@ export default {
 
       { immediate: true }
     )
-    this.ExtendVtuberData()
   },
   beforeRouteEnter(to, from, next) {
     console.log(from)
@@ -176,7 +173,7 @@ export default {
             crossDomain: true,
             params: {
               groupid: this.$route.params.id,
-              live: "true",
+              // live: "true",
             },
           }
         : {}
@@ -190,6 +187,20 @@ export default {
       const vtuber_data = await axios
         .get(Config.REST_API + "/members/", groupIdExist)
         .then((response) => response.data)
+
+
+      console.log("Waiting Group not null...")
+      await new Promise(
+        // set interval to check if group is not null then stop interval
+        (resolve) =>
+          setTimeout(() => {
+            if (vtuber_data.Group !== null) {
+              resolve()
+            }
+          }, 1000)
+      )
+
+      console.log("Add more stuff...")
 
       vtuber_data.forEach((vtuber) => {
         this.groups.forEach((group) => {
@@ -229,6 +240,21 @@ export default {
       this.loaded = true
     },
 
+    async getGroupData() {
+      const data_groups = await axios
+        .get(Config.REST_API + "/groups/")
+        .then((response) => response.data)
+
+      // add "all vtubers" in the first position of "groups"
+      data_groups.unshift({
+        ID: "",
+        GroupName: "All Vtubers",
+        GroupIcon: "https://i.imgur.com/XqQZQZL.png",
+      })
+
+      this.groups = data_groups
+    },
+
     async getRegions() {
       if (
         this.group_id === this.$route.params.id ||
@@ -242,16 +268,18 @@ export default {
       await this.fetchVtubers()
       console.log("Get regions...")
 
+      const region_data = []
+
       await this.vtubers.forEach((vtuber) => {
         // loop regionConfig
         regionConfig.forEach((region) => {
           if (region.code === vtuber.Region) {
             // check if region already exist
-            if (this.regions.find((region) => region.code === vtuber.Region)) {
+            if (region_data.find((region) => region.code === vtuber.Region)) {
               return
             }
 
-            this.regions.push({
+            region_data.push({
               code: vtuber.Region,
               name: region.name,
               flagCode: region.flagCode,
@@ -259,6 +287,17 @@ export default {
           }
         })
       })
+
+      console.log(region_data.length)
+
+      // sort region_data from name
+      region_data.sort((a, b) => {
+        if (a.name < b.name) return -1
+        if (a.name > b.name) return 1
+        return 0
+      })
+
+      this.regions = region_data
 
       console.log(this.regions)
     },
@@ -320,9 +359,11 @@ export default {
               }
             }
 
-            li {
+            // add event for li exept .pending
+
+            .filter-submenu-item {
               a {
-                @apply flex text-white w-full px-7 sm:pl-1 sm:pr-3 py-1 hover:bg-blue-500/50 font-semibold;
+                @apply flex text-white w-full px-7 sm:pl-1 sm:pr-3 py-1 hover:bg-blue-500/50 font-semibold sm:min-w-[9rem];
 
                 img {
                   @apply w-6 object-contain drop-shadow-md mr-1;
