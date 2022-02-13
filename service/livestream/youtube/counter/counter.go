@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"flag"
 	"regexp"
 	"strings"
 	"sync"
@@ -25,6 +26,7 @@ var (
 	Bot          *discordgo.Session
 	GroupPayload *[]database.Group
 	gRCPconn     pilot.PilotServiceClient
+	torTransport = flag.Bool("Tor", false, "Enable multiTor for bot transport")
 )
 
 const (
@@ -33,6 +35,7 @@ const (
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
+	flag.Parse()
 	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 }
 
@@ -66,7 +69,7 @@ func main() {
 
 	GetPayload()
 	configfile.InitConf()
-	Bot = engine.StartBot(false)
+	Bot = engine.StartBot(*torTransport)
 
 	database.Start(configfile)
 

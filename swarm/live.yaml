@@ -27,7 +27,7 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
     networks:
       - go-simp-net
-    command: ./liveyoutube -MultiTOR  
+    command: ./liveyoutube -MultiTOR -Tor
 
   youtube_counter:
     image: justhumanz/go-simp-youtube-counter-livestream:${RELEASE_VERSION}
@@ -37,7 +37,8 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
     networks:
       - go-simp-net
-
+    command: ./liveyoutube_counter -MultiTOR -Tor
+    
   twitch:
     image: justhumanz/go-simp-twitch-livestream:${RELEASE_VERSION}
     depends_on:

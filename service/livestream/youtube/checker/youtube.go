@@ -24,6 +24,7 @@ var (
 	GroupPayload *[]database.Group
 	gRCPconn     pilot.PilotServiceClient
 	proxy        = flag.Bool("MultiTOR", false, "Enable MultiTOR for scrapping yt rss")
+	torTransport = flag.Bool("Tor", false, "Enable multiTor for bot transport")
 )
 
 const (
@@ -66,7 +67,7 @@ func main() {
 
 	GetPayload()
 	configfile.InitConf()
-	Bot = engine.StartBot(false)
+	Bot = engine.StartBot(*torTransport)
 
 	database.Start(configfile)
 
