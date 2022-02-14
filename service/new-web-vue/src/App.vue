@@ -83,7 +83,7 @@ export default {
 <style lang="scss">
 nav {
   font-family: "Nunito", sans-serif;
-  @apply h-16 bg-cyan-500 shadow-md shadow-cyan-500/50 fixed top-0 left-0 w-full z-10 flex justify-center;
+  @apply h-16 bg-cyan-500 shadow-md shadow-cyan-500/50 fixed top-0 left-0 w-full z-[11] flex justify-center;
   .navbar {
     @apply mx-4 h-full flex justify-between md:justify-around items-center w-full md:w-[90%] lg:w-[85%];
 
@@ -96,6 +96,7 @@ nav {
     }
 
     .nav-menu {
+
       .toggle-menu {
         @apply block sm:hidden;
       }

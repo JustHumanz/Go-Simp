@@ -15,7 +15,16 @@
               class="filter-submenu-item"
             >
               <router-link :to="`/vtuber/${group.ID}`">
-                <img v-bind:src="group.GroupIcon" :alt="group.GroupName" />
+                <img
+                  v-if="group.GroupIcon"
+                  :src="group.GroupIcon"
+                  :alt="group.GroupName"
+                />
+                <font-awesome-icon
+                  v-else
+                  :icon="['fas', 'user']"
+                  class="fa-fw"
+                />
                 {{ group.GroupName }}
               </router-link>
             </li>
@@ -39,10 +48,17 @@
                     : ''
                 "
                 ><img
+                  v-if="region.flagCode"
                   :src="`/src/assets/flags/${region.flagCode}.svg`"
                   alt=""
-                />{{ region.name }}</router-link
-              >
+                />
+                <font-awesome-icon
+                  v-else
+                  :icon="['fas', 'earth-americas']"
+                  class="fa-fw"
+                />
+                {{ region.name }}
+              </router-link>
             </li>
           </ul>
         </li>
@@ -50,14 +66,13 @@
     </div>
 
     <div class="search">
-      <input type="text" v-model="search" id="search" placeholder="Search..." />
+      <input type="text" v-model="search" id="search" :placeholder="phName" />
     </div>
   </div>
   <section class="ame-page" :class="{ hide: loaded }">
     <img src="/src/assets/amelia-watson-spin.gif" alt="" />
   </section>
   <section class="vtuber-page" :class="{ hide: !loaded }">
-    <!-- make 1 data dummy card for vtubers-->
     <div class="card-vtubers" v-for="vtuber in show_vtuber" :key="vtuber.ID">
       <div class="card-vtuber-img">
         <div class="tags">
@@ -73,8 +88,8 @@
             :alt="vtuber.Regions.name"
           />
           <a
-          :href="vtuber.LiveURL"
-          target="_blank"
+            :href="vtuber.LiveURL"
+            target="_blank"
             :class="{
               hide:
                 !vtuber.IsBiliLive && !vtuber.IsYtLive && !vtuber.IsTwitchLive,
@@ -83,6 +98,9 @@
           >
             LIVE
           </a>
+          <div class="tooltip-info">
+            {{ `${vtuber.Group.GroupName} ${vtuber.Region}` }}
+          </div>
         </div>
         <router-link :to="`/vtuber/members/${vtuber.ID}`">
           <div class="profile-pic" v-if="vtuber.Youtube !== null">
@@ -126,6 +144,12 @@ import axios from "axios"
 import Config from "../config.json"
 import regionConfig from "../region.json"
 
+import { library } from "@fortawesome/fontawesome-svg-core"
+// import { fa } from '@fortawesome/free-brands-svg-icons'
+import { faGlobeAmericas, faUser } from "@fortawesome/free-solid-svg-icons"
+
+library.add(faGlobeAmericas, faUser)
+
 export default {
   name: "Vtubers",
   data() {
@@ -138,6 +162,7 @@ export default {
       region_vtuber: [],
       show_vtuber: [],
       search: "",
+      phName: "Search...",
     }
   },
   async mounted() {
@@ -165,6 +190,10 @@ export default {
         await this.getRegions()
 
         // limit vtubers from getVtuberData to 30
+        this.phName =
+          this.getVtuberFilterData[
+            Math.floor(Math.random() * this.getVtuberFilterData.length)
+          ]["EnName"]
         this.show_vtuber = this.getVtuberFilterData.slice(0, 30)
       },
 
@@ -274,7 +303,12 @@ export default {
       data_groups.unshift({
         ID: "",
         GroupName: "All Vtubers",
-        GroupIcon: "https://i.imgur.com/XqQZQZL.png",
+        GroupIcon: "",
+      })
+
+      // change GroupIcon from ID 10 to ""
+      data_groups.forEach((group) => {
+        if (group.ID === 10) group.GroupIcon = ""
       })
 
       this.groups = data_groups
@@ -352,6 +386,11 @@ export default {
       this.$watch(
         () => this.$route.query.reg,
         () => {
+          if (this.getVtuberFilterData.length > 0)
+            this.phName =
+              this.getVtuberFilterData[
+                Math.floor(Math.random() * this.getVtuberFilterData.length)
+              ]["EnName"]
           this.show_vtuber = this.getVtuberFilterData.slice(0, 30)
         },
         { immediate: true }
@@ -406,10 +445,13 @@ export default {
 
             .filter-submenu-item {
               a {
-                @apply flex text-white w-full px-7 sm:pl-1 sm:pr-3 py-1 hover:bg-blue-500/50 font-semibold sm:min-w-[9rem];
+                @apply flex text-white w-full px-7 sm:pl-1 sm:pr-3 py-1 hover:bg-blue-500/50 font-semibold sm:w-44;
 
                 img {
-                  @apply w-6 object-contain drop-shadow-md mr-1;
+                  @apply w-6 object-contain drop-shadow-md mr-2 ml-1;
+                }
+                svg {
+                  @apply py-1 px-[2px] mr-2 ml-1;
                 }
               }
             }
@@ -427,7 +469,7 @@ export default {
     @apply inline-block mx-1 ml-3 flex-auto sm:flex-none;
 
     input {
-      @apply bg-blue-300 focus:bg-blue-200 py-1 px-2 rounded-md transition-shadow hover:shadow-sm hover:shadow-blue-600/75 focus:shadow-md focus:shadow-blue-600/75 w-full;
+      @apply bg-blue-300 focus:bg-blue-200 py-1 px-2 rounded-md transition-shadow hover:shadow-sm hover:shadow-blue-600/75 focus:shadow-md focus:shadow-blue-600/75 w-full text-gray-600 font-semibold placeholder:italic placeholder:text-blue-500 placeholder:font-normal;
     }
   }
 }
@@ -452,13 +494,23 @@ export default {
       @apply relative;
 
       .tags {
-        @apply absolute bg-gray-200 rounded-br-md overflow-hidden h-8 flex items-center;
+        @apply absolute bg-gray-200 rounded-br-md h-8 flex items-center cursor-pointer;
 
         img {
           @apply object-contain w-8 mx-1 drop-shadow-md;
         }
         .live-indicator {
-          @apply bg-red-500 text-white px-2 py-1;
+          @apply bg-red-500 text-white px-2 py-1 rounded-br-md;
+        }
+
+        &:hover {
+          .tooltip-info {
+            @apply block;
+          }
+        }
+
+        .tooltip-info {
+          @apply absolute top-8 px-2 py-1 text-xs font-semibold text-gray-600 bg-gray-200 rounded-r-md z-[9] hidden whitespace-nowrap;
         }
       }
 
