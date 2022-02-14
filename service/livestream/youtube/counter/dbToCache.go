@@ -26,8 +26,8 @@ func CacheChcker() {
 				} else {
 					log.WithFields(log.Fields{
 						"videoID": j.VideoID,
-						"agency":  j.Group.GroupName,
-						"vtuber":  j.Member.Name,
+						"agency":  v.GroupName,
+						"vtuber":  k.Member.Name,
 					}).Info("Found upcoming on db but not in cache,send it to cache now")
 					err := k.SendToCache(false)
 					if err != nil {
