@@ -64,9 +64,9 @@ func BilGet(Payload map[string]interface{}) ([]LiveStream, string, error) {
 
 	var Key = func() string {
 		if Group != 0 {
-			return strconv.Itoa(int(Group)) + "-" + "Group" + "-" + Status + "-" + config.Sys
+			return strconv.Itoa(int(Group)) + "-" + "Group" + "-" + Status
 		} else {
-			return strconv.Itoa(int(Member)) + "-" + "Member" + "-" + Status + "-" + config.Sys
+			return strconv.Itoa(int(Member)) + "-" + "Member" + "-" + Status
 		}
 	}()
 

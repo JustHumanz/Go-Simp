@@ -56,7 +56,6 @@ const (
 	Prediction        = "prediction:9001"
 	Indie             = "independent"
 	Fe                = "frontend"
-	Sys               = "system"
 
 	PixivModule          = "Pixiv Fanart"
 	TwitterModule        = "Twitter Fanart"
