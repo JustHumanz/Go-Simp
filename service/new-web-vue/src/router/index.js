@@ -5,8 +5,13 @@ import VtuberView from "../views/VtuberView.vue"
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior(to, from, savedPosition) {
-    // always scroll to top
-    return { top: 0 }
+    // always scroll to top when route changed
+console.log(from, to)
+    if (to.path !== from.path) {
+      console.log("scroll to top")
+      return { top: 0 }
+      
+    }
   },
   routes: [
     {

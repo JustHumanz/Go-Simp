@@ -1,4 +1,3 @@
-
 <template>
   <div class="filter-nav">
     <div class="menu-filter">
@@ -33,14 +32,16 @@
               :key="region"
               class="filter-submenu-item"
             >
-              <a
-                :href="
-                  $route.href.replace(/reg=.{2}/, '') + `?reg=${region.code}`
+              <router-link
+                :to="
+                  $route.href.replace(/\?reg=.{2}/, '') + region.code
+                    ? `?reg=${region.code}`
+                    : ''
                 "
                 ><img
                   :src="`/src/assets/flags/${region.flagCode}.svg`"
                   alt=""
-                />{{ region.name }}</a
+                />{{ region.name }}</router-link
               >
             </li>
           </ul>
@@ -49,7 +50,7 @@
     </div>
 
     <div class="search">
-      <input type="text" placeholder="Search..." />
+      <input type="text" v-model="search" id="search" placeholder="Search..." />
     </div>
   </div>
   <section class="ame-page" :class="{ hide: loaded }">
@@ -58,31 +59,32 @@
   <section class="vtuber-page" :class="{ hide: !loaded }">
     <!-- make 1 data dummy card for vtubers-->
     <div class="card-vtubers" v-for="vtuber in show_vtuber" :key="vtuber.ID">
-      <router-link to="/vtuber/members/1">
-        <div class="card-vtuber-img">
-          <div class="tags">
-            <!-- Get groupicon from group id -->
-            <img
-              v-bind:src="vtuber.Group.GroupIcon"
-              :alt="vtuber.Group.GroupName"
-            />
-            <!-- Get flag icon from Region -->
-            <img
-              v-bind:src="`/src/assets/flags/${vtuber.Regions.flagCode}.svg`"
-              :alt="vtuber.Regions.name"
-            />
-            <div
-              :class="{
-                hide:
-                  !vtuber.IsBiliLive &&
-                  !vtuber.IsYtLive &&
-                  !vtuber.IsTwitchLive,
-              }"
-              class="live-indicator"
-            >
-              LIVE
-            </div>
-          </div>
+      <div class="card-vtuber-img">
+        <div class="tags">
+          <!-- Get groupicon from group id -->
+          <img
+            v-if="vtuber.GroupID !== 10"
+            :src="vtuber.Group.GroupIcon"
+            :alt="vtuber.Group.GroupName"
+          />
+          <!-- Get flag icon from Region -->
+          <img
+            v-bind:src="`/src/assets/flags/${vtuber.Regions.flagCode}.svg`"
+            :alt="vtuber.Regions.name"
+          />
+          <a
+          :href="vtuber.LiveURL"
+          target="_blank"
+            :class="{
+              hide:
+                !vtuber.IsBiliLive && !vtuber.IsYtLive && !vtuber.IsTwitchLive,
+            }"
+            class="live-indicator"
+          >
+            LIVE
+          </a>
+        </div>
+        <router-link :to="`/vtuber/members/${vtuber.ID}`">
           <div class="profile-pic" v-if="vtuber.Youtube !== null">
             <img
               class="card-img-top"
@@ -106,7 +108,9 @@
               alt="Card image cap"
             />
           </div>
-        </div>
+        </router-link>
+      </div>
+      <router-link :to="`/vtuber/members/${vtuber.ID}`">
         <div class="card-vtuber-name">
           <h4>{{ vtuber.EnName }}</h4>
           <small>{{ vtuber.NickName }}</small>
@@ -128,21 +132,40 @@ export default {
     return {
       loaded: false,
       groups: null,
-      group_id: -1,
+      group: -1,
       regions: [],
       vtubers: [],
+      region_vtuber: [],
       show_vtuber: [],
+      search: "",
     }
   },
   async mounted() {
-    await this.getGroupData()
+    this.Searching()
+    this.changingRegion()
     this.ExtendVtuberData()
   },
   async created() {
     this.$watch(
       () => this.$route.params,
       async () => {
+        if (
+          this.group === this.$route.params?.id ||
+          !this.$route.path.includes("vtuber") ||
+          this.vtubers === []
+        ) {
+          console.log("Clicked")
+          return
+        }
+
+        this.group = this.$route.params?.id
+
+        await this.getGroupData()
+        await this.fetchVtubers()
         await this.getRegions()
+
+        // limit vtubers from getVtuberData to 30
+        this.show_vtuber = this.getVtuberFilterData.slice(0, 30)
       },
 
       { immediate: true }
@@ -152,17 +175,32 @@ export default {
     console.log(from)
     next()
   },
-  computed: {},
+  computed: {
+    getVtuberFilterData() {
+      // get reg from ?reg=
+      const reg = this.$route.query.reg
+      const vtuber_data = reg
+        ? this.vtubers.filter(
+            (vtuber) => vtuber.Region.toLowerCase() === reg.toLowerCase()
+          )
+        : this.vtubers
+
+      console.log("Filtering")
+
+      return vtuber_data.filter((post) => {
+        let EnName = post.EnName.toLowerCase().includes(
+          this.search.toLowerCase()
+        )
+        let JpName
+        if (post.JpName != null) {
+          JpName = post.JpName.toLowerCase().includes(this.search.toLowerCase())
+        }
+        return EnName || JpName
+      })
+    },
+  },
   methods: {
     async fetchVtubers() {
-      if (
-        this.group_id === this.$route.params.id ||
-        !this.$route.path.includes("vtuber")
-      ) {
-        console.log("Clicked")
-        return
-      }
-
       this.vtubers = []
       this.regions = []
 
@@ -171,7 +209,7 @@ export default {
             crossDomain: true,
             params: {
               groupid: this.$route.params.id,
-              // live: "true",
+              live: "true",
             },
           }
         : {}
@@ -179,24 +217,12 @@ export default {
       // List vtuber
       console.log("Fetching data...")
 
-      this.group_id = this.$route.params.id
+      this.locate = this.$route.href
       this.loaded = false
 
       const vtuber_data = await axios
         .get(Config.REST_API + "/members/", groupIdExist)
         .then((response) => response.data)
-
-
-      console.log("Waiting Group not null...")
-      await new Promise(
-        // set interval to check if group is not null then stop interval
-        (resolve) =>
-          setTimeout(() => {
-            if (vtuber_data.Group !== null) {
-              resolve()
-            }
-          }, 1000)
-      )
 
       console.log("Add more stuff...")
 
@@ -232,13 +258,14 @@ export default {
 
       this.vtubers = vtuber_data
 
-      console.log(`Total data: ${this.vtubers.length}`)
-      //push vtubers to show_vtuber only 50 data
-      this.show_vtuber = this.vtubers.slice(0, 50)
+      console.log(`Total vtuber: ${this.vtubers.length}`)
       this.loaded = true
     },
 
     async getGroupData() {
+      if (this.groups !== null) return
+      console.log("Fetching group data...")
+
       const data_groups = await axios
         .get(Config.REST_API + "/groups/")
         .then((response) => response.data)
@@ -251,19 +278,10 @@ export default {
       })
 
       this.groups = data_groups
+      console.log(`Total group: ${this.groups.length}`)
     },
 
     async getRegions() {
-      if (
-        this.group_id === this.$route.params.id ||
-        !this.$route.path.includes("vtuber") ||
-        this.vtubers === []
-      ) {
-        console.log("Clicked")
-        return
-      }
-
-      await this.fetchVtubers()
       console.log("Get regions...")
 
       const region_data = []
@@ -286,13 +304,20 @@ export default {
         })
       })
 
-      console.log(region_data.length)
+      console.log(`Total region: ${region_data.length}`)
 
       // sort region_data from name
       region_data.sort((a, b) => {
         if (a.name < b.name) return -1
         if (a.name > b.name) return 1
         return 0
+      })
+
+      // add all Regions in the first position of "regions"
+      region_data.unshift({
+        code: "",
+        name: "All Regions",
+        flagCode: "",
       })
 
       this.regions = region_data
@@ -308,9 +333,29 @@ export default {
         if (bottomOfWindow) {
           // count vtuber_show, then add 50 more
           let vtuber_show = this.show_vtuber.length
-          this.show_vtuber = this.vtubers.slice(0, vtuber_show + 50)
+          this.show_vtuber = this.getVtuberFilterData.slice(0, vtuber_show + 30)
         }
       }
+    },
+    Searching() {
+      // Check this.search changing
+      console.log("Searching...")
+      this.$watch(
+        () => this.search,
+        () => {
+          this.show_vtuber = this.getVtuberFilterData.slice(0, 30)
+        },
+        { immediate: true }
+      )
+    },
+    changingRegion() {
+      this.$watch(
+        () => this.$route.query.reg,
+        () => {
+          this.show_vtuber = this.getVtuberFilterData.slice(0, 30)
+        },
+        { immediate: true }
+      )
     },
   },
 }
