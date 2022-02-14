@@ -166,7 +166,6 @@ type ConfigFile struct {
 	TopGG          string `toml:"TOPGG"`
 	Domain         string `toml:"Domain"`
 	PrometheusURL  string `toml:"PrometheusURL"`
-	LowResources   bool   `toml:"LowResources"` //Disable update like clout fanart & set wait every 5 counter
 	Metric         bool   `toml:"Metric"`
 	Twitch         struct {
 		ClientID     string `toml:"ClientID"`

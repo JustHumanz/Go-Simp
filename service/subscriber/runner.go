@@ -166,7 +166,7 @@ func SendNude(Embed *discordgo.MessageEmbed, Group database.Group, Member databa
 		}
 
 		Wait := engine.GetMaxSqlConn()
-		if i%Wait == 0 && configfile.LowResources {
+		if i%Wait == 0 && i != 0 {
 			log.WithFields(log.Fields{
 				"Func":  "Subscriber",
 				"Value": Wait,

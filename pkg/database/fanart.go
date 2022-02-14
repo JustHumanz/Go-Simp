@@ -257,17 +257,15 @@ func (FanArt DataFanart) CheckTweetFanArt() (bool, error) {
 		} else if err != nil {
 			return false, err
 		} else {
-			if !config.GoSimpConf.LowResources {
-				//update like
-				log.WithFields(log.Fields{
-					"Name":    FanArt.Member.EnName,
-					"Hashtag": FanArt.Member.TwitterHashtags,
-					"Likes":   FanArt.Likes,
-				}).Info("Update like")
-				_, err := DB.Exec(`Update Twitter set Likes=? Where id=? `, FanArt.Likes, id)
-				if err != nil {
-					return false, err
-				}
+			//update like
+			log.WithFields(log.Fields{
+				"Name":    FanArt.Member.EnName,
+				"Hashtag": FanArt.Member.TwitterHashtags,
+				"Likes":   FanArt.Likes,
+			}).Info("Update like")
+			_, err := DB.Exec(`Update Twitter set Likes=? Where id=? `, FanArt.Likes, id)
+			if err != nil {
+				return false, err
 			}
 		}
 	}

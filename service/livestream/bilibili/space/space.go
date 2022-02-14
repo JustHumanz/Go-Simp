@@ -214,9 +214,7 @@ func (i *checkBlSpaceJob) Run() {
 							video.VideoType = Videotype
 							engine.SendLiveNotif(Data, Bot)
 						} else {
-							if !config.GoSimpConf.LowResources {
-								Data.UpdateSpaceViews(id)
-							}
+							Data.UpdateSpaceViews(id)
 						}
 					}
 					i.AddVideoID(Member.Name, FirstVideoID)

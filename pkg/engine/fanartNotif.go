@@ -81,6 +81,8 @@ func SendFanArtNude(Art database.DataFanart, Bot *discordgo.Session) {
 							log.WithFields(log.Fields{
 								"channelId": Channel.ChannelID,
 								"vtuber":    Member.Name,
+								"artURL":    Art.PermanentURL,
+								"isLewd":    Art.Lewd,
 							}).Info("Send pic")
 							tmp, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
 								SetAuthor(strings.Title(Art.Group.GroupName), Art.Group.IconURL).
@@ -125,7 +127,7 @@ func SendFanArtNude(Art database.DataFanart, Bot *discordgo.Session) {
 
 				}(ctx, C, &wgg)
 
-				if i%10 == 0 && config.GoSimpConf.LowResources && i != 0 {
+				if i%10 == 0 && i != 0 {
 					tidur := 10 * time.Second
 					log.WithFields(log.Fields{
 						"Type":  "Sleep",
