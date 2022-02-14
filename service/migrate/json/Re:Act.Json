@@ -1,0 +1,107 @@
+{
+	"GroupName": "Re:Act",
+	"GroupIcon": "https://cdn.humanz.moe/Re:Act.png",
+	"GroupChannel": {
+		"Youtube": [
+			null
+		],
+		"BiliBili": [
+			null
+		]
+	},
+	"Members": [
+        {
+            "EN_Name": "Hanabasami Kyo",
+            "Fanbase": "",
+            "JP_Name": "花鋏キョウ",
+            "Name": "Kyo",
+            "Region": "JP",
+            "BiliBili": null,
+            "Twitch": null,
+            "Twitter": {
+              "Twitter_Fanart": "#はなばさみあーと",
+              "Twitter_Lewd": "",
+              "Twitter_Username": "Kyo_Hanabasami"
+            },
+            "Youtube": {
+              "Yt_ID": "UC4OeUf_KfYRrwksschtRYow"
+            }
+        },
+        {
+            "EN_Name": "Shishigami Leona",
+            "Fanbase": "",
+            "JP_Name": "獅子神レオナ",
+            "Name": "Leona",
+            "Region": "JP",
+            "BiliBili": null,
+            "Twitch": null,
+            "Twitter": {
+              "Twitter_Fanart": "#レオナアート",
+              "Twitter_Lewd": "",
+              "Twitter_Username": "LeonaShishigami"
+            },
+            "Youtube": {
+              "Yt_ID": "UCB1s_IdO-r0nUkY2mXeti-A"
+            }
+        },
+        {
+            "EN_Name": "Amakawa Hano",
+            "Fanbase": "",
+            "JP_Name": "天川はの",
+            "Name": "Hano",
+            "Region": "JP",
+            "BiliBili": {
+              "BiliBili_Fanart": "",
+              "BiliBili_ID": "482515510",
+              "BiliRoom_ID": "21693692"
+            },
+            "Twitch": null,
+            "Twitter": {
+              "Twitter_Fanart": "#はのーと",
+              "Twitter_Lewd": "",
+              "Twitter_Username": "sb_hano_"
+            },
+            "Youtube": {
+              "Yt_ID": "UCxJ9SJLG7dA00M7VoEe4ltw"
+            }
+        },
+        {
+            "EN_Name": "Himekuma Ribon",
+            "Fanbase": "",
+            "JP_Name": "姫熊りぼん",
+            "Name": "Ribon",
+            "Region": "JP",
+            "BiliBili": {
+              "BiliBili_Fanart": "",
+              "BiliBili_ID": "482515509",
+              "BiliRoom_ID": "21693691"
+            },
+            "Twitch": null,
+            "Twitter": {
+              "Twitter_Fanart": "#くまの自由帳",
+              "Twitter_Lewd": "",
+              "Twitter_Username": "sb_ribon_"
+            },
+            "Youtube": {
+              "Yt_ID": "UC6HjtF2rHZO8gAsX5FXF-Kg"
+            }
+        },
+        {
+            "EN_Name": "Kashiko Mari",
+            "Fanbase": "",
+            "JP_Name": "かしこまり",
+            "Name": "KashikoMari",
+            "Region": "JP",
+            "BiliBili": null,
+            "Twitch": null,
+            "Twitter": {
+              "Twitter_Fanart": "#くまの自由帳",
+              "Twitter_Lewd": "",
+              "Twitter_Username": "kashikomari_ch"
+            },
+            "Youtube": {
+              "Yt_ID": "UCfiK42sBHraMBK6eNWtsy7A"
+            }
+        }                                        
+	]
+}
