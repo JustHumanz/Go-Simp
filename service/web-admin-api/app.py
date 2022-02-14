@@ -249,7 +249,7 @@ def update_channel(channel_id):
     if len(discord.token.keys()) < 1:
         return prepare_response({"message":"Missing token"},401)
 
-    logging.info('%s %s %s',"update channel",discord_user.verify_user(discord),channel_id,discord_user.channel_id)
+    logging.info('%s %d %s',"update channel",discord_user.verify_user(discord),channel_id,discord_user.channel_id)
     if discord_user.verify_user(discord) and channel_id == discord_user.channel_id:
         form = request.json
         if form["agency_id"] != 10:
@@ -291,7 +291,7 @@ def delete_channel(channel_id):
     if len(discord.token.keys()) < 1:
         return prepare_response({"message":"Missing token"},401)
 
-    logging.info('%s %s %s',"delete channel",discord_user.verify_user(discord),channel_id,discord_user.channel_id)
+    logging.info('%s %d %s',"delete channel",discord_user.verify_user(discord),channel_id,discord_user.channel_id)
     if discord_user.verify_user(discord) and channel_id == discord_user.channel_id:
         form = request.json
         if form["agency_id"] != 10:
