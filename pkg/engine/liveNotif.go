@@ -154,6 +154,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 								if err != nil {
 									log.Error(err)
 								}
+								return
 							}
 
 							log.WithFields(log.Fields{
@@ -224,6 +225,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							UserTagsList, err := Channel.GetUserList(ctx)
 							if err != nil {
 								log.Error(err)
+								return
 							}
 
 							if UserTagsList == nil && Data.Group.GroupName != config.Indie {
@@ -276,6 +278,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 								msgText, err := Bot.ChannelMessageSend(Channel.ChannelID, MsgFinal)
 								if err != nil {
 									log.Error(err)
+									return
 								}
 
 								User.SetDiscordChannelID(Channel.ChannelID).
