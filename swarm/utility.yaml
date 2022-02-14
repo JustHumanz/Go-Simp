@@ -37,10 +37,10 @@ services:
   web-admin-api:                                           
     image: justhumanz/go-simp-web-admin-api:latest         
     environment:                                     
-      - SECRET=${SECRET}
-      - CLIENTID=${CLIENTID}
-      - CALLBACK_URL=${CALLBACK_URL}
-      - URL=${URL}
+      - SECRET=${BOT_SECRET}
+      - CLIENTID=${BOT_CLIENTID}
+      - CALLBACK_URL=https://web-admin.humanz.moe/callback
+      - URL=https://web-admin.humanz.moe
       - BOT=${BOT}
       - DB_PASS=${DB_PASS}
       - DB_USER=root
