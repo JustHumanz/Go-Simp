@@ -1,13 +1,15 @@
 <template>
   <div class="filter-nav">
     <div class="menu-filter">
-      <a href="#" class="mobile-filter">Filters</a>
+      <a href="#" class="mobile-filter"
+        ><font-awesome-icon :icon="['fas', 'filter']" class="fa-fw fa-lg text-white"
+      /></a>
       <ul class="filters">
         <li class="filter">
           <a href="#" class="link-filter">Groups</a>
           <ul class="filter-submenu">
             <li class="pending" v-if="groups == null">
-              <img src="/src/assets/amelia-watson-spin.gif" alt="" />
+              <img :src="`/src/assets/loading/${Math.floor(Math.random() * 7)}.gif`" alt="" />
             </li>
             <li
               v-for="group in groups"
@@ -34,7 +36,7 @@
           <a href="#" class="link-filter">Regions</a>
           <ul class="filter-submenu">
             <li class="pending" v-if="regions.length < 1">
-              <img src="/src/assets/amelia-watson-spin.gif" alt="" />
+              <img :src="`/src/assets/loading/${Math.floor(Math.random() * 7)}.gif`" alt="" />
             </li>
             <li
               v-for="region in regions"
@@ -66,12 +68,18 @@
     </div>
 
     <div class="search">
-      <input type="text" v-model="search" id="search" :placeholder="phName" />
+      <font-awesome-icon
+        :icon="['fas', 'magnifying-glass']"
+        class="fa-fw fa-md text-white" />
+      <input
+        type="text"
+        v-model="search"
+        id="vtuber-search"
+        :placeholder="phName"
+        :disabled="vtubers.length < 1"
+      />
     </div>
   </div>
-  <section class="ame-page" :class="{ hide: loaded }">
-    <img src="/src/assets/amelia-watson-spin.gif" alt="" />
-  </section>
   <section class="vtuber-page" :class="{ hide: !loaded }">
     <div class="card-vtubers" v-for="vtuber in show_vtuber" :key="vtuber.ID">
       <div class="card-vtuber-img">
@@ -136,6 +144,9 @@
       </router-link>
     </div>
   </section>
+  <section class="ame-page" :class="{ hide: show_vtuber >= getVtuberFilterData && loaded, hiscreen: !loaded }">
+    <img :src="`/src/assets/loading/${Math.floor(Math.random() * 7)}.gif`" alt="" />
+  </section>
 </template>
 
 <script>
@@ -146,9 +157,14 @@ import regionConfig from "../region.json"
 
 import { library } from "@fortawesome/fontawesome-svg-core"
 // import { fa } from '@fortawesome/free-brands-svg-icons'
-import { faGlobeAmericas, faUser } from "@fortawesome/free-solid-svg-icons"
+import {
+  faGlobeAmericas,
+  faUser,
+  faFilter,
+  faMagnifyingGlass
+} from "@fortawesome/free-solid-svg-icons"
 
-library.add(faGlobeAmericas, faUser)
+library.add(faGlobeAmericas, faUser, faFilter, faMagnifyingGlass)
 
 export default {
   name: "Vtubers",
@@ -409,6 +425,10 @@ export default {
 
     .mobile-filter {
       @apply sm:hidden;
+
+      svg > path {
+        // @apply fill-white;
+      }
     }
 
     &:focus-within .filters {
@@ -466,17 +486,25 @@ export default {
   }
 
   .search {
-    @apply inline-block mx-1 ml-3 flex-auto sm:flex-none;
+    @apply inline-block mx-1 ml-3 flex-auto sm:flex-none relative;
+
+    .fa-magnifying-glass {
+      @apply absolute mt-2 ml-2 text-blue-500;
+    }
 
     input {
-      @apply bg-blue-300 focus:bg-blue-200 py-1 px-2 rounded-md transition-shadow hover:shadow-sm hover:shadow-blue-600/75 focus:shadow-md focus:shadow-blue-600/75 w-full text-gray-600 font-semibold placeholder:italic placeholder:text-blue-500 placeholder:font-normal;
+      @apply bg-blue-300 focus:bg-blue-200 py-1 px-2 rounded-lg transition-shadow hover:shadow-sm hover:shadow-blue-600/75 focus:shadow-md focus:shadow-blue-600/75 w-full text-gray-600 font-semibold placeholder:italic placeholder:text-blue-500 placeholder:font-normal pl-8;
     }
   }
 }
 
 // make .ame-page full screen and placing content inside in to center
 .ame-page {
-  @apply flex flex-col items-center justify-center w-full h-screen;
+  @apply flex flex-col items-center justify-center w-full h-40;
+
+  img {
+    @apply h-32 object-contain;
+  }
 }
 
 .vtuber-page {
@@ -539,5 +567,9 @@ export default {
 
 .hide {
   @apply hidden;
+}
+
+.hiscreen {
+  @apply h-screen;
 }
 </style>
