@@ -426,7 +426,7 @@ export default {
       )
     },
     async getData() {
-      this.groupID = this.$route.params?.id || null
+      this.groupID = this.$route.params?.id 
 
       await this.getGroupData()
       await this.fetchVtubers()
