@@ -2,21 +2,29 @@
   <div class="filter-nav">
     <div class="menu-filter">
       <a href="#" class="mobile-filter"
-        ><font-awesome-icon :icon="['fas', 'filter']" class="fa-fw fa-lg text-white"
+        ><font-awesome-icon
+          :icon="['fas', 'filter']"
+          class="fa-fw fa-lg text-white"
       /></a>
       <ul class="filters">
         <li class="filter">
           <a href="#" class="link-filter" onclick="return false">Groups</a>
           <ul class="filter-submenu">
             <li class="pending" v-if="groups == null">
-              <img :src="`/src/assets/loading/${Math.floor(Math.random() * 7)}.gif`" alt="" />
+              <img
+                :src="`/src/assets/loading/${Math.floor(
+                  Math.random() * 7
+                )}.gif`"
+                alt=""
+              />
             </li>
             <li
               v-for="group in groups"
-              :key="group._id"
+              :key="group.ID"
               class="filter-submenu-item"
+              :class="{ active: groupID == group.ID }"
             >
-              <router-link :to="`/vtuber/${group.ID}`">
+              <router-link :to="`/vtuber/${group.ID || ''}`">
                 <img
                   v-if="group.GroupIcon"
                   :src="group.GroupIcon"
@@ -36,20 +44,34 @@
           <a href="#" class="link-filter" onclick="return false">Regions</a>
           <ul class="filter-submenu">
             <li class="pending" v-if="regions.length < 1">
-              <img :src="`/src/assets/loading/${Math.floor(Math.random() * 7)}.gif`" alt="" />
+              <img
+                :src="`/src/assets/loading/${Math.floor(
+                  Math.random() * 7
+                )}.gif`"
+                alt=""
+              />
+            </li>
+            <li class="filter-submenu-item" :class="{active: !$route.query?.reg}" v-if="regions.length > 0">
+              <router-link :to="$route.href.replace(/\?reg=.{2}/, '')">
+                <font-awesome-icon
+                  :icon="['fas', 'earth-americas']"
+                  class="fa-fw"
+                />
+                All Regions
+              </router-link>
             </li>
             <li
               v-for="region in regions"
               :key="region._id"
               class="filter-submenu-item"
+              :class="{active: $route.query?.reg && $route.query?.reg.toLowerCase()  == region.code.toLowerCase()}"
             >
               <router-link
                 :to="
-                  $route.href.replace(/\?reg=.{2}/, '') + region.code
-                    ? `?reg=${region.code}`
-                    : ''
+                  $route.href.replace(/\?reg=.{2}/, '') + `?reg=${region.code}`
                 "
-                ><img
+              >
+                <img
                   v-if="region.flagCode"
                   :src="`/src/assets/flags/${region.flagCode}.svg`"
                   alt=""
@@ -70,7 +92,8 @@
     <div class="search">
       <font-awesome-icon
         :icon="['fas', 'magnifying-glass']"
-        class="fa-fw fa-md text-white" />
+        class="fa-fw fa-md text-white"
+      />
       <input
         type="text"
         v-model="search"
@@ -80,7 +103,7 @@
       />
     </div>
   </div>
-  <section class="vtuber-page" :class="{ hide: !loaded }">
+  <section class="vtuber-page" :class="{hide: !loaded}">
     <div class="card-vtubers" v-for="vtuber in show_vtuber" :key="vtuber.ID">
       <div class="card-vtuber-img">
         <div class="tags">
@@ -144,8 +167,17 @@
       </router-link>
     </div>
   </section>
-  <section class="ame-page" :class="{ hide: show_vtuber >= getVtuberFilterData && loaded, hiscreen: !loaded }">
-    <img :src="`/src/assets/loading/${Math.floor(Math.random() * 7)}.gif`" alt="" />
+  <section
+    class="ame-page"
+    :class="{
+      hide: show_vtuber >= getVtuberFilterData && loaded,
+      hiscreen: !loaded,
+    }"
+  >
+    <img
+      :src="`/src/assets/loading/${Math.floor(Math.random() * 7)}.gif`"
+      alt=""
+    />
   </section>
 </template>
 
@@ -161,7 +193,7 @@ import {
   faGlobeAmericas,
   faUser,
   faFilter,
-  faMagnifyingGlass
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons"
 
 library.add(faGlobeAmericas, faUser, faFilter, faMagnifyingGlass)
@@ -199,18 +231,7 @@ export default {
           return
         }
 
-        this.groupID = this.$route.params?.id
-
-        await this.getGroupData()
-        await this.fetchVtubers()
-        await this.getRegions()
-
-        // limit vtubers from getVtuberData to 30
-        this.phName =
-          this.getVtuberFilterData[
-            Math.floor(Math.random() * this.getVtuberFilterData.length)
-          ]["EnName"]
-        this.show_vtuber = this.getVtuberFilterData.slice(0, 30)
+        await this.getData()
       },
 
       { immediate: true }
@@ -317,7 +338,6 @@ export default {
 
       // add "all vtubers" in the first position of "groups"
       data_groups.unshift({
-        ID: "",
         GroupName: "All Vtubers",
         GroupIcon: "",
       })
@@ -363,13 +383,6 @@ export default {
         return 0
       })
 
-      // add all Regions in the first position of "regions"
-      region_data.unshift({
-        code: "",
-        name: "All Regions",
-        flagCode: "",
-      })
-
       this.regions = region_data
 
       console.log(this.regions)
@@ -411,6 +424,20 @@ export default {
         },
         { immediate: true }
       )
+    },
+    async getData() {
+      this.groupID = this.$route.params?.id || null
+
+      await this.getGroupData()
+      await this.fetchVtubers()
+      await this.getRegions()
+
+      // limit vtubers from getVtuberData to 30
+      this.phName =
+        this.getVtuberFilterData[
+          Math.floor(Math.random() * this.getVtuberFilterData.length)
+        ]["EnName"]
+      this.show_vtuber = this.getVtuberFilterData.slice(0, 30)
     },
   },
 }
@@ -473,6 +500,9 @@ export default {
                 svg {
                   @apply py-1 px-[2px] mr-2 ml-1;
                 }
+              }
+              &.active {
+                @apply bg-blue-500;
               }
             }
           }
