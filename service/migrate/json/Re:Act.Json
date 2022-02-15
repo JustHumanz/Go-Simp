@@ -52,8 +52,8 @@
             "Region": "JP",
             "BiliBili": {
               "BiliBili_Fanart": "",
-              "BiliBili_ID": "482515510",
-              "BiliRoom_ID": "21693692"
+              "BiliBili_ID": 482515510,
+              "BiliRoom_ID": 21693692
             },
             "Twitch": null,
             "Twitter": {
@@ -73,8 +73,8 @@
             "Region": "JP",
             "BiliBili": {
               "BiliBili_Fanart": "",
-              "BiliBili_ID": "482515509",
-              "BiliRoom_ID": "21693691"
+              "BiliBili_ID": 482515509,
+              "BiliRoom_ID": 21693691
             },
             "Twitch": null,
             "Twitter": {
