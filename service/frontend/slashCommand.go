@@ -900,7 +900,7 @@ var (
 						YTSubs := "[Youtube](https://www.youtube.com/channel/" + v2.YoutubeID + "?sub_confirmation=1)"
 						BiliFollow := "[BiliBili](https://space.bilibili.com/" + strconv.Itoa(v2.BiliBiliID) + ")"
 						TwitterFollow := "[Twitter](https://twitter.com/" + v2.TwitterName + ")"
-						if SubsData.BiliFollow != 0 {
+						if SubsData.BiliFollow != 0 && SubsData.BiliViews != 0 && SubsData.BiliVideos != 0 {
 							err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 								Type: discordgo.InteractionResponseChannelMessageWithSource,
 								Data: &discordgo.InteractionResponseData{
@@ -946,7 +946,6 @@ var (
 											AddField("Twitter followers", engine.NearestThousandFormat(float64(SubsData.TwFollow))).
 											RemoveInline().
 											AddField("<:yt:796023828723269662>", YTSubs).
-											AddField("<:bili:796025336542265344>", BiliFollow).
 											AddField("<:tw:796025611210588187>", TwitterFollow).
 											InlineAllFields().
 											SetColor(Color).MessageEmbed,
