@@ -6,7 +6,7 @@
       /></a>
       <ul class="filters">
         <li class="filter">
-          <a href="#" class="link-filter">Groups</a>
+          <a href="#" class="link-filter" onclick="return false">Groups</a>
           <ul class="filter-submenu">
             <li class="pending" v-if="groups == null">
               <img :src="`/src/assets/loading/${Math.floor(Math.random() * 7)}.gif`" alt="" />
@@ -33,14 +33,14 @@
           </ul>
         </li>
         <li class="filter">
-          <a href="#" class="link-filter">Regions</a>
+          <a href="#" class="link-filter" onclick="return false">Regions</a>
           <ul class="filter-submenu">
             <li class="pending" v-if="regions.length < 1">
               <img :src="`/src/assets/loading/${Math.floor(Math.random() * 7)}.gif`" alt="" />
             </li>
             <li
               v-for="region in regions"
-              :key="region"
+              :key="region._id"
               class="filter-submenu-item"
             >
               <router-link
@@ -172,7 +172,7 @@ export default {
     return {
       loaded: false,
       groups: null,
-      group: -1,
+      groupID: -1,
       regions: [],
       vtubers: [],
       region_vtuber: [],
@@ -191,7 +191,7 @@ export default {
       () => this.$route.params,
       async () => {
         if (
-          this.group === this.$route.params?.id ||
+          this.groupID === this.$route.params?.id ||
           !this.$route.path.includes("vtuber") ||
           this.vtubers === []
         ) {
@@ -199,7 +199,7 @@ export default {
           return
         }
 
-        this.group = this.$route.params?.id
+        this.groupID = this.$route.params?.id
 
         await this.getGroupData()
         await this.fetchVtubers()

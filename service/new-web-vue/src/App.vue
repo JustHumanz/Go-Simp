@@ -11,7 +11,7 @@ import "./index.css"
         ><IconHome class="h-full" /> <span>Go-Simp</span></router-link
       >
       <div class="nav-menu">
-        <a href="#" class="toggle-menu"
+        <a href="#" class="toggle-menu" onclick="return false"
           ><svg width="24" height="24" fill="none" aria-hidden="true">
             <path
               d="M12 6v.01M12 12v.01M12 18v.01M12 7a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"
