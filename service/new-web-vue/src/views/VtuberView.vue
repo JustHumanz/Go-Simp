@@ -35,7 +35,7 @@
                   :icon="['fas', 'user']"
                   class="fa-fw"
                 />
-                {{ group.GroupName }}
+                {{ group.GroupName.charAt(0).toUpperCase() + group.GroupName.slice(1) }}
               </router-link>
             </li>
           </ul>
@@ -428,9 +428,17 @@ export default {
     async getData() {
       this.groupID = this.$route.params?.id 
 
+      // add title
+      document.title = `Vtuber List`
+
       await this.getGroupData()
       await this.fetchVtubers()
       await this.getRegions()
+
+      // add title "GroupName - Vtuber List" with first letter capital
+      const NameGroup = this.groups.find((group) => group.ID == this.groupID)?.GroupName
+      document.title = `${NameGroup.charAt(0).toUpperCase() + NameGroup.slice(1)} - Vtuber List`
+
 
       // limit vtubers from getVtuberData to 30
       this.phName =

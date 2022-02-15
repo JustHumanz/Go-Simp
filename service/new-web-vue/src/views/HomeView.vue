@@ -1,5 +1,3 @@
-<script setup></script>
-
 <template>
   <section class="header-section">
     <div class="header">
@@ -53,6 +51,21 @@
     </div>
   </section>
 </template>
+
+<script>
+export default {
+  async created() {
+    this.$watch(
+      () => this.$route.params,
+      async () => {
+        document.title = "Vtbot - A vtuber sceduler from Discord Server"
+      },
+
+      { immediate: true }
+    )
+  },
+}
+</script>
 
 <style lang="scss">
 .header-section {
