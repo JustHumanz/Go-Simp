@@ -35,7 +35,10 @@
                   :icon="['fas', 'user']"
                   class="fa-fw"
                 />
-                {{ group.GroupName.charAt(0).toUpperCase() + group.GroupName.slice(1) }}
+                {{
+                  group.GroupName.charAt(0).toUpperCase() +
+                  group.GroupName.slice(1)
+                }}
               </router-link>
             </li>
           </ul>
@@ -51,7 +54,11 @@
                 alt=""
               />
             </li>
-            <li class="filter-submenu-item" :class="{active: !$route.query?.reg}" v-if="regions.length > 0">
+            <li
+              class="filter-submenu-item"
+              :class="{ active: !$route.query?.reg }"
+              v-if="regions.length > 0"
+            >
               <router-link :to="$route.href.replace(/\?reg=.{2}/, '')">
                 <font-awesome-icon
                   :icon="['fas', 'earth-americas']"
@@ -64,7 +71,11 @@
               v-for="region in regions"
               :key="region._id"
               class="filter-submenu-item"
-              :class="{active: $route.query?.reg && $route.query?.reg.toLowerCase()  == region.code.toLowerCase()}"
+              :class="{
+                active:
+                  $route.query?.reg &&
+                  $route.query?.reg.toLowerCase() == region.code.toLowerCase(),
+              }"
             >
               <router-link
                 :to="
@@ -103,7 +114,10 @@
       />
     </div>
   </div>
-  <section class="vtuber-page" :class="{hide: !loaded}">
+  <section
+    class="vtuber-page"
+    :class="{ hide: !loaded || show_vtuber.length < 1 }"
+  >
     <div class="card-vtubers" v-for="vtuber in show_vtuber" :key="vtuber.ID">
       <div class="card-vtuber-img">
         <div class="tags">
@@ -179,6 +193,39 @@
       alt=""
     />
   </section>
+  <!-- make section data vtuber not found -->
+  <section
+    class="vtuber-not-found"
+    :class="{
+      hide: show_vtuber.length > 0 || !loaded,
+    }"
+  >
+    <div class="not-found-img">
+      <img
+        src="/src/assets/smolame/bugs.png"
+        alt=""
+      />
+    </div>
+    <div class="not-found-text">
+      <h2>
+        <font-awesome-icon
+          :icon="['fas', 'exclamation-triangle']"
+          class="fa-fw"
+        />
+        <span>Hi, you cannot find your talent here</span>
+      </h2>
+      <p>
+        The vtuber you are looking for is not found. Check group, region, or
+        search. You can submit in
+        <a
+          href="https://github.com/JustHumanz/Go-Simp/issues/new?assignees=JustHumanz&labels=enhancement&template=add_vtuber.md&title=Add+%5BVtuber+Nickname%5D+from+%5BGroup%2FAgency%5D"
+          target="_blank"
+          rel="noopener noreferrer"
+          >here</a
+        >
+      </p>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -194,9 +241,16 @@ import {
   faUser,
   faFilter,
   faMagnifyingGlass,
+  faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons"
 
-library.add(faGlobeAmericas, faUser, faFilter, faMagnifyingGlass)
+library.add(
+  faGlobeAmericas,
+  faUser,
+  faFilter,
+  faMagnifyingGlass,
+  faExclamationTriangle
+)
 
 export default {
   name: "Vtubers",
@@ -336,6 +390,13 @@ export default {
         .get(Config.REST_API + "/groups/")
         .then((response) => response.data)
 
+      // sort group data from GroupName
+      data_groups.sort((a, b) => {
+        if (a.GroupName < b.GroupName) return -1
+        if (a.GroupName > b.GroupName) return 1
+        return 0
+      })
+
       // add "all vtubers" in the first position of "groups"
       data_groups.unshift({
         GroupName: "All Vtubers",
@@ -392,10 +453,10 @@ export default {
         let bottomOfWindow =
           document.documentElement.scrollTop + window.innerHeight ===
           document.documentElement.offsetHeight
+        let vtuber_show = this.show_vtuber.length
 
-        if (bottomOfWindow) {
+        if (bottomOfWindow && vtuber_show < this.getVtuberFilterData.length) {
           // count vtuber_show, then add 50 more
-          let vtuber_show = this.show_vtuber.length
           this.show_vtuber = this.getVtuberFilterData.slice(0, vtuber_show + 30)
         }
       }
@@ -426,7 +487,7 @@ export default {
       )
     },
     async getData() {
-      this.groupID = this.$route.params?.id 
+      this.groupID = this.$route.params?.id
 
       // add title
       document.title = `Vtuber List`
@@ -436,9 +497,12 @@ export default {
       await this.getRegions()
 
       // add title "GroupName - Vtuber List" with first letter capital
-      const NameGroup = this.groups.find((group) => group.ID == this.groupID)?.GroupName
-      document.title = `${NameGroup.charAt(0).toUpperCase() + NameGroup.slice(1)} - Vtuber List`
-
+      const NameGroup = this.groups.find(
+        (group) => group.ID == this.groupID
+      )?.GroupName
+      document.title = `${
+        NameGroup.charAt(0).toUpperCase() + NameGroup.slice(1)
+      } - Vtuber List`
 
       // limit vtubers from getVtuberData to 30
       this.phName =
@@ -546,7 +610,8 @@ export default {
 }
 
 .vtuber-page {
-  @apply w-full md:w-[80%] lg:w-[75%] p-4 m-auto pt-[4.2rem] mb-3 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-[1.5rem];
+  @apply w-full md:w-[80%] lg:w-[75%] p-4 m-auto pt-[4.2rem] mb-3 grid  gap-[1.5rem];
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 
   .card-vtubers {
     @apply bg-white shadow-md rounded-md overflow-hidden transition-transform;
@@ -598,6 +663,35 @@ export default {
 
       small {
         @apply text-gray-600 leading-3;
+      }
+    }
+  }
+}
+
+.vtuber-not-found {
+  @apply flex justify-center items-center w-full h-[95vh] flex-col sm:flex-row;
+
+  .not-found-img {
+    @apply w-24 h-24 object-contain;
+  }
+
+  // make .not-found-text fit with h2
+  .not-found-text {
+    @apply max-w-[29rem] px-5;
+
+    h2 {
+      @apply text-center text-gray-800 font-semibold text-xl sm:text-2xl;
+
+      svg {
+        @apply text-yellow-400;
+      }
+    }
+
+    p {
+      @apply inline-block text-center text-gray-600 font-semibold text-sm sm:text-base leading-5 my-2;
+
+      a {
+        @apply text-gray-700 hover:text-blue-600 transition-all;
       }
     }
   }
