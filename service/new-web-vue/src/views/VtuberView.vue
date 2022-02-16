@@ -1,10 +1,12 @@
 <template>
   <div class="filter-nav">
+    <!--  -->
     <div class="menu-filter">
       <a href="#" class="mobile-filter"
         ><font-awesome-icon
           :icon="['fas', 'filter']"
           class="fa-fw fa-lg text-white"
+          onclick="return false"
       /></a>
       <ul class="filters">
         <li class="filter">
@@ -24,7 +26,7 @@
               class="filter-submenu-item"
               :class="{ active: groupID == group.ID }"
             >
-              <router-link :to="`/vtuber/${group.ID || ''}`">
+              <router-link :to="`/vtuber/${group.ID || ''}`" @click="resetLink">
                 <img
                   v-if="group.GroupIcon"
                   :src="group.GroupIcon"
@@ -59,7 +61,10 @@
               :class="{ active: !$route.query?.reg }"
               v-if="regions.length > 0"
             >
-              <router-link :to="$route.href.replace(/\?reg=.{2}/, '')">
+              <router-link
+                :to="$route.href.replace(/\?reg=.{2}/, '')"
+                @click="resetLink"
+              >
                 <font-awesome-icon
                   :icon="['fas', 'earth-americas']"
                   class="fa-fw"
@@ -81,6 +86,7 @@
                 :to="
                   $route.href.replace(/\?reg=.{2}/, '') + `?reg=${region.code}`
                 "
+                @click="resetLink"
               >
                 <img
                   v-if="region.flagCode"
@@ -114,6 +120,7 @@
       />
     </div>
   </div>
+
   <section
     class="vtuber-page"
     :class="{ hide: !loaded || show_vtuber.length < 1 }"
@@ -123,24 +130,43 @@
         <div class="tags">
           <!-- Get groupicon from group id -->
           <img
+            class="group"
             v-if="vtuber.GroupID !== 10"
             :src="vtuber.Group.GroupIcon"
             :alt="vtuber.Group.GroupName"
           />
           <!-- Get flag icon from Region -->
           <img
+            class="flag"
             v-bind:src="`/src/assets/flags/${vtuber.Regions.flagCode}.svg`"
             :alt="vtuber.Regions.name"
           />
           <a
             :href="vtuber.LiveURL"
             target="_blank"
-            :class="{
-              hide:
-                !vtuber.IsBiliLive && !vtuber.IsYtLive && !vtuber.IsTwitchLive,
-            }"
+            v-if="vtuber.IsBiliLive || vtuber.IsYtLive || vtuber.IsTwitchLive"
             class="live-indicator"
           >
+            <!-- add icon youtube when live in youtube -->
+            <font-awesome-icon
+              v-if="vtuber.IsYtLive"
+              :icon="['fab', 'youtube']"
+              class="fa-fw"
+            />
+
+            <!-- add icon twitch when live in twitch -->
+            <font-awesome-icon
+              v-if="vtuber.IsTwitchLive"
+              :icon="['fab', 'twitch']"
+              class="fa-fw"
+            />
+
+            <!-- add icon bilibili when live in bilibili -->
+            <font-awesome-icon
+              v-if="vtuber.IsBiliLive"
+              :icon="['fab', 'bilibili']"
+              class="fa-fw"
+            />
             LIVE
           </a>
           <div class="tooltip-info">
@@ -148,7 +174,7 @@
           </div>
         </div>
         <router-link :to="`/vtuber/members/${vtuber.ID}`">
-          <div class="profile-pic" v-if="vtuber.Youtube !== null">
+          <div class="profile-pic" v-if="vtuber.Youtube">
             <img
               class="card-img-top"
               v-bind:src="vtuber.Youtube.Avatar"
@@ -156,7 +182,10 @@
               alt="Card image cap"
             />
           </div>
-          <div class="profile-pic" v-else-if="vtuber.BiliBili !== null">
+          <div
+            class="profile-pic"
+            v-else-if="vtuber.BiliBili && !vtuber.Youtube"
+          >
             <img
               class="card-img-top"
               v-bind:src="vtuber.BiliBili.Avatar"
@@ -172,6 +201,40 @@
             />
           </div>
         </router-link>
+        <div class="social-menu">
+          <a
+            v-if="vtuber.Youtube !== null"
+            :href="`https://www.youtube.com/channel/${vtuber.Youtube.ID}`"
+            target="_blank"
+            class="social-icon youtube"
+          >
+            <font-awesome-icon :icon="['fab', 'youtube']" class="fa-fw" />
+          </a>
+          <a
+            v-if="vtuber.BiliBili !== null"
+            :href="`https://space.bilibili.com/${vtuber.BiliBili.ID}`"
+            target="_blank"
+            class="social-icon bilibili"
+          >
+            <font-awesome-icon :icon="['fab', 'bilibili']" class="fa-fw" />
+          </a>
+          <a
+            v-if="vtuber.Twitch !== null"
+            :href="`https://twitch.tv/${vtuber.Twitch.UserName}`"
+            target="_blank"
+            class="social-icon twitch"
+          >
+            <font-awesome-icon :icon="['fab', 'twitch']" class="fa-fw" />
+          </a>
+          <a
+            v-if="vtuber.Twitter !== null"
+            :href="`https://twitter.com/${vtuber.Twitter.UserName}`"
+            target="_blank"
+            class="social-icon twitter"
+          >
+            <font-awesome-icon :icon="['fab', 'twitter']" class="fa-fw" />
+          </a>
+        </div>
       </div>
       <router-link :to="`/vtuber/members/${vtuber.ID}`">
         <div class="card-vtuber-name">
@@ -201,10 +264,7 @@
     }"
   >
     <div class="not-found-img">
-      <img
-        src="/src/assets/smolame/bugs.png"
-        alt=""
-      />
+      <img src="/src/assets/smolame/bugs.png" alt="" />
     </div>
     <div class="not-found-text">
       <h2>
@@ -235,7 +295,12 @@ import Config from "../config.json"
 import regionConfig from "../region.json"
 
 import { library } from "@fortawesome/fontawesome-svg-core"
-// import { fa } from '@fortawesome/free-brands-svg-icons'
+import {
+  faYoutube,
+  faBilibili,
+  faTwitch,
+  faTwitter,
+} from "@fortawesome/free-brands-svg-icons"
 import {
   faGlobeAmericas,
   faUser,
@@ -249,7 +314,11 @@ library.add(
   faUser,
   faFilter,
   faMagnifyingGlass,
-  faExclamationTriangle
+  faExclamationTriangle,
+  faYoutube,
+  faBilibili,
+  faTwitch,
+  faTwitter
 )
 
 export default {
@@ -257,7 +326,7 @@ export default {
   data() {
     return {
       loaded: false,
-      groups: null,
+      groups: [],
       groupID: -1,
       regions: [],
       vtubers: [],
@@ -265,6 +334,8 @@ export default {
       show_vtuber: [],
       search: "",
       phName: "Search...",
+      cancelGroups: null,
+      cancelVtubers: null,
     }
   },
   async mounted() {
@@ -285,16 +356,30 @@ export default {
           return
         }
 
+        if (
+          this.groups.length === 0 &&
+          !this.loaded &&
+          this.cancelGroups !== null
+        )
+          this.cancelGroups.cancel("Canceled")
+
+        if (
+          this.vtubers.length === 0 &&
+          !this.loaded &&
+          this.cancelVtubers !== null
+        )
+          this.cancelVtubers.cancel("Canceled")
+
         await this.getData()
       },
 
       { immediate: true }
     )
   },
-  beforeRouteEnter(to, from, next) {
-    console.log(from)
-    next()
-  },
+  // beforeRouteEnter(to, from, next) {
+
+  //   next()
+  // },
   computed: {
     getVtuberFilterData() {
       // get reg from ?reg=
@@ -338,11 +423,20 @@ export default {
       console.log("Fetching data...")
 
       this.locate = this.$route.href
-      this.loaded = false
+      this.cancelVtubers = axios.CancelToken.source()
 
       const vtuber_data = await axios
-        .get(Config.REST_API + "/members/", groupIdExist)
-        .then((response) => response.data)
+        .get(Config.REST_API + "/members/", {
+          cancelToken: this.cancelVtubers.token,
+          ...groupIdExist,
+        })
+        .then((response) => {
+          this.cancelVtubers = null
+          return response.data
+        })
+        .catch((error) => {
+          console.log(error)
+        })
 
       console.log("Add more stuff...")
 
@@ -379,16 +473,22 @@ export default {
       this.vtubers = vtuber_data
 
       console.log(`Total vtuber: ${this.vtubers.length}`)
-      this.loaded = true
     },
 
     async getGroupData() {
-      if (this.groups !== null) return
+      if (this.groups.length > 0) return
       console.log("Fetching group data...")
 
+      this.cancelGroups = axios.CancelToken.source()
+
       const data_groups = await axios
-        .get(Config.REST_API + "/groups/")
+        .get(Config.REST_API + "/groups/", {
+          cancelToken: this.cancelGroups.token,
+        })
         .then((response) => response.data)
+        .catch((error) => {
+          console.log(error.message)
+        })
 
       // sort group data from GroupName
       data_groups.sort((a, b) => {
@@ -487,7 +587,11 @@ export default {
       )
     },
     async getData() {
+      this.loaded = false
+
       this.groupID = this.$route.params?.id
+      // empty #vtuber-search input
+      this.search = ""
 
       // add title
       document.title = `Vtuber List`
@@ -504,6 +608,8 @@ export default {
         NameGroup.charAt(0).toUpperCase() + NameGroup.slice(1)
       } - Vtuber List`
 
+      this.loaded = true
+
       // limit vtubers from getVtuberData to 30
       this.phName =
         this.getVtuberFilterData[
@@ -511,23 +617,32 @@ export default {
         ]["EnName"]
       this.show_vtuber = this.getVtuberFilterData.slice(0, 30)
     },
+    resetLink() {
+      // get element .mobile-filter
+      const mobileFilter = document.querySelector(".mobile-filter")
+      mobileFilter.blur()
+
+      // get element .filter-submenu-item a
+      const filterSubmenuItem = document.querySelectorAll(
+        ".filter-submenu-item a"
+      )
+      filterSubmenuItem.forEach((item) => {
+        item.blur()
+      })
+    },
   },
 }
 </script>
 
 <style lang="scss">
 .filter-nav {
-  @apply bg-blue-400 fixed top-16 w-screen py-3 px-3 md:px-[15%] lg:px-[17%] flex flex-wrap items-center sm:justify-between z-10;
+  @apply bg-blue-400 fixed top-16 py-3 px-4 w-screen flex flex-wrap items-center sm:justify-between md:justify-around justify-center z-10;
 
   .menu-filter {
     @apply flex-none;
 
     .mobile-filter {
       @apply sm:hidden;
-
-      svg > path {
-        // @apply fill-white;
-      }
     }
 
     &:focus-within .filters {
@@ -567,7 +682,7 @@ export default {
                 @apply flex text-white w-full px-7 sm:pl-1 sm:pr-3 py-1 hover:bg-blue-500/50 font-semibold sm:w-44;
 
                 img {
-                  @apply w-6 object-contain drop-shadow-md mr-2 ml-1;
+                  @apply w-6 rounded-md object-contain drop-shadow-md mr-2 ml-1;
                 }
                 svg {
                   @apply py-1 px-[2px] mr-2 ml-1;
@@ -611,7 +726,7 @@ export default {
 
 .vtuber-page {
   @apply w-full md:w-[80%] lg:w-[75%] p-4 m-auto pt-[4.2rem] mb-3 grid  gap-[1.5rem];
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
 
   .card-vtubers {
     @apply bg-white shadow-md rounded-md overflow-hidden transition-transform;
@@ -625,13 +740,21 @@ export default {
       @apply relative;
 
       .tags {
-        @apply absolute bg-gray-200 rounded-br-md h-8 flex items-center cursor-pointer;
+        @apply absolute bg-gray-200/90 rounded-br-md h-6 flex items-center cursor-pointer;
 
         img {
-          @apply object-contain w-8 mx-1 drop-shadow-md;
+          @apply object-contain w-5 ml-1 drop-shadow-md;
+
+          &.flag {
+            @apply mx-2 w-4 rounded-sm;
+          }
         }
         .live-indicator {
-          @apply bg-red-500 text-white px-2 py-1 rounded-br-md;
+          @apply bg-red-500/90 text-white px-2 py-1 rounded-br-md flex items-center text-xs font-semibold;
+
+          svg {
+            @apply mr-1;
+          }
         }
 
         &:hover {
@@ -641,15 +764,43 @@ export default {
         }
 
         .tooltip-info {
-          @apply absolute top-8 px-2 py-1 text-xs font-semibold text-gray-600 bg-gray-200 rounded-r-md z-[9] hidden whitespace-nowrap;
+          @apply absolute top-6 px-2 py-1 text-xs font-semibold text-gray-600 bg-gray-200/90 rounded-r-md z-[9] hidden whitespace-nowrap;
         }
       }
 
       .profile-pic {
         // size width and height square and fit to card
         @apply object-contain h-full aspect-square bg-smolame bg-cover;
+
         img {
           @apply object-contain h-full;
+        }
+      }
+      .social-menu {
+        @apply absolute bg-gray-200/90 bottom-0 right-0 p-1 rounded-tl-md;
+
+        .social-icon {
+          @apply p-2 text-gray-700;
+
+          &.youtube:hover {
+            // what color logo of youtube
+            @apply text-youtube;
+          }
+
+          &.bilibili:hover {
+            // what color logo of bilibili
+            @apply text-bilibili;
+          }
+
+          &.twitch:hover {
+            // what color logo of twitch
+            @apply text-twitch;
+          }
+
+          &.twitter:hover {
+            // what color logo of twitter
+            @apply text-twitter;
+          }
         }
       }
     }

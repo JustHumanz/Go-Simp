@@ -23,14 +23,30 @@ import "./index.css"
         ></a>
         <ul>
           <li>
-            <router-link to="/vtuber" :class="{ active: isActive }"
+            <router-link
+              to="/vtuber"
+              :class="{ active: isActive }"
+              class="nav-link"
+              @click="resetFocus()"
               >Vtubers</router-link
             >
           </li>
-          <li><router-link to="/docs">Docs</router-link></li>
-          <li><router-link to="/support">Support</router-link></li>
+          <li>
+            <router-link to="/docs" class="nav-link" @click="resetFocus()"
+              >Docs</router-link
+            >
+          </li>
+          <li>
+            <router-link to="/support" class="nav-link" @click="resetFocus()"
+              >Support</router-link
+            >
+          </li>
           <li class="mobile-dashboard">
-            <a href="https://web-admin.humanz.moe/login" target="_blank"
+            <a
+              href="https://web-admin.humanz.moe/login"
+              target="_blank"
+              class="nav-link"
+              @click="resetFocus()"
               >Dashboard</a
             >
           </li>
@@ -77,13 +93,25 @@ export default {
       { immediate: true }
     )
   },
+  methods: {
+    resetFocus() {
+      this.$nextTick(() => {
+        // get element .nav-link
+        const navLinks = document.querySelectorAll(".nav-link")
+        // looping nav-link
+        navLinks.forEach((navLink) => {
+          navLink.blur()
+        })
+      })
+    },
+  },
 }
 </script>
 
 <style lang="scss">
 nav {
   font-family: "Nunito", sans-serif;
-  @apply h-16 bg-cyan-500 shadow-md shadow-cyan-500/50 fixed top-0 left-0 w-full z-[11] flex justify-center;
+  @apply h-16 bg-cyan-500 shadow-md shadow-cyan-500/50 fixed top-0 left-0 w-screen z-[11] flex justify-center;
   .navbar {
     @apply mx-4 h-full flex justify-between md:justify-around items-center w-full md:w-[90%] lg:w-[85%];
 
@@ -96,7 +124,6 @@ nav {
     }
 
     .nav-menu {
-
       .toggle-menu {
         @apply block sm:hidden;
       }
