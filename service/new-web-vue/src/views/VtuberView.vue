@@ -258,15 +258,15 @@
   </section>
   <!-- make section data vtuber not found -->
   <section
-    class="vtuber-not-found"
+    class="error-page"
     :class="{
       hide: show_vtuber.length > 0 || !loaded,
     }"
   >
-    <div class="not-found-img">
+    <div class="error-image">
       <img src="/src/assets/smolame/bugs.png" alt="" />
     </div>
-    <div class="not-found-text">
+    <div class="error-text">
       <h2>
         <font-awesome-icon
           :icon="['fas', 'exclamation-triangle']"
@@ -276,13 +276,37 @@
       </h2>
       <p>
         The vtuber you are looking for is not found. Check group, region, or
-        search. You can submit in
+        search. Or you can submit in
         <a
           href="https://github.com/JustHumanz/Go-Simp/issues/new?assignees=JustHumanz&labels=enhancement&template=add_vtuber.md&title=Add+%5BVtuber+Nickname%5D+from+%5BGroup%2FAgency%5D"
           target="_blank"
           rel="noopener noreferrer"
           >here</a
         >
+      </p>
+    </div>
+  </section>
+  <!-- make section when api is broken -->
+  <section
+    class="error-page"
+    :class="{
+      hide: !error_msg,
+    }"
+  >
+    <div class="error-image">
+      <img src="/src/assets/smolame/lazer.png" alt="" />
+    </div>
+    <div class="error-text">
+      <h2>
+        <font-awesome-icon
+          :icon="['fas', 'circle-exclamation']"
+          class="fa-fw"
+        />
+        <span>You internet in danger</span>
+      </h2>
+      <p>
+        Check your internet connection, try restart your modem, or try again
+        later.
       </p>
     </div>
   </section>
@@ -307,6 +331,7 @@ import {
   faFilter,
   faMagnifyingGlass,
   faExclamationTriangle,
+  faCircleExclamation
 } from "@fortawesome/free-solid-svg-icons"
 
 library.add(
@@ -318,7 +343,8 @@ library.add(
   faYoutube,
   faBilibili,
   faTwitch,
-  faTwitter
+  faTwitter,
+  faCircleExclamation
 )
 
 export default {
@@ -326,6 +352,7 @@ export default {
   data() {
     return {
       loaded: false,
+      error_msg: null,
       groups: [],
       groupID: -1,
       regions: [],
@@ -347,6 +374,8 @@ export default {
     this.$watch(
       () => this.$route.params,
       async () => {
+        this.search = ""
+
         if (
           this.groupID === this.$route.params?.id ||
           !this.$route.path.includes("vtuber") ||
@@ -550,6 +579,7 @@ export default {
     },
     ExtendVtuberData() {
       window.onscroll = () => {
+        console.log("Scroll")
         let bottomOfWindow =
           document.documentElement.scrollTop + window.innerHeight ===
           document.documentElement.offsetHeight
@@ -590,8 +620,6 @@ export default {
       this.loaded = false
 
       this.groupID = this.$route.params?.id
-      // empty #vtuber-search input
-      this.search = ""
 
       // add title
       document.title = `Vtuber List`
@@ -659,6 +687,14 @@ export default {
           w-full h-full inline-block hover:bg-blue-500/50 sm:hover:bg-transparent sm:hover:shadow-sm sm:hover:shadow-blue-600/75;
         }
 
+        .filter-submenu {
+          @apply hidden relative sm:absolute;
+
+          .pending img {
+            @apply w-16 h-16 object-cover sm:object-contain;
+          }
+        }
+
         &:focus-within {
           .link-filter {
             @apply sm:shadow-md sm:shadow-blue-600;
@@ -694,10 +730,6 @@ export default {
             }
           }
         }
-
-        .filter-submenu {
-          @apply hidden relative sm:absolute;
-        }
       }
     }
   }
@@ -710,7 +742,7 @@ export default {
     }
 
     input {
-      @apply bg-blue-300 focus:bg-blue-200 py-1 px-2 rounded-lg transition-shadow hover:shadow-sm hover:shadow-blue-600/75 focus:shadow-md focus:shadow-blue-600/75 w-full text-gray-600 font-semibold placeholder:italic placeholder:text-blue-500 placeholder:font-normal pl-8;
+      @apply bg-blue-300 focus:bg-blue-200 disabled:bg-slate-500 py-1 px-2 rounded-lg transition-all hover:shadow-sm hover:shadow-blue-600/75 focus:shadow-md focus:shadow-blue-600/75 w-full text-gray-600 font-semibold placeholder:italic placeholder:text-blue-500 disabled:placeholder:text-blue-200 placeholder:font-normal pl-8 focus:outline-none;
     }
   }
 }
@@ -819,22 +851,26 @@ export default {
   }
 }
 
-.vtuber-not-found {
+.error-page {
   @apply flex justify-center items-center w-full h-[95vh] flex-col sm:flex-row;
 
-  .not-found-img {
+  .error-image {
     @apply w-24 h-24 object-contain;
   }
 
   // make .not-found-text fit with h2
-  .not-found-text {
-    @apply max-w-[29rem] px-5;
+  .error-text {
+    @apply max-w-[29.5rem] px-5;
 
     h2 {
       @apply text-center text-gray-800 font-semibold text-xl sm:text-2xl;
 
       svg {
-        @apply text-yellow-400;
+        @apply text-yellow-400 mr-1;
+      }
+
+      .fa-circle-exclamation {
+        @apply text-red-500;
       }
     }
 

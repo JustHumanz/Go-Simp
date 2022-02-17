@@ -125,7 +125,7 @@ nav {
 
     .nav-menu {
       .toggle-menu {
-        @apply block sm:hidden;
+        @apply block sm:hidden p-3;
       }
 
       &:focus-within ul {
