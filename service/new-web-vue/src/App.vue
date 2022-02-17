@@ -108,7 +108,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 nav {
   font-family: "Nunito", sans-serif;
   @apply h-16 bg-cyan-500 shadow-md shadow-cyan-500/50 fixed top-0 left-0 w-screen z-[11] flex justify-center;
@@ -134,7 +134,7 @@ nav {
 
       ul {
         // make nav-menu items using tailwind
-        @apply flex items-start sm:items-center flex-col sm:flex-row bg-cyan-500 rounded-md sm:bg-transparent w-[13rem] sm:w-auto absolute top-2 right-2 sm:top-auto sm:right-auto sm:relative invisible sm:visible shadow-center sm:shadow-none shadow-cyan-600/75;
+        @apply flex items-start sm:items-center flex-col sm:flex-row bg-cyan-500 rounded-md sm:bg-transparent w-[13rem] sm:w-auto absolute top-2 right-2 sm:top-auto sm:right-auto sm:relative invisible sm:visible shadow-md shadow-black/50 sm:shadow-none;
 
         li {
           @apply w-full sm:w-auto sm:mx-1;
