@@ -331,7 +331,7 @@ import {
   faFilter,
   faMagnifyingGlass,
   faExclamationTriangle,
-  faCircleExclamation
+  faCircleExclamation,
 } from "@fortawesome/free-solid-svg-icons"
 
 library.add(
@@ -586,7 +586,15 @@ export default {
         console.log(bottomOfWindow)
         console.log(document.documentElement.offsetHeight)
         console.log(document.documentElement.scrollTop)
-        console.log(window.innerHeight)
+        console.log(
+          Math.max(
+            document.body.scrollHeight,
+            document.body.offsetHeight,
+            document.documentElement.clientHeight,
+            document.documentElement.scrollHeight,
+            document.documentElement.offsetHeight
+          )
+        )
 
         if (bottomOfWindow && vtuber_show < this.getVtuberFilterData.length) {
           // count vtuber_show, then add 50 more
