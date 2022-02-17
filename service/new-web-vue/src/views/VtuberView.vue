@@ -585,6 +585,7 @@ export default {
         let vtuber_show = this.show_vtuber.length
         console.log(bottomOfWindow)
         console.log(document.body.scrollHeight)
+        console.log(document.documentElement.offsetHeight)
         console.log(document.documentElement.scrollTop + window.innerHeight)
 
         // if (bottomOfWindow && vtuber_show < this.getVtuberFilterData.length) {
