@@ -579,11 +579,14 @@ export default {
     },
     ExtendVtuberData() {
       window.onscroll = () => {
-        console.log("Scroll")
         let bottomOfWindow =
           document.documentElement.scrollTop + window.innerHeight ===
           document.documentElement.offsetHeight
         let vtuber_show = this.show_vtuber.length
+        console.log(bottomOfWindow)
+        console.log(document.documentElement.offsetHeight)
+        console.log(document.documentElement.scrollTop)
+        console.log(window.innerHeight)
 
         if (bottomOfWindow && vtuber_show < this.getVtuberFilterData.length) {
           // count vtuber_show, then add 50 more
