@@ -181,7 +181,7 @@
           <div class="profile-pic" v-if="vtuber.Youtube">
             <img
               class="card-img-top"
-              v-bind:src="vtuber.Youtube.Avatar"
+              v-bind:src="vtuber.Youtube.Avatar.replace('s800', 's360')"
               onerror="this.src='/src/assets/smolame.png'"
               alt="Card image cap"
             />
@@ -192,9 +192,9 @@
           >
             <img
               class="card-img-top"
-              v-bind:src="vtuber.BiliBili.Avatar"
-              onerror="this.src='/src/assets/smolame.png'"
+              v-bind:src="`${vtuber.BiliBili.Avatar}@360w_360h_1c_1s.jpg`"
               referrerpolicy="no-referrer"
+              onerror="this.src='/src/assets/smolame.png'"
               alt="Card image cap"
             />
           </div>
