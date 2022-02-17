@@ -580,18 +580,14 @@ export default {
     ExtendVtuberData() {
       window.onscroll = () => {
         let bottomOfWindow =
-          document.documentElement.scrollTop + window.innerHeight ===
-          document.documentElement.offsetHeight
+          Math.round(window.scrollY + window.innerHeight) >= document.body.offsetHeight
         let vtuber_show = this.show_vtuber.length
-        console.log(bottomOfWindow)
-        console.log(document.body.scrollHeight)
-        console.log(document.documentElement.offsetHeight)
-        console.log(document.documentElement.scrollTop + window.innerHeight)
 
-        // if (bottomOfWindow && vtuber_show < this.getVtuberFilterData.length) {
-        //   // count vtuber_show, then add 50 more
-        //   this.show_vtuber = this.getVtuberFilterData.slice(0, vtuber_show + 30)
-        // }
+
+        if (bottomOfWindow && vtuber_show < this.getVtuberFilterData.length) {
+          // count vtuber_show, then add 50 more
+          this.show_vtuber = this.getVtuberFilterData.slice(0, vtuber_show + 30)
+        }
       }
     },
     Searching() {
