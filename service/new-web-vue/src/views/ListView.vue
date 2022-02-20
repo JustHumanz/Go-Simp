@@ -298,7 +298,7 @@
     </div>
   </section>
   <!-- make section when api is broken -->
-  <section class="error-page" v-if="error_msg">
+  <section class="error-page" v-if="error_msg && error_msg !== `Request failed with status code 404`">
     <div class="error-image">
       <img src="/src/assets/smolame/lazer.png" alt="" />
     </div>
@@ -315,6 +315,29 @@
         later.
       </p>
       <small>{{ error_msg }}</small>
+    </div>
+  </section>
+  <!-- make section when group or region not found -->
+  <section class="error-page" v-if="error_msg && error_msg === `Request failed with status code 404`">
+    <div class="error-image">
+      <img src="/src/assets/smolame/lazer.png" alt="" />
+    </div>
+    <div class="error-text">
+      <h2>
+        <font-awesome-icon
+          :icon="['fas', 'circle-exclamation']"
+          class="fa-fw"
+        />
+        <span>You in the worng group/region</span>
+      </h2>
+      <p>
+        Find correct group/region, or request  <a
+          href="https://github.com/JustHumanz/Go-Simp/issues/new?assignees=JustHumanz&labels=enhancement&template=add_vtuber.md&title=Add+%5BVtuber+Nickname%5D+from+%5BGroup%2FAgency%5D"
+          target="_blank"
+          rel="noopener noreferrer"
+          >here</a
+        > when is not found.
+      </p>
     </div>
   </section>
 </template>
@@ -890,7 +913,7 @@ export default {
       @apply inline-block text-center text-gray-600 font-semibold text-sm sm:text-base leading-5 my-2;
 
       a {
-        @apply text-gray-700 hover:text-blue-600 transition-all;
+        @apply text-gray-900 hover:text-blue-600 transition-all;
       }
     }
     small {

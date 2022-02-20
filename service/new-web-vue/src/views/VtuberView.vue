@@ -1,11 +1,11 @@
 <template>
-  <div class="title">
+  <div class="title" v-if="!error_msg">
     <span class="title__span">
       <font-awesome-icon :icon="['fas', 'circle-info']" class="title__svg" />
       Info Vtuber
     </span>
   </div>
-  <section class="vtuber-view" v-if="member">
+  <section class="vtuber-view" v-if="member && !error_msg">
     <div class="profile">
       <div class="profile-photo">
         <img
@@ -315,8 +315,60 @@
       </div>
     </div>
   </section>
-  <section class="loading" v-if="!member">
-    <img :src="`/src/assets/loading/${Math.floor(Math.random() * 7)}.gif`" class="loading__img" alt="ame loading">
+  <section class="loading" v-if="!member && !error_msg">
+    <img
+      :src="`/src/assets/loading/${Math.floor(Math.random() * 7)}.gif`"
+      class="loading__img"
+      alt="ame loading"
+    />
+  </section>
+  <!-- make section when api is broken -->
+  <section
+    class="error-page"
+    v-if="error_msg && error_msg !== `Request failed with status code 404`"
+  >
+    <img src="/src/assets/smolame/lazer.png" alt="" class="error-page__img" />
+    <div class="error-page-text">
+      <h2 class="error-page-text__h2">
+        <font-awesome-icon
+          :icon="['fas', 'circle-exclamation']"
+          class="fa-fw error-page-text__svg"
+        />
+        <span>Cannot call with server</span>
+      </h2>
+      <p class="error-page-text__paragraph">
+        Check your internet connection, try restart your modem, or try again
+        later.
+      </p>
+      <small class="error-page-text__small">{{ error_msg }}</small>
+    </div>
+  </section>
+  <!-- make section when group or region not found -->
+  <section
+    class="error-page"
+    v-if="error_msg && error_msg === `Request failed with status code 404`"
+  >
+    <img src="/src/assets/smolame/lazer.png" alt="" class="error-page__img" />
+    <div class="error-page-text">
+      <h2 class="error-page-text__h2">
+        <font-awesome-icon
+          :icon="['fas', 'circle-exclamation']"
+          class="fa-fw error-page-text__svg"
+        />
+        <span>You in the worng person</span>
+      </h2>
+      <p class="error-page-text__paragraph">
+        Find correct vtuber characher/member, or request
+        <a
+          href="https://github.com/JustHumanz/Go-Simp/issues/new?assignees=JustHumanz&labels=enhancement&template=add_vtuber.md&title=Add+%5BVtuber+Nickname%5D+from+%5BGroup%2FAgency%5D"
+          class="error-page-text__link"
+          target="_blank"
+          rel="noopener noreferrer"
+          >here</a
+        >
+        when is not found.
+      </p>
+    </div>
   </section>
 </template>
 
@@ -333,7 +385,7 @@
 }
 
 .sub-title {
-  @apply text-xl font-semibold uppercase py-3 w-full;
+  @apply font-semibold uppercase py-2 px-4 my-1 inline-block rounded-full bg-blue-400 text-white;
 }
 .vtuber-view {
   @apply w-full md:w-[80%] lg:w-[75%] mx-auto px-2;
@@ -480,6 +532,38 @@
     @apply object-contain h-32 aspect-square;
   }
 }
+
+.error-page {
+  @apply flex justify-center items-center w-full h-[95vh] flex-col sm:flex-row;
+
+  &__img {
+    @apply w-24 h-24 object-contain;
+  }
+
+  // make .not-found-text fit with h2
+  &-text {
+    @apply max-w-[29.5rem] px-5;
+
+    &__h2 {
+      @apply text-center text-gray-800 font-semibold text-xl sm:text-2xl;
+    }
+    &__svg {
+      @apply text-red-500;
+    }
+
+    &__paragraph {
+      @apply inline-block text-center text-gray-600 font-semibold text-sm sm:text-base leading-5 my-2;
+    }
+
+    &__link {
+      @apply text-gray-900 hover:text-blue-600 transition-all;
+    }
+
+    &__small {
+      @apply inline-block w-full text-center text-gray-400 text-sm;
+    }
+  }
+}
 </style>
 
 <script>
@@ -500,6 +584,7 @@ import {
   faPaintbrush,
   faUsers,
   faChartLine,
+  faCircleExclamation,
 } from "@fortawesome/free-solid-svg-icons"
 
 library.add(
@@ -510,7 +595,8 @@ library.add(
   faCircleInfo,
   faPaintbrush,
   faUsers,
-  faChartLine
+  faChartLine,
+  faCircleExclamation
 )
 
 export default {
@@ -518,6 +604,7 @@ export default {
     return {
       member: null,
       fanart: null,
+      error_msg: null,
     }
   },
   components: {
@@ -529,10 +616,22 @@ export default {
     const member_data = await axios
       .get(Config.REST_API + "/members/" + this.$route.params.id)
       .then((response) => response.data[0])
+      .catch((error) => {
+        this.error_msg = error.message
+      })
+
+    console.log(this.error_msg)
+
+    if (this.error_msg) return
 
     member_data.Group = await axios
       .get(Config.REST_API + "/groups/" + member_data.GroupID)
       .then((response) => response.data[0])
+      .catch((error) => {
+        this.error_msg = error.message
+      })
+
+    if (this.error_msg) return
 
     // delete GroupName and GroupID
     delete member_data.GroupName
@@ -546,12 +645,6 @@ export default {
 
     this.member = member_data
     console.log(this.member)
-
-    // get fanart
-    this.fanart = await axios
-      .get(Config.REST_API + "/fanart/random/member/" + this.$route.params.id)
-      .then((response) => response.data)
-    console.log(this.fanart)
 
     document.title = this.member.EnName + " - Vtuber Details"
   },
