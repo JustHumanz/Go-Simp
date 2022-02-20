@@ -38,8 +38,10 @@
                   class="fa-fw"
                 />
                 {{
-                  (group.GroupName.charAt(0).toUpperCase() +
-                  group.GroupName.slice(1)).replace("_", " ")
+                  (
+                    group.GroupName.charAt(0).toUpperCase() +
+                    group.GroupName.slice(1)
+                  ).replace("_", " ")
                 }}
               </router-link>
             </li>
@@ -182,17 +184,24 @@
             <img
               class="card-img-top"
               v-bind:src="vtuber.Youtube.Avatar.replace('s800', 's360')"
+              referrerpolicy="no-referrer"
               onerror="this.src='/src/assets/smolame.jpg'"
               alt="Card image cap"
             />
           </div>
-          <div
-            class="profile-pic"
-            v-else-if="vtuber.BiliBili && !vtuber.Youtube"
-          >
+          <div class="profile-pic" v-else-if="vtuber.BiliBili">
             <img
               class="card-img-top"
               v-bind:src="`${vtuber.BiliBili.Avatar}@360w_360h_1c_1s.jpg`"
+              referrerpolicy="no-referrer"
+              onerror="this.src='/src/assets/smolame.jpg'"
+              alt="Card image cap"
+            />
+          </div>
+          <div class="profile-pic" v-else-if="vtuber.Twitch">
+            <img
+              class="card-img-top"
+              v-bind:src="vtuber.Twitch.Avatar"
               referrerpolicy="no-referrer"
               onerror="this.src='/src/assets/smolame.jpg'"
               alt="Card image cap"
