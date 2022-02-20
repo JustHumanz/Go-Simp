@@ -303,10 +303,10 @@
           />
           Fanart Pixiv
         </div>
-        <span class="card-span">#{{ member.JpName || member.EnName }}</span>
+        <span class="card-span">#{{ member.JpName.split("/")[0] || member.EnName }}</span>
         <a
           :href="`https://www.pixiv.net/en/tags/${
-            member.JpName || member.EnName
+            member.JpName.split('/')[0] || member.EnName
           }/artworks`"
           target="_blank"
           class="card-link"
