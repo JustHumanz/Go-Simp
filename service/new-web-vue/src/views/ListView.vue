@@ -38,8 +38,8 @@
                   class="fa-fw"
                 />
                 {{
-                  group.GroupName.charAt(0).toUpperCase() +
-                  group.GroupName.slice(1)
+                  (group.GroupName.charAt(0).toUpperCase() +
+                  group.GroupName.slice(1)).replace("_", " ")
                 }}
               </router-link>
             </li>
@@ -182,7 +182,7 @@
             <img
               class="card-img-top"
               v-bind:src="vtuber.Youtube.Avatar.replace('s800', 's360')"
-              onerror="this.src='/src/assets/smolame.png'"
+              onerror="this.src='/src/assets/smolame.jpg'"
               alt="Card image cap"
             />
           </div>
@@ -194,14 +194,14 @@
               class="card-img-top"
               v-bind:src="`${vtuber.BiliBili.Avatar}@360w_360h_1c_1s.jpg`"
               referrerpolicy="no-referrer"
-              onerror="this.src='/src/assets/smolame.png'"
+              onerror="this.src='/src/assets/smolame.jpg'"
               alt="Card image cap"
             />
           </div>
           <div v-else class="profile-pic">
             <img
               class="card-img-top"
-              src="/src/assets/smolame.png"
+              src="/src/assets/smolame.jpg"
               alt="Card image cap"
             />
           </div>
@@ -841,10 +841,10 @@ export default {
     }
 
     .card-vtuber-name {
-      @apply px-4 py-2 mt-2;
+      @apply p-3;
 
       h4 {
-        @apply font-semibold text-lg text-gray-800 leading-4;
+        @apply font-semibold text-base text-gray-800 leading-4;
       }
 
       small {

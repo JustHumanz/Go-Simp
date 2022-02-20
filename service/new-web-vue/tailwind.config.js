@@ -7,7 +7,7 @@ module.exports = {
         "kizuna-ai": "url(/src/assets/kizuna-ai.png)",
         "tokino-sora": "url(/src/assets/tokino-sora.png)",
         mito: "url(/src/assets/mito.png)",
-        smolame: "url(/src/assets/smolame.png)",
+        smolame: "url(/src/assets/smolame.jpg)",
         "img-none": "none",
       },
 
