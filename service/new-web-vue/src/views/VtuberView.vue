@@ -303,10 +303,14 @@
           />
           Fanart Pixiv
         </div>
-        <span class="card-span">#{{ member.JpName.split("/")[0] || member.EnName }}</span>
+        <span class="card-span"
+          >#{{
+            member.JpName ? member.JpName.split("/")[0] : member.EnName
+          }}</span
+        >
         <a
           :href="`https://www.pixiv.net/en/tags/${
-            member.JpName.split('/')[0] || member.EnName
+            member.JpName ? member.JpName.split('/')[0] : member.EnName
           }/artworks`"
           target="_blank"
           class="card-link"
@@ -348,7 +352,7 @@
     class="error-page"
     v-if="error_msg && error_msg === `Request failed with status code 404`"
   >
-    <img src="/src/assets/smolame/lazer.png" alt="" class="error-page__img" />
+    <img src="/src/assets/smolame/laptop.png" alt="" class="error-page__img" />
     <div class="error-page-text">
       <h2 class="error-page-text__h2">
         <font-awesome-icon

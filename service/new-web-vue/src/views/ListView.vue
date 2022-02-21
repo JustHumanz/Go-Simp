@@ -298,7 +298,10 @@
     </div>
   </section>
   <!-- make section when api is broken -->
-  <section class="error-page" v-if="error_msg && error_msg !== `Request failed with status code 404`">
+  <section
+    class="error-page"
+    v-if="error_msg && error_msg !== `Request failed with status code 404`"
+  >
     <div class="error-image">
       <img src="/src/assets/smolame/lazer.png" alt="" />
     </div>
@@ -318,9 +321,12 @@
     </div>
   </section>
   <!-- make section when group or region not found -->
-  <section class="error-page" v-if="error_msg && error_msg === `Request failed with status code 404`">
+  <section
+    class="error-page"
+    v-if="error_msg && error_msg === `Request failed with status code 404`"
+  >
     <div class="error-image">
-      <img src="/src/assets/smolame/lazer.png" alt="" />
+      <img src="/src/assets/smolame/laptop.png" alt="" />
     </div>
     <div class="error-text">
       <h2>
@@ -331,12 +337,14 @@
         <span>You in the worng group/region</span>
       </h2>
       <p>
-        Find correct group/region, or request  <a
+        Find correct group/region, or request
+        <a
           href="https://github.com/JustHumanz/Go-Simp/issues/new?assignees=JustHumanz&labels=enhancement&template=add_vtuber.md&title=Add+%5BVtuber+Nickname%5D+from+%5BGroup%2FAgency%5D"
           target="_blank"
           rel="noopener noreferrer"
           >here</a
-        > when is not found.
+        >
+        when is not found.
       </p>
     </div>
   </section>
@@ -616,7 +624,7 @@ export default {
       window.onscroll = () => {
         let bottomOfWindow =
           Math.ceil(window.scrollY + window.innerHeight) >=
-          document.body.offsetHeight
+          document.body.offsetHeight - 65
         let vtuber_show = this.show_vtuber.length
 
         if (bottomOfWindow && vtuber_show < this.getVtuberFilterData.length) {
