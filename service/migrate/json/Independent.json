@@ -253,24 +253,6 @@
       "Status": "Active"
     },
     {
-      "Name": "Tama",
-      "EN_Name": "Quon Tama",
-      "JP_Name": "久遠たま",
-      "Twitter": {
-        "Twitter_Fanart": "#たまのアトリエ工房",
-        "Twitter_Lewd": "",
-        "Twitter_Username": "quon01tama"
-      },
-      "Youtube": {
-        "Yt_ID": "UCBC7vYFNQoGPupe5NxPG4Bw"
-      },
-      "BiliBili": null,
-      "Twitch": null,
-      "Region": "JP",
-      "Fanbase": "",
-      "Status": "Active"
-    },
-    {
       "Name": "Tenshi",
       "EN_Name": "Amatsuka Uto",
       "JP_Name": "天使うと",
@@ -947,6 +929,46 @@
       "Region": "EN",
       "Fanbase": "Hylarem",
       "Status": "Active"
-    }
+    },
+		{
+			"Name": "hina-chan",
+			"EN_Name": "Nekomiya Hinata",
+			"JP_Name": "猫宮ひなた",
+			"Twitter": {
+				"Twitter_Fanart": "#ルーブルひなた",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "nekomiya_hinata"
+			},
+			"Youtube": {
+				"Yt_ID": "UCevD0wKzJFpfIkvHOiQsfLQ"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 291296062,
+				"BiliRoom_ID": 9286381
+			},
+			"Twitch": null,
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Mirai",
+			"EN_Name": "Mirai Akari",
+			"JP_Name": "ミライアカリ",
+			"Twitter": {
+				"Twitter_Fanart": "#アカリギャラリー",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "miraiakari_prj"
+			},
+			"Youtube": {
+				"Yt_ID": "UCMYtONm441rBogWK_xPH9HA"
+			},
+			"BiliBili": null,
+			"Twitch": null,
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		}    
   ]
 }

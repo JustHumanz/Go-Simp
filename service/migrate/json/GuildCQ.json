@@ -1,0 +1,50 @@
+{
+	"GroupName": "ENTUM",
+	"GroupIcon": "https://cdn.humanz.moe/entum.png",
+	"GroupChannel": {
+		"Youtube": [
+			null
+		],
+		"BiliBili": [
+			null
+		]
+	},
+	"Members": [
+        {
+            "Name": "Tama",
+            "EN_Name": "Quon Tama",
+            "JP_Name": "久遠たま",
+            "Twitter": {
+              "Twitter_Fanart": "#たまのアトリエ工房",
+              "Twitter_Lewd": "",
+              "Twitter_Username": "quon01tama"
+            },
+            "Youtube": {
+              "Yt_ID": "UCBC7vYFNQoGPupe5NxPG4Bw"
+            },
+            "BiliBili": null,
+            "Twitch": null,
+            "Region": "JP",
+            "Fanbase": "",
+            "Status": "Active"
+        },
+        {
+            "Name": "Kakeru",
+            "EN_Name": "Kakeru Matori",
+            "JP_Name": "間取かける",
+            "Twitter": {
+              "Twitter_Fanart": "#間取描ける",
+              "Twitter_Lewd": "",
+              "Twitter_Username": "matorikakeru"
+            },
+            "Youtube": {
+              "Yt_ID": "UCiLt4FLjMXszLOh5ISi1oqw"
+            },
+            "BiliBili": null,
+            "Twitch": null,
+            "Region": "JP",
+            "Fanbase": "",
+            "Status": "Active"
+        }        
+	]
+}
