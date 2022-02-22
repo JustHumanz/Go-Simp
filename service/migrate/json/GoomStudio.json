@@ -1,0 +1,32 @@
+{
+	"GroupName": "GoomStudio",
+	"GroupIcon": "https://cdn.humanz.moe/GoomStudio.png",
+	"GroupChannel": {
+		"Youtube": [
+			null
+		],
+		"BiliBili": [
+			null
+		]
+	},
+	"Members": [
+		{
+			"Name": "Mirai",
+			"EN_Name": "Mirai Akari",
+			"JP_Name": "ミライアカリ",
+			"Twitter": {
+				"Twitter_Fanart": "#アカリギャラリー",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "miraiakari_prj"
+			},
+			"Youtube": {
+				"Yt_ID": "UCMYtONm441rBogWK_xPH9HA"
+			},
+			"BiliBili": null,
+			"Twitch": null,
+			"Region": "JP",
+			"Fanbase": "",
+			"Status": "Active"
+		}    
+	]
+}
