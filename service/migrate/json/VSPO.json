@@ -19,11 +19,7 @@
       "JP_Name": "一ノ瀬うるは",
       "Name": "Uruha",
       "Region": "JP",
-      "BiliBili": {
-        "BiliBili_Fanart": "",
-        "BiliBili_ID": "",
-        "BiliRoom_ID": ""
-      },
+      "BiliBili": null,
       "Twitch": null,
       "Twitter": {
         "Twitter_Fanart": "#一ノ瀬の絵",
