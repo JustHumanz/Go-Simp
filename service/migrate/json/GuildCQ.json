@@ -10,41 +10,113 @@
 		]
 	},
 	"Members": [
-        {
-            "Name": "Tama",
-            "EN_Name": "Quon Tama",
-            "JP_Name": "久遠たま",
-            "Twitter": {
-              "Twitter_Fanart": "#たまのアトリエ工房",
-              "Twitter_Lewd": "",
-              "Twitter_Username": "quon01tama"
-            },
-            "Youtube": {
-              "Yt_ID": "UCBC7vYFNQoGPupe5NxPG4Bw"
-            },
-            "BiliBili": null,
-            "Twitch": null,
-            "Region": "JP",
-            "Fanbase": "",
-            "Status": "Active"
+      {
+          "Name": "Tama",
+          "EN_Name": "Quon Tama",
+          "JP_Name": "久遠たま",
+          "Twitter": {
+            "Twitter_Fanart": "#たまのアトリエ工房",
+            "Twitter_Lewd": "",
+            "Twitter_Username": "quon01tama"
+          },
+          "Youtube": {
+            "Yt_ID": "UCBC7vYFNQoGPupe5NxPG4Bw"
+          },
+          "BiliBili": null,
+          "Twitch": null,
+          "Region": "JP",
+          "Fanbase": "",
+          "Status": "Active"
+      },
+      {
+          "Name": "Kakeru",
+          "EN_Name": "Kakeru Matori",
+          "JP_Name": "間取かける",
+          "Twitter": {
+            "Twitter_Fanart": "#間取描ける",
+            "Twitter_Lewd": "",
+            "Twitter_Username": "matorikakeru"
+          },
+          "Youtube": {
+            "Yt_ID": "UCiLt4FLjMXszLOh5ISi1oqw"
+          },
+          "BiliBili": null,
+          "Twitch": null,
+          "Region": "JP",
+          "Fanbase": "",
+          "Status": "Active"
+      },
+      {
+        "Name": "Rekui",
+        "EN_Name": "Emurii Rekui",
+        "JP_Name": "苓吃エムリィ",
+        "Twitter": {
+          "Twitter_Fanart": "#レクイ絵ム",
+          "Twitter_Lewd": "",
+          "Twitter_Username": "REKUIEMURII"
         },
-        {
-            "Name": "Kakeru",
-            "EN_Name": "Kakeru Matori",
-            "JP_Name": "間取かける",
-            "Twitter": {
-              "Twitter_Fanart": "#間取描ける",
-              "Twitter_Lewd": "",
-              "Twitter_Username": "matorikakeru"
-            },
-            "Youtube": {
-              "Yt_ID": "UCiLt4FLjMXszLOh5ISi1oqw"
-            },
-            "BiliBili": null,
-            "Twitch": null,
-            "Region": "JP",
-            "Fanbase": "",
-            "Status": "Active"
-        }        
+        "Youtube": {
+          "Yt_ID": "UC36tM-mb6ve_OA3jPynxp7g"
+        },
+        "BiliBili": null,
+        "Twitch": null,
+        "Region": "JP",
+        "Fanbase": "",
+        "Status": "Active"
+    },
+    {
+      "Name": "Itou",
+      "EN_Name": "Yuna Itou",
+      "JP_Name": "伊冬ユナ",
+      "Twitter": {
+        "Twitter_Fanart": "#ユナ絵日記",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "Itou_yuna_"
+      },
+      "Youtube": {
+        "Yt_ID": "UCYbzeYnRZuw7fZKrgu2bgtw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Mazika",
+      "EN_Name": "Ruri Mazika",
+      "JP_Name": "真鹿るり",
+      "Twitter": {
+        "Twitter_Fanart": "#まじ描るり",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "mazikaruri"
+      },
+      "Youtube": {
+        "Yt_ID": "UCpQBfGlXMoyu9eIgQDSHs2A"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Alma",
+      "EN_Name": "Minai Aruma",
+      "JP_Name": "薬袋アルマ",
+      "Twitter": {
+        "Twitter_Fanart": "#艦長の旅アルバム",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "MinaiAlma"
+      },
+      "Youtube": {
+        "Yt_ID": "UCD1QOCJIAPsMKMvRSXjLahw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    }    
 	]
 }
