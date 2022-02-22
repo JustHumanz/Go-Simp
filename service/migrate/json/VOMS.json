@@ -2,8 +2,13 @@
   "GroupName": "VOMS",
   "GroupIcon": "https://cdn.humanz.moe/vox.png",
   "GroupChannel": {
-    "Youtube": [null],
-    "BiliBili": [null]
+    "Youtube": [
+      {
+        "ChannelID": "UCdMpGhtL9oK8EYolTt8v4uQ",
+        "Region": "JP"
+      }
+    ],
+    "BiliBili": null
   },
   "Members": [
     {
@@ -19,7 +24,9 @@
         "Yt_ID": "UCajhBT4nMrg3DLS-bLL2RCg"
       },
       "BiliBili": null,
-      "Twitch": null,
+      "Twitch": {
+				"Twitch_Username": "pikameeamano"
+			},
       "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
@@ -91,7 +98,9 @@
         "Yt_ID": "UCivDgaCAh7WPBoKA24WNwJQ"
       },
       "BiliBili": null,
-      "Twitch": null,
+      "Twitch": {
+				"Twitch_Username": "ryugond"
+			},
       "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
