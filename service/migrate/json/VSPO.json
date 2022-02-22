@@ -3,51 +3,257 @@
 	"GroupIcon": "https://cdn.humanz.moe/VSPO.png",
 	"GroupChannel": {
 		"Youtube": [
-            {
-                "ChannelID": "UCuI5XaO-6VkOEhHao6ij7JA",
-                "Region": "JP"
-            }
+          {
+              "ChannelID": "UCuI5XaO-6VkOEhHao6ij7JA",
+              "Region": "JP"
+          }
 		],
 		"BiliBili": [
 			null
 		]
 	},
 	"Members": [
-        {
-            "Name": "Tama",
-            "EN_Name": "Quon Tama",
-            "JP_Name": "久遠たま",
-            "Twitter": {
-              "Twitter_Fanart": "#たまのアトリエ工房",
-              "Twitter_Lewd": "",
-              "Twitter_Username": "quon01tama"
-            },
-            "Youtube": {
-              "Yt_ID": "UCBC7vYFNQoGPupe5NxPG4Bw"
-            },
-            "BiliBili": null,
-            "Twitch": null,
-            "Region": "JP",
-            "Fanbase": "",
-            "Status": "Active"
-        },
-        {
-            "Name": "Kakeru",
-            "EN_Name": "Kakeru Matori",
-            "JP_Name": "間取かける",
-            "Twitter": {
-              "Twitter_Fanart": "#間取描ける",
-              "Twitter_Lewd": "",
-              "Twitter_Username": "matorikakeru"
-            },
-            "Youtube": {
-              "Yt_ID": "UCiLt4FLjMXszLOh5ISi1oqw"
-            },
-            "BiliBili": null,
-            "Twitch": null,
-            "Region": "JP",
-            "Fanbase": "",
-            "Status": "Active"
-        }        
+    {
+      "EN_Name": "Ichinose Uruha",
+      "Fanbase": "",
+      "JP_Name": "一ノ瀬うるは",
+      "Name": "Uruha",
+      "Region": "JP",
+      "BiliBili": {
+        "BiliBili_Fanart": "",
+        "BiliBili_ID": "",
+        "BiliRoom_ID": ""
+      },
+      "Twitch": null,
+      "Twitter": {
+        "Twitter_Fanart": "#一ノ瀬の絵",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "uruha_ichinose"
+      },
+      "Youtube": {
+        "Yt_ID": "UC5LyYg6cCA4yHEYvtUsir3g"
+      }
+    },
+    {
+      "EN_Name": "Kaga Sumire",
+      "Fanbase": "",
+      "JP_Name": "花芽すみれ",
+      "Name": "KagaSumire",
+      "Region": "JP",
+      "BiliBili": null,
+      "Twitch": null,
+      "Twitter": {
+        "Twitter_Fanart": "#すぅあーと",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "sumire_kaga"
+      },
+      "Youtube": {
+        "Yt_ID": "UCyLGcqYs7RsBb3L0SJfzGYA"
+      }
+    },
+    {
+      "EN_Name": "Kaga Nazuna",
+      "Fanbase": "",
+      "JP_Name": "花芽なずな",
+      "Name": "KagaNazuna",
+      "Region": "JP",
+      "BiliBili": null,
+      "Twitch": null,
+      "Twitter": {
+        "Twitter_Fanart": "#なずなーと",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "nazuna_kaga"
+      },
+      "Youtube": {
+        "Yt_ID": "UCiMG6VdScBabPhJ1ZtaVmbw"
+      }
+    },
+    {
+      "EN_Name": "Kogara Toto",
+      "Fanbase": "",
+      "JP_Name": "小雀とと",
+      "Name": "KogaraToto",
+      "Region": "JP",
+      "BiliBili": null,
+      "Twitch": null,
+      "Twitter": {
+        "Twitter_Fanart": "#ととの絵",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "toto_kogara"
+      },
+      "Youtube": {
+        "Yt_ID": "UCgTzsBI0DIRopMylJEDqnog"
+      }
+    },
+    {
+      "EN_Name": "Kisaragi Ren",
+      "Fanbase": "",
+      "JP_Name": "如月れん",
+      "Name": "KisaragiRen",
+      "Region": "JP",
+      "BiliBili": null,
+      "Twitch": null,
+      "Twitter": {
+        "Twitter_Fanart": "#れん絡帳",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "ren_kisaragi__"
+      },
+      "Youtube": {
+        "Yt_ID": "UCGWa1dMU_sDCaRQjdabsVgg"
+      }
+    },
+    {
+      "EN_Name": "Kurumi Noah",
+      "Fanbase": "",
+      "JP_Name": "胡桃のあ",
+      "Name": "KurumiNoah",
+      "Region": "JP",
+      "BiliBili": null,
+      "Twitch": null,
+      "Twitter": {
+        "Twitter_Fanart": "#963art",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "n0ah_kurumi"
+      },
+      "Youtube": {
+        "Yt_ID": "noah963"
+      }
+    },
+    {
+      "EN_Name": "Tachibana Hinano",
+      "Fanbase": "",
+      "JP_Name": "橘ひなの",
+      "Name": "Hinano",
+      "Region": "JP",
+      "BiliBili": null,
+      "Twitch": null,
+      "Twitter": {
+        "Twitter_Fanart": "#ひなのの絵なの",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "hinano_tachiba7"
+      },
+      "Youtube": {
+        "Yt_ID": "UCvUc0m317LWTTPZoBQV479A"
+      }
+    },
+    {
+      "EN_Name": "Tosaki Mimi",
+      "Fanbase": "",
+      "JP_Name": "兎咲ミミ",
+      "Name": "TosakiMimi",
+      "Region": "JP",
+      "BiliBili": null,
+      "Twitch": null,
+      "Twitter": {
+        "Twitter_Fanart": "#ミミ画",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "mimi_tosaki"
+      },
+      "Youtube": {
+        "Yt_ID": "UCnvVG9RbOW3J6Ifqo-zKLiw"
+      }
+    },
+    {
+      "EN_Name": "Asumi Sena",
+      "Fanbase": "",
+      "JP_Name": "空澄セナ",
+      "Name": "AsumiSena",
+      "Region": "JP",
+      "BiliBili": null,
+      "Twitch": null,
+      "Twitter": {
+        "Twitter_Fanart": "#空澄絵",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "sena_asumi"
+      },
+      "Youtube": {
+        "Yt_ID": "UCF_U2GCKHvDz52jWdizppIA"
+      }
+    },
+    {
+      "EN_Name": "Hanabusa Lisa",
+      "Fanbase": "",
+      "JP_Name": "英リサ",
+      "Name": "HanabusaLisa",
+      "Region": "JP",
+      "BiliBili": null,
+      "Twitch": null,
+      "Twitter": {
+        "Twitter_Fanart": "#はなぶさの絵",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "Lisa_hanabusa"
+      },
+      "Youtube": {
+        "Yt_ID": "UCurEA8YoqFwimJcAuSHU0MQ"
+      }
+    },
+    {
+      "EN_Name": "Kaminari Qpi",
+      "Fanbase": "",
+      "JP_Name": "神成きゅぴ",
+      "Name": "Qpi",
+      "Region": "JP",
+      "BiliBili": null,
+      "Twitch": null,
+      "Twitter": {
+        "Twitter_Fanart": "#神成った",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "xprprQchanx"
+      },
+      "Youtube": {
+        "Yt_ID": "UCMp55EbT_ZlqiMS3lCj01BQ"
+      }
+    },
+    {
+      "EN_Name": "Yakumo Beni",
+      "Fanbase": "",
+      "JP_Name": "八雲べに",
+      "Name": "Beni",
+      "Region": "JP",
+      "BiliBili": null,
+      "Twitch": null,
+      "Twitter": {
+        "Twitter_Fanart": "#べにっき",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "beni_yakumo"
+      },
+      "Youtube": {
+        "Yt_ID": "UCjXBuHmWkieBApgBhDuJMMQ"
+      }
+    },
+    {
+      "EN_Name": "Aizawa Ema",
+      "Fanbase": "",
+      "JP_Name": "藍沢エマ",
+      "Name": "AizawaEma",
+      "Region": "JP",
+      "BiliBili": null,
+      "Twitch": null,
+      "Twitter": {
+        "Twitter_Fanart": "#えまぁーと",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "Ema_Aizawa"
+      },
+      "Youtube": {
+        "Yt_ID": "UCPkKpOHxEDcwmUAnRpIu-Ng"
+      }
+    },
+    {
+      "EN_Name": "Shinomiya Runa",
+      "Fanbase": "Shinomin",
+      "JP_Name": "紫宮るな",
+      "Name": "ShinomiyaRuna",
+      "Region": "JP",
+      "BiliBili": null,
+      "Twitch": null,
+      "Twitter": {
+        "Twitter_Fanart": "#るなぱれっと",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "Runa_shinomiya"
+      },
+      "Youtube": {
+        "Yt_ID": "UCD5W21JqNMv_tV9nfjvF9sw"
+      }
+    }
 	]
 }
