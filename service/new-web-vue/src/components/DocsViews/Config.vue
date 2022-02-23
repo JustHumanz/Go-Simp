@@ -4,9 +4,11 @@ import "./style.scss"
 
 <template>
   <h3 class="content-title">Configuration</h3>
-  <h4 class="content-subtitle">Setup (Old Version)</h4>
+  <h4 class="content-subtitle">Setup</h4>
   <p class="content-code">vtbot>Setup</p>
   <p class="content-text">
+    <small><b>Role permission required: Manage Channel or Higher</b></small
+    ><br /><br />
     This command will bring you in setup mode and
     <i
       >all schedules/fanart will be displayed on the channel that has been
@@ -17,22 +19,23 @@ import "./style.scss"
       alt=""
       class="content-image"
     />
-    <b>Role permission required: Manage Channel or Higher</b>
   </p>
   <h4 class="content-subtitle">Setup (Slash Command)</h4>
   <p class="content-code">
     /setup channel-type <span>livestream/fanart/lewd</span>
   </p>
   <p class="content-text">
+    <small><b>Role permission required: Manage Channel or Higher</b></small
+    ><br /><br />
     Same like above, but you can set any schedules/fanart on on a different
-    channel in <b>channel-name</b>.
+    channel in <span class="code-span">channel-name</span>.
     <i
-      >When <b>vtuber-group</b> can't use group name, using
+      >When <span class="code-span">vtuber-group</span> can't use <b>group name</b>, using
       <b>Group ID</b> instead. For list, check below!</i
     >
     <br />
     <br />
-    <b>Vtuber Groups:</b>
+    <b for="vtuber-groups">Vtuber Groups:</b>
   </p>
   <!-- Make a table -->
   <div class="flex items-start">
@@ -59,16 +62,19 @@ import "./style.scss"
     <span class="code-span">vtuber-group</span>: Available Group Name or Group
     ID in above tables <br />
     <span class="code-span">liveonly</span>: Show only live streaming (without
-    regular content like cover or other video) (livestream stage
-    only)<br />
-    <span class="code-span">newupcoming</span>: Show upcoming live
-    streaming (livestream stage only)<br />
-    <span class="code-span">dynamic</span>: Deleting schedule after ending live
-    streaming (livestream stage only)<br />
-    <span class="code-span">lite-mode</span>: Show only schedule live
-    streaming without notification (livestream stage only)<br />
-    <span class="code-span">indie-notif</span>:When get a notification from indie vtuber, recommend for set <b><i>True</i></b> <span class="code-span">vtuber-group</span> to <b>independent</b> or <b>10</b> (livestream stage only)<br />
-    <span class="code-span">fanart</span>: Add fanart post about same group in same channel (optional, livestream stage only)<br /><br />
+    regular content like cover or other video) (livestream stage only)<br />
+    <span class="code-span">newupcoming</span>: Show upcoming live streaming
+    (livestream stage only)<br />
+    <span class="code-span">dynamic</span>: Show schedule and deleted after past
+    live streaming (livestream stage only)<br />
+    <span class="code-span">lite-mode</span>: Disabling ping user/role function
+    (livestream stage only)<br />
+    <span class="code-span">indie-notif</span>:When get a notification from
+    indie vtuber, recommend for set <b><i>True</i></b
+    >&nbsp;<span class="code-span">vtuber-group</span> to <b>independent</b> or
+    <b>10</b> (livestream stage only)<br />
+    <span class="code-span">fanart</span>: Add fanart post about same group in
+    same channel (optional, livestream stage only)<br /><br />
     <b>Example 1:</b>
   </p>
   <p class="content-code">
@@ -77,13 +83,64 @@ import "./style.scss"
     <span>newupcoming: False</span><span>dynamic: False</span>
     <span>lite-mode: False</span><span>indie-notif: False</span>
   </p>
-  <p>
+  <p class="content-text">
     <b>Example 2:</b>
   </p>
   <p class="content-code">
     /setup channel-type fanart <span>channel-name: #niji-art</span>
     <span>vtuber-group: 6</span>
   </p>
+  <h4 class="content-subtitle">Checking Stage (Slash Command)</h4>
+  <p class="content-code">/channel-state <span>channel-name</span></p>
+  <p class="content-text">
+    Checking any existing stage group on
+    <span class="code-span">channel-name</span><br /><br /><b>Example:</b>
+  </p>
+  <p class="content-code">
+    /channel-state <span>channel-name: #re-memories</span>
+  </p>
+  <h4 class="content-subtitle">Change Stage</h4>
+  <p class="content-code">vtbot>Update</p>
+  <p class="content-text">
+    <small><b>Role permission required: Manage Channel or Higher</b></small
+    ><br /><br />
+    Change any existing vtuber group on channel your command, like adding
+    another region/removing a region or changing from live stream to fan art.
+  </p>
+  <h4 class="content-subtitle">Change Stage (Slash Command)</h4>
+  <p class="content-code">/channel-update <span>channel-name</span></p>
+  <p class="content-text">
+    <small><b>Role permission required: Manage Channel or Higher</b></small
+    ><br /><br />
+    Like previous command, but you can changing separated channel using
+    <span class="code-span">channel-name</span>
+    <br /><br /><b>Example:</b>
+  </p>
+  <p class="content-code">
+    /channel-update <span>channel-name: #kizuna-ai</span>
+  </p>
+  <h4 class="content-subtitle">Disable</h4>
+  <p class="content-code">vtbot>Disable <span>group vtuber</span></p>
+  <p class="content-text">
+    <small><b>Role permission required: Manage Channel or Higher</b></small
+    ><br /><br />
+    Disable/remove single or several groups in channel your command.
+    <br /><br /><b>Example 1:</b>
+  </p>
+  <p class="content-code">vtbot>Disable <span>VOMS</span></p>
+  <p class="content-text">
+    <b>Example 2:</b>
+  </p>
+  <p class="content-code">vtbot>Disable <span>hololive,holostars</span></p>
+  <h4 class="content-subtitle">Disable (Slash Command)</h4>
+  <p class="content-code">/channel-update <span>channel-name</span></p>
+  <p class="content-text">
+    <small><b>Role permission required: Manage Channel or Higher</b></small
+    ><br /><br />
+    Disable/remove any groups in channel inside <span class="code-span">channel-name</span>
+    <br /><br /><b>Example :</b>
+  </p>
+  <p class="content-code">/channel-update <span>channel-name: #vshojo</span></p>
 </template>
 
 <script>
