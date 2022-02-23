@@ -665,7 +665,7 @@ export default {
       this.groupID = this.$route.params?.id
 
       // add title
-      document.title = `Vtuber List`
+      document.title = `Vtuber List - Vtbot`
 
       if ((await this.getGroupData()) === false) return
       if ((await this.fetchVtubers()) === false) return

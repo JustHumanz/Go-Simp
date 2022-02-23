@@ -2,7 +2,7 @@
   <section class="header-section">
     <div class="header">
       <h4>Welcome to Vtbot</h4>
-      <p>Vtbot is a sceduler and sharing fan-art for vtubers.</p>
+      <p>Vtbot is a scheduler and sharing fan-art for vtubers.</p>
       <a href="/invite" target="_blank" class="btn-invite"> ADD ME! </a>
       <div class="text-orange-200">
         <a
@@ -58,7 +58,7 @@ export default {
     this.$watch(
       () => this.$route.params,
       async () => {
-        document.title = "Vtbot - A vtuber sceduler from Discord Server"
+        document.title = "Vtbot - A vtuber scheduler from Discord Server"
       },
 
       { immediate: true }

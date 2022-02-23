@@ -276,7 +276,7 @@
       Fan Art
     </h4>
     <div class="fanart">
-      <div class="card fanart-twitter" v-if="member.Twitter">
+      <div class="card fanart-twitter" v-if="member.Twitter?.Fanart">
         <div class="card-title">
           <font-awesome-icon
             :icon="['fab', 'twitter']"
@@ -305,12 +305,20 @@
         </div>
         <span class="card-span"
           >#{{
-            member.JpName ? member.JpName.split("/")[0] : member.EnName
+            member.JpName
+              ? member.JpName.split("/")[0]
+                  .split(" ")
+                  .reduce((acc, cur) => acc + acc !== '' ? '・' : '' + cur, "")
+              : member.EnName.split(" ").reduce((acc, cur) => acc + cur, "")
           }}</span
         >
         <a
           :href="`https://www.pixiv.net/en/tags/${
-            member.JpName ? member.JpName.split('/')[0] : member.EnName
+            member.JpName
+              ? member.JpName.split('/')[0]
+                  .split(' ')
+                  .reduce((acc, cur) => acc + acc !== '' ? '・' : '' + cur, '')
+              : member.EnName.split(' ').reduce((acc, cur) => acc + cur, '')
           }/artworks`"
           target="_blank"
           class="card-link"
@@ -615,7 +623,7 @@ export default {
     CountTo,
   },
   async created() {
-    document.title = "Vtuber Details"
+    document.title = "Vtuber Details - Vtbot"
 
     const member_data = await axios
       .get(Config.REST_API + "/members/" + this.$route.params.id)
