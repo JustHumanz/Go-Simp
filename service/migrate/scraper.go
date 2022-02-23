@@ -127,7 +127,11 @@ func (Data Youtube) YtAvatar() string {
 		if err != nil {
 			log.Error(err)
 		}
-		return datasubs.Items[0].Snippet.Thumbnails.High.URL
+
+		for _, v := range datasubs.Items {
+			return v.Snippet.Thumbnails.High.URL
+		}
+		return ""
 	} else {
 		return ""
 	}
