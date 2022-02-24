@@ -1,6 +1,7 @@
 <script setup>
 import ConfigView from "../components/DocsViews/Config.vue"
-import TagingView from "../components/DocsViews/Taging.vue";
+import TagingView from "../components/DocsViews/Taging.vue"
+import UtilsView from "../components/DocsViews/Utils.vue"
 </script>
 
 <template>
@@ -59,6 +60,9 @@ import TagingView from "../components/DocsViews/Taging.vue";
     </section>
     <section v-if="tab === 2" class="content">
       <TagingView />
+    </section>
+    <section v-if="tab === 3" class="content">
+      <UtilsView />
     </section>
   </div>
 </template>

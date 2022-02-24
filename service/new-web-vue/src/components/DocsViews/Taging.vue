@@ -230,7 +230,7 @@ import "./style.scss"
     <small><b>Role permission required: Manage Channel or Higher</b></small
     ><br /><br />
     This command will set or update reminder for group or member vtuber. When
-    you remove reminder time,you can set minutes to 0.
+    you remove reminder time, you can set minutes to 0.
     <br /><br /><b>Example 1 (Reminder for yourself):</b>
   </p>
   <p class="content-code">
