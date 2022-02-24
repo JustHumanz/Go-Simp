@@ -54,17 +54,18 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 	if err != nil {
 		log.Error(err)
 	}
-	for i := 0; i < len(Data.Items); i++ {
+	counter := 0
+	for _, Item := range Data.Items {
 		yttype = "Streaming"
-		if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|mv)", Data.Items[i].Snippet.Title); Cover {
+		if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|mv)", Item.Snippet.Title); Cover {
 			yttype = "Covering"
 		}
 
-		if Chat, _ := regexp.MatchString("(?m)(free|chat|room)", Data.Items[i].Snippet.Title); Chat {
+		if Chat, _ := regexp.MatchString("(?m)(free|chat|room)", Item.Snippet.Title); Chat {
 			yttype = "ChatRoom"
 		}
 
-		YtData, err := Dat.CheckYoutubeVideo(VideoID[i])
+		YtData, err := Dat.CheckYoutubeVideo(VideoID[counter])
 		if err != nil {
 			log.Error(err)
 		}
@@ -74,31 +75,31 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 		} else {
 			log.Info("New video")
 			//verify
-			if Data.Items[i].LiveDetails.Viewers == "" {
-				Viewers = Data.Items[i].Statistics.ViewCount
+			if Item.LiveDetails.Viewers == "" {
+				Viewers = Item.Statistics.ViewCount
 			} else {
-				Viewers = Data.Items[i].LiveDetails.Viewers
+				Viewers = Item.LiveDetails.Viewers
 			}
 
 			NewData := &database.LiveStream{
-				Status:    Data.Items[i].Snippet.VideoStatus,
-				VideoID:   VideoID[i],
-				Title:     Data.Items[i].Snippet.Title,
-				Thumb:     "http://i3.ytimg.com/vi/" + VideoID[i] + "/maxresdefault.jpg",
-				Desc:      Data.Items[i].Snippet.Description,
-				Schedul:   Data.Items[i].LiveDetails.StartTime,
-				Published: Data.Items[i].Snippet.PublishedAt,
-				End:       Data.Items[i].LiveDetails.EndTime,
+				Status:    Item.Snippet.VideoStatus,
+				VideoID:   VideoID[counter],
+				Title:     Item.Snippet.Title,
+				Thumb:     "http://i3.ytimg.com/vi/" + VideoID[counter] + "/maxresdefault.jpg",
+				Desc:      Item.Snippet.Description,
+				Schedul:   Item.LiveDetails.StartTime,
+				Published: Item.Snippet.PublishedAt,
+				End:       Item.LiveDetails.EndTime,
 				Type:      yttype,
 				Viewers:   Viewers,
 				Member:    Dat,
 			}
 
-			if Data.Items[i].Snippet.VideoStatus != "upcoming" || Data.Items[i].Snippet.VideoStatus != config.LiveStatus {
+			if Item.Snippet.VideoStatus != "upcoming" || Item.Snippet.VideoStatus != config.LiveStatus {
 				NewData.Status = config.PastStatus
 			}
 
-			if Data.Items[i].Snippet.VideoStatus == config.UpcomingStatus {
+			if Item.Snippet.VideoStatus == config.UpcomingStatus {
 				err := NewData.SendToCache(false)
 				if err != nil {
 					log.Error(err)
@@ -111,6 +112,7 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 			}
 
 		}
+		counter++
 	}
 }
 
