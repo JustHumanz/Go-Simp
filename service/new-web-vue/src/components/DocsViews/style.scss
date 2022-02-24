@@ -35,4 +35,8 @@
   &-image {
     @apply my-2;
   }
+
+  &-link {
+    @apply text-sm text-gray-600 hover:text-blue-500 underline;
+  }
 }

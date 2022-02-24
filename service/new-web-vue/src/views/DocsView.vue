@@ -37,7 +37,7 @@ import TagingView from "../components/DocsViews/Taging.vue";
             href="#"
             @click="tab = 3"
             class="tab-list__link"
-            >Reminders</a
+            >Utilites</a
           >
         </li>
         <li class="tab-list" :class="{ active: tab === 4 }">

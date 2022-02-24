@@ -19,26 +19,33 @@ import "./style.scss"
       alt=""
       class="content-image"
     />
+    You can setup <b>Slash Command</b>. Unlike legacy command, you can set any schedules/fanart on on a different
+    channel in <span class="code-span">channel-name</span>. <br><br> <b>Setup Livestreaming:</b>
   </p>
-  <h4 class="content-subtitle">Setup (Slash Command)</h4>
   <p class="content-code">
-    /setup channel-type <span>livestream/fanart/lewd</span>
+    /setup channel-type livestream <span>​channel-name</span> <span>vtuber-group</span> <span>liveonly</span> <span>newupcoming</span> <span>dynamic</span> <span>lite-mode</span> <span>indie-notif</span> <span>fanart (optional)</span>
   </p>
   <p class="content-text">
     <small><b>Role permission required: Manage Channel or Higher</b></small
     ><br /><br />
-    Same like above, but you can set any schedules/fanart on on a different
-    channel in <span class="code-span">channel-name</span>.
-    <i
-      >When <span class="code-span">vtuber-group</span> can't use <b>group name</b>, using
-      <b>Group ID</b> instead. For list, check below!</i
-    >
-    <br />
-    <br />
-    <b for="vtuber-groups">Vtuber Groups:</b>
+    <b>Setup Fanart:</b>
   </p>
+  <p class="content-code">
+    /setup channel-type fanart <span>​channel-name</span> <span>vtuber-group</span>
+  </p>
+  <p class="content-text">
+    <small><b>Role permission required: Manage Channel or Higher</b></small
+    ><br /><br />
+    <b>Setup NSFW/Lewd Fanart:</b>
+  </p>
+  <p class="content-code">
+    /setup channel-type lewd <span>​channel-name</span> <span>vtuber-group</span> 
+  </p>
+  <p class="content-text">
+    <small><b>Role permission required: Manage Channel or Higher</b></small
+    ><br /><br />
   <!-- Make a table -->
-  <div class="flex items-start">
+  <!-- <div class="flex items-start">
     <table class="content-table" v-for="group in groups" :key="group">
       <tr>
         <th>Group ID</th>
@@ -53,28 +60,22 @@ import "./style.scss"
         </td>
       </tr>
     </table>
-  </div>
-  <p class="content-text">
-    <br />
-    <b>Context command:</b> <br />
-    <span class="code-span">channel-name</span>: Available <b>channels</b> on
+  </div> -->
+    <b>Options:</b> <br />
+    <span class="code-span">channel-name</span> Available <b>channels</b> on
     your discord server <br />
-    <span class="code-span">vtuber-group</span>: Available Group Name or Group
-    ID in above tables <br />
-    <span class="code-span">liveonly</span>: Show only live streaming (without
+    <span class="code-span">vtuber-group</span> Any Name Group or ID Group<br />
+    <span class="code-span">liveonly</span> Show only live streaming (without
     regular content like cover or other video) (livestream stage only)<br />
-    <span class="code-span">newupcoming</span>: Show upcoming live streaming
+    <span class="code-span">newupcoming</span> Show upcoming live streaming
     (livestream stage only)<br />
-    <span class="code-span">dynamic</span>: Show schedule and deleted after past
+    <span class="code-span">dynamic</span> Show schedule and deleted after past
     live streaming (livestream stage only)<br />
-    <span class="code-span">lite-mode</span>: Disabling ping user/role function
+    <span class="code-span">lite-mode</span> Disabling ping user/role function
     (livestream stage only)<br />
-    <span class="code-span">indie-notif</span>:When get a notification from
-    indie vtuber, recommend for set <b><i>True</i></b
-    >&nbsp;<span class="code-span">vtuber-group</span> to <b>independent</b> or
-    <b>10</b> (livestream stage only)<br />
-    <span class="code-span">fanart</span>: Add fanart post about same group in
-    same channel (optional, livestream stage only)<br /><br />
+    <span class="code-span">indie-notif</span> When get a notification from
+    indie vtuber, when <span class="code-span">vtuber-group</span> is <b>independent</b> (livestream stage only)<br />
+    <span class="code-span">fanart</span> Additional post fanart in same channel (optional, livestream stage only)<br /><br />
     <b>Example 1:</b>
   </p>
   <p class="content-code">
@@ -93,7 +94,9 @@ import "./style.scss"
   <h4 class="content-subtitle">Checking Stage (Slash Command)</h4>
   <p class="content-code">/channel-state <span>channel-name</span></p>
   <p class="content-text">
-    Checking any existing stage group on
+      <small><b>Role permission required: No permission needed</b></small
+    ><br /><br />
+    Checking existing vtuber group on
     <span class="code-span">channel-name</span><br /><br /><b>Example:</b>
   </p>
   <p class="content-code">
@@ -105,26 +108,28 @@ import "./style.scss"
     <small><b>Role permission required: Manage Channel or Higher</b></small
     ><br /><br />
     Change any existing vtuber group on channel your command, like adding
-    another region/removing a region or changing from live stream to fan art.
+    another region/removing a region or changing from live stream to fan art.<br />
+    For aternative, use <b>Slash Command</b> for update in different channel.
+    <br /><br /><b>Slash Commands:</b>
   </p>
-  <h4 class="content-subtitle">Change Stage (Slash Command)</h4>
   <p class="content-code">/channel-update <span>channel-name</span></p>
   <p class="content-text">
     <small><b>Role permission required: Manage Channel or Higher</b></small
-    ><br /><br />
-    Like previous command, but you can changing separated channel using
-    <span class="code-span">channel-name</span>
+    >
     <br /><br /><b>Example:</b>
   </p>
   <p class="content-code">
     /channel-update <span>channel-name: #kizuna-ai</span>
   </p>
-  <h4 class="content-subtitle">Disable</h4>
+  <h4 class="content-subtitle">Disable/Remove Stage</h4>
+  <p class="content-text">
+    <b>Disable Partial Group (Legacy only):</b>
+  </p>
   <p class="content-code">vtbot>Disable <span>group vtuber</span></p>
   <p class="content-text">
     <small><b>Role permission required: Manage Channel or Higher</b></small
     ><br /><br />
-    Disable/remove single or several groups in channel your command.
+    Disable/remove single or several vtuber groups in channel your command.
     <br /><br /><b>Example 1:</b>
   </p>
   <p class="content-code">vtbot>Disable <span>VOMS</span></p>
@@ -132,15 +137,18 @@ import "./style.scss"
     <b>Example 2:</b>
   </p>
   <p class="content-code">vtbot>Disable <span>hololive,holostars</span></p>
-  <h4 class="content-subtitle">Disable (Slash Command)</h4>
+  <p class="content-text">
+    <b>Disable All group (Slash Command):</b>
+  </p>
   <p class="content-code">/channel-update <span>channel-name</span></p>
   <p class="content-text">
     <small><b>Role permission required: Manage Channel or Higher</b></small
     ><br /><br />
-    Disable/remove any groups in channel inside <span class="code-span">channel-name</span>
+    Disable/remove any vtuber groups in channel inside <span class="code-span">channel-name</span>.
     <br /><br /><b>Example :</b>
   </p>
   <p class="content-code">/channel-update <span>channel-name: #vshojo</span></p>
+  <br />
 </template>
 
 <script>
