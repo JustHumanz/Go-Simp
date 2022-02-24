@@ -514,9 +514,39 @@ func (Data Members) InputSubs(MemberID int64) {
 		log.Error(err)
 	}
 
-	ytsubs, _ := strconv.Atoi(Subs.Items[0].Statistics.SubscriberCount)
-	ytvideos, _ := strconv.Atoi(Subs.Items[0].Statistics.VideoCount)
-	ytviews, _ := strconv.Atoi(Subs.Items[0].Statistics.ViewCount)
+	ytsubs := func() int {
+		for _, v := range Subs.Items {
+			tmp, err := strconv.Atoi(v.Statistics.SubscriberCount)
+			if err != nil {
+				log.Error(err)
+			}
+			return tmp
+		}
+		return 0
+	}()
+
+	ytvideos := func() int {
+		for _, v := range Subs.Items {
+			tmp, err := strconv.Atoi(v.Statistics.VideoCount)
+			if err != nil {
+				log.Error(err)
+			}
+			return tmp
+		}
+		return 0
+	}()
+
+	ytviews := func() int {
+		for _, v := range Subs.Items {
+			tmp, err := strconv.Atoi(v.Statistics.ViewCount)
+			if err != nil {
+				log.Error(err)
+			}
+			return tmp
+		}
+		return 0
+	}()
+
 	bilifoll := Bili.Follow.Data.Follower
 	bilivideos := Bili.Video
 	biliview := Bili.Like.Data.Archive.View
