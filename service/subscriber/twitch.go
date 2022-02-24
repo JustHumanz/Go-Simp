@@ -47,6 +47,7 @@ func CheckTwitch() {
 					})
 					break
 				}
+
 				SendNotif := func(SubsCount, Viwers string) {
 					err = Name.RemoveSubsCache()
 					if err != nil {
@@ -58,7 +59,6 @@ func CheckTwitch() {
 						log.Error(err)
 					}
 
-					//Graph := "[View as Graph](" + os.Getenv("PrometheusURL") + "/graph?g0.expr=get_subscriber%7Bstate%3D%22Twitch%22%2C%20vtuber%3D%22" + Name.Name + "%22%7D&g0.tab=0&g0.stacked=0&g0.range_input=4w)"
 					SendNude(engine.NewEmbed().
 						SetAuthor(Group.GroupName, Group.IconURL, "https://twitch.tv/"+Name.TwitchName).
 						SetTitle(engine.FixName(Name.EnName, Name.JpName)).
@@ -69,8 +69,22 @@ func CheckTwitch() {
 						InlineAllFields().
 						SetURL("https://twitch.tv/"+Name.TwitchName).
 						SetColor(Color).MessageEmbed, Group, Name)
+
 				}
 				if TotalFollowers != TwitchFollowDB.TwitchFollow {
+
+					log.WithFields(log.Fields{
+						"Past Twitch Follower":    TwitchFollowDB.TwitchFollow,
+						"Current Twitch Follower": TotalFollowers,
+						"Vtuber":                  Name.EnName,
+					}).Info("Update Twitch Follower")
+
+					TwitchFollowDB.SetMember(Name).SetGroup(Group).
+						UpTwitchFollow(TotalFollowers).
+						UpTwitchViwers(TotalViwers).
+						UpdateState(config.TwitchLive).
+						UpdateSubs()
+
 					if TotalFollowers >= 1000000 {
 						for i := 0; i < 10000001; i += 1000000 {
 							if i == TotalFollowers {
@@ -96,29 +110,17 @@ func CheckTwitch() {
 							}
 						}
 					}
+				}
 
-					log.WithFields(log.Fields{
-						"Past Twitch Follower":    TwitchFollowDB.TwitchFollow,
-						"Current Twitch Follower": TotalFollowers,
-						"Vtuber":                  Name.EnName,
-					}).Info("Update Twitch Follower")
-
-					TwitchFollowDB.SetMember(Name).SetGroup(Group).
-						UpTwitchFollow(TotalFollowers).
-						UpTwitchViwers(TotalViwers).
-						UpdateState(config.TwitchLive).
-						UpdateSubs()
-
-					bin, err := TwitchFollowDB.MarshalBinary()
-					if err != nil {
-						log.Error(err)
-					}
-					if config.GoSimpConf.Metric {
-						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-							MetricData: bin,
-							State:      config.SubsState,
-						})
-					}
+				bin, err := TwitchFollowDB.MarshalBinary()
+				if err != nil {
+					log.Error(err)
+				}
+				if config.GoSimpConf.Metric {
+					gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+						MetricData: bin,
+						State:      config.SubsState,
+					})
 				}
 			}
 		}

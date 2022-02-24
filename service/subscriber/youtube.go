@@ -111,6 +111,28 @@ func CheckYoutube() {
 
 						}
 						if YtSubsDB.YtSubs != YTSubscriberCount {
+
+							log.WithFields(log.Fields{
+								"Past Youtube subscriber":    YtSubsDB.YtSubs,
+								"Current Youtube subscriber": YTSubscriberCount,
+								"Vtuber":                     Member.EnName,
+							}).Info("Update Youtube subscriber")
+							VideoCount, err := strconv.Atoi(Item.Statistics.VideoCount)
+							if err != nil {
+								log.Error(err)
+							}
+							ViewCount, err := strconv.Atoi(Item.Statistics.ViewCount)
+							if err != nil {
+								log.Error(err)
+							}
+
+							YtSubsDB.SetMember(Member).SetGroup(Group).
+								UpYtSubs(YTSubscriberCount).
+								UpYtVideo(VideoCount).
+								UpYtViews(ViewCount).
+								UpdateState(config.YoutubeLive).
+								UpdateSubs()
+
 							if YTSubscriberCount >= 1000000 {
 								for i := 0; i < 10000001; i += 1000000 {
 									if i == YTSubscriberCount && !Item.Statistics.HiddenSubscriberCount {
@@ -186,27 +208,6 @@ func CheckYoutube() {
 							}
 						}
 
-						log.WithFields(log.Fields{
-							"Past Youtube subscriber":    YtSubsDB.YtSubs,
-							"Current Youtube subscriber": YTSubscriberCount,
-							"Vtuber":                     Member.EnName,
-						}).Info("Update Youtube subscriber")
-						VideoCount, err := strconv.Atoi(Item.Statistics.VideoCount)
-						if err != nil {
-							log.Error(err)
-						}
-						ViewCount, err := strconv.Atoi(Item.Statistics.ViewCount)
-						if err != nil {
-							log.Error(err)
-						}
-
-						YtSubsDB.SetMember(Member).SetGroup(Group).
-							UpYtSubs(YTSubscriberCount).
-							UpYtVideo(VideoCount).
-							UpYtViews(ViewCount).
-							UpdateState(config.YoutubeLive).
-							UpdateSubs()
-
 						bin, err := YtSubsDB.MarshalBinary()
 						if err != nil {
 							log.Error(err)
@@ -217,6 +218,7 @@ func CheckYoutube() {
 								State:      config.SubsState,
 							})
 						}
+
 					}
 				}
 			}

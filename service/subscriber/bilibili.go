@@ -86,7 +86,21 @@ func CheckBiliBili() {
 				if err != nil {
 					log.Error(err)
 				}
+
 				if bilistate.Follow.Data.Follower != 0 {
+
+					log.WithFields(log.Fields{
+						"Past BiliBili Follower":    BiliFollowDB.BiliFollow,
+						"Current BiliBili Follower": bilistate.Follow.Data.Follower,
+						"Vtuber":                    Name.EnName,
+					}).Info("Update BiliBili Follower")
+
+					BiliFollowDB.SetMember(Name).SetGroup(Group).
+						UpBiliFollow(bilistate.Follow.Data.Follower).
+						UpBiliVideo(bilistate.Videos).
+						UpBiliViews(bilistate.LikeView.Data.Archive.View).
+						UpdateState(config.BiliLive).UpdateSubs()
+
 					if BiliFollowDB.BiliFollow != bilistate.Follow.Data.Follower {
 						if bilistate.Follow.Data.Follower <= 10000 {
 							for i := 0; i < 1000001; i += 100000 {
@@ -139,17 +153,6 @@ func CheckBiliBili() {
 							}
 						}
 					}
-					log.WithFields(log.Fields{
-						"Past BiliBili Follower":    BiliFollowDB.BiliFollow,
-						"Current BiliBili Follower": bilistate.Follow.Data.Follower,
-						"Vtuber":                    Name.EnName,
-					}).Info("Update BiliBili Follower")
-
-					BiliFollowDB.SetMember(Name).SetGroup(Group).
-						UpBiliFollow(bilistate.Follow.Data.Follower).
-						UpBiliVideo(bilistate.Videos).
-						UpBiliViews(bilistate.LikeView.Data.Archive.View).
-						UpdateState(config.BiliLive).UpdateSubs()
 
 					bin, err := BiliFollowDB.MarshalBinary()
 					if err != nil {

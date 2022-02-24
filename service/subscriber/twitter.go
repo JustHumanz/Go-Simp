@@ -90,6 +90,18 @@ func CheckTwitter() {
 
 				}
 				if Twitter.FollowersCount != TwFollowDB.TwFollow {
+
+					log.WithFields(log.Fields{
+						"Past Twitter Follower":    TwFollowDB.TwFollow,
+						"Current Twitter Follower": Twitter.FollowersCount,
+						"Vtuber":                   Name.EnName,
+					}).Info("Update Twitter Follower")
+
+					TwFollowDB.SetMember(Name).SetGroup(Group).
+						UptwFollow(Twitter.FollowersCount).
+						UpdateState(config.TwitterArt).
+						UpdateSubs()
+
 					if Twitter.FollowersCount >= 1000000 {
 						for i := 0; i < 10000001; i += 1000000 {
 							if i == Twitter.FollowersCount {
@@ -167,28 +179,16 @@ func CheckTwitter() {
 							}
 						}
 					}
-
-					log.WithFields(log.Fields{
-						"Past Twitter Follower":    TwFollowDB.TwFollow,
-						"Current Twitter Follower": Twitter.FollowersCount,
-						"Vtuber":                   Name.EnName,
-					}).Info("Update Twitter Follower")
-
-					TwFollowDB.SetMember(Name).SetGroup(Group).
-						UptwFollow(Twitter.FollowersCount).
-						UpdateState(config.TwitterArt).
-						UpdateSubs()
-
-					bin, err := TwFollowDB.MarshalBinary()
-					if err != nil {
-						log.Error(err)
-					}
-					if config.GoSimpConf.Metric {
-						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-							MetricData: bin,
-							State:      config.SubsState,
-						})
-					}
+				}
+				bin, err := TwFollowDB.MarshalBinary()
+				if err != nil {
+					log.Error(err)
+				}
+				if config.GoSimpConf.Metric {
+					gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+						MetricData: bin,
+						State:      config.SubsState,
+					})
 				}
 			}
 		}
