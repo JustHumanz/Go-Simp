@@ -586,7 +586,9 @@
         "BiliBili_ID": 624252709,
         "BiliRoom_ID": 22349492
       },
-      "Twitch": null,
+      "Twitch": {
+        "Twitch_Username": "momosuzunene_hololive"
+      },
       "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
@@ -831,7 +833,7 @@
       "Twitch": null,
       "Region": "JP",
       "Fanbase": "",
-      "Status": "Active"
+      "Status": "Inactive"
     },
     {
       "Name": "Gura",
