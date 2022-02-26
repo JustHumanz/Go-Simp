@@ -7,3 +7,15 @@
 :root {
   font-family: "Nunito", sans-serif;
 }
+
+@media (max-width: 767px) {
+  body {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+  }
+
+  body::-webkit-scrollbar {
+    /* Chromium and Safari */
+    display: none;
+  }
+}

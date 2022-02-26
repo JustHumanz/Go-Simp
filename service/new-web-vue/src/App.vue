@@ -50,6 +50,24 @@ import "./index.css"
               >Dashboard</a
             >
           </li>
+          <li>
+            <a
+              href="https://discord.com/oauth2/authorize?client_id=721964514018590802&permissions=456720&scope=bot%20applications.commands"
+              target="_blank"
+              class="nav-link"
+              @click="resetFocus()"
+              >Invite</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://top.gg/bot/721964514018590802"
+              target="_blank"
+              class="nav-link"
+              @click="resetFocus()"
+              >Vote</a
+            >
+          </li>
         </ul>
       </div>
 
