@@ -60,24 +60,53 @@ import "./index.css"
               >Vote</a
             >
           </li>
-          <li class="navbar-item mobile-dashboard">
+          <li class="navbar-item mobile-menu dashboard">
             <a
               href="https://web-admin.humanz.moe/login"
               target="_blank"
               class="navbar-link"
               @click="resetFocus()"
-              >Dashboard</a
+              ><font-awesome-icon icon="gauge-simple" class="fa-fw" />
+              Dashboard</a
+            >
+          </li>
+          <li class="navbar-item mobile-menu dark-mode">
+            <a href="#" class="navbar-link" @click="resetFocus()">
+              <font-awesome-icon
+                icon="moon"
+                class="dark-mode-btn__svg fa-fw dark-icon"
+              />
+              <font-awesome-icon
+                icon="sun"
+                class="dark-mode-btn__svg fa-fw light-icon"
+              />
+              Dark Mode</a
             >
           </li>
         </ul>
       </div>
 
-      <a
-        class="dashboard-btn"
-        href="https://web-admin.humanz.moe/login"
-        target="_blank"
-        >Dashboard</a
-      >
+      <div class="navbar-buttons">
+        <a
+          class="navbar-buttons__button dashboard"
+          href="https://web-admin.humanz.moe/login"
+          target="_blank"
+          ><font-awesome-icon icon="gauge-simple" class="fa-fw" />
+          <span class="navbar-buttons__hover">Dashboard</span>
+        </a>
+        <!-- Add Dark mode button -->
+        <a href="" class="navbar-buttons__button dark-mode">
+          <font-awesome-icon
+            icon="moon"
+            class="dark-mode-btn__svg fa-fw dark-icon"
+          />
+          <font-awesome-icon
+            icon="sun"
+            class="dark-mode-btn__svg fa-fw light-icon"
+          />
+          <span class="navbar-buttons__hover">Dark Mode</span>
+        </a>
+      </div>
     </div>
   </nav>
 
@@ -122,7 +151,12 @@ import "./index.css"
     </div>
     <div class="footer-credit">
       This Website designed and developed by
-      <a href="https://github.com/yarndinasti" target="_blank" class="footer-credit__link">Yarn</a>
+      <a
+        href="https://github.com/yarndinasti"
+        target="_blank"
+        class="footer-credit__link"
+        >Yarn</a
+      >
     </div>
   </footer>
 </template>
@@ -131,7 +165,8 @@ import "./index.css"
 // Add Font Awesome for Discord and Github icons
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faDiscord, faGithub } from "@fortawesome/free-brands-svg-icons"
-library.add(faDiscord, faGithub)
+import { faMoon, faSun, faGaugeSimple } from "@fortawesome/free-solid-svg-icons"
+library.add(faDiscord, faGithub, faMoon, faSun, faGaugeSimple)
 
 export default {
   data() {
@@ -154,6 +189,8 @@ export default {
       this.$nextTick(() => {
         // get element .nav-link
         const navLinks = document.querySelectorAll(".nav-link")
+        // check if element is active
+
         // looping nav-link
         navLinks.forEach((navLink) => {
           navLink.blur()
@@ -195,7 +232,7 @@ nav {
       @apply w-full sm:w-auto sm:mx-1;
 
       .navbar-link {
-        @apply w-full inline-block cursor-pointer text-white py-2 sm:py-1 px-2 sm:rounded-md transition-shadow sm:hover:shadow-sm sm:hover:shadow-cyan-600/75 hover:bg-cyan-600/50 sm:hover:bg-transparent;
+        @apply w-full inline-block cursor-pointer text-white py-2 sm:py-1 px-2 sm:rounded-md transition-shadow sm:hover:shadow-sm sm:hover:shadow-cyan-600/75 hover:bg-black/10 sm:hover:bg-transparent;
 
         &.router-link-active,
         &.active {
@@ -203,17 +240,58 @@ nav {
         }
       }
 
-      &.mobile-dashboard {
+      &.mobile-menu {
         @apply block sm:hidden;
 
-        .navbar-link {
-          @apply bg-rose-500 hover:bg-rose-600;
+        &.dashboard {
+          @apply bg-rose-500;
+        }
+
+        &.dark-mode {
+          @apply bg-cyan-600 dark:bg-slate-700;
         }
       }
     }
 
-    .dashboard-btn {
-      @apply bg-rose-500 my-3 py-1 px-2 rounded-md font-semibold text-white cursor-pointer shadow-none transition-shadow hover:shadow-md hover:shadow-rose-500/75 hidden sm:block;
+    &-buttons {
+      @apply hidden sm:block;
+
+      &__hover {
+        @apply hidden absolute translate-y-0 w-max -left-7 rounded-md px-2 py-1 shadow-md;
+      }
+
+      &__button {
+        @apply my-3 py-1 px-2 rounded-md font-semibold text-white cursor-pointer shadow-none transition-shadow hover:shadow-md relative;
+
+        &:hover {
+          .navbar-buttons__hover {
+            @apply inline-block translate-y-8;
+          }
+        }
+
+        &.dashboard {
+          @apply bg-rose-500 hover:shadow-rose-500/75 mr-2;
+
+          .navbar-buttons__hover {
+            @apply bg-rose-500 shadow-rose-500/75;
+          }
+        }
+
+        &.dark-mode {
+          @apply bg-cyan-600 dark:bg-slate-700 hover:shadow-cyan-600/75 dark:hover:shadow-slate-700/75;
+
+          .navbar-buttons__hover {
+            @apply bg-cyan-600 dark:bg-slate-700 shadow-cyan-600/75 dark:shadow-slate-700/75;
+          }
+        }
+      }
+    }
+    .dark-icon {
+      @apply hidden dark:inline-block;
+    }
+
+    .light-icon {
+      @apply inline-block dark:hidden;
     }
   }
 }
@@ -245,19 +323,17 @@ nav {
     }
   }
 
-    &-lists {
-      @apply flex flex-col w-40;
+  &-lists {
+    @apply flex flex-col w-40;
+  }
+
+  &-list {
+    @apply w-full;
+
+    &__link {
+      @apply text-white hover:text-cyan-100 inline-block w-full;
     }
-
-      &-list {
-        @apply w-full;
-
-        &__link {
-          @apply text-white hover:text-cyan-100 inline-block w-full;
-        }
-      }
-
-
+  }
 
   .footer-credit {
     grid-area: credit;
