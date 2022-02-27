@@ -404,3 +404,8 @@ func (Data *DiscordChannel) IsLewd() bool {
 	}
 	return false
 }
+
+//YtIsEmpty?
+func (Data LiveStream) YtIsEmpty() bool {
+	return Data.VideoID == ""
+}

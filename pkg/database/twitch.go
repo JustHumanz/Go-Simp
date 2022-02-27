@@ -1,7 +1,12 @@
 package database
 
 import (
+	"context"
+	"encoding/json"
+	"fmt"
+
 	"github.com/JustHumanz/Go-Simp/pkg/config"
+	"github.com/go-redis/redis/v8"
 )
 
 //Get data of member twitch
@@ -23,50 +28,80 @@ func (Data *LiveStream) UpdateTwitch() error {
 	return nil
 }
 
-//TwitchGet Get LiveBiliBili by Status (live,past)
-func TwitchGet(Payload map[string]interface{}) ([]LiveStream, error) {
-	var Group, Member int64
-	Status := Payload["Status"].(string)
-
-	if Payload["GroupID"] != nil {
-		Group = Payload["GroupID"].(int64)
-	} else {
-		Member = Payload["MemberID"].(int64)
-	}
-
+func (Data *Member) GetTwitchLiveStream(status string) (LiveStream, error) {
 	var (
-		Limit int
+		Query string
+		ctx   = context.Background()
+		Live  LiveStream
+		Key   = fmt.Sprintf("%d-%s-%s-%s", Data.ID, Data.Name, status, Data.TwitchName)
 	)
 
-	if Group > 0 && Status != "Live" {
-		Limit = 3
+	val, err := LiveCache.Get(ctx, Key).Result()
+	if err == redis.Nil {
+		Limit := func() int {
+			if status == config.PastStatus {
+				return 3
+			} else {
+				return 4
+			}
+		}()
+
+		if status == config.LiveStatus {
+			Query = "SELECT Twitch.* FROM Vtuber.Twitch Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Where  VtuberMember.id=? AND Twitch.Status=? Order by ScheduledStart ASC Limit ?"
+		} else {
+			Query = "SELECT Twitch.* FROM Vtuber.Twitch Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Where  VtuberMember.id=? AND Twitch.Status=? Order by ScheduledStart DESC Limit ?"
+		}
+
+		rows, err := DB.Query(Query, Data.ID, status, Limit)
+		if err != nil {
+			return LiveStream{}, err
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			err = rows.Scan(&Live.ID, &Live.Game, &Live.Status, &Live.Title, &Live.Thumb, &Live.Schedul, &Live.End, &Live.Viewers, &Live.Member.ID)
+			if err != nil {
+				return LiveStream{}, err
+			}
+		}
+
+		err = LiveCache.Set(ctx, Key, Live, 0).Err()
+		if err != nil {
+			return LiveStream{}, err
+		}
+
+		err = LiveCache.Expire(ctx, Key, config.YtGetStatusTTL).Err()
+		if err != nil {
+			return LiveStream{}, err
+		}
+
+	} else if err != nil {
+		return LiveStream{}, err
 	} else {
-		Limit = 2525
+
+		err := json.Unmarshal([]byte(val), &Live)
+		if err != nil {
+			return LiveStream{}, err
+		}
+
 	}
 
-	Query := ""
-	if Status == config.LiveStatus {
-		Query = "SELECT Twitch.* FROM Vtuber.Twitch Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Twitch.Status=? Order by ScheduledStart ASC Limit ?"
-	} else {
-		Query = "SELECT Twitch.* FROM Vtuber.Twitch Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Twitch.Status=? Order by ScheduledStart DESC Limit ?"
-	}
+	return Live, nil
+}
 
-	rows, err := DB.Query(Query, Group, Member, Status, Limit)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var (
-		Data []LiveStream
-		list LiveStream
-	)
-	for rows.Next() {
-		err = rows.Scan(&list.ID, &list.Game, &list.Status, &list.Title, &list.Thumb, &list.Schedul, &list.End, &list.Viewers, &list.Member.ID)
+func (Group Group) GetTwitchLiveStream(status string) ([]LiveStream, error) {
+	var LiveData []LiveStream
+	for _, Member := range Group.Members {
+		Live, err := Member.GetBlLiveStream(status)
 		if err != nil {
 			return nil, err
 		}
-		Data = append(Data, list)
+
+		if Live.ID == 0 {
+			continue
+		}
+
+		LiveData = append(LiveData, Live)
 	}
-	return Data, nil
+	return LiveData, nil
 }

@@ -7,13 +7,14 @@ import (
 	"math/rand"
 	"regexp"
 	"strings"
+	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	log "github.com/sirupsen/logrus"
 )
 
-//GetFanart Get Member fanart URL from TBiliBili and Twitter
-func GetFanart(GroupID, MemberID int64) (*DataFanart, error) {
+//GetRandomFanart Get Member fanart URL from TBiliBili and Twitter
+func GetRandomFanart(GroupID, MemberID int64) (*DataFanart, error) {
 	var (
 		Data     DataFanart
 		PhotoTmp sql.NullString
@@ -457,7 +458,7 @@ func (Data *DataFanart) SetState(new string) *DataFanart {
 
 //Get random fanart from group struct
 func (p *Group) GetRandomFanart() (*DataFanart, error) {
-	b, err := GetFanart(p.ID, 0)
+	b, err := GetRandomFanart(p.ID, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -466,7 +467,7 @@ func (p *Group) GetRandomFanart() (*DataFanart, error) {
 
 //Get random fanart from member struct
 func (p *Member) GetRandomFanart() (*DataFanart, error) {
-	b, err := GetFanart(0, p.ID)
+	b, err := GetRandomFanart(0, p.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -489,4 +490,120 @@ func (p *Member) GetRandomLewd() (*DataFanart, error) {
 		return nil, err
 	}
 	return b, nil
+}
+
+func (Member Member) GetFanartData(State string, Limit int) ([]DataFanart, error) {
+	var (
+		Datafanart []DataFanart
+		PhotoTmp   sql.NullString
+		Video      sql.NullString
+	)
+
+	Twitter := func() error {
+		rows, err := DB.Query(`SELECT Twitter.* FROM Vtuber.Twitter Inner Join Vtuber.VtuberMember on VtuberMember.id = Twitter.VtuberMember_id where  VtuberMember.id=?  ORDER by id desc LIMIT ?`, Member.ID, Limit)
+		if err != nil {
+			return err
+		}
+
+		defer rows.Close()
+		for rows.Next() {
+			var Data DataFanart
+			err = rows.Scan(&Data.ID, &Data.PermanentURL, &Data.Author, &Data.Likes, &PhotoTmp, &Video, &Data.Text, &Data.TweetID, &Data.Member.ID)
+			if err != nil {
+				return err
+			}
+
+			if Data.ID == 0 {
+				return errors.New("vtuber don't have any fanart in Twitter")
+			}
+
+			Data.State = config.TwitterArt
+			Data.Videos = Video.String
+			Data.Photos = strings.Fields(PhotoTmp.String)
+			Data.AddMember(Member)
+			Datafanart = append(Datafanart, Data)
+		}
+		return nil
+	}
+	Tbilibili := func() error {
+		rows, err := DB.Query(`SELECT TBiliBili.* FROM Vtuber.TBiliBili Inner Join Vtuber.VtuberMember on VtuberMember.id = TBiliBili.VtuberMember_id where VtuberMember.id=?  ORDER by id desc LIMIT ?`, Member.ID, Limit)
+		if err != nil {
+			return err
+		}
+
+		defer rows.Close()
+		for rows.Next() {
+			var Data DataFanart
+			err = rows.Scan(&Data.ID, &Data.PermanentURL, &Data.Author, &Data.Likes, &PhotoTmp, &Video, &Data.Text, &Data.Dynamic_id, &Data.Member.ID)
+			if err != nil {
+				return err
+			}
+			if Data.ID == 0 {
+				return errors.New("vtuber don't have any fanart in Twitter")
+			}
+
+			Data.State = config.BiliBiliArt
+			Data.Photos = strings.Fields(PhotoTmp.String)
+			Data.AddMember(Member)
+			Datafanart = append(Datafanart, Data)
+		}
+		return nil
+	}
+
+	Pixiv := func() error {
+		rows, err := DB.Query(`SELECT Pixiv.* FROM Vtuber.Pixiv Inner Join Vtuber.VtuberMember on VtuberMember.id = Pixiv.VtuberMember_id where VtuberMember.id=? ORDER by id desc LIMIT ?`, Member.ID, Limit)
+		if err != nil {
+			return err
+		}
+
+		defer rows.Close()
+		for rows.Next() {
+			var Data DataFanart
+			err = rows.Scan(&Data.ID, &Data.PermanentURL, &Data.Author, &PhotoTmp, &Data.Text, &Data.PixivID, &Data.Member.ID)
+			if err != nil {
+				return err
+			}
+			if Data.ID == 0 {
+				return errors.New("vtuber don't have any fanart in Twitter")
+			}
+
+			Data.State = config.PixivArt
+			Data.Photos = strings.Fields(PhotoTmp.String)
+			Data.AddMember(Member)
+			Datafanart = append(Datafanart, Data)
+		}
+		return nil
+	}
+
+	if State == config.PixivArt {
+		err := Pixiv()
+		if err != nil {
+			return nil, err
+		}
+	} else if State == config.BiliBiliArt {
+		err := Tbilibili()
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		err := Twitter()
+		if err != nil {
+			return nil, err
+		}
+	}
+	return Datafanart, nil
+}
+
+func (Group Group) GetFanartData(State string, Limit int) ([]DataFanart, error) {
+	var Data []DataFanart
+	for i := 1; i < Limit; i++ {
+		rand.Seed(time.Now().Unix())
+		n := rand.Int() % len(Group.Members)
+		DataFanart, err := Group.Members[n].GetFanartData(State, 1)
+		if err != nil {
+			return nil, err
+		}
+		Data = append(Data, DataFanart...)
+	}
+	return Data, nil
 }

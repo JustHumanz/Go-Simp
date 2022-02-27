@@ -339,10 +339,7 @@ func CheckLiveBiliBili() {
 					ScheduledStart time.Time
 				)
 				for _, v := range []string{config.PastStatus, config.LiveStatus} {
-					DataDB, _, err := database.BilGet(map[string]interface{}{
-						"Status":   v,
-						"MemberID": Member.ID,
-					})
+					DataDB, err := Member.GetBlLiveStream(v)
 					if err != nil {
 						log.Error(err)
 					}
@@ -371,7 +368,7 @@ func CheckLiveBiliBili() {
 						"MemberID":       Member.ID,
 					}
 
-					if DataDB == nil {
+					if DataDB.ID == 0 {
 						if Status.CheckScheduleLive() {
 							//Live
 							log.WithFields(log.Fields{
@@ -398,7 +395,7 @@ func CheckLiveBiliBili() {
 							}).Info("Status Live")
 							Data["Status"] = config.LiveStatus
 							LiveBiliBili(Data)
-						} else if !Status.CheckScheduleLive() && DataDB[0].Status == config.LiveStatus {
+						} else if !Status.CheckScheduleLive() && DataDB.Status == config.LiveStatus {
 							//prob past
 							log.WithFields(log.Fields{
 								"Group":      Group.GroupName,

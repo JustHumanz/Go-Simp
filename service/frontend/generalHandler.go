@@ -82,34 +82,27 @@ func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 			return true
 		}
-		for _, GroupData := range *GroupsPayload {
-			if m.Content == strings.ToLower(Prefix+GroupData.GroupName) {
-				FanArtData, err := database.GetFanart(GroupData.ID, 0)
+		for _, Agency := range *GroupsPayload {
+			if m.Content == strings.ToLower(Prefix+Agency.GroupName) {
+				FanArtData, err := Agency.GetRandomFanart()
 				if err != nil {
 					log.Error(err)
 					s.ChannelMessageSend(m.ChannelID, "Opps,something goes worng,like dev life\n"+err.Error())
 					return
 				}
 
-				for _, v := range GroupData.Members {
-					if v.ID == FanArtData.Member.ID {
-						FanArtData.AddMember(v)
-						break
-					}
-				}
 				Group = SendNude(FanArtData)
 				break
 			}
-			for _, MemberData := range GroupData.Members {
-				if m.Content == strings.ToLower(Prefix+MemberData.Name) || (MemberData.JpName != "" && m.Content == strings.ToLower(Prefix+MemberData.JpName)) {
-					FanArtData, err := database.GetFanart(0, MemberData.ID)
+			for _, AgencyMember := range Agency.Members {
+				if m.Content == strings.ToLower(Prefix+AgencyMember.Name) || (AgencyMember.JpName != "" && m.Content == strings.ToLower(Prefix+AgencyMember.JpName)) {
+					FanArtData, err := AgencyMember.GetRandomFanart()
 					if err != nil {
 						log.Error(err)
 						s.ChannelMessageSend(m.ChannelID, "Opps,something goes worng,like dev life\n"+err.Error())
 						return
 					}
 
-					FanArtData.AddMember(MemberData)
 					Member = SendNude(FanArtData)
 					break
 				}

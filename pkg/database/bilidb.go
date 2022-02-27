@@ -5,9 +5,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"strconv"
+	"fmt"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
+	"github.com/go-redis/redis/v8"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -35,86 +36,84 @@ func (Data *LiveStream) SetBiliLive(new bool) *LiveStream {
 	return Data
 }
 
-//BilGet Get LiveBiliBili by Status (live,past)
-func BilGet(Payload map[string]interface{}) ([]LiveStream, string, error) {
-	var Group, Member int64
-	Status := Payload["Status"].(string)
-
-	if Payload["GroupID"] != nil {
-		Group = Payload["GroupID"].(int64)
-	} else {
-		Member = Payload["MemberID"].(int64)
-	}
-
+func (Data *Member) GetBlLiveStream(status string) (LiveStream, error) {
 	var (
-		ctx  = context.Background()
-		Data []LiveStream
-		list = LiveStream{
-			State: config.BiliLive,
-		}
+		Query string
+		ctx   = context.Background()
+		Live  LiveStream
+		Key   = fmt.Sprintf("%d-%s-%s-%d", Data.ID, Data.Name, status, Data.BiliBiliID)
 	)
 
-	var Limit = func() int {
-		if Group > 0 && Status != config.LiveStatus {
-			return 3
-		} else {
-			return 2525
-		}
-	}()
+	val, err := LiveCache.Get(ctx, Key).Result()
+	if err == redis.Nil {
+		Limit := func() int {
+			if status == config.PastStatus {
+				return 3
+			} else {
+				return 4
+			}
+		}()
 
-	var Key = func() string {
-		if Group != 0 {
-			return strconv.Itoa(int(Group)) + "-" + "Group" + "-" + Status
+		if status == config.LiveStatus {
+			Query = "SELECT LiveBiliBili.* FROM Vtuber.LiveBiliBili Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Where  VtuberMember.id=? AND LiveBiliBili.Status=? Order by ScheduledStart ASC Limit ?"
 		} else {
-			return strconv.Itoa(int(Member)) + "-" + "Member" + "-" + Status
-		}
-	}()
-
-	val, err := LiveCache.LRange(ctx, Key, 0, -1).Result()
-	if err != nil {
-		return nil, Key, err
-	}
-
-	if len(val) == 0 {
-		Query := ""
-		if Status == config.LiveStatus {
-			Query = "SELECT LiveBiliBili.* FROM Vtuber.LiveBiliBili Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND LiveBiliBili.Status=? Order by ScheduledStart ASC Limit ?"
-		} else {
-			Query = "SELECT LiveBiliBili.* FROM Vtuber.LiveBiliBili Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND LiveBiliBili.Status=? Order by ScheduledStart DESC Limit ?"
+			Query = "SELECT LiveBiliBili.* FROM Vtuber.LiveBiliBili Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Where  VtuberMember.id=? AND LiveBiliBili.Status=? Order by ScheduledStart DESC Limit ?"
 		}
 
-		rows, err := DB.Query(Query, Group, Member, Status, Limit)
+		rows, err := DB.Query(Query, Data.ID, status, Limit)
 		if err != nil {
-			return nil, Key, err
+			return LiveStream{}, err
 		}
 		defer rows.Close()
 
 		for rows.Next() {
-			err = rows.Scan(&list.ID, &list.Member.BiliRoomID, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.Viewers, &list.End, &list.Member.ID)
+			err = rows.Scan(&Live.ID, &Live.Member.BiliRoomID, &Live.Status, &Live.Title, &Live.Thumb, &Live.Desc, &Live.Published, &Live.Schedul, &Live.Viewers, &Live.End, &Live.Member.ID)
 			if err != nil {
-				return nil, Key, err
-			}
-			Data = append(Data, list)
-
-			err = LiveCache.LPush(ctx, Key, list).Err()
-			if err != nil {
-				return nil, Key, err
+				return LiveStream{}, err
 			}
 		}
+
+		err = LiveCache.Set(ctx, Key, Live, 0).Err()
+		if err != nil {
+			return LiveStream{}, err
+		}
+
 		err = LiveCache.Expire(ctx, Key, config.YtGetStatusTTL).Err()
 		if err != nil {
-			return nil, Key, err
+			return LiveStream{}, err
 		}
+
+	} else if err != nil {
+		return LiveStream{}, err
 	} else {
-		for _, result := range unique(val) {
-			err := json.Unmarshal([]byte(result), &list)
-			if err != nil {
-				return nil, Key, err
-			}
-			Data = append(Data, list)
+		err := json.Unmarshal([]byte(val), &Live)
+		if err != nil {
+			return LiveStream{}, err
 		}
 	}
-	return Data, Key, nil
+
+	Live.AddMember(*Data)
+
+	return Live, nil
+}
+
+//BilGet Get LiveBiliBili by Status (live,past)
+func (Data *Group) GetBlLiveStream(status string) ([]LiveStream, error) {
+	var LiveStreamData []LiveStream
+	for _, Member := range Data.Members {
+		Live, err := Member.GetBlLiveStream(status)
+		if err != nil {
+			return nil, err
+		}
+
+		if Live.ID == 0 {
+			continue
+		}
+
+		LiveStreamData = append(LiveStreamData, Live)
+	}
+
+	return LiveStreamData, nil
 }
 
 //SpaceGet Get SpaceBiliBili Data
