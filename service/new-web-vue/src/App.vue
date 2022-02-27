@@ -7,11 +7,12 @@ import "./index.css"
 <template>
   <nav>
     <div class="navbar">
-      <router-link to="/" class="icon"
-        ><IconHome class="h-full" /> <span>Go-Simp</span></router-link
+      <router-link to="/" class="navbar-icon"
+        ><IconHome class="h-full" />
+        <span class="navbar-icon__span">Go-Simp</span></router-link
       >
-      <div class="nav-menu">
-        <a href="#" class="toggle-menu" onclick="return false"
+      <div class="navbar-menu">
+        <a href="#" class="navbar-toggle" onclick="return false"
           ><svg width="24" height="24" fill="none" aria-hidden="true">
             <path
               d="M12 6v.01M12 12v.01M12 18v.01M12 7a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"
@@ -21,51 +22,51 @@ import "./index.css"
               stroke-linejoin="round"
             ></path></svg
         ></a>
-        <ul>
-          <li>
+        <ul class="navbar-items">
+          <li class="navbar-item">
             <router-link
               to="/vtuber"
               :class="{ active: isActive }"
-              class="nav-link"
+              class="navbar-link"
               @click="resetFocus()"
               >Vtubers</router-link
             >
           </li>
-          <li>
-            <router-link to="/docs" class="nav-link" @click="resetFocus()"
+          <li class="navbar-item">
+            <router-link to="/docs" class="navbar-link" @click="resetFocus()"
               >Docs</router-link
             >
           </li>
-          <li>
-            <router-link to="/support" class="nav-link" @click="resetFocus()"
+          <li class="navbar-item">
+            <router-link to="/support" class="navbar-link" @click="resetFocus()"
               >Support</router-link
             >
           </li>
-          <li class="mobile-dashboard">
-            <a
-              href="https://web-admin.humanz.moe/login"
-              target="_blank"
-              class="nav-link"
-              @click="resetFocus()"
-              >Dashboard</a
-            >
-          </li>
-          <li>
+          <li class="navbar-item">
             <a
               href="https://discord.com/oauth2/authorize?client_id=721964514018590802&permissions=456720&scope=bot%20applications.commands"
               target="_blank"
-              class="nav-link"
+              class="navbar-link"
               @click="resetFocus()"
               >Invite</a
             >
           </li>
-          <li>
+          <li class="navbar-item">
             <a
               href="https://top.gg/bot/721964514018590802"
               target="_blank"
-              class="nav-link"
+              class="navbar-link"
               @click="resetFocus()"
               >Vote</a
+            >
+          </li>
+          <li class="navbar-item mobile-dashboard">
+            <a
+              href="https://web-admin.humanz.moe/login"
+              target="_blank"
+              class="navbar-link"
+              @click="resetFocus()"
+              >Dashboard</a
             >
           </li>
         </ul>
@@ -83,18 +84,55 @@ import "./index.css"
   <main class="mt-[4rem]">
     <RouterView />
   </main>
-  <footer>
-    <span>2022 &copy; JustHumanz</span>
-    <div class="link">
-      <!-- add link discord server -->
-      <a href="https://discord.gg/ydWC5knbJT" target="_blank">Discord</a> |
-      <!-- add link github -->
-      <a href="https://github.com/JustHumanz/Go-Simp" target="_blank">Github</a>
+  <footer class="footer">
+    <div class="footer-page">
+      <h2 class="footer-page__title">Vtbot</h2>
+      <h4 class="footer-page__subtitle">Bot for Vtubers</h4>
+    </div>
+    <div class="footer-links">
+      <h4 class="footer-links__title">Information</h4>
+      <ul class="footer-lists">
+        <li class="footer-list">
+          <a href="" class="footer-list__link">Docs</a>
+        </li>
+        <li class="footer-list">
+          <a href="" class="footer-list__link">Support</a>
+        </li>
+        <!-- Github link -->
+        <li class="footer-list">
+          <a href="" class="footer-list__link">
+            <font-awesome-icon
+              :icon="['fab', 'github']"
+              class="footer-list__icon fa-fw"
+            ></font-awesome-icon>
+            Github
+          </a>
+        </li>
+        <!-- Discord link -->
+        <li class="footer-list">
+          <a href="" class="footer-list__link">
+            <font-awesome-icon
+              :icon="['fab', 'discord']"
+              class="footer-list__icon fa-fw"
+            ></font-awesome-icon>
+            Discord Server
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="footer-credit">
+      This Website designed and developed by
+      <a href="https://github.com/yarndinasti" target="_blank" class="footer-credit__link">Yarn</a>
     </div>
   </footer>
 </template>
 
 <script>
+// Add Font Awesome for Discord and Github icons
+import { library } from "@fortawesome/fontawesome-svg-core"
+import { faDiscord, faGithub } from "@fortawesome/free-brands-svg-icons"
+library.add(faDiscord, faGithub)
+
 export default {
   data() {
     return {
@@ -133,53 +171,43 @@ nav {
   .navbar {
     @apply mx-4 h-full flex justify-between md:justify-around items-center w-full md:w-[90%] lg:w-[85%];
 
-    .icon {
+    &-icon {
       @apply w-auto h-full p-3 cursor-pointer flex items-center;
 
-      span {
+      &__span {
         @apply ml-2 text-2xl font-semibold text-center uppercase sm:hidden text-white;
       }
     }
+    .navbar-toggle {
+      @apply block sm:hidden p-3;
+    }
 
-    .nav-menu {
-      .toggle-menu {
-        @apply block sm:hidden p-3;
+    &:focus-within .navbar-items {
+      @apply visible;
+    }
+
+    .navbar-items {
+      // make nav-menu items using tailwind
+      @apply flex items-start sm:items-center flex-col sm:flex-row bg-cyan-500 rounded-md sm:bg-transparent w-[13rem] sm:w-auto absolute top-2 right-2 sm:top-auto sm:right-auto sm:relative invisible sm:visible shadow-md shadow-black/50 sm:shadow-none overflow-hidden sm:overflow-visible;
+    }
+
+    .navbar-item {
+      @apply w-full sm:w-auto sm:mx-1;
+
+      .navbar-link {
+        @apply w-full inline-block cursor-pointer text-white py-2 sm:py-1 px-2 sm:rounded-md transition-shadow sm:hover:shadow-sm sm:hover:shadow-cyan-600/75 hover:bg-cyan-600/50 sm:hover:bg-transparent;
+
+        &.router-link-active,
+        &.active {
+          @apply sm:shadow-md bg-cyan-600 sm:bg-transparent sm:shadow-cyan-600/75 font-semibold;
+        }
       }
 
-      &:focus-within ul {
-        @apply visible;
-      }
+      &.mobile-dashboard {
+        @apply block sm:hidden;
 
-      ul {
-        // make nav-menu items using tailwind
-        @apply flex items-start sm:items-center flex-col sm:flex-row bg-cyan-500 rounded-md sm:bg-transparent w-[13rem] sm:w-auto absolute top-2 right-2 sm:top-auto sm:right-auto sm:relative invisible sm:visible shadow-md shadow-black/50 sm:shadow-none;
-
-        li {
-          @apply w-full sm:w-auto sm:mx-1;
-
-          &:first-child a {
-            @apply rounded-t-md;
-          }
-          &:last-child a {
-            @apply rounded-b-md;
-          }
-
-          a {
-            @apply w-full inline-block cursor-pointer text-white py-2 sm:py-1 px-2 sm:rounded-md transition-shadow sm:hover:shadow-sm sm:hover:shadow-cyan-600/75 hover:bg-cyan-600/50 sm:hover:bg-transparent;
-
-            &.router-link-active,
-            &.active {
-              @apply sm:shadow-md bg-cyan-600 sm:bg-transparent sm:shadow-cyan-600/75 font-semibold;
-            }
-          }
-
-          &.mobile-dashboard {
-            @apply block sm:hidden;
-
-            a {
-              @apply bg-rose-500 hover:bg-rose-600;
-            }
-          }
+        .navbar-link {
+          @apply bg-rose-500 hover:bg-rose-600;
         }
       }
     }
@@ -189,13 +217,53 @@ nav {
     }
   }
 }
-footer {
-  @apply py-5 bg-cyan-500 font-semibold w-full flex justify-around;
-  .link {
-    @apply text-sm text-yellow-500;
+.footer {
+  @apply pt-3 bg-cyan-500 font-semibold w-full justify-around grid;
 
-    a {
-      @apply text-black hover:text-orange-100 cursor-pointer;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "page links"
+    "credit credit";
+
+  &-page {
+    @apply flex justify-center flex-col sm:px-4 pl-3  md:pl-6 lg:pl-12 xl:pl-20;
+    grid-area: page;
+
+    &__title {
+      @apply text-3xl font-semibold text-cyan-200;
+    }
+    &__subtitle {
+      @apply text-white;
+    }
+  }
+
+  &-links {
+    @apply pr-3 md:pr-6 lg:pr-12 xl:pr-20;
+    grid-area: links;
+    &__title {
+      @apply text-xl font-semibold text-cyan-200;
+    }
+  }
+
+    &-lists {
+      @apply flex flex-col w-40;
+    }
+
+      &-list {
+        @apply w-full;
+
+        &__link {
+          @apply text-white hover:text-cyan-100 inline-block w-full;
+        }
+      }
+
+
+
+  .footer-credit {
+    grid-area: credit;
+    @apply text-center text-cyan-50 py-2 mt-3 bg-cyan-700;
+    &__link {
+      @apply text-white hover:text-cyan-100;
     }
   }
 }
