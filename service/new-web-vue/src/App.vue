@@ -122,14 +122,14 @@ import "./index.css"
       <h4 class="footer-links__title">Information</h4>
       <ul class="footer-lists">
         <li class="footer-list">
-          <a href="" class="footer-list__link">Docs</a>
+          <router-link to="/docs" class="footer-list__link">Docs</router-link>
         </li>
         <li class="footer-list">
-          <a href="" class="footer-list__link">Support</a>
+          <router-link to="/support" class="footer-list__link">Support</router-link>
         </li>
         <!-- Github link -->
         <li class="footer-list">
-          <a href="" class="footer-list__link">
+          <a href="https://github.com/JustHumanz/Go-Simp" class="footer-list__link">
             <font-awesome-icon
               :icon="['fab', 'github']"
               class="footer-list__icon fa-fw"
@@ -139,7 +139,7 @@ import "./index.css"
         </li>
         <!-- Discord link -->
         <li class="footer-list">
-          <a href="" class="footer-list__link">
+          <a href="https://discord.gg/ydWC5knbJT" class="footer-list__link">
             <font-awesome-icon
               :icon="['fab', 'discord']"
               class="footer-list__icon fa-fw"
@@ -316,7 +316,7 @@ nav {
   }
 
   &-links {
-    @apply pr-3 md:pr-6 lg:pr-12 xl:pr-20;
+    @apply sm:pr-3 md:pr-6 lg:pr-12 xl:pr-20;
     grid-area: links;
     &__title {
       @apply text-xl font-semibold text-cyan-200;
@@ -324,7 +324,12 @@ nav {
   }
 
   &-lists {
-    @apply flex flex-col w-40;
+    @apply grid;
+
+    @media (min-width: 640px) {
+      @apply grid-flow-col;
+      grid-template-rows: repeat(2, 1fr);
+    }
   }
 
   &-list {
