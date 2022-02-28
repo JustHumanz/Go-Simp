@@ -15,7 +15,7 @@ type MembersPayload struct {
 	Twitter  interface{}
 	Twitch   interface{}
 	Group    database.Group
-	IsLive   []string
+	IsLive   interface{}
 }
 
 type GroupPayload struct {

@@ -48,6 +48,8 @@ func init() {
 		}
 
 		Payload = nil
+		VtuberAgency = nil
+		VtuberMembers = nil
 
 		err = json.Unmarshal(res.ConfigFile, &configfile)
 		if err != nil {
@@ -175,21 +177,39 @@ func init() {
 							return nil
 						}
 					}(),
-					IsLive: func() []string {
-						var tmp []string
+					IsLive: func() interface{} {
+						tmp := make(map[string]interface{})
+
 						if len(isYtLive) > 0 {
 							for _, v := range isYtLive {
-								tmp = append(tmp, "https://www.youtube.com/watch?v="+v.VideoID)
+								tmp["Youtube"] = map[string]interface{}{
+									"IsLive": true,
+									"URL":    "https://www.youtube.com/watch?v=" + v.VideoID,
+								}
 								break
 							}
+						} else {
+							tmp["Youtube"] = nil
 						}
+
 						if isBlLive.ID != 0 {
-							tmp = append(tmp, fmt.Sprintf("https://live.bilibili.com/%d", Member.BiliRoomID))
+							tmp["BiliBili"] = map[string]interface{}{
+								"IsLive": true,
+								"URL":    fmt.Sprintf("https://live.bilibili.com/%d", Member.BiliRoomID),
+							}
+						} else {
+							tmp["BiliBili"] = nil
 						}
 
 						if isTwitchLive.ID != 0 {
-							tmp = append(tmp, fmt.Sprintf("https://www.twitch.tv/%s", Member.TwitchName))
+							tmp["Twitch"] = map[string]interface{}{
+								"IsLive": true,
+								"URL":    fmt.Sprintf("https://www.twitch.tv/%s", Member.TwitchName),
+							}
+						} else {
+							tmp["Twitch"] = nil
 						}
+
 						return tmp
 					}(),
 				})
