@@ -21,7 +21,6 @@ const router = createRouter({
     {
       path: "/vtuber",
       name: "Vtuber List",
-
       component: ListView,
     },
     {
@@ -31,13 +30,12 @@ const router = createRouter({
     },
     {
       path: "/oldvtuber",
-      name: "Vtuber List",
-
+      name: "Old Vtuber List",
       component: OldListView,
     },
     {
       path: "/oldvtuber/:id",
-      name: "Group Vtuber List",
+      name: "Old Group Vtuber List",
       component: OldListView,
     },
     {

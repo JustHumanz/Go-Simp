@@ -1,15 +1,20 @@
+<script setup>
+import FilterMenu from "../components/MenuFilters/FilterMenu.vue"
+</script>
+
 <template>
-  
+  <FilterMenu />
 </template>
 
 <script>
+// Add magnifying-glass icon to font-awesome
+
+
 export default {
-  setup() {
-    
-  },
+  
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
 </style>

@@ -5,7 +5,7 @@ import "./index.css"
 </script>
 
 <template>
-  <nav>
+  <nav class="nav">
     <div class="navbar">
       <router-link to="/" class="navbar-icon"
         ><IconHome class="h-full" />
@@ -88,14 +88,17 @@ import "./index.css"
 
       <div class="navbar-buttons">
         <a
-          class="navbar-buttons__button dashboard"
+          class="navbar-buttons__button dashboard group"
           href="https://web-admin.humanz.moe/login"
           target="_blank"
           ><font-awesome-icon icon="gauge-simple" class="fa-fw" />
-          <span class="navbar-buttons__hover">Dashboard</span>
+          <span
+            class="navbar-buttons__hover group-hover:!opacity-100 group-hover:!scale-100"
+            >Dashboard</span
+          >
         </a>
         <!-- Add Dark mode button -->
-        <a href="" class="navbar-buttons__button dark-mode">
+        <a href="" class="navbar-buttons__button dark-mode group">
           <font-awesome-icon
             icon="moon"
             class="dark-mode-btn__svg fa-fw dark-icon"
@@ -104,7 +107,10 @@ import "./index.css"
             icon="sun"
             class="dark-mode-btn__svg fa-fw light-icon"
           />
-          <span class="navbar-buttons__hover">Dark Mode</span>
+          <span
+            class="navbar-buttons__hover group-hover:!opacity-100 group-hover:!scale-100"
+            >Dark Mode</span
+          >
         </a>
       </div>
     </div>
@@ -125,11 +131,16 @@ import "./index.css"
           <router-link to="/docs" class="footer-list__link">Docs</router-link>
         </li>
         <li class="footer-list">
-          <router-link to="/support" class="footer-list__link">Support</router-link>
+          <router-link to="/support" class="footer-list__link"
+            >Support</router-link
+          >
         </li>
         <!-- Github link -->
         <li class="footer-list">
-          <a href="https://github.com/JustHumanz/Go-Simp" class="footer-list__link">
+          <a
+            href="https://github.com/JustHumanz/Go-Simp"
+            class="footer-list__link"
+          >
             <font-awesome-icon
               :icon="['fab', 'github']"
               class="footer-list__icon fa-fw"
@@ -202,7 +213,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-nav {
+.nav {
   font-family: "Nunito", sans-serif;
   @apply h-16 bg-cyan-500 shadow-md shadow-cyan-500/50 fixed top-0 left-0 w-screen z-[11] flex justify-center;
   .navbar {
@@ -219,7 +230,7 @@ nav {
       @apply block sm:hidden p-3;
     }
 
-    &:focus-within .navbar-items {
+    &-menu:focus-within .navbar-items {
       @apply visible;
     }
 
@@ -257,17 +268,11 @@ nav {
       @apply hidden sm:block;
 
       &__hover {
-        @apply hidden absolute translate-y-0 w-max -left-7 rounded-md px-2 py-1 shadow-md;
+        @apply absolute top-9 w-max -left-7 rounded-md px-2 py-1 shadow-md transition inline-block opacity-0 scale-0;
       }
 
       &__button {
         @apply my-3 py-1 px-2 rounded-md font-semibold text-white cursor-pointer shadow-none transition-shadow hover:shadow-md relative;
-
-        &:hover {
-          .navbar-buttons__hover {
-            @apply inline-block translate-y-8;
-          }
-        }
 
         &.dashboard {
           @apply bg-rose-500 hover:shadow-rose-500/75 mr-2;
@@ -304,7 +309,7 @@ nav {
     "credit credit";
 
   &-page {
-    @apply flex justify-center flex-col sm:px-4 pl-3  md:pl-6 lg:pl-12 xl:pl-20;
+    @apply flex justify-center flex-col sm:px-4 pl-5 md:pl-8 lg:pl-12 xl:pl-20;
     grid-area: page;
 
     &__title {
@@ -316,7 +321,7 @@ nav {
   }
 
   &-links {
-    @apply sm:pr-3 md:pr-6 lg:pr-12 xl:pr-20;
+    @apply pl-5 md:pl-8 lg:pl-12 xl:pl-20;
     grid-area: links;
     &__title {
       @apply text-xl font-semibold text-cyan-200;
