@@ -16,12 +16,20 @@ export default {
     return {
       vtubers: null,
       filters: null,
+      group_id: null,
     }
   },
   async created() {
     this.$watch(
-      () => this.$route.params.id,
+      () => this.$route.params,
+      () => (this.group_id = this.$route.params?.id || null),
+      { immediate: true }
+    )
+
+    this.$watch(
+      () => this.group_id,
       async () => {
+        console.log("Running...")
         this.filters = null
 
         await this.getVtuberData()
@@ -85,6 +93,13 @@ export default {
               flagCode: region.flagCode,
             })
           }
+        })
+
+        // Sort region_data from A to Z with toLowerCase
+        region_data.sort((a, b) => {
+          if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
+          if (a.name.toLowerCase() > b.name.toLowerCase()) return 1
+          return 0
         })
 
         if (vtuber.BiliBili) bilibili = true

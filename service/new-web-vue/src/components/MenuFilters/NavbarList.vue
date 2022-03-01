@@ -1,6 +1,7 @@
 <script setup>
 import GroupsMenu from "./GroupsMenu.vue"
 import FilterMenu from "./FilterMenu.vue"
+import SortMenu from "./SortMenu.vue"
 </script>
 
 <template>
@@ -21,7 +22,7 @@ import FilterMenu from "./FilterMenu.vue"
         <FilterMenu :filters="filters" />
       </li>
       <li class="navbar-filter">
-        <a href="#" class="navbar-filter__link" onclick="return false">Sort</a>
+        <SortMenu :filters="filters" />
       </li>
     </ul>
     <div class="nav-search">
@@ -150,6 +151,10 @@ export default {
     @apply min-w-[1.5rem] w-6 object-contain inline-block drop-shadow-md;
   }
 
+  &__svg {
+    @apply w-6;
+  }
+
   &__span {
     @apply inline-block xs:hidden;
 
@@ -169,7 +174,7 @@ export default {
   }
 
   &-items {
-    @apply absolute flex flex-col bg-blue-400 sm:shadow-center sm:shadow-blue-600/75 sm:rounded-md transition-all overflow-y-auto overflow-x-hidden max-h-[86.5vh] sm:max-h-60 left-0 mt-2 sm:left-auto scale-y-0 origin-top;
+    @apply absolute flex flex-col bg-blue-400 sm:shadow-center sm:shadow-blue-600/75 sm:rounded-md transition-all overflow-y-auto overflow-x-hidden max-h-[86.5vh] sm:max-h-60 left-0 mt-2 sm:mt-0 sm:left-auto scale-y-0 origin-top;
     @media (min-width: 640px) {
       scrollbar-width: none; /* Firefox */
       -ms-overflow-style: none; /* IE 10+ */
@@ -182,17 +187,18 @@ export default {
 
   &-item {
     &__img {
-      @apply w-6 object-contain inline-block drop-shadow-md;
+      @apply min-w-[1.25rem] w-5 object-contain inline-block drop-shadow-md;
     }
 
-    &__span {
-      @apply ml-2;
+    &__svg {
+      @apply w-6;
     }
 
     &__link {
-      @apply flex space-x-1 items-center font-semibold px-2 py-1 hover:bg-blue-600/50 text-white w-screen sm:w-44;
+      @apply flex space-x-2 items-center font-semibold px-2 py-1 hover:bg-blue-600/50 text-white w-screen sm:w-44;
 
-      &.router-link-active {
+      &.router-link-active,
+      &.active {
         @apply bg-blue-600;
       }
 
@@ -224,15 +230,19 @@ export default {
     @apply bg-blue-600/30 flex items-center w-full;
 
     &__link {
-      @apply text-white flex space-x-1 items-center w-full font-semibold px-2 py-1 hover:bg-blue-600/50 pl-7 sm:pl-4;
+      @apply text-white flex space-x-2 items-center w-full font-semibold px-2 py-1 hover:bg-blue-600/50 pl-7 sm:pl-4;
+
+      &.active {
+        @apply bg-blue-600;
+      }
     }
 
     &__img {
       @apply min-w-[1.25rem] w-5 object-contain inline-block;
     }
 
-    &__span {
-      @apply ml-2;
+    &__svg {
+      @apply w-6;
     }
   }
 }

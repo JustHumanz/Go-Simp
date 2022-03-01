@@ -89,17 +89,27 @@ export default {
     return {
       groups: [],
       current_group: null,
+      group_id: null,
     }
   },
   async created() {
     await this.getGroupData()
 
+  this.$watch(
+    () => this.$route.params,
+    () => 
+      this.group_id = this.$route.params?.id || null,
+    { immediate: true }
+  )
+
     this.$watch(
-      () => this.$route.params?.id,
+      () => this.group_id,
       async () => {
+        // if (groups.length > 0) return
         this.current_group = await this.groups.find(
           (group) => group.ID == this.$route.params.id
         )
+
         console.log(`Get Group: ${this.current_group.GroupName}`)
       },
       { immediate: true }

@@ -24,6 +24,7 @@
               query: { ...plat, ...inac, ...sort },
             }"
             class="navbar-submenu-item__link"
+            :class="{ active: !reg.reg }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
@@ -43,6 +44,7 @@
               query: { reg: region.code, ...plat, ...inac, ...sort },
             }"
             class="navbar-submenu-item__link"
+            :class="{ active: reg.reg == region.code }"
           >
             <img
               :src="`/src/assets/flags/${region.flagCode}.svg`"
@@ -230,7 +232,7 @@ export default {
     this.$watch(
       () => this.filters,
       () => {
-this.platform = []
+        this.platform = []
 
         if (this.filters) {
           if (this.filters.youtube) this.platform.push("youtube")
