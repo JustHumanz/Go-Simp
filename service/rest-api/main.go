@@ -49,7 +49,6 @@ func init() {
 		var (
 			VtuberMembersTMP []MembersPayload
 			VtuberAgencyTMP  []GroupPayload
-			PayloadTMP       []*database.Group
 		)
 
 		err = json.Unmarshal(res.ConfigFile, &configfile)
@@ -66,7 +65,7 @@ func init() {
 		database.Start(configfile)
 
 		for _, Agency := range Payload {
-			VtuberAgency = append(VtuberAgency, GroupPayload{
+			VtuberAgencyTMP = append(VtuberAgencyTMP, GroupPayload{
 				ID:        Agency.ID,
 				GroupName: Agency.GroupName,
 				GroupIcon: Agency.IconURL,
@@ -113,7 +112,7 @@ func init() {
 					"isTwitchLive": isTwitchLive.ID,
 				}).Info("Processing data")
 
-				VtuberMembers = append(VtuberMembers, MembersPayload{
+				VtuberMembersTMP = append(VtuberMembersTMP, MembersPayload{
 					ID:       Member.ID,
 					NickName: Member.Name,
 					EnName:   Member.EnName,
@@ -217,7 +216,6 @@ func init() {
 			}
 		}
 
-		Payload = PayloadTMP
 		VtuberAgency = VtuberAgencyTMP
 		VtuberMembers = VtuberMembersTMP
 	}
