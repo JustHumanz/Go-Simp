@@ -1,20 +1,111 @@
 <script setup>
-import FilterMenu from "../components/MenuFilters/FilterMenu.vue"
+import NavbarList from "../components/MenuFilters/NavbarList.vue"
 </script>
 
 <template>
-  <FilterMenu />
+  <NavbarList :filters="filters" />
 </template>
 
 <script>
-// Add magnifying-glass icon to font-awesome
-
+import axios from "axios"
+import Config from "../config.json"
+import regionConfig from "../region.json"
 
 export default {
-  
+  data() {
+    return {
+      vtubers: null,
+      filters: null,
+    }
+  },
+  async created() {
+    this.$watch(
+      () => this.$route.params.id,
+      async () => {
+        this.filters = null
+
+        await this.getVtuberData()
+        this.getFilter()
+      },
+      { immediate: true }
+    )
+  },
+  methods: {
+    async getVtuberData() {
+      const groupId = this.$route.params.id
+        ? { groupid: this.$route.params.id }
+        : {}
+
+      const groupIdExist = {
+        crossDomain: true,
+        params: {
+          ...groupId,
+          live: "true",
+        },
+      }
+
+      const vtuber_data = await axios
+        .get(Config.REST_API2 + "/members/", {
+          // cancelToken: this.cancelVtubers.token,
+          ...groupIdExist,
+        })
+        .then((response) => {
+          // this.cancelVtubers = null
+          return response.data
+        })
+        .catch((error) => {
+          if (!axios.isCancel(error)) this.error_msg = error.message
+        })
+
+      this.vtubers = vtuber_data
+      console.log("Total vtuber members: " + this.vtubers.length)
+    },
+    async getFilter() {
+      // Get region
+      const region_data = []
+
+      let twitch = false
+      let youtube = false
+      let twitter = false
+      let bilibili = false
+      let inactive = false
+
+      await this.vtubers.forEach((vtuber) => {
+        // loop regionConfig
+        regionConfig.forEach((region) => {
+          if (region.code === vtuber.Region) {
+            // check if region already exist
+            if (region_data.find((region) => region.code === vtuber.Region)) {
+              return
+            }
+
+            region_data.push({
+              code: vtuber.Region,
+              name: region.name,
+              flagCode: region.flagCode,
+            })
+          }
+        })
+
+        if (vtuber.BiliBili) bilibili = true
+        if (vtuber.Twitter) twitter = true
+        if (vtuber.Youtube) youtube = true
+        if (vtuber.Twitch) twitch = true
+
+        if (vtuber.Status == "Inactive") inactive = true
+      })
+
+      this.filters = {
+        region: region_data,
+        bilibili,
+        twitter,
+        youtube,
+        twitch,
+        inactive,
+      }
+    },
+  },
 }
 </script>
 
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>
