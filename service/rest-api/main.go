@@ -46,10 +46,11 @@ func init() {
 		if err != nil {
 			log.Fatalf("Error when request payload: %s", err)
 		}
-
-		Payload = nil
-		VtuberAgency = nil
-		VtuberMembers = nil
+		var (
+			VtuberMembersTMP []MembersPayload
+			VtuberAgencyTMP  []GroupPayload
+			PayloadTMP       []*database.Group
+		)
 
 		err = json.Unmarshal(res.ConfigFile, &configfile)
 		if err != nil {
@@ -215,6 +216,10 @@ func init() {
 				})
 			}
 		}
+
+		Payload = PayloadTMP
+		VtuberAgency = VtuberAgencyTMP
+		VtuberMembers = VtuberMembersTMP
 	}
 
 	RequestPayload()
