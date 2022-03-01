@@ -135,11 +135,11 @@ export default {
 }
 
 .navbar-pending {
-  @apply w-[10.5rem] h-[10.5rem] p-3 flex justify-center items-center;
+  @apply w-screen h-[100vw] sm:w-[10.5rem] sm:h-[10.5rem] p-3 flex justify-center items-center;
 }
 
 .navbar-filter {
-  @apply relative;
+  @apply sm:relative;
 
   &__link {
     @apply text-white flex space-x-1 items-center font-semibold px-2 py-1 rounded-md hover:shadow-sm 
@@ -169,7 +169,7 @@ export default {
   }
 
   &-items {
-    @apply absolute flex flex-col bg-blue-400 sm:shadow-center sm:shadow-blue-600/75 sm:rounded-md transition-all sm:overflow-y-auto sm:overflow-x-hidden sm:max-h-60 scale-y-0 origin-top;
+    @apply absolute flex flex-col bg-blue-400 sm:shadow-center sm:shadow-blue-600/75 sm:rounded-md transition-all overflow-y-auto overflow-x-hidden max-h-[86.5vh] sm:max-h-60 left-0 mt-2 sm:left-auto scale-y-0 origin-top;
     @media (min-width: 640px) {
       scrollbar-width: none; /* Firefox */
       -ms-overflow-style: none; /* IE 10+ */
@@ -190,7 +190,7 @@ export default {
     }
 
     &__link {
-      @apply flex space-x-1  items-center font-semibold px-2 py-1 hover:bg-blue-600/50 text-white sm:w-44;
+      @apply flex space-x-1 items-center font-semibold px-2 py-1 hover:bg-blue-600/50 text-white w-screen sm:w-44;
 
       &.router-link-active {
         @apply bg-blue-600;
@@ -224,7 +224,7 @@ export default {
     @apply bg-blue-600/30 flex items-center w-full;
 
     &__link {
-      @apply text-white flex space-x-1 items-center w-full font-semibold px-2 py-1 hover:bg-blue-600/50 pl-4;
+      @apply text-white flex space-x-1 items-center w-full font-semibold px-2 py-1 hover:bg-blue-600/50 pl-7 sm:pl-4;
     }
 
     &__img {
