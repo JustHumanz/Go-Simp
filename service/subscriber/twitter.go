@@ -94,13 +94,16 @@ func CheckTwitter() {
 					log.WithFields(log.Fields{
 						"Past Twitter Follower":    TwFollowDB.TwFollow,
 						"Current Twitter Follower": Twitter.FollowersCount,
-						"Vtuber":                   Name.EnName,
+						"Vtuber":                   Name.Name,
 					}).Info("Update Twitter Follower")
 
-					TwFollowDB.SetMember(Name).SetGroup(Group).
-						UptwFollow(Twitter.FollowersCount).
+					err := TwFollowDB.SetMember(Name).SetGroup(Group).
+						UpdateTwitterFollowes(Twitter.FollowersCount).
 						UpdateState(config.TwitterArt).
 						UpdateSubs()
+					if err != nil {
+						log.Error(err)
+					}
 
 					if Twitter.FollowersCount >= 1000000 {
 						for i := 0; i < 10000001; i += 1000000 {

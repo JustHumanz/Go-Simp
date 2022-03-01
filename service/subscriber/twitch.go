@@ -76,14 +76,17 @@ func CheckTwitch() {
 					log.WithFields(log.Fields{
 						"Past Twitch Follower":    TwitchFollowDB.TwitchFollow,
 						"Current Twitch Follower": TotalFollowers,
-						"Vtuber":                  Name.EnName,
+						"Vtuber":                  Name.Name,
 					}).Info("Update Twitch Follower")
 
-					TwitchFollowDB.SetMember(Name).SetGroup(Group).
-						UpTwitchFollow(TotalFollowers).
-						UpTwitchViwers(TotalViwers).
+					err := TwitchFollowDB.SetMember(Name).SetGroup(Group).
+						UpdateTwitchFollowes(TotalFollowers).
+						UpdateTwitchViewers(TotalViwers).
 						UpdateState(config.TwitchLive).
 						UpdateSubs()
+					if err != nil {
+						log.Error(err)
+					}
 
 					if TotalFollowers >= 1000000 {
 						for i := 0; i < 10000001; i += 1000000 {

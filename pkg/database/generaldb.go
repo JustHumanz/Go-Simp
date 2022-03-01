@@ -179,56 +179,56 @@ func (Member Member) RemoveSubsCache() error {
 	return nil
 }
 
-//UpBiliFollow update bilibili state
-func (Member *MemberSubs) UpBiliFollow(new int) *MemberSubs {
+//UpdateBiliBiliFollowers update bilibili state
+func (Member *MemberSubs) UpdateBiliBiliFollowers(new int) *MemberSubs {
 	Member.BiliFollow = new
 	return Member
 }
 
-//UpBiliVideo Add bilibili Videos
-func (Member *MemberSubs) UpBiliVideo(new int) *MemberSubs {
+//UpdateBiliBiliVideos Add bilibili Videos
+func (Member *MemberSubs) UpdateBiliBiliVideos(new int) *MemberSubs {
 	Member.BiliVideos = new
 	return Member
 }
 
-//UpBiliViews Add views
-func (Member *MemberSubs) UpBiliViews(new int) *MemberSubs {
+//UpdateBiliBiliViewers Add views
+func (Member *MemberSubs) UpdateBiliBiliViewers(new int) *MemberSubs {
 	Member.BiliViews = new
 	return Member
 }
 
-//UpYtSubs update youtube state
-func (Member *MemberSubs) UpYtSubs(new int) *MemberSubs {
+//UpdateYoutubeSubs update youtube state
+func (Member *MemberSubs) UpdateYoutubeSubs(new int) *MemberSubs {
 	Member.YtSubs = new
 	return Member
 }
 
-//UpYtVideo Update youtube videos
-func (Member *MemberSubs) UpYtVideo(new int) *MemberSubs {
+//UpdateYoutubeVideos Update youtube videos
+func (Member *MemberSubs) UpdateYoutubeVideos(new int) *MemberSubs {
 	Member.YtVideos = new
 	return Member
 }
 
-//UpYtViews Update youtube views
-func (Member *MemberSubs) UpYtViews(new int) *MemberSubs {
+//UpdateYoutubeViewers Update youtube views
+func (Member *MemberSubs) UpdateYoutubeViewers(new int) *MemberSubs {
 	Member.YtViews = new
 	return Member
 }
 
-//UptwFollow Update twitter state
-func (Member *MemberSubs) UptwFollow(new int) *MemberSubs {
+//UpdateTwitterFollowes Update twitter state
+func (Member *MemberSubs) UpdateTwitterFollowes(new int) *MemberSubs {
 	Member.TwFollow = new
 	return Member
 }
 
-//UptwitchFollow Update Twitch state
-func (Member *MemberSubs) UpTwitchFollow(new int) *MemberSubs {
+//UpdateTwitchFollowes Update Twitch state
+func (Member *MemberSubs) UpdateTwitchFollowes(new int) *MemberSubs {
 	Member.TwitchFollow = new
 	return Member
 }
 
-//UptwitchViwers Update Twitch state
-func (Member *MemberSubs) UpTwitchViwers(new int) *MemberSubs {
+//UpdateTwitchViewers Update Twitch state
+func (Member *MemberSubs) UpdateTwitchViewers(new int) *MemberSubs {
 	Member.TwitchViews = new
 	return Member
 }
@@ -240,7 +240,7 @@ func (Member *MemberSubs) UpdateSubs() error {
 		if err != nil {
 			return err
 		}
-	} else if Member.State == config.BiliBiliArt {
+	} else if Member.State == config.BiliLive {
 		_, err := DB.Exec(`Update Subscriber set BiliBili_Followers=?,BiliBili_Videos=?,BiliBili_Views=? Where id=? `, Member.BiliFollow, Member.BiliVideos, Member.BiliViews, Member.ID)
 		if err != nil {
 			return err

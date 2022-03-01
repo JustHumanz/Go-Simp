@@ -115,7 +115,7 @@ func CheckYoutube() {
 							log.WithFields(log.Fields{
 								"Past Youtube subscriber":    YtSubsDB.YtSubs,
 								"Current Youtube subscriber": YTSubscriberCount,
-								"Vtuber":                     Member.EnName,
+								"Vtuber":                     Member.Name,
 							}).Info("Update Youtube subscriber")
 							VideoCount, err := strconv.Atoi(Item.Statistics.VideoCount)
 							if err != nil {
@@ -126,12 +126,15 @@ func CheckYoutube() {
 								log.Error(err)
 							}
 
-							YtSubsDB.SetMember(Member).SetGroup(Group).
-								UpYtSubs(YTSubscriberCount).
-								UpYtVideo(VideoCount).
-								UpYtViews(ViewCount).
+							err = YtSubsDB.SetMember(Member).SetGroup(Group).
+								UpdateYoutubeSubs(YTSubscriberCount).
+								UpdateYoutubeVideos(VideoCount).
+								UpdateYoutubeViewers(ViewCount).
 								UpdateState(config.YoutubeLive).
 								UpdateSubs()
+							if err != nil {
+								log.Error(err)
+							}
 
 							if YTSubscriberCount >= 1000000 {
 								for i := 0; i < 10000001; i += 1000000 {
