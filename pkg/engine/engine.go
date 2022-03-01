@@ -705,10 +705,8 @@ func GetRSS(YtID string, proxy bool) ([]string, error) {
 
 	for i := 0; i < len(DataXML.Entry); i++ {
 		VideoID = append(VideoID, DataXML.Entry[i].VideoId)
-		if i == config.GoSimpConf.LimitConf.YoutubeLimit {
-			break
-		}
 	}
+
 	return VideoID, nil
 }
 
