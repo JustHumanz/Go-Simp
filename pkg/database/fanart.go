@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"errors"
@@ -9,6 +10,7 @@ import (
 	"strings"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
+	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -489,4 +491,66 @@ func (p *Member) GetRandomLewd() (*DataFanart, error) {
 		return nil, err
 	}
 	return b, nil
+}
+
+func (Member Member) ScrapTwitterFanart(Scraper *twitterscraper.Scraper, Lewd bool) ([]DataFanart, error) {
+
+	var (
+		FanartList []DataFanart
+	)
+
+	log.WithFields(log.Fields{
+		"Hashtag": Member.TwitterHashtags,
+		"Vtuber":  Member.Name,
+		"Lewd":    Lewd,
+	}).Info("Start curl twitter")
+
+	for tweet := range Scraper.SearchTweets(context.Background(), Member.TwitterHashtags+" AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)", config.GoSimpConf.LimitConf.TwitterFanart) {
+		if tweet.Error != nil {
+			log.Error(tweet.Error)
+			continue
+		}
+
+		for _, TweetHashtag := range tweet.Hashtags {
+			if (strings.EqualFold("#"+TweetHashtag, Member.TwitterHashtags) || strings.EqualFold("#"+TweetHashtag, Member.TwitterLewd)) && !tweet.IsQuoted && !tweet.IsReply && len(tweet.Photos) > 0 {
+				TweetArt := DataFanart{
+					PermanentURL: tweet.PermanentURL,
+					Author:       tweet.Username,
+					AuthorAvatar: func() string {
+						profile, err := Scraper.GetProfile(tweet.Username)
+						if err != nil {
+							log.Error(err)
+						}
+						return strings.Replace(profile.Avatar, "normal.jpg", "400x400.jpg", -1)
+					}(),
+					TweetID: tweet.ID,
+					Text: func() string {
+						return regexp.MustCompile(`(?m)^(.*?)https:\/\/t.co\/.+`).ReplaceAllString(tweet.Text, "${1}$2")
+					}(),
+					Photos: tweet.Photos,
+					Likes:  tweet.Likes,
+					Member: Member,
+					State:  config.TwitterArt,
+				}
+				if tweet.Videos != nil {
+					TweetArt.Videos = tweet.Videos[0].Preview
+				}
+
+				New, err := TweetArt.CheckTweetFanArt()
+				if err != nil {
+					return nil, err
+				}
+
+				if New {
+					FanartList = append(FanartList, TweetArt)
+				}
+			}
+		}
+	}
+
+	if len(FanartList) > 0 {
+		return FanartList, nil
+	} else {
+		return nil, errors.New("still same")
+	}
 }

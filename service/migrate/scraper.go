@@ -26,11 +26,14 @@ func TwitterFanart() {
 		log.Error(err)
 	}
 	for _, Group := range Groups {
-		_, err := engine.CreatePayload(Group, scraper, 100, false)
-		if err != nil {
-			log.WithFields(log.Fields{
-				"Group": Group.GroupName,
-			}).Error(err)
+		for _, Member := range Group.Members {
+			_, err := Member.ScrapTwitterFanart(scraper, false)
+			if err != nil {
+				log.WithFields(log.Fields{
+					"Vtuber": Member.Name,
+					"Agency": Group.GroupName,
+				}).Error(err)
+			}
 		}
 	}
 }
