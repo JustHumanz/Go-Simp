@@ -15,7 +15,6 @@ YoutubeToken = [
 [Limit]
 TwitterFanart = int
 SpaceBiliBili = int
-YoutubeLimit = int
 
 [Sql]
 User = "humanz"
