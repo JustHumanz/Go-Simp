@@ -1,9 +1,13 @@
 <script setup>
 import NavbarList from "../components/MenuFilters/NavbarList.vue"
+import AmeLoading from "../components/AmeComp/AmeLoading.vue"
+import VtuberList from "../components/VtuberList.vue"
 </script>
 
 <template>
   <NavbarList :filters="filters" />
+  <AmeLoading v-if="!vtubers" class="!h-screen" />
+  <VtuberList :vtubers="vtubers" v-if="vtubers" />
 </template>
 
 <script>
@@ -40,12 +44,13 @@ export default {
   },
   methods: {
     async getVtuberData() {
+      this.vtubers = null
+
       const groupId = this.$route.params.id
         ? { groupid: this.$route.params.id }
         : {}
 
       const groupIdExist = {
-        crossDomain: true,
         params: {
           ...groupId,
           live: "true",
@@ -53,7 +58,7 @@ export default {
       }
 
       const vtuber_data = await axios
-        .get(Config.REST_API2 + "/members/", {
+        .get(Config.REST_API + "/v2/members/", {
           // cancelToken: this.cancelVtubers.token,
           ...groupIdExist,
         })
@@ -110,6 +115,8 @@ export default {
         if (vtuber.Status == "Inactive") inactive = true
       })
 
+      console.log("Total region: " + region_data.length)
+
       this.filters = {
         region: region_data,
         bilibili,
@@ -122,5 +129,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss"></style>

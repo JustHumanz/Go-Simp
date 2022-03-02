@@ -22,9 +22,7 @@
       loading="lazy"
       v-else-if="current_group && $route.params.id && $route.params.id != 10"
     />
-    <span
-      class="navbar-filter__span"
-      v-if="!current_group || !$route.params.id"
+    <span class="navbar-filter__span" v-if="!current_group || !$route.params.id"
       >Groups</span
     >
     <span class="navbar-filter__span" v-else>{{
@@ -93,22 +91,26 @@ export default {
     }
   },
   async created() {
+    document.title = "List Vtubers - Vtbot"
     await this.getGroupData()
 
-  this.$watch(
-    () => this.$route.params,
-    () => 
-      this.group_id = this.$route.params?.id || null,
-    { immediate: true }
-  )
+    this.$watch(
+      () => this.$route.params,
+      () => (this.group_id = this.$route.params?.id || null),
+      { immediate: true }
+    )
 
     this.$watch(
       () => this.group_id,
       async () => {
-        // if (groups.length > 0) return
         this.current_group = await this.groups.find(
           (group) => group.ID == this.$route.params.id
         )
+
+        document.title = `${
+          this.current_group?.GroupName.charAt(0).toUpperCase() +
+          this.current_group?.GroupName.slice(1).replace("_", " ")
+        } - List Vtubers`
 
         console.log(`Get Group: ${this.current_group.GroupName}`)
       },

@@ -7,16 +7,16 @@ import SortMenu from "./SortMenu.vue"
 <template>
   <nav class="list-nav">
     <ul class="navbar-filters">
-      <li class="navbar-filter">
+      <li class="navbar-filter group">
         <GroupsMenu />
       </li>
       <li
         class="navbar-filter"
         v-if="
           !filters ||
-          (filters.region?.length > 1 &&
-            platform.length > 1 &&
-            filters.inactive)
+          !(filters.region.length < 2 &&
+            platform.length < 2 &&
+            !filters.inactive)
         "
       >
         <FilterMenu :filters="filters" />
@@ -185,6 +185,13 @@ export default {
     }
   }
 
+  // add class exept sort
+  &.group {
+    .router-link-active {
+      @apply bg-blue-600;
+    }
+  }
+
   &-item {
     &__img {
       @apply min-w-[1.25rem] w-5 object-contain inline-block drop-shadow-md;
@@ -197,7 +204,6 @@ export default {
     &__link {
       @apply flex space-x-2 items-center font-semibold px-2 py-1 hover:bg-blue-600/50 text-white w-screen sm:w-44;
 
-      &.router-link-active,
       &.active {
         @apply bg-blue-600;
       }

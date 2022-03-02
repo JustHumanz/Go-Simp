@@ -26,7 +26,7 @@
               class="filter-submenu-item"
               :class="{ active: groupID == group.ID }"
             >
-              <router-link :to="`/vtuber/${group.ID || ''}`" @click="resetLink">
+              <router-link :to="`/oldvtuber/${group.ID || ''}`" @click="resetLink">
                 <img
                   v-if="group.GroupIcon"
                   :src="group.GroupIcon"

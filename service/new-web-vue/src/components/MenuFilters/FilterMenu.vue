@@ -74,6 +74,7 @@
               query: { ...reg, ...inac, ...sort },
             }"
             class="navbar-submenu-item__link"
+            :class="{ active: !plat.plat }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
@@ -89,6 +90,7 @@
               query: { ...reg, plat: 'yt', ...inac, ...sort },
             }"
             class="navbar-submenu-item__link"
+            :class="{ active: plat.plat == 'yt' }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
@@ -104,6 +106,7 @@
               query: { ...reg, plat: 'tw', ...inac, ...sort },
             }"
             class="navbar-submenu-item__link"
+            :class="{ active: plat.plat == 'tw' }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
@@ -119,6 +122,7 @@
               query: { ...reg, plat: 'bl', ...inac, ...sort },
             }"
             class="navbar-submenu-item__link"
+            :class="{ active: plat.plat == 'bl' }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
@@ -150,6 +154,7 @@
               query: { ...reg, ...plat, ...sort },
             }"
             class="navbar-submenu-item__link"
+            :class="{ active: !inac.inac }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
@@ -165,6 +170,7 @@
               query: { ...reg, ...plat, inac: 'true', ...sort },
             }"
             class="navbar-submenu-item__link"
+            :class="{ active: inac.inac == 'true' }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
