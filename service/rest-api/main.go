@@ -135,6 +135,7 @@ func init() {
 								"LiveID":      Member.BiliRoomID,
 								"TotalVideos": Subs.BiliVideos,
 								"ViwersCount": Subs.BiliViews,
+								"Followers":   Subs.BiliFollow,
 							}
 						} else {
 							return nil
