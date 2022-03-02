@@ -183,7 +183,6 @@ func init() {
 						if len(isYtLive) > 0 {
 							for _, v := range isYtLive {
 								tmp["Youtube"] = map[string]interface{}{
-									"IsLive": true,
 									"URL":    "https://www.youtube.com/watch?v=" + v.VideoID,
 								}
 								break
@@ -194,7 +193,6 @@ func init() {
 
 						if isBlLive.ID != 0 {
 							tmp["BiliBili"] = map[string]interface{}{
-								"IsLive": true,
 								"URL":    fmt.Sprintf("https://live.bilibili.com/%d", Member.BiliRoomID),
 							}
 						} else {
@@ -203,7 +201,6 @@ func init() {
 
 						if isTwitchLive.ID != 0 {
 							tmp["Twitch"] = map[string]interface{}{
-								"IsLive": true,
 								"URL":    fmt.Sprintf("https://www.twitch.tv/%s", Member.TwitchName),
 							}
 						} else {
