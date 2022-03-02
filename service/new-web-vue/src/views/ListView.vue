@@ -42,6 +42,11 @@ export default {
       { immediate: true }
     )
   },
+  computed: {
+    FilteredVtuber() {
+      
+    },
+  },
   methods: {
     async getVtuberData() {
       this.vtubers = null

@@ -28,7 +28,7 @@ export default {
     this.$watch(
       () => this.$route,
       () => {
-        this.limitedVtubers = this.sortingVtubers.slice(0, 55)
+        this.limitedVtubers = this.sortingVtubers.slice(0, 25)
       },
       { immediate: true }
     )
@@ -149,7 +149,7 @@ export default {
 
 <style lang="scss" scoped>
 .vtuber-list {
-  @apply pt-24 pb-4 xs:pt-14 container mx-auto grid gap-[1.5rem];
+  @apply pt-24 pb-4 xs:pt-14 w-full md:w-[80%] lg:w-[75%] mx-auto grid gap-[1.5rem];
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
 }
 </style>
