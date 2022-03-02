@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
@@ -184,7 +183,7 @@ func init() {
 						if len(isYtLive) > 0 {
 							for _, v := range isYtLive {
 								tmp["Youtube"] = map[string]interface{}{
-									"URL":    "https://www.youtube.com/watch?v=" + v.VideoID,
+									"URL": "https://www.youtube.com/watch?v=" + v.VideoID,
 								}
 								break
 							}
@@ -194,7 +193,7 @@ func init() {
 
 						if isBlLive.ID != 0 {
 							tmp["BiliBili"] = map[string]interface{}{
-								"URL":    fmt.Sprintf("https://live.bilibili.com/%d", Member.BiliRoomID),
+								"URL": fmt.Sprintf("https://live.bilibili.com/%d", Member.BiliRoomID),
 							}
 						} else {
 							tmp["BiliBili"] = nil
@@ -202,7 +201,7 @@ func init() {
 
 						if isTwitchLive.ID != 0 {
 							tmp["Twitch"] = map[string]interface{}{
-								"URL":    fmt.Sprintf("https://www.twitch.tv/%s", Member.TwitchName),
+								"URL": fmt.Sprintf("https://www.twitch.tv/%s", Member.TwitchName),
 							}
 						} else {
 							tmp["Twitch"] = nil
@@ -504,65 +503,22 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 	grpID := r.FormValue("groupid")
 	idstr := mux.Vars(r)["memberID"]
 	var Members []MembersPayload
-	var ww sync.WaitGroup
 
 	if idstr != "" {
 		key := strings.Split(idstr, ",")
-		for _, M := range VtuberMembers {
-			ww.Add(1)
-			go func(Member MembersPayload, wg *sync.WaitGroup) {
-				defer wg.Done()
-				for _, MemberStr := range key {
-					MemberInt, err := strconv.Atoi(MemberStr)
-					if err != nil {
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(MessageError{
-							Message: err.Error(),
-							Date:    time.Now(),
-						})
-						w.WriteHeader(http.StatusBadRequest)
-						return
-					}
-					if grpID != "" {
-						GroupID, err := strconv.Atoi(grpID)
-						if err != nil {
-							w.Header().Set("Content-Type", "application/json")
-							json.NewEncoder(w).Encode(MessageError{
-								Message: err.Error(),
-								Date:    time.Now(),
-							})
-							w.WriteHeader(http.StatusBadRequest)
-							return
-						}
-						if region != "" {
-							if GroupID == int(Member.Group.ID) && strings.EqualFold(region, Member.Region) {
-								Members = append(Members, Member)
-							}
-						} else {
-							if GroupID == int(Member.Group.ID) {
-								Members = append(Members, Member)
-							}
-						}
-					} else {
-						if region != "" {
-							if MemberInt == int(Member.ID) && strings.EqualFold(region, Member.Region) {
-								Members = append(Members, Member)
-							}
-						} else {
-							if MemberInt == int(Member.ID) {
-								Members = append(Members, Member)
-							}
-						}
-					}
+
+		for _, Member := range VtuberMembers {
+			for _, MemberStr := range key {
+				MemberInt, err := strconv.Atoi(MemberStr)
+				if err != nil {
+					w.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(w).Encode(MessageError{
+						Message: err.Error(),
+						Date:    time.Now(),
+					})
+					w.WriteHeader(http.StatusBadRequest)
+					return
 				}
-			}(M, &ww)
-		}
-		ww.Wait()
-	} else if grpID != "" {
-		for _, M := range VtuberMembers {
-			ww.Add(1)
-			go func(Member MembersPayload, wg *sync.WaitGroup) {
-				defer wg.Done()
 				if grpID != "" {
 					GroupID, err := strconv.Atoi(grpID)
 					if err != nil {
@@ -583,10 +539,42 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 							Members = append(Members, Member)
 						}
 					}
+				} else {
+					if region != "" {
+						if MemberInt == int(Member.ID) && strings.EqualFold(region, Member.Region) {
+							Members = append(Members, Member)
+						}
+					} else {
+						if MemberInt == int(Member.ID) {
+							Members = append(Members, Member)
+						}
+					}
 				}
-			}(M, &ww)
+			}
 		}
-		ww.Wait()
+	} else if grpID != "" {
+		GroupID, err := strconv.Atoi(grpID)
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(MessageError{
+				Message: err.Error(),
+				Date:    time.Now(),
+			})
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		for _, Member := range VtuberMembers {
+			if region != "" {
+				if GroupID == int(Member.Group.ID) && strings.EqualFold(region, Member.Region) {
+					Members = append(Members, Member)
+				}
+			} else {
+				if GroupID == int(Member.Group.ID) {
+					Members = append(Members, Member)
+				}
+			}
+		}
 	} else if region != "" {
 		for _, v := range VtuberMembers {
 			if strings.EqualFold(region, v.Region) {
