@@ -119,11 +119,29 @@ func init() {
 					Region:   Member.Region,
 					Status:   Member.Status,
 					Fanbase:  Member.Fanbase,
-					Group: database.Group{
-						ID:              Agency.ID,
-						IconURL:         Agency.IconURL,
-						GroupName:       Agency.GroupName,
-						YoutubeChannels: Agency.YoutubeChannels,
+					//Group: database.Group{
+					//	ID:              Agency.ID,
+					//	IconURL:         Agency.IconURL,
+					//	GroupName:       Agency.GroupName,
+					//	YoutubeChannels: Agency.YoutubeChannels,
+					//},
+					Group: map[string]interface{}{
+						"ID":        Agency.ID,
+						"IconURL":   Agency.IconURL,
+						"GroupName": Agency.GroupName,
+						"YoutubeChannels": func() []map[string]interface{} {
+							if Agency.YoutubeChannels != nil {
+								tmp := []map[string]interface{}{}
+								for _, v := range Agency.YoutubeChannels {
+									tmp = append(tmp, map[string]interface{}{
+										"YtChannel": v.YtChannel,
+										"Region":    v.Region,
+									})
+								}
+								return tmp
+							}
+							return nil
+						}(),
 					},
 					BiliBili: func() interface{} {
 						if Member.BiliBiliID != 0 {
@@ -502,7 +520,29 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 	region := r.FormValue("region")
 	grpID := r.FormValue("groupid")
 	idstr := mux.Vars(r)["memberID"]
-	var Members []MembersPayload
+	Members := []MembersPayload{}
+
+	var FixMember = func(Member MembersPayload) MembersPayload {
+		tmp := Member
+		if tmp.BiliBili != nil {
+			delete(tmp.BiliBili.(map[string]interface{}), "TotalVideos")
+			delete(tmp.BiliBili.(map[string]interface{}), "Fanart")
+		}
+
+		if tmp.Youtube != nil {
+			delete(tmp.Youtube.(map[string]interface{}), "TotalVideos")
+		}
+
+		if tmp.Twitter != nil {
+			delete(tmp.Twitter.(map[string]interface{}), "Fanart")
+			delete(tmp.Twitter.(map[string]interface{}), "LewdFanart")
+		}
+
+		delete(tmp.Group.(map[string]interface{}), "Members")
+		delete(tmp.Group.(map[string]interface{}), "YoutubeChannels")
+
+		return tmp
+	}
 
 	if idstr != "" {
 		key := strings.Split(idstr, ",")
@@ -530,12 +570,14 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 						w.WriteHeader(http.StatusBadRequest)
 						return
 					}
+
+					memberAgencyID := Member.Group.(map[string]interface{})
 					if region != "" {
-						if GroupID == int(Member.Group.ID) && strings.EqualFold(region, Member.Region) {
+						if GroupID == int(memberAgencyID["ID"].(int64)) && strings.EqualFold(region, Member.Region) {
 							Members = append(Members, Member)
 						}
 					} else {
-						if GroupID == int(Member.Group.ID) {
+						if GroupID == int(memberAgencyID["ID"].(int64)) {
 							Members = append(Members, Member)
 						}
 					}
@@ -565,13 +607,15 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 		}
 
 		for _, Member := range VtuberMembers {
+			memberAgencyID := Member.Group.(map[string]interface{})
+
 			if region != "" {
-				if GroupID == int(Member.Group.ID) && strings.EqualFold(region, Member.Region) {
-					Members = append(Members, Member)
+				if GroupID == int(memberAgencyID["ID"].(int64)) && strings.EqualFold(region, Member.Region) {
+					Members = append(Members, FixMember(Member))
 				}
 			} else {
-				if GroupID == int(Member.Group.ID) {
-					Members = append(Members, Member)
+				if GroupID == int(memberAgencyID["ID"].(int64)) {
+					Members = append(Members, FixMember(Member))
 				}
 			}
 		}
@@ -582,13 +626,25 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	} else {
-		Members = VtuberMembers
+		for _, v := range VtuberMembers {
+			Members = append(Members, FixMember(v))
+		}
 	}
 
 	if Members != nil {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(Members)
+		err := json.NewEncoder(w).Encode(Members)
+		if err != nil {
+			log.Error(err)
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(MessageError{
+				Message: err.Error(),
+				Date:    time.Now(),
+			})
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 		w.WriteHeader(http.StatusOK)
 	} else {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -605,15 +661,6 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 type MessageError struct {
 	Message string
 	Date    time.Time
-}
-
-func GetMember(i int64) MembersPayload {
-	for _, v := range VtuberMembers {
-		if v.ID == i {
-			return v
-		}
-	}
-	return MembersPayload{}
 }
 
 func LowerCaseURI(h http.Handler) http.Handler {

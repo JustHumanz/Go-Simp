@@ -103,7 +103,7 @@ func GetGroupsYtChannel(i int64) ([]GroupYtChannel, error) {
 		if err != nil {
 			return nil, err
 		}
-		list.ID = i
+		list.GroupID = i
 		Data = append(Data, list)
 	}
 	return Data, nil

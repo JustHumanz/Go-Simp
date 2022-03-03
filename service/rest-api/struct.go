@@ -1,7 +1,5 @@
 package main
 
-import "github.com/JustHumanz/Go-Simp/pkg/database"
-
 type MembersPayload struct {
 	ID       int64
 	NickName string
@@ -14,7 +12,7 @@ type MembersPayload struct {
 	Youtube  interface{}
 	Twitter  interface{}
 	Twitch   interface{}
-	Group    database.Group
+	Group    interface{}
 	IsLive   interface{}
 }
 

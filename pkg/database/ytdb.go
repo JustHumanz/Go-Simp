@@ -304,7 +304,7 @@ func (Member Member) CheckYoutubeVideo(VideoID string) (*LiveStream, error) {
 //Check new video or not
 func (Group GroupYtChannel) CheckYoutubeVideo(VideoID string) (*LiveStream, error) {
 	var Data LiveStream
-	rows, err := DB.Query(`SELECT * FROM Vtuber.GroupVideos Where VideoID=? AND VtuberGroup_id=?`, VideoID, Group.ID)
+	rows, err := DB.Query(`SELECT * FROM Vtuber.GroupVideos Where VideoID=? AND VtuberGroup_id=?`, VideoID, Group.GroupID)
 	if err != nil {
 		return nil, err
 	}
