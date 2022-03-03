@@ -239,7 +239,7 @@ export default {
 
   &-item {
     &__img {
-      @apply min-w-[1.25rem] w-5 object-contain inline-block drop-shadow-md;
+      @apply min-w-[1.25rem] w-5 object-contain inline-block drop-shadow-md rounded-md;
     }
 
     &__svg {
@@ -289,7 +289,7 @@ export default {
     }
 
     &__img {
-      @apply min-w-[1.25rem] w-5 object-contain inline-block;
+      @apply min-w-[1.25rem] w-5 object-contain inline-block rounded-sm;
     }
 
     &__svg {

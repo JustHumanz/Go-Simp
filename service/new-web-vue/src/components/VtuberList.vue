@@ -1,5 +1,6 @@
 <script setup>
 import VtuberCard from "./VtuberCard.vue"
+import AmeLoading from "./AmeComp/AmeLoading.vue"
 </script>
 
 <template>
@@ -10,6 +11,10 @@ import VtuberCard from "./VtuberCard.vue"
       :vtuber="vtuber"
     />
   </section>
+  <AmeLoading
+    v-if="limitedVtubers.length < searchVtubers.length"
+    class="my-4"
+  />
 </template>
 
 <script>
@@ -45,6 +50,8 @@ export default {
       },
       { immediate: true }
     )
+
+    this.ExtendVtuberData()
   },
   computed: {
     filteredVtubers() {
@@ -230,6 +237,23 @@ export default {
       this.nullData = vtuber_data.length === 0
       this.$emit("null-data", this.nullData)
       return vtuber_data
+    },
+  },
+  methods: {
+    ExtendVtuberData() {
+      window.onscroll = () => {
+        let bottomOfWindow =
+          Math.ceil(window.scrollY + window.innerHeight) >=
+          document.body.offsetHeight - 65
+
+        let vtubers_count = this.limitedVtubers.length
+
+        if (bottomOfWindow && vtubers_count < this.searchVtubers.length) {
+          // count vtubers_count, then add 25 more
+          console.log("Extend more data...")
+          this.limitedVtubers = this.searchVtubers.slice(0, vtubers_count + 25)
+        }
+      }
     },
   },
 }

@@ -82,6 +82,19 @@
         />
       </router-link>
     </div>
+    <div class="card-vtuber-name">
+      <router-link
+        :to="`/vtuber/members/${vtuber.ID}`"
+        class="card-vtuber-name__link"
+      >
+        <h4 class="card-vtuber-name__title">
+          {{ vtuber.EnName }}
+        </h4>
+        <span class="card-vtuber-name__nickname">
+          {{ vtuber.NickName }}
+        </span>
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -112,21 +125,35 @@ export default {
 
 <style lang="scss" scoped>
 .card-vtuber {
-  @apply bg-white rounded-md overflow-hidden shadow-sm hover:bg-slate-100 hover:shadow-md hover:scale-110 transition select-none;
+  @apply bg-white rounded-md overflow-hidden shadow-sm hover:bg-slate-100 hover:shadow-md hover:scale-105 transition select-none;
 
   &-image {
     @apply w-full aspect-square bg-smolame bg-cover;
   }
+
+  &-name {
+    &__link {
+      @apply flex flex-col justify-center p-2;
+    }
+
+    &__title {
+      @apply font-bold text-lg tracking-tight leading-6 truncate;
+    }
+
+    &__nickname {
+      @apply text-xs text-stone-600;
+    }
+  }
 }
 
 .tag-vtuber {
-  @apply absolute flex items-center bg-white/80 rounded-br-md overflow-hidden text-xs;
+  @apply absolute flex items-center bg-slate-100/80 rounded-br-md overflow-hidden text-xs;
 
   &-agency {
     @apply px-[0.325rem] flex items-center space-x-1 justify-center h-6;
 
     &__icon {
-      @apply w-5 object-contain drop-shadow-md;
+      @apply w-5 object-contain drop-shadow-md rounded-md;
     }
 
     &__flag {
