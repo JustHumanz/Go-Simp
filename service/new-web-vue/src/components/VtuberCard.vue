@@ -20,13 +20,15 @@
             v-if="vtuber.Status == 'Inactive'"
           />
         </div>
-        <div
+        <a
           class="tag-vtuber-live"
           v-if="
             vtuber.IsLive.Youtube ||
             vtuber.IsLive.Twitch ||
             vtuber.IsLive.BiliBili
           "
+          :href="liveLink"
+          target="_blank"
         >
           <font-awesome-icon
             :icon="['fab', 'youtube']"
@@ -44,7 +46,7 @@
             v-if="vtuber.IsLive.BiliBili"
           />
           <span>LIVE</span>
-        </div>
+        </a>
       </div>
       <router-link
         :to="`/vtuber/members/${vtuber.ID}`"
@@ -120,6 +122,13 @@ export default {
   created() {
     // console.log("Show Vtuber: " + this.vtuber.EnName)
   },
+  computed: {
+    liveLink() {
+      if (this.vtuber.IsLive.Youtube) return this.vtuber.IsLive.Youtube.URL
+      else if (this.vtuber.IsLive.Twitch) return this.vtuber.IsLive.Twitch.URL
+      else return this.vtuber.IsLive.BiliBili.URL
+    }
+  }
 }
 </script>
 
@@ -150,7 +159,7 @@ export default {
   @apply absolute flex items-center bg-slate-100/80 rounded-br-md overflow-hidden text-xs;
 
   &-agency {
-    @apply px-[0.325rem] flex items-center space-x-1 justify-center h-6;
+    @apply px-[0.325rem] flex items-center space-x-2 justify-center h-6;
 
     &__icon {
       @apply w-5 object-contain drop-shadow-md rounded-md;
@@ -159,6 +168,10 @@ export default {
     &__flag {
       @apply h-3 object-contain rounded-sm drop-shadow-md;
     }
+  }
+
+  &>span {
+    @apply hidden;
   }
 
   &-live {
