@@ -9,7 +9,7 @@ import VtuberList from "../components/VtuberList.vue"
     :filters="filters"
     @search="getSearchData"
     :placeholder="phName"
-    :disable_search="null_data || !vtubers"
+    :disable_search="(null_data || !vtubers) && !search_query"
   />
   <AmeLoading v-if="!vtubers" class="!h-screen" />
   <VtuberList
@@ -83,6 +83,14 @@ export default {
         .catch((error) => {
           if (!axios.isCancel(error)) this.error_msg = error.message
         })
+
+      vtuber_data.forEach((vtuber) => {
+        regionConfig.forEach((region) => {
+          if (region.code === vtuber.Region) {
+            vtuber.Regions = region
+          }
+        })
+      })
 
       this.vtubers = vtuber_data
       console.log("Total vtuber members: " + this.vtubers.length)

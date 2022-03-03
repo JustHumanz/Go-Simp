@@ -173,7 +173,7 @@ export default {
 
 <style lang="scss">
 .list-nav {
-  @apply bg-blue-400 fixed top-16 py-2 px-5 w-screen flex flex-wrap-reverse items-center sm:justify-around justify-center z-10;
+  @apply bg-blue-400 fixed top-16 py-2 px-5 w-screen flex flex-wrap-reverse items-center sm:justify-around justify-center z-10 select-none;
 }
 
 .navbar-filters {

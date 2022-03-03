@@ -19,7 +19,6 @@
       :src="current_group.GroupIcon"
       :alt="current_group.GroupName"
       class="navbar-filter__img"
-      loading="lazy"
       v-else-if="current_group && $route.params.id && $route.params.id != 10"
     />
     <span class="navbar-filter__span" v-if="!current_group || !$route.params.id"
@@ -59,7 +58,6 @@
           :src="group.GroupIcon"
           :alt="group.GroupName"
           class="navbar-filter-item__img"
-          loading="lazy"
         />
         <span class="navbar-filter-item__span">
           {{

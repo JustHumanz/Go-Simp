@@ -11,6 +11,7 @@ module.exports = {
         "tokino-sora": "url(/src/assets/tokino-sora.png)",
         mito: "url(/src/assets/mito.png)",
         smolame: "url(/src/assets/smolame.jpg)",
+        rip: "url(/src/assets/rip.svg)",
         "img-none": "none",
       },
 
