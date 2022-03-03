@@ -5,7 +5,7 @@ info:
   title: "Go-simp"
 
 servers:
-  - url: "https://api.humanz.moe/"
+  - url: "https://api.humanz.moe/v2"
 
 tags:
 - name: "groups"
