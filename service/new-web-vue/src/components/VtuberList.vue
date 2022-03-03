@@ -261,7 +261,7 @@ export default {
 
 <style lang="scss" scoped>
 .vtuber-list {
-  @apply pt-24 pb-4 xs:pt-14 w-full md:w-[80%] lg:w-[75%] mx-auto grid gap-[1.5rem];
+  @apply pt-24 pb-4 xs:pt-14 w-[95%] sm:w-[85%] md:w-[80%] lg:w-[75%] mx-auto grid gap-[1.5rem];
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
 }
 </style>
