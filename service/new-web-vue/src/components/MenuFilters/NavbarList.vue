@@ -14,9 +14,11 @@ import SortMenu from "./SortMenu.vue"
         class="navbar-filter"
         v-if="
           !filters ||
-          !(filters.region.length < 2 &&
+          !(
+            filters.region.length < 2 &&
             platform.length < 2 &&
-            !filters.inactive)
+            !filters.inactive
+          )
         "
       >
         <FilterMenu :filters="filters" />
@@ -30,7 +32,13 @@ import SortMenu from "./SortMenu.vue"
         icon="magnifying-glass"
         class="fa-fw fa-md nav-search__svg"
       />
-      <input type="text" class="nav-search__input" />
+      <input
+        type="text"
+        class="nav-search__input"
+        v-model="search_query"
+        :placeholder="placeholder"
+        :disabled="disable_search"
+      />
     </div>
   </nav>
 </template>
@@ -46,6 +54,7 @@ export default {
     return {
       activeMenu: null,
       platform: [],
+      search_query: "",
     }
   },
   props: {
@@ -53,8 +62,19 @@ export default {
       type: Object,
       default: null,
     },
+    placeholder: {
+      type: String,
+      default: "Search Vtuber...",
+    },
+    disable_search: {
+      type: Boolean,
+      default: false,
+    },
   },
   created() {
+    this.getClickMenu()
+    this.unfocusMenu()
+
     this.$watch(
       () => this.filters,
       () => {
@@ -69,60 +89,85 @@ export default {
       { immediate: true }
     )
 
-    document.onclick = (e) => {
-      const classList = [...e.target.classList]
+    this.$watch(
+      () => this.search_query,
+      () => {
+        this.$emit("search", this.search_query)
+      },
+      { immediate: true }
+    )
 
-      if (classList.find((c) => c.includes("navbar-filter__"))) {
-        const navbarFilter =
-          e.target.tagName === "A" ? e.target : e.target.parentElement
-
-        switch (this.activeMenu) {
-          case navbarFilter:
-            this.activeMenu.blur()
-            this.activeMenu = null
-            break
-          case null:
-            this.activeMenu = navbarFilter
-            break
-          default:
-            this.activeMenu = navbarFilter
-            break
-        }
-      } else if (classList.find((c) => c.includes("navbar-filter-item__"))) {
-        const navbarFilterItem =
-          e.target.tagName === "A" ? e.target : e.target.parentElement
-
-        if (!navbarFilterItem.classList.contains("sub-menu")) {
-          this.activeMenu = null
-          navbarFilterItem.blur()
-        }
-      } else if (classList.find((c) => c.includes("navbar-submenu-item__"))) {
-        const navbarSubItem =
-          e.target.tagName === "A" ? e.target : e.target.parentElement
-
-        this.activeMenu = null
-        navbarSubItem.blur()
-      } else {
-        console.log("closing menu")
-        this.activeMenu = null
-      }
-    }
-
-    // when document unfocus
-    document.onblur = (e) => {
-      if (this.activeMenu) {
-        if (this.activeMenu === document.activeElement) this.activeMenu.blur()
-        else if (
-          !document.activeElement.classList.contains("nav-search__input")
+    this.$watch(
+      () => this.$route,
+      (a, b) => {
+        if (
+          a.query.reg !== b.query.reg ||
+          a.query.plat !== b.query.plat ||
+          a.query.inac !== b.query.inac ||
+          a.params.id !== b.params.id
         )
-          document.activeElement.blur()
-
-        console.log("closing menu")
-        this.activeMenu = null
+          this.search_query = ""
       }
-    }
+    )
   },
-  methods: {},
+  methods: {
+    getClickMenu() {
+      document.onclick = (e) => {
+        const classList = [...e.target.classList]
+
+        if (classList.find((c) => c.includes("navbar-filter__"))) {
+          const navbarFilter =
+            e.target.tagName === "A" ? e.target : e.target.parentElement
+
+          switch (this.activeMenu) {
+            case navbarFilter:
+              this.activeMenu.blur()
+              this.activeMenu = null
+              break
+            case null:
+              this.activeMenu = navbarFilter
+              break
+            default:
+              this.activeMenu = navbarFilter
+              break
+          }
+        } else if (classList.find((c) => c.includes("navbar-filter-item__"))) {
+          const navbarFilterItem =
+            e.target.tagName === "A" ? e.target : e.target.parentElement
+
+          if (!navbarFilterItem.classList.contains("sub-menu")) {
+            this.activeMenu = null
+            navbarFilterItem.blur()
+          }
+        } else if (classList.find((c) => c.includes("navbar-submenu-item__"))) {
+          const navbarSubItem =
+            e.target.tagName === "A" ? e.target : e.target.parentElement
+
+          this.activeMenu = null
+          navbarSubItem.blur()
+        } else {
+          if (this.activeMenu === null) return
+          console.log("closing menu")
+          this.activeMenu = null
+        }
+      }
+    },
+    unfocusMenu() {
+      // when document unfocus
+      document.onblur = (e) => {
+        if (this.activeMenu) {
+          if (this.activeMenu === document.activeElement) this.activeMenu.blur()
+          else if (
+            !document.activeElement.classList.contains("nav-search__input")
+          )
+            document.activeElement.blur()
+
+          console.log("closing menu")
+          this.activeMenu = null
+        }
+      }
+    },
+  },
 }
 </script>
 

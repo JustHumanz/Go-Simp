@@ -3,7 +3,7 @@ import VtuberCard from "./VtuberCard.vue"
 </script>
 
 <template>
-  <section class="vtuber-list">
+  <section class="vtuber-list" v-if="!nullData">
     <VtuberCard
       v-for="vtuber in limitedVtubers"
       :key="vtuber.ID"
@@ -18,26 +18,94 @@ export default {
     vtubers: {
       type: Array,
     },
+    search_query: {
+      type: String,
+    },
   },
+  emits: ["getPlaceholder", "null-data"],
   data() {
     return {
       limitedVtubers: [],
+      nullData: false,
     }
   },
   created() {
     this.$watch(
-      () => this.$route,
-      () => {
-        this.limitedVtubers = this.sortingVtubers.slice(0, 25)
+      () => this.$route.query,
+      async () => {
+        this.limitedVtubers = await this.searchVtubers.slice(0, 30)
+      },
+      { immediate: true }
+    )
+
+    this.$watch(
+      () => this.search_query,
+      async () => {
+        this.limitedVtubers = await this.searchVtubers.slice(0, 30)
       },
       { immediate: true }
     )
   },
   computed: {
+    filteredVtubers() {
+      let vtuber_data = this.vtubers
+
+      // Filter vtuber.Region from this.$route.query.reg
+      vtuber_data = vtuber_data.filter((vtuber) => {
+        return this.$route.query.reg
+          ? vtuber.Region == this.$route.query.reg
+          : vtuber
+      })
+
+      // Filter platform inside vtuber
+
+      switch (this.$route.query.plat) {
+        case "yt":
+          // Filter when vtuber_data.Youtube is not null
+          vtuber_data = vtuber_data.filter((vtuber) => {
+            return vtuber.Youtube != null
+          })
+          break
+        case "tw":
+          // Filter when vtuber_data.Twitch is not null
+          vtuber_data = vtuber_data.filter((vtuber) => {
+            return vtuber.Twitch != null
+          })
+          break
+        case "bl":
+          // Filter when vtuber_data.BiliBili is not null
+          vtuber_data = vtuber_data.filter((vtuber) => {
+            return vtuber.BiliBili != null
+          })
+          break
+      }
+
+      // Filter when vtuber_data.Status is "Inactive"
+
+      vtuber_data = vtuber_data.filter((vtuber) => {
+        return this.$route.query.inac == "true"
+          ? vtuber.Status === "Inactive"
+          : vtuber
+      })
+
+      console.log("Total after filtered: " + vtuber_data.length)
+
+      this.$emit(
+        "getPlaceholder",
+        vtuber_data.length > 0
+          ? vtuber_data[Math.floor(Math.random() * vtuber_data.length)][
+              "EnName"
+            ]
+          : ""
+      )
+
+      return vtuber_data
+    },
+
     sortingVtubers() {
       // get query.sort when exist
       const sort = this.$route.query.sort ? this.$route.query.sort : ""
-      let vtuber_data = this.vtubers
+      let vtuber_data = this.filteredVtubers
 
       switch (sort) {
         case "":
@@ -61,7 +129,7 @@ export default {
         case "yt":
           console.log("Sort by Most Youtube Subscriber")
           // Sorting vtuber by Youtube.Subscriber DESC when exist
-          vtuber_data = vtuber_data.sort((a, b) =>{
+          vtuber_data = vtuber_data.sort((a, b) => {
             if (a.Youtube?.Subscriber < b.Youtube?.Subscriber) return 1
             if (a.Youtube?.Subscriber > b.Youtube?.Subscriber) return -1
             return 0
@@ -142,6 +210,26 @@ export default {
         if (a.IsLive.BiliBili && !b.IsLive.BiliBili) return -1
         return 0
       })
+    },
+
+    searchVtubers() {
+      // Filter vtuber.EnName or vtuber.JpName from this.search_query
+      const vtuber_data = this.sortingVtubers.filter((post) => {
+        let EnName = post.EnName.toLowerCase().includes(
+          this.search_query.toLowerCase()
+        )
+        let JpName
+        if (post.JpName != null) {
+          JpName = post.JpName.toLowerCase().includes(
+            this.search_query.toLowerCase()
+          )
+        }
+        return EnName || JpName
+      })
+
+      this.nullData = vtuber_data.length === 0
+      this.$emit("null-data", this.nullData)
+      return vtuber_data
     },
   },
 }

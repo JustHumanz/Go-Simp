@@ -5,9 +5,20 @@ import VtuberList from "../components/VtuberList.vue"
 </script>
 
 <template>
-  <NavbarList :filters="filters" />
+  <NavbarList
+    :filters="filters"
+    @search="getSearchData"
+    :placeholder="phName"
+    :disable_search="null_data || !vtubers"
+  />
   <AmeLoading v-if="!vtubers" class="!h-screen" />
-  <VtuberList :vtubers="vtubers" v-if="vtubers" />
+  <VtuberList
+    :vtubers="vtubers"
+    :search_query="search_query"
+    v-if="vtubers && vtubers.length > 0"
+    @getPlaceholder="getPlaceholder"
+    @null-data="nullData"
+  />
 </template>
 
 <script>
@@ -21,6 +32,9 @@ export default {
       vtubers: null,
       filters: null,
       group_id: null,
+      null_data: false,
+      search_query: "",
+      phName: "",
     }
   },
   async created() {
@@ -33,8 +47,10 @@ export default {
     this.$watch(
       () => this.group_id,
       async () => {
-        console.log("Running...")
+        this.vtubers = null
         this.filters = null
+        this.getPlaceholder()
+        console.log("Running...")
 
         await this.getVtuberData()
         this.getFilter()
@@ -42,15 +58,8 @@ export default {
       { immediate: true }
     )
   },
-  computed: {
-    FilteredVtuber() {
-      
-    },
-  },
   methods: {
     async getVtuberData() {
-      this.vtubers = null
-
       const groupId = this.$route.params.id
         ? { groupid: this.$route.params.id }
         : {}
@@ -130,6 +139,19 @@ export default {
         twitch,
         inactive,
       }
+    },
+    getSearchData(q) {
+      this.search_query = q
+    },
+
+    getPlaceholder(name = "") {
+      if (!this.vtubers || name == "") this.phName = "Search Vtubers..."
+      else this.phName = name
+    },
+
+    nullData(bool) {
+      this.null_data = bool
+      console.log(this.null_data)
     },
   },
 }
