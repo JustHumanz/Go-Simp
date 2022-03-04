@@ -2,6 +2,7 @@
 import NavbarList from "../components/MenuFilters/NavbarList.vue"
 import AmeLoading from "../components/AmeComp/AmeLoading.vue"
 import VtuberList from "../components/VtuberList.vue"
+import AmeError from "../components/AmeComp/AmeError.vue"
 </script>
 
 <template>
@@ -11,7 +12,35 @@ import VtuberList from "../components/VtuberList.vue"
     :placeholder="phName"
     :disable_search="(null_data || !vtubers) && !search_query"
   />
-  <AmeLoading v-if="!vtubers" class="!h-screen" />
+  <AmeLoading v-if="!vtubers && error_msg === ''" class="!h-screen" />
+  <AmeError
+    v-if="null_data && !search_query"
+    type="error"
+    img="laptop"
+    title="Your filter is incorrect"
+    :description="`Check your filter. Or when your vtuber is not available, request ${link_request}`"
+  />
+  <AmeError
+    v-if="null_data && search_query"
+    type="warning"
+    img="bugs"
+    title="You find worng keyword"
+    :description="`When your vtuber/member is not here, your can request ${link_request}, or try another keyword`"
+  />
+  <AmeError
+    v-if="!vtubers && error_msg === `Request failed with status code 404`"
+    type="error"
+    img="laptop"
+    title="Your group is not available"
+    :description="`Check another available group, or you can request a group ${link_request}`"
+  />
+  <AmeError
+    v-if="!vtubers && error_msg !== `Request failed with status code 404`"
+    type="error"
+    img="lazer"
+    title="Something wrong when get request"
+    :description="`Waiting for server response, restart your WiFi, or try again later`"
+  />
   <VtuberList
     :vtubers="vtubers"
     :search_query="search_query"
@@ -35,6 +64,7 @@ export default {
       null_data: false,
       search_query: "",
       phName: "",
+      error_msg: "",
     }
   },
   async created() {
@@ -49,14 +79,21 @@ export default {
       async () => {
         this.vtubers = null
         this.filters = null
+        this.error_msg = ""
         this.getPlaceholder()
         console.log("Running...")
 
         await this.getVtuberData()
+        if (this.error_msg) return
         this.getFilter()
       },
       { immediate: true }
     )
+  },
+  computed: {
+    link_request() {
+      return `<a href="https://github.com/JustHumanz/Go-Simp/issues/new?assignees=JustHumanz&labels=enhancement&template=add_vtuber.md&title=Add+%5BVtuber+Nickname%5D+from+%5BGroup%2FAgency%5D" target="_blank" class="ame-error-text__link">here</a>`
+    },
   },
   methods: {
     async getVtuberData() {
@@ -83,6 +120,8 @@ export default {
         .catch((error) => {
           if (!axios.isCancel(error)) this.error_msg = error.message
         })
+
+      if (!vtuber_data) return
 
       vtuber_data.forEach((vtuber) => {
         regionConfig.forEach((region) => {
@@ -159,7 +198,6 @@ export default {
 
     nullData(bool) {
       this.null_data = bool
-      console.log(this.null_data)
     },
   },
 }

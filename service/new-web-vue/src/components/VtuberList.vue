@@ -244,7 +244,7 @@ export default {
       window.onscroll = () => {
         let bottomOfWindow =
           Math.ceil(window.scrollY + window.innerHeight) >=
-          document.body.offsetHeight - 65
+          document.body.offsetHeight - 145
 
         let vtubers_count = this.limitedVtubers.length
 

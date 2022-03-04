@@ -3,6 +3,7 @@
   <ul class="navbar-filter-items">
     <li class="navbar-pending" v-if="!filters">
       <img
+        draggable="false"
         :src="`/src/assets/loading/${Math.floor(Math.random() * 7)}.gif`"
         class="navbar-pending__img"
       />
@@ -47,6 +48,7 @@
             :class="{ active: reg.reg == region.code }"
           >
             <img
+              draggable="false"
               :src="`/src/assets/flags/${region.flagCode}.svg`"
               :alt="region.name"
               class="navbar-submenu-item__img"

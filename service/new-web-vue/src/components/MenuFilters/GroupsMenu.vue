@@ -16,6 +16,7 @@
       v-else-if="current_group && $route.params.id == 10"
     />
     <img
+      draggable="false"
       :src="current_group.GroupIcon"
       :alt="current_group.GroupName"
       class="navbar-filter__img"
@@ -34,6 +35,7 @@
   <ul class="navbar-filter-items peer-focus-within:scale-y-100">
     <li class="navbar-pending" v-if="groups.length < 1">
       <img
+        draggable="false"
         :src="`/src/assets/loading/${Math.floor(Math.random() * 7)}.gif`"
         class="navbar-pending__img"
       />
@@ -54,6 +56,7 @@
           v-else-if="group.ID && group.ID == 10"
         />
         <img
+          draggable="false"
           v-else-if="group.ID && group.ID != 10"
           :src="group.GroupIcon"
           :alt="group.GroupName"
@@ -105,12 +108,20 @@ export default {
           (group) => group.ID == this.$route.params.id
         )
 
-        document.title = `${
-          this.current_group?.GroupName.charAt(0).toUpperCase() +
-          this.current_group?.GroupName.slice(1).replace("_", " ")
-        } - List Vtubers`
+        if (this.current_group) {
+          document.title = `${
+            this.current_group?.GroupName.charAt(0).toUpperCase() +
+            this.current_group?.GroupName.slice(1).replace("_", " ")
+          } - List Vtubers`
+        } else {
+          document.title = "List Vtubers - Vtbot"
+        }
 
-        console.log(`Get Group: ${this.current_group.GroupName}`)
+        if (this.current_group) {
+          console.log(`Get Group: ${this.current_group.GroupName}`)
+        } else {
+          console.log(`Cannot get group`)
+        }
       },
       { immediate: true }
     )

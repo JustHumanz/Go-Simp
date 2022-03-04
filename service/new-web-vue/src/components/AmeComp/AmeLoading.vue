@@ -1,6 +1,7 @@
 <template>
   <section class="ame-loading">
     <img
+      draggable="false"
       :src="`/src/assets/loading/${Math.floor(Math.random() * 7)}.gif`"
       class="ame-loading__img"
     />
