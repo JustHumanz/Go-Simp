@@ -123,7 +123,6 @@ export default {
         }
 
         if (classList.find((c) => c.includes("navbar-filter__"))) {
-          console.log(classList)
           const navbarFilter =
             e.target.tagName === "A"
               ? e.target
@@ -145,7 +144,11 @@ export default {
           }
         } else if (classList.find((c) => c.includes("navbar-filter-item__"))) {
           const navbarFilterItem =
-            e.target.tagName === "A" ? e.target : e.target.parentElement
+            e.target.tagName === "A"
+              ? e.target
+              : e.target.tagName === "path"
+              ? e.target.parentElement.parentElement
+              : e.target.parentElement
 
           if (!navbarFilterItem.classList.contains("sub-menu")) {
             this.activeMenu = null
@@ -153,7 +156,10 @@ export default {
           }
         } else if (classList.find((c) => c.includes("navbar-submenu-item__"))) {
           const navbarSubItem =
-            e.target.tagName === "A" ? e.target : e.target.parentElement
+            e.target.tagName === "A" ?  e.target
+              : e.target.tagName === "path"
+              ? e.target.parentElement.parentElement
+              : e.target.parentElement
 
           this.activeMenu = null
           navbarSubItem.blur()
