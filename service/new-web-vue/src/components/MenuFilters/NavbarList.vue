@@ -7,7 +7,8 @@ import SortMenu from "./SortMenu.vue"
 <template>
   <nav class="list-nav">
     <ul class="navbar-filters">
-      <li class="navbar-filter group">
+      <li class="navbar-filter group"
+      :class="{disabled: disabled}">
         <GroupsMenu />
       </li>
       <li
@@ -67,6 +68,10 @@ export default {
       default: "Search Vtuber...",
     },
     disable_search: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
       type: Boolean,
       default: false,
     },
@@ -241,7 +246,7 @@ export default {
     }
   }
 
-  &:focus-within {
+  &:not(.disabled):focus-within {
     .navbar-filter__link {
       @apply shadow-md;
     }
