@@ -100,6 +100,7 @@
           <font-awesome-icon
             :icon="['fab', 'youtube']"
             class="fa-fw"
+            rel="noopener noreferrer"
             v-if="vtuber.Youtube"
           />
         </a>

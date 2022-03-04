@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router"
 import HomeView from "../views/HomeView.vue"
 import ListView from "../views/ListView.vue"
-import OldListView from "../views/OldListView.vue"
 import VtuberView from "../views/VtuberView.vue"
 import DocsView from "../views/DocsView.vue"
 import SupportView from "../views/SupportView.vue"
@@ -27,16 +26,6 @@ const router = createRouter({
       path: "/vtuber/:id",
       name: "Group Vtuber List",
       component: ListView,
-    },
-    {
-      path: "/oldvtuber",
-      name: "Old Vtuber List",
-      component: OldListView,
-    },
-    {
-      path: "/oldvtuber/:id",
-      name: "Old Group Vtuber List",
-      component: OldListView,
     },
     {
       path: "/vtuber/members/:id",
