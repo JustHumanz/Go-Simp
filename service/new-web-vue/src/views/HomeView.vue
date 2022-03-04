@@ -1,58 +1,94 @@
 <template>
-  <section class="header-section">
-    <div class="header">
-      <h4>Welcome to Vtbot</h4>
-      <p>Vtbot is a scheduler and sharing fan-art for vtubers.</p>
-      <a href="/invite" target="_blank" class="btn-invite"> ADD ME! </a>
-      <div class="text-orange-200">
-        <a
-          href="https://github.com/JustHumanz/Go-Simp"
-          target="_blank"
-          class="link-source"
-        >
-          Source Code
-        </a>
-        |
-        <a
-          href="https://discord.gg/ydWC5knbJT"
-          target="_blank"
-          class="link-source"
-        >
-          Join Server
-        </a>
-      </div>
+  <header class="header">
+    <div class="header-image">
+      <img src="/src/assets/vtuber.png" alt="" class="header-image__img" />
+    </div>
+    <h3 class="header-title">Friend for get notification from vtuber</h3>
+    <a href="" class="header-button">
+      <font-awesome-icon :icon="['fab', 'discord']" class="fa-fw" />
+      Add to Discord
+    </a>
+    <div class="header-links">
+      <a href="" class="header-links__link">
+        <font-awesome-icon :icon="['fab', 'discord']" class="fa-fw" />
+        Discord Server
+      </a>
+      <span class="header-links__separator">|</span>
+      <a href="" class="header-links__link">
+        <font-awesome-icon :icon="['fab', 'github']" class="fa-fw" />
+        Source Code
+      </a>
+    </div>
+  </header>
+  <section class="feature">
+    <div class="feature-image">
+      <img
+        src="/src/assets/graphics/SVG/live_light.svg"
+        alt=""
+        class="img-light"
+      />
+      <img
+        src="/src/assets/graphics/SVG/live_dark.svg"
+        alt=""
+        class="img-dark"
+      />
+    </div>
+    <div class="feature-content">
+      <h3 class="feature-content__title">Live Notification</h3>
+      <p class="feature-content__description">
+        Get notification when vtuber is live.
+      </p>
     </div>
   </section>
-  <section class="agency-section">
-    <div class="section">
-      <h4>remember your talent in action</h4>
-      <p>Scheduling live and video over 300+ vtubers and counting</p>
+  <section class="feature reverse">
+    <div class="feature-image">
+      <img
+        src="/src/assets/graphics/SVG/fanart_light.svg"
+        alt=""
+        class="img-light"
+      />
+      <img
+        src="/src/assets/graphics/SVG/fanart_dark.svg"
+        alt=""
+        class="img-dark"
+      />
+    </div>
+    <div class="feature-content">
+      <h3 class="feature-content__title">Fan Art</h3>
+      <p class="feature-content__description">
+        Get fan art from vtuber.
+      </p>
     </div>
   </section>
-  <section class="member-section">
-    <div class="section">
-      <h4>Look a gift for fans</h4>
-      <p>There are also fanart and h****i made for vtuber members</p>
+  <section class="feature reverse">
+    <div class="feature-image">
+      <img
+        src="/src/assets/graphics/SVG/milestone_light.svg"
+        alt=""
+        class="img-light"
+      />
+      <img
+        src="/src/assets/graphics/SVG/milestone_dark.svg"
+        alt=""
+        class="img-dark"
+      />
     </div>
-  </section>
-  <section class="quest-section">
-    <div class="section">
-      <h4>There is something missing?</h4>
-      <p>
-        You can request your best talent on
-        <a href="https://discord.gg/ydWC5knbJT" target="_blank">Discord</a>
-        or
-        <a
-          href="https://github.com/JustHumanz/Go-Simp/issues/new/choose"
-          target="_blank"
-          >Github</a
-        >
+    <div class="feature-content">
+      <h3 class="feature-content__title">Milestone</h3>
+      <p class="feature-content__description">
+        Get notification when vtuber has new milestone.
       </p>
     </div>
   </section>
 </template>
 
 <script>
+// add discord and github in font awesome
+import { library } from "@fortawesome/fontawesome-svg-core"
+import { faDiscord, faGithub } from "@fortawesome/free-brands-svg-icons"
+
+library.add(faDiscord, faGithub)
+
 export default {
   async created() {
     this.$watch(
@@ -67,77 +103,71 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.header-section {
-  @apply h-full py-52 bg-img-none md:bg-kizuna-ai bg-no-repeat bg-ipad-header xl:bg-post-default;
+<style lang="scss" scoped>
+.header {
+  @apply bg-indigo-300 h-[90vh] px-12 flex flex-col items-center justify-center;
 
-  .header {
-    @apply flex flex-col items-center justify-center ml-0 md:ml-64 lg:ml-[25rem];
+  &-image {
+    @apply overflow-hidden h-[19vmax] flex items-start drop-shadow-sm;
 
-    h4 {
-      @apply text-4xl font-semibold text-center uppercase;
+    &__img {
+      @apply w-[35vmax] object-contain;
+    }
+  }
+
+  &-title {
+    @apply mt-3 text-center text-[3vmax] font-bold uppercase text-white tracking-tight;
+  }
+
+  &-button {
+    @apply mt-2 bg-indigo-500 text-white text-lg font-bold rounded-md px-4 py-2 shadow-sm shadow-indigo-600/50 hover:shadow-lg transition-shadow;
+  }
+
+  &-links {
+    @apply mt-3 flex justify-center;
+
+    &__link {
+      @apply text-white hover:text-indigo-600 text-sm font-thin tracking-tight;
     }
 
-    p {
-      @apply text-xl text-center font-light text-gray-600;
-    }
-
-    .btn-invite {
-      @apply bg-orange-400 my-3 py-2 px-4 text-xl rounded-md font-semibold text-white cursor-pointer shadow-none transition-shadow hover:shadow-md hover:shadow-orange-400/75;
-    }
-    .link-source {
-      @apply text-sm text-center text-gray-500 hover:text-gray-700 cursor-pointer;
+    &__separator {
+      @apply mx-1 text-indigo-500 text-sm font-thin tracking-tight;
     }
   }
 }
 
-.agency-section {
-  @apply h-full py-52 bg-sky-300 bg-img-none md:bg-tokino-sora bg-no-repeat bg-ipad-agency xl:bg-right-top;
+.feature {
+  @apply h-[90vh] flex justify-center md:justify-evenly items-center flex-col md:flex-row;
 
-  .section {
-    @apply flex flex-col items-center justify-center mr-0 md:mr-64 lg:mr-[27rem];
+  &-image {
+    @apply w-[37vmax] object-contain rounded-xl shadow-sm hover:shadow-md transition-all hover:scale-105 overflow-hidden;
+  }
 
-    h4 {
-      @apply text-4xl font-semibold text-center uppercase px-14 lg:px-0;
+  &.reverse {
+    @apply flex-col md:flex-row-reverse;
+    .feature-content {
+      @apply md:text-left;
+    }
+  }
+
+  &-content {
+    @apply flex flex-col max-w-[37vmax] mt-12 md:mt-0 text-center md:text-right;
+
+    &__title {
+      @apply text-3xl font-bold tracking-tight;
     }
 
-    p {
-      @apply text-xl text-center font-light text-gray-600;
+    &__description {
+      @apply text-lg;
     }
   }
 }
-.member-section {
-  @apply h-full py-52 bg-pink-300 bg-img-none md:bg-mito bg-no-repeat bg-ipad-header xl:bg-post-default;
 
-  .section {
-    @apply flex flex-col items-center justify-center  ml-0 md:ml-64 lg:ml-[26rem];
-
-    h4 {
-      @apply text-4xl font-semibold text-center uppercase;
-    }
-
-    p {
-      @apply text-xl text-center font-light text-gray-600;
-    }
-  }
+.img-light {
+  @apply dark:hidden;
 }
-.quest-section {
-  @apply h-full py-52 bg-orange-300 bg-img-none;
 
-  .section {
-    @apply flex flex-col items-center justify-center;
-
-    h4 {
-      @apply text-4xl font-semibold text-center uppercase;
-    }
-
-    p {
-      @apply text-xl text-center font-light text-gray-600;
-
-      a {
-        @apply text-gray-500 hover:text-gray-700 cursor-pointer;
-      }
-    }
-  }
+.img-dark {
+  @apply hidden dark:block;
 }
 </style>

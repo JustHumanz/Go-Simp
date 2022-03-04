@@ -7,9 +7,6 @@ module.exports = {
         xs: "454px",
       },
       backgroundImage: {
-        "kizuna-ai": "url(/src/assets/kizuna-ai.png)",
-        "tokino-sora": "url(/src/assets/tokino-sora.png)",
-        mito: "url(/src/assets/mito.png)",
         smolame: "url(/src/assets/smolame.jpg)",
         rip: "url(/src/assets/rip.svg)",
         "img-none": "none",
@@ -36,7 +33,7 @@ module.exports = {
       colors: {
         youtube: "#ff0000",
         bilibili: "#00a1d6",
-        twitch: "#6441a5",
+        twitch: "#a970ff",
         twitter: "#1da1f2",
         pixiv: "#0096fa",
       },
