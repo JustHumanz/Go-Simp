@@ -90,7 +90,7 @@ func BilGet(Payload map[string]interface{}) ([]LiveStream, string, error) {
 		defer rows.Close()
 
 		for rows.Next() {
-			err = rows.Scan(&list.ID, &list.Member.BiliRoomID, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.Viewers, &list.End, &list.Member.ID)
+			err = rows.Scan(&list.ID, &list.Member.BiliBiliRoomID, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.Viewers, &list.End, &list.Member.ID)
 			if err != nil {
 				return nil, Key, err
 			}

@@ -387,7 +387,7 @@ var (
 									SetDescription(LiveData.Desc).
 									SetThumbnail(Member.BiliBiliAvatar).
 									SetImage(LiveData.Thumb).
-									SetURL("https://live.bilibili.com/"+strconv.Itoa(Member.BiliRoomID)).
+									SetURL("https://live.bilibili.com/"+strconv.Itoa(Member.BiliBiliRoomID)).
 									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
 									AddField("Online", engine.NearestThousandFormat(float64(view))).
 									SetColor(Color).
@@ -400,7 +400,7 @@ var (
 									SetDescription(LiveData.Desc).
 									SetThumbnail(LiveData.Member.BiliBiliAvatar).
 									SetImage(LiveData.Thumb).
-									SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveData.Member.BiliRoomID)).
+									SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveData.Member.BiliBiliRoomID)).
 									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
 									AddField("Online", engine.NearestThousandFormat(float64(view))).
 									SetColor(Color).
@@ -449,7 +449,7 @@ var (
 									SetDescription(LiveData.Desc).
 									SetThumbnail(Member.BiliBiliAvatar).
 									SetImage(LiveData.Thumb).
-									SetURL("https://live.bilibili.com/"+strconv.Itoa(Member.BiliRoomID)).
+									SetURL("https://live.bilibili.com/"+strconv.Itoa(Member.BiliBiliRoomID)).
 									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
 									AddField("Online", engine.NearestThousandFormat(float64(view))).
 									SetColor(Color).
@@ -462,7 +462,7 @@ var (
 									SetDescription(LiveData.Desc).
 									SetThumbnail(LiveData.Member.BiliBiliAvatar).
 									SetImage(LiveData.Thumb).
-									SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveData.Member.BiliRoomID)).
+									SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveData.Member.BiliBiliRoomID)).
 									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
 									AddField("Online", engine.NearestThousandFormat(float64(view))).
 									SetColor(Color).
@@ -886,7 +886,7 @@ var (
 						if gacha() {
 							Avatar = v2.YoutubeAvatar
 						} else {
-							if v2.BiliRoomID != 0 {
+							if v2.BiliBiliRoomID != 0 {
 								Avatar = v2.BiliBiliAvatar
 							} else {
 								Avatar = v2.YoutubeAvatar
@@ -1004,8 +1004,8 @@ var (
 			One := true
 			for _, v := range *GroupsPayload {
 				for _, v2 := range v.Members {
-					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.GroupID) && GroupID != 0) {
-						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.GroupID) {
+					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
+						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
 							if (Reminder > 60 && Reminder < 10) && Reminder != 0 {
 								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 									Type: discordgo.InteractionResponseChannelMessageWithSource,
@@ -1116,8 +1116,8 @@ var (
 
 			for _, v := range *GroupsPayload {
 				for _, v2 := range v.Members {
-					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.GroupID) && GroupID != 0) {
-						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.GroupID) {
+					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
+						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
 
 							User := &database.UserStruct{
 								DiscordID:       i.Member.User.ID,
@@ -1249,8 +1249,8 @@ var (
 			One := true
 			for _, v := range *GroupsPayload {
 				for _, v2 := range v.Members {
-					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.GroupID) && GroupID != 0) {
-						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.GroupID) {
+					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
+						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
 							if (Reminder > 60 && Reminder < 10) && Reminder != 0 {
 								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 									Type: discordgo.InteractionResponseChannelMessageWithSource,
@@ -1380,8 +1380,8 @@ var (
 
 			for _, v := range *GroupsPayload {
 				for _, v2 := range v.Members {
-					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.GroupID) && GroupID != 0) {
-						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.GroupID) {
+					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
+						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
 
 							User := &database.UserStruct{
 								DiscordID:       RoleState.ID,

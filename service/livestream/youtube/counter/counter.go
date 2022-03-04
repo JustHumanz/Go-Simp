@@ -350,8 +350,8 @@ func (i *checkYtJob) Run() {
 											SetState(config.YoutubeLive).
 											UpdateYt(config.LiveStatus)
 
-										if Member.BiliRoomID != 0 {
-											LiveBili, err := engine.GetRoomStatus(Member.BiliRoomID)
+										if Member.BiliBiliRoomID != 0 {
+											LiveBili, err := engine.GetRoomStatus(Member.BiliBiliRoomID)
 											if err != nil {
 												log.Error(err)
 											}

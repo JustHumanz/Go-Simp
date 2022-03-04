@@ -157,10 +157,10 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 				Tag := strings.ToLower(tag.(string))
 				GrpName := strings.ToLower(FixFanArt.Group.GroupName)
 				HashTag := FixFanArt.Member.EnName
-				if FixFanArt.Member.TwitterHashtags != "" {
-					HashTag = FixFanArt.Member.TwitterHashtags[1:]
-				} else if FixFanArt.Member.BiliBiliHashtags != "" {
-					HashTag = FixFanArt.Member.BiliBiliHashtags[1 : len(FixFanArt.Member.BiliBiliHashtags)-1]
+				if FixFanArt.Member.TwitterHashtag != "" {
+					HashTag = FixFanArt.Member.TwitterHashtag[1:]
+				} else if FixFanArt.Member.BiliBiliHashtag != "" {
+					HashTag = FixFanArt.Member.BiliBiliHashtag[1 : len(FixFanArt.Member.BiliBiliHashtag)-1]
 				}
 
 				match, _ := regexp.MatchString("("+strings.ToLower(HashTag)+"|"+GrpName+")", Tag)

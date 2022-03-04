@@ -132,11 +132,37 @@ type Statistics struct {
 	VideoCount            string `json:"videoCount"`
 }
 type Items struct {
-	Kind       string     `json:"kind"`
-	Etag       string     `json:"etag"`
-	ID         string     `json:"id"`
-	Snippet    Snippet    `json:"snippet"`
-	Statistics Statistics `json:"statistics"`
+	Kind             string           `json:"kind"`
+	Etag             string           `json:"etag"`
+	ID               string           `json:"id"`
+	Snippet          Snippet          `json:"snippet"`
+	Statistics       Statistics       `json:"statistics"`
+	Brandingsettings Brandingsettings `json:"brandingSettings"`
+}
+
+type YtChannel struct {
+	Kind     string   `json:"kind"`
+	Etag     string   `json:"etag"`
+	Pageinfo Pageinfo `json:"pageInfo"`
+	Items    []Items  `json:"items"`
+}
+type Pageinfo struct {
+	Totalresults   int `json:"totalResults"`
+	Resultsperpage int `json:"resultsPerPage"`
+}
+type Channel struct {
+	Title               string `json:"title"`
+	Description         string `json:"description"`
+	Keywords            string `json:"keywords"`
+	Unsubscribedtrailer string `json:"unsubscribedTrailer"`
+	Country             string `json:"country"`
+}
+type Image struct {
+	Bannerexternalurl string `json:"bannerExternalUrl"`
+}
+type Brandingsettings struct {
+	Channel Channel `json:"channel"`
+	Image   Image   `json:"image"`
 }
 
 func (Data Subs) Default() Subs {

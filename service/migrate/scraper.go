@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -119,45 +121,20 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 	}
 }
 
-func (Data Youtube) YtAvatar() string {
-	var (
-		datasubs Subs
-	)
+func (Data Youtube) GetYtInfo() (YtChannel, error) {
 	if Data.YtID != "" {
-		body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=snippet&id="+Data.YtID+"&key="+*YoutubeToken, nil)
+		var ChannelData YtChannel
+		body, err := network.Curl(fmt.Sprintf("https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics,brandingSettings&id=%s&key=%s", Data.YtID, *YoutubeToken), nil)
 		if err != nil {
-			log.Error(err)
+			return YtChannel{}, err
 		}
-		err = json.Unmarshal(body, &datasubs)
+		err = json.Unmarshal(body, &ChannelData)
 		if err != nil {
-			log.Error(err)
+			return YtChannel{}, err
 		}
-
-		for _, v := range datasubs.Items {
-			return v.Snippet.Thumbnails.High.URL
-		}
-		return ""
+		return ChannelData, nil
 	} else {
-		return ""
-	}
-}
-
-func (Data Youtube) GetYtSubs() Subs {
-	var (
-		datasubs Subs
-	)
-	if Data.YtID != "" {
-		body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+Data.YtID+"&key="+*YoutubeToken, nil)
-		if err != nil {
-			log.Error(err)
-		}
-		err = json.Unmarshal(body, &datasubs)
-		if err != nil {
-			log.Error(err)
-		}
-		return datasubs
-	} else {
-		return datasubs.Default()
+		return YtChannel{}, errors.New("nil yt channel id")
 	}
 }
 
@@ -219,35 +196,42 @@ func (Data BiliBili) GetBiliFolow(Vtuber string) BiliStat {
 	}
 }
 
-func (Data Twitter) GetTwitterFollow() (int, error) {
+func (Data Twitter) GetTwitterInfo() (twitterscraper.Profile, error) {
 	if Data.TwitterUsername != "" {
 		profile, err := twitterscraper.GetProfile(Data.TwitterUsername)
 		if err != nil {
-			return 0, err
+			return twitterscraper.Profile{}, err
 		}
-		return profile.FollowersCount, nil
+		return profile, nil
 	} else {
-		return 0, nil
+		return twitterscraper.Profile{}, nil
 	}
 }
 
-func (Data BiliBili) BliBiliFace() (string, error) {
+func (Data BiliBili) GetBiliBiliInfo() (Avatar, error) {
 	if Data.BiliBiliID == 0 {
-		return "", nil
+		return Avatar{}, nil
 	} else {
-		var (
-			Info Avatar
-		)
-		body, errcurl := network.CoolerCurl("https://api.bilibili.com/x/space/acc/info?mid="+strconv.Itoa(Data.BiliBiliID), BiliBiliSession)
-		if errcurl != nil {
-			return "", errcurl
-		}
-		err := json.Unmarshal(body, &Info)
-		if err != nil {
-			return "", err
-		}
+		if config.GoSimpConf.MultiTOR != "" {
+			var (
+				Info Avatar
+			)
+			body, errcurl := network.CoolerCurl("https://api.bilibili.com/x/space/acc/info?mid="+strconv.Itoa(Data.BiliBiliID), BiliBiliSession)
+			if errcurl != nil {
+				return Avatar{}, errcurl
+			}
+			err := json.Unmarshal(body, &Info)
+			if err != nil {
+				return Avatar{}, err
+			}
 
-		return strings.Replace(Info.Data.Face, "http", "https", -1), nil
+			strings.Replace(Info.Data.Face, "http", "https", -1)
+			strings.Replace(Info.Data.TopPhoto, "http", "https", -1)
+
+			return Info, nil
+		} else {
+			return Avatar{}, errors.New("multi_tor not found")
+		}
 	}
 }
 
@@ -349,7 +333,7 @@ func CheckLiveBiliBili() {
 					if err != nil {
 						log.Error(err)
 					}
-					Status, err := engine.GetRoomStatus(Member.BiliRoomID)
+					Status, err := engine.GetRoomStatus(Member.BiliBiliRoomID)
 					if err != nil {
 						log.Error(err)
 					}
@@ -361,7 +345,7 @@ func CheckLiveBiliBili() {
 					}
 
 					Data := map[string]interface{}{
-						"LiveRoomID":     Member.BiliRoomID,
+						"LiveRoomID":     Member.BiliBiliRoomID,
 						"Status":         "",
 						"Title":          Status.Data.RoomInfo.Title,
 						"Thumbnail":      Status.Data.RoomInfo.Cover,

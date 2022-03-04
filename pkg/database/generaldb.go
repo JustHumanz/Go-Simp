@@ -119,7 +119,30 @@ func GetMembers(GroupID int64) ([]Member, error) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		err = rows.Scan(&list.ID, &list.Name, &list.EnName, &list.JpName, &list.TwitterHashtags, &list.TwitterLewd, &list.BiliBiliHashtags, &list.YoutubeID, &list.YoutubeAvatar, &list.BiliBiliID, &list.BiliRoomID, &list.BiliBiliAvatar, &list.TwitterName, &list.TwitchName, &list.TwitchAvatar, &list.Region, &list.Fanbase, &list.Status, &list.GroupID)
+		err = rows.Scan(
+			&list.ID,
+			&list.Name,
+			&list.EnName,
+			&list.JpName,
+			&list.TwitterName,
+			&list.TwitterHashtag,
+			&list.TwitterLewd,
+			&list.TwitterBanner,
+			&list.YoutubeID,
+			&list.YoutubeAvatar,
+			&list.YoutubeBanner,
+			&list.BiliBiliID,
+			&list.BiliBiliRoomID,
+			&list.BiliBiliAvatar,
+			&list.BiliBiliHashtag,
+			&list.BiliBiliBanner,
+			&list.TwitchName,
+			&list.TwitchAvatar,
+			&list.Region,
+			&list.Fanbase,
+			&list.Status,
+			&list.Group.ID,
+		)
 		if err != nil {
 			return nil, err
 		}

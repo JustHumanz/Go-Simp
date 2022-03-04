@@ -89,14 +89,14 @@ func init() {
 
 				if Member.BiliBiliID != 0 {
 					var fanart interface{}
-					if Member.BiliBiliHashtags != "" {
-						fanart = Member.BiliBiliHashtags
+					if Member.BiliBiliHashtag != "" {
+						fanart = Member.BiliBiliHashtag
 					} else {
 						fanart = nil
 					}
 					MemberData["BiliBili"] = map[string]interface{}{
 						"ID":          Member.BiliBiliID,
-						"RoomID":      Member.BiliRoomID,
+						"RoomID":      Member.BiliBiliRoomID,
 						"Avatar":      Member.BiliBiliAvatar,
 						"Fanart":      fanart,
 						"Followers":   Subs.BiliFollow,
@@ -119,8 +119,8 @@ func init() {
 						Lewd = nil
 					}
 
-					if Member.TwitterHashtags != "" {
-						Fanart = Member.TwitterHashtags
+					if Member.TwitterHashtag != "" {
+						Fanart = Member.TwitterHashtag
 					} else {
 						Fanart = nil
 					}

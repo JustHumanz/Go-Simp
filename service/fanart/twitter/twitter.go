@@ -179,7 +179,7 @@ func (i *checkTwJob) Run() {
 			Grp := *GroupPayload
 
 			for _, Vtuber := range Grp[j].Members {
-				if Vtuber.TwitterHashtags != "" || Vtuber.TwitterLewd != "" {
+				if Vtuber.TwitterHashtag != "" || Vtuber.TwitterLewd != "" {
 					i.wg.Add(1)
 					go Cek(Vtuber, &i.wg)
 				}
@@ -190,7 +190,7 @@ func (i *checkTwJob) Run() {
 	} else {
 		for _, G := range *GroupPayload {
 			for _, Vtuber := range G.Members {
-				if Vtuber.TwitterHashtags != "" || Vtuber.TwitterLewd != "" {
+				if Vtuber.TwitterHashtag != "" || Vtuber.TwitterLewd != "" {
 					i.wg.Add(1)
 					go Cek(Vtuber, &i.wg)
 				}

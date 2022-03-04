@@ -378,8 +378,8 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 							log.Error(err)
 						}
 
-						if Member.BiliRoomID != 0 {
-							LiveBili, err := engine.GetRoomStatus(Member.BiliRoomID)
+						if Member.BiliBiliRoomID != 0 {
+							LiveBili, err := engine.GetRoomStatus(Member.BiliBiliRoomID)
 							if err != nil {
 								log.Error(err)
 							}
