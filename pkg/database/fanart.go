@@ -234,7 +234,7 @@ func (FanArt DataFanart) CheckTweetFanArt() (bool, error) {
 		if err == sql.ErrNoRows {
 			log.WithFields(log.Fields{
 				"Name":    FanArt.Member.EnName,
-				"Hashtag": FanArt.Member.TwitterHashtags,
+				"Hashtag": FanArt.Member.TwitterHashtag,
 				"Lewd":    FanArt.Lewd,
 				"URL":     FanArt.PermanentURL,
 			}).Info("New Fanart")
@@ -261,7 +261,7 @@ func (FanArt DataFanart) CheckTweetFanArt() (bool, error) {
 			//update like
 			log.WithFields(log.Fields{
 				"Name":    FanArt.Member.EnName,
-				"Hashtag": FanArt.Member.TwitterHashtags,
+				"Hashtag": FanArt.Member.TwitterHashtag,
 				"Likes":   FanArt.Likes,
 			}).Info("Update like")
 			_, err := DB.Exec(`Update Twitter set Likes=? Where id=? `, FanArt.Likes, id)
@@ -497,7 +497,7 @@ func (Member Member) ScrapTwitterFanart(Scraper *twitterscraper.Scraper, Lewd bo
 		if Lewd {
 			return Member.TwitterLewd + " AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)"
 		} else {
-			return Member.TwitterHashtags + " AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)"
+			return Member.TwitterHashtag + " AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)"
 		}
 	}()
 
@@ -506,7 +506,7 @@ func (Member Member) ScrapTwitterFanart(Scraper *twitterscraper.Scraper, Lewd bo
 			if Lewd {
 				return Member.TwitterLewd
 			}
-			return Member.TwitterHashtags
+			return Member.TwitterHashtag
 		}(),
 		"Vtuber": Member.Name,
 		"Lewd":   Lewd,
@@ -519,7 +519,7 @@ func (Member Member) ScrapTwitterFanart(Scraper *twitterscraper.Scraper, Lewd bo
 		}
 
 		for _, TweetHashtag := range tweet.Hashtags {
-			if (strings.EqualFold("#"+TweetHashtag, Member.TwitterHashtags) || strings.EqualFold("#"+TweetHashtag, Member.TwitterLewd)) && !tweet.IsQuoted && !tweet.IsReply && len(tweet.Photos) > 0 {
+			if (strings.EqualFold("#"+TweetHashtag, Member.TwitterHashtag) || strings.EqualFold("#"+TweetHashtag, Member.TwitterLewd)) && !tweet.IsQuoted && !tweet.IsReply && len(tweet.Photos) > 0 {
 				TweetArt := DataFanart{
 					PermanentURL: tweet.PermanentURL,
 					Author:       tweet.Username,

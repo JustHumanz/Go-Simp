@@ -518,9 +518,9 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 		} else if Data.State == config.BiliLive {
 			loc, _ := time.LoadLocation("Asia/Shanghai")
 			BiliBiliAccount := "https://space.bilibili.com/" + strconv.Itoa(Data.Member.BiliBiliID)
-			BiliBiliURL := "https://live.bilibili.com/" + strconv.Itoa(Data.Member.BiliRoomID)
+			BiliBiliURL := "https://live.bilibili.com/" + strconv.Itoa(Data.Member.BiliBiliRoomID)
 
-			BiliBiliRoomID := strconv.Itoa(Data.Member.BiliRoomID)
+			BiliBiliRoomID := strconv.Itoa(Data.Member.BiliBiliRoomID)
 			User := &database.UserStruct{
 				Human:    true,
 				Reminder: 0,

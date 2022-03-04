@@ -40,8 +40,10 @@ var (
 )
 
 type NewVtuber struct {
-	Member Members
-	Group  database.Group
+	Member     Members
+	Group      database.Group
+	YtAvatar   string
+	BiliAvatar string
 }
 
 func RequestPay(Message string) {
@@ -196,8 +198,7 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		Youtube = "✓"
 		URL = "https://www.youtube.com/channel/" + Data.Member.Youtube.YtID + "?sub_confirmation=1"
 
-		Avatar = Data.Member.Youtube.YtAvatar()
-		Color, err = engine.GetColor(config.TmpDir, Avatar)
+		Color, err = engine.GetColor(config.TmpDir, Data.YtAvatar)
 		if err != nil {
 			log.Error(err)
 		}
@@ -205,11 +206,7 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 	} else {
 		Youtube = "✘"
 		URL = "https://space.bilibili.com/" + strconv.Itoa(Data.Member.BiliBili.BiliBiliID)
-		Avatar, err = Data.Member.BiliBili.BliBiliFace()
-		if err != nil {
-			log.Error(err)
-		}
-		Color, err = engine.GetColor(config.TmpDir, Avatar)
+		Color, err = engine.GetColor(config.TmpDir, Data.BiliAvatar)
 		if err != nil {
 			log.Error(err)
 		}

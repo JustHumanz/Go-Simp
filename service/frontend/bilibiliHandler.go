@@ -63,7 +63,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetDescription(LiveData.Desc).
 									SetThumbnail(Member.BiliBiliAvatar).
 									SetImage(LiveData.Thumb).
-									SetURL("https://live.bilibili.com/"+strconv.Itoa(Member.BiliRoomID)).
+									SetURL("https://live.bilibili.com/"+strconv.Itoa(Member.BiliBiliRoomID)).
 									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
 									AddField("Online", engine.NearestThousandFormat(float64(view))).
 									SetColor(Color).
@@ -119,7 +119,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetDescription(LiveData.Desc).
 									SetThumbnail(LiveData.Member.BiliBiliAvatar).
 									SetImage(LiveData.Thumb).
-									SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveData.Member.BiliRoomID)).
+									SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveData.Member.BiliBiliRoomID)).
 									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
 									AddField("Online", engine.NearestThousandFormat(float64(view))).
 									SetColor(Color).
@@ -181,7 +181,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetDescription(LiveData.Desc).
 									SetThumbnail(Member.BiliBiliAvatar).
 									SetImage(LiveData.Thumb).
-									SetURL("https://live.bilibili.com/"+strconv.Itoa(Member.BiliRoomID)).
+									SetURL("https://live.bilibili.com/"+strconv.Itoa(Member.BiliBiliRoomID)).
 									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
 									AddField("Online", engine.NearestThousandFormat(float64(view))).
 									SetColor(Color).
@@ -236,7 +236,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetDescription(LiveData.Desc).
 									SetThumbnail(LiveData.Member.BiliBiliAvatar).
 									SetImage(LiveData.Thumb).
-									SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveData.Member.BiliRoomID)).
+									SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveData.Member.BiliBiliRoomID)).
 									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
 									AddField("Online", engine.NearestThousandFormat(float64(view))).
 									SetColor(Color).
