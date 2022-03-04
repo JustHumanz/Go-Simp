@@ -156,13 +156,28 @@ export default {
           }
         } else if (classList.find((c) => c.includes("navbar-submenu-item__"))) {
           const navbarSubItem =
-            e.target.tagName === "A" ?  e.target
+            e.target.tagName === "A"
+              ? e.target
               : e.target.tagName === "path"
               ? e.target.parentElement.parentElement
               : e.target.parentElement
 
           this.activeMenu = null
           navbarSubItem.blur()
+        } else if (classList.find((c) => c.includes("nav-search"))) {
+          if (this.activeMenu !== null) {
+            console.log("closing menu")
+            this.activeMenu = null
+          }
+
+          const navbarSearchItem =
+            e.target.tagName === "DIV"
+              ? e.target
+              : e.target.tagName === "path"
+              ? e.target.parentElement.parentElement
+              : e.target.parentElement
+
+          navbarSearchItem.children[1].focus()
         } else {
           if (this.activeMenu === null) return
           console.log("closing menu")
