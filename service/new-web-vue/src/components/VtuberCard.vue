@@ -7,7 +7,7 @@
             draggable="false"
             class="tag-vtuber-agency__icon"
             :src="vtuber.Group.IconURL"
-            alt=""
+            :alt="vtuber.Group.GroupName"
             v-if="vtuber.Group.ID !== 10"
           />
           <img
@@ -21,6 +21,11 @@
             icon="skull"
             v-if="vtuber.Status == 'Inactive'"
           />
+          <span class="tag-vtuber-agency__hover">{{
+            `${vtuber.Group.ID === 10 ? `Vtuber` : GroupName} ${
+              vtuber.Regions.name
+            }`
+          }}</span>
         </div>
         <a
           class="tag-vtuber-live"
@@ -189,13 +194,19 @@ export default {
       else if (this.vtuber.IsLive.Twitch) return this.vtuber.IsLive.Twitch.URL
       else return this.vtuber.IsLive.BiliBili.URL
     },
+    GroupName() {
+      return (
+        this.vtuber.Group.GroupName.charAt(0).toUpperCase() +
+        this.vtuber.Group.GroupName.slice(1).replace("_", " ")
+      )
+    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
 .card-vtuber {
-  @apply bg-white rounded-md overflow-hidden shadow-sm hover:bg-slate-100 hover:shadow-md hover:scale-105 transition select-none;
+  @apply bg-white rounded-md overflow-hidden shadow-sm hover:bg-slate-100 hover:shadow-md hover:scale-105 select-none transition duration-300 ease-in-out;
 
   &-image {
     @apply w-full aspect-square bg-smolame bg-cover relative;
@@ -217,7 +228,7 @@ export default {
 }
 
 .tag-vtuber {
-  @apply absolute flex items-center bg-slate-100/80 rounded-br-md overflow-hidden text-xs;
+  @apply absolute flex items-center bg-slate-100/80 rounded-br-md text-xs;
 
   &-agency {
     @apply px-[0.325rem] flex items-center space-x-2 justify-center h-6;
@@ -230,6 +241,14 @@ export default {
     &__flag {
       @apply h-3 object-contain rounded-sm drop-shadow-md;
       image-rendering: smooth;
+    }
+
+    &__hover {
+      @apply absolute top-6 px-2 py-1 -left-2 w-fit bg-slate-100/80 font-semibold rounded-r-md whitespace-nowrap scale-0 origin-top-left transition-transform ease-in-out duration-200;
+    }
+
+    &:hover &__hover {
+      @apply scale-100;
     }
   }
 
@@ -246,7 +265,7 @@ export default {
   @apply absolute bottom-0 right-0 bg-slate-100/80 rounded-tl-md px-[0.325rem] space-x-1;
 
   &__link {
-    @apply inline-block py-[0.125rem] px-1 text-stone-700;
+    @apply inline-block py-[0.125rem] px-1 text-stone-700 transition-colors duration-200 ease-in-out;
   }
 }
 
