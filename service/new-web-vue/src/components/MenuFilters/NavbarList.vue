@@ -113,11 +113,23 @@ export default {
   methods: {
     getClickMenu() {
       document.onclick = (e) => {
-        const classList = [...e.target.classList]
+        let classList = [...e.target.classList]
+
+        if (e.target.tagName === "path") {
+          classList = [...e.target.parentElement.parentElement.classList]
+        }
+        if (e.target.tagName === "svg") {
+          classList = [...e.target.parentElement.classList]
+        }
 
         if (classList.find((c) => c.includes("navbar-filter__"))) {
+          console.log(classList)
           const navbarFilter =
-            e.target.tagName === "A" ? e.target : e.target.parentElement
+            e.target.tagName === "A"
+              ? e.target
+              : e.target.tagName === "path"
+              ? e.target.parentElement.parentElement
+              : e.target.parentElement
 
           switch (this.activeMenu) {
             case navbarFilter:
