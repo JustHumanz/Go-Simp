@@ -11,6 +11,8 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
       :vtuber="vtuber"
     />
   </section>
+  <a href="#" class="scroll-to-top"></a>
+
   <AmeLoading
     v-if="limitedVtubers.length < searchVtubers.length"
     class="my-4"
@@ -18,6 +20,8 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
 </template>
 
 <script>
+
+
 export default {
   props: {
     vtubers: {

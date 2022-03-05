@@ -24,7 +24,7 @@
           <span class="tag-vtuber-agency__hover">{{
             `${vtuber.Group.ID === 10 ? `Vtuber` : GroupName} ${
               vtuber.Regions.name
-            }`
+            } ${vtuber.Status === "Inactive" ? ` (Inactive)` : ""}`
           }}</span>
         </div>
         <a
@@ -96,7 +96,7 @@
       </router-link>
       <div class="vtuber-link">
         <a
-          :href="`http://youtube.com/channel/${vtuber.Youtube.YoutubeID}`"
+          :href="`https://youtube.com/channel/${vtuber.Youtube.YoutubeID}`"
           target="_blank"
           class="vtuber-link__link hover:!text-youtube"
           rel="noopener noreferrer"
@@ -231,7 +231,7 @@ export default {
   @apply absolute flex items-center bg-slate-100/80 rounded-br-md text-xs;
 
   &-agency {
-    @apply px-[0.325rem] flex items-center space-x-2 justify-center h-6;
+    @apply px-[0.325rem] flex items-center space-x-2 justify-center h-6 cursor-pointer;
 
     &__icon {
       @apply w-5 object-contain drop-shadow-md rounded-md;
@@ -244,7 +244,7 @@ export default {
     }
 
     &__hover {
-      @apply absolute top-6 px-2 py-1 -left-2 w-fit bg-slate-100/80 font-semibold rounded-r-md whitespace-nowrap scale-0 origin-top-left transition-transform ease-in-out duration-200;
+      @apply absolute top-6 px-2 py-1 -left-2 max-w-[10rem] truncate bg-slate-100/80 font-semibold rounded-r-md scale-0 origin-top-left transition-transform ease-in-out duration-200;
     }
 
     &:hover &__hover {

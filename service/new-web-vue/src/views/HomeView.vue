@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <div class="header-image">
-      <img src="/src/assets/vtuber.png" alt="" class="header-image__img" />
+      <img src="/src/assets/vtuber.png" draggable="false" alt="" class="header-image__img" />
     </div>
     <h3 class="header-title">Friend for get notification from vtuber</h3>
     <a href="" class="header-button">
@@ -25,18 +25,20 @@
       <img
         src="/src/assets/graphics/SVG/live_light.svg"
         alt=""
+        draggable="false"
         class="img-light"
       />
       <img
         src="/src/assets/graphics/SVG/live_dark.svg"
         alt=""
+        draggable="false"
         class="img-dark"
       />
     </div>
     <div class="feature-content">
       <h3 class="feature-content__title">Live Notification</h3>
       <p class="feature-content__description">
-        Get notification when vtuber is live.
+        Get any live notification over +400 vtubers.
       </p>
     </div>
   </section>
@@ -45,40 +47,55 @@
       <img
         src="/src/assets/graphics/SVG/fanart_light.svg"
         alt=""
+        draggable="false"
         class="img-light"
       />
       <img
         src="/src/assets/graphics/SVG/fanart_dark.svg"
         alt=""
+        draggable="false"
         class="img-dark"
       />
     </div>
     <div class="feature-content">
       <h3 class="feature-content__title">Fan Art</h3>
       <p class="feature-content__description">
-        Get fan art from vtuber.
+        Look a cool random fan art and NSFW every members.
       </p>
     </div>
   </section>
-  <section class="feature reverse">
+  <section class="feature">
     <div class="feature-image">
       <img
-        src="/src/assets/graphics/SVG/milestone_light.svg"
+        src="/src/assets/graphics/SVG/member_light.svg"
         alt=""
+        draggable="false"
         class="img-light"
       />
       <img
-        src="/src/assets/graphics/SVG/milestone_dark.svg"
+        src="/src/assets/graphics/SVG/member_dark.svg"
         alt=""
+        draggable="false"
         class="img-dark"
       />
     </div>
     <div class="feature-content">
       <h3 class="feature-content__title">Milestone</h3>
       <p class="feature-content__description">
-        Get notification when vtuber has new milestone.
+        Track your favorite vtuber's for target milestone.
       </p>
     </div>
+  </section>
+  <section class="ending">
+    <div class="ending-content">
+      <h3 class="ending-content__title">
+        Your favorite vtuber cannot be here?
+        </h3>
+      <p class="ending-content__description">
+        Request your favorite vtuber to be here.
+      </p>
+    </div>
+    <a href="" class="ending-button">Request Here</a>
   </section>
 </template>
 
@@ -169,5 +186,25 @@ export default {
 
 .img-dark {
   @apply hidden dark:block;
+}
+
+.ending {
+  @apply h-[90vh] flex justify-center items-center flex-col bg-sky-200;
+
+  &-content {
+    @apply flex flex-col text-center;
+
+    &__title {
+      @apply text-[3vmax] font-bold tracking-tight;
+    }
+
+    &__description {
+      @apply text-lg;
+    }
+  }
+
+  &-button {
+    @apply mt-4 bg-sky-500 text-white text-lg font-bold rounded-md px-4 py-2 shadow-sm shadow-sky-600/50 hover:shadow-lg transition-shadow;
+  }
 }
 </style>
