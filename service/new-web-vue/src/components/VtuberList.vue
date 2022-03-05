@@ -4,6 +4,14 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
 </script>
 
 <template>
+  <a
+    href="#"
+    class="scroll-to-top"
+    :style="{ transform: hide_scroll_up ? 'scale(0)' : 'scale(1)' }"
+  >
+    <font-awesome-icon icon="caret-up" class="fa-fw" />
+  </a>
+
   <section class="vtuber-list" v-if="!nullData">
     <VtuberCard
       v-for="vtuber in limitedVtubers"
@@ -11,7 +19,6 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
       :vtuber="vtuber"
     />
   </section>
-  <a href="#" class="scroll-to-top"></a>
 
   <AmeLoading
     v-if="limitedVtubers.length < searchVtubers.length"
@@ -20,7 +27,10 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
 </template>
 
 <script>
+import { library } from "@fortawesome/fontawesome-svg-core"
+import { faCaretUp } from "@fortawesome/free-solid-svg-icons"
 
+library.add(faCaretUp)
 
 export default {
   props: {
@@ -36,6 +46,7 @@ export default {
     return {
       limitedVtubers: [],
       nullData: false,
+      hide_scroll_up: true,
     }
   },
   created() {
@@ -55,7 +66,7 @@ export default {
       { immediate: true }
     )
 
-    this.ExtendVtuberData()
+    this.ScrollFuncions()
   },
   computed: {
     filteredVtubers() {
@@ -244,7 +255,7 @@ export default {
     },
   },
   methods: {
-    ExtendVtuberData() {
+    ScrollFuncions() {
       window.onscroll = () => {
         let bottomOfWindow =
           Math.ceil(window.scrollY + window.innerHeight) >=
@@ -257,6 +268,16 @@ export default {
           console.log("Extend more data...")
           this.limitedVtubers = this.searchVtubers.slice(0, vtubers_count + 25)
         }
+
+        let topOfWindow = window.scrollY <= 0
+
+        console.log(topOfWindow)
+
+        if (topOfWindow) {
+          this.hide_scroll_up = true
+        } else {
+          this.hide_scroll_up = false
+        }
       }
     },
   },
@@ -267,5 +288,10 @@ export default {
 .vtuber-list {
   @apply pt-24 pb-4 xs:pt-14 w-[95%] sm:w-[85%] md:w-[80%] lg:w-[75%] mx-auto grid gap-[1.5rem];
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+}
+
+.scroll-to-top {
+  @apply fixed bottom-0 right-0 m-4 z-10 text-2xl bg-sky-400 text-white px-3 pb-2
+  pt-3 rounded-full shadow-sm hover:shadow-md shadow-sky-700/50 transition-transform;
 }
 </style>

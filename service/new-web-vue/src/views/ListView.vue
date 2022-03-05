@@ -36,7 +36,7 @@ import AmeError from "../components/AmeComp/AmeError.vue"
     :description="`Check another available group, or you can request a group ${link_request}`"
   />
   <AmeError
-    v-if="!vtuber && error_msg !== '' && error_msg !== `Request failed with status code 404`"
+    v-if="!vtubers && error_msg !== '' && error_msg !== `Request failed with status code 404`"
     type="error"
     img="lazer"
     title="Something wrong when get request"
