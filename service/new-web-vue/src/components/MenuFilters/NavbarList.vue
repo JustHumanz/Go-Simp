@@ -53,7 +53,6 @@ library.add(faMagnifyingGlass)
 export default {
   data() {
     return {
-      activeMenu: null,
       platform: [],
       search_query: "",
     }
@@ -77,7 +76,6 @@ export default {
     },
   },
   created() {
-    this.getClickMenu()
     this.unfocusMenu()
 
     this.$watch(
@@ -119,80 +117,6 @@ export default {
     )
   },
   methods: {
-    getClickMenu() {
-      document.onclick = (e) => {
-        let classList = [...e.target.classList]
-
-        if (e.target.tagName === "path") {
-          classList = [...e.target.parentElement.parentElement.classList]
-        }
-        if (e.target.tagName === "svg") {
-          classList = [...e.target.parentElement.classList]
-        }
-
-        if (classList.find((c) => c.includes("navbar-filter__"))) {
-          const navbarFilter =
-            e.target.tagName === "A"
-              ? e.target
-              : e.target.tagName === "path"
-              ? e.target.parentElement.parentElement
-              : e.target.parentElement
-
-          switch (this.activeMenu) {
-            case navbarFilter:
-              this.activeMenu.blur()
-              this.activeMenu = null
-              break
-            case null:
-              this.activeMenu = navbarFilter
-              break
-            default:
-              this.activeMenu = navbarFilter
-              break
-          }
-        } else if (classList.find((c) => c.includes("navbar-filter-item__"))) {
-          const navbarFilterItem =
-            e.target.tagName === "A"
-              ? e.target
-              : e.target.tagName === "path"
-              ? e.target.parentElement.parentElement
-              : e.target.parentElement
-
-          if (!navbarFilterItem.classList.contains("sub-menu")) {
-            this.activeMenu = null
-            navbarFilterItem.blur()
-          }
-        } else if (classList.find((c) => c.includes("navbar-submenu-item__"))) {
-          const navbarSubItem =
-            e.target.tagName === "A"
-              ? e.target
-              : e.target.tagName === "path"
-              ? e.target.parentElement.parentElement
-              : e.target.parentElement
-
-          this.activeMenu = null
-          navbarSubItem.blur()
-        } else if (classList.find((c) => c.includes("nav-search"))) {
-          if (this.activeMenu !== null) {
-            console.log("closing menu")
-            this.activeMenu = null
-          }
-
-          const navbarSearchItem =
-            e.target.tagName === "DIV"
-              ? e.target
-              : e.target.tagName === "path"
-              ? e.target.parentElement.parentElement
-              : e.target.parentElement
-
-          navbarSearchItem.children[1].focus()
-        } else {
-          if (this.activeMenu === null) return
-          console.log("closing menu")
-          this.activeMenu = null
-        }
-      }
-    },
     unfocusMenu() {
       // when document unfocus
       document.onblur = (e) => {

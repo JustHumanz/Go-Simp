@@ -70,19 +70,6 @@ import "./index.css"
               Dashboard</a
             >
           </li>
-          <li class="navbar-item mobile-menu dark-mode">
-            <a href="#" class="navbar-link" @click="resetFocus()">
-              <font-awesome-icon
-                icon="moon"
-                class="dark-mode-btn__svg fa-fw dark-icon"
-              />
-              <font-awesome-icon
-                icon="sun"
-                class="dark-mode-btn__svg fa-fw light-icon"
-              />
-              Dark Mode</a
-            >
-          </li>
         </ul>
       </div>
 
@@ -98,19 +85,38 @@ import "./index.css"
           >
         </a>
         <!-- Add Dark mode button -->
-        <a href="" class="navbar-buttons__button dark-mode group">
+        <a
+          href="#"
+          class="navbar-buttons__button dark-mode group"
+          @click="darkMode"
+          onclick="return false"
+        >
           <font-awesome-icon
             icon="moon"
-            class="dark-mode-btn__svg fa-fw dark-icon"
+            class="dark-mode-btn__svg fa-fw"
+            v-if="theme === 'dark'"
           />
           <font-awesome-icon
             icon="sun"
-            class="dark-mode-btn__svg fa-fw light-icon"
+            class="dark-mode-btn__svg fa-fw"
+            v-else-if="theme === 'light'"
+          />
+          <font-awesome-icon
+            icon="circle-half-stroke"
+            class="dark-mode-btn__svg fa-fw"
+            v-else
           />
           <span
             class="navbar-buttons__hover group-hover:!opacity-100 group-hover:!scale-100"
-            >Dark Mode</span
           >
+            {{
+              theme === "dark"
+                ? "Dark Mode"
+                : theme === "light"
+                ? "Light Mode"
+                : "Auto"
+            }}
+          </span>
         </a>
       </div>
     </div>
@@ -176,16 +182,34 @@ import "./index.css"
 // Add Font Awesome for Discord and Github icons
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faDiscord, faGithub } from "@fortawesome/free-brands-svg-icons"
-import { faMoon, faSun, faGaugeSimple } from "@fortawesome/free-solid-svg-icons"
-library.add(faDiscord, faGithub, faMoon, faSun, faGaugeSimple)
+import {
+  faMoon,
+  faSun,
+  faCircleHalfStroke,
+  faGaugeSimple,
+} from "@fortawesome/free-solid-svg-icons"
+import { watch } from "@vue/runtime-core"
+library.add(
+  faDiscord,
+  faGithub,
+  faMoon,
+  faSun,
+  faGaugeSimple,
+  faCircleHalfStroke
+)
 
 export default {
   data() {
     return {
+      activeListMenu: null,
       isActive: false,
+      theme: null,
     }
   },
   async created() {
+    this.getClickMenu()
+    this.theme = localStorage.getItem("theme")
+
     this.$watch(
       () => this.$route.params,
       async () => {
@@ -194,8 +218,114 @@ export default {
 
       { immediate: true }
     )
+
+
+
+    this.$watch(
+      () => this.theme,
+      async () => {
+        switch (this.theme) {
+          case "dark":
+            document.body.classList.add("dark")
+            break
+          case "light":
+            document.body.classList.remove("dark")
+            break
+        }
+      },
+      { immediate: true }
+    )
+
+    
+      this.$watch(
+        () => window.matchMedia("(prefers-color-scheme: dark)").matches,
+        async () => {
+          console.log(window.matchMedia("(prefers-color-scheme: dark)").matches)
+        },
+        { immediate: true }
+      )
   },
   methods: {
+    getClickMenu() {
+      document.onclick = (e) => {
+        if (!this.$route.path.includes("/vtuber")) {
+          this.activeListMenu = null
+          return
+        }
+
+        // Vtuber List
+        let classList = [...e.target.classList]
+
+        if (e.target.tagName === "path") {
+          classList = [...e.target.parentElement.parentElement.classList]
+        }
+        if (e.target.tagName === "svg") {
+          classList = [...e.target.parentElement.classList]
+        }
+
+        if (classList.find((c) => c.includes("navbar-filter__"))) {
+          const navbarFilter =
+            e.target.tagName === "A"
+              ? e.target
+              : e.target.tagName === "path"
+              ? e.target.parentElement.parentElement
+              : e.target.parentElement
+
+          switch (this.activeListMenu) {
+            case navbarFilter:
+              this.activeListMenu.blur()
+              this.activeListMenu = null
+              break
+            case null:
+              this.activeListMenu = navbarFilter
+              break
+            default:
+              this.activeListMenu = navbarFilter
+              break
+          }
+        } else if (classList.find((c) => c.includes("navbar-filter-item__"))) {
+          const navbarFilterItem =
+            e.target.tagName === "A"
+              ? e.target
+              : e.target.tagName === "path"
+              ? e.target.parentElement.parentElement
+              : e.target.parentElement
+
+          if (!navbarFilterItem.classList.contains("sub-menu")) {
+            this.activeListMenu = null
+            navbarFilterItem.blur()
+          }
+        } else if (classList.find((c) => c.includes("navbar-submenu-item__"))) {
+          const navbarSubItem =
+            e.target.tagName === "A"
+              ? e.target
+              : e.target.tagName === "path"
+              ? e.target.parentElement.parentElement
+              : e.target.parentElement
+
+          this.activeListMenu = null
+          navbarSubItem.blur()
+        } else if (classList.find((c) => c.includes("nav-search"))) {
+          if (this.activeListMenu !== null) {
+            console.log("closing menu")
+            this.activeListMenu = null
+          }
+
+          const navbarSearchItem =
+            e.target.tagName === "DIV"
+              ? e.target
+              : e.target.tagName === "path"
+              ? e.target.parentElement.parentElement
+              : e.target.parentElement
+
+          navbarSearchItem.children[1].focus()
+        } else {
+          if (this.activeListMenu === null) return
+          console.log("closing menu")
+          this.activeListMenu = null
+        }
+      }
+    },
     resetFocus() {
       this.$nextTick(() => {
         // get element .nav-link
@@ -208,6 +338,23 @@ export default {
         })
       })
     },
+    darkMode() {
+      switch (this.theme) {
+        case "dark":
+          localStorage.setItem("theme", "light")
+          this.theme = "light"
+          break
+        case "light":
+          localStorage.removeItem("theme")
+          this.theme = null
+          break
+        default:
+          localStorage.setItem("theme", "dark")
+          this.theme = "dark"
+          break
+      }
+      console.log(this.theme)
+    },
   },
 }
 </script>
@@ -218,6 +365,10 @@ export default {
   @apply h-16 bg-cyan-500 shadow-md shadow-cyan-500/50 fixed top-0 left-0 w-screen z-[11] flex justify-center select-none;
   .navbar {
     @apply mx-4 h-full flex justify-between md:justify-around items-center w-full md:w-[90%] lg:w-[85%];
+
+    &-menu {
+      @apply relative;
+    }
 
     &-icon {
       @apply w-auto h-full p-3 cursor-pointer flex items-center;
@@ -231,12 +382,12 @@ export default {
     }
 
     &-menu:focus-within .navbar-items {
-      @apply visible;
+      @apply scale-100;
     }
 
     .navbar-items {
       // make nav-menu items using tailwind
-      @apply flex items-start sm:items-center flex-col sm:flex-row bg-cyan-500 rounded-md sm:bg-transparent w-[13rem] sm:w-auto absolute top-2 right-2 sm:top-auto sm:right-auto sm:relative invisible sm:visible shadow-md shadow-black/50 sm:shadow-none overflow-hidden sm:overflow-visible;
+      @apply flex items-start sm:items-center flex-col sm:flex-row bg-cyan-500 rounded-md sm:bg-transparent w-[13rem] sm:w-auto absolute top-3 right-3 sm:top-auto sm:right-auto sm:static shadow-md shadow-black/50 sm:shadow-none overflow-hidden sm:overflow-visible scale-0 sm:scale-100 origin-top-right transition sm:transition-none duration-200 ease-in-out;
     }
 
     .navbar-item {
@@ -268,7 +419,7 @@ export default {
       @apply hidden sm:block;
 
       &__hover {
-        @apply absolute top-9 w-max -left-7 rounded-md px-2 py-1 shadow-md transition inline-block opacity-0 scale-0;
+        @apply absolute top-9 w-max left-1/2 -translate-x-1/2 rounded-md px-2 py-1 shadow-md transition inline-block opacity-0 scale-0;
       }
 
       &__button {
@@ -290,13 +441,6 @@ export default {
           }
         }
       }
-    }
-    .dark-icon {
-      @apply hidden dark:inline-block;
-    }
-
-    .light-icon {
-      @apply inline-block dark:hidden;
     }
   }
 }

@@ -157,7 +157,7 @@ export default {
   @apply h-[90vh] flex justify-center md:justify-evenly items-center flex-col md:flex-row;
 
   &-image {
-    @apply w-[37vmax] object-contain rounded-xl shadow-sm hover:shadow-md transition-all hover:scale-105 overflow-hidden;
+    @apply w-[37vmax] object-contain rounded-xl shadow-sm hover:shadow-md transition-all hover:scale-105 overflow-hidden relative;
   }
 
   &.reverse {
@@ -181,11 +181,11 @@ export default {
 }
 
 .img-light {
-  @apply dark:hidden;
+  @apply dark:opacity-0 transition-opacity duration-300 ease-in-out;
 }
 
 .img-dark {
-  @apply hidden dark:block;
+  @apply absolute top-0 transition-opacity duration-300 ease-in-out opacity-0 dark:opacity-100;
 }
 
 .ending {
