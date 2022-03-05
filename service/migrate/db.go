@@ -138,6 +138,7 @@ func AddData(Data Vtuber) {
 					TwitterItem.Avatar,
 					TwitterItem.Banner,
 					VtuberMember.Youtube.YtID,
+					YtItem.Snippet.Thumbnails.High.URL,
 					YtItem.Brandingsettings.Image.Bannerexternalurl,
 					VtuberMember.BiliBili.BiliBiliID,
 					VtuberMember.BiliBili.BiliRoomID,
@@ -147,6 +148,9 @@ func AddData(Data Vtuber) {
 					VtuberMember.Twitch.TwitchUsername,
 					TwitchAvatar,
 					Region,
+					VtuberMember.Fanbase,
+					VtuberMember.Status,
+					MemberID,
 				)
 				if err != nil {
 					log.Error(err)
@@ -232,6 +236,7 @@ func AddData(Data Vtuber) {
 					TwitterItem.Avatar,
 					TwitterItem.Banner,
 					VtuberMember.Youtube.YtID,
+					YtItem.Snippet.Thumbnails.High.URL,
 					YtItem.Brandingsettings.Image.Bannerexternalurl,
 					VtuberMember.BiliBili.BiliBiliID,
 					VtuberMember.BiliBili.BiliRoomID,
@@ -445,6 +450,7 @@ func AddData(Data Vtuber) {
 						TwitterItem.Avatar,
 						TwitterItem.Banner,
 						VtuberMember.Youtube.YtID,
+						YtItem.Snippet.Thumbnails.High.URL,
 						YtItem.Brandingsettings.Image.Bannerexternalurl,
 						VtuberMember.BiliBili.BiliBiliID,
 						VtuberMember.BiliBili.BiliRoomID,
@@ -536,6 +542,7 @@ func AddData(Data Vtuber) {
 						TwitterItem.Avatar,
 						TwitterItem.Banner,
 						VtuberMember.Youtube.YtID,
+						YtItem.Snippet.Thumbnails.High.URL,
 						YtItem.Brandingsettings.Image.Bannerexternalurl,
 						VtuberMember.BiliBili.BiliBiliID,
 						VtuberMember.BiliBili.BiliRoomID,
