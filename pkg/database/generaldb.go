@@ -113,7 +113,7 @@ func GetMembers(GroupID int64) ([]Member, error) {
 		Data []Member
 	)
 
-	rows, err := DB.Query(`SELECT * FROM Vtuber.VtuberMember WHERE VtuberGroup_id=? Order by Region,VtuberGroup_id;`, GroupID)
+	rows, err := DB.Query(`SELECT id, VtuberName, VtuberName_EN, VtuberName_JP, Twitter_Username, Twitter_Hashtag, Twitter_Avatar, Twitter_Banner, Twitter_Lewd, Youtube_ID, Youtube_Avatar, Youtube_Banner, BiliBili_SpaceID, BiliBili_RoomID, BiliBili_Avatar, BiliBili_Hashtag, BiliBili_Banner, Twitch_Username, Twitch_Avatar, Region, Fanbase, Status, VtuberGroup_id FROM Vtuber.VtuberMember WHERE VtuberGroup_id=? Order by Region,VtuberGroup_id;`, GroupID)
 	if err != nil {
 		return nil, err
 	}
