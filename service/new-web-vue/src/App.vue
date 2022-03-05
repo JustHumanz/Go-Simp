@@ -219,8 +219,6 @@ export default {
       { immediate: true }
     )
 
-
-
     this.$watch(
       () => this.theme,
       async () => {
@@ -231,19 +229,12 @@ export default {
           case "light":
             document.body.classList.remove("dark")
             break
+          default:
+            this.autoDark()
         }
       },
       { immediate: true }
     )
-
-    
-      this.$watch(
-        () => window.matchMedia("(prefers-color-scheme: dark)").matches,
-        async () => {
-          console.log(window.matchMedia("(prefers-color-scheme: dark)").matches)
-        },
-        { immediate: true }
-      )
   },
   methods: {
     getClickMenu() {
@@ -354,6 +345,25 @@ export default {
           break
       }
       console.log(this.theme)
+    },
+    autoDark() {
+      if (this.theme) return
+
+      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        document.body.classList.add("dark")
+      } else {
+        document.body.classList.remove("dark")
+      }
+
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", async () => {
+          if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            document.body.classList.add("dark")
+          } else {
+            document.body.classList.remove("dark")
+          }
+        })
     },
   },
 }
