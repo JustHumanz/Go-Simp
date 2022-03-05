@@ -8,6 +8,10 @@
   font-family: "Nunito", sans-serif;
 }
 
+body {
+  @apply dark:bg-gray-600 dark:text-white transition-colors duration-100 ease-in-out;
+}
+
 @media (max-width: 767px) {
   body {
     scrollbar-width: none; /* Firefox */

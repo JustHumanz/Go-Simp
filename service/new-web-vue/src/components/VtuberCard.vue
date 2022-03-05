@@ -206,7 +206,7 @@ export default {
 
 <style lang="scss" scoped>
 .card-vtuber {
-  @apply bg-white rounded-md overflow-hidden shadow-sm hover:bg-slate-100 hover:shadow-md hover:scale-105 select-none transition duration-300 ease-in-out;
+  @apply bg-white dark:bg-slate-800 rounded-md overflow-hidden shadow-sm hover:bg-slate-100 dark:hover:bg-slate-900 hover:shadow-md hover:scale-105 select-none transition duration-300 ease-in-out;
 
   &-image {
     @apply w-full aspect-square bg-smolame bg-cover relative;
@@ -218,17 +218,17 @@ export default {
     }
 
     &__title {
-      @apply font-bold text-lg tracking-tight leading-6 truncate;
+      @apply font-bold text-lg tracking-tight leading-6 truncate dark:text-white;
     }
 
     &__nickname {
-      @apply text-xs text-stone-600;
+      @apply text-xs text-stone-600 dark:text-stone-400;
     }
   }
 }
 
 .tag-vtuber {
-  @apply absolute flex items-center bg-slate-100/80 rounded-br-md text-xs;
+  @apply absolute flex items-center bg-slate-100/80 dark:bg-slate-500/80 rounded-br-md text-xs;
 
   &-agency {
     @apply px-[0.325rem] flex items-center space-x-2 justify-center h-6 cursor-pointer;
@@ -244,7 +244,7 @@ export default {
     }
 
     &__hover {
-      @apply absolute top-6 px-2 py-1 -left-2 max-w-[10rem] truncate bg-slate-100/80 font-semibold rounded-r-md scale-0 origin-top-left transition-transform ease-in-out duration-200;
+      @apply absolute top-6 px-2 py-1 -left-2 max-w-[10rem] truncate bg-slate-100/80 dark:bg-slate-500/80 font-semibold rounded-r-md scale-0 origin-top-left transition-transform ease-in-out duration-200;
     }
 
     &:hover &__hover {
@@ -262,10 +262,10 @@ export default {
 }
 
 .vtuber-link {
-  @apply absolute bottom-0 right-0 bg-slate-100/80 rounded-tl-md px-[0.325rem] space-x-1;
+  @apply absolute bottom-0 right-0 bg-slate-100/80  dark:bg-slate-500/80 rounded-tl-md px-[0.325rem] space-x-1;
 
   &__link {
-    @apply inline-block py-[0.125rem] px-1 text-stone-700 transition-colors duration-200 ease-in-out;
+    @apply inline-block py-[0.125rem] px-1 text-stone-700 dark:text-slate-50 transition-colors duration-200 ease-in-out;
   }
 }
 

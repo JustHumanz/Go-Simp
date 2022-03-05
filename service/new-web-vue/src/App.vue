@@ -9,68 +9,83 @@ import "./index.css"
     <div class="navbar">
       <router-link to="/" class="navbar-icon"
         ><IconHome class="h-full" />
-        <span class="navbar-icon__span">Go-Simp</span></router-link
+        <span class="navbar-icon__span"> Go-Simp </span></router-link
       >
-      <div class="navbar-menu">
-        <a href="#" class="navbar-toggle" onclick="return false"
-          ><svg width="24" height="24" fill="none" aria-hidden="true">
-            <path
-              d="M12 6v.01M12 12v.01M12 18v.01M12 7a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"
-              stroke="white"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></path></svg
-        ></a>
-        <ul class="navbar-items">
-          <li class="navbar-item">
-            <router-link
-              to="/vtuber"
-              :class="{ active: isActive }"
-              class="navbar-link"
-              @click="resetFocus()"
-              >Vtubers</router-link
-            >
-          </li>
-          <li class="navbar-item">
-            <router-link to="/docs" class="navbar-link" @click="resetFocus()"
-              >Docs</router-link
-            >
-          </li>
-          <li class="navbar-item">
-            <router-link to="/support" class="navbar-link" @click="resetFocus()"
-              >Support</router-link
-            >
-          </li>
-          <li class="navbar-item">
-            <a
-              href="https://discord.com/oauth2/authorize?client_id=721964514018590802&permissions=456720&scope=bot%20applications.commands"
-              target="_blank"
-              class="navbar-link"
-              @click="resetFocus()"
-              >Invite</a
-            >
-          </li>
-          <li class="navbar-item">
-            <a
-              href="https://top.gg/bot/721964514018590802"
-              target="_blank"
-              class="navbar-link"
-              @click="resetFocus()"
-              >Vote</a
-            >
-          </li>
-          <li class="navbar-item mobile-menu dashboard">
-            <a
-              href="https://web-admin.humanz.moe/login"
-              target="_blank"
-              class="navbar-link"
-              @click="resetFocus()"
-              ><font-awesome-icon icon="gauge-simple" class="fa-fw" />
-              Dashboard</a
-            >
-          </li>
-        </ul>
+      <div class="navbar-group">
+        <a
+          href="#"
+          class="navbar-toggle"
+          @click="darkMode"
+          onclick="return false"
+        >
+          <font-awesome-icon
+            icon="moon"
+            class="navbar-toggle__icon fa-fw"
+            v-if="theme === 'dark'"
+          />
+          <font-awesome-icon
+            icon="sun"
+            class="navbar-toggle__icon fa-fw"
+            v-else-if="theme === 'light'"
+          />
+          <font-awesome-icon
+            icon="circle-half-stroke"
+            class="navbar-toggle__icon fa-fw"
+            v-else
+          />
+        </a>
+
+        <div class="navbar-menu">
+          <a href="#" class="navbar-toggle" onclick="return false">
+            <font-awesome-icon
+              icon="ellipsis-vertical"
+              class="navbar-toggle__icon fa-fw"
+            />
+          </a>
+          <ul class="navbar-items">
+            <li class="navbar-item">
+              <router-link
+                to="/vtuber"
+                :class="{ active: isActive }"
+                class="navbar-link"
+                >Vtubers</router-link
+              >
+            </li>
+            <li class="navbar-item">
+              <router-link to="/docs" class="navbar-link">Docs</router-link>
+            </li>
+            <li class="navbar-item">
+              <router-link to="/support" class="navbar-link"
+                >Support</router-link
+              >
+            </li>
+            <li class="navbar-item">
+              <a
+                href="https://discord.com/oauth2/authorize?client_id=721964514018590802&permissions=456720&scope=bot%20applications.commands"
+                target="_blank"
+                class="navbar-link"
+                >Invite</a
+              >
+            </li>
+            <li class="navbar-item">
+              <a
+                href="https://top.gg/bot/721964514018590802"
+                target="_blank"
+                class="navbar-link"
+                >Vote</a
+              >
+            </li>
+            <li class="navbar-item mobile-menu dashboard">
+              <a
+                href="https://web-admin.humanz.moe/login"
+                target="_blank"
+                class="navbar-link"
+                ><font-awesome-icon icon="gauge-simple" class="fa-fw" />
+                Dashboard</a
+              >
+            </li>
+          </ul>
+        </div>
       </div>
 
       <div class="navbar-buttons">
@@ -187,6 +202,7 @@ import {
   faSun,
   faCircleHalfStroke,
   faGaugeSimple,
+  faEllipsisVertical,
 } from "@fortawesome/free-solid-svg-icons"
 import { watch } from "@vue/runtime-core"
 library.add(
@@ -195,7 +211,8 @@ library.add(
   faMoon,
   faSun,
   faGaugeSimple,
-  faCircleHalfStroke
+  faCircleHalfStroke,
+  faEllipsisVertical
 )
 
 export default {
@@ -224,10 +241,10 @@ export default {
       async () => {
         switch (this.theme) {
           case "dark":
-            document.body.classList.add("dark")
+            document.documentElement.classList.add("dark")
             break
           case "light":
-            document.body.classList.remove("dark")
+            document.documentElement.classList.remove("dark")
             break
           default:
             this.autoDark()
@@ -239,11 +256,6 @@ export default {
   methods: {
     getClickMenu() {
       document.onclick = (e) => {
-        if (!this.$route.path.includes("/vtuber")) {
-          this.activeListMenu = null
-          return
-        }
-
         // Vtuber List
         let classList = [...e.target.classList]
 
@@ -252,6 +264,22 @@ export default {
         }
         if (e.target.tagName === "svg") {
           classList = [...e.target.parentElement.classList]
+        }
+
+        if (classList.find((c) => c === "navbar-link")) {
+          const mainNavbar =
+            e.target.tagName === "A"
+              ? e.target
+              : e.target.tagName === "path"
+              ? e.target.parentElement.parentElement
+              : e.target.parentElement
+
+          mainNavbar.blur()
+        }
+
+        if (!this.$route.path.includes("/vtuber")) {
+          this.activeListMenu = null
+          return
         }
 
         if (classList.find((c) => c.includes("navbar-filter__"))) {
@@ -317,18 +345,6 @@ export default {
         }
       }
     },
-    resetFocus() {
-      this.$nextTick(() => {
-        // get element .nav-link
-        const navLinks = document.querySelectorAll(".nav-link")
-        // check if element is active
-
-        // looping nav-link
-        navLinks.forEach((navLink) => {
-          navLink.blur()
-        })
-      })
-    },
     darkMode() {
       switch (this.theme) {
         case "dark":
@@ -352,16 +368,16 @@ export default {
       const darkSheme = window.matchMedia("(prefers-color-scheme: dark)")
 
       if (darkSheme.matches) {
-        document.body.classList.add("dark")
+        document.documentElement.classList.add("dark")
       } else {
-        document.body.classList.remove("dark")
+        document.documentElement.classList.remove("dark")
       }
 
       darkSheme.onchange = async () => {
         if (darkSheme.matches) {
-          document.body.classList.add("dark")
+          document.documentElement.classList.add("dark")
         } else {
-          document.body.classList.remove("dark")
+          document.documentElement.classList.remove("dark")
         }
       }
     },
@@ -376,6 +392,10 @@ export default {
   .navbar {
     @apply mx-4 h-full flex justify-between md:justify-around items-center w-full md:w-[90%] lg:w-[85%];
 
+    &-group {
+      @apply flex;
+    }
+
     &-menu {
       @apply relative;
     }
@@ -389,6 +409,10 @@ export default {
     }
     .navbar-toggle {
       @apply block sm:hidden p-3;
+
+      &__icon {
+        @apply text-white;
+      }
     }
 
     &-menu:focus-within .navbar-items {
@@ -404,11 +428,11 @@ export default {
       @apply w-full sm:w-auto sm:mx-1;
 
       .navbar-link {
-        @apply w-full inline-block cursor-pointer text-white py-2 sm:py-1 px-2 sm:rounded-md transition-shadow sm:hover:shadow-sm sm:hover:shadow-cyan-600/75 hover:bg-black/10 sm:hover:bg-transparent;
+        @apply w-full inline-block cursor-pointer text-white py-2 sm:py-1 px-2 sm:rounded-md transition-shadow sm:hover:shadow-sm sm:hover:shadow-cyan-600/75 hover:bg-black/10 sm:hover:bg-transparent font-semibold;
 
         &.router-link-active,
         &.active {
-          @apply sm:shadow-md bg-cyan-600 sm:bg-transparent sm:shadow-cyan-600/75 font-semibold;
+          @apply sm:shadow-md bg-cyan-600 sm:bg-transparent sm:shadow-cyan-600/75;
         }
       }
 
@@ -417,10 +441,6 @@ export default {
 
         &.dashboard {
           @apply bg-rose-500;
-        }
-
-        &.dark-mode {
-          @apply bg-cyan-600 dark:bg-slate-700;
         }
       }
     }
@@ -444,10 +464,10 @@ export default {
         }
 
         &.dark-mode {
-          @apply bg-cyan-600 dark:bg-slate-700 hover:shadow-cyan-600/75 dark:hover:shadow-slate-700/75;
+          @apply bg-sky-500 dark:bg-slate-700 hover:shadow-sky-500/75 dark:hover:shadow-slate-700/75;
 
           .navbar-buttons__hover {
-            @apply bg-cyan-600 dark:bg-slate-700 shadow-cyan-600/75 dark:shadow-slate-700/75;
+            @apply bg-sky-500 dark:bg-slate-700 shadow-sky-500/75 dark:shadow-slate-700/75;
           }
         }
       }

@@ -20,7 +20,7 @@ module.exports = {
       },
 
       boxShadow: {
-        center: "0 0.5rem 1rem rgba(0, 0, 0, 0.2)",
+        // center: "0 0.5rem 1rem rgba(0, 0, 0, 0.2)",
       },
 
       spacing: {

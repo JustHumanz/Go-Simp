@@ -7,8 +7,7 @@ import SortMenu from "./SortMenu.vue"
 <template>
   <nav class="list-nav">
     <ul class="navbar-filters">
-      <li class="navbar-filter group"
-      :class="{disabled: disabled}">
+      <li class="navbar-filter group" :class="{ disabled: disabled }">
         <GroupsMenu />
       </li>
       <li
@@ -96,8 +95,8 @@ export default {
       () => this.search_query,
       () => {
         window.scrollTo({
-        top: 0,
-      })
+          top: 0,
+        })
         this.$emit("search", this.search_query)
       },
       { immediate: true }
@@ -138,7 +137,7 @@ export default {
 
 <style lang="scss">
 .list-nav {
-  @apply bg-blue-400 fixed top-16 py-2 px-5 w-screen flex flex-wrap-reverse items-center sm:justify-around justify-center z-10 select-none;
+  @apply bg-blue-400 dark:bg-slate-700 fixed top-16 py-2 px-5 w-screen flex flex-wrap-reverse items-center sm:justify-around justify-center z-10 select-none;
 }
 
 .navbar-filters {
@@ -154,7 +153,7 @@ export default {
 
   &__link {
     @apply text-white flex space-x-1 items-center font-semibold px-2 py-1 rounded-md hover:shadow-sm 
-    shadow-blue-600/75;
+    shadow-blue-600/75 dark:shadow-slate-300/50;
   }
 
   &__img {
@@ -173,9 +172,17 @@ export default {
     }
   }
 
+  &.disabled {
+    @apply opacity-50;
+
+    &__link {
+      @apply cursor-not-allowed;
+    }
+  }
+
   &:not(.disabled):focus-within {
     .navbar-filter__link {
-      @apply shadow-md;
+      @apply shadow-md shadow-blue-600/75 dark:shadow-slate-300/50;
     }
 
     .navbar-filter-items {
@@ -184,7 +191,7 @@ export default {
   }
 
   &-items {
-    @apply absolute flex flex-col bg-blue-400 sm:shadow-center sm:shadow-blue-600/75 sm:rounded-md transition-all overflow-y-auto overflow-x-hidden max-h-[86.5vh] sm:max-h-60 left-0 mt-2 sm:mt-0 sm:left-auto scale-y-0 origin-top;
+    @apply absolute flex flex-col bg-blue-400 dark:bg-slate-700 sm:shadow-md sm:shadow-blue-600/75 sm:dark:shadow-slate-200/75 sm:rounded-md transition-all overflow-y-auto overflow-x-hidden max-h-[86.5vh] sm:max-h-60 left-0 mt-2 sm:mt-0 sm:left-auto scale-y-0 origin-top;
     @media (min-width: 640px) {
       scrollbar-width: none; /* Firefox */
       -ms-overflow-style: none; /* IE 10+ */
@@ -198,7 +205,7 @@ export default {
   // add class exept sort
   &.group {
     .router-link-active {
-      @apply bg-blue-600;
+      @apply bg-blue-600 dark:bg-slate-900;
     }
   }
 
@@ -212,10 +219,10 @@ export default {
     }
 
     &__link {
-      @apply flex space-x-2 items-center font-semibold px-2 py-1 hover:bg-blue-600/50 text-white w-screen sm:w-44;
+      @apply flex space-x-2 items-center font-semibold px-2 py-1 hover:bg-blue-600/50 dark:hover:bg-slate-900/40 text-white w-screen sm:w-44;
 
       &.active {
-        @apply bg-blue-600;
+        @apply bg-blue-600 dark:bg-slate-900;
       }
 
       &.sub-menu::after {
@@ -243,13 +250,13 @@ export default {
   }
 
   &-item {
-    @apply bg-blue-600/30 flex items-center w-full;
+    @apply bg-blue-600/30 dark:bg-slate-900/20 flex items-center w-full;
 
     &__link {
-      @apply text-white flex space-x-2 items-center w-full font-semibold px-2 py-1 hover:bg-blue-600/50 pl-7 sm:pl-4;
+      @apply text-white flex space-x-2 items-center w-full font-semibold px-2 py-1 hover:bg-blue-600/50 dark:hover:bg-slate-900/40 pl-7 sm:pl-4;
 
       &.active {
-        @apply bg-blue-600;
+        @apply bg-blue-600 dark:bg-slate-900;
       }
     }
 
@@ -267,11 +274,11 @@ export default {
   @apply inline-block mx-1 ml-3 flex-auto sm:flex-none relative;
 
   &__svg {
-    @apply absolute mt-2 ml-2 text-blue-500;
+    @apply absolute mt-2 ml-2 text-blue-500 dark:text-white;
   }
 
   &__input {
-    @apply bg-blue-300 focus:bg-blue-200 disabled:bg-slate-500 py-1 px-2 rounded-lg transition-all hover:shadow-sm hover:shadow-blue-600/75 focus:shadow-md focus:shadow-blue-600/75 w-full text-gray-600 font-semibold placeholder:italic placeholder:text-blue-500 disabled:placeholder:text-blue-200 placeholder:font-normal pl-8 focus:outline-none;
+    @apply bg-blue-300 dark:bg-slate-500 focus:bg-blue-200 dark:focus:bg-slate-400 disabled:bg-blue-600 dark:disabled:bg-slate-800 py-1 px-2 rounded-lg transition-all hover:shadow-sm hover:shadow-blue-600/75 dark:hover:shadow-slate-100/75 focus:shadow-md focus:shadow-blue-600/75 dark:focus:shadow-slate-100/75  w-full text-gray-600 dark:text-white font-semibold placeholder:italic placeholder:text-blue-500 dark:placeholder:text-gray-300 disabled:placeholder:text-blue-200 placeholder:font-normal pl-8 focus:outline-none;
   }
 }
 </style>
