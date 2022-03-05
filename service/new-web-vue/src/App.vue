@@ -349,21 +349,21 @@ export default {
     autoDark() {
       if (this.theme) return
 
-      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      const darkSheme = window.matchMedia("(prefers-color-scheme: dark)")
+
+      if (darkSheme.matches) {
         document.body.classList.add("dark")
       } else {
         document.body.classList.remove("dark")
       }
 
-      window
-        .matchMedia("(prefers-color-scheme: dark)")
-        .addEventListener("change", async () => {
-          if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-            document.body.classList.add("dark")
-          } else {
-            document.body.classList.remove("dark")
-          }
-        })
+      darkSheme.onchange = async () => {
+        if (darkSheme.matches) {
+          document.body.classList.add("dark")
+        } else {
+          document.body.classList.remove("dark")
+        }
+      }
     },
   },
 }
