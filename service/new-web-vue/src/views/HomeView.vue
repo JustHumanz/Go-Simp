@@ -4,17 +4,17 @@
       <img src="/src/assets/vtuber.png" draggable="false" alt="" class="header-image__img" />
     </div>
     <h3 class="header-title">Friend for get notification from vtuber</h3>
-    <a href="" class="header-button">
+    <a href="https://discord.com/oauth2/authorize?client_id=721964514018590802&permissions=456720&scope=bot%20applications.commands" target="_blank" class="header-button">
       <font-awesome-icon :icon="['fab', 'discord']" class="fa-fw" />
       Add to Discord
     </a>
     <div class="header-links">
-      <a href="" class="header-links__link">
+      <a href="https://discord.gg/ydWC5knbJT" class="header-links__link"  target="_blank">
         <font-awesome-icon :icon="['fab', 'discord']" class="fa-fw" />
         Discord Server
       </a>
       <span class="header-links__separator">|</span>
-      <a href="" class="header-links__link">
+      <a href="https://github.com/JustHumanz/Go-Simp" class="header-links__link"  target="_blank">
         <font-awesome-icon :icon="['fab', 'github']" class="fa-fw" />
         Source Code
       </a>
@@ -95,7 +95,7 @@
         Request your favorite vtuber to be here.
       </p>
     </div>
-    <a href="" class="ending-button">Request Here</a>
+    <a href="https://github.com/JustHumanz/Go-Simp/issues/new?assignees=JustHumanz&labels=enhancement&template=add_vtuber.md&title=Add+%5BVtuber+Nickname%5D+from+%5BGroup%2FAgency%5D" class="ending-button" target="_blank">Request Here</a>
   </section>
 </template>
 

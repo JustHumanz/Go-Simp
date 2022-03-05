@@ -6,6 +6,8 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
 <template>
   <a
     href="#"
+    @click="scrollUp"
+    onclick="return false"
     class="scroll-to-top"
     :style="{ transform: hide_scroll_up ? 'scale(0)' : 'scale(1)' }"
   >
@@ -271,14 +273,18 @@ export default {
 
         let topOfWindow = window.scrollY <= 0
 
-        console.log(topOfWindow)
-
         if (topOfWindow) {
           this.hide_scroll_up = true
         } else {
           this.hide_scroll_up = false
         }
       }
+    },
+    scrollUp() {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      })
     },
   },
 }
