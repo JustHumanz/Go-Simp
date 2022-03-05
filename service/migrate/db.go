@@ -150,7 +150,6 @@ func AddData(Data Vtuber) {
 					Region,
 					VtuberMember.Fanbase,
 					VtuberMember.Status,
-					MemberID,
 				)
 				if err != nil {
 					log.Error(err)
@@ -462,7 +461,6 @@ func AddData(Data Vtuber) {
 						Region,
 						VtuberMember.Fanbase,
 						VtuberMember.Status,
-						MemberID,
 					)
 					if err != nil {
 						log.Error(err)
