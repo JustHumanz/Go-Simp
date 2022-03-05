@@ -241,6 +241,8 @@ func AddData(Data Vtuber) {
 					VtuberMember.Twitch.TwitchUsername,
 					TwitchAvatar,
 					Region,
+					VtuberMember.Fanbase,
+					VtuberMember.Status,
 					MemberID,
 				)
 				if err != nil {
@@ -452,6 +454,9 @@ func AddData(Data Vtuber) {
 						VtuberMember.Twitch.TwitchUsername,
 						TwitchAvatar,
 						Region,
+						VtuberMember.Fanbase,
+						VtuberMember.Status,
+						MemberID,
 					)
 					if err != nil {
 						log.Error(err)
@@ -540,6 +545,8 @@ func AddData(Data Vtuber) {
 						VtuberMember.Twitch.TwitchUsername,
 						TwitchAvatar,
 						Region,
+						VtuberMember.Fanbase,
+						VtuberMember.Status,
 						MemberID,
 					)
 					if err != nil {
