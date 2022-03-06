@@ -67,12 +67,15 @@ import "./index.css"
                 >Vote</a
               >
             </li>
-              <li class="navbar-item mobile-menu invite">
+            <li class="navbar-item mobile-menu invite">
               <a
                 href="https://discord.com/oauth2/authorize?client_id=721964514018590802&permissions=456720&scope=bot%20applications.commands"
                 target="_blank"
                 class="navbar-link"
-                ><font-awesome-icon icon="right-to-bracket" class="fa-fw mr-1" />
+                ><font-awesome-icon
+                  icon="right-to-bracket"
+                  class="fa-fw mr-1"
+                />
                 Invite Me</a
               >
             </li>
@@ -95,11 +98,10 @@ import "./index.css"
           href="https://discord.com/oauth2/authorize?client_id=721964514018590802&permissions=456720&scope=bot%20applications.commands"
           target="_blank"
           ><font-awesome-icon icon="right-to-bracket" class="fa-fw" />
-           <span
+          <span
             class="navbar-buttons__hover group-hover:!opacity-100 group-hover:!scale-100"
             >Invite Me</span
           >
-          
         </a>
         <a
           class="navbar-buttons__button dashboard group"
@@ -446,7 +448,7 @@ export default {
 
         &.router-link-active,
         &.active {
-          @apply sm:shadow-md bg-cyan-600 dark:bg-slate-800 sm:bg-transparent sm:shadow-cyan-600/75 sm:dark:shadow-slate-200/75;
+          @apply sm:shadow-md bg-cyan-600 dark:bg-slate-800 sm:bg-transparent dark:sm:bg-transparent sm:shadow-cyan-600/75 sm:dark:shadow-slate-200/75;
         }
       }
 
