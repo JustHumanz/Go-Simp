@@ -122,7 +122,7 @@ export default {
 
 <style lang="scss" scoped>
 .header {
-  @apply bg-indigo-300 h-[90vh] px-12 flex flex-col items-center justify-center;
+  @apply bg-indigo-300 dark:bg-slate-600 h-[90vh] px-12 flex flex-col items-center justify-center;
 
   &-image {
     @apply overflow-hidden h-[19vmax] flex items-start drop-shadow-sm;
@@ -137,18 +137,18 @@ export default {
   }
 
   &-button {
-    @apply mt-2 bg-indigo-500 text-white text-lg font-bold rounded-md px-4 py-2 shadow-sm shadow-indigo-600/50 hover:shadow-lg transition-shadow;
+    @apply mt-2 bg-indigo-500 dark:bg-slate-800 text-white text-lg font-bold rounded-md px-4 py-2 shadow-sm shadow-indigo-600/50 dark:shadow-slate-800/50 hover:shadow-lg transition-shadow;
   }
 
   &-links {
     @apply mt-3 flex justify-center;
 
     &__link {
-      @apply text-white hover:text-indigo-600 text-sm font-thin tracking-tight;
+      @apply text-white hover:text-indigo-600 dark:hover:text-slate-400 text-sm font-thin tracking-tight;
     }
 
     &__separator {
-      @apply mx-1 text-indigo-500 text-sm font-thin tracking-tight;
+      @apply mx-1 text-indigo-500 dark:text-black text-sm font-thin tracking-tight;
     }
   }
 }
@@ -189,7 +189,7 @@ export default {
 }
 
 .ending {
-  @apply h-[90vh] flex justify-center items-center flex-col bg-sky-200;
+  @apply h-[90vh] flex justify-center items-center flex-col bg-sky-200 dark:bg-slate-500;
 
   &-content {
     @apply flex flex-col text-center;
@@ -204,7 +204,7 @@ export default {
   }
 
   &-button {
-    @apply mt-4 bg-sky-500 text-white text-lg font-bold rounded-md px-4 py-2 shadow-sm shadow-sky-600/50 hover:shadow-lg transition-shadow;
+    @apply mt-4 bg-sky-500 dark:bg-zinc-500 text-white text-lg font-bold rounded-md px-4 py-2 shadow-sm shadow-sky-600/50 dark:shadow-zinc-700/50 hover:shadow-lg transition-shadow;
   }
 }
 </style>

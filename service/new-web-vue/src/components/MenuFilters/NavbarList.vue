@@ -137,7 +137,7 @@ export default {
 
 <style lang="scss">
 .list-nav {
-  @apply bg-blue-400 dark:bg-slate-700 fixed top-16 py-2 px-5 w-screen flex flex-wrap-reverse items-center sm:justify-around justify-center z-10 select-none;
+  @apply bg-blue-400 dark:bg-slate-500 fixed top-16 py-2 px-5 w-screen flex flex-wrap-reverse items-center sm:justify-around justify-center z-10 select-none;
 }
 
 .navbar-filters {
@@ -219,7 +219,7 @@ export default {
     }
 
     &__link {
-      @apply flex space-x-2 items-center font-semibold px-2 py-1 hover:bg-blue-600/50 dark:hover:bg-slate-900/40 text-white w-screen sm:w-44;
+      @apply flex space-x-2 items-center font-semibold px-2 py-1 hover:bg-blue-500/60 dark:hover:bg-slate-900/40 text-white w-screen sm:w-44;
 
       &.active {
         @apply bg-blue-600 dark:bg-slate-900;
@@ -250,10 +250,10 @@ export default {
   }
 
   &-item {
-    @apply bg-blue-600/30 dark:bg-slate-900/20 flex items-center w-full;
+    @apply bg-blue-100/20 dark:bg-slate-900/20 flex items-center w-full;
 
     &__link {
-      @apply text-white flex space-x-2 items-center w-full font-semibold px-2 py-1 hover:bg-blue-600/50 dark:hover:bg-slate-900/40 pl-7 sm:pl-4;
+      @apply text-white flex space-x-2 items-center w-full font-semibold px-2 py-1 hover:bg-blue-500/40 dark:hover:bg-slate-900/40 pl-7 sm:pl-4;
 
       &.active {
         @apply bg-blue-600 dark:bg-slate-900;
@@ -278,7 +278,7 @@ export default {
   }
 
   &__input {
-    @apply bg-blue-300 dark:bg-slate-500 focus:bg-blue-200 dark:focus:bg-slate-400 disabled:bg-blue-600 dark:disabled:bg-slate-800 py-1 px-2 rounded-lg transition-all hover:shadow-sm hover:shadow-blue-600/75 dark:hover:shadow-slate-100/75 focus:shadow-md focus:shadow-blue-600/75 dark:focus:shadow-slate-100/75  w-full text-gray-600 dark:text-white font-semibold placeholder:italic placeholder:text-blue-500 dark:placeholder:text-gray-300 disabled:placeholder:text-blue-200 placeholder:font-normal pl-8 focus:outline-none;
+    @apply bg-blue-300 dark:bg-slate-400 focus:bg-blue-200 dark:focus:bg-slate-400 disabled:bg-blue-600 dark:disabled:bg-slate-700 py-1 px-2 rounded-lg transition-all hover:shadow-sm hover:shadow-blue-600/75 dark:hover:shadow-slate-100/75 focus:shadow-md focus:shadow-blue-600/75 dark:focus:shadow-slate-100/75  w-full text-gray-600 dark:text-white font-semibold placeholder:italic placeholder:text-blue-500 dark:placeholder:text-gray-300 disabled:placeholder:text-blue-200 placeholder:font-normal pl-8 focus:outline-none;
   }
 }
 </style>

@@ -61,18 +61,18 @@ import "./index.css"
             </li>
             <li class="navbar-item">
               <a
-                href="https://discord.com/oauth2/authorize?client_id=721964514018590802&permissions=456720&scope=bot%20applications.commands"
-                target="_blank"
-                class="navbar-link"
-                >Invite</a
-              >
-            </li>
-            <li class="navbar-item">
-              <a
                 href="https://top.gg/bot/721964514018590802"
                 target="_blank"
                 class="navbar-link"
                 >Vote</a
+              >
+            </li>
+              <li class="navbar-item mobile-menu invite">
+              <a
+                href="https://discord.com/oauth2/authorize?client_id=721964514018590802&permissions=456720&scope=bot%20applications.commands"
+                target="_blank"
+                class="navbar-link"
+                >Invite</a
               >
             </li>
             <li class="navbar-item mobile-menu dashboard">
@@ -388,7 +388,7 @@ export default {
 <style lang="scss" scoped>
 .nav {
   font-family: "Nunito", sans-serif;
-  @apply h-16 bg-cyan-500 shadow-md shadow-cyan-500/50 fixed top-0 left-0 w-screen z-[11] flex justify-center select-none;
+  @apply h-16 bg-cyan-500 dark:bg-slate-700 shadow-md shadow-cyan-500/50 dark:shadow-slate-700/50 fixed top-0 left-0 w-screen z-[11] flex justify-center select-none;
   .navbar {
     @apply mx-4 h-full flex justify-between md:justify-around items-center w-full md:w-[90%] lg:w-[85%];
 
@@ -421,18 +421,18 @@ export default {
 
     .navbar-items {
       // make nav-menu items using tailwind
-      @apply flex items-start sm:items-center flex-col sm:flex-row bg-cyan-500 rounded-md sm:bg-transparent w-[13rem] sm:w-auto absolute top-3 right-3 sm:top-auto sm:right-auto sm:static shadow-md shadow-black/50 sm:shadow-none overflow-hidden sm:overflow-visible scale-0 sm:scale-100 origin-top-right transition sm:transition-none duration-200 ease-in-out;
+      @apply flex items-start sm:items-center flex-col sm:flex-row bg-cyan-500 dark:bg-slate-700 sm:dark:bg-slate-700 rounded-md sm:bg-transparent w-[13rem] sm:w-auto absolute top-3 right-3 sm:top-auto sm:right-auto sm:static shadow-md shadow-black/50 sm:shadow-none overflow-hidden sm:overflow-visible scale-0 sm:scale-100 origin-top-right transition sm:transition-none duration-200 ease-in-out;
     }
 
     .navbar-item {
       @apply w-full sm:w-auto sm:mx-1;
 
       .navbar-link {
-        @apply w-full inline-block cursor-pointer text-white py-2 sm:py-1 px-2 sm:rounded-md transition-shadow sm:hover:shadow-sm sm:hover:shadow-cyan-600/75 hover:bg-black/10 sm:hover:bg-transparent font-semibold;
+        @apply w-full inline-block cursor-pointer text-white py-2 sm:py-1 px-2 sm:rounded-md transition-shadow sm:hover:shadow-sm sm:hover:shadow-cyan-600/75 sm:dark:hover:shadow-slate-200/75 hover:bg-black/10 hover:dark:bg-white/10 sm:hover:bg-transparent sm:hover:dark:bg-transparent font-semibold;
 
         &.router-link-active,
         &.active {
-          @apply sm:shadow-md bg-cyan-600 sm:bg-transparent sm:shadow-cyan-600/75;
+          @apply sm:shadow-md bg-cyan-600 sm:bg-transparent sm:shadow-cyan-600/75 sm:dark:shadow-slate-200/75;
         }
       }
 
@@ -440,7 +440,10 @@ export default {
         @apply block sm:hidden;
 
         &.dashboard {
-          @apply bg-rose-500;
+          @apply bg-rose-500 dark:bg-slate-900;
+        }
+        &.invite {
+          @apply bg-indigo-500 dark:bg-slate-800;
         }
       }
     }
@@ -456,18 +459,18 @@ export default {
         @apply my-3 py-1 px-2 rounded-md font-semibold text-white cursor-pointer shadow-none transition-shadow hover:shadow-md relative;
 
         &.dashboard {
-          @apply bg-rose-500 hover:shadow-rose-500/75 mr-2;
+          @apply bg-rose-500 dark:bg-slate-900 hover:shadow-rose-500/75 hover:dark:shadow-slate-100/75 mr-2;
 
           .navbar-buttons__hover {
-            @apply bg-rose-500 shadow-rose-500/75;
+            @apply bg-rose-500 dark:bg-slate-900 shadow-rose-500/75 dark:shadow-slate-100/75;
           }
         }
 
         &.dark-mode {
-          @apply bg-sky-500 dark:bg-slate-700 hover:shadow-sky-500/75 dark:hover:shadow-slate-700/75;
+          @apply bg-sky-500 dark:bg-slate-800 hover:shadow-sky-500/75 hover:dark:shadow-slate-100/75;
 
           .navbar-buttons__hover {
-            @apply bg-sky-500 dark:bg-slate-700 shadow-sky-500/75 dark:shadow-slate-700/75;
+            @apply bg-sky-500 dark:bg-slate-800 shadow-sky-500/75 dark:shadow-slate-100/75;
           }
         }
       }
