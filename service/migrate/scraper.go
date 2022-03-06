@@ -225,8 +225,8 @@ func (Data BiliBili) GetBiliBiliInfo() (Avatar, error) {
 				return Avatar{}, err
 			}
 
-			strings.Replace(Info.Data.Face, "http", "https", -1)
-			strings.Replace(Info.Data.TopPhoto, "http", "https", -1)
+			Info.Data.Face = strings.Replace(Info.Data.Face, "http", "https", -1)
+			Info.Data.TopPhoto = strings.Replace(Info.Data.TopPhoto, "http", "https", -1)
 
 			return Info, nil
 		} else {
