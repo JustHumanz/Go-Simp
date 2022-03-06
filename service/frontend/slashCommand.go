@@ -354,266 +354,125 @@ var (
 
 				loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
 				if !member.IsMemberNill() {
-					LiveBili, err := member.GetBlLiveStream(status)
+					LiveData, err := member.GetBlLiveStream(status)
 					if err != nil {
 						log.Error(err)
 					}
-					if LiveBili.ID != 0 {
-						Color, err := engine.GetColor(config.TmpDir, LiveBili.Thumb)
+					if LiveData.ID != 0 {
+						Color, err := engine.GetColor(config.TmpDir, LiveData.Thumb)
 						if err != nil {
 							log.Error(err)
 						}
 
-						Member, err := FindVtuber(LiveBili.Member.ID)
+						Member, err := FindVtuber(LiveData.Member.ID)
 						if err != nil {
 							log.Error(err)
 						}
 
-							LiveData.AddMember(Member)
-							FixName := engine.FixName(LiveData.Member.EnName, LiveData.Member.JpName)
-							view, err := strconv.Atoi(LiveData.Viewers)
-							if err != nil {
-								log.Error(err)
-							}
-							if status == config.PastStatus {
-								diff := time.Now().In(loc).Sub(LiveData.Schedul.In(loc))
-								embed = append(embed, engine.NewEmbed().
-									SetTitle(FixName).
-									SetAuthor(Nick, Avatar).
-									SetDescription(LiveData.Desc).
-									SetThumbnail(Member.BiliBiliAvatar).
-									SetImage(LiveData.Thumb).
-									SetURL("https://live.bilibili.com/"+strconv.Itoa(Member.BiliBiliRoomID)).
-									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-									AddField("Online", engine.NearestThousandFormat(float64(view))).
-									SetColor(Color).
-									SetFooter(LiveData.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
-							} else {
-								diff := LiveData.Schedul.In(loc).Sub(time.Now().In(loc))
-								embed = append(embed, engine.NewEmbed().
-									SetTitle(FixName).
-									SetAuthor(Nick, Avatar).
-									SetDescription(LiveData.Desc).
-									SetThumbnail(LiveData.Member.BiliBiliAvatar).
-									SetImage(LiveData.Thumb).
-									SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveData.Member.BiliBiliRoomID)).
-									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-									AddField("Online", engine.NearestThousandFormat(float64(view))).
-									SetColor(Color).
-									SetFooter(LiveData.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
-							}
-
+						LiveData.AddMember(Member)
+						FixName := engine.FixName(LiveData.Member.EnName, LiveData.Member.JpName)
+						view, err := strconv.Atoi(LiveData.Viewers)
+						if err != nil {
+							log.Error(err)
 						}
-					} else {
-						embed = append(embed, engine.NewEmbed().
-							SetAuthor(Nick, Avatar).
-							SetDescription("It looks like `"+group.GroupName+"` doesn't have a `"+status+"` schedule right now").
-							SetImage(engine.NotFoundIMG()).MessageEmbed)
+						if status == config.PastStatus {
+							diff := time.Now().In(loc).Sub(LiveData.Schedul.In(loc))
+							embed = append(embed, engine.NewEmbed().
+								SetTitle(FixName).
+								SetAuthor(Nick, Avatar).
+								SetDescription(LiveData.Desc).
+								SetThumbnail(Member.BiliBiliAvatar).
+								SetImage(LiveData.Thumb).
+								SetURL("https://live.bilibili.com/"+strconv.Itoa(Member.BiliBiliRoomID)).
+								AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
+								AddField("Online", engine.NearestThousandFormat(float64(view))).
+								SetColor(Color).
+								SetFooter(LiveData.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
+						} else {
+							diff := LiveData.Schedul.In(loc).Sub(time.Now().In(loc))
+							embed = append(embed, engine.NewEmbed().
+								SetTitle(FixName).
+								SetAuthor(Nick, Avatar).
+								SetDescription(LiveData.Desc).
+								SetThumbnail(LiveData.Member.BiliBiliAvatar).
+								SetImage(LiveData.Thumb).
+								SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveData.Member.BiliBiliRoomID)).
+								AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
+								AddField("Online", engine.NearestThousandFormat(float64(view))).
+								SetColor(Color).
+								SetFooter(LiveData.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
+						}
+
 					}
-					SendMessage(embed)
 				} else {
-					LiveBili, err := group.GetBlLiveStream(status)
-					if err != nil {
-						log.Error(err)
-					}
-					if LiveBili != nil {
-						for _, LiveData := range LiveBili {
-							Member, err := FindVtuber(LiveData.Member.ID)
-							if err != nil {
-								log.Error(err)
-							}
-
-							Color, err := engine.GetColor(config.TmpDir, LiveData.Thumb)
-							if err != nil {
-								log.Error(err)
-							}
-
-							LiveData.AddMember(Member)
-							FixName := engine.FixName(LiveData.Member.EnName, LiveData.Member.JpName)
-							view, err := strconv.Atoi(LiveData.Viewers)
-							if err != nil {
-								log.Error(err)
-							}
-
-							if status == config.PastStatus {
-								diff := time.Now().In(loc).Sub(LiveData.Schedul.In(loc))
-								embed = append(embed, engine.NewEmbed().
-									SetTitle(FixName).
-									SetAuthor(Nick, Avatar).
-									SetDescription(LiveData.Desc).
-									SetThumbnail(Member.BiliBiliAvatar).
-									SetImage(LiveData.Thumb).
-									SetURL("https://live.bilibili.com/"+strconv.Itoa(Member.BiliBiliRoomID)).
-									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-									AddField("Online", engine.NearestThousandFormat(float64(view))).
-									SetColor(Color).
-									SetFooter(LiveData.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
-							} else {
-								diff := LiveData.Schedul.In(loc).Sub(time.Now().In(loc))
-								embed = append(embed, engine.NewEmbed().
-									SetTitle(FixName).
-									SetAuthor(Nick, Avatar).
-									SetDescription(LiveData.Desc).
-									SetThumbnail(LiveData.Member.BiliBiliAvatar).
-									SetImage(LiveData.Thumb).
-									SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveData.Member.BiliBiliRoomID)).
-									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-									AddField("Online", engine.NearestThousandFormat(float64(view))).
-									SetColor(Color).
-									SetFooter(LiveData.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
-							}
-						}
-					} else {
-						embed = append(embed, engine.NewEmbed().
-							SetAuthor(Nick, Avatar).
-							SetDescription("It looks like `"+group.GroupName+"` doesn't have a `"+status+"` schedule right now").
-							SetImage(engine.NotFoundIMG()).MessageEmbed)
-					}
-					SendMessage(embed)
+					embed = append(embed, engine.NewEmbed().
+						SetAuthor(Nick, Avatar).
+						SetDescription("It looks like `"+group.GroupName+"` doesn't have a `"+status+"` schedule right now").
+						SetImage(engine.NotFoundIMG()).MessageEmbed)
 				}
+				SendMessage(embed)
 			} else {
-				if status == config.UpcomingStatus {
-					NotSupportUp(status, "Twitch")
-					return
+				LiveBili, err := group.GetBlLiveStream(status)
+				if err != nil {
+					log.Error(err)
 				}
-				if !member.IsMemberNill() {
-					LiveTwitch, err := member.GetTwitchLiveStream(status)
-					if err != nil {
-						log.Error(err)
-					}
-					FixName := engine.FixName(member.EnName, member.JpName)
-					if LiveTwitch.ID != 0 {
-						Color, err := engine.GetColor(config.TmpDir, Avatar)
-						if err != nil {
-							log.Error(err)
-						}
-						FanBase := "simps"
-						loc := engine.Zawarudo(member.Region)
-						diff := time.Now().In(loc).Sub(LiveTwitch.Schedul.In(loc))
-						view, err := strconv.Atoi(LiveTwitch.Viewers)
+				loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
+				if LiveBili != nil {
+					for _, LiveData := range LiveBili {
+						Member, err := FindVtuber(LiveData.Member.ID)
 						if err != nil {
 							log.Error(err)
 						}
 
-						if member.Fanbase != "" {
-							FanBase = member.Fanbase
+						Color, err := engine.GetColor(config.TmpDir, LiveData.Thumb)
+						if err != nil {
+							log.Error(err)
 						}
 
-						if LiveTwitch.Game == "" {
-							LiveTwitch.Game = "???"
+						LiveData.AddMember(Member)
+						FixName := engine.FixName(LiveData.Member.EnName, LiveData.Member.JpName)
+						view, err := strconv.Atoi(LiveData.Viewers)
+						if err != nil {
+							log.Error(err)
 						}
 
 						if status == config.PastStatus {
-							diff := time.Now().In(loc).Sub(LiveTwitch.Schedul.In(loc))
+							diff := time.Now().In(loc).Sub(LiveData.Schedul.In(loc))
 							embed = append(embed, engine.NewEmbed().
 								SetTitle(FixName).
-								SetAuthor(i.Member.Nick, Avatar).
-								SetThumbnail(LiveTwitch.Member.TwitchAvatar).
-								SetImage(LiveTwitch.Thumb).
-								SetURL("https://twitch.tv/"+LiveTwitch.Member.TwitchName).
+								SetAuthor(Nick, Avatar).
+								SetDescription(LiveData.Desc).
+								SetThumbnail(Member.BiliBiliAvatar).
+								SetImage(LiveData.Thumb).
+								SetURL("https://live.bilibili.com/"+strconv.Itoa(Member.BiliBiliRoomID)).
 								AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-								AddField("Viewers", engine.NearestThousandFormat(float64(view))+" "+FanBase).
-								InlineAllFields().
-								AddField("Game", LiveTwitch.Game).
+								AddField("Online", engine.NearestThousandFormat(float64(view))).
 								SetColor(Color).
-								SetFooter(LiveTwitch.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
-
+								SetFooter(LiveData.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
 						} else {
+							diff := LiveData.Schedul.In(loc).Sub(time.Now().In(loc))
 							embed = append(embed, engine.NewEmbed().
 								SetTitle(FixName).
-								SetAuthor(i.Member.Nick, Avatar).
-								SetThumbnail(LiveTwitch.Member.TwitchAvatar).
-								SetImage(LiveTwitch.Thumb).
-								SetURL("https://twitch.tv/"+LiveTwitch.Member.TwitchName).
+								SetAuthor(Nick, Avatar).
+								SetDescription(LiveData.Desc).
+								SetThumbnail(LiveData.Member.BiliBiliAvatar).
+								SetImage(LiveData.Thumb).
+								SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveData.Member.BiliBiliRoomID)).
 								AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-								AddField("Viewers", engine.NearestThousandFormat(float64(view))+" "+FanBase).
-								InlineAllFields().
-								AddField("Game", LiveTwitch.Game).
+								AddField("Online", engine.NearestThousandFormat(float64(view))).
 								SetColor(Color).
-								SetFooter(LiveTwitch.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
+								SetFooter(LiveData.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
 						}
-
-					} else {
-						embed = append(embed, engine.NewEmbed().
-							SetAuthor(Nick, Avatar).
-							SetDescription("It looks like `"+FixName+"` doesn't have a `"+status+"` schedule right now").
-							SetImage(engine.NotFoundIMG()).MessageEmbed)
 					}
 				} else {
-					TwitchLive, err := group.GetTwitchLiveStream(status)
-					if err != nil {
-						log.Error(err)
-					}
-					if TwitchLive != nil {
-						Color, err := engine.GetColor(config.TmpDir, Avatar)
-						if err != nil {
-							log.Error(err)
-						}
-
-						for _, LiveData := range TwitchLive {
-							FanBase := "simps"
-
-							Member, err := FindVtuber(LiveData.Member.ID)
-							if err != nil {
-								log.Error(err)
-							}
-
-							LiveData.AddMember(Member)
-							loc := engine.Zawarudo(LiveData.Member.Region)
-							FixName := engine.FixName(LiveData.Member.EnName, LiveData.Member.JpName)
-							view, err := strconv.Atoi(LiveData.Viewers)
-							if err != nil {
-								log.Error(err)
-							}
-
-							if LiveData.Member.Fanbase != "" {
-								FanBase = LiveData.Member.Fanbase
-							}
-
-							if LiveData.Game == "" {
-								LiveData.Game = "???"
-							}
-
-							if status == config.PastStatus {
-								diff := time.Now().In(loc).Sub(LiveData.Schedul.In(loc))
-								embed = append(embed, engine.NewEmbed().
-									SetTitle(FixName).
-									SetAuthor(Nick, Avatar).
-									SetThumbnail(LiveData.Member.TwitchAvatar).
-									SetImage(LiveData.Thumb).
-									SetURL("https://twitch.tv/"+LiveData.Member.TwitchName).
-									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-									AddField("Viewers", engine.NearestThousandFormat(float64(view))+" "+FanBase).
-									InlineAllFields().
-									AddField("Game", LiveData.Game).
-									SetColor(Color).
-									SetFooter(LiveData.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
-
-							} else {
-								diff := LiveData.Schedul.In(loc).Sub(time.Now().In(loc))
-								embed = append(embed, engine.NewEmbed().
-									SetTitle(FixName).
-									SetAuthor(Nick, Avatar).
-									SetThumbnail(LiveData.Member.TwitchAvatar).
-									SetImage(LiveData.Thumb).
-									SetURL("https://twitch.tv/"+LiveData.Member.TwitchName).
-									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-									AddField("Viewers", engine.NearestThousandFormat(float64(view))+" "+FanBase).
-									InlineAllFields().
-									AddField("Game", LiveData.Game).
-									SetColor(Color).
-									SetFooter(LiveData.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
-							}
-						}
-					} else {
-						embed = append(embed, engine.NewEmbed().
-							SetAuthor(Nick, Avatar).
-							SetDescription("It looks like `"+group.GroupName+"` doesn't have a `"+status+"` schedule right now").
-							SetImage(engine.NotFoundIMG()).MessageEmbed)
-					}
+					embed = append(embed, engine.NewEmbed().
+						SetAuthor(Nick, Avatar).
+						SetDescription("It looks like `"+group.GroupName+"` doesn't have a `"+status+"` schedule right now").
+						SetImage(engine.NotFoundIMG()).MessageEmbed)
 				}
 				SendMessage(embed)
 			}
+
 		},
 		"art": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			var embed *discordgo.MessageEmbed

@@ -67,6 +67,7 @@ func (Data *Member) GetBlLiveStream(status string) (LiveStream, error) {
 		defer rows.Close()
 
 		for rows.Next() {
+			var list LiveStream
 			err = rows.Scan(&list.ID, &list.Member.BiliBiliRoomID, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.Viewers, &list.End, &list.Member.ID)
 			if err != nil {
 				return LiveStream{}, err

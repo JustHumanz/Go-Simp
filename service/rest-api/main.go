@@ -87,24 +87,9 @@ func init() {
 					log.Error(err)
 				}
 
-				if Member.BiliBiliID != 0 {
-					var fanart interface{}
-					if Member.BiliBiliHashtag != "" {
-						fanart = Member.BiliBiliHashtag
-					} else {
-						fanart = nil
-					}
-					MemberData["BiliBili"] = map[string]interface{}{
-						"ID":          Member.BiliBiliID,
-						"RoomID":      Member.BiliBiliRoomID,
-						"Avatar":      Member.BiliBiliAvatar,
-						"Fanart":      fanart,
-						"Followers":   Subs.BiliFollow,
-						"TotalVideos": Subs.BiliVideos,
-						"ViwersCount": Subs.BiliViews,
-					}
-				} else {
-					MemberData["BiliBili"] = nil
+				isBlLive, err := Member.GetBlLiveStream(config.LiveStatus)
+				if err != nil {
+					log.Error(err)
 				}
 
 				isTwitchLive, err := Member.GetTwitchLiveStream(config.LiveStatus)
@@ -162,9 +147,9 @@ func init() {
 						if Member.BiliBiliID != 0 {
 							return map[string]interface{}{
 								"Avatar":      Member.BiliBiliAvatar,
-								"Fanart":      Member.BiliBiliHashtags,
+								"Fanart":      Member.BiliBiliHashtag,
 								"SpaceID":     Member.BiliBiliID,
-								"LiveID":      Member.BiliRoomID,
+								"LiveID":      Member.BiliBiliID,
 								"TotalVideos": Subs.BiliVideos,
 								"ViwersCount": Subs.BiliViews,
 								"Followers":   Subs.BiliFollow,
@@ -190,7 +175,7 @@ func init() {
 						if Member.TwitterName != "" {
 							return map[string]interface{}{
 								"Username":   Member.TwitterName,
-								"Fanart":     Member.TwitterHashtags,
+								"Fanart":     Member.TwitterHashtag,
 								"LewdFanart": Member.TwitterLewd,
 								"Followers":  Subs.TwFollow,
 							}
@@ -226,12 +211,12 @@ func init() {
 
 						if isBlLive.ID != 0 {
 							tmp["BiliBili"] = map[string]interface{}{
-								"URL": fmt.Sprintf("https://live.bilibili.com/%d", Member.BiliRoomID),
+								"URL": fmt.Sprintf("https://live.bilibili.com/%d", Member.BiliBiliRoomID),
 							}
 						} else {
 							tmp["BiliBili"] = nil
 						}
-            
+
 						if isTwitchLive.ID != 0 {
 							tmp["Twitch"] = map[string]interface{}{
 								"URL": fmt.Sprintf("https://www.twitch.tv/%s", Member.TwitchName),

@@ -562,7 +562,8 @@ func (Member Member) ScrapTwitterFanart(Scraper *twitterscraper.Scraper, Lewd bo
 	} else {
 		return nil, errors.New("still same")
 	}
-  
+}
+
 func (Member Member) GetFanartData(State string, Limit int) ([]DataFanart, error) {
 	var (
 		Datafanart []DataFanart
