@@ -72,7 +72,8 @@ import "./index.css"
                 href="https://discord.com/oauth2/authorize?client_id=721964514018590802&permissions=456720&scope=bot%20applications.commands"
                 target="_blank"
                 class="navbar-link"
-                >Invite</a
+                ><font-awesome-icon icon="right-to-bracket" class="fa-fw mr-1" />
+                Invite Me</a
               >
             </li>
             <li class="navbar-item mobile-menu dashboard">
@@ -80,7 +81,7 @@ import "./index.css"
                 href="https://web-admin.humanz.moe/login"
                 target="_blank"
                 class="navbar-link"
-                ><font-awesome-icon icon="gauge-simple" class="fa-fw" />
+                ><font-awesome-icon icon="gauge-simple" class="fa-fw mr-1" />
                 Dashboard</a
               >
             </li>
@@ -89,6 +90,17 @@ import "./index.css"
       </div>
 
       <div class="navbar-buttons">
+        <a
+          class="navbar-buttons__button invite group"
+          href="https://discord.com/oauth2/authorize?client_id=721964514018590802&permissions=456720&scope=bot%20applications.commands"
+          target="_blank"
+          ><font-awesome-icon icon="right-to-bracket" class="fa-fw" />
+           <span
+            class="navbar-buttons__hover group-hover:!opacity-100 group-hover:!scale-100"
+            >Invite Me</span
+          >
+          
+        </a>
         <a
           class="navbar-buttons__button dashboard group"
           href="https://web-admin.humanz.moe/login"
@@ -203,6 +215,7 @@ import {
   faCircleHalfStroke,
   faGaugeSimple,
   faEllipsisVertical,
+  faRightToBracket,
 } from "@fortawesome/free-solid-svg-icons"
 import { watch } from "@vue/runtime-core"
 library.add(
@@ -212,7 +225,8 @@ library.add(
   faSun,
   faGaugeSimple,
   faCircleHalfStroke,
-  faEllipsisVertical
+  faEllipsisVertical,
+  faRightToBracket
 )
 
 export default {
@@ -421,18 +435,18 @@ export default {
 
     .navbar-items {
       // make nav-menu items using tailwind
-      @apply flex items-start sm:items-center flex-col sm:flex-row bg-cyan-500 dark:bg-slate-700 sm:dark:bg-slate-700 rounded-md sm:bg-transparent w-[13rem] sm:w-auto absolute top-3 right-3 sm:top-auto sm:right-auto sm:static shadow-md shadow-black/50 sm:shadow-none overflow-hidden sm:overflow-visible scale-0 sm:scale-100 origin-top-right transition sm:transition-none duration-200 ease-in-out;
+      @apply flex items-start sm:items-center flex-col sm:flex-row bg-cyan-500 dark:bg-slate-600 sm:dark:bg-slate-700 rounded-md sm:bg-transparent w-[13rem] sm:w-auto absolute top-3 right-3 sm:top-auto sm:right-auto sm:static shadow-md shadow-black/50 sm:shadow-none overflow-hidden sm:overflow-visible scale-0 sm:scale-100 origin-top-right transition sm:transition-none duration-200 ease-in-out;
     }
 
     .navbar-item {
       @apply w-full sm:w-auto sm:mx-1;
 
       .navbar-link {
-        @apply w-full inline-block cursor-pointer text-white py-2 sm:py-1 px-2 sm:rounded-md transition-shadow sm:hover:shadow-sm sm:hover:shadow-cyan-600/75 sm:dark:hover:shadow-slate-200/75 hover:bg-black/10 hover:dark:bg-white/10 sm:hover:bg-transparent sm:hover:dark:bg-transparent font-semibold;
+        @apply w-full inline-block cursor-pointer text-white py-2 sm:py-1 px-2 sm:rounded-md transition-shadow sm:hover:shadow-sm sm:hover:shadow-cyan-600/75 sm:dark:hover:shadow-slate-200/75 hover:bg-black/20 sm:hover:bg-transparent sm:hover:dark:bg-transparent font-semibold;
 
         &.router-link-active,
         &.active {
-          @apply sm:shadow-md bg-cyan-600 sm:bg-transparent sm:shadow-cyan-600/75 sm:dark:shadow-slate-200/75;
+          @apply sm:shadow-md bg-cyan-600 dark:bg-slate-800 sm:bg-transparent sm:shadow-cyan-600/75 sm:dark:shadow-slate-200/75;
         }
       }
 
@@ -440,10 +454,10 @@ export default {
         @apply block sm:hidden;
 
         &.dashboard {
-          @apply bg-rose-500 dark:bg-slate-900;
+          @apply bg-rose-500 dark:bg-slate-800/50;
         }
         &.invite {
-          @apply bg-indigo-500 dark:bg-slate-800;
+          @apply bg-indigo-500 dark:bg-slate-800/20;
         }
       }
     }
@@ -463,6 +477,13 @@ export default {
 
           .navbar-buttons__hover {
             @apply bg-rose-500 dark:bg-slate-900 shadow-rose-500/75 dark:shadow-slate-100/75;
+          }
+        }
+        &.invite {
+          @apply bg-indigo-500 dark:bg-slate-800 hover:shadow-indigo-500/75 hover:dark:shadow-slate-100/75 mr-2;
+
+          .navbar-buttons__hover {
+            @apply bg-indigo-500 dark:bg-slate-800 shadow-indigo-500/75 dark:shadow-slate-100/75;
           }
         }
 
