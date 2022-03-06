@@ -173,7 +173,7 @@ func (i *checkYtCekJob) Run() {
 	} else {
 		for _, G := range *GroupPayload {
 			i.wg.Add(1)
-			StartCheckYT(G, i.Update, &i.wg)
+			go StartCheckYT(G, i.Update, &i.wg)
 		}
 		i.Reverse = true
 	}

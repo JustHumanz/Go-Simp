@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"errors"
@@ -10,6 +11,7 @@ import (
 	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
+	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -187,7 +189,12 @@ func (Data DataFanart) DeleteFanart(e string) error {
 }
 
 //Add new lewd fanart
-func AddLewd(Data DataFanart) error {
+func (Data DataFanart) AddLewd() error {
+	log.WithFields(log.Fields{
+		"Vtuber": Data.Member.Name,
+		"Img":    Data.Photos,
+		"URL":    Data.PermanentURL,
+	}).Info("New Lewd Fanart")
 	stmt, err := DB.Prepare(`INSERT INTO Lewd (PermanentURL,Author,Photos,Videos,Text,TweetID,PixivID,VtuberMember_id) values(?,?,?,?,?,?,?,?)`)
 	if err != nil {
 		return err
@@ -214,13 +221,7 @@ func (FanArt DataFanart) CheckTweetFanArt() (bool, error) {
 		)
 		err := DB.QueryRow(`SELECT id FROM Lewd WHERE TweetID=?`, FanArt.TweetID).Scan(&id)
 		if err == sql.ErrNoRows {
-			log.WithFields(log.Fields{
-				"Name":    FanArt.Member.EnName,
-				"Hashtag": FanArt.Member.TwitterHashtags,
-				"Lewd":    FanArt.Lewd,
-				"URL":     FanArt.PermanentURL,
-			}).Info("New Fanart")
-			err = AddLewd(FanArt)
+			err = FanArt.AddLewd()
 			if err != nil {
 				return false, err
 			}
@@ -234,7 +235,7 @@ func (FanArt DataFanart) CheckTweetFanArt() (bool, error) {
 		if err == sql.ErrNoRows {
 			log.WithFields(log.Fields{
 				"Name":    FanArt.Member.EnName,
-				"Hashtag": FanArt.Member.TwitterHashtags,
+				"Hashtag": FanArt.Member.TwitterHashtag,
 				"Lewd":    FanArt.Lewd,
 				"URL":     FanArt.PermanentURL,
 			}).Info("New Fanart")
@@ -261,7 +262,7 @@ func (FanArt DataFanart) CheckTweetFanArt() (bool, error) {
 			//update like
 			log.WithFields(log.Fields{
 				"Name":    FanArt.Member.EnName,
-				"Hashtag": FanArt.Member.TwitterHashtags,
+				"Hashtag": FanArt.Member.TwitterHashtag,
 				"Likes":   FanArt.Likes,
 			}).Info("Update like")
 			_, err := DB.Exec(`Update Twitter set Likes=? Where id=? `, FanArt.Likes, id)
@@ -313,12 +314,7 @@ func (FanArt DataFanart) CheckPixivFanArt() (bool, error) {
 		row := DB.QueryRow("SELECT id FROM Vtuber.Lewd where PixivID=?", FanArt.PixivID)
 		err := row.Scan(&tmp)
 		if err == sql.ErrNoRows {
-			log.WithFields(log.Fields{
-				"Vtuber": FanArt.Member.EnName,
-				"Img":    FanArt.Photos,
-				"URL":    FanArt.PermanentURL,
-			}).Info("New Lewd Fanart")
-			err = AddLewd(FanArt)
+			err = FanArt.AddLewd()
 			if err != nil {
 				return false, err
 			}
@@ -492,6 +488,81 @@ func (p *Member) GetRandomLewd() (*DataFanart, error) {
 	return b, nil
 }
 
+func (Member Member) ScrapTwitterFanart(Scraper *twitterscraper.Scraper, Lewd bool) ([]DataFanart, error) {
+
+	var (
+		FanartList []DataFanart
+	)
+
+	Query := func() string {
+		if Lewd {
+			return Member.TwitterLewd + " AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)"
+		} else {
+			return Member.TwitterHashtag + " AND (-filter:replies -filter:retweets -filter:quote) AND (filter:media OR filter:link)"
+		}
+	}()
+
+	log.WithFields(log.Fields{
+		"Hashtag": func() string {
+			if Lewd {
+				return Member.TwitterLewd
+			}
+			return Member.TwitterHashtag
+		}(),
+		"Vtuber": Member.Name,
+		"Lewd":   Lewd,
+	}).Info("Start curl twitter")
+
+	for tweet := range Scraper.SearchTweets(context.Background(), Query, config.GoSimpConf.LimitConf.TwitterFanart) {
+		if tweet.Error != nil {
+			log.Error(tweet.Error)
+			continue
+		}
+
+		for _, TweetHashtag := range tweet.Hashtags {
+			if (strings.EqualFold("#"+TweetHashtag, Member.TwitterHashtag) || strings.EqualFold("#"+TweetHashtag, Member.TwitterLewd)) && !tweet.IsQuoted && !tweet.IsReply && len(tweet.Photos) > 0 {
+				TweetArt := DataFanart{
+					PermanentURL: tweet.PermanentURL,
+					Author:       tweet.Username,
+					AuthorAvatar: func() string {
+						profile, err := Scraper.GetProfile(tweet.Username)
+						if err != nil {
+							log.Error(err)
+						}
+						return strings.Replace(profile.Avatar, "normal.jpg", "400x400.jpg", -1)
+					}(),
+					TweetID: tweet.ID,
+					Text: func() string {
+						return regexp.MustCompile(`(?m)^(.*?)https:\/\/t.co\/.+`).ReplaceAllString(tweet.Text, "${1}$2")
+					}(),
+					Photos: tweet.Photos,
+					Likes:  tweet.Likes,
+					Member: Member,
+					State:  config.TwitterArt,
+					Lewd:   Lewd,
+				}
+				if tweet.Videos != nil {
+					TweetArt.Videos = tweet.Videos[0].Preview
+				}
+
+				New, err := TweetArt.CheckTweetFanArt()
+				if err != nil {
+					return nil, err
+				}
+
+				if New {
+					FanartList = append(FanartList, TweetArt)
+				}
+			}
+		}
+	}
+
+	if len(FanartList) > 0 {
+		return FanartList, nil
+	} else {
+		return nil, errors.New("still same")
+	}
+  
 func (Member Member) GetFanartData(State string, Limit int) ([]DataFanart, error) {
 	var (
 		Datafanart []DataFanart

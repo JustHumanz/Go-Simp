@@ -153,13 +153,13 @@ func (k *checkBlJob) Run() {
 		defer wg.Done()
 
 		for _, Member := range Group.Members {
-			if Member.BiliBiliHashtags != "" {
+			if Member.BiliBiliHashtag != "" {
 				log.WithFields(log.Fields{
 					"Group":  Group.GroupName,
 					"Vtuber": Member.EnName,
 				}).Info("Start crawler bilibili")
 
-				body, errcurl := network.CoolerCurl("https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_name="+url.QueryEscape(Member.BiliBiliHashtags), nil)
+				body, errcurl := network.CoolerCurl("https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_name="+url.QueryEscape(Member.BiliBiliHashtag), nil)
 				if errcurl != nil {
 					log.Error(errcurl)
 					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{

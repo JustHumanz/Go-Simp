@@ -48,24 +48,26 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							if err != nil {
 								log.Error(err)
 							}
-							diff := time.Now().In(loc).Sub(LiveBili.Schedul.In(loc))
-							view, err := strconv.Atoi(LiveBili.Viewers)
-							if err != nil {
-								log.Error(err)
-							}
-							_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-								SetTitle(FixName).
-								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-								SetDescription(LiveBili.Desc).
-								SetThumbnail(Member.BiliBiliAvatar).
-								SetImage(LiveBili.Thumb).
-								SetURL("https://live.bilibili.com/"+strconv.Itoa(Member.BiliRoomID)).
-								AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-								AddField("Online", engine.NearestThousandFormat(float64(view))).
-								SetColor(Color).
-								SetFooter(LiveBili.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
-							if err != nil {
-								log.Error(err)
+							for _, LiveData := range LiveBili {
+								diff := time.Now().In(loc).Sub(LiveData.Schedul.In(loc))
+								view, err := strconv.Atoi(LiveData.Viewers)
+								if err != nil {
+									log.Error(err)
+								}
+								_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+									SetTitle(FixName).
+									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+									SetDescription(LiveData.Desc).
+									SetThumbnail(Member.BiliBiliAvatar).
+									SetImage(LiveData.Thumb).
+									SetURL("https://live.bilibili.com/"+strconv.Itoa(Member.BiliBiliRoomID)).
+									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
+									AddField("Online", engine.NearestThousandFormat(float64(view))).
+									SetColor(Color).
+									SetFooter(LiveData.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
+								if err != nil {
+									log.Error(err)
+								}
 							}
 						} else {
 							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
@@ -110,7 +112,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetDescription(LiveData.Desc).
 									SetThumbnail(LiveData.Member.BiliBiliAvatar).
 									SetImage(LiveData.Thumb).
-									SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveData.Member.BiliRoomID)).
+									SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveData.Member.BiliBiliRoomID)).
 									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
 									AddField("Online", engine.NearestThousandFormat(float64(view))).
 									SetColor(Color).
@@ -156,24 +158,28 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							if err != nil {
 								log.Error(err)
 							}
-							diff := LiveBili.Schedul.In(loc).Sub(time.Now().In(loc))
-							view, err := strconv.Atoi(LiveBili.Viewers)
-							if err != nil {
-								log.Error(err)
-							}
-							_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
-								SetTitle(FixName).
-								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-								SetDescription(LiveBili.Desc).
-								SetThumbnail(Member.BiliBiliAvatar).
-								SetImage(LiveBili.Thumb).
-								SetURL("https://live.bilibili.com/"+strconv.Itoa(Member.BiliRoomID)).
-								AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-								AddField("Online", engine.NearestThousandFormat(float64(view))).
-								SetColor(Color).
-								SetFooter(LiveBili.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
-							if err != nil {
-								log.Error(err)
+
+							for _, LiveData := range LiveBili {
+								diff := LiveData.Schedul.In(loc).Sub(time.Now().In(loc))
+								view, err := strconv.Atoi(LiveData.Viewers)
+								if err != nil {
+									log.Error(err)
+								}
+								_, err = s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
+									SetTitle(FixName).
+									SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
+									SetDescription(LiveData.Desc).
+									SetThumbnail(Member.BiliBiliAvatar).
+									SetImage(LiveData.Thumb).
+									SetURL("https://live.bilibili.com/"+strconv.Itoa(Member.BiliBiliRoomID)).
+									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
+									AddField("Online", engine.NearestThousandFormat(float64(view))).
+									SetColor(Color).
+									SetFooter(LiveData.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
+								if err != nil {
+									log.Error(err)
+								}
+
 							}
 						} else {
 							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
@@ -218,7 +224,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 									SetDescription(LiveData.Desc).
 									SetThumbnail(LiveData.Member.BiliBiliAvatar).
 									SetImage(LiveData.Thumb).
-									SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveData.Member.BiliRoomID)).
+									SetURL("https://live.bilibili.com/"+strconv.Itoa(LiveData.Member.BiliBiliRoomID)).
 									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
 									AddField("Online", engine.NearestThousandFormat(float64(view))).
 									SetColor(Color).

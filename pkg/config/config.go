@@ -173,7 +173,6 @@ type ConfigFile struct {
 	LimitConf struct {
 		TwitterFanart int `toml:"TwitterLimit"`
 		SpaceBiliBili int `toml:"SpaceBiliBili"`
-		YoutubeLimit  int `toml:"YoutubeLimit"`
 	} `toml:"Limit"`
 	SQL struct {
 		User         string `toml:"User"`
@@ -268,10 +267,6 @@ func (Data ConfigFile) InitConf() {
 	GuideURL = fmt.Sprintf("https://go-simp.%s/Guide/", Data.Domain)
 	VtubersData = fmt.Sprintf("https://go-simp.%s", Data.Domain)
 	PixivProxy = fmt.Sprintf("https://cdn.%s/pixiv/?pixivURL=", Data.Domain)
-
-	if Data.LimitConf.YoutubeLimit >= 15 {
-		GoSimpConf.LimitConf.YoutubeLimit = 15
-	}
 
 	if Data.BotPrefix.Bilibili == "" {
 		log.Fatal("Bilibili Prefix not found")

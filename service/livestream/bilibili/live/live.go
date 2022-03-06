@@ -144,7 +144,7 @@ func (i *checkBlLiveeJob) Run() {
 								"Group":  Agency.GroupName,
 								"Vtuber": Member.Name,
 							}).Info("Checking LiveBiliBili")
-							Status, err := engine.GetRoomStatus(Member.BiliRoomID)
+							Status, err := engine.GetRoomStatus(Member.BiliBiliRoomID)
 							if err != nil {
 								log.Error(err)
 								gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
@@ -209,7 +209,7 @@ func (i *checkBlLiveeJob) Run() {
 									"Vtuber": Member.EnName,
 									"Start":  Bili.Schedul,
 								}).Info("Past live stream")
-								engine.RemoveEmbed(strconv.Itoa(Bili.Member.BiliRoomID), Bot)
+								engine.RemoveEmbed(strconv.Itoa(Bili.Member.BiliBiliRoomID), Bot)
 								Bili.UpdateEnd(time.Now().In(loc)).
 									UpdateStatus(config.PastStatus)
 

@@ -2,7 +2,7 @@
 
 ## Simple Setup
 First create a channel for this bot,Example `holosimps_channel`
-then execute `/setup` for setup or you can setup it from [web](https://web-admin.humanz.moe/Login)
+then execute `/setup` for setup or you can setup it from [web](https://web-admin.humanz.moe/login)
 
 ## Setup bot to ping roles
 After you create and enable channel you can setup bot for ping some roles if any new livestream from vtubers  

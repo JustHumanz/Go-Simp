@@ -87,9 +87,24 @@ func init() {
 					log.Error(err)
 				}
 
-				isBlLive, err := Member.GetBlLiveStream(config.LiveStatus)
-				if err != nil {
-					log.Error(err)
+				if Member.BiliBiliID != 0 {
+					var fanart interface{}
+					if Member.BiliBiliHashtag != "" {
+						fanart = Member.BiliBiliHashtag
+					} else {
+						fanart = nil
+					}
+					MemberData["BiliBili"] = map[string]interface{}{
+						"ID":          Member.BiliBiliID,
+						"RoomID":      Member.BiliBiliRoomID,
+						"Avatar":      Member.BiliBiliAvatar,
+						"Fanart":      fanart,
+						"Followers":   Subs.BiliFollow,
+						"TotalVideos": Subs.BiliVideos,
+						"ViwersCount": Subs.BiliViews,
+					}
+				} else {
+					MemberData["BiliBili"] = nil
 				}
 
 				isTwitchLive, err := Member.GetTwitchLiveStream(config.LiveStatus)
@@ -216,7 +231,7 @@ func init() {
 						} else {
 							tmp["BiliBili"] = nil
 						}
-
+            
 						if isTwitchLive.ID != 0 {
 							tmp["Twitch"] = map[string]interface{}{
 								"URL": fmt.Sprintf("https://www.twitch.tv/%s", Member.TwitchName),

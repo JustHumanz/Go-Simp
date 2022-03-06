@@ -117,7 +117,6 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 			}).Info(res.Message)
 
 			Twit.Run()
-			time.Sleep(10 * time.Second)
 			_, _ = client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
 				Service: ModuleState,
 				Message: "Done",
@@ -140,13 +139,12 @@ type checkTwJob struct {
 }
 
 func (i *checkTwJob) Run() {
-	Cek := func(Group database.Group, w *sync.WaitGroup) {
+	Cek := func(Member database.Member, w *sync.WaitGroup) {
 		defer w.Done()
-		Fanarts, err := engine.CreatePayload(Group, engine.InitTwitterScraper(), config.GoSimpConf.LimitConf.TwitterFanart, *lewd)
+		Fanarts, err := Member.ScrapTwitterFanart(engine.InitTwitterScraper(), false)
 		if err != nil {
-			log.WithFields(log.Fields{
-				"Group": Group.GroupName,
-			}).Error(err)
+			log.Error(err)
+			return
 		}
 		for _, Art := range Fanarts {
 			if config.GoSimpConf.Metric {
@@ -157,20 +155,46 @@ func (i *checkTwJob) Run() {
 			}
 			engine.SendFanArtNude(Art, Bot)
 		}
+
+		if *lewd {
+			Fanarts, err := Member.ScrapTwitterFanart(engine.InitTwitterScraper(), true)
+			if err != nil {
+				log.Error(err)
+				return
+			}
+			for _, Art := range Fanarts {
+				if config.GoSimpConf.Metric {
+					gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+						MetricData: Art.MarshallBin(),
+						State:      config.FanartState,
+					})
+				}
+				engine.SendFanArtNude(Art, Bot)
+			}
+		}
 	}
 
 	if i.Reverse {
 		for j := len(*GroupPayload) - 1; j >= 0; j-- {
-			i.wg.Add(1)
 			Grp := *GroupPayload
-			go Cek(Grp[j], &i.wg)
+
+			for _, Vtuber := range Grp[j].Members {
+				if Vtuber.TwitterHashtag != "" || Vtuber.TwitterLewd != "" {
+					i.wg.Add(1)
+					go Cek(Vtuber, &i.wg)
+				}
+			}
 		}
 		i.Reverse = false
 
 	} else {
 		for _, G := range *GroupPayload {
-			i.wg.Add(1)
-			go Cek(G, &i.wg)
+			for _, Vtuber := range G.Members {
+				if Vtuber.TwitterHashtag != "" || Vtuber.TwitterLewd != "" {
+					i.wg.Add(1)
+					go Cek(Vtuber, &i.wg)
+				}
+			}
 		}
 		i.Reverse = true
 	}

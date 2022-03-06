@@ -384,12 +384,12 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					Done = nil
 				}
 				for i, Member := range MemberTag {
-					Group, err := FindGropName(Member.GroupID)
+					Group, err := FindGropName(Member.Group.ID)
 					if err != nil {
 						log.Error(err)
 					}
 
-					if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.GroupID) {
+					if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.Group.ID) {
 						User.SetGroup(Group).
 							SetReminder(ReminderUser)
 
@@ -559,12 +559,12 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					}
 				}
 				for i, Member := range MemberTag {
-					Group, err := FindGropName(Member.GroupID)
+					Group, err := FindGropName(Member.Group.ID)
 					if err != nil {
 						log.Error(err)
 					}
 
-					if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.GroupID) {
+					if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.Group.ID) {
 						User.SetGroup(Group).
 							SetReminder(ReminderUser).
 							SetMember(Member)
@@ -707,12 +707,12 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 				Already = nil
 				Done = nil
 				for i, Member := range MemberTag {
-					Group, err := FindGropName(Member.GroupID)
+					Group, err := FindGropName(Member.Group.ID)
 					if err != nil {
 						log.Error(err)
 					}
 
-					if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.GroupID) {
+					if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.Group.ID) {
 						err := User.SetGroup(Group).SetMember(Member).Deluser()
 						if err != nil {
 							Already = append(Already, "`"+tmp[i]+"`")
@@ -898,12 +898,12 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						Done = nil
 					}
 					for i, Member := range MemberTag {
-						Group, err := FindGropName(Member.GroupID)
+						Group, err := FindGropName(Member.Group.ID)
 						if err != nil {
 							log.Error(err)
 						}
 
-						if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.GroupID) {
+						if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.Group.ID) {
 							for _, Role := range guild.Roles {
 								for _, UserRole := range VtuberName {
 									if UserRole == Role.Mention() {
@@ -1073,11 +1073,11 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 					Already = nil
 					Done = nil
 					for i, Member := range MemberTag {
-						Group, err := FindGropName(Member.GroupID)
+						Group, err := FindGropName(Member.Group.ID)
 						if err != nil {
 							log.Error(err)
 						}
-						if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.GroupID) {
+						if database.CheckChannelEnable(m.ChannelID, tmp[i], Member.Group.ID) {
 							for _, Role := range guild.Roles {
 								for _, UserRole := range VtuberName {
 									if UserRole == Role.Mention() {
@@ -1276,7 +1276,7 @@ func Tags(s *discordgo.Session, m *discordgo.MessageCreate) {
 						Done = nil
 					}
 					for i, Member := range MemberTag {
-						Group, err := FindGropName(Member.GroupID)
+						Group, err := FindGropName(Member.Group.ID)
 						if err != nil {
 							log.Error(err)
 						}

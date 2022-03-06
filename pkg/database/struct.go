@@ -35,29 +35,37 @@ func (Data Group) IsNull() bool {
 
 //Member Member struct
 type Member struct {
-	ID               int64
-	Name             string
-	EnName           string
-	JpName           string
-	YoutubeID        string
-	YoutubeAvatar    string
-	BiliBiliID       int
-	BiliRoomID       int
-	TwitterHashtags  string
-	TwitterName      string
-	TwitterLewd      string
-	BiliBiliHashtags string
-	BiliBiliAvatar   string
-	TwitchName       string
-	TwitchAvatar     string
-	Region           string
-	Fanbase          string
-	Status           string
-	GroupID          int64
+	ID            int64
+	Name          string
+	EnName        string
+	JpName        string
+	YoutubeID     string
+	YoutubeAvatar string
+	YoutubeBanner string
+
+	BiliBiliID      int
+	BiliBiliRoomID  int
+	BiliBiliHashtag string
+	BiliBiliAvatar  string
+	BiliBiliBanner  string
+
+	TwitterHashtag string
+	TwitterName    string
+	TwitterLewd    string
+	TwitterAvatar  string
+	TwitterBanner  string
+
+	TwitchName   string
+	TwitchAvatar string
+	Region       string
+	Fanbase      string
+	Status       string
+
+	Group Group
 }
 
 func (Data Member) IsMemberNill() bool {
-	return Data == (Member{})
+	return Data.ID == 0
 }
 
 func (Data Member) Active() bool {
@@ -73,7 +81,7 @@ func (Data Member) IsTwitchNill() bool {
 }
 
 func (Data Member) IsBiliNill() bool {
-	return Data.BiliRoomID == 0
+	return Data.BiliBiliRoomID == 0
 }
 
 func (Data Member) IsTwNill() bool {

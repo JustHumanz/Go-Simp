@@ -1,12 +1,6 @@
 name: build go-simp main module
 
-on:
-  push:
-    branches:
-      - 'master'
-    paths-ignore:
-      - '.github/**'
-      - 'service/pilot/**'
+on: workflow_dispatch 
       
 jobs:
   build:
