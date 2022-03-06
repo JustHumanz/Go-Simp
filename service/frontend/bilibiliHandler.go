@@ -24,7 +24,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 			Payload := strings.Split(strings.TrimSpace(CommandArray[1]), ",")
 			if CommandArray[0] == Prefix+Live {
 				for _, FindGroupArry := range Payload {
-					VTuberGroup, err := FindGropName(FindGroupArry)
+					Agency, err := FindGropName(FindGroupArry)
 					if err != nil {
 						Member, err := FindVtuber(FindGroupArry)
 						if err != nil {
@@ -32,11 +32,8 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
 						}
-						//0, Member.ID, config.LiveStatus
-						LiveBili, _, err := database.BilGet(map[string]interface{}{
-							"Status":   config.LiveStatus,
-							"MemberID": Member.ID,
-						})
+
+						LiveBili, err := Member.GetBlLiveStream(config.LiveStatus)
 						if err != nil {
 							log.Error(err)
 							SendError(map[string]string{
@@ -46,7 +43,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							})
 						}
 						FixName := engine.FixName(Member.EnName, Member.JpName)
-						if LiveBili != nil {
+						if LiveBili.ID != 0 {
 							Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 							if err != nil {
 								log.Error(err)
@@ -82,11 +79,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						//VTuberGroup.ID, 0, config.LiveStatus
-						LiveBili, _, err := database.BilGet(map[string]interface{}{
-							"GroupID": VTuberGroup.ID,
-							"Status":  config.LiveStatus,
-						})
+						LiveBili, err := Agency.GetBlLiveStream(config.LiveStatus)
 						if err != nil {
 							log.Error(err)
 							SendError(map[string]string{
@@ -131,7 +124,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						} else {
 							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-								SetDescription("It looks like `"+VTuberGroup.GroupName+"` doesn't have a livestream right now").
+								SetDescription("It looks like `"+Agency.GroupName+"` doesn't have a livestream right now").
 								SetImage(engine.NotFoundIMG()).MessageEmbed)
 							if err != nil {
 								log.Error(err)
@@ -142,7 +135,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 			} else if CommandArray[0] == Prefix+Past || CommandArray[0] == Prefix+"last" {
 				for _, FindGroupArry := range Payload {
-					VTuberGroup, err := FindGropName(FindGroupArry)
+					Agency, err := FindGropName(FindGroupArry)
 					if err != nil {
 						Member, err := FindVtuber(FindGroupArry)
 						if err != nil {
@@ -150,10 +143,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							s.ChannelMessageSend(m.ChannelID, "`"+FindGroupArry+"`,Name of Vtuber Group or Vtuber Name was not found")
 							return
 						}
-						LiveBili, _, err := database.BilGet(map[string]interface{}{
-							"Status":   config.PastStatus,
-							"MemberID": Member.ID,
-						})
+						LiveBili, err := Member.GetBlLiveStream(config.PastStatus)
 						if err != nil {
 							log.Error(err)
 							SendError(map[string]string{
@@ -163,7 +153,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							})
 						}
 						FixName := engine.FixName(Member.JpName, Member.EnName)
-						if LiveBili != nil {
+						if LiveBili.ID != 0 {
 							Color, err := engine.GetColor(config.TmpDir, m.Author.AvatarURL("128"))
 							if err != nil {
 								log.Error(err)
@@ -189,6 +179,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 								if err != nil {
 									log.Error(err)
 								}
+
 							}
 						} else {
 							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
@@ -200,10 +191,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 							}
 						}
 					} else {
-						LiveBili, _, err := database.BilGet(map[string]interface{}{
-							"GroupID": VTuberGroup.ID,
-							"Status":  config.PastStatus,
-						})
+						LiveBili, err := Agency.GetBlLiveStream(config.PastStatus)
 						if err != nil {
 							log.Error(err)
 							SendError(map[string]string{
@@ -248,7 +236,7 @@ func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 						} else {
 							_, err := s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 								SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
-								SetDescription("It looks like `"+VTuberGroup.GroupName+"` doesn't have a Past livestream right now").
+								SetDescription("It looks like `"+Agency.GroupName+"` doesn't have a Past livestream right now").
 								SetImage(engine.NotFoundIMG()).MessageEmbed)
 							if err != nil {
 								log.Error(err)

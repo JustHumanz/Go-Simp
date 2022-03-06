@@ -110,7 +110,7 @@ jobs:
         with:
           context: ./service/rest-api/
           push: true
-          tags: justhumanz/go-simp-rest_api:${{ github.event.inputs.versionTag }}
+          tags: justhumanz/go-simp-rest_api:v2-${{ github.event.inputs.versionTag }}
 
       ### Frontend
       -

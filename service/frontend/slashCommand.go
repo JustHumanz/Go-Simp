@@ -354,24 +354,20 @@ var (
 
 				loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
 				if !member.IsMemberNill() {
-					LiveBili, _, err := database.BilGet(map[string]interface{}{
-						"MemberID": member.ID,
-						"Status":   status,
-					})
+					LiveBili, err := member.GetBlLiveStream(status)
 					if err != nil {
 						log.Error(err)
 					}
-					if LiveBili != nil {
-						for _, LiveData := range LiveBili {
-							Color, err := engine.GetColor(config.TmpDir, LiveData.Thumb)
-							if err != nil {
-								log.Error(err)
-							}
+					if LiveBili.ID != 0 {
+						Color, err := engine.GetColor(config.TmpDir, LiveBili.Thumb)
+						if err != nil {
+							log.Error(err)
+						}
 
-							Member, err := FindVtuber(LiveData.Member.ID)
-							if err != nil {
-								log.Error(err)
-							}
+						Member, err := FindVtuber(LiveBili.Member.ID)
+						if err != nil {
+							log.Error(err)
+						}
 
 							LiveData.AddMember(Member)
 							FixName := engine.FixName(LiveData.Member.EnName, LiveData.Member.JpName)
@@ -406,6 +402,7 @@ var (
 									SetColor(Color).
 									SetFooter(LiveData.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
 							}
+
 						}
 					} else {
 						embed = append(embed, engine.NewEmbed().
@@ -415,10 +412,7 @@ var (
 					}
 					SendMessage(embed)
 				} else {
-					LiveBili, _, err := database.BilGet(map[string]interface{}{
-						"GroupID": group.ID,
-						"Status":  status,
-					})
+					LiveBili, err := group.GetBlLiveStream(status)
 					if err != nil {
 						log.Error(err)
 					}
@@ -483,67 +477,62 @@ var (
 					return
 				}
 				if !member.IsMemberNill() {
-					LiveTwitch, err := database.TwitchGet(map[string]interface{}{
-						"MemberID": member.ID,
-						"Status":   status,
-					})
+					LiveTwitch, err := member.GetTwitchLiveStream(status)
 					if err != nil {
 						log.Error(err)
 					}
 					FixName := engine.FixName(member.EnName, member.JpName)
-					if LiveTwitch != nil {
+					if LiveTwitch.ID != 0 {
 						Color, err := engine.GetColor(config.TmpDir, Avatar)
 						if err != nil {
 							log.Error(err)
 						}
-						for _, LiveData := range LiveTwitch {
-							FanBase := "simps"
-							loc := engine.Zawarudo(member.Region)
-							diff := time.Now().In(loc).Sub(LiveData.Schedul.In(loc))
-							view, err := strconv.Atoi(LiveData.Viewers)
-							if err != nil {
-								log.Error(err)
-							}
-
-							if member.Fanbase != "" {
-								FanBase = member.Fanbase
-							}
-
-							if LiveData.Game == "" {
-								LiveData.Game = "???"
-							}
-
-							if status == config.PastStatus {
-								diff := time.Now().In(loc).Sub(LiveData.Schedul.In(loc))
-								embed = append(embed, engine.NewEmbed().
-									SetTitle(FixName).
-									SetAuthor(i.Member.Nick, Avatar).
-									SetThumbnail(LiveData.Member.TwitchAvatar).
-									SetImage(LiveData.Thumb).
-									SetURL("https://twitch.tv/"+LiveData.Member.TwitchName).
-									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-									AddField("Viewers", engine.NearestThousandFormat(float64(view))+" "+FanBase).
-									InlineAllFields().
-									AddField("Game", LiveData.Game).
-									SetColor(Color).
-									SetFooter(LiveData.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
-
-							} else {
-								embed = append(embed, engine.NewEmbed().
-									SetTitle(FixName).
-									SetAuthor(i.Member.Nick, Avatar).
-									SetThumbnail(LiveData.Member.TwitchAvatar).
-									SetImage(LiveData.Thumb).
-									SetURL("https://twitch.tv/"+LiveData.Member.TwitchName).
-									AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
-									AddField("Viewers", engine.NearestThousandFormat(float64(view))+" "+FanBase).
-									InlineAllFields().
-									AddField("Game", LiveData.Game).
-									SetColor(Color).
-									SetFooter(LiveData.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
-							}
-
+						FanBase := "simps"
+						loc := engine.Zawarudo(member.Region)
+						diff := time.Now().In(loc).Sub(LiveTwitch.Schedul.In(loc))
+						view, err := strconv.Atoi(LiveTwitch.Viewers)
+						if err != nil {
+							log.Error(err)
 						}
+
+						if member.Fanbase != "" {
+							FanBase = member.Fanbase
+						}
+
+						if LiveTwitch.Game == "" {
+							LiveTwitch.Game = "???"
+						}
+
+						if status == config.PastStatus {
+							diff := time.Now().In(loc).Sub(LiveTwitch.Schedul.In(loc))
+							embed = append(embed, engine.NewEmbed().
+								SetTitle(FixName).
+								SetAuthor(i.Member.Nick, Avatar).
+								SetThumbnail(LiveTwitch.Member.TwitchAvatar).
+								SetImage(LiveTwitch.Thumb).
+								SetURL("https://twitch.tv/"+LiveTwitch.Member.TwitchName).
+								AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
+								AddField("Viewers", engine.NearestThousandFormat(float64(view))+" "+FanBase).
+								InlineAllFields().
+								AddField("Game", LiveTwitch.Game).
+								SetColor(Color).
+								SetFooter(LiveTwitch.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
+
+						} else {
+							embed = append(embed, engine.NewEmbed().
+								SetTitle(FixName).
+								SetAuthor(i.Member.Nick, Avatar).
+								SetThumbnail(LiveTwitch.Member.TwitchAvatar).
+								SetImage(LiveTwitch.Thumb).
+								SetURL("https://twitch.tv/"+LiveTwitch.Member.TwitchName).
+								AddField("Start live", durafmt.Parse(diff).LimitFirstN(2).String()+" Ago").
+								AddField("Viewers", engine.NearestThousandFormat(float64(view))+" "+FanBase).
+								InlineAllFields().
+								AddField("Game", LiveTwitch.Game).
+								SetColor(Color).
+								SetFooter(LiveTwitch.Schedul.In(loc).Format(time.RFC822)).MessageEmbed)
+						}
+
 					} else {
 						embed = append(embed, engine.NewEmbed().
 							SetAuthor(Nick, Avatar).
@@ -551,10 +540,7 @@ var (
 							SetImage(engine.NotFoundIMG()).MessageEmbed)
 					}
 				} else {
-					TwitchLive, err := database.TwitchGet(map[string]interface{}{
-						"GroupID": group.ID,
-						"Status":  status,
-					})
+					TwitchLive, err := group.GetTwitchLiveStream(status)
 					if err != nil {
 						log.Error(err)
 					}
