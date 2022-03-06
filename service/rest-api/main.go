@@ -147,6 +147,7 @@ func init() {
 						if Member.BiliBiliID != 0 {
 							return map[string]interface{}{
 								"Avatar":      Member.BiliBiliAvatar,
+								"Banner":      Member.BiliBiliBanner,
 								"Fanart":      Member.BiliBiliHashtag,
 								"SpaceID":     Member.BiliBiliID,
 								"LiveID":      Member.BiliBiliID,
@@ -162,6 +163,7 @@ func init() {
 						if Member.YoutubeID != "" {
 							return map[string]interface{}{
 								"Avatar":      Member.YoutubeAvatar,
+								"Banner":      Member.YoutubeBanner,
 								"YoutubeID":   Member.YoutubeID,
 								"Subscriber":  Subs.YtSubs,
 								"TotalVideos": Subs.YtVideos,
@@ -174,6 +176,8 @@ func init() {
 					Twitter: func() interface{} {
 						if Member.TwitterName != "" {
 							return map[string]interface{}{
+								"Avatar":     Member.TwitterAvatar,
+								"Banner":     Member.TwitterBanner,
 								"Username":   Member.TwitterName,
 								"Fanart":     Member.TwitterHashtag,
 								"LewdFanart": Member.TwitterLewd,
@@ -219,7 +223,7 @@ func init() {
 
 						if isTwitchLive.ID != 0 {
 							tmp["Twitch"] = map[string]interface{}{
-								"URL": fmt.Sprintf("https://www.twitch.tv/%s", Member.TwitchName),
+								"URL": "https://www.twitch.tv/" + Member.TwitchName,
 							}
 						} else {
 							tmp["Twitch"] = nil
@@ -527,15 +531,18 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 		if tmp.BiliBili != nil {
 			delete(tmp.BiliBili.(map[string]interface{}), "TotalVideos")
 			delete(tmp.BiliBili.(map[string]interface{}), "Fanart")
+			delete(tmp.BiliBili.(map[string]interface{}), "Banner")
 		}
 
 		if tmp.Youtube != nil {
 			delete(tmp.Youtube.(map[string]interface{}), "TotalVideos")
+			delete(tmp.Youtube.(map[string]interface{}), "Banner")
 		}
 
 		if tmp.Twitter != nil {
 			delete(tmp.Twitter.(map[string]interface{}), "Fanart")
 			delete(tmp.Twitter.(map[string]interface{}), "LewdFanart")
+			delete(tmp.Twitter.(map[string]interface{}), "Banner")
 		}
 
 		delete(tmp.Group.(map[string]interface{}), "Members")
