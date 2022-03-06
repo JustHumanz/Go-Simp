@@ -143,7 +143,11 @@ func (i *checkTwJob) Run() {
 		defer w.Done()
 		Fanarts, err := Member.ScrapTwitterFanart(engine.InitTwitterScraper(), false)
 		if err != nil {
-			log.Error(err)
+			log.WithFields(log.Fields{
+				"vtuber":  Member.Name,
+				"agency":  Member.Group.GroupName,
+				"hashtag": Member.TwitterHashtag,
+			}).Error(err)
 			return
 		}
 		for _, Art := range Fanarts {
@@ -159,7 +163,11 @@ func (i *checkTwJob) Run() {
 		if *lewd {
 			Fanarts, err := Member.ScrapTwitterFanart(engine.InitTwitterScraper(), true)
 			if err != nil {
-				log.Error(err)
+				log.WithFields(log.Fields{
+					"vtuber":  Member.Name,
+					"agency":  Member.Group.GroupName,
+					"hashtag": Member.TwitterLewd,
+				}).Error(err)
 				return
 			}
 			for _, Art := range Fanarts {
@@ -178,25 +186,36 @@ func (i *checkTwJob) Run() {
 		for j := len(*GroupPayload) - 1; j >= 0; j-- {
 			Grp := *GroupPayload
 
-			for _, Vtuber := range Grp[j].Members {
+			for kk, Vtuber := range Grp[j].Members {
 				if Vtuber.TwitterHashtag != "" || Vtuber.TwitterLewd != "" {
+					Vtuber.Group = Grp[j]
 					i.wg.Add(1)
 					go Cek(Vtuber, &i.wg)
+				}
+
+				if kk%10 == 0 && kk != 0 {
+					i.wg.Wait()
 				}
 			}
 		}
 		i.Reverse = false
+		i.wg.Wait()
 
 	} else {
 		for _, G := range *GroupPayload {
-			for _, Vtuber := range G.Members {
+			for kk, Vtuber := range G.Members {
 				if Vtuber.TwitterHashtag != "" || Vtuber.TwitterLewd != "" {
+					Vtuber.Group = G
 					i.wg.Add(1)
 					go Cek(Vtuber, &i.wg)
+				}
+
+				if kk%10 == 0 && kk != 0 {
+					i.wg.Wait()
 				}
 			}
 		}
 		i.Reverse = true
+		i.wg.Wait()
 	}
-	i.wg.Wait()
 }

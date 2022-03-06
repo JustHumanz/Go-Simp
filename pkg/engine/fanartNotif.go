@@ -17,7 +17,6 @@ func SendFanArtNude(Art database.DataFanart, Bot *discordgo.Session) {
 	Art.Group.RemoveNillIconURL()
 	for _, Member := range Art.Group.Members {
 		if Art.Member.ID == Member.ID {
-
 			ChannelData := func() []database.DiscordChannel {
 				if Art.Lewd {
 					Data, err1 := database.ChannelTag(Member.ID, 1, config.LewdChannel, Member.Region)
@@ -137,10 +136,6 @@ func SendFanArtNude(Art database.DataFanart, Bot *discordgo.Session) {
 				}
 
 			}
-
-			log.WithFields(log.Fields{
-				"Type": "Wait",
-			}).Info("Waiting send message")
 			wgg.Wait()
 		}
 	}

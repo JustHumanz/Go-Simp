@@ -23,7 +23,7 @@ var M = []*pilot.ModuleList{
 	{
 		Name:    config.TwitterModule,
 		Counter: 1,
-		CronJob: 10, //every 10 minutes
+		CronJob: 1, //every 10 minutes
 	},
 	{
 		Name:    config.PixivModule,

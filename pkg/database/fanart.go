@@ -539,6 +539,7 @@ func (Member Member) ScrapTwitterFanart(Scraper *twitterscraper.Scraper, Lewd bo
 					Member: Member,
 					State:  config.TwitterArt,
 					Lewd:   Lewd,
+					Group:  Member.Group,
 				}
 				if tweet.Videos != nil {
 					TweetArt.Videos = tweet.Videos[0].Preview
