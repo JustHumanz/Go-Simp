@@ -37,6 +37,8 @@ func AddData(Data Vtuber) {
 		if err != nil {
 			log.Error(err)
 		}
+
+		profile.Avatar = strings.Replace(profile.Avatar, "_normal.jpg", ".jpg", -1)
 		return profile
 	}
 
