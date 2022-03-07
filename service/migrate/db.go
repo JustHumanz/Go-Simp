@@ -26,7 +26,9 @@ func AddData(Data Vtuber) {
 		if len(YoutubeChannelInfoRaw.Items) > 0 {
 			for _, Item := range YoutubeChannelInfoRaw.Items {
 				YtItem = Item
-				YtItem.Brandingsettings.Image.Bannerexternalurl += "=s1200"
+				if YtItem.Brandingsettings.Image.Bannerexternalurl != "" {
+					YtItem.Brandingsettings.Image.Bannerexternalurl += "=s1200"
+				}
 			}
 		}
 		return YtItem
