@@ -524,36 +524,81 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 	region := r.FormValue("region")
 	grpID := r.FormValue("groupid")
 	idstr := mux.Vars(r)["memberID"]
-	Members := []MembersPayload{}
 
-	var FixMember = func(Member MembersPayload) MembersPayload {
-		tmp := Member
-		if tmp.BiliBili != nil {
-			delete(tmp.BiliBili.(map[string]interface{}), "TotalVideos")
-			delete(tmp.BiliBili.(map[string]interface{}), "Fanart")
-			delete(tmp.BiliBili.(map[string]interface{}), "Banner")
+	type simpleMember struct {
+		ID       int64
+		NickName string
+		EnName   string
+		JpName   string
+		Region   string
+		Fanbase  string
+		Status   string
+		BiliBili interface{}
+		Youtube  interface{}
+		Twitter  interface{}
+		Twitch   interface{}
+		Group    interface{}
+		IsLive   interface{}
+	}
+
+	var FixMember = func(Member MembersPayload) simpleMember {
+		tmp := simpleMember{
+			ID:       Member.ID,
+			NickName: Member.NickName,
+			EnName:   Member.EnName,
+			JpName:   Member.JpName,
+			Region:   Member.Region,
+			Fanbase:  Member.Fanbase,
+			Status:   Member.Status,
+			BiliBili: func() interface{} {
+				if Member.BiliBili != nil {
+					return map[string]interface{}{
+						"Avatar":      Member.BiliBili.(map[string]interface{})["Avatar"],
+						"SpaceID":     Member.BiliBili.(map[string]interface{})["SpaceID"],
+						"LiveID":      Member.BiliBili.(map[string]interface{})["LiveID"],
+						"ViwersCount": Member.BiliBili.(map[string]interface{})["ViwersCount"],
+						"Followers":   Member.BiliBili.(map[string]interface{})["Followers"],
+					}
+				}
+				return nil
+			}(),
+			Youtube: func() interface{} {
+				if Member.Youtube != nil {
+					return map[string]interface{}{
+						"Avatar":      Member.Youtube.(map[string]interface{})["Avatar"],
+						"YoutubeID":   Member.Youtube.(map[string]interface{})["YoutubeID"],
+						"Subscriber":  Member.Youtube.(map[string]interface{})["Subscriber"],
+						"ViwersCount": Member.Youtube.(map[string]interface{})["ViwersCount"],
+					}
+				}
+				return nil
+			}(),
+			Twitter: func() interface{} {
+				if Member.Twitter != nil {
+					return map[string]interface{}{
+						"Avatar":    Member.Twitter.(map[string]interface{})["Avatar"],
+						"Username":  Member.Twitter.(map[string]interface{})["Username"],
+						"Followers": Member.Twitter.(map[string]interface{})["Followers"],
+					}
+				}
+				return nil
+			}(),
+			Twitch: Member.Twitch,
+			Group: func() interface{} {
+				return map[string]interface{}{
+					"ID":        Member.Group.(map[string]interface{})["ID"],
+					"IconURL":   Member.Group.(map[string]interface{})["IconURL"],
+					"GroupName": Member.Group.(map[string]interface{})["GroupName"],
+				}
+			}(),
+			IsLive: Member.IsLive,
 		}
-
-		if tmp.Youtube != nil {
-			delete(tmp.Youtube.(map[string]interface{}), "TotalVideos")
-			delete(tmp.Youtube.(map[string]interface{}), "Banner")
-		}
-
-		if tmp.Twitter != nil {
-			delete(tmp.Twitter.(map[string]interface{}), "Fanart")
-			delete(tmp.Twitter.(map[string]interface{}), "LewdFanart")
-			delete(tmp.Twitter.(map[string]interface{}), "Banner")
-		}
-
-		delete(tmp.Group.(map[string]interface{}), "Members")
-		delete(tmp.Group.(map[string]interface{}), "YoutubeChannels")
-
 		return tmp
 	}
 
 	if idstr != "" {
+		Members := make([]MembersPayload, 0)
 		key := strings.Split(idstr, ",")
-
 		for _, Member := range VtuberMembers {
 			for _, MemberStr := range key {
 				MemberInt, err := strconv.Atoi(MemberStr)
@@ -601,7 +646,35 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
+
+		if Members != nil {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
+			err := json.NewEncoder(w).Encode(Members)
+			if err != nil {
+				log.Error(err)
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(MessageError{
+					Message: err.Error(),
+					Date:    time.Now(),
+				})
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+		} else {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(MessageError{
+				Message: "Reqest not found,404",
+				Date:    time.Now(),
+			})
+			w.WriteHeader(http.StatusNotFound)
+		}
+		return
 	} else if grpID != "" {
+		Members := make([]simpleMember, 0)
 		GroupID, err := strconv.Atoi(grpID)
 		if err != nil {
 			w.Header().Set("Content-Type", "application/json")
@@ -626,42 +699,100 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
+
+		if Members != nil {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
+			err := json.NewEncoder(w).Encode(Members)
+			if err != nil {
+				log.Error(err)
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(MessageError{
+					Message: err.Error(),
+					Date:    time.Now(),
+				})
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+		} else {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(MessageError{
+				Message: "Reqest not found,404",
+				Date:    time.Now(),
+			})
+			w.WriteHeader(http.StatusNotFound)
+		}
+		return
+
 	} else if region != "" {
+		Members := make([]MembersPayload, 0)
 		for _, v := range VtuberMembers {
 			if strings.EqualFold(region, v.Region) {
 				Members = append(Members, v)
 			}
 		}
-	} else {
-		for _, v := range VtuberMembers {
-			Members = append(Members, FixMember(v))
-		}
-	}
 
-	if Members != nil {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Content-Type", "application/json")
-		err := json.NewEncoder(w).Encode(Members)
-		if err != nil {
-			log.Error(err)
+		if Members != nil {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
 			w.Header().Set("Content-Type", "application/json")
+			err := json.NewEncoder(w).Encode(Members)
+			if err != nil {
+				log.Error(err)
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(MessageError{
+					Message: err.Error(),
+					Date:    time.Now(),
+				})
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+		} else {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(w).Encode(MessageError{
-				Message: err.Error(),
+				Message: "Reqest not found,404",
 				Date:    time.Now(),
 			})
-			w.WriteHeader(http.StatusInternalServerError)
-			return
+			w.WriteHeader(http.StatusNotFound)
 		}
-		w.WriteHeader(http.StatusOK)
+		return
+
 	} else {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode(MessageError{
-			Message: "Reqest not found,404",
-			Date:    time.Now(),
-		})
-		w.WriteHeader(http.StatusNotFound)
+		Members := make([]simpleMember, 0)
+		for _, Member := range VtuberMembers {
+			Members = append(Members, FixMember(Member))
+		}
+		if Members != nil {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
+			err := json.NewEncoder(w).Encode(Members)
+			if err != nil {
+				log.Error(err)
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(MessageError{
+					Message: err.Error(),
+					Date:    time.Now(),
+				})
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+		} else {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(MessageError{
+				Message: "Reqest not found,404",
+				Date:    time.Now(),
+			})
+			w.WriteHeader(http.StatusNotFound)
+		}
+		return
 	}
 }
 
