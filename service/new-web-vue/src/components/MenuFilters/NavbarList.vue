@@ -75,8 +75,6 @@ export default {
     },
   },
   created() {
-    this.unfocusMenu()
-
     this.$watch(
       () => this.filters,
       () => {
@@ -116,21 +114,7 @@ export default {
     )
   },
   methods: {
-    unfocusMenu() {
-      // when document unfocus
-      document.onblur = (e) => {
-        if (this.activeMenu) {
-          if (this.activeMenu === document.activeElement) this.activeMenu.blur()
-          else if (
-            !document.activeElement.classList.contains("nav-search__input")
-          )
-            document.activeElement.blur()
 
-          console.log("closing menu")
-          this.activeMenu = null
-        }
-      }
-    },
   },
 }
 </script>
@@ -250,7 +234,7 @@ export default {
   }
 
   &-item {
-    @apply bg-blue-100/20 dark:bg-slate-900/20 flex items-center w-full;
+    @apply bg-blue-500/20 dark:bg-slate-900/20 flex items-center w-full;
 
     &__link {
       @apply text-white flex space-x-2 items-center w-full font-semibold px-2 py-1 hover:bg-blue-500/40 dark:hover:bg-slate-900/40 pl-7 sm:pl-4;

@@ -241,6 +241,8 @@ export default {
   },
   async created() {
     this.getClickMenu()
+    this.unfocusMenu()
+
     this.theme = localStorage.getItem("theme")
 
     this.$watch(
@@ -276,9 +278,13 @@ export default {
         let classList = [...e.target.classList]
 
         if (e.target.tagName === "path") {
+          if (e.target.parentElement.classList.contains("dark-mode-btn__svg"))
+            return
           classList = [...e.target.parentElement.parentElement.classList]
         }
         if (e.target.tagName === "svg") {
+          if (e.target.classList.contains("dark-mode-btn__svg"))
+            return
           classList = [...e.target.parentElement.classList]
         }
 
@@ -361,6 +367,23 @@ export default {
         }
       }
     },
+    unfocusMenu() {
+      // when document unfocus
+      document.onblur = (e) => {
+        if (this.activeListMenu) {
+          if (this.activeListMenu === document.activeElement)
+            this.activeListMenu.blur()
+          else if (
+            !document.activeElement.classList.contains("nav-search__input")
+          )
+            document.activeElement.blur()
+
+          console.log("closing menu")
+          this.activeListMenu = null
+        }
+      }
+    },
+
     darkMode() {
       switch (this.theme) {
         case "dark":
@@ -501,7 +524,7 @@ export default {
   }
 }
 .footer {
-  @apply pt-3 bg-cyan-500 font-semibold w-full justify-around grid;
+  @apply pt-3 bg-cyan-500 dark:bg-slate-700 font-semibold w-full justify-around grid;
 
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
@@ -513,7 +536,7 @@ export default {
     grid-area: page;
 
     &__title {
-      @apply text-3xl font-semibold text-cyan-200;
+      @apply text-3xl font-semibold text-cyan-200 dark:text-slate-300;
     }
     &__subtitle {
       @apply text-white;
@@ -524,7 +547,7 @@ export default {
     @apply pl-5 md:pl-8 lg:pl-12 xl:pl-20;
     grid-area: links;
     &__title {
-      @apply text-xl font-semibold text-cyan-200;
+      @apply text-xl font-semibold text-cyan-200 dark:text-slate-300;
     }
   }
 
@@ -541,15 +564,15 @@ export default {
     @apply w-full;
 
     &__link {
-      @apply text-white hover:text-cyan-100 inline-block w-full;
+      @apply text-white hover:text-cyan-100 dark:hover:text-slate-300 inline-block w-full;
     }
   }
 
   .footer-credit {
     grid-area: credit;
-    @apply text-center text-cyan-50 py-2 mt-3 bg-cyan-700;
+    @apply text-center text-cyan-50 py-2 mt-3 bg-cyan-700 dark:bg-slate-800;
     &__link {
-      @apply text-white hover:text-cyan-100;
+      @apply text-white hover:text-cyan-100 dark:hover:text-slate-300;
     }
   }
 }

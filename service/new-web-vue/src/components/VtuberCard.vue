@@ -185,14 +185,16 @@ export default {
       type: Object,
     },
   },
-  created() {
-    // console.log("Show Vtuber: " + this.vtuber.EnName)
+  async created() {
   },
   computed: {
     liveLink() {
       if (this.vtuber.IsLive.Youtube) return this.vtuber.IsLive.Youtube.URL
       else if (this.vtuber.IsLive.Twitch) return this.vtuber.IsLive.Twitch.URL
       else return this.vtuber.IsLive.BiliBili.URL
+    },
+    randomAvatar() {
+      
     },
     GroupName() {
       return (
