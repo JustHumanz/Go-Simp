@@ -62,6 +62,7 @@ func RequestPay(Message string) {
 
 func init() {
 	fmt.Println("Reading json files...")
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
 
 	files, err := ioutil.ReadDir("json/")
 	if err != nil {
