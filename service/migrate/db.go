@@ -758,7 +758,7 @@ func AddTwitchInfo(Data map[string]interface{}) error {
 			"VtuberName": Data["MemberName"],
 		}).Info("New Member Twitch")
 
-		stmt, err := db.Prepare("INSERT INTO Twitch (Game,Status,Title,Thumbnails,ScheduledStart,EndStream,Viewers,VtuberMember_id) values(?,?,?,?,?,?,?)")
+		stmt, err := db.Prepare("INSERT INTO Twitch (Game,Status,Title,Thumbnails,ScheduledStart,EndStream,Viewers,VtuberMember_id) values(?,?,?,?,?,?,?,?)")
 		if err != nil {
 			return err
 		}
