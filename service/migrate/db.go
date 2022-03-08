@@ -215,7 +215,7 @@ func AddData(Data Vtuber) {
 
 				log.WithFields(log.Fields{
 					"VtuberGroup": "Independen",
-					"Vtuber":      VtuberMember.EnName,
+					"Vtuber":      VtuberMember.Name,
 				}).Info("Update member")
 				_, err = db.Exec(`Update VtuberMember set VtuberName=?, VtuberName_EN=?, VtuberName_JP=?, Twitter_Username=?, Twitter_Hashtag=?, Twitter_Lewd=?, Twitter_Avatar=?, Twitter_Banner=?, Youtube_ID=?, Youtube_Avatar=?, Youtube_Banner=?, BiliBili_SpaceID=?, BiliBili_RoomID=?, BiliBili_Avatar=?, BiliBili_Hashtag=?, BiliBili_Banner=?, Twitch_Username=?, Twitch_Avatar=?, Region=?, Fanbase=?, Status=?  Where id=?`,
 					VtuberMember.Name,
@@ -247,8 +247,9 @@ func AddData(Data Vtuber) {
 
 			}
 			log.WithFields(log.Fields{
-				"VtuberGroup": "Independen",
-				"Vtuber":      VtuberMember.EnName,
+				"VtuberGroup": "Independent",
+				"Vtuber":      VtuberMember.Name,
+				"Region":      Region,
 			}).Info("Add subs info to database")
 
 			/*
@@ -545,6 +546,7 @@ func AddData(Data Vtuber) {
 				log.WithFields(log.Fields{
 					"VtuberGroup": GroupData.GroupName,
 					"Vtuber":      VtuberMember.Name,
+					"Region":      Region,
 				}).Info("Add subs info to database")
 
 				/*
