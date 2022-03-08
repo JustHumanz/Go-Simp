@@ -128,11 +128,17 @@ export default {
 
     sortingVtubers() {
       // get query.sort when exist
-      const sort = this.$route.query.sort ? this.$route.query.sort : ""
       let vtuber_data = this.filteredVtubers
 
-      switch (sort) {
-        case "":
+      // Sorting vtuber by EnName DESC and lowercase first
+      vtuber_data = vtuber_data.sort((a, b) => {
+        if (a.EnName.toLowerCase() > b.EnName.toLowerCase()) return -1
+        if (a.EnName.toLowerCase() < b.EnName.toLowerCase()) return 1
+        return 0
+      })
+
+      switch (this.$route.query.sort) {
+        case undefined:
           console.log("Sort by Alphabet")
           // Sorting vtuber by EnName ASC and lowercase
           vtuber_data = vtuber_data.sort((a, b) => {
@@ -143,82 +149,92 @@ export default {
           break
         case "-name":
           console.log("Sort by Reverse Alphabet")
-          // Sorting vtuber by EnName DESC and lowercase
-          vtuber_data = vtuber_data.sort((a, b) => {
-            if (a.EnName.toLowerCase() > b.EnName.toLowerCase()) return -1
-            if (a.EnName.toLowerCase() < b.EnName.toLowerCase()) return 1
-            return 0
-          })
           break
         case "yt":
           console.log("Sort by Most Youtube Subscriber")
-          // Sorting vtuber by Youtube.Subscriber DESC when exist
+          // Sorting vtuber by Youtube.Subscriber ASC when exist
           vtuber_data = vtuber_data.sort((a, b) => {
-            if (a.Youtube?.Subscriber < b.Youtube?.Subscriber) return 1
-            if (a.Youtube?.Subscriber > b.Youtube?.Subscriber) return -1
+            if (a.Youtube) {
+              if (a.Youtube?.Subscriber < b.Youtube?.Subscriber) return 1
+              if (a.Youtube?.Subscriber > b.Youtube?.Subscriber) return -1
+            }
             return 0
           })
           break
         case "-yt":
           console.log("Sort by Least Youtube Subscriber")
-          // Sorting vtuber by Youtube.Subscriber ASC when exist
+          // Sorting vtuber by Youtube.Subscriber DESC when exist
           vtuber_data = vtuber_data.sort((a, b) => {
-            if (a.Youtube?.Subscriber > b.Youtube?.Subscriber) return -1
-            if (a.Youtube?.Subscriber < b.Youtube?.Subscriber) return 1
+            if (b.Youtube) {
+              if (a.Youtube?.Subscriber > b.Youtube?.Subscriber) return 1
+              if (a.Youtube?.Subscriber < b.Youtube?.Subscriber) return -1
+            }
             return 0
           })
           break
         case "tw":
           console.log("Sort by Most Twitch Followers")
-          //Sorting vtuber by Twitch.Followers DESC when exist
+          //Sorting vtuber by Twitch.Followers ASC when exist
           vtuber_data = vtuber_data.sort((a, b) => {
-            if (a.Twitch?.Followers < b.Twitch?.Followers) return 1
-            if (a.Twitch?.Followers > b.Twitch?.Followers) return -1
+            if (a.Twitch) {
+              if (a.Twitch?.Followers < b.Twitch?.Followers) return 1
+              if (a.Twitch?.Followers > b.Twitch?.Followers) return -1
+            } else return 1
             return 0
           })
           break
         case "-tw":
           console.log("Sort by Least Twitch Followers")
-          //Sorting vtuber by Twitch.Followers ASC when exist
+          //Sorting vtuber by Twitch.Followers DESC when exist
           vtuber_data = vtuber_data.sort((a, b) => {
-            if (a.Twitch?.Followers > b.Twitch?.Followers) return -1
-            if (a.Twitch?.Followers < b.Twitch?.Followers) return 1
+            if (b.Twitch) {
+              if (a.Twitch?.Followers > b.Twitch?.Followers) return 1
+              if (a.Twitch?.Followers < b.Twitch?.Followers) return -1
+            }
             return 0
           })
           break
         case "bl":
           console.log("Sort by Most Bilibili Followers")
-          //Sorting vtuber by BiliBili.Followers DESC when exist
+          //Sorting vtuber by BiliBili.Followers ASC when exist
           vtuber_data = vtuber_data.sort((a, b) => {
-            if (a.BiliBili?.Followers < b.BiliBili?.Followers) return 1
-            if (a.BiliBili?.Followers > b.BiliBili?.Followers) return -1
+            if (a.BiliBili) {
+              if (a.BiliBili?.Followers < b.BiliBili?.Followers) return 1
+              if (a.BiliBili?.Followers > b.BiliBili?.Followers) return -1
+            }
             return 0
           })
           break
         case "-bl":
           console.log("Sort by Least Bilibili Followers")
-          //Sorting vtuber by BiliBili.Followers ASC when exist
+          //Sorting vtuber by BiliBili.Followers DESC when exist
           vtuber_data = vtuber_data.sort((a, b) => {
-            if (a.BiliBili?.Followers > b.BiliBili?.Followers) return -1
-            if (a.BiliBili?.Followers < b.BiliBili?.Followers) return 1
+            if (b.BiliBili) {
+              if (a.BiliBili?.Followers > b.BiliBili?.Followers) return 1
+              if (a.BiliBili?.Followers < b.BiliBili?.Followers) return -1
+            }
             return 0
           })
           break
         case "twr":
           console.log("Sort by Most Twitter Followers")
-          //Sorting vtuber by Twitter.Followers DESC when exist
+          //Sorting vtuber by Twitter.Followers ASC when exist
           vtuber_data = vtuber_data.sort((a, b) => {
-            if (a.Twitter?.Followers < b.Twitter?.Followers) return 1
-            if (a.Twitter?.Followers > b.Twitter?.Followers) return -1
+            if (a.Twitter) {
+              if (a.Twitter?.Followers < b.Twitter?.Followers) return 1
+              if (a.Twitter?.Followers > b.Twitter?.Followers) return -1
+            }
             return 0
           })
           break
         case "-twr":
           console.log("Sort by Least Twitter Followers")
-          //Sorting vtuber by Twitter.Followers ASC when exist
+          //Sorting vtuber by Twitter.Followers DESC when exist
           vtuber_data = vtuber_data.sort((a, b) => {
-            if (a.Twitter?.Followers > b.Twitter?.Followers) return -1
-            if (a.Twitter?.Followers < b.Twitter?.Followers) return 1
+            if (b.Twitter) {
+              if (a.Twitter?.Followers > b.Twitter?.Followers) return 1
+              if (a.Twitter?.Followers < b.Twitter?.Followers) return -1
+            }
             return 0
           })
           break
