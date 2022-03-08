@@ -597,7 +597,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if idstr != "" {
-		Members := make([]MembersPayload, 0)
+		var Members []MembersPayload
 		key := strings.Split(idstr, ",")
 		for _, Member := range VtuberMembers {
 			for _, MemberStr := range key {
@@ -674,7 +674,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	} else if grpID != "" {
-		Members := make([]simpleMember, 0)
+		var Members []simpleMember
 		GroupID, err := strconv.Atoi(grpID)
 		if err != nil {
 			w.Header().Set("Content-Type", "application/json")
@@ -728,7 +728,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 		return
 
 	} else if region != "" {
-		Members := make([]MembersPayload, 0)
+		var Members []MembersPayload
 		for _, v := range VtuberMembers {
 			if strings.EqualFold(region, v.Region) {
 				Members = append(Members, v)
@@ -763,7 +763,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 		return
 
 	} else {
-		Members := make([]simpleMember, 0)
+		var Members []simpleMember
 		for _, Member := range VtuberMembers {
 			Members = append(Members, FixMember(Member))
 		}
