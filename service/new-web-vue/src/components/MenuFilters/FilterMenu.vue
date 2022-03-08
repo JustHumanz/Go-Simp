@@ -1,13 +1,6 @@
 <template>
   <a href="#" class="navbar-filter__link" onclick="return false"> Filters </a>
   <ul class="navbar-filter-items">
-    <li class="navbar-pending" v-if="!filters">
-      <img
-        draggable="false"
-        :src="`/src/assets/loading/${Math.floor(Math.random() * 7)}.gif`"
-        class="navbar-pending__img"
-      />
-    </li>
     <li class="navbar-filter-item" v-if="filters && filters.region.length > 1">
       <a
         href="#"

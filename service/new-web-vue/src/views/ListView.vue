@@ -12,8 +12,9 @@ import AmeError from "../components/AmeComp/AmeError.vue"
     :placeholder="phName"
     :disable_search="(null_data || !vtubers) && !search_query"
     :disabled="!vtubers"
+    :error_status="error_status"
   />
-  <AmeLoading v-if="!vtubers && error_msg === ''" class="!h-screen" />
+  <AmeLoading v-if="!vtubers && !error_status" class="!h-screen" />
   <AmeError
     v-if="null_data && !search_query"
     type="error"
@@ -29,14 +30,14 @@ import AmeError from "../components/AmeComp/AmeError.vue"
     :description="`When your vtuber/member is not here, your can request ${link_request}, or try another keyword`"
   />
   <AmeError
-    v-if="!vtubers && error_msg === `Request failed with status code 404`"
+    v-if="!vtubers && error_status && error_status === 404"
     type="error"
     img="laptop"
     title="Your group is not available"
     :description="`Check another available group, or you can request a group ${link_request}`"
   />
   <AmeError
-    v-if="!vtubers && error_msg !== '' && error_msg !== `Request failed with status code 404`"
+    v-if="!vtubers && error_status && error_status !== 404"
     type="error"
     img="lazer"
     title="Something wrong when get request"
@@ -62,10 +63,10 @@ export default {
       vtubers: null,
       filters: null,
       group_id: null,
+      error_status: null,
       null_data: false,
       search_query: "",
       phName: "",
-      error_msg: "",
     }
   },
   async created() {
@@ -80,12 +81,12 @@ export default {
       async () => {
         this.vtubers = null
         this.filters = null
-        this.error_msg = ""
+        this.error_status = null
         this.getPlaceholder()
         console.log("Running...")
 
         await this.getVtuberData()
-        if (this.error_msg) return
+        if (this.error_status) return
         this.getFilter()
       },
       { immediate: true }
@@ -119,9 +120,8 @@ export default {
           return response.data
         })
         .catch((error) => {
-          if (!axios.isCancel(error)) this.error_msg = error.message
+          if (!axios.isCancel(error)) this.error_status = error.response.status
         })
-
       if (!vtuber_data) return
 
       vtuber_data.forEach((vtuber) => {

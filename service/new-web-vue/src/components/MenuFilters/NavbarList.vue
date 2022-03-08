@@ -7,23 +7,31 @@ import SortMenu from "./SortMenu.vue"
 <template>
   <nav class="list-nav">
     <ul class="navbar-filters">
-      <li class="navbar-filter group" :class="{ disabled: disabled }">
+      <li
+        class="navbar-filter group"
+        :class="{
+          disabled:
+            (disabled && error_status != 404) ||
+            (error_status && error_status != 404),
+        }"
+      >
         <GroupsMenu />
       </li>
       <li
         class="navbar-filter"
-        v-if="
-          !filters ||
-          !(
-            filters.region.length < 2 &&
-            platform.length < 2 &&
-            !filters.inactive
-          )
-        "
+        :class="{
+          disabled:
+            disabled ||
+            error_status ||
+            (filters &&
+              filters.region.length < 2 &&
+              platform.length < 2 &&
+              !filters.inactive),
+        }"
       >
         <FilterMenu :filters="filters" />
       </li>
-      <li class="navbar-filter">
+      <li class="navbar-filter" :class="{ disabled: disabled || error_status }">
         <SortMenu :filters="filters" />
       </li>
     </ul>
@@ -54,6 +62,7 @@ export default {
     return {
       platform: [],
       search_query: "",
+      err_status: null,
     }
   },
   props: {
@@ -73,8 +82,12 @@ export default {
       type: Boolean,
       default: false,
     },
+    error_status: {
+      type: Number,
+      default: null,
+    },
   },
-  created() {
+  async created() {
     this.$watch(
       () => this.filters,
       () => {
@@ -113,9 +126,7 @@ export default {
       }
     )
   },
-  methods: {
-
-  },
+  methods: {},
 }
 </script>
 

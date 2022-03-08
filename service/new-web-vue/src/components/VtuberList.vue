@@ -297,7 +297,7 @@ export default {
 }
 
 .scroll-to-top {
-  @apply fixed bottom-0 right-0 m-4 z-10 text-2xl bg-sky-400 dark:bg-slate-800 text-white px-3 pb-2
+  @apply fixed bottom-0 right-0 m-4 z-[2] text-2xl bg-sky-400 dark:bg-slate-800 text-white px-3 pb-2
   pt-3 rounded-full shadow-sm hover:shadow-md shadow-sky-700/50 dark:shadow-slate-100/50 transition-transform;
 }
 </style>

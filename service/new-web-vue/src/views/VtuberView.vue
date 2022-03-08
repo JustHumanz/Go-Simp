@@ -1,5 +1,6 @@
 <script setup>
 import AmeLoading from "../components/AmeComp/AmeLoading.vue"
+import VtuberHeader from "../components/VtuberDetails/VtuberHeader.vue"
 </script>
 
 <template>
@@ -10,6 +11,9 @@ import AmeLoading from "../components/AmeComp/AmeLoading.vue"
     </span>
   </div>
   <AmeLoading v-if="!vtuber && error_msg === ''" class="!h-screen" />
+  <section class="vtuber-details">
+    <VtuberHeader v-if="vtuber" :vtuber="vtuber" />
+  </section>
 </template>
 
 <style lang="scss" scoped>
@@ -23,6 +27,10 @@ import AmeLoading from "../components/AmeComp/AmeLoading.vue"
     @apply text-blue-200;
   }
 }
+
+.vtuber-details {
+  @apply pb-4 w-full sm:w-[90%] md:w-[80%] lg:w-[75%] mx-auto;
+}
 </style>
 
 <script>
@@ -32,31 +40,9 @@ import regionConfig from "../region.json"
 import { CountTo } from "vue3-count-to"
 import { library } from "@fortawesome/fontawesome-svg-core"
 
-import {
-  faYoutube,
-  faBilibili,
-  faTwitch,
-  faTwitter,
-} from "@fortawesome/free-brands-svg-icons"
-import {
-  faCircleInfo,
-  faPaintbrush,
-  faUsers,
-  faChartLine,
-  faCircleExclamation,
-} from "@fortawesome/free-solid-svg-icons"
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 
-library.add(
-  faYoutube,
-  faBilibili,
-  faTwitch,
-  faTwitter,
-  faCircleInfo,
-  faPaintbrush,
-  faUsers,
-  faChartLine,
-  faCircleExclamation
-)
+library.add(faCircleInfo)
 
 export default {
   data() {

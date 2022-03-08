@@ -57,11 +57,13 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-:deep(.ame-error-text__link) {
-  @apply underline text-gray-700 hover:text-blue-400 hover:decoration-2 underline-offset-1 decoration-dotted;
+<style lang="scss">
+.ame-error-text__link {
+  @apply underline text-gray-700 hover:text-blue-400 dark:text-slate-200 dark:hover:text-slate-400 hover:decoration-2 underline-offset-1 decoration-dotted;
 }
+</style>
 
+<style lang="scss" scoped>
 .ame-error {
   @apply w-full h-screen flex flex-col md:flex-row items-center justify-center;
 
@@ -73,7 +75,7 @@ export default {
     @apply max-w-[29.5rem] px-5;
 
     &__title {
-      @apply text-center text-gray-800 font-semibold text-xl sm:text-2xl;
+      @apply text-center text-gray-800 dark:text-white font-semibold text-xl sm:text-2xl;
     }
 
     &__icon {
@@ -81,11 +83,11 @@ export default {
     }
 
     &__description {
-      @apply inline-block text-center text-gray-600 font-semibold text-sm sm:text-base leading-5 my-2;
+      @apply inline-block text-center text-gray-600 dark:text-slate-100 font-semibold text-sm sm:text-base leading-5 my-2;
     }
 
     &__err-msg {
-      @apply inline-block w-full text-center text-gray-400 text-sm;
+      @apply inline-block w-full text-center text-gray-400 dark:text-gray-200 text-sm;
     }
   }
 }
