@@ -415,13 +415,7 @@ func AddData(Data Vtuber) {
 				TwitterItem := GetTwitterAccountInfo(VtuberMember)
 				BiliItem := GetBiliBiliAccountInfo(VtuberMember)
 
-				Region := func() string {
-					if YtItem.Brandingsettings.Channel.Country != "" {
-						return YtItem.Brandingsettings.Channel.Country
-					} else {
-						return VtuberMember.Region
-					}
-				}()
+				Region := VtuberMember.Region
 
 				row := db.QueryRow("SELECT id FROM VtuberMember WHERE VtuberName=? AND VtuberName_EN=? AND (Youtube_ID=? OR  BiliBili_SpaceID=? OR BiliBili_RoomID=?)", VtuberMember.Name, VtuberMember.EnName, VtuberMember.Youtube.YtID, VtuberMember.BiliBili.BiliBiliID, VtuberMember.BiliBili.BiliRoomID)
 				err = row.Scan(&MemberID)
