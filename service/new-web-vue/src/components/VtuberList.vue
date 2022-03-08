@@ -157,7 +157,7 @@ export default {
             if (a.Youtube) {
               if (a.Youtube?.Subscriber < b.Youtube?.Subscriber) return 1
               if (a.Youtube?.Subscriber > b.Youtube?.Subscriber) return -1
-            }
+            } else return 1
             return 0
           })
           break
@@ -168,7 +168,7 @@ export default {
             if (b.Youtube) {
               if (a.Youtube?.Subscriber > b.Youtube?.Subscriber) return 1
               if (a.Youtube?.Subscriber < b.Youtube?.Subscriber) return -1
-            }
+            } else return 1
             return 0
           })
           break
@@ -190,7 +190,7 @@ export default {
             if (b.Twitch) {
               if (a.Twitch?.Followers > b.Twitch?.Followers) return 1
               if (a.Twitch?.Followers < b.Twitch?.Followers) return -1
-            }
+            } else return 1
             return 0
           })
           break
@@ -201,7 +201,7 @@ export default {
             if (a.BiliBili) {
               if (a.BiliBili?.Followers < b.BiliBili?.Followers) return 1
               if (a.BiliBili?.Followers > b.BiliBili?.Followers) return -1
-            }
+            } else return 1
             return 0
           })
           break
@@ -212,7 +212,7 @@ export default {
             if (b.BiliBili) {
               if (a.BiliBili?.Followers > b.BiliBili?.Followers) return 1
               if (a.BiliBili?.Followers < b.BiliBili?.Followers) return -1
-            }
+            } else return 1
             return 0
           })
           break
@@ -223,7 +223,7 @@ export default {
             if (a.Twitter) {
               if (a.Twitter?.Followers < b.Twitter?.Followers) return 1
               if (a.Twitter?.Followers > b.Twitter?.Followers) return -1
-            }
+            } else return 1
             return 0
           })
           break
@@ -234,7 +234,7 @@ export default {
             if (b.Twitter) {
               if (a.Twitter?.Followers > b.Twitter?.Followers) return 1
               if (a.Twitter?.Followers < b.Twitter?.Followers) return -1
-            }
+            } else return 1
             return 0
           })
           break
