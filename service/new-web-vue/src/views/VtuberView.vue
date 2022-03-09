@@ -14,14 +14,14 @@ import VtuberHeader from "../components/VtuberDetails/VtuberHeader.vue"
     </span>
   </div>
   <AmeLoading v-if="!vtuber && !error_status" class="!h-screen" />
-  <section class="vtuber-details">
-    <VtuberHeader v-if="vtuber" :vtuber="vtuber" />
+  <section class="vtuber-details" v-if="vtuber">
+    <VtuberHeader :vtuber="vtuber" />
   </section>
 </template>
 
 <style lang="scss" scoped>
 .title {
-  @apply text-2xl font-semibold uppercase bg-blue-400 py-2 w-full flex flex-wrap select-none;
+  @apply text-2xl font-semibold uppercase bg-blue-400 py-2 w-full flex flex-wrap select-none fixed top-16 z-[9];
 
   &__span {
     @apply w-[95%] md:w-[75%] lg:w-[70%] mx-auto text-white;
@@ -36,7 +36,7 @@ import VtuberHeader from "../components/VtuberDetails/VtuberHeader.vue"
 }
 
 .vtuber-details {
-  @apply pb-4 w-full sm:w-[90%] md:w-[80%] lg:w-[75%] mx-auto;
+  @apply pb-4 w-full sm:w-[90%] md:w-[80%] lg:w-[75%] mx-auto mt-28;
 }
 </style>
 

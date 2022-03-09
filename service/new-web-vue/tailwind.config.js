@@ -42,6 +42,11 @@ module.exports = {
         twitter: "#1da1f2",
         pixiv: "#0096fa",
       },
+
+      brightness: {
+        125: "1.25",
+        95: "0.95",
+      },
     },
   },
   plugins: [],

@@ -105,14 +105,156 @@
       </div>
     </div>
   </header>
+  <hr class="m-2 mt-3 mb-2" />
+  <div class="link-header">
+    <a
+      :href="vtuber.IsLive.Youtube.URL"
+      v-if="vtuber.IsLive.Youtube"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="link-header__link bg-youtube"
+    >
+      <font-awesome-icon
+        :icon="['fab', 'youtube']"
+        size="lg"
+        class="link-header__link-icon"
+      ></font-awesome-icon>
+      <span class="link-header__link-text">LIVE</span>
+    </a>
+    <a
+      :href="`https://youtube.com/channel/${vtuber.Youtube.YoutubeID}`"
+      v-if="vtuber.Youtube && !vtuber.IsLive.Youtube"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="link-header__link bg-youtube"
+    >
+      <font-awesome-icon
+        :icon="['fab', 'youtube']"
+        size="lg"
+        class="link-header__link-icon"
+      ></font-awesome-icon>
+      <span class="link-header__link-text">YouTube</span>
+    </a>
+    <a
+      :href="`https://twitch.tv/${vtuber.Twitch.Username}`"
+      v-if="vtuber.Twitch"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="link-header__link bg-twitch"
+    >
+      <font-awesome-icon
+        :icon="['fab', 'twitch']"
+        size="lg"
+        class="link-header__link-icon"
+      ></font-awesome-icon>
+      <span class="link-header__link-text" v-if="vtuber.IsLive.Twitch"
+        >LIVE</span
+      >
+      <span class="link-header__link-text" v-else>Twitch</span>
+    </a>
+    <a
+      :href="vtuber.IsLive.BiliBili.URL"
+      v-if="vtuber.IsLive.BiliBili"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="link-header__link bg-bilibili"
+    >
+      <font-awesome-icon
+        :icon="['fab', 'bilibili']"
+        size="lg"
+        class="link-header__link-icon"
+      ></font-awesome-icon>
+      <span class="link-header__link-text">LIVE</span>
+    </a>
+    <a
+      :href="`https://space.bilibili.com/${vtuber.BiliBili.SpaceID}`"
+      v-if="vtuber.BiliBili && !vtuber.IsLive.BiliBili"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="link-header__link bg-bilibili"
+    >
+      <font-awesome-icon
+        :icon="['fab', 'bilibili']"
+        size="lg"
+        class="link-header__link-icon"
+      ></font-awesome-icon>
+      <span class="link-header__link-text">Space</span>
+    </a>
+    <a
+      class="link-header__link bg-twitter"
+      :href="`https://twitter.com/${vtuber.Twitter.Username}`"
+      v-if="vtuber.Twitter"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <font-awesome-icon
+        :icon="['fab', 'twitter']"
+        size="lg"
+        class="link-header__link-icon"
+      ></font-awesome-icon>
+      <span class="link-header__link-text">@{{ vtuber.Twitter.Username }}</span>
+    </a>
+    <a
+      :href="`https://twitter.com/hashtag/${vtuber.Twitter.Fanart.replace(
+        '#',
+        ''
+      )}`"
+      v-if="vtuber.Twitter && vtuber.Twitter.Fanart"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="link-header__link bg-twitter"
+    >
+      <font-awesome-icon
+        icon="paint-brush"
+        size="lg"
+        class="link-header__link-icon"
+      ></font-awesome-icon>
+      <span class="link-header__link-text"
+        >Twitter (#{{ vtuber.Twitter.Fanart.replace("#", "") }})</span
+      >
+    </a>
+    <a
+      :href="`https://www.pixiv.net/en/tags/${fanart_pixiv}`"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="link-header__link bg-pixiv"
+    >
+      <font-awesome-icon
+        icon="paint-brush"
+        size="lg"
+        class="link-header__link-icon"
+      />
+      <span class="link-header__link-text"> Pixiv (#{{ fanart_pixiv }}) </span>
+    </a>
+  </div>
+    <hr class="m-2" />
 </template>
 
 <script>
 import { library } from "@fortawesome/fontawesome-svg-core"
+import {
+  faYoutube,
+  faTwitch,
+  faBilibili,
+  faTwitter,
+} from "@fortawesome/free-brands-svg-icons"
+import { faPaintBrush } from "@fortawesome/free-solid-svg-icons"
+
+library.add(faYoutube, faTwitch, faBilibili, faTwitter, faPaintBrush)
 
 export default {
   props: {
     vtuber: Object,
+  },
+
+  computed: {
+    fanart_pixiv() {
+      return this.vtuber.JpName
+        ? this.vtuber.JpName.split("/")[0]
+            .split(" ")
+            .reduce((acc, cur) => (acc + acc !== "" ? "・" : "" + cur), "")
+        : this.vtuber.EnName.split(" ").reduce((acc, cur) => acc + cur, "")
+    },
   },
 }
 </script>
@@ -143,7 +285,7 @@ export default {
     }
   }
   &-info {
-    @apply flex items-center flex-col sm:flex-row pb-2 relative;
+    @apply flex items-center flex-col sm:flex-row sm:pb-2 relative;
   }
   &-profile-pic {
     @apply absolute -top-9 sm:-top-14 sm:ml-10 w-24 sm:w-32 rounded-md shadow-md overflow-hidden;
@@ -188,6 +330,25 @@ export default {
       &-icon {
         @apply w-5 h-5 object-contain rounded-md inline-block -mt-1;
       }
+    }
+  }
+}
+
+.link-header {
+  @apply flex justify-center items-center px-2 flex-wrap;
+
+  &__link {
+    @apply inline-flex items-center text-white px-3 m-px py-2 rounded-full;
+
+    &-icon {
+      @apply w-5 h-5 object-contain rounded-md mr-2;
+    }
+    &-text {
+      @apply text-sm font-semibold;
+    }
+
+    &:hover {
+      @apply brightness-90;
     }
   }
 }
