@@ -2,7 +2,10 @@
   <header class="header">
     <div
       class="header-banner bg-cyan-300"
-      :style="`background-image: url(${vtuber.Youtube.Banner})`"
+      :style="`background-image: url(${vtuber.Youtube.Banner.replace(
+        's1200',
+        ''
+      )}s1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj)`"
       referrerpolicy="no-referrer"
       v-if="vtuber.Youtube"
     ></div>
@@ -14,7 +17,10 @@
     ></div>
     <div class="header-banner bg-cyan-300" v-else></div>
     <div class="header-info">
-      <div class="header-profile-pic">
+      <div
+        class="header-profile-pic"
+        :class="{ inactive: vtuber.Status == 'Inactive' }"
+      >
         <img
           draggable="false"
           class="header-profile-pic__img"
@@ -49,6 +55,16 @@
           src="/src/assets/smolame.jpg"
           alt="Card image cap"
         />
+        <span
+          class="live-tag"
+          v-if="
+            vtuber.IsLive.Youtube ||
+            vtuber.IsLive.Twitch ||
+            vtuber.IsLive.BiliBili
+          "
+        >
+          LIVE
+        </span>
       </div>
       <div class="header-vtuber-name">
         <h4 class="header-vtuber-name__name">
@@ -76,7 +92,11 @@
               class="header-vtuber-name__group-icon"
               v-else
             />
-            {{ vtuber.Group.ID === 10 ? "Vtuber" : vtuber.Group.GroupName }}
+            {{
+              vtuber.Group.ID === 10
+                ? "Vtuber"
+                : vtuber.Group.GroupName.replace("_", " ")
+            }}
             {{ vtuber.Regions.name }} </router-link
           ><router-link to="/vtubers?inac=true">
             {{ vtuber.Status === "Inactive" ? " (Inactive)" : "" }}
@@ -98,15 +118,35 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.live-tag {
+  @apply w-full inline-block bg-red-600 text-white font-semibold text-center text-xs py-1 absolute bottom-0 select-none;
+}
+
+.inactive {
+  @apply bg-rip bg-contain bg-no-repeat bg-gray-600;
+  .header-profile-pic__img {
+    @apply grayscale opacity-40;
+  }
+}
+
 .header {
   &-banner {
-    @apply w-full h-[11.25rem] bg-center;
+    @apply w-full /*&h-[11.25rem]*/ bg-center bg-cover bg-no-repeat;
+    height: calc(16.1290322581vw - 1px);
+
+    // @media (min-width: 640px) {
+    //   height: calc(16.1290322581vw - 1px);
+    // }
+
+    @media (min-width: 768px) {
+      height: calc((100vw - 240px) / 6.2 - 1px);
+    }
   }
   &-info {
-    @apply flex items-center flex-col sm:flex-row pb-4 relative;
+    @apply flex items-center flex-col sm:flex-row pb-2 relative;
   }
   &-profile-pic {
-    @apply absolute -top-[4.5rem] sm:-top-14 sm:ml-10 w-32 rounded-md shadow-md overflow-hidden;
+    @apply absolute -top-9 sm:-top-14 sm:ml-10 w-24 sm:w-32 rounded-md shadow-md overflow-hidden;
   }
   &-vtuber-name {
     @apply w-full flex items-center sm:items-stretch mt-14 px-3 sm:mt-0 sm:ml-[10.5rem] flex-col text-center sm:text-left;

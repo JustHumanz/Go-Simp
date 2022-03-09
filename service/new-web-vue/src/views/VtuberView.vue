@@ -21,7 +21,7 @@ import VtuberHeader from "../components/VtuberDetails/VtuberHeader.vue"
 
 <style lang="scss" scoped>
 .title {
-  @apply text-2xl font-semibold uppercase bg-blue-400 py-2 w-full flex flex-wrap;
+  @apply text-2xl font-semibold uppercase bg-blue-400 py-2 w-full flex flex-wrap select-none;
 
   &__span {
     @apply w-[95%] md:w-[75%] lg:w-[70%] mx-auto text-white;

@@ -55,10 +55,7 @@
           <span>LIVE</span>
         </a>
       </div>
-      <router-link
-        :to="`/vtuber/${vtuber.ID}`"
-        class="card-vtuber-image__link"
-      >
+      <router-link :to="`/vtuber/${vtuber.ID}`" class="card-vtuber-image__link">
         <img
           draggable="false"
           class="card-vtuber-image__img"
@@ -151,10 +148,7 @@
       </div>
     </div>
     <div class="card-vtuber-name">
-      <router-link
-        :to="`/vtuber/${vtuber.ID}`"
-        class="card-vtuber-name__link"
-      >
+      <router-link :to="`/vtuber/${vtuber.ID}`" class="card-vtuber-name__link">
         <h4 class="card-vtuber-name__title">
           {{ vtuber.EnName }}
         </h4>
@@ -185,17 +179,14 @@ export default {
       type: Object,
     },
   },
-  async created() {
-  },
+  async created() {},
   computed: {
     liveLink() {
       if (this.vtuber.IsLive.Youtube) return this.vtuber.IsLive.Youtube.URL
       else if (this.vtuber.IsLive.Twitch) return this.vtuber.IsLive.Twitch.URL
       else return this.vtuber.IsLive.BiliBili.URL
     },
-    randomAvatar() {
-      
-    },
+    randomAvatar() {},
     GroupName() {
       return (
         this.vtuber.Group.GroupName.charAt(0).toUpperCase() +
@@ -230,7 +221,7 @@ export default {
 }
 
 .tag-vtuber {
-  @apply absolute flex items-center bg-slate-100/80 dark:bg-slate-500/80 rounded-br-md text-xs;
+  @apply absolute flex items-center bg-slate-100/80 dark:bg-slate-500/80 rounded-br-md text-xs select-none;
 
   &-agency {
     @apply px-[0.325rem] flex items-center space-x-2 justify-center h-6 cursor-pointer;
