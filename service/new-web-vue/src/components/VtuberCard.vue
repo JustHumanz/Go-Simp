@@ -56,7 +56,7 @@
         </a>
       </div>
       <router-link
-        :to="`/vtuber/members/${vtuber.ID}`"
+        :to="`/vtuber/${vtuber.ID}`"
         class="card-vtuber-image__link"
       >
         <img
@@ -152,7 +152,7 @@
     </div>
     <div class="card-vtuber-name">
       <router-link
-        :to="`/vtuber/members/${vtuber.ID}`"
+        :to="`/vtuber/${vtuber.ID}`"
         class="card-vtuber-name__link"
       >
         <h4 class="card-vtuber-name__title">

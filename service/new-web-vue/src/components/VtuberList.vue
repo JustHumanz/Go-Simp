@@ -74,6 +74,8 @@ export default {
     filteredVtubers() {
       let vtuber_data = this.vtubers
 
+      if (!this.$route.path.includes("/vtubers")) return []
+
       // Filter vtuber.Region from this.$route.query.reg
       vtuber_data = vtuber_data.filter((vtuber) => {
         return this.$route.query.reg
@@ -129,6 +131,8 @@ export default {
     sortingVtubers() {
       // get query.sort when exist
       let vtuber_data = this.filteredVtubers
+
+      if (!this.$route.path.includes("/vtubers")) return []
 
       // Sorting vtuber by EnName DESC and lowercase first
       vtuber_data = vtuber_data.sort((a, b) => {

@@ -222,10 +222,7 @@ export default {
 
       &.sub-menu::after {
         // add arrow right icon
-        @apply content-[''] absolute right-3 rotate-90 transition;
-        border-top: 5px solid transparent;
-        border-bottom: 5px solid transparent;
-        border-left: 5px solid currentColor;
+        @apply content-[''] absolute right-3 rotate-90 transition border-y-5 border-l-5 border-solid border-y-transparent border-l-current;
       }
     }
     &:focus-within {

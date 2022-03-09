@@ -18,17 +18,17 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: "/vtuber",
+      path: "/vtubers",
       name: "Vtuber List",
       component: ListView,
     },
     {
-      path: "/vtuber/:id",
+      path: "/vtubers/:id",
       name: "Group Vtuber List",
       component: ListView,
     },
     {
-      path: "/vtuber/members/:id",
+      path: "/vtuber/:id",
       name: "Vtuber Details",
       component: VtuberView,
     },

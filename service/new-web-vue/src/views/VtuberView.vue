@@ -4,13 +4,16 @@ import VtuberHeader from "../components/VtuberDetails/VtuberHeader.vue"
 </script>
 
 <template>
-  <div class="title" v-if="!error_msg">
+  <div class="title" v-if="!error_status">
     <span class="title__span">
-      <font-awesome-icon :icon="['fas', 'circle-info']" class="title__svg" />
+      <router-link class="back-button" :to="history_back">
+        <font-awesome-icon icon="caret-left" class="fa-fw" />
+      </router-link>
+      <font-awesome-icon icon="circle-info" class="title__svg fa-fw" />
       Info Vtuber
     </span>
   </div>
-  <AmeLoading v-if="!vtuber && error_msg === ''" class="!h-screen" />
+  <AmeLoading v-if="!vtuber && !error_status" class="!h-screen" />
   <section class="vtuber-details">
     <VtuberHeader v-if="vtuber" :vtuber="vtuber" />
   </section>
@@ -18,14 +21,18 @@ import VtuberHeader from "../components/VtuberDetails/VtuberHeader.vue"
 
 <style lang="scss" scoped>
 .title {
-  @apply text-2xl font-semibold uppercase bg-blue-400 py-3 w-full flex flex-wrap;
+  @apply text-2xl font-semibold uppercase bg-blue-400 py-2 w-full flex flex-wrap;
 
   &__span {
-    @apply w-[90%] md:w-[70%] lg:w-[65%] mx-auto text-white;
+    @apply w-[95%] md:w-[75%] lg:w-[70%] mx-auto text-white;
   }
   &__svg {
     @apply text-blue-200;
   }
+}
+
+.back-button {
+  @apply text-white hover:text-blue-200 p-2;
 }
 
 .vtuber-details {
@@ -40,16 +47,17 @@ import regionConfig from "../region.json"
 import { CountTo } from "vue3-count-to"
 import { library } from "@fortawesome/fontawesome-svg-core"
 
-import { faCircleInfo } from "@fortawesome/free-solid-svg-icons"
+import { faCircleInfo, faCaretLeft } from "@fortawesome/free-solid-svg-icons"
 
-library.add(faCircleInfo)
+library.add(faCircleInfo, faCaretLeft)
 
 export default {
   data() {
     return {
       vtuber: null,
       fanart: null,
-      error_msg: "",
+      error_status: "",
+      history_back: null,
     }
   },
   components: {
@@ -58,16 +66,16 @@ export default {
   async created() {
     document.title = "Vtuber Details - Vtbot"
 
+    this.history_back = window.history.state.back || `/vtuber`
+
     const member_data = await axios
       .get(Config.REST_API + "/v2/members/" + this.$route.params.id)
       .then((response) => response.data[0])
       .catch((error) => {
-        this.error_msg = error.message
+        this.error_status = error.response.status
       })
 
-    console.log(this.error_msg)
-
-    if (this.error_msg) return
+    if (this.error_status) return
 
     regionConfig.forEach((region) => {
       if (region.code === member_data.Region) {

@@ -45,7 +45,7 @@ import "./index.css"
           <ul class="navbar-items">
             <li class="navbar-item">
               <router-link
-                to="/vtuber"
+                to="/vtubers"
                 :class="{ active: isActive }"
                 class="navbar-link"
                 >Vtubers</router-link
@@ -248,7 +248,7 @@ export default {
     this.$watch(
       () => this.$route.params,
       async () => {
-        this.isActive = this.$route.path.includes("/vtuber/")
+        this.isActive = this.$route.path.includes("/vtuber")
       },
 
       { immediate: true }
@@ -299,7 +299,7 @@ export default {
           mainNavbar.blur()
         }
 
-        if (!this.$route.path.includes("/vtuber")) {
+        if (!this.$route.path.includes("/vtubers")) {
           this.activeListMenu = null
           return
         }

@@ -42,7 +42,7 @@
     </li>
     <li class="navbar-filter-item" v-for="group in groups" :key="group.ID">
       <router-link
-        :to="`/vtuber/${group.ID || ''}`"
+        :to="`/vtubers/${group.ID || ''}`"
         class="navbar-filter-item__link"
       >
         <font-awesome-icon
@@ -117,10 +117,10 @@ export default {
           document.title = "List Vtubers - Vtbot"
         }
 
-        if (this.current_group) {
-          console.log(`Get Group: ${this.current_group.GroupName}`)
-        } else {
-          console.log(`Cannot get group`)
+        if (this.$route.path.includes("/vtubers")) {
+          if (this.current_group)
+            console.log(`Get Group: ${this.current_group.GroupName}`)
+          else console.log(`Cannot get group`)
         }
       },
       { immediate: true }

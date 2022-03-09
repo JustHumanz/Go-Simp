@@ -53,17 +53,34 @@
       <div class="header-vtuber-name">
         <h4 class="header-vtuber-name__name">
           {{ vtuber.EnName }}{{ vtuber.JpName ? ` (${vtuber.JpName})` : "" }}
-          <span class="nickname"> {{ vtuber.NickName }}</span>
+          <div class="nickname">
+            {{ vtuber.NickName }}
+            <span class="nickname-hover"
+              >This nickname is used for initials when calling in the Discord
+              command
+              <router-link to="/docs#members">Learn More</router-link></span
+            >
+          </div>
         </h4>
         <div class="header-vtuber-name__group">
-          <img
-            :src="vtuber.Group.IconURL"
-            :alt="vtuber.Group.GroupName"
-            class="header-vtuber-name__group-icon"
-            v-if="vtuber.Group.ID !== 10"
-          />
-          {{ vtuber.Group.ID === 10 ? "Vtuber" : vtuber.Group.GroupName }}
-          {{ vtuber.Regions.name }}
+          <router-link :to="`/vtubers/${vtuber.Group.ID}`">
+            <img
+              :src="vtuber.Group.IconURL"
+              :alt="vtuber.Group.GroupName"
+              class="header-vtuber-name__group-icon"
+              v-if="vtuber.Group.ID !== 10"
+            />
+            <img
+              :src="`/src/assets/flags/${vtuber.Regions.flagCode}.svg`"
+              :alt="vtuber.Group.GroupName"
+              class="header-vtuber-name__group-icon"
+              v-else
+            />
+            {{ vtuber.Group.ID === 10 ? "Vtuber" : vtuber.Group.GroupName }}
+            {{ vtuber.Regions.name }} </router-link
+          ><router-link to="/vtubers?inac=true">
+            {{ vtuber.Status === "Inactive" ? " (Inactive)" : "" }}
+          </router-link>
         </div>
       </div>
     </div>
@@ -86,26 +103,50 @@ export default {
     @apply w-full h-[11.25rem] bg-center;
   }
   &-info {
-    @apply flex items-center flex-col sm:flex-row;
+    @apply flex items-center flex-col sm:flex-row pb-4 relative;
   }
   &-profile-pic {
-    @apply absolute -mt-[4.5rem] sm:mt-0 sm:ml-10 w-32 rounded-md shadow-md overflow-hidden;
+    @apply absolute -top-[4.5rem] sm:-top-14 sm:ml-10 w-32 rounded-md shadow-md overflow-hidden;
   }
   &-vtuber-name {
-    @apply w-full flex items-center sm:items-stretch mt-14 px-3 sm:mt-0 sm:ml-[11.5rem] flex-col text-center sm:text-left;
+    @apply w-full flex items-center sm:items-stretch mt-14 px-3 sm:mt-0 sm:ml-[10.5rem] flex-col text-center sm:text-left;
 
     &__name {
-      @apply text-2xl font-semibold pt-3;
+      @apply text-xl font-semibold pt-3;
       .nickname {
-        @apply text-gray-600 text-xl font-thin;
+        @apply text-gray-600 text-xl font-thin block sm:inline-block relative cursor-pointer;
+
+        a {
+          @apply text-white hover:text-gray-300;
+        }
+
+        &-hover {
+          @apply bg-sky-300 text-sm font-normal px-2 py-1 rounded-md w-44 text-left inline-block absolute top-7 left-1/2 -translate-x-1/2 -translate-y-5 invisible opacity-0 delay-100 duration-300 ease-in-out;
+          transition-property: opacity, transform;
+
+          &::before {
+            // add arrow up in center using tailwind
+            @apply content-[''] border-x-8 border-b-8 border-solid border-x-transparent border-b-sky-300 absolute -top-1 left-1/2 -translate-x-1/2;
+          }
+        }
+
+        &:hover {
+          .nickname-hover {
+            @apply opacity-100 translate-y-0 visible;
+          }
+        }
       }
     }
 
     &__group {
-      @apply text-sm font-light text-gray-500;
+      @apply text-sm font-light text-gray-500 inline-block mt-px;
+
+      a {
+        @apply hover:text-gray-700;
+      }
 
       &-icon {
-        @apply w-5 object-contain rounded-md inline-block;
+        @apply w-5 h-5 object-contain rounded-md inline-block -mt-1;
       }
     }
   }

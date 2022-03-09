@@ -23,6 +23,10 @@ module.exports = {
         // center: "0 0.5rem 1rem rgba(0, 0, 0, 0.2)",
       },
 
+      borderWidth: {
+        5: "5px",
+      },
+
       spacing: {
         42: "10,5rem",
       },

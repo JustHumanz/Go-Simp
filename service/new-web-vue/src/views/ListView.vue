@@ -79,6 +79,7 @@ export default {
     this.$watch(
       () => this.group_id,
       async () => {
+        if (!this.$route.path.includes("/vtubers")) return
         this.vtubers = null
         this.filters = null
         this.error_status = null
