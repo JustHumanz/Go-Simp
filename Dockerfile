@@ -6,7 +6,6 @@ RUN export CGO_ENABLED=1
 RUN mkdir /app
 COPY . /app/Go-Simp
 WORKDIR /app/Go-Simp
-RUN rm -rf Img
 WORKDIR /app/Go-Simp/bin
 
 #fanart

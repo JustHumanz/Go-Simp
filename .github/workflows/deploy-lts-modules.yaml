@@ -6,57 +6,63 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
+      
+      - name: Checkout
         uses: actions/checkout@v2
-      -
-        name: Set up QEMU
+      
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
-      -
-        name: Set up Docker Buildx
+      
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-      -
-        name: Login to DockerHub
+
+      - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
+
+      - name: Get Hash
+        id: hash
+        run: echo "git_hash=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_HASH
+                  
     ## Build main image
-      -
-        name: Build and push
+      - name: Build and push
         uses: docker/build-push-action@v2
         with:
           context: .
           push: true
-          tags: justhumanz/go-simp:latest
+          tags: justhumanz/go-simp:{{ env.hash }}
 
     ### Pilot      
-      -
-        name: Build and push go-simp-pilot
+      - name: Build and push go-simp-pilot
         uses: docker/build-push-action@v2
         with:
           context: ./service/pilot
           push: true
           tags: justhumanz/go-simp-pilot:latest
+          build-args: |
+            BASE_IMAGE=justhumanz/go-simp:{{ env.hash }}
 
     ### Guild
-      -
-        name: Build and push go-simp-guild
+      - name: Build and push go-simp-guild
         uses: docker/build-push-action@v2
         with:
           context: ./service/guild
           push: true
           tags: justhumanz/go-simp-guild:latest
+          build-args: |
+            BASE_IMAGE=justhumanz/go-simp:{{ env.hash }}
 
     ### Utility
-      -
-        name: Build and push go-simp-utility
+      - name: Build and push go-simp-utility
         uses: docker/build-push-action@v2
         with:
           context: ./service/utility
           push: true
           tags: justhumanz/go-simp-utility:latest
+          build-args: |
+            BASE_IMAGE=justhumanz/go-simp:{{ env.hash }}          
 
 
   deploy:
@@ -65,22 +71,16 @@ jobs:
       name: production    
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v2
-      - 
-        name: Set env
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV   
-        
-      - 
-        name: SSH and deploy to server
+         
+      - name: SSH and deploy to server
         uses: fifsky/ssh-action@master
         with:
           host: ${{ secrets.REMOTE_HOST }}
           user: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           command: |
-            export RELEASE_VERSION=${{ env.RELEASE_VERSION }}
             export TOPGG=${{ env.TOPGG }}
             cd Go-Simp/swarm
             sudo git pull
