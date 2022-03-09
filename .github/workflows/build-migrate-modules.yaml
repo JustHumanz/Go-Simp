@@ -21,10 +21,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Get Hash
-        id: hash
-        run: echo "git_hash=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_HASH
                   
     ## Build main image
       - name: Build and push
@@ -32,7 +28,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: justhumanz/go-simp:{{ env.hash }}
+          tags: justhumanz/go-simp:${{ github.sha }}
 
     ### Migrate
       
@@ -43,4 +39,4 @@ jobs:
           push: true
           tags: justhumanz/go-simp-migrate:latest       
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:{{ env.hash }}              
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}
