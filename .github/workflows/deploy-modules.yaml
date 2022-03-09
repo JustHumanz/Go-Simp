@@ -33,17 +33,13 @@ jobs:
         name: Start build docker image
         run: echo ${{ env.RELEASE_VERSION }}        
 
-      - name: Get Hash
-        id: hash
-        run: echo "git_hash=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_HASH
-
     ## Build main image
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
           context: .
           push: true
-          tags: justhumanz/go-simp:{{ env.hash }}
+          tags: justhumanz/go-simp:${{ github.sha }}
 
       #### Fanart    
       
@@ -54,7 +50,7 @@ jobs:
           push: true
           tags: justhumanz/go-simp-bilibili-fanart:${{ env.RELEASE_VERSION }}
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:{{ env.hash }} 
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }} 
 
       - name: Build and push twitter fanart
         uses: docker/build-push-action@v2
@@ -70,7 +66,7 @@ jobs:
           push: true
           tags: justhumanz/go-simp-pixiv-fanart:${{ env.RELEASE_VERSION }}
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:{{ env.hash }}           
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}           
 
 
       ### Live
@@ -82,7 +78,7 @@ jobs:
           push: true
           tags: justhumanz/go-simp-bilispace-livestream:${{ env.RELEASE_VERSION }}
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:{{ env.hash }}           
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}           
       
       - name: Build and push live bilibili livestream 
         uses: docker/build-push-action@v2
@@ -91,7 +87,7 @@ jobs:
           push: true
           tags: justhumanz/go-simp-bililive-livestream:${{ env.RELEASE_VERSION }}
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:{{ env.hash }}           
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}           
 
       
       - name: Build and push youtube checker livestream
@@ -101,7 +97,7 @@ jobs:
           push: true
           tags: justhumanz/go-simp-youtube-checker-livestream:${{ env.RELEASE_VERSION }}
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:{{ env.hash }}           
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}           
       
       - name: Build and push youtube counter livestream
         uses: docker/build-push-action@v2
@@ -110,7 +106,7 @@ jobs:
           push: true
           tags: justhumanz/go-simp-youtube-counter-livestream:${{ env.RELEASE_VERSION }}
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:{{ env.hash }}           
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}           
       
       - name: Build and push twitch livestream
         uses: docker/build-push-action@v2
@@ -119,7 +115,7 @@ jobs:
           push: true
           tags: justhumanz/go-simp-twitch-livestream:${{ env.RELEASE_VERSION }}
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:{{ env.hash }}           
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}           
 
       ### Subscriber
       
@@ -130,7 +126,7 @@ jobs:
           push: true
           tags: justhumanz/go-simp-subscriber:${{ env.RELEASE_VERSION }}
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:{{ env.hash }}           
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}           
 
       ### REST API
       
@@ -141,7 +137,7 @@ jobs:
           push: true
           tags: justhumanz/go-simp-rest_api:${{ env.RELEASE_VERSION }}
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:{{ env.hash }}           
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}           
 
       ### Frontend
       
@@ -152,7 +148,7 @@ jobs:
           push: true
           tags: justhumanz/go-simp-frontend:${{ env.RELEASE_VERSION }}            
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:{{ env.hash }}           
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}           
 
       ### Web admin api
       
@@ -163,7 +159,7 @@ jobs:
           push: true
           tags: justhumanz/go-simp-web-admin-api:latest       
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:{{ env.hash }} 
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }} 
 
       ### Web admin vue
       
@@ -174,7 +170,7 @@ jobs:
           push: true
           tags: justhumanz/go-simp-web-admin-vue:latest       
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:{{ env.hash }}                 
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}                 
 
   deploy:
     needs: build  
