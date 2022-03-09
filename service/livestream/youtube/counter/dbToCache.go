@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	log "github.com/sirupsen/logrus"
@@ -13,30 +15,35 @@ func CacheChecker() {
 	if err != nil {
 		log.Error(err)
 	}
+
 	for _, Agency := range *GroupPayload {
 		for _, Member := range Agency.Members {
-			liveStream, err := Member.GetYtLiveStream(config.UpcomingStatus)
+			liveStreamDb, err := Member.GetYtLiveStream(config.UpcomingStatus)
 			if err != nil {
 				log.Error(err)
 			}
-			for _, k := range liveStream {
-				for _, j := range liveCache {
-					j := j.(database.LiveStream)
-					if k.VideoID == j.VideoID {
-						continue
-					} else {
-						log.WithFields(log.Fields{
-							"videoID": j.VideoID,
-							"agency":  Agency.GroupName,
-							"vtuber":  k.Member.Name,
-						}).Info("Found upcoming on db but not in cache,send it to cache now")
-						err := k.SendToCache(false)
-						if err != nil {
-							log.Error(err)
-						}
+			for _, live := range liveStreamDb {
+				key := fmt.Sprintf("%s-%s", Member.Name, live.VideoID)
+				_, ok := liveCache[key]
+				if !ok {
+					log.WithFields(log.Fields{
+						"videoID": live.VideoID,
+						"agency":  Agency.GroupName,
+						"vtuber":  live.Member.Name,
+					}).Info("Found upcoming on db but not in cache,send it to cache now")
+					err := live.SendToCache(false)
+					if err != nil {
+						log.Error(err)
 					}
 				}
 			}
 		}
 	}
 }
+
+/*
+	if k.VideoID == j.VideoID {
+		continue
+	} else {
+	}
+*/
