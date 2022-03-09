@@ -21,18 +21,18 @@ import VtuberHeader from "../components/VtuberDetails/VtuberHeader.vue"
 
 <style lang="scss" scoped>
 .title {
-  @apply text-2xl font-semibold uppercase bg-blue-400 py-2 w-full flex flex-wrap select-none fixed top-16 z-[9];
+  @apply text-2xl font-semibold uppercase bg-blue-400 dark:bg-slate-500 py-2 w-full flex flex-wrap select-none fixed top-16 z-[9];
 
   &__span {
     @apply w-[95%] md:w-[75%] lg:w-[70%] mx-auto text-white;
   }
   &__svg {
-    @apply text-blue-200;
+    @apply text-blue-200 dark:text-gray-200;
   }
 }
 
 .back-button {
-  @apply text-white hover:text-blue-200 p-2;
+  @apply text-white hover:text-blue-300 dark:hover:text-gray-300 p-2;
 }
 
 .vtuber-details {
