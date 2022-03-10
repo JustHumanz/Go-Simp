@@ -2,34 +2,27 @@
   <div class="platform">
     <h4 class="platform-title">
       <font-awesome-icon
-        :icon="['fab', 'youtube']"
+        :icon="['fab', 'bilibili']"
         class="platform-title__icon fa-fw"
       />
-      YouTube
+      BiliBili
     </h4>
-    <a :href="`https://socialcounts.org/youtube-live-subscriber-count/${youtube.YoutubeID}`" class="platform-link" target="_blank">
-      Realtime Subscribers
-      <font-awesome-icon
-        icon="circle-right"
-        class="platform-link__icon fa-fw"
-      />
-    </a>
     <div class="platform-cards">
       <div class="platform-card">
         <span class="card-count">
-          <CountTo :endVal="youtube.Subscriber" />
+          <CountTo :endVal="bilibili.Followers" />
         </span>
-        <span class="card-title">Subscribers</span>
+        <span class="card-title">Followers</span>
       </div>
       <div class="platform-card">
         <span class="card-count">
-          <CountTo :endVal="youtube.ViwersCount" />
+          <CountTo :endVal="bilibili.ViwersCount" />
         </span>
         <span class="card-title">Viewers</span>
       </div>
       <div class="platform-card">
         <span class="card-count">
-          <CountTo :endVal="youtube.VideoCount" />
+          <CountTo :endVal="bilibili.TotalVideos" />
         </span>
         <span class="card-title">Videos/Archives</span>
       </div>
@@ -41,14 +34,14 @@
 <script>
 import { CountTo } from "vue3-count-to"
 import { library } from "@fortawesome/fontawesome-svg-core"
-import { faYoutube } from "@fortawesome/free-brands-svg-icons"
+import { faBilibili } from "@fortawesome/free-brands-svg-icons"
 import { faCircleRight } from "@fortawesome/free-solid-svg-icons"
 
-library.add(faYoutube, faCircleRight)
+library.add(faBilibili, faCircleRight)
 
 export default {
   props: {
-    youtube: {
+    bilibili: {
       type: Object,
     },
   },
@@ -64,24 +57,11 @@ export default {
   grid-template-columns: 1fr;
   grid-template-areas:
     "platform-title"
-    "platform-card"
-    "platform-link";
-
-  @media (min-width: 640px) {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    grid-template-areas:
-      "platform-title platform-title platform-link"
-      "platform-card platform-card platform-card";
-  }
+    "platform-card";
 
   &-title {
-    @apply text-lg font-semibold underline decoration-2 underline-offset-4 decoration-youtube;
+    @apply text-lg font-semibold underline decoration-2 underline-offset-4 decoration-bilibili;
     grid-area: platform-title;
-  }
-
-  &-link {
-    @apply text-sm font-semibold text-right hover:underline hover:text-slate-700;
-    grid-area: platform-link;
   }
 
   &-cards {
@@ -95,7 +75,7 @@ export default {
   }
 
   &-card {
-    @apply inline-flex flex-col items-center justify-center bg-youtube py-6 px-2 m-1 rounded-md;
+    @apply inline-flex flex-col items-center justify-center bg-bilibili py-6 px-2 m-1 rounded-md;
   }
 }
 

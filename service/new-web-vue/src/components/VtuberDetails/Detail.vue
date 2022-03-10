@@ -58,6 +58,13 @@
         {{ vtuber.Status }}
       </span>
     </div>
+
+    <div class="detail-vtuber-item">
+      <span class="detail-vtuber-item__title"> Fanbase </span>
+      <span class="detail-vtuber-item__value">
+        {{ vtuber.Fanbase }}
+      </span>
+      </div>
   </div>
   <hr class="m-2" />
 </template>

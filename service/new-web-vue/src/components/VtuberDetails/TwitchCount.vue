@@ -2,13 +2,17 @@
   <div class="platform">
     <h4 class="platform-title">
       <font-awesome-icon
-        :icon="['fab', 'youtube']"
+        :icon="['fab', 'twitch']"
         class="platform-title__icon fa-fw"
       />
-      YouTube
+      Twitch
     </h4>
-    <a :href="`https://socialcounts.org/youtube-live-subscriber-count/${youtube.YoutubeID}`" class="platform-link" target="_blank">
-      Realtime Subscribers
+    <a
+      :href="`https://socialblade.com/twitch/user/${twitch.Username}/realtime`"
+      class="platform-link"
+      target="_blank"
+    >
+      Realtime Followers
       <font-awesome-icon
         icon="circle-right"
         class="platform-link__icon fa-fw"
@@ -17,21 +21,15 @@
     <div class="platform-cards">
       <div class="platform-card">
         <span class="card-count">
-          <CountTo :endVal="youtube.Subscriber" />
+          <CountTo :endVal="twitch.Followers" />
         </span>
-        <span class="card-title">Subscribers</span>
+        <span class="card-title">Followers</span>
       </div>
       <div class="platform-card">
         <span class="card-count">
-          <CountTo :endVal="youtube.ViwersCount" />
+          <CountTo :endVal="twitch.ViwersCount" />
         </span>
         <span class="card-title">Viewers</span>
-      </div>
-      <div class="platform-card">
-        <span class="card-count">
-          <CountTo :endVal="youtube.VideoCount" />
-        </span>
-        <span class="card-title">Videos/Archives</span>
       </div>
     </div>
   </div>
@@ -41,14 +39,14 @@
 <script>
 import { CountTo } from "vue3-count-to"
 import { library } from "@fortawesome/fontawesome-svg-core"
-import { faYoutube } from "@fortawesome/free-brands-svg-icons"
+import { faTwitch } from "@fortawesome/free-brands-svg-icons"
 import { faCircleRight } from "@fortawesome/free-solid-svg-icons"
 
-library.add(faYoutube, faCircleRight)
+library.add(faTwitch, faCircleRight)
 
 export default {
   props: {
-    youtube: {
+    twitch: {
       type: Object,
     },
   },
@@ -75,7 +73,7 @@ export default {
   }
 
   &-title {
-    @apply text-lg font-semibold underline decoration-2 underline-offset-4 decoration-youtube;
+    @apply text-lg font-semibold underline decoration-2 underline-offset-4 decoration-twitch;
     grid-area: platform-title;
   }
 
@@ -95,7 +93,7 @@ export default {
   }
 
   &-card {
-    @apply inline-flex flex-col items-center justify-center bg-youtube py-6 px-2 m-1 rounded-md;
+    @apply inline-flex flex-col items-center justify-center bg-twitch py-6 px-2 m-1 rounded-md;
   }
 }
 

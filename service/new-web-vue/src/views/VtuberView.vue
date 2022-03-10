@@ -3,6 +3,9 @@ import AmeLoading from "../components/AmeComp/AmeLoading.vue"
 import VtuberHeader from "../components/VtuberDetails/VtuberHeader.vue"
 import Detail from "../components/VtuberDetails/Detail.vue"
 import YoutubeCount from "../components/VtuberDetails/YoutubeCount.vue"
+import TwitchCount from "../components/VtuberDetails/TwitchCount.vue"
+import BiliBiliCount from "../components/VtuberDetails/BiliBiliCount.vue"
+import TwitterCount from "../components/VtuberDetails/TwitterCount.vue"
 </script>
 
 <template>
@@ -20,6 +23,9 @@ import YoutubeCount from "../components/VtuberDetails/YoutubeCount.vue"
     <VtuberHeader :vtuber="vtuber" />
     <Detail :vtuber="vtuber" />
     <YoutubeCount :youtube="vtuber.Youtube" v-if="vtuber.Youtube" />
+    <TwitchCount :twitch="vtuber.Twitch" v-if="vtuber.Twitch" />
+    <BiliBiliCount :bilibili="vtuber.BiliBili" v-if="vtuber.BiliBili" />
+    <TwitterCount :twitter="vtuber.Twitter" v-if="vtuber.Twitter" />
   </section>
 </template>
 

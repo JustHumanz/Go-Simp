@@ -1,21 +1,29 @@
 <template>
   <header class="header">
-    <div
+    <img
       class="header-banner bg-cyan-300"
-      :style="`background-image: url(${vtuber.Youtube.Banner.replace(
+      :src="`${vtuber.Youtube.Banner.replace(
         's1200',
         ''
-      )}s1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj)`"
+      )}s1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj`"
       referrerpolicy="no-referrer"
       v-if="vtuber.Youtube"
-    ></div>
-    <div
+      @contextmenu="disableContextMenu"
+    />
+    <img
       class="header-banner bg-cyan-300"
-      :style="`background-image: url(${vtuber.BiliBili.Banner})`"
+      :src="
+        vtuber.BiliBili.Banner.replace('.jpg', '') + '@1707w_282h_1c_1s.jpg'
+      "
       referrerpolicy="no-referrer"
       v-else-if="vtuber.BiliBili"
-    ></div>
-    <div class="header-banner bg-cyan-300" v-else></div>
+      @contextmenu="disableContextMenu"
+    />
+    <img
+      class="header-banner bg-cyan-300"
+      v-else
+      @contextmenu="disableContextMenu"
+    />
     <div class="header-info">
       <div
         class="header-profile-pic"
@@ -227,7 +235,7 @@
       <span class="link-header__link-text"> Pixiv (#{{ fanart_pixiv }}) </span>
     </a>
   </div>
-    <hr class="m-2" />
+  <hr class="m-2" />
 </template>
 
 <script>
@@ -256,6 +264,11 @@ export default {
         : this.vtuber.EnName.split(" ").reduce((acc, cur) => acc + cur, "")
     },
   },
+  methods: {
+    disableContextMenu(e) {
+      e.preventDefault()
+    },
+  },
 }
 </script>
 
@@ -273,7 +286,7 @@ export default {
 
 .header {
   &-banner {
-    @apply w-full /*&h-[11.25rem]*/ bg-center bg-cover bg-no-repeat;
+    @apply w-full /*&h-[11.25rem]*/ /*bg-center bg-cover bg-no-repeat*/ object-cover object-center;
     height: calc(16.1290322581vw - 1px);
 
     // @media (min-width: 640px) {
@@ -350,6 +363,10 @@ export default {
     &:hover {
       @apply brightness-90;
     }
+  }
+
+  & > span {
+    @apply hidden;
   }
 }
 </style>
