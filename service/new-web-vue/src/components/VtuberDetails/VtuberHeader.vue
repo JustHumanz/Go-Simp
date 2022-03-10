@@ -2,6 +2,7 @@
   <header class="header">
     <img
       class="header-banner bg-cyan-300"
+      draggable="false"
       :src="`${vtuber.Youtube.Banner.replace(
         's1200',
         ''
@@ -12,6 +13,7 @@
     />
     <img
       class="header-banner bg-cyan-300"
+      draggable="false"
       :src="
         vtuber.BiliBili.Banner.replace('.jpg', '') + '@1707w_282h_1c_1s.jpg'
       "
