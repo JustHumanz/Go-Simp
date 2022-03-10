@@ -78,7 +78,7 @@ export default {
   }
 
   &-link {
-    @apply text-sm font-semibold text-right hover:underline hover:text-slate-700;
+    @apply text-sm font-semibold py-2 justify-self-end text-right hover:underline hover:text-slate-700 dark:hover:text-slate-300;
     grid-area: platform-link;
   }
 

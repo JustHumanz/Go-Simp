@@ -7,7 +7,11 @@
       />
       YouTube
     </h4>
-    <a :href="`https://socialcounts.org/youtube-live-subscriber-count/${youtube.YoutubeID}`" class="platform-link" target="_blank">
+    <a
+      :href="`https://socialcounts.org/youtube-live-subscriber-count/${youtube.YoutubeID}`"
+      class="platform-link"
+      target="_blank"
+    >
       Realtime Subscribers
       <font-awesome-icon
         icon="circle-right"
@@ -80,7 +84,7 @@ export default {
   }
 
   &-link {
-    @apply text-sm font-semibold text-right hover:underline hover:text-slate-700;
+    @apply text-sm font-semibold py-2 justify-self-end text-right hover:underline hover:text-slate-700 dark:hover:text-slate-300;
     grid-area: platform-link;
   }
 

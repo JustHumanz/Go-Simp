@@ -270,7 +270,7 @@ export default {
   }
 
   &__input {
-    @apply bg-blue-300 dark:bg-slate-400 focus:bg-blue-200 dark:focus:bg-slate-400 disabled:bg-blue-600 dark:disabled:bg-slate-700 py-1 px-2 rounded-lg transition-all hover:shadow-sm hover:shadow-blue-600/75 dark:hover:shadow-slate-100/75 focus:shadow-md focus:shadow-blue-600/75 dark:focus:shadow-slate-100/75  w-full text-gray-600 dark:text-white font-semibold placeholder:italic placeholder:text-blue-500 dark:placeholder:text-gray-300 disabled:placeholder:text-blue-200 placeholder:font-normal pl-8 focus:outline-none;
+    @apply bg-blue-300 dark:bg-slate-300/20 focus:bg-blue-200 dark:focus:bg-slate-400 disabled:bg-blue-600 dark:disabled:bg-slate-700 py-1 px-2 rounded-lg transition-all hover:shadow-sm hover:shadow-blue-600/75 dark:hover:shadow-slate-100/75 focus:shadow-md focus:shadow-blue-600/75 dark:focus:shadow-slate-100/75  w-full text-gray-600 dark:text-white font-semibold placeholder:italic placeholder:text-blue-500 dark:placeholder:text-gray-300 disabled:placeholder:text-blue-200 placeholder:font-normal pl-8 focus:outline-none;
   }
 }
 </style>

@@ -59,7 +59,7 @@
       </span>
     </div>
 
-    <div class="detail-vtuber-item">
+    <div class="detail-vtuber-item" v-if="vtuber.Fanbase">
       <span class="detail-vtuber-item__title"> Fanbase </span>
       <span class="detail-vtuber-item__value">
         {{ vtuber.Fanbase }}
@@ -87,7 +87,7 @@ export default {
 
 <style lang="scss" scoped>
 a.detail-vtuber-item__value {
-  @apply hover:text-gray-600;
+  @apply hover:text-gray-600 dark:hover:text-gray-300;
 }
 
 .detail-vtuber {

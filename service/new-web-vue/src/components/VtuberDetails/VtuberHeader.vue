@@ -21,7 +21,7 @@
       v-else-if="vtuber.BiliBili"
       @contextmenu="disableContextMenu"
     />
-    <img
+    <div
       class="header-banner bg-cyan-300"
       v-else
       @contextmenu="disableContextMenu"
@@ -178,7 +178,7 @@
     </a>
     <a
       :href="`https://space.bilibili.com/${vtuber.BiliBili.SpaceID}`"
-      v-if="vtuber.BiliBili && !vtuber.IsLive.BiliBili"
+      v-if="vtuber.BiliBili"
       target="_blank"
       rel="noopener noreferrer"
       class="link-header__link bg-bilibili"
@@ -311,19 +311,19 @@ export default {
     &__name {
       @apply text-xl font-semibold pt-3;
       .nickname {
-        @apply text-gray-600 text-xl font-thin block sm:inline-block relative cursor-pointer;
+        @apply text-gray-600 dark:text-slate-300 text-xl font-thin block sm:inline-block relative cursor-pointer;
 
         a {
-          @apply text-white hover:text-gray-300;
+          @apply text-white hover:text-gray-100 dark:hover:text-gray-300;
         }
 
         &-hover {
-          @apply bg-sky-300 text-sm font-normal px-2 py-1 rounded-md w-44 text-left inline-block absolute top-7 left-1/2 -translate-x-1/2 -translate-y-5 invisible opacity-0 delay-100 duration-300 ease-in-out;
+          @apply bg-sky-300 dark:bg-slate-700 text-sm font-normal px-2 py-1 rounded-md w-44 text-left inline-block absolute top-7 left-1/2 -translate-x-1/2 -translate-y-5 invisible opacity-0 delay-100 duration-300 ease-in-out;
           transition-property: opacity, transform;
 
           &::before {
             // add arrow up in center using tailwind
-            @apply content-[''] border-x-8 border-b-8 border-solid border-x-transparent border-b-sky-300 absolute -top-1 left-1/2 -translate-x-1/2;
+            @apply content-[''] border-x-8 border-b-8 border-solid border-x-transparent border-b-sky-300 dark:border-b-slate-700 absolute -top-1 left-1/2 -translate-x-1/2;
           }
         }
 
@@ -336,10 +336,10 @@ export default {
     }
 
     &__group {
-      @apply text-sm font-light text-gray-500 inline-block mt-px;
+      @apply text-sm font-light text-gray-500 dark:text-gray-300 inline-block mt-px;
 
       a {
-        @apply hover:text-gray-700;
+        @apply hover:text-gray-700 dark:hover:text-gray-400;
       }
 
       &-icon {

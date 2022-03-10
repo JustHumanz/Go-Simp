@@ -7,6 +7,17 @@
       />
       Twitter
     </h4>
+    <a
+      :href="`https://socialblade.com/twitter/user/${twitter.Username}/realtime`"
+      class="platform-link"
+      target="_blank"
+    >
+      Realtime Followers
+      <font-awesome-icon
+        icon="circle-right"
+        class="platform-link__icon fa-fw"
+      />
+    </a>
     <div class="platform-cards">
       <div class="platform-card">
         <span class="card-count">
@@ -70,11 +81,24 @@ a.platform-card {
   grid-template-columns: 1fr;
   grid-template-areas:
     "platform-title"
-    "platform-card";
+    "platform-card"
+    "platform-link";
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-areas:
+      "platform-title platform-title platform-link"
+      "platform-card platform-card platform-card";
+  }
 
   &-title {
     @apply text-lg font-semibold underline decoration-2 underline-offset-4 decoration-twitter;
     grid-area: platform-title;
+  }
+
+  &-link {
+    @apply text-sm font-semibold py-2 justify-self-end text-right hover:underline hover:text-slate-700 dark:hover:text-slate-300;
+    grid-area: platform-link;
   }
 
   &-cards {
