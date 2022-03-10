@@ -175,6 +175,7 @@ import "./index.css"
           <a
             href="https://github.com/JustHumanz/Go-Simp"
             class="footer-list__link"
+            target="_blank"
           >
             <font-awesome-icon
               :icon="['fab', 'github']"
@@ -185,7 +186,11 @@ import "./index.css"
         </li>
         <!-- Discord link -->
         <li class="footer-list">
-          <a href="https://discord.gg/ydWC5knbJT" class="footer-list__link">
+          <a
+            href="https://discord.gg/ydWC5knbJT"
+            target="_blank"
+            class="footer-list__link"
+          >
             <font-awesome-icon
               :icon="['fab', 'discord']"
               class="footer-list__icon fa-fw"
@@ -283,8 +288,7 @@ export default {
           classList = [...e.target.parentElement.parentElement.classList]
         }
         if (e.target.tagName === "svg") {
-          if (e.target.classList.contains("dark-mode-btn__svg"))
-            return
+          if (e.target.classList.contains("dark-mode-btn__svg")) return
           classList = [...e.target.parentElement.classList]
         }
 

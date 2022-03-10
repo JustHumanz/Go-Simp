@@ -1,6 +1,8 @@
 <script setup>
 import AmeLoading from "../components/AmeComp/AmeLoading.vue"
 import VtuberHeader from "../components/VtuberDetails/VtuberHeader.vue"
+import Detail from "../components/VtuberDetails/Detail.vue"
+import YoutubeCount from "../components/VtuberDetails/YoutubeCount.vue"
 </script>
 
 <template>
@@ -16,6 +18,8 @@ import VtuberHeader from "../components/VtuberDetails/VtuberHeader.vue"
   <AmeLoading v-if="!vtuber && !error_status" class="!h-screen" />
   <section class="vtuber-details" v-if="vtuber">
     <VtuberHeader :vtuber="vtuber" />
+    <Detail :vtuber="vtuber" />
+    <YoutubeCount :youtube="vtuber.Youtube" v-if="vtuber.Youtube" />
   </section>
 </template>
 
