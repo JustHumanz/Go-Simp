@@ -150,7 +150,7 @@ func init() {
 								"Banner":      Member.BiliBiliBanner,
 								"Fanart":      Member.BiliBiliHashtag,
 								"SpaceID":     Member.BiliBiliID,
-								"LiveID":      Member.BiliBiliID,
+								"LiveID":      Member.BiliBiliRoomID,
 								"TotalVideos": Subs.BiliVideos,
 								"ViwersCount": Subs.BiliViews,
 								"Followers":   Subs.BiliFollow,
