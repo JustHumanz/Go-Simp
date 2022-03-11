@@ -501,17 +501,6 @@ func (Member Member) ScrapTwitterFanart(Scraper *twitterscraper.Scraper, Lewd bo
 		}
 	}()
 
-	log.WithFields(log.Fields{
-		"Hashtag": func() string {
-			if Lewd {
-				return Member.TwitterLewd
-			}
-			return Member.TwitterHashtag
-		}(),
-		"Vtuber": Member.Name,
-		"Lewd":   Lewd,
-	}).Info("Start curl twitter")
-
 	for tweet := range Scraper.SearchTweets(context.Background(), Query, config.GoSimpConf.LimitConf.TwitterFanart) {
 		if tweet.Error != nil {
 			log.Error(tweet.Error)

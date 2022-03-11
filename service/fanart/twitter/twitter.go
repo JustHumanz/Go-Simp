@@ -141,6 +141,14 @@ type checkTwJob struct {
 func (i *checkTwJob) Run() {
 	Cek := func(Member database.Member, w *sync.WaitGroup) {
 		defer w.Done()
+
+		log.WithFields(log.Fields{
+			"Hashtag": Member.TwitterHashtag,
+			"Vtuber":  Member.Name,
+			"Agency":  Member.Group.GroupName,
+			"Lewd":    false,
+		}).Info("Start curl twitter")
+
 		Fanarts, err := Member.ScrapTwitterFanart(engine.InitTwitterScraper(), false)
 		if err != nil {
 			log.WithFields(log.Fields{
@@ -161,6 +169,14 @@ func (i *checkTwJob) Run() {
 		}
 
 		if *lewd {
+
+			log.WithFields(log.Fields{
+				"Hashtag": Member.TwitterLewd,
+				"Vtuber":  Member.Name,
+				"Agency":  Member.Group.GroupName,
+				"Lewd":    true,
+			}).Info("Start curl twitter")
+
 			Fanarts, err := Member.ScrapTwitterFanart(engine.InitTwitterScraper(), true)
 			if err != nil {
 				log.WithFields(log.Fields{
