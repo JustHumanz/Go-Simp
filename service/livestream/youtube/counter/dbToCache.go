@@ -40,10 +40,3 @@ func CacheChecker() {
 		}
 	}
 }
-
-/*
-	if k.VideoID == j.VideoID {
-		continue
-	} else {
-	}
-*/

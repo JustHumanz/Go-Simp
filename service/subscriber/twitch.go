@@ -12,11 +12,14 @@ import (
 
 func CheckTwitch() {
 	for _, Group := range *Payload {
-		for _, Name := range Group.Members {
-			if Name.TwitchName != "" && Name.Active() {
-				res, err := TwitchClient.GetUsers(&helix.UsersParams{Logins: []string{Name.TwitchName}})
+		for _, Member := range Group.Members {
+			if Member.TwitchName != "" && Member.Active() {
+				res, err := TwitchClient.GetUsers(&helix.UsersParams{Logins: []string{Member.TwitchName}})
 				if err != nil {
-					log.Error(err)
+					log.WithFields(log.Fields{
+						"Agency": Group.GroupName,
+						"Vtuber": Member.Name,
+					}).Error(err)
 					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 						Message: err.Error(),
 						Service: ModuleState,
@@ -27,7 +30,10 @@ func CheckTwitch() {
 				for _, v := range res.Data.Users {
 					tmp, err := TwitchClient.GetUsersFollows(&helix.UsersFollowsParams{ToID: v.ID})
 					if err != nil {
-						log.Error(err)
+						log.WithFields(log.Fields{
+							"Agency": Group.GroupName,
+							"Vtuber": Member.Name,
+						}).Error(err)
 						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 							Message: err.Error(),
 							Service: ModuleState,
@@ -38,9 +44,12 @@ func CheckTwitch() {
 					break
 				}
 
-				TwitchFollowDB, err := Name.GetSubsCount()
+				TwitchFollowDB, err := Member.GetSubsCount()
 				if err != nil {
-					log.Error(err)
+					log.WithFields(log.Fields{
+						"Agency": Group.GroupName,
+						"Vtuber": Member.Name,
+					}).Error(err)
 					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 						Message: err.Error(),
 						Service: ModuleState,
@@ -49,26 +58,32 @@ func CheckTwitch() {
 				}
 
 				SendNotif := func(SubsCount, Viwers string) {
-					err = Name.RemoveSubsCache()
+					err = Member.RemoveSubsCache()
 					if err != nil {
-						log.Error(err)
+						log.WithFields(log.Fields{
+							"Agency": Group.GroupName,
+							"Vtuber": Member.Name,
+						}).Error(err)
 					}
 
-					Color, err := engine.GetColor(config.TmpDir, Name.TwitchAvatar)
+					Color, err := engine.GetColor(config.TmpDir, Member.TwitchAvatar)
 					if err != nil {
-						log.Error(err)
+						log.WithFields(log.Fields{
+							"Agency": Group.GroupName,
+							"Vtuber": Member.Name,
+						}).Error(err)
 					}
 
 					SendNude(engine.NewEmbed().
-						SetAuthor(Group.GroupName, Group.IconURL, "https://twitch.tv/"+Name.TwitchName).
-						SetTitle(engine.FixName(Name.EnName, Name.JpName)).
+						SetAuthor(Group.GroupName, Group.IconURL, "https://twitch.tv/"+Member.TwitchName).
+						SetTitle(engine.FixName(Member.EnName, Member.JpName)).
 						SetThumbnail(config.TwitchIMG).
 						SetDescription("Congratulation for "+SubsCount+" followers").
-						SetImage(Name.TwitchAvatar).
+						SetImage(Member.TwitchAvatar).
 						AddField("Twitch viwers count", Viwers).
 						InlineAllFields().
-						SetURL("https://twitch.tv/"+Name.TwitchName).
-						SetColor(Color).MessageEmbed, Group, Name)
+						SetURL("https://twitch.tv/"+Member.TwitchName).
+						SetColor(Color).MessageEmbed, Group, Member)
 
 				}
 				if TotalFollowers != TwitchFollowDB.TwitchFollow {
@@ -76,16 +91,19 @@ func CheckTwitch() {
 					log.WithFields(log.Fields{
 						"Past Twitch Follower":    TwitchFollowDB.TwitchFollow,
 						"Current Twitch Follower": TotalFollowers,
-						"Vtuber":                  Name.Name,
+						"Vtuber":                  Member.Name,
 					}).Info("Update Twitch Follower")
 
-					err := TwitchFollowDB.SetMember(Name).SetGroup(Group).
+					err := TwitchFollowDB.SetMember(Member).SetGroup(Group).
 						UpdateTwitchFollowes(TotalFollowers).
 						UpdateTwitchViewers(TotalViwers).
 						UpdateState(config.TwitchLive).
 						UpdateSubs()
 					if err != nil {
-						log.Error(err)
+						log.WithFields(log.Fields{
+							"Agency": Group.GroupName,
+							"Vtuber": Member.Name,
+						}).Error(err)
 					}
 
 					if TotalFollowers >= 1000000 {
@@ -117,7 +135,10 @@ func CheckTwitch() {
 
 				bin, err := TwitchFollowDB.MarshalBinary()
 				if err != nil {
-					log.Error(err)
+					log.WithFields(log.Fields{
+						"Agency": Group.GroupName,
+						"Vtuber": Member.Name,
+					}).Error(err)
 				}
 				if config.GoSimpConf.Metric {
 					gRCPconn.MetricReport(context.Background(), &pilot.Metric{

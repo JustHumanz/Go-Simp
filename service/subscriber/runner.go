@@ -28,10 +28,10 @@ var (
 	Payload      *[]database.Group
 	gRCPconn     pilot.PilotServiceClient
 	TwitchClient *helix.Client
-	Youtube      *bool
-	BiliBili     *bool
-	Twitter      *bool
-	Twitch       *bool
+	Youtube      = flag.Bool("Youtube", false, "Enable youtube module")
+	BiliBili     = flag.Bool("BiliBili", false, "Enable bilibili module")
+	Twitter      = flag.Bool("Twitter", false, "Enable twitter module")
+	Twitch       = flag.Bool("Twitch", false, "Enable Twitch module")
 )
 
 const (
@@ -39,12 +39,7 @@ const (
 )
 
 func init() {
-	Youtube = flag.Bool("Youtube", false, "Enable youtube module")
-	BiliBili = flag.Bool("BiliBili", false, "Enable bilibili module")
-	Twitter = flag.Bool("Twitter", false, "Enable twitter module")
-	Twitch = flag.Bool("Twitch", false, "Enable Twitch module")
 	flag.Parse()
-
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
 	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 

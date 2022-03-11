@@ -144,6 +144,7 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 				Message: "Done",
 				Alive:   false,
 			})
+
 			log.WithFields(log.Fields{
 				"Service": ModuleState,
 				"Running": false,

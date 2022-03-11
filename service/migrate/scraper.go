@@ -43,8 +43,11 @@ func TwitterFanart() {
 func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 	VideoID, err := engine.GetRSS(Dat.YoutubeID, false)
 	if err != nil {
-		log.Error(err)
+		log.WithFields(log.Fields{
+			"Vtuber": Dat.Name,
+		}).Error(err)
 	}
+
 	defer wg.Done()
 	body, err := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,actualEndTime),statistics(viewCount))&id="+strings.Join(VideoID, ",")+"&key="+*YoutubeToken, nil)
 	if err != nil {
@@ -57,8 +60,11 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 	)
 	err = json.Unmarshal(body, &Data)
 	if err != nil {
-		log.Error(err)
+		log.WithFields(log.Fields{
+			"Vtuber": Dat.Name,
+		}).Error(err)
 	}
+
 	counter := 0
 	for _, Item := range Data.Items {
 		yttype = "Streaming"
@@ -72,13 +78,17 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 
 		YtData, err := Dat.CheckYoutubeVideo(VideoID[counter])
 		if err != nil {
-			log.Error(err)
+			log.WithFields(log.Fields{
+				"Vtuber": Dat.Name,
+			}).Error(err)
 		}
 
 		if YtData != nil {
 			continue
 		} else {
-			log.Info("New video")
+			log.WithFields(log.Fields{
+				"Vtuber": Dat.Name,
+			}).Info("New video")
 			//verify
 			if Item.LiveDetails.Viewers == "" {
 				Viewers = Item.Statistics.ViewCount
@@ -107,13 +117,17 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 			if Item.Snippet.VideoStatus == config.UpcomingStatus {
 				err := NewData.SendToCache(false)
 				if err != nil {
-					log.Error(err)
+					log.WithFields(log.Fields{
+						"Vtuber": Dat.Name,
+					}).Error(err)
 				}
 			}
 
 			_, err := NewData.InputYt()
 			if err != nil {
-				log.Error(err)
+				log.WithFields(log.Fields{
+					"Vtuber": Dat.Name,
+				}).Error(err)
 			}
 
 		}
@@ -138,61 +152,51 @@ func (Data Youtube) GetYtInfo() (YtChannel, error) {
 	}
 }
 
-func (Data BiliBili) GetBiliFolow(Vtuber string) BiliStat {
+func (Data BiliBili) GetBiliFolow(Vtuber string) (BiliStat, error) {
 	var (
-		wg   sync.WaitGroup
 		stat BiliStat
 	)
 	if Data.BiliRoomID != 0 {
-		wg.Add(3)
-		go func() {
-			body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/relation/stat?vmid="+strconv.Itoa(Data.BiliBiliID), BiliBiliSession)
-			if curlerr != nil {
-				log.Error(curlerr)
-			}
-			err := json.Unmarshal(body, &stat.Follow)
-			if err != nil {
-				log.Error(err)
-			}
-			defer wg.Done()
-		}()
+		body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/relation/stat?vmid="+strconv.Itoa(Data.BiliBiliID), BiliBiliSession)
+		if curlerr != nil {
+			return BiliStat{}, curlerr
+		}
+		err := json.Unmarshal(body, &stat.Follow)
+		if err != nil {
+			return BiliStat{}, err
+		}
 
-		go func() {
-			body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/space/upstat?mid="+strconv.Itoa(Data.BiliBiliID), BiliBiliSession)
-			if curlerr != nil {
-				log.Error(curlerr)
-			}
-			err := json.Unmarshal(body, &stat.Like)
-			if err != nil {
-				log.Error(err)
-			}
-			defer wg.Done()
-		}()
+		body, curlerr = network.CoolerCurl("https://api.bilibili.com/x/space/upstat?mid="+strconv.Itoa(Data.BiliBiliID), BiliBiliSession)
+		if curlerr != nil {
+			return BiliStat{}, err
+		}
 
-		go func() {
-			baseurl := "https://api.bilibili.com/x/space/arc/search?mid=" + strconv.Itoa(Data.BiliBiliID) + "&ps=100"
-			url := []string{baseurl + "&tid=1", baseurl + "&tid=3", baseurl + "&tid=4"}
-			for f := 0; f < len(url); f++ {
-				body, curlerr := network.CoolerCurl(url[f], BiliBiliSession)
-				if curlerr != nil {
-					log.Error(curlerr)
-				}
-				var video SpaceVideo
-				err := json.Unmarshal(body, &video)
-				if err != nil {
-					log.Error(err)
-				}
-				stat.Video += video.Data.Page.Count
+		err = json.Unmarshal(body, &stat.Like)
+		if err != nil {
+			return BiliStat{}, err
+		}
+
+		baseurl := "https://api.bilibili.com/x/space/arc/search?mid=" + strconv.Itoa(Data.BiliBiliID) + "&ps=100"
+		url := []string{baseurl + "&tid=1", baseurl + "&tid=3", baseurl + "&tid=4"}
+		for f := 0; f < len(url); f++ {
+			body, curlerr := network.CoolerCurl(url[f], BiliBiliSession)
+			if curlerr != nil {
+				return BiliStat{}, err
 			}
-			defer wg.Done()
-		}()
-		wg.Wait()
-		return stat
+			var video SpaceVideo
+			err := json.Unmarshal(body, &video)
+			if err != nil {
+				return BiliStat{}, err
+			}
+			stat.Video += video.Data.Page.Count
+		}
+
+		return stat, nil
 	} else {
 		log.WithFields(log.Fields{
 			"Vtuber": Vtuber,
 		}).Warn("BiliBili Space nill")
-		return stat
+		return stat, nil
 	}
 }
 
@@ -314,7 +318,9 @@ func CheckLiveBiliBili() {
 	for _, Group := range Groups {
 		MemberData, err := database.GetMembers(Group.ID)
 		if err != nil {
-			log.Error(err)
+			log.WithFields(log.Fields{
+				"Agency": Group.GroupName,
+			}).Error(err)
 		}
 		for _, Member := range MemberData {
 			if Member.BiliBiliID != 0 {
@@ -330,13 +336,22 @@ func CheckLiveBiliBili() {
 						"Status":   v,
 						"MemberID": Member.ID,
 					})
+
 					if err != nil {
-						log.Error(err)
+						log.WithFields(log.Fields{
+							"Agency": Group.GroupName,
+							"Vtuber": Member.Name,
+						}).Error(err)
 					}
+
 					Status, err := engine.GetRoomStatus(Member.BiliBiliRoomID)
 					if err != nil {
-						log.Error(err)
+						log.WithFields(log.Fields{
+							"Agency": Group.GroupName,
+							"Vtuber": Member.Name,
+						}).Error(err)
 					}
+
 					loc, _ := time.LoadLocation("Asia/Shanghai")
 					if Status.Data.RoomInfo.LiveStartTime != 0 {
 						ScheduledStart = time.Unix(int64(Status.Data.RoomInfo.LiveStartTime), 0).In(loc)
@@ -410,25 +425,37 @@ func CheckTwitch() {
 	for _, Group := range Groups {
 		MembersData, err := database.GetMembers(Group.ID)
 		if err != nil {
-			log.Error(err)
+			log.WithFields(log.Fields{
+				"Agency": Group.GroupName,
+			}).Error(err)
 		}
 		for _, Member := range MembersData {
 			if Member.TwitchName != "" {
 				result, err := TwitchClient.GetStreams(&helix.StreamsParams{
 					UserLogins: []string{Member.TwitchName},
 				})
+
 				if err != nil {
-					log.Error(err)
+					log.WithFields(log.Fields{
+						"Agency": Group.GroupName,
+						"Vtuber": Member.Name,
+					}).Error(err)
 				}
+
 				if len(result.Data.Streams) > 0 {
 					for _, Stream := range result.Data.Streams {
 						if strings.EqualFold(Stream.UserName, Member.TwitchName) {
 							GameResult, err := TwitchClient.GetGames(&helix.GamesParams{
 								IDs: []string{Stream.GameID},
 							})
+
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Agency": Group.GroupName,
+									"Vtuber": Member.Name,
+								}).Error(err)
 							}
+
 							Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{width}", "1280", -1)
 							Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{height}", "720", -1)
 							log.WithFields(log.Fields{
@@ -482,10 +509,14 @@ func CheckSpaceBiliBili() {
 		if Group[z].GroupName == "Hololive" {
 			continue
 		}
+
 		Name, err := database.GetMembers(Group[z].ID)
 		if err != nil {
-			log.Error(err)
+			log.WithFields(log.Fields{
+				"Agency": Group[z].GroupName,
+			}).Error(err)
 		}
+
 		for k := 0; k < len(Name); k++ {
 			if Name[k].BiliBiliID != 0 {
 				log.WithFields(log.Fields{
@@ -502,13 +533,20 @@ func CheckSpaceBiliBili() {
 				for f := 0; f < len(url); f++ {
 					body, err := network.Curl(url[f], nil)
 					if err != nil {
-						log.Error(err)
+						log.WithFields(log.Fields{
+							"Agency": Group[z].GroupName,
+							"Vtuber": Name[k].Name,
+						}).Error(err)
 					}
 					var tmp SpaceVideo
 					err = json.Unmarshal(body, &tmp)
 					if err != nil {
-						log.Error(err)
+						log.WithFields(log.Fields{
+							"Agency": Group[z].GroupName,
+							"Vtuber": Name[k].Name,
+						}).Error(err)
 					}
+
 					PushVideo.Data.List.Vlist = append(PushVideo.Data.List.Vlist, tmp.Data.List.Vlist...)
 				}
 

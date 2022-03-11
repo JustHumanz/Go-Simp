@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"os"
 	"strconv"
-	"sync"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
@@ -19,83 +18,82 @@ func CheckBiliBili() {
 		"Cookie": "SESSDATA=" + configfile.BiliSess,
 	}
 	for _, Group := range *Payload {
-		Names := Group.Members
-		for _, Name := range Names {
-			if Name.BiliBiliID != 0 && Name.Active() {
+		for _, Member := range Group.Members {
+			if Member.BiliBiliID != 0 && Member.Active() {
 				var (
-					wg        sync.WaitGroup
 					bilistate BiliBiliStat
 				)
-				wg.Add(3)
-				go func() {
-					body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/relation/stat?vmid="+strconv.Itoa(Name.BiliBiliID), BiliBiliSession)
-					if curlerr != nil {
-						log.Error(curlerr)
-						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-							Message: curlerr.Error(),
-							Service: ModuleState,
-						})
-					}
-					err := json.Unmarshal(body, &bilistate.Follow)
-					if err != nil {
-						log.Error(err)
-					}
-					defer wg.Done()
-				}()
 
-				go func() {
-					body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/space/upstat?mid="+strconv.Itoa(Name.BiliBiliID), BiliBiliSession)
-					if curlerr != nil {
-						log.Error(curlerr)
-						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-							Message: curlerr.Error(),
-							Service: ModuleState,
-						})
-					}
-					err := json.Unmarshal(body, &bilistate.LikeView)
-					if err != nil {
-						log.Error(err)
-					}
-					defer wg.Done()
-				}()
-
-				go func() {
-					baseurl := "https://api.bilibili.com/x/space/arc/search?mid=" + strconv.Itoa(Name.BiliBiliID) + "&ps=100"
-					url := []string{baseurl + "&tid=1", baseurl + "&tid=3", baseurl + "&tid=4"}
-					for f := 0; f < len(url); f++ {
-						body, curlerr := network.CoolerCurl(url[f], BiliBiliSession)
-						if curlerr != nil {
-							log.Error(curlerr)
-							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-								Message: curlerr.Error(),
-								Service: ModuleState,
-							})
-						}
-						var video engine.SpaceVideo
-						err := json.Unmarshal(body, &video)
-						if err != nil {
-							log.Error(err)
-						}
-						bilistate.Videos += video.Data.Page.Count
-					}
-					defer wg.Done()
-				}()
-				wg.Wait()
-
-				BiliFollowDB, err := Name.GetSubsCount()
+				body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/relation/stat?vmid="+strconv.Itoa(Member.BiliBiliID), BiliBiliSession)
+				if curlerr != nil {
+					log.WithFields(log.Fields{
+						"Agency": Group.GroupName,
+						"Vtuber": Member.Name,
+					})
+					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+						Message: curlerr.Error(),
+						Service: ModuleState,
+					})
+				}
+				err := json.Unmarshal(body, &bilistate.Follow)
 				if err != nil {
 					log.Error(err)
 				}
 
-				if bilistate.Follow.Data.Follower != 0 {
+				body, curlerr = network.CoolerCurl("https://api.bilibili.com/x/space/upstat?mid="+strconv.Itoa(Member.BiliBiliID), BiliBiliSession)
+				if curlerr != nil {
+					log.WithFields(log.Fields{
+						"Agency": Group.GroupName,
+						"Vtuber": Member.Name,
+					})
+					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+						Message: curlerr.Error(),
+						Service: ModuleState,
+					})
+				}
+				err = json.Unmarshal(body, &bilistate.LikeView)
+				if err != nil {
+					log.Error(err)
+				}
 
+				baseurl := "https://api.bilibili.com/x/space/arc/search?mid=" + strconv.Itoa(Member.BiliBiliID) + "&ps=100"
+				url := []string{baseurl + "&tid=1", baseurl + "&tid=3", baseurl + "&tid=4"}
+				for f := 0; f < len(url); f++ {
+					body, curlerr := network.CoolerCurl(url[f], BiliBiliSession)
+					if curlerr != nil {
+						log.WithFields(log.Fields{
+							"Agency": Group.GroupName,
+							"Vtuber": Member.Name,
+						})
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message: curlerr.Error(),
+							Service: ModuleState,
+						})
+					}
+					var video engine.SpaceVideo
+					err := json.Unmarshal(body, &video)
+					if err != nil {
+						log.Error(err)
+					}
+					bilistate.Videos += video.Data.Page.Count
+				}
+
+				BiliFollowDB, err := Member.GetSubsCount()
+				if err != nil {
+					log.WithFields(log.Fields{
+						"Agency": Group.GroupName,
+						"Vtuber": Member.Name,
+					})
+				}
+
+				if bilistate.Follow.Data.Follower != 0 {
 					log.WithFields(log.Fields{
 						"Past BiliBili Follower":    BiliFollowDB.BiliFollow,
 						"Current BiliBili Follower": bilistate.Follow.Data.Follower,
-						"Vtuber":                    Name.Name,
+						"Vtuber":                    Member.Name,
 					}).Info("Update BiliBili Follower")
 
-					err := BiliFollowDB.SetMember(Name).SetGroup(Group).
+					err := BiliFollowDB.SetMember(Member).SetGroup(Group).
 						UpdateBiliBiliFollowers(bilistate.Follow.Data.Follower).
 						UpdateBiliBiliVideos(bilistate.Videos).
 						UpdateBiliBiliViewers(bilistate.LikeView.Data.Archive.View).
@@ -108,50 +106,56 @@ func CheckBiliBili() {
 						if bilistate.Follow.Data.Follower <= 10000 {
 							for i := 0; i < 1000001; i += 100000 {
 								if i == bilistate.Follow.Data.Follower {
-									Avatar := Name.BiliBiliAvatar
+									Avatar := Member.BiliBiliAvatar
 									Color, err := engine.GetColor(config.TmpDir, Avatar)
 									if err != nil {
-										log.Error(err)
+										log.WithFields(log.Fields{
+											"Agency": Group.GroupName,
+											"Vtuber": Member.Name,
+										})
 									}
 
-									err = Name.RemoveSubsCache()
+									err = Member.RemoveSubsCache()
 									if err != nil {
-										log.Error(err)
+										log.WithFields(log.Fields{
+											"Agency": Group.GroupName,
+											"Vtuber": Member.Name,
+										})
 									}
-									Graph := "[View as Graph](" + os.Getenv("PrometheusURL") + "/graph?g0.expr=get_subscriber%7Bstate%3D%22BiliBili%22%2C%20vtuber%3D%22" + Name.Name + "%22%7D&g0.tab=0&g0.stacked=0&g0.range_input=4w)"
+									Graph := "[View as Graph](" + os.Getenv("PrometheusURL") + "/graph?g0.expr=get_subscriber%7Bstate%3D%22BiliBili%22%2C%20vtuber%3D%22" + Member.Name + "%22%7D&g0.tab=0&g0.stacked=0&g0.range_input=4w)"
 									SendNude(engine.NewEmbed().
-										SetAuthor(Group.GroupName, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
-										SetTitle(engine.FixName(Name.EnName, Name.JpName)).
+										SetAuthor(Group.GroupName, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Member.BiliBiliID)).
+										SetTitle(engine.FixName(Member.EnName, Member.JpName)).
 										SetThumbnail(config.BiliBiliIMG).
 										SetDescription("Congratulation for "+engine.NearestThousandFormat(float64(i))+" followers").
 										SetImage(Avatar).
 										AddField("Viewers", strconv.Itoa(bilistate.LikeView.Data.Archive.View)).
 										AddField("Videos", strconv.Itoa(bilistate.Videos)).
-										SetURL("https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
+										SetURL("https://space.bilibili.com/"+strconv.Itoa(Member.BiliBiliID)).
 										InlineAllFields().
 										AddField("Graph", Graph).
-										SetColor(Color).MessageEmbed, Group, Name)
+										SetColor(Color).MessageEmbed, Group, Member)
 								}
 							}
 						} else {
 							for i := 0; i < 10001; i += 1000 {
 								if i == bilistate.Follow.Data.Follower {
-									Avatar := Name.BiliBiliAvatar
+									Avatar := Member.BiliBiliAvatar
 									Color, err := engine.GetColor(config.TmpDir, Avatar)
 									if err != nil {
 										log.Error(err)
 									}
 									SendNude(engine.NewEmbed().
-										SetAuthor(Group.GroupName, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
-										SetTitle(engine.FixName(Name.EnName, Name.JpName)).
+										SetAuthor(Group.GroupName, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Member.BiliBiliID)).
+										SetTitle(engine.FixName(Member.EnName, Member.JpName)).
 										SetThumbnail(config.BiliBiliIMG).
 										SetDescription("Congratulation for "+engine.NearestThousandFormat(float64(i))+" followers").
 										SetImage(Avatar).
 										AddField("Views", engine.NearestThousandFormat(float64(bilistate.LikeView.Data.Archive.View))).
 										AddField("Videos", engine.NearestThousandFormat(float64(bilistate.Videos))).
-										SetURL("https://space.bilibili.com/"+strconv.Itoa(Name.BiliBiliID)).
+										SetURL("https://space.bilibili.com/"+strconv.Itoa(Member.BiliBiliID)).
 										InlineAllFields().
-										SetColor(Color).MessageEmbed, Group, Name)
+										SetColor(Color).MessageEmbed, Group, Member)
 								}
 							}
 						}
