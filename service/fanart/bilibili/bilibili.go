@@ -110,7 +110,7 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 		if res.Run {
 			log.WithFields(log.Fields{
 				"Service": ModuleState,
-				"Running": false,
+				"Running": true,
 			}).Info(res.Message)
 
 			Bili.Run()
@@ -119,6 +119,7 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 				Message: "Done",
 				Alive:   false,
 			})
+
 			log.WithFields(log.Fields{
 				"Service": ModuleState,
 				"Running": false,
@@ -155,8 +156,8 @@ func (k *checkBlJob) Run() {
 		for _, Member := range Group.Members {
 			if Member.BiliBiliHashtag != "" {
 				log.WithFields(log.Fields{
-					"Group":  Group.GroupName,
-					"Vtuber": Member.EnName,
+					"Agency": Group.GroupName,
+					"Vtuber": Member.Name,
 				}).Info("Start crawler bilibili")
 
 				body, errcurl := network.CoolerCurl("https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_name="+url.QueryEscape(Member.BiliBiliHashtag), nil)
@@ -183,7 +184,10 @@ func (k *checkBlJob) Run() {
 						)
 						err := json.Unmarshal([]byte(v.Card), &STB)
 						if err != nil {
-							log.Error(err)
+							log.WithFields(log.Fields{
+								"Agency": Group.GroupName,
+								"Vtuber": Member.Name,
+							}).Error(err)
 						}
 						if STB.Item.Pictures != nil && v.Desc.Type == 2 { //type 2 is picture post (prob,heheheh)
 							for _, pic := range STB.Item.Pictures {
@@ -205,7 +209,10 @@ func (k *checkBlJob) Run() {
 
 							New, err := TBiliData.CheckTBiliBiliFanArt()
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Agency": Group.GroupName,
+									"Vtuber": Member.Name,
+								}).Error(err)
 								gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 									Message: err.Error(),
 									Service: ModuleState,

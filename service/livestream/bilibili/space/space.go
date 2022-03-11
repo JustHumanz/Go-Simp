@@ -129,7 +129,7 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 		if res.Run {
 			log.WithFields(log.Fields{
 				"Service": ModuleState,
-				"Running": false,
+				"Running": true,
 			}).Info(res.Message)
 
 			Bili := SpaceBiliBili
@@ -156,9 +156,8 @@ func (i *checkBlSpaceJob) Run() {
 		for _, Member := range Group.Members {
 			if Member.BiliBiliID != 0 && Member.Active() {
 				log.WithFields(log.Fields{
-					"Group":      Group.GroupName,
-					"Vtuber":     Member.Name,
-					"BiliBiliID": Member.BiliBiliID,
+					"Agency": Group.GroupName,
+					"Vtuber": Member.Name,
 				}).Info("Checking Space BiliBili")
 
 				Group.RemoveNillIconURL()
@@ -173,7 +172,10 @@ func (i *checkBlSpaceJob) Run() {
 
 				body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/space/arc/search?mid="+strconv.Itoa(Data.Member.BiliBiliID)+"&ps="+strconv.Itoa(config.GoSimpConf.LimitConf.SpaceBiliBili), nil)
 				if curlerr != nil {
-					log.Error(curlerr)
+					log.WithFields(log.Fields{
+						"Agency": Group.GroupName,
+						"Vtuber": Member.Name,
+					}).Error(curlerr)
 					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 						Message: curlerr.Error(),
 						Service: ModuleState,
@@ -183,7 +185,10 @@ func (i *checkBlSpaceJob) Run() {
 
 				err := json.Unmarshal(body, &PushVideo)
 				if err != nil {
-					log.Error(err)
+					log.WithFields(log.Fields{
+						"Agency": Group.GroupName,
+						"Vtuber": Member.Name,
+					}).Error(err)
 				}
 
 				if len(PushVideo.Data.List.Vlist) > 0 {

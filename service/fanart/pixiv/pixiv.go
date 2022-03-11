@@ -228,13 +228,19 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 
 					new, err := FixFanArt.CheckPixivFanArt()
 					if err != nil {
-						log.Warn(err)
+						log.WithFields(log.Fields{
+							"Agency": FixFanArt.Group.GroupName,
+							"Vtuber": FixFanArt.Member.Name,
+						}).Warn(err)
 					}
 
 					if new {
 						path, err := DownloadImg(Img["mini"].(string))
 						if err != nil {
-							log.Error(err)
+							log.WithFields(log.Fields{
+								"Agency": FixFanArt.Group.GroupName,
+								"Vtuber": FixFanArt.Member.Name,
+							}).Error(err)
 						}
 
 						FixFanArt.Photos[0] = config.PixivProxy + FixImg
@@ -289,12 +295,19 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 
 					new, err := FixFanArt.CheckPixivFanArt()
 					if err != nil {
-						log.Warn(err)
+						log.WithFields(log.Fields{
+							"Agency": FixFanArt.Group.GroupName,
+							"Vtuber": FixFanArt.Member.Name,
+						}).Error(err)
 					}
+
 					if new {
 						path, err := DownloadImg(Img["mini"].(string))
 						if err != nil {
-							log.Error(err)
+							log.WithFields(log.Fields{
+								"Agency": FixFanArt.Group.GroupName,
+								"Vtuber": FixFanArt.Member.Name,
+							}).Error(err)
 						}
 
 						if config.GoSimpConf.Metric {
@@ -416,7 +429,7 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 		if res.Run {
 			log.WithFields(log.Fields{
 				"Service": ModuleState,
-				"Running": false,
+				"Running": true,
 			}).Info(res.Message)
 
 			Pix.Run()
@@ -453,8 +466,8 @@ func (k *checkPxJob) Run() {
 
 		if Member.JpName != "" && Member.Region == "JP" {
 			log.WithFields(log.Fields{
-				"Member": Member.JpName,
-				"Group":  Group.GroupName,
+				"Vtuber": Member.JpName,
+				"Agency": Group.GroupName,
 				"Lewd":   l,
 			}).Info("Start curl pixiv")
 			URLJP := GetPixivURL(url.QueryEscape(Member.JpName))
@@ -468,8 +481,8 @@ func (k *checkPxJob) Run() {
 			}
 		} else if Member.EnName != "" && Member.Region != "JP" {
 			log.WithFields(log.Fields{
-				"Member": Member.EnName,
-				"Group":  Group.GroupName,
+				"Vtuber": Member.EnName,
+				"Agency": Group.GroupName,
 				"Lewd":   l,
 			}).Info("Start curl pixiv")
 			URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
@@ -483,8 +496,8 @@ func (k *checkPxJob) Run() {
 			}
 		} else {
 			log.WithFields(log.Fields{
-				"Member": Member.EnName,
-				"Group":  Group.GroupName,
+				"Vtuber": Member.EnName,
+				"Agency": Group.GroupName,
 				"Lewd":   l,
 			}).Info("Start curl pixiv")
 			URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))

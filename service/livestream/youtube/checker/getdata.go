@@ -32,7 +32,11 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 
 			VideoID, err := engine.GetRSS(YtChan.YtChannel, *proxy)
 			if err != nil {
-				log.Error(err)
+				log.WithFields(log.Fields{
+					"agency":    Group.GroupName,
+					"channelID": YtChan.YtChannel,
+					"region":    YtChan.Region,
+				}).Error(err)
 				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 					Message: err.Error(),
 					Service: ModuleState,
@@ -47,7 +51,11 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 				if YoutubeData == nil {
 					Data, err := engine.YtAPI([]string{ID})
 					if err != nil {
-						log.Error(err)
+						log.WithFields(log.Fields{
+							"agency":    Group.GroupName,
+							"channelID": YtChan.YtChannel,
+							"region":    YtChan.Region,
+						}).Error(err)
 						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 							Message: err.Error(),
 							Service: ModuleState,
@@ -128,12 +136,20 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						NewYoutubeData.UpdateStatus(config.UpcomingStatus)
 						_, err := NewYoutubeData.InputYt()
 						if err != nil {
-							log.Error(err)
+							log.WithFields(log.Fields{
+								"agency":    Group.GroupName,
+								"channelID": YtChan.YtChannel,
+								"region":    YtChan.Region,
+							}).Error(err)
 						}
 
 						err = NewYoutubeData.SendToCache(true)
 						if err != nil {
-							log.Error(err)
+							log.WithFields(log.Fields{
+								"agency":    Group.GroupName,
+								"channelID": YtChan.YtChannel,
+								"region":    YtChan.Region,
+							}).Error(err)
 						}
 
 						engine.SendLiveNotif(NewYoutubeData, Bot)
@@ -146,11 +162,16 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 
 					Data, err := engine.YtAPI([]string{ID})
 					if err != nil {
+						log.WithFields(log.Fields{
+							"agency":    Group.GroupName,
+							"channelID": YtChan.YtChannel,
+							"region":    YtChan.Region,
+						}).Error(err)
+
 						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 							Message: err.Error(),
 							Service: ModuleState,
 						})
-						log.Error(err)
 					}
 
 					if len(Data.Items) == 0 {
@@ -178,8 +199,13 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						if config.GoSimpConf.Metric {
 							bit, err := YoutubeData.MarshalBinary()
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"agency":    Group.GroupName,
+									"channelID": YtChan.YtChannel,
+									"region":    YtChan.Region,
+								}).Error(err)
 							}
+
 							gRCPconn.MetricReport(context.Background(), &pilot.Metric{
 								MetricData: bit,
 								State:      config.PastStatus,
@@ -249,12 +275,16 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 		if !Member.IsYtNill() && Member.Active() {
 			log.WithFields(log.Fields{
 				"Vtuber": Member.Name,
-				"Group":  Group.GroupName,
+				"Agency": Group.GroupName,
 			}).Info("Checking Vtuber channel")
 
 			VideoID, err := engine.GetRSS(Member.YoutubeID, *proxy)
 			if err != nil {
-				log.Error(err)
+				log.WithFields(log.Fields{
+					"Vtuber": Member.Name,
+					"Agency": Group.GroupName,
+				}).Error(err)
+
 				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 					Message: err.Error(),
 					Service: ModuleState,
@@ -263,7 +293,10 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 			for _, ID := range VideoID {
 				YoutubeData, err := Member.CheckYoutubeVideo(ID)
 				if err != nil {
-					log.Warn(err)
+					log.WithFields(log.Fields{
+						"Vtuber": Member.Name,
+						"Agency": Group.GroupName,
+					}).Warn(err)
 				}
 
 				if YoutubeData == nil {
@@ -273,11 +306,15 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 
 					Data, err := engine.YtAPI([]string{ID})
 					if err != nil {
+						log.WithFields(log.Fields{
+							"Vtuber": Member.Name,
+							"Agency": Group.GroupName,
+						}).Error(err)
+
 						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 							Message: err.Error(),
 							Service: ModuleState,
 						})
-						log.Error(err)
 					}
 
 					log.WithFields(log.Fields{
@@ -297,14 +334,20 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						if YoutubeData == nil {
 							Viewers, err = engine.GetWaiting(ID)
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Vtuber": Member.Name,
+									"Agency": Group.GroupName,
+								}).Error(err)
 							}
 						} else if YoutubeData.Viewers != config.Ytwaiting {
 							Viewers = YoutubeData.Viewers
 						} else {
 							Viewers, err = engine.GetWaiting(ID)
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Vtuber": Member.Name,
+									"Agency": Group.GroupName,
+								}).Error(err)
 							}
 						}
 					} else if Items.LiveDetails.Viewers == "" {
@@ -352,12 +395,18 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						NewYoutubeData.UpdateStatus(config.UpcomingStatus)
 						_, err := NewYoutubeData.InputYt()
 						if err != nil {
-							log.Error(err)
+							log.WithFields(log.Fields{
+								"Vtuber": Member.Name,
+								"Agency": Group.GroupName,
+							}).Error(err)
 						}
 
 						err = NewYoutubeData.SendToCache(false)
 						if err != nil {
-							log.Error(err)
+							log.WithFields(log.Fields{
+								"Vtuber": Member.Name,
+								"Agency": Group.GroupName,
+							}).Error(err)
 						}
 
 						UpcominginHours := int(time.Until(NewYoutubeData.Schedul).Hours())
@@ -375,13 +424,19 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						NewYoutubeData.UpdateStatus(config.LiveStatus)
 						_, err := NewYoutubeData.InputYt()
 						if err != nil {
-							log.Error(err)
+							log.WithFields(log.Fields{
+								"Vtuber": Member.Name,
+								"Agency": Group.GroupName,
+							}).Error(err)
 						}
 
 						if Member.BiliBiliRoomID != 0 {
 							LiveBili, err := engine.GetRoomStatus(Member.BiliBiliRoomID)
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Vtuber": Member.Name,
+									"Agency": Group.GroupName,
+								}).Error(err)
 							}
 							if LiveBili.CheckScheduleLive() {
 								NewYoutubeData.SetBiliLive(true).UpdateBiliToLive()
@@ -391,7 +446,10 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						if config.GoSimpConf.Metric {
 							bit, err := NewYoutubeData.MarshalBinary()
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Vtuber": Member.Name,
+									"Agency": Group.GroupName,
+								}).Error(err)
 							}
 							gRCPconn.MetricReport(context.Background(), &pilot.Metric{
 								MetricData: bit,
@@ -449,7 +507,10 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 							Message: err.Error(),
 							Service: ModuleState,
 						})
-						log.Error(err)
+						log.WithFields(log.Fields{
+							"Vtuber": Member.Name,
+							"Agency": Group.GroupName,
+						}).Error(err)
 					}
 
 					if len(Data.Items) == 0 {
@@ -478,7 +539,10 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						if config.GoSimpConf.Metric {
 							bit, err := YoutubeData.MarshalBinary()
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Vtuber": Member.Name,
+									"Agency": Group.GroupName,
+								}).Error(err)
 							}
 							gRCPconn.MetricReport(context.Background(), &pilot.Metric{
 								MetricData: bit,

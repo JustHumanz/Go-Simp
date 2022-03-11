@@ -106,7 +106,7 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 		if res.Run {
 			log.WithFields(log.Fields{
 				"Service": ModuleState,
-				"Running": false,
+				"Running": true,
 			}).Info(res.Message)
 
 			Bili.Run()
@@ -136,7 +136,9 @@ func (i *checkBlLiveeJob) Run() {
 				"Status":  v,
 			})
 			if err != nil {
-				log.Error(err)
+				log.WithFields(log.Fields{
+					"Agency": Group.GroupName,
+				}).Error(err)
 			}
 
 			if len(LiveBili) > 0 {
@@ -145,12 +147,15 @@ func (i *checkBlLiveeJob) Run() {
 						if Bili.Member.ID == Member.ID {
 							Bili.AddGroup(Group).AddMember(Member)
 							log.WithFields(log.Fields{
-								"Group":  Group.GroupName,
+								"Agency": Group.GroupName,
 								"Vtuber": Member.Name,
 							}).Info("Checking LiveBiliBili")
 							Status, err := engine.GetRoomStatus(Member.BiliBiliRoomID)
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Agency": Group.GroupName,
+									"Vtuber": Member.Name,
+								}).Error(err)
 								gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 									Message: err.Error(),
 									Service: ModuleState,
@@ -191,18 +196,27 @@ func (i *checkBlLiveeJob) Run() {
 
 								err := Bili.UpdateLiveBili()
 								if err != nil {
-									log.Error(err)
+									log.WithFields(log.Fields{
+										"Agency": Group.GroupName,
+										"Vtuber": Member.Name,
+									}).Error(err)
 								}
 
 								err = Bili.RemoveCache(Key)
 								if err != nil {
-									log.Panic(err)
+									log.WithFields(log.Fields{
+										"Agency": Group.GroupName,
+										"Vtuber": Member.Name,
+									}).Error(err)
 								}
 
 								if config.GoSimpConf.Metric {
 									bit, err := Bili.MarshalBinary()
 									if err != nil {
-										log.Error(err)
+										log.WithFields(log.Fields{
+											"Agency": Group.GroupName,
+											"Vtuber": Member.Name,
+										}).Error(err)
 									}
 									gRCPconn.MetricReport(context.Background(), &pilot.Metric{
 										MetricData: bit,
@@ -224,18 +238,27 @@ func (i *checkBlLiveeJob) Run() {
 
 								err = Bili.UpdateLiveBili()
 								if err != nil {
-									log.Error(err)
+									log.WithFields(log.Fields{
+										"Agency": Group.GroupName,
+										"Vtuber": Member.Name,
+									}).Error(err)
 								}
 
 								err = Bili.RemoveCache(Key)
 								if err != nil {
-									log.Panic(err)
+									log.WithFields(log.Fields{
+										"Agency": Group.GroupName,
+										"Vtuber": Member.Name,
+									}).Error(err)
 								}
 
 								if config.GoSimpConf.Metric {
 									bit, err := Bili.MarshalBinary()
 									if err != nil {
-										log.Error(err)
+										log.WithFields(log.Fields{
+											"Agency": Group.GroupName,
+											"Vtuber": Member.Name,
+										}).Error(err)
 									}
 									gRCPconn.MetricReport(context.Background(), &pilot.Metric{
 										MetricData: bit,
@@ -247,7 +270,10 @@ func (i *checkBlLiveeJob) Run() {
 								Bili.UpdateViewers(strconv.Itoa(Status.Data.RoomInfo.Online))
 								err := Bili.UpdateLiveBili()
 								if err != nil {
-									log.Error(err)
+									log.WithFields(log.Fields{
+										"Agency": Group.GroupName,
+										"Vtuber": Member.Name,
+									}).Error(err)
 								}
 							}
 						}
