@@ -428,7 +428,7 @@ func (Data *DiscordChannel) AddChannel() error {
 
 //DelChannel delete discord channel from `disable` command
 func (Data *DiscordChannel) DelChannel(errmsg string) error {
-	match, err := regexp.MatchString("Unknown|403|Delete|Missing", errmsg)
+	match, err := regexp.MatchString("Unknown|403||Delete|Missing|non-text", errmsg)
 	if err != nil {
 		return err
 	}
