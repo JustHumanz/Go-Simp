@@ -2,7 +2,7 @@
 
 ![alt text](https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/go-simp.png "Go-Simp")  
 ##### [Original Source](https://twitter.com/any_star_/status/1288184424320790528)
-[![build go-simp main module](https://github.com/JustHumanz/Go-Simp/actions/workflows/build-main.yaml/badge.svg)](https://github.com/JustHumanz/Go-Simp/actions/workflows/build-main.yaml)
+[![build & deploy go-simp modules](https://github.com/JustHumanz/Go-Simp/actions/workflows/deploy-modules.yaml/badge.svg)](https://github.com/JustHumanz/Go-Simp/actions/workflows/deploy-modules.yaml)
 ----
 
 ## Introduction
