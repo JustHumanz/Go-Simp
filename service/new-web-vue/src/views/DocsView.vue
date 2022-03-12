@@ -128,18 +128,16 @@ export default {
 }
 
 .fly {
-  // @media (min-width: 768px) {
     position: fixed !important;
-    @apply top-16 md:-z-10;
+    @apply top-16;
 
     .tab-link{
       @apply shadow-md bg-blue-400 text-white;
     }
 
     .tab-lists {
-      @apply shadow-md md:shadow-none;
+      @apply shadow-md md:shadow-none z-[2];
     }
-  // }
 }
 
 .message {
@@ -163,7 +161,7 @@ export default {
   }
 
   &-lists {
-    @apply scale-y-0 origin-top md:scale-y-100 flex flex-col w-full absolute md:static z-[2] bg-blue-100 md:bg-transparent transition-all duration-200 ease-in-out;
+    @apply scale-y-0 origin-top md:scale-y-100 flex flex-col w-full absolute md:static md:z-auto bg-blue-100 md:bg-transparent transition-all duration-200 ease-in-out;
   }
 
   &-list {

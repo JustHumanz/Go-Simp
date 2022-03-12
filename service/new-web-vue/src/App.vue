@@ -159,7 +159,7 @@ import "./index.css"
   <main class="mt-[4rem]">
     <RouterView />
   </main>
-  <footer class="footer">
+  <footer class="footer relative z-[1]">
     <div class="footer-page">
       <h2 class="footer-page__title">Vtbot</h2>
       <h4 class="footer-page__subtitle">Bot for Vtubers</h4>
