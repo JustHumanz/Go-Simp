@@ -786,7 +786,9 @@
         "BiliBili_ID": 20813493,
         "BiliRoom_ID": 4664126
       },
-      "Twitch": null,
+      "Twitch": {
+        "Twitch_Username": "robocosan_hololive",
+      },
       "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
