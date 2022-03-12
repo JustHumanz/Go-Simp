@@ -1,17 +1,7 @@
 package main
 
-import (
-	"strconv"
-	"strings"
-	"time"
-
-	config "github.com/JustHumanz/Go-Simp/pkg/config"
-	database "github.com/JustHumanz/Go-Simp/pkg/database"
-	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
-	"github.com/bwmarrin/discordgo"
-	"github.com/hako/durafmt"
-	log "github.com/sirupsen/logrus"
-)
+/*
+Deprecated
 
 //YoutubeMessage Youtube message handler
 func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -486,3 +476,5 @@ func YoutubeMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 	}
 }
+
+*/

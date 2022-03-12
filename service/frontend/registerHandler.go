@@ -1,21 +1,8 @@
 package main
 
-import (
-	"strconv"
-	"strings"
+/*
+Deprecated
 
-	config "github.com/JustHumanz/Go-Simp/pkg/config"
-	database "github.com/JustHumanz/Go-Simp/pkg/database"
-	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
-	"github.com/bwmarrin/discordgo"
-	"github.com/olekukonko/tablewriter"
-	log "github.com/sirupsen/logrus"
-)
-
-const (
-	UpdateState = "SelectChannel"
-	FirstSetup  = "Setup"
-)
 
 func StartRegister(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
@@ -413,3 +400,5 @@ func StartRegister(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 	}
 }
+
+*/

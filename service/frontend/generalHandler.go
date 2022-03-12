@@ -1,20 +1,18 @@
 package main
 
 import (
-	"encoding/json"
-	"os"
-	"regexp"
 	"strconv"
 	"strings"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	database "github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
-	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	"github.com/bwmarrin/discordgo"
-	"github.com/olekukonko/tablewriter"
 	log "github.com/sirupsen/logrus"
 )
+
+/*
+Deprecated
 
 //Fanart discord message handler
 func Fanart(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -1442,6 +1440,8 @@ func EnableState(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 }
 
+*/
+
 //Help helmp command message handler
 func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
@@ -1461,12 +1461,13 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 				AddField("Guide", "[Guide]("+config.GuideURL+")").
 				AddField("Vtuber list", "[Vtubers]("+config.VtubersData+")").
 				AddField("Made by Golang", "[Go-Simp](https://github.com/JustHumanz/Go-Simp)").
+				AddField("Bot WebApp", "[Web](web-admin.humanz.moe/Login)").
 				AddField("Server count", strconv.Itoa(len(GuildList))).
 				AddField("Member count", strconv.Itoa(database.GetMemberCount())).
 				InlineAllFields().
 				AddField("Join Dev server", "[Invite](https://discord.com/invite/ydWC5knbJT)").
 				SetThumbnail(config.BSD).
-				SetFooter(os.Getenv("VERSION")).
+				SetFooter("Prefix command already deprecated,use slash command").
 				SetColor(Color).MessageEmbed)
 			if err != nil {
 				log.Error(err)
@@ -1491,6 +1492,9 @@ func Help(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 	}
 }
+
+/*
+Deprecated
 
 //Status command message handler
 func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -1916,6 +1920,8 @@ func Status(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 	}
 }
+
+*/
 
 func SendError(Messsage map[string]string) {
 	_, err := Bot.ChannelMessageSendEmbed(Messsage["ChannelID"], engine.NewEmbed().

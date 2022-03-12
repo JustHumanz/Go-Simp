@@ -61,6 +61,8 @@ const (
 	Kings         = "kings"
 	Upvote        = "upvote"
 	Predick       = "prediction"
+	UpdateState   = "SelectChannel"
+	FirstSetup    = "Setup"
 )
 
 func init() {
@@ -152,17 +154,17 @@ func main() {
 				log.Error(err)
 			}
 
-			Bot.AddHandler(Fanart)
-			Bot.AddHandler(Tags)
+			//Bot.AddHandler(Fanart)
+			//Bot.AddHandler(Tags)
 			//Bot.AddHandler(EnableState)
-			Bot.AddHandler(Status)
+			//Bot.AddHandler(Status)
 			Bot.AddHandler(Help)
-			Bot.AddHandler(BiliBiliMessage)
-			Bot.AddHandler(BiliBiliSpace)
-			Bot.AddHandler(YoutubeMessage)
-			Bot.AddHandler(TwitchMessage)
-			Bot.AddHandler(Lewd)
-			Bot.AddHandler(StartRegister)
+			//Bot.AddHandler(BiliBiliMessage)
+			//Bot.AddHandler(BiliBiliSpace)
+			//Bot.AddHandler(YoutubeMessage)
+			//Bot.AddHandler(TwitchMessage)
+			//Bot.AddHandler(Lewd)
+			//Bot.AddHandler(StartRegister)
 			c.Stop()
 			c2 := cron.New()
 			c2.Start()

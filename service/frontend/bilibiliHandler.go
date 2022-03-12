@@ -1,24 +1,14 @@
 package main
 
-import (
-	"strconv"
-	"strings"
-	"time"
-
-	config "github.com/JustHumanz/Go-Simp/pkg/config"
-	database "github.com/JustHumanz/Go-Simp/pkg/database"
-	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
-	"github.com/bwmarrin/discordgo"
-	"github.com/hako/durafmt"
-	log "github.com/sirupsen/logrus"
-)
+/*
+Deprecated
 
 //BiliBiliMessage message handler
 func BiliBiliMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 	Prefix := configfile.BotPrefix.Bilibili
 	m.Content = strings.ToLower(m.Content)
 	if strings.HasPrefix(m.Content, Prefix) {
-		loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
+		loc, _ := time.LoadLocation("Asia/Shanghai") //Use CST
 		CommandArray := strings.Split(m.Content, " ")
 		if len(CommandArray) > 1 {
 			Payload := strings.Split(strings.TrimSpace(CommandArray[1]), ",")
@@ -273,7 +263,7 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 	m.Content = strings.ToLower(m.Content)
 	Prefix := "sp_" + configfile.BotPrefix.Bilibili
 	if strings.HasPrefix(m.Content, Prefix) {
-		loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
+		loc, _ := time.LoadLocation("Asia/Shanghai") //Use CST
 		Payload := m.Content[len(Prefix):]
 		if Payload != "" {
 			for _, FindGroupArry := range strings.Split(strings.TrimSpace(Payload), ",") {
@@ -406,3 +396,4 @@ func BiliBiliSpace(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 	}
 }
+*/
