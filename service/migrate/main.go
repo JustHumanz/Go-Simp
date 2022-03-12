@@ -269,9 +269,9 @@ func Dead(s *discordgo.Session, m *discordgo.MessageCreate) {
 			s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 				SetTitle("Bot update new Vtubers").
-				SetURL("https://github.com/JustHumanz/Go-Simp/blob/master/CHANGELOG.md").
+				SetURL("https://github.com/JustHumanz/Go-Simp/releases").
 				SetDescription("Still Processing new data,Comeback when i ready to bang you (around 10-20 minutes or more)").
-				AddField("See update at", "[Changelog](https://github.com/JustHumanz/Go-Simp/blob/master/CHANGELOG.md)").
+				AddField("See update at", "[Changelog](https://github.com/JustHumanz/Go-Simp/releases)").
 				SetThumbnail(config.Sleep).
 				SetImage(engine.MaintenanceIMG()).
 				SetColor(Color).
