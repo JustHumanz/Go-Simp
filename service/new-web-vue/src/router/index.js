@@ -3,6 +3,7 @@ import HomeView from "../views/HomeView.vue"
 import ListView from "../views/ListView.vue"
 import VtuberView from "../views/VtuberView.vue"
 import DocsView from "../views/DocsView.vue"
+// import OldDocsView from "../views/OldDocsView.vue"
 import SupportView from "../views/SupportView.vue"
 
 const router = createRouter({
@@ -32,11 +33,21 @@ const router = createRouter({
       name: "Vtuber Details",
       component: VtuberView,
     },
+    // {
+    //   path: "/docs",
+
+    //   redirect: "/docs/quick-start",
+    // },
     {
-      path: "/docs",
+      path: "/docs/",
       name: "Documentation",
       component: DocsView,
     },
+    // {
+    //   path: "/olddocs",
+    //   name: "Old Documentation",
+    //   component: OldDocsView,
+    // },
     {
       path: "/support",
       name: "Support",

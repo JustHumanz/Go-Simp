@@ -14,7 +14,44 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
     <font-awesome-icon icon="caret-up" class="fa-fw" />
   </a>
 
-  <section class="vtuber-list" v-if="!nullData">
+  <div class="pt-24 xs:pt-14" />
+
+  <section v-if="$route.params?.id && group" class="group-detail">
+    <img
+      v-if="group.ID != 10"
+      draggable="false"
+      :src="group.GroupIcon"
+      :alt="group.GroupName"
+      class="group-detail__img"
+    />
+    <h4 class="group-detail__title">
+      {{
+        (
+          group.GroupName.charAt(0).toUpperCase() + group.GroupName.slice(1)
+        ).replace("_", " ")
+      }}
+      <span class="group-detail__command"> {{ group.GroupName.toLowerCase() }}</span>
+    </h4>
+    <div class="group-detail__link" v-if="group.Youtube">
+      <a
+        :href="`https://www.youtube.com/channel/${youtube.YtChannel}`"
+        target="_blank"
+        rel="noopener noreferrer"
+        v-for="youtube in group.Youtube"
+        :key="youtube.Region"
+        class="group-detail__link-item"
+      >
+        <font-awesome-icon :icon="['fab', 'youtube']" class="fa-fw" />
+        <span>{{
+          /*regions.find((r) => r.code === youtube.Region).name */ `Engrish`
+        }}</span>
+      </a>
+    </div>
+  </section>
+  <section
+    class="vtuber-list"
+    v-if="!nullData"
+  >
     <VtuberCard
       v-for="vtuber in limitedVtubers"
       :key="vtuber.ID"
@@ -31,6 +68,7 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
 <script>
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faCaretUp } from "@fortawesome/free-solid-svg-icons"
+import regionConfig from "../region.json"
 
 library.add(faCaretUp)
 
@@ -42,6 +80,10 @@ export default {
     search_query: {
       type: String,
     },
+    groups: {
+      type: Array,
+      default: [],
+    },
   },
   emits: ["getPlaceholder", "null-data"],
   data() {
@@ -49,9 +91,25 @@ export default {
       limitedVtubers: [],
       nullData: false,
       hide_scroll_up: true,
+      group: null,
+      regions: null,
     }
   },
-  created() {
+  async created() {
+    this.regions = regionConfig
+
+    this.$watch(
+      () => this.groups,
+      () => {
+        if (this.groups.length > 0 && this.$route.params?.id) {
+          this.group = this.groups.find(
+            (group) => group.ID == this.$route.params.id
+          )
+        }
+      },
+      { immediate: true }
+    )
+
     this.$watch(
       () => this.$route.query,
       async () => {
@@ -312,8 +370,43 @@ export default {
 
 <style lang="scss" scoped>
 .vtuber-list {
-  @apply pt-24 pb-4 xs:pt-14 w-[95%] sm:w-[85%] md:w-[80%] lg:w-[75%] mx-auto grid gap-[1.5rem];
+  @apply pb-4 w-[95%] sm:w-[85%] md:w-[80%] lg:w-[75%] mx-auto grid gap-[1.5rem];
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+}
+
+.group-detail {
+  @apply w-[95%] sm:w-[85%] md:w-[80%] lg:w-[75%] mx-auto grid bg-slate-300 dark:bg-slate-700 p-2 rounded-md shadow-md mb-3 gap-1;
+  grid-template-columns: max-content auto;
+  grid-template-areas: "image title" "image link";
+
+
+  &__img {
+    @apply w-14 h-14 m-1 object-cover justify-self-start self-center;
+    grid-area: image;
+  }
+
+  &__title {
+    @apply text-2xl ml-1 font-bold text-center text-gray-700 dark:text-white justify-self-start self-center;
+    grid-area: title;
+
+    // when &__title is end item
+    &:last-child {
+      grid-area: 1 / 2 / 3 / 3;
+    }
+  }
+
+  &__command {
+    @apply text-xl font-thin text-slate-800 dark:text-slate-200;
+  }
+
+  &__link {
+    @apply ml-1;
+    grid-area: link;
+
+    &-item {
+      @apply inline-flex items-center space-x-2 px-3 py-1 m-[2px] rounded-full text-white bg-youtube hover:brightness-90;
+    }
+  }
 }
 
 .scroll-to-top {

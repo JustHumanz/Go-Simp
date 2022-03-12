@@ -133,11 +133,11 @@ export default {
     @apply top-16 md:-z-10;
 
     .tab-link{
-      @apply bg-blue-400 text-white border-b-0;
+      @apply shadow-md bg-blue-400 text-white;
     }
 
     .tab-lists {
-      @apply bg-blue-100 md:bg-transparent;
+      @apply shadow-md md:shadow-none;
     }
   // }
 }
@@ -149,7 +149,7 @@ export default {
   @apply flex-col md:py-2 md:border-r-2 border-blue-300 w-full md:w-48 md:mx-0 md:ml-3 md:absolute md:h-screen;
 
   &-link {
-    @apply text-xl py-3 w-full inline-block md:hidden transition-all font-semibold px-6 border-b-2 border-blue-400;
+    @apply text-xl py-3 w-full inline-block md:hidden transition-all font-semibold px-6 bg-blue-300;
 
     &__svg {
       @apply mr-2;
@@ -158,16 +158,16 @@ export default {
 
   &:focus-within {
     .tab-lists {
-      @apply flex flex-col;
+      @apply scale-y-100;
     }
   }
 
   &-lists {
-    @apply hidden md:flex flex-col p-2 md:p-0;
+    @apply scale-y-0 origin-top md:scale-y-100 flex flex-col w-full absolute md:static z-[2] bg-blue-100 md:bg-transparent transition-all duration-200 ease-in-out;
   }
 
   &-list {
-    @apply px-3 py-1 text-blue-400 rounded-full hover:bg-blue-100 md:rounded-r-none;
+    @apply px-3 py-1 text-blue-400 hover:bg-blue-100 md:rounded-l-full;
     transition: all 0.2s ease-in-out;
 
     &.active {

@@ -15,7 +15,7 @@ import SortMenu from "./SortMenu.vue"
             (error_status && error_status != 404),
         }"
       >
-        <GroupsMenu />
+        <GroupsMenu :groups="groups" />
       </li>
       <li
         class="navbar-filter"
@@ -66,6 +66,10 @@ export default {
     }
   },
   props: {
+    groups: {
+      type: Array,
+      default: [],
+    },
     filters: {
       type: Object,
       default: null,
@@ -186,7 +190,7 @@ export default {
   }
 
   &-items {
-    @apply absolute flex flex-col bg-blue-400 dark:bg-slate-700 sm:shadow-md sm:shadow-blue-600/75 sm:dark:shadow-slate-200/75 sm:rounded-md transition-all overflow-y-auto overflow-x-hidden max-h-[86.5vh] sm:max-h-60 left-0 mt-2 sm:mt-0 sm:left-auto scale-y-0 origin-top;
+    @apply absolute flex flex-col bg-blue-400 dark:bg-slate-700 sm:shadow-md sm:shadow-blue-600/75 sm:dark:shadow-slate-200/75 sm:rounded-md transition-all overflow-y-auto overflow-x-hidden max-h-[83.8vh] sm:max-h-60 left-0 mt-2 sm:mt-0 sm:left-auto scale-y-0 origin-top;
     @media (min-width: 640px) {
       scrollbar-width: none; /* Firefox */
       -ms-overflow-style: none; /* IE 10+ */

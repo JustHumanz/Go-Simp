@@ -13,6 +13,7 @@ import AmeError from "../components/AmeComp/AmeError.vue"
     :disable_search="(null_data || !vtubers) && !search_query"
     :disabled="!vtubers"
     :error_status="error_status"
+    :groups="groups"
   />
   <AmeLoading v-if="!vtubers && !error_status" class="!h-screen" />
   <AmeError
@@ -46,6 +47,7 @@ import AmeError from "../components/AmeComp/AmeError.vue"
   <VtuberList
     :vtubers="vtubers"
     :search_query="search_query"
+    :groups="groups"
     v-if="vtubers && vtubers.length > 0"
     @getPlaceholder="getPlaceholder"
     @null-data="nullData"
@@ -61,6 +63,7 @@ export default {
   data() {
     return {
       vtubers: null,
+      groups: [],
       filters: null,
       group_id: null,
       error_status: null,
@@ -70,6 +73,8 @@ export default {
     }
   },
   async created() {
+    await this.getGroupData()
+
     this.$watch(
       () => this.$route.params,
       () => (this.group_id = this.$route.params?.id || null),
@@ -188,6 +193,40 @@ export default {
         twitch,
         inactive,
       }
+    },
+
+    async getGroupData() {
+      if (this.groups.length > 0) return
+      console.log("Fetching group data...")
+
+      // this.cancelGroups = axios.CancelToken.source()
+
+      const data_groups = await axios
+        .get(Config.REST_API + "/v2/groups/", {
+          // cancelToken: this.cancelGroups.token,
+        })
+        .then((response) => response.data)
+        .catch((error) => {
+          if (!axios.isCancel(error)) this.error_msg = error.message
+        })
+
+      if (this.error_msg) return false
+
+      // sort group data from GroupName
+      data_groups.sort((a, b) => {
+        if (a.GroupName.toLowerCase() < b.GroupName.toLowerCase()) return -1
+        if (a.GroupName.toLowerCase() > b.GroupName.toLowerCase()) return 1
+        return 0
+      })
+
+      // add "all vtubers" in the first position of "groups"
+      data_groups.unshift({
+        GroupName: "All Vtubers",
+        GroupIcon: "",
+      })
+
+      this.groups = data_groups
+      console.log(`Total group: ${this.groups.length}`)
     },
     getSearchData(q) {
       this.search_query = q

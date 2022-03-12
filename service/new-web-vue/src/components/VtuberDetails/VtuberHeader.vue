@@ -130,61 +130,6 @@
       </div>
     </div>
   </header>
-  <hr
-    class="m-2 mt-3 mb-2"
-    v-if="
-      vtuber.IsLive.Youtube || vtuber.IsLive.Twitch || vtuber.IsLive.BiliBili
-    "
-  />
-  <div
-    class="link-header"
-    v-if="
-      vtuber.IsLive.Youtube || vtuber.IsLive.Twitch || vtuber.IsLive.BiliBili
-    "
-  >
-    <a
-      :href="vtuber.IsLive.Youtube.URL"
-      v-if="vtuber.IsLive.Youtube"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="link-header__link bg-red-500 hover:bg-red-600"
-    >
-      <font-awesome-icon
-        :icon="['fab', 'youtube']"
-        size="lg"
-        class="link-header__link-icon"
-      ></font-awesome-icon>
-      <span class="link-header__link-text">LIVE on YouTube</span>
-    </a>
-    <a
-      :href="vtuber.IsLive.Twitch.URL"
-      v-else-if="vtuber.IsLive.Twitch"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="link-header__link bg-red-500 hover:bg-red-600"
-    >
-      <font-awesome-icon
-        :icon="['fab', 'twitch']"
-        size="lg"
-        class="link-header__link-icon"
-      ></font-awesome-icon>
-      <span class="link-header__link-text">LIVE on Twitch</span>
-    </a>
-    <a
-      :href="vtuber.IsLive.BiliBili.URL"
-      v-else-if="vtuber.IsLive.BiliBili"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="link-header__link bg-red-500 hover:bg-red-600"
-    >
-      <font-awesome-icon
-        :icon="['fab', 'bilibili']"
-        size="lg"
-        class="link-header__link-icon"
-      ></font-awesome-icon>
-      <span class="link-header__link-text">LIVE on BiliBili</span>
-    </a>
-  </div>
   <hr class="m-2 mt-3 mb-2" />
   <div class="link-header">
     <a
@@ -291,6 +236,62 @@
     </a>
   </div>
   <hr class="m-2" />
+  <div
+    class="link-header"
+    v-if="
+      vtuber.IsLive.Youtube || vtuber.IsLive.Twitch || vtuber.IsLive.BiliBili
+    "
+  >
+    <a
+      :href="vtuber.IsLive.Youtube.URL"
+      v-if="vtuber.IsLive.Youtube"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="link-header__link bg-red-600 hover:bg-red-700"
+    >
+      <font-awesome-icon
+        :icon="['fab', 'youtube']"
+        size="lg"
+        class="link-header__link-icon"
+      ></font-awesome-icon>
+      <span class="link-header__link-text">LIVE on YouTube</span>
+    </a>
+    <a
+      :href="vtuber.IsLive.Twitch.URL"
+      v-if="vtuber.IsLive.Twitch"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="link-header__link bg-red-600 hover:bg-red-700"
+    >
+      <font-awesome-icon
+        :icon="['fab', 'twitch']"
+        size="lg"
+        class="link-header__link-icon"
+      ></font-awesome-icon>
+      <span class="link-header__link-text">LIVE on Twitch</span>
+    </a>
+    <a
+      :href="vtuber.IsLive.BiliBili.URL"
+      v-if="vtuber.IsLive.BiliBili"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="link-header__link bg-red-600 hover:bg-red-700"
+    >
+      <font-awesome-icon
+        :icon="['fab', 'bilibili']"
+        size="lg"
+        class="link-header__link-icon"
+      ></font-awesome-icon>
+      <span class="link-header__link-text">LIVE on BiliBili</span>
+    </a>
+  </div>
+    <hr
+    class="m-2 mt-3 mb-2"
+    v-if="
+      vtuber.IsLive.Youtube || vtuber.IsLive.Twitch || vtuber.IsLive.BiliBili
+    "
+  />
+  
 </template>
 
 <script>

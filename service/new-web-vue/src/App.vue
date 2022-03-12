@@ -46,13 +46,18 @@ import "./index.css"
             <li class="navbar-item">
               <router-link
                 to="/vtubers"
-                :class="{ active: isActive }"
+                :class="{ active: isActiveVtuber }"
                 class="navbar-link"
                 >Vtubers</router-link
               >
             </li>
             <li class="navbar-item">
-              <router-link to="/docs" class="navbar-link">Docs</router-link>
+              <router-link
+                to="/docs"
+                :class="{ active: isActiveDocs }"
+                class="navbar-link"
+                >Docs</router-link
+              >
             </li>
             <li class="navbar-item">
               <router-link to="/support" class="navbar-link"
@@ -240,7 +245,9 @@ export default {
   data() {
     return {
       activeListMenu: null,
-      isActive: false,
+      menuDocs: false,
+      isActiveVtuber: false,
+      isActiveDocs: false,
       theme: null,
     }
   },
@@ -253,7 +260,8 @@ export default {
     this.$watch(
       () => this.$route.params,
       async () => {
-        this.isActive = this.$route.path.includes("/vtuber")
+        this.isActiveVtuber = this.$route.path.includes("/vtuber")
+        this.isActiveDocs = this.$route.path.includes("/docs")
       },
 
       { immediate: true }
@@ -301,6 +309,25 @@ export default {
               : e.target.parentElement
 
           mainNavbar.blur()
+        }
+
+        if (this.$route.path.includes("/docs")) {
+          if (classList.find((c) => c === "tab-link")) {
+            const docsMenu =
+              e.target.tagName === "A"
+                ? e.target
+                : e.target.tagName === "path"
+                ? e.target.parentElement.parentElement
+                : e.target.parentElement
+
+            this.menuDocs = !this.menuDocs
+            if (!this.menuDocs && document.activeElement === docsMenu) {
+              docsMenu.blur()
+            }
+          } else {
+            document.activeElement.blur()
+            this.menuDocs = false
+          }
         }
 
         if (!this.$route.path.includes("/vtubers")) {
@@ -374,17 +401,18 @@ export default {
     unfocusMenu() {
       // when document unfocus
       document.onblur = (e) => {
-        if (this.activeListMenu) {
-          if (this.activeListMenu === document.activeElement)
-            this.activeListMenu.blur()
-          else if (
-            !document.activeElement.classList.contains("nav-search__input")
-          )
-            document.activeElement.blur()
+        if (
+          this.activeListMenu &&
+          this.activeListMenu === document.activeElement
+        )
+          this.activeListMenu.blur()
+        else if (
+          !document.activeElement.classList.contains("nav-search__input")
+        )
+          document.activeElement.blur()
 
-          console.log("closing menu")
-          this.activeListMenu = null
-        }
+        this.menuDocs = false
+        this.activeListMenu = null
       }
     },
 
