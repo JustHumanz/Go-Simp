@@ -156,7 +156,7 @@ import "./index.css"
     </div>
   </nav>
 
-  <main class="mt-[4rem]">
+  <main class="mt-[4rem] min-h-[85vh]">
     <RouterView />
   </main>
   <footer class="footer relative z-[1]">

@@ -19,38 +19,27 @@ import UtilsView from "../components/DocsViews/Utils.vue"
       ><font-awesome-icon :icon="['fas', 'bars']" class="fa-fw tab-link__svg" /> Menu</a
     >
     <ul class="tab-lists">
-      <li class="tab-list" :class="{ active: tab === 1 }">
-        <a href="#" @click="tab = 1" class="tab-list__link">Configuration</a>
+      <li class="tab-list">
+        <a href="#" class="tab-list__link">Quick Setup</a>
       </li>
-      <li class="tab-list" :class="{ active: tab === 2 }">
-        <a href="#" @click="tab = 2" class="tab-list__link">Roles and Taging</a>
+      <li class="tab-list">
+        <a href="#" class="tab-list__link">Configuration</a>
       </li>
-      <li class="tab-list" :class="{ active: tab === 3 }">
-        <a href="#" @click="tab = 3" class="tab-list__link">Utilites</a>
+      <li class="tab-list">
+        <a href="#" class="tab-list__link">Roles and Taging</a>
       </li>
-      <li class="tab-list" :class="{ active: tab === 4 }">
-        <a href="#" @click="tab = 4" class="tab-list__link">Get Data Groups</a>
+      <li class="tab-list">
+        <a href="#" class="tab-list__link">Utilites</a>
       </li>
     </ul>
   </div>
-  <!-- <div class="message">
-      There was a slight problem between the bot and the Discord API, but it
-      should be resolved soon
-    </div> -->
-  <section v-if="tab === 1" class="content">
-    <ConfigView />
-  </section>
-  <section v-if="tab === 2" class="content">
-    <TagingView />
-  </section>
-  <section v-if="tab === 3" class="content">
-    <UtilsView />
+  <section class="content">
+    
   </section>
 </template>
 
 <script>
 import { library } from "@fortawesome/fontawesome-svg-core"
-import { marked } from 'marked'
 
 // import {
 
@@ -72,6 +61,7 @@ export default {
   },
   created() {
     this.changeTab()
+    console.log(FileSystem.root)
     window.addEventListener("scroll", () => {
       let bottomOfWindow = Math.ceil(window.scrollY) >= 55
 

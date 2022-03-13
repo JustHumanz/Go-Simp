@@ -33,13 +33,13 @@ const router = createRouter({
       name: "Vtuber Details",
       component: VtuberView,
     },
-    // {
-    //   path: "/docs",
-
-    //   redirect: "/docs/quick-start",
-    // },
     {
-      path: "/docs/",
+      path: "/docs",
+
+      redirect: "/docs/quick-start",
+    },
+    {
+      path: "/docs/:page",
       name: "Documentation",
       component: DocsView,
     },
