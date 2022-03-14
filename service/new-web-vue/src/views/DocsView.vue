@@ -59,25 +59,19 @@ library.add(faCircleQuestion, faBars)
 export default {
   data() {
     return {
-      tab: 1,
+      docs: null,
       fly: false,
     }
   },
   mounted() {
     document.title = "Documentation - Vtbot"
   },
-  created() {
-    this.changeTab()
-    console.log(FileSystem.root)
+  async created() {
+
     window.addEventListener("scroll", () => {
       let bottomOfWindow = Math.ceil(window.scrollY) >= 55
 
       this.fly = bottomOfWindow
-      // if (bottomOfWindow) {
-      //   console.log("scroll")
-      // } else {
-      //   console.log("no scroll")
-      // }
     })
   },
   computed: {
@@ -162,8 +156,7 @@ export default {
   }
 
   &-list {
-    @apply  text-blue-400;
-
+    @apply text-blue-400;
 
     &__link {
       @apply w-full h-full inline-block px-3 py-1 md:rounded-l-full hover:bg-blue-200;

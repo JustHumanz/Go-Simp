@@ -1,5 +1,4 @@
 {
   "ENV": "production",
-  "REST_API": "https://api.humanz.moe",
-  "REST_API2": "https://api.humanz.moe/v2"
+  "REST_API": "https://api.humanz.moe"
 }
