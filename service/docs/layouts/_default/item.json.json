@@ -1,0 +1,5 @@
+{
+    "slug": "{{ replace (index (last 1 (split (delimit (split .Permalink "/") "," "") ",")) 0) "index.json" ""  }}",
+    "title": "{{ .Title }}",
+    "content": "{{ replace .Content "\n" "<br>" }}"
+}

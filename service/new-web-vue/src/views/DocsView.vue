@@ -16,26 +16,33 @@ import UtilsView from "../components/DocsViews/Utils.vue"
   </div>
   <div class="tab" :class="{ fly: fly }">
     <a href="#" class="tab-link" onclick="return false"
-      ><font-awesome-icon :icon="['fas', 'bars']" class="fa-fw tab-link__svg" /> Menu</a
+      ><font-awesome-icon :icon="['fas', 'bars']" class="fa-fw tab-link__svg" />
+      Menu</a
     >
     <ul class="tab-lists">
       <li class="tab-list">
-        <a href="#" class="tab-list__link">Quick Setup</a>
+        <router-link to="/docs/quick-start" class="tab-list__link"
+          >Quick Start</router-link
+        >
       </li>
       <li class="tab-list">
-        <a href="#" class="tab-list__link">Configuration</a>
+        <router-link to="/docs/configuration" class="tab-list__link"
+          >Configuration</router-link
+        >
       </li>
       <li class="tab-list">
-        <a href="#" class="tab-list__link">Roles and Taging</a>
+        <router-link to="/docs/roles-and-taging" class="tab-list__link"
+          >Roles and Taging</router-link
+        >
       </li>
       <li class="tab-list">
-        <a href="#" class="tab-list__link">Utilites</a>
+        <router-link to="/docs/utilites" class="tab-list__link"
+          >Utilites</router-link
+        >
       </li>
     </ul>
   </div>
-  <section class="content">
-    
-  </section>
+  <section class="content"></section>
 </template>
 
 <script>
@@ -118,16 +125,16 @@ export default {
 }
 
 .fly {
-    position: fixed !important;
-    @apply top-16;
+  position: fixed !important;
+  @apply top-16;
 
-    .tab-link{
-      @apply shadow-md bg-blue-400 text-white;
-    }
+  .tab-link {
+    @apply shadow-md bg-blue-400 text-white;
+  }
 
-    .tab-lists {
-      @apply shadow-md md:shadow-none z-[2];
-    }
+  .tab-lists {
+    @apply shadow-md md:shadow-none z-[2];
+  }
 }
 
 .message {
@@ -155,15 +162,16 @@ export default {
   }
 
   &-list {
-    @apply px-3 py-1 text-blue-400 hover:bg-blue-100 md:rounded-l-full;
-    transition: all 0.2s ease-in-out;
+    @apply  text-blue-400;
 
-    &.active {
-      @apply bg-blue-300 text-white font-semibold;
-    }
 
     &__link {
-      @apply w-full h-full inline-block;
+      @apply w-full h-full inline-block px-3 py-1 md:rounded-l-full hover:bg-blue-200;
+      transition: all 0.2s ease-in-out;
+
+      &.router-link-active {
+        @apply bg-blue-300 text-white font-semibold;
+      }
     }
   }
 }
