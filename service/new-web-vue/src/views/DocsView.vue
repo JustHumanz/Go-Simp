@@ -42,7 +42,7 @@ import UtilsView from "../components/DocsViews/Utils.vue"
       </li>
     </ul>
   </div>
-  <section class="content"></section>
+  <quick-start class="content" v-if="$route.params.page === 'quick-start'" />
 </template>
 
 <script>
@@ -52,11 +52,13 @@ import { library } from "@fortawesome/fontawesome-svg-core"
 
 // } from "@fortawesome/free-brands-svg-icons"
 import { faCircleQuestion, faBars } from "@fortawesome/free-solid-svg-icons"
+import QuickStart from '../components/DocsViews/QuickStart.vue'
 
 library.add(faCircleQuestion, faBars)
 
 // change title
 export default {
+  components: { QuickStart },
   data() {
     return {
       docs: null,
@@ -108,13 +110,13 @@ export default {
 
 <style lang="scss" scoped>
 .title {
-  @apply text-2xl font-semibold uppercase bg-blue-400 py-3 w-full flex flex-wrap relative;
+  @apply text-2xl font-semibold uppercase bg-blue-400 dark:bg-slate-500 py-3 w-full flex flex-wrap relative;
 
   &__span {
     @apply w-[90%] md:w-[70%] lg:w-[65%] mx-auto text-white;
   }
   &__svg {
-    @apply text-blue-200;
+    @apply text-blue-200 dark:text-gray-200;
   }
 }
 
@@ -123,7 +125,7 @@ export default {
   @apply top-16;
 
   .tab-link {
-    @apply shadow-md bg-blue-400 text-white;
+    @apply shadow-md bg-blue-400 text-white dark:bg-slate-500 dark:text-white;
   }
 
   .tab-lists {
@@ -131,14 +133,11 @@ export default {
   }
 }
 
-.message {
-  @apply bg-yellow-400 text-white px-4 py-2 mx-2 my-1 rounded-md font-semibold;
-}
 .tab {
-  @apply flex-col md:py-2 md:border-r-2 border-blue-300 w-full md:w-48 md:mx-0 md:ml-3 md:absolute md:h-screen;
+  @apply flex-col md:py-2 md:border-r-2 border-blue-300 dark:border-white w-full md:w-48 md:mx-0 md:ml-3 md:absolute md:h-screen;
 
   &-link {
-    @apply text-xl py-3 w-full inline-block md:hidden transition-all font-semibold px-6 bg-blue-300;
+    @apply text-xl py-3 w-full inline-block md:hidden transition-all font-semibold px-6 bg-blue-300 dark:bg-slate-400 dark:text-gray-700;
 
     &__svg {
       @apply mr-2;
@@ -152,24 +151,24 @@ export default {
   }
 
   &-lists {
-    @apply scale-y-0 origin-top md:scale-y-100 flex flex-col w-full absolute md:static md:z-auto bg-blue-100 md:bg-transparent transition-all duration-200 ease-in-out;
+    @apply scale-y-0 origin-top md:scale-y-100 flex flex-col w-full absolute md:static md:z-auto bg-blue-100 dark:bg-slate-500 md:bg-transparent dark:md:bg-transparent transition-all duration-200 ease-in-out;
   }
 
   &-list {
-    @apply text-blue-400;
+    @apply text-blue-400 dark:text-slate-200;
 
     &__link {
-      @apply w-full h-full inline-block px-3 py-1 md:rounded-l-full hover:bg-blue-200;
+      @apply w-full h-full inline-block px-3 py-1 md:rounded-l-full hover:bg-blue-200 dark:hover:bg-slate-700;
       transition: all 0.2s ease-in-out;
 
       &.router-link-active {
-        @apply bg-blue-300 text-white font-semibold;
+        @apply bg-blue-300 dark:text-slate-800 dark:bg-white text-white font-semibold;
       }
     }
   }
 }
 
 .content {
-  @apply px-3 md:pl-[13.5rem];
+  @apply px-3 py-4 md:pl-[13.5rem];
 }
 </style>

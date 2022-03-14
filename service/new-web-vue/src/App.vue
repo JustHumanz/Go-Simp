@@ -287,6 +287,14 @@ export default {
   methods: {
     getClickMenu() {
       document.onclick = (e) => {
+        if (e.target.id === "router-link") {
+          e.preventDefault()
+          // get href
+          const href = e.target.getAttribute("href")
+          //move router to href
+          this.$router.push(href)
+        }
+
         // Vtuber List
         let classList = [...e.target.classList]
 
