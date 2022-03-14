@@ -232,7 +232,9 @@
         "BiliBili_ID": 443305053,
         "BiliRoom_ID": 21560356
       },
-      "Twitch": null,
+      "Twitch": {
+        "Twitch_Username": "usadapekora_hololive"
+      },
       "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
@@ -764,7 +766,9 @@
         "BiliBili_ID": 491474051,
         "BiliRoom_ID": 21752710
       },
-      "Twitch": null,
+      "Twitch": {
+        "Twitch_Username": "tokoyamitowa_holo"
+      },
       "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
@@ -1068,7 +1072,9 @@
         "Yt_ID": "UCENwRMx5Yh42zWpzURebzTw"
       },
       "BiliBili": null,
-      "Twitch": null,
+      "Twitch": {
+        "Twitch_Username": "laplusdarknesss_hololive"
+      },
       "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
