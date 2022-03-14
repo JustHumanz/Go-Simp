@@ -1,0 +1,13 @@
+baseURL = 'https://go-simp.humanz.moe/docs/'
+languageCode = 'en-us'
+title = 'Vtbot Documentation'
+ignoreErrors = ["error-remote-getjson"]
+publishDir = "/public"
+pygmentsStyle = "atom"
+pygmentsUseClasses = true
+enableRobotsTXT = true
+
+[outputs]
+    page = ["json"] # A player
+    section = ["json"] # All players
+    home = ["json"] # Everything
