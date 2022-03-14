@@ -20,6 +20,9 @@
   ```
   this means that the bot will mention role{@Holo Simps} when any new hololive fan arts or live streams are uploaded. 
   router-link{« Read More}(/docs/roles-and-taging#tag-roles)
+
+  ### Get Vtuber Group and Vtuber Name
+
   </pre>
 </template>
 
@@ -34,13 +37,12 @@ export default {
     }
   },
   mounted() {
+    document.title = "Quick Start - Documentation"
     this.render()
   },
   methods: {
     render() {
       this.rendered = marked(document.getElementById("content-md").innerText)
-        // replace every splash{text} to <span class="value-slash">text</span> but inside channel{text} and role{text} not change
-
         .replace(/channel{([^}]+)}/g, '<span class="d-channel">$1</span>')
         .replace(/role{([^}]+)}/g, '<span class="d-role">$1</span>')
         .replace(/slash{([^}]+)}/g, '<span class="value-slash">$1</span>')
