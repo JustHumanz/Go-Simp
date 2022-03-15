@@ -1,7 +1,5 @@
 <script setup>
-import ConfigView from "../components/DocsViews/Config.vue"
-import TagingView from "../components/DocsViews/Taging.vue"
-import UtilsView from "../components/DocsViews/Utils.vue"
+import DocsRender from "../components/DocsRender.vue"
 </script>
 
 <template>
@@ -42,7 +40,12 @@ import UtilsView from "../components/DocsViews/Utils.vue"
       </li>
     </ul>
   </div>
-  <quick-start class="content" v-if="$route.params.page === 'quick-start'" />
+  <docs-render class="content" :page="$route.params.page" />
+  <!-- <quick-start class="content" v-if="$route.params.page === 'quick-start'" />
+  <configuration
+    class="content"
+    v-if="$route.params.page === 'configuration'"
+  /> -->
 </template>
 
 <script>
@@ -52,13 +55,11 @@ import { library } from "@fortawesome/fontawesome-svg-core"
 
 // } from "@fortawesome/free-brands-svg-icons"
 import { faCircleQuestion, faBars } from "@fortawesome/free-solid-svg-icons"
-import QuickStart from '../components/DocsViews/QuickStart.vue'
 
 library.add(faCircleQuestion, faBars)
 
 // change title
 export default {
-  components: { QuickStart },
   data() {
     return {
       docs: null,
@@ -66,10 +67,21 @@ export default {
     }
   },
   mounted() {
-    document.title = "Documentation - Vtbot"
+    this.$watch(
+      () => this.$route.params.page,
+      () => {
+        if (!this.$route.params.page) return
+        (document.title = `${this.$route.params.page
+          .split("-")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ")} - Documentation`)
+          },
+      {
+        immediate: true,
+      }
+    )
   },
   async created() {
-
     window.addEventListener("scroll", () => {
       let bottomOfWindow = Math.ceil(window.scrollY) >= 55
 

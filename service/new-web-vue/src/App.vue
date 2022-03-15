@@ -507,11 +507,11 @@ export default {
       @apply w-full sm:w-auto sm:mx-1;
 
       .navbar-link {
-        @apply w-full inline-block cursor-pointer text-white py-2 sm:py-1 px-2 sm:rounded-md transition-shadow sm:hover:shadow-sm sm:hover:shadow-cyan-600/75 sm:dark:hover:shadow-slate-200/75 hover:bg-black/20 sm:hover:bg-transparent sm:hover:dark:bg-transparent font-semibold;
+        @apply w-full inline-block cursor-pointer text-white py-2 sm:py-1 px-2 sm:rounded-md transition sm:hover:shadow-sm sm:hover:shadow-cyan-600/75 sm:dark:hover:shadow-slate-200/75 hover:bg-black/20 sm:hover:bg-transparent sm:hover:dark:bg-transparent font-semibold hover:sm:-translate-y-px;
 
         &.router-link-active,
         &.active {
-          @apply sm:shadow-md bg-cyan-600 dark:bg-slate-800 sm:bg-transparent dark:sm:bg-transparent sm:shadow-cyan-600/75 sm:dark:shadow-slate-200/75;
+          @apply sm:shadow-md bg-cyan-600 dark:bg-slate-800 sm:bg-transparent dark:sm:bg-transparent sm:shadow-cyan-600/75 sm:dark:shadow-slate-200/75 sm:-translate-y-0.5;
         }
       }
 
@@ -535,7 +535,7 @@ export default {
       }
 
       &__button {
-        @apply my-3 py-1 px-2 rounded-md font-semibold text-white cursor-pointer shadow-none transition-shadow hover:shadow-md relative;
+        @apply my-3 py-1 px-2 rounded-md font-semibold text-white cursor-pointer shadow-none transition-shadow hover:shadow-md relative hover:-translate-y-0.5;
 
         &.dashboard {
           @apply bg-rose-500 dark:bg-slate-900 hover:shadow-rose-500/75 hover:dark:shadow-slate-100/75 mr-2;

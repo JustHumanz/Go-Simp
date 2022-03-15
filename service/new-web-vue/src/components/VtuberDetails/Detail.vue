@@ -17,7 +17,7 @@
     <div class="detail-vtuber-item">
       <span class="detail-vtuber-item__title"> Nickname </span>
       <span class="detail-vtuber-item__value">
-        {{ vtuber.NickName }}
+        {{ vtuber.NickName.toLowerCase() }}
       </span>
     </div>
 

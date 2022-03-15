@@ -95,11 +95,11 @@
         <h4 class="header-vtuber-name__name">
           {{ vtuber.EnName }}{{ vtuber.JpName ? ` (${vtuber.JpName})` : "" }}
           <div class="nickname">
-            {{ vtuber.NickName }}
+            {{ vtuber.NickName.toLowerCase() }}
             <span class="nickname-hover"
               >This nickname is used for initials when calling in the Discord
               command
-              <router-link to="/docs#members">Learn More</router-link></span
+              <router-link to="/docs/quick-start#get-vtuber-group-and-vtuber-name">Learn More</router-link></span
             >
           </div>
         </h4>
