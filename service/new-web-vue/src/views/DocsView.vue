@@ -3,14 +3,25 @@ import DocsRender from "../components/DocsRender.vue"
 </script>
 
 <template>
-  <div class="title">
-    <span class="title__span">
-      <font-awesome-icon
-        :icon="['fas', 'circle-question']"
-        class="title__svg"
-      />
-      Documentation
-    </span>
+  <div class="header-title">
+    <div class="title">
+      <span class="title__span">
+        <font-awesome-icon
+          :icon="['fas', 'circle-question']"
+          class="title__svg"
+        />
+        Documentation
+      </span>
+      <a
+        :href="`https://github.com/JustHumanz/Go-Simp/blob/new-web-lets-go/service/new-web-vue/src/components/docs/${$route.params.page}.md`"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="edit-github"
+      >
+        <font-awesome-icon :icon="['fab', 'github']" class="edit-github__svg" />
+        Edit on GitHub</a
+      >
+    </div>
   </div>
   <div class="tab" :class="{ fly: fly }">
     <a href="#" class="tab-link" onclick="return false"
@@ -41,41 +52,37 @@ import DocsRender from "../components/DocsRender.vue"
     </ul>
   </div>
   <docs-render class="content" :page="$route.params.page" />
-  <!-- <quick-start class="content" v-if="$route.params.page === 'quick-start'" />
-  <configuration
-    class="content"
-    v-if="$route.params.page === 'configuration'"
-  /> -->
 </template>
 
 <script>
+const mdfiles = import.meta.glob("./docs/*.md", { assert: { type: "raw" } })
 import { library } from "@fortawesome/fontawesome-svg-core"
 
-// import {
-
-// } from "@fortawesome/free-brands-svg-icons"
+import { faGithub } from "@fortawesome/free-brands-svg-icons"
 import { faCircleQuestion, faBars } from "@fortawesome/free-solid-svg-icons"
 
-library.add(faCircleQuestion, faBars)
+library.add(faCircleQuestion, faBars, faGithub)
 
 // change title
 export default {
   data() {
     return {
-      docs: null,
+      markdowns: null,
       fly: false,
     }
   },
   mounted() {
+    this.markdowns = mdfiles
+
     this.$watch(
       () => this.$route.params.page,
       () => {
         if (!this.$route.params.page) return
-        (document.title = `${this.$route.params.page
+        document.title = `${this.$route.params.page
           .split("-")
           .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(" ")} - Documentation`)
-          },
+          .join(" ")} - Documentation`
+      },
       {
         immediate: true,
       }
@@ -87,11 +94,6 @@ export default {
 
       this.fly = bottomOfWindow
     })
-  },
-  computed: {
-    isActive() {
-      return this.$route.path === "/docs"
-    },
   },
   methods: {
     resetFocus() {
@@ -121,15 +123,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.header-title {
+  @apply bg-blue-400 dark:bg-slate-500 py-3 w-full;
+}
+
 .title {
-  @apply text-2xl font-semibold uppercase bg-blue-400 dark:bg-slate-500 py-3 w-full flex flex-wrap relative;
+  @apply w-[90%] md:w-[70%] lg:w-[65%] mx-auto flex flex-wrap justify-between;
 
   &__span {
-    @apply w-[90%] md:w-[70%] lg:w-[65%] mx-auto text-white;
+    @apply text-white text-2xl font-semibold uppercase;
   }
   &__svg {
     @apply text-blue-200 dark:text-gray-200;
   }
+}
+
+.edit-github {
+  @apply px-2 py-1 inline-block rounded-md shadow-sm -translate-y-px hover:shadow-md hover:-translate-y-0.5 shadow-blue-600/75 dark:shadow-slate-300/50 text-sm font-semibold text-white transition duration-200 ease-in-out;
 }
 
 .fly {

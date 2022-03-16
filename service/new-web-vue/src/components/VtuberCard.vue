@@ -153,7 +153,7 @@
           {{ vtuber.EnName }}
         </h4>
         <span class="card-vtuber-name__nickname">
-          {{ vtuber.NickName }}
+          {{ vtuber.NickName.toLowerCase() }}
         </span>
       </router-link>
     </div>

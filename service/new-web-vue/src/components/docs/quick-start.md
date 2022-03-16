@@ -17,6 +17,7 @@
   /tag-role slash{role-name: role{@Holo Simps}} slash{vtuber-group: hololive}
   ```
   this means that the bot will mention role{@Holo Simps} when any new hololive fan arts or live streams are uploaded. 
+  
   router-link{« Read More}(/docs/roles-and-taging#tag-roles)
 
   ### Get Vtuber Group and Vtuber Name
@@ -25,4 +26,6 @@
   center{![get-vtuber-name1](/src/assets/docs/get-member-card.png)}
   For **vtuber-name**, your can find below **Name Charachers** inside card list.
   center{![get-vtuber-name2](/src/assets/docs/get-member-detail.png)}
-  Or in **Member Detail**, **vtuber-name** it's on the right of the **Name Charachers** or in **Nickname**.
+  Or in **Member Detail**, **vtuber-name** it's on the right from **Name Charachers** or in **Nickname**.
+
+  

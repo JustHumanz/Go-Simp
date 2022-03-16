@@ -13,10 +13,36 @@ export default {
       required: true,
     },
   },
+  created() {
+    this.$watch(
+      () => this.$route.hash,
+      async () => {
+        if (!this.$route.hash) return
+        await new Promise((resolve) => setTimeout(resolve, 60))
+        let element = document.getElementById(this.$route.hash.replace("#", ""))
+
+        if (element) {
+          const headerOffset = 70
+          const elementPosition = element.getBoundingClientRect().top
+          const offsetPosition =
+            elementPosition + window.pageYOffset - headerOffset
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          })
+        }
+      },
+      {
+        immediate: true,
+      }
+    )
+  },
   computed: {
     rendered() {
       if (!mdfiles[`./docs/${this.page}.md`]) return ""
       return marked(mdfiles[`./docs/${this.page}.md`])
+        .replace(/(%br)/g, '<div style="margin-top:1rem;"></div>')
         .replace(/channel{([^}]+)}/g, '<span class="d-channel">$1</span>')
         .replace(/role{([^}]+)}/g, '<span class="d-role">$1</span>')
         .replace(/slash{([^}]+)}/g, '<span class="value-slash">$1</span>')
@@ -34,7 +60,7 @@ export default {
 <style lang="scss">
 .content {
   & > * {
-    @apply leading-normal whitespace-pre-line;
+    // @apply leading-normal whitespace-pre-line;
   }
 
   h1 {
@@ -50,13 +76,7 @@ export default {
   }
 
   pre {
-    @apply bg-slate-200 dark:bg-slate-700 px-3 py-2 rounded-lg whitespace-nowrap overflow-y-scroll my-2;
-
-    .value-slash {
-      &:last-child {
-        @apply mr-3;
-      }
-    }
+    @apply bg-slate-200 dark:bg-slate-700 px-3 py-2 rounded-lg my-2 text-sm whitespace-pre-line;
   }
 
   .value-slash {
@@ -65,6 +85,14 @@ export default {
 
   a {
     @apply text-blue-500 dark:text-gray-300 hover:underline;
+  }
+
+  ul {
+    @apply list-disc ml-5 my-2;
+  }
+
+  ol {
+    @apply list-decimal ml-5 my-2;
   }
 
   .d-channel {
