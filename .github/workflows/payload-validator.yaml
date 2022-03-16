@@ -1,3 +1,5 @@
+name: Check vtuber payload
+
 on:
   push:
     paths:
