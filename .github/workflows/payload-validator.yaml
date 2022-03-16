@@ -1,0 +1,17 @@
+on:
+  push:
+    paths:
+      - 'service/migrate/json/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Start check vtuber payload
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.7"
+          architecture: x64
+      - run: APIURL=https://api.humanz.moe/v2/ python service/payload-validator/main.py

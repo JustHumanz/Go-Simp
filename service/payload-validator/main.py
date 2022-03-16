@@ -1,5 +1,5 @@
 import requests,json,os
-DATA_DIR = "../migrate/json"
+DATA_DIR = "service/migrate/json/"
 API = os.environ["APIURL"]
 
 vtuber_json = os.listdir(DATA_DIR)
