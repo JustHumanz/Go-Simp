@@ -4,56 +4,71 @@ import NotFound from "./NotFound.vue"
 </script>
 
 <template>
-<div v-if="markdowns && markdowns[`./../components/docs/${$route.params.page}.md`]">
-  <div class="header-title">
-    <div class="title">
-      <span class="title__span">
-        <font-awesome-icon
-          :icon="['fas', 'circle-question']"
-          class="title__svg"
-        />
-        Documentation
-      </span>
-      <a
-        :href="`https://github.com/JustHumanz/Go-Simp/blob/new-web-lets-go/service/new-web-vue/src/components/docs/${$route.params.page}.md`"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="edit-github"
-      >
-        <font-awesome-icon :icon="['fab', 'github']" class="edit-github__svg" />
-        Edit on GitHub</a
-      >
+  <div
+    v-if="
+      markdowns && markdowns[`./../components/docs/${$route.params.page}.md`]
+    "
+  >
+    <div class="header-title">
+      <div class="title">
+        <span class="title__span">
+          <font-awesome-icon
+            :icon="['fas', 'circle-question']"
+            class="title__svg"
+          />
+          Documentation
+        </span>
+        <a
+          :href="`https://github.com/JustHumanz/Go-Simp/blob/new-web-lets-go/service/new-web-vue/src/components/docs/${$route.params.page}.md`"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="edit-github"
+        >
+          <font-awesome-icon
+            :icon="['fab', 'github']"
+            class="edit-github__svg"
+          />
+          Edit on GitHub</a
+        >
+      </div>
     </div>
-  </div>
-  <div class="tab" :class="{ fly: fly }">
-    <a href="#" class="tab-link" onclick="return false"
-      ><font-awesome-icon :icon="['fas', 'bars']" class="fa-fw tab-link__svg" />
-      Menu</a
-    >
-    <ul class="tab-lists">
-      <li class="tab-list">
-        <router-link to="/docs/quick-start" class="tab-list__link"
-          >Quick Start</router-link
-        >
-      </li>
-      <li class="tab-list">
-        <router-link to="/docs/configuration" class="tab-list__link"
-          >Configuration</router-link
-        >
-      </li>
-      <li class="tab-list">
-        <router-link to="/docs/roles-and-taging" class="tab-list__link"
-          >Roles and Taging</router-link
-        >
-      </li>
-      <li class="tab-list">
-        <router-link to="/docs/utilities" class="tab-list__link"
-          >Utilities</router-link
-        >
-      </li>
-    </ul>
-  </div>
-  <docs-render class="content" :page="$route.params.page" />
+    <div class="tab" :class="{ fly: fly }">
+      <a href="#" class="tab-link" onclick="return false"
+        ><font-awesome-icon
+          :icon="['fas', 'bars']"
+          class="fa-fw tab-link__svg"
+        />
+        Menu</a
+      >
+      <ul class="tab-lists">
+        <li class="tab-list">
+          <router-link to="/docs/quick-start" class="tab-list__link"
+            >Quick Start</router-link
+          >
+        </li>
+        <li class="tab-list">
+          <router-link to="/docs/configuration" class="tab-list__link"
+            >Configuration</router-link
+          >
+        </li>
+        <li class="tab-list">
+          <router-link to="/docs/roles-and-taging" class="tab-list__link"
+            >Roles and Taging</router-link
+          >
+        </li>
+        <li class="tab-list">
+          <router-link to="/docs/utilities" class="tab-list__link"
+            >Utilities</router-link
+          >
+        </li>
+        <li class="tab-list">
+          <router-link to="/docs/get-data-groups" class="tab-list__link"
+            >Get Data Groups</router-link
+          >
+        </li>
+      </ul>
+    </div>
+    <docs-render class="content" :page="$route.params.page" />
   </div>
   <div v-else>
     <not-found />
@@ -61,7 +76,9 @@ import NotFound from "./NotFound.vue"
 </template>
 
 <script>
-const mdfiles = import.meta.glob("./../components/docs/*.md", { assert: { type: "raw" } })
+const mdfiles = import.meta.glob("./../components/docs/*.md", {
+  assert: { type: "raw" },
+})
 import { library } from "@fortawesome/fontawesome-svg-core"
 
 import { faGithub } from "@fortawesome/free-brands-svg-icons"

@@ -30,7 +30,9 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
           group.GroupName.charAt(0).toUpperCase() + group.GroupName.slice(1)
         ).replace("_", " ")
       }}
-      <span class="group-detail__command"> {{ group.GroupName.toLowerCase() }}</span>
+      <span class="group-detail__command">
+        {{ group.GroupName.toLowerCase() }}</span
+      >
     </h4>
     <div class="group-detail__link" v-if="group.Youtube">
       <a
@@ -42,16 +44,11 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
         class="group-detail__link-item"
       >
         <font-awesome-icon :icon="['fab', 'youtube']" class="fa-fw" />
-        <span>{{
-          /*regions.find((r) => r.code === youtube.Region).name */ `Engrish`
-        }}</span>
+        <span>{{ regions.find((r) => r.code === youtube.Region).name }}</span>
       </a>
     </div>
   </section>
-  <section
-    class="vtuber-list"
-    v-if="!nullData"
-  >
+  <section class="vtuber-list" v-if="!nullData">
     <VtuberCard
       v-for="vtuber in limitedVtubers"
       :key="vtuber.ID"
@@ -375,13 +372,12 @@ export default {
 }
 
 .group-detail {
-  @apply w-[95%] sm:w-[85%] md:w-[80%] lg:w-[75%] mx-auto grid bg-slate-300 dark:bg-slate-700 p-2 rounded-md shadow-md mb-3 gap-1;
+  @apply w-[95%] sm:w-[85%] md:w-[80%] lg:w-[75%] mx-auto grid bg-blue-400 dark:bg-slate-500 p-2 rounded-md shadow-md mb-3 gap-1;
   grid-template-columns: max-content auto;
   grid-template-areas: "image title" "image link";
 
-
   &__img {
-    @apply w-14 h-14 m-1 object-cover justify-self-start self-center;
+    @apply w-14 h-14 m-1 object-cover justify-self-start self-center drop-shadow-md;
     grid-area: image;
   }
 

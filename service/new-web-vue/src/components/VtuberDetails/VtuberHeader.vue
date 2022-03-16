@@ -99,7 +99,9 @@
             <span class="nickname-hover"
               >This nickname is used for initials when calling in the Discord
               command
-              <router-link to="/docs/quick-start#get-vtuber-group-and-vtuber-name">Learn More</router-link></span
+              <router-link to="/docs/get-data-groups#get-vtuber-name"
+                >Learn More</router-link
+              ></span
             >
           </div>
         </h4>
@@ -285,13 +287,12 @@
       <span class="link-header__link-text">LIVE on BiliBili</span>
     </a>
   </div>
-    <hr
+  <hr
     class="m-2 mt-3 mb-2"
     v-if="
       vtuber.IsLive.Youtube || vtuber.IsLive.Twitch || vtuber.IsLive.BiliBili
     "
   />
-  
 </template>
 
 <script>

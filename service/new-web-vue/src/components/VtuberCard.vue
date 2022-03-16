@@ -199,7 +199,7 @@ export default {
 
 <style lang="scss" scoped>
 .card-vtuber {
-  @apply bg-white dark:bg-slate-800 rounded-md overflow-hidden shadow-sm hover:bg-slate-100 dark:hover:bg-slate-900 hover:shadow-md dark:shadow-white/5 hover:scale-105 select-none transition duration-300 ease-in-out;
+  @apply bg-white dark:bg-slate-500 rounded-md overflow-hidden shadow-sm hover:bg-slate-100 dark:hover:bg-slate-700 hover:shadow-md dark:shadow-white/5 hover:scale-105 select-none transition duration-300 ease-in-out;
 
   &-image {
     @apply w-full aspect-square bg-smolame bg-cover relative;
@@ -215,7 +215,7 @@ export default {
     }
 
     &__nickname {
-      @apply text-xs text-stone-600 dark:text-stone-400;
+      @apply text-xs text-stone-600 dark:text-stone-300;
     }
   }
 }

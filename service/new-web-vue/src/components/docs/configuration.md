@@ -27,11 +27,11 @@ small{**Role permission required: Manage Channel or Higher**}
 - slash{**indie-notif**} Show all vtuber **Independent** notification when set slash{**vtuber-group**} to ***independent*** (***livestream stage only***).
 - slash{**fanart**} Additional show random fanart in same channel (***optional***) (***livestream stage only***).
 
-### Example 1
+### Example 1 (Set Livestream)
 ```slash
 /setup channel-type livestream slash{channel-name: channel{#hololive}} slash{vtuber-group: hololive} slash{liveonly: False} slash{newupcoming: False} slash{dynamic: False} slash{lite-mode: False} slash{indie-notif: False}
 ```
-### Example 2 (Add independent vtuber)
+### Example 2 (Add independent vtuber and set fanart)
 ```slash
 /setup channel-type livestream slash{channel-name: channel{#inde-notif}} slash{vtuber-group: independent} slash{liveonly: False} slash{newupcoming: True} slash{dynamic: True} slash{lite-mode: False} slash{indie-notif: True} slash{fanart: True}
 ```
@@ -39,6 +39,8 @@ small{**Role permission required: Manage Channel or Higher**}
 ```slash
 /setup channel-type fanart slash{channel-name: channel{#niji-fanart}} slash{vtuber-group: nijisanji}
 ```
+%br%
+Or you can set on website [Here](https://web-admin.humanz.moe/login)
 
 ## Checking Stage
 ```slash

@@ -64,15 +64,15 @@ Show detail and total follower any platform from single member
 ```slash
 /livesteam slash{state} slash{status} slash{vtuber-group} slash{vtuber-name (optional)} slash{region (optional)}
 ```
-Show any livestream from members or group in **YouTube**, **Twitch**, and **BiliBili**. When you find by groups, live streaming info is limited to 3 only (exept Live Status). 
+Show any livestream from members or group in **YouTube**, **Twitch**, and **BiliBili**. When you find by groups, live streaming info is limited to 5 only (exept Live Status). 
 
 ### Available States
 
 Platform | Upcoming | Live | Past |
 ---------|----------|-------|-------|
-YouTube | ✓ Max 3 Members | ✓ Available | ✓ Max 3 Members |
-Twitch | ✕ Not Available | ✓ Available | ✓ Max 3 Members |
-BiliBili | ✕ Not Available | ✓ Available | ✓ Max 3 Members |
+YouTube | ✓ Max 5 Members | ✓ Available | ✓ Max 5 Members |
+Twitch | ✕ Not Available | ✓ Available | ✓ Max 5 Members |
+BiliBili | ✕ Not Available | ✓ Available | ✓ Max 5 Members |
 
 ### Example 1 (Show Upcoming Group Livestreams)
 ```slash
