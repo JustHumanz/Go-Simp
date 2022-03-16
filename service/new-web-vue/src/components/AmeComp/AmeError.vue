@@ -1,7 +1,7 @@
 <template>
   <section class="ame-error">
     <img
-      :src="`/src/assets/smolame/${img}.png`"
+      :src="`/assets/smolame/${img}.png`"
       alt=""
       class="ame-error-image"
     />

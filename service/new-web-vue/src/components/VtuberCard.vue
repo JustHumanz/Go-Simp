@@ -13,7 +13,7 @@
           <img
             draggable="false"
             class="tag-vtuber-agency__flag"
-            :src="`/src/assets/flags/${vtuber.Regions.flagCode}.svg`"
+            :src="`/assets/flags/${vtuber.Regions.flagCode}.svg`"
             :alt="vtuber.Regions.name"
           />
           <font-awesome-icon
@@ -62,7 +62,7 @@
           v-if="vtuber.Youtube"
           v-bind:src="vtuber.Youtube.Avatar.replace('s800', 's360')"
           referrerpolicy="no-referrer"
-          onerror="this.src='/src/assets/smolame.jpg'"
+          onerror="this.src='/assets/smolame.jpg'"
           alt="Card image cap"
         />
         <img
@@ -71,7 +71,7 @@
           v-else-if="vtuber.BiliBili"
           v-bind:src="`${vtuber.BiliBili.Avatar}@360w_360h_1c_1s.jpg`"
           referrerpolicy="no-referrer"
-          onerror="this.src='/src/assets/smolame.jpg'"
+          onerror="this.src='/assets/smolame.jpg'"
           alt="Card image cap"
         />
         <img
@@ -80,14 +80,14 @@
           v-else-if="vtuber.Twitch"
           v-bind:src="vtuber.Twitch.Avatar"
           referrerpolicy="no-referrer"
-          onerror="this.src='/src/assets/smolame.jpg'"
+          onerror="this.src='/assets/smolame.jpg'"
           alt="Card image cap"
         />
         <img
           draggable="false"
           class="card-vtuber-image__img"
           v-else
-          src="/src/assets/smolame.jpg"
+          src="/assets/smolame.jpg"
           alt="Card image cap"
         />
       </router-link>

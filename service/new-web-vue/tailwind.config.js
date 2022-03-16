@@ -8,7 +8,7 @@ module.exports = {
         xs: "454px",
       },
       backgroundImage: {
-        smolame: "url(/src/assets/smolame.jpg)",
+        smolame: "url(/assets/smolame.jpg)",
         rip: "url(/src/assets/rip.svg)",
         "img-none": "none",
       },

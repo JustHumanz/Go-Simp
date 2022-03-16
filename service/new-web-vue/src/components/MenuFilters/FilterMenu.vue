@@ -42,7 +42,7 @@
           >
             <img
               draggable="false"
-              :src="`/src/assets/flags/${region.flagCode}.svg`"
+              :src="`/assets/flags/${region.flagCode}.svg`"
               :alt="region.name"
               class="navbar-submenu-item__img"
             />

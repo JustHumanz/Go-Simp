@@ -44,7 +44,7 @@
         class="detail-vtuber-item__value"
       >
         <img
-          :src="`/src/assets/flags/${vtuber.Regions.flagCode}.svg`"
+          :src="`/assets/flags/${vtuber.Regions.flagCode}.svg`"
           :alt="vtuber.Regions.name"
           class="detail-vtuber-item__icon"
         />
