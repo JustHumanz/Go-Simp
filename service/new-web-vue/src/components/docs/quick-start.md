@@ -18,7 +18,7 @@
   ```
   this means that the bot will mention role{@Holo Simps} when any new hololive fan arts or live streams are uploaded. 
   
-  router-link{« Read More}(/docs/roles-and-taging#tag-roles)
+  router-link{« Read More}(/docs/roles-and-taging#taging-roles)
 
   ### Get Vtuber Group and Vtuber Name
   center{![get-group-name](/src/assets/docs/get-group.png)}

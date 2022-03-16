@@ -42,7 +42,7 @@ export default {
     rendered() {
       if (!mdfiles[`./docs/${this.page}.md`]) return ""
       return marked(mdfiles[`./docs/${this.page}.md`])
-        .replace(/(%br)/g, '<div style="margin-top:1rem;"></div>')
+        .replace(/(%br%)/g, '<div style="margin-top:1rem;"></div>')
         .replace(/channel{([^}]+)}/g, '<span class="d-channel">$1</span>')
         .replace(/role{([^}]+)}/g, '<span class="d-role">$1</span>')
         .replace(/slash{([^}]+)}/g, '<span class="value-slash">$1</span>')
@@ -72,7 +72,7 @@ export default {
   }
 
   h3 {
-    @apply text-xl font-bold mt-4;
+    @apply text-lg font-bold mt-4;
   }
 
   pre {
@@ -93,6 +93,18 @@ export default {
 
   ol {
     @apply list-decimal ml-5 my-2;
+  }
+
+  table {
+    @apply w-full table-auto border-collapse rounded-md overflow-hidden max-w-screen-sm;
+
+    th {
+      @apply bg-slate-300 dark:bg-slate-700;
+    }
+    
+    td {
+      @apply bg-slate-100 dark:bg-slate-500 py-px px-2 border-t-2 border-r-2 border-white dark:border-gray-700;
+    }
   }
 
   .d-channel {

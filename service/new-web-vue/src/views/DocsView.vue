@@ -45,8 +45,8 @@ import DocsRender from "../components/DocsRender.vue"
         >
       </li>
       <li class="tab-list">
-        <router-link to="/docs/utilites" class="tab-list__link"
-          >Utilites</router-link
+        <router-link to="/docs/utilities" class="tab-list__link"
+          >Utilities</router-link
         >
       </li>
     </ul>

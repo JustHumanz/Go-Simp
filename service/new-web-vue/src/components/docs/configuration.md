@@ -31,11 +31,11 @@ small{**Role permission required: Manage Channel or Higher**}
 ```slash
 /setup channel-type livestream slash{channel-name: channel{#hololive}} slash{vtuber-group: hololive} slash{liveonly: False} slash{newupcoming: False} slash{dynamic: False} slash{lite-mode: False} slash{indie-notif: False}
 ```
-### Example 2
+### Example 2 (Add independent vtuber)
 ```slash
 /setup channel-type livestream slash{channel-name: channel{#inde-notif}} slash{vtuber-group: independent} slash{liveonly: False} slash{newupcoming: True} slash{dynamic: True} slash{lite-mode: False} slash{indie-notif: True} slash{fanart: True}
 ```
-### Example 3
+### Example 3 (Set random Fan Art Vtuber)
 ```slash
 /setup channel-type fanart slash{channel-name: channel{#niji-fanart}} slash{vtuber-group: nijisanji}
 ```
@@ -75,5 +75,5 @@ Disable/remove any vtuber groups in channel inside slash{channel-delete}.
 
 ### Example
 ```slash
-/channel-update slash{channel-name: #vshojo}
+/channel-delete slash{channel-name: #vshojo}
 ```
