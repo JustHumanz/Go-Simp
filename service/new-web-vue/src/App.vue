@@ -351,6 +351,13 @@ export default {
               ? e.target.parentElement.parentElement
               : e.target.parentElement
 
+          const liNavbarFilter = navbarFilter.parentElement
+
+          if (liNavbarFilter.classList.contains("disabled")) {
+            navbarFilter.blur()
+            return
+          }
+
           switch (this.activeListMenu) {
             case navbarFilter:
               this.activeListMenu.blur()

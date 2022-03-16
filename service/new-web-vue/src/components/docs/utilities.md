@@ -70,9 +70,9 @@ Show any livestream from members or group in **YouTube**, **Twitch**, and **Bili
 
 Platform | Upcoming | Live | Past |
 ---------|----------|-------|-------|
-YouTube | ✓ Max 3 | ✓ Available | ✓ Max 3 |
-Twitch | ✕ Not Available | ✓ Available | ✓ Max 3 |
-BiliBili | ✕ Not Available | ✓ Available | ✓ Max 3 |
+YouTube | ✓ Max 3 Members | ✓ Available | ✓ Max 3 Members |
+Twitch | ✕ Not Available | ✓ Available | ✓ Max 3 Members |
+BiliBili | ✕ Not Available | ✓ Available | ✓ Max 3 Members |
 
 ### Example 1 (Show Upcoming Group Livestreams)
 ```slash

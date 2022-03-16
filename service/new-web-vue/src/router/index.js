@@ -3,7 +3,7 @@ import HomeView from "../views/HomeView.vue"
 import ListView from "../views/ListView.vue"
 import VtuberView from "../views/VtuberView.vue"
 import DocsView from "../views/DocsView.vue"
-// import OldDocsView from "../views/OldDocsView.vue"
+import NotFoundView from "../views/NotFound.vue"
 import SupportView from "../views/SupportView.vue"
 
 const router = createRouter({
@@ -43,17 +43,16 @@ const router = createRouter({
       name: "Documentation",
       component: DocsView,
     },
-    // {
-    //   path: "/olddocs",
-    //   name: "Old Documentation",
-    //   component: OldDocsView,
-    // },
     {
       path: "/support",
       name: "Support",
       component: SupportView,
     },
-    //{ path: "*", component: NotFound, name: "NotFound" },
+    {
+      path: "/:pathMatch(.*)",
+      name: "NotFound",
+      component: NotFoundView
+    },
     {
       path: "/invite",
       name: "invite",

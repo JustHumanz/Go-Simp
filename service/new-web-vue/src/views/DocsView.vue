@@ -1,8 +1,10 @@
 <script setup>
 import DocsRender from "../components/DocsRender.vue"
+import NotFound from "./NotFound.vue"
 </script>
 
 <template>
+<div v-if="markdowns && markdowns[`./../components/docs/${$route.params.page}.md`]">
   <div class="header-title">
     <div class="title">
       <span class="title__span">
@@ -52,10 +54,14 @@ import DocsRender from "../components/DocsRender.vue"
     </ul>
   </div>
   <docs-render class="content" :page="$route.params.page" />
+  </div>
+  <div v-else>
+    <not-found />
+  </div>
 </template>
 
 <script>
-const mdfiles = import.meta.glob("./docs/*.md", { assert: { type: "raw" } })
+const mdfiles = import.meta.glob("./../components/docs/*.md", { assert: { type: "raw" } })
 import { library } from "@fortawesome/fontawesome-svg-core"
 
 import { faGithub } from "@fortawesome/free-brands-svg-icons"

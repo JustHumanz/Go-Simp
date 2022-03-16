@@ -112,7 +112,7 @@
               v-if="vtuber.Group.ID !== 10"
             />
             <img
-              :src="`/src/assets/flags/${vtuber.Regions.flagCode}.svg`"
+              :src="`/assets/flags/${vtuber.Regions.flagCode}.svg`"
               :alt="vtuber.Group.GroupName"
               class="header-vtuber-name__group-icon"
               v-else

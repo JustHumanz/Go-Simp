@@ -44,7 +44,7 @@ import SortMenu from "./SortMenu.vue"
         type="text"
         class="nav-search__input"
         v-model="search_query"
-        :placeholder="placeholder"
+        :placeholder="placeholder || `Search Vtuber...`"
         :disabled="disable_search"
       />
     </div>
@@ -151,8 +151,7 @@ export default {
   @apply sm:relative;
 
   &__link {
-    @apply text-white flex space-x-1 items-center font-semibold px-2 py-1 rounded-md hover:shadow-sm 
-    shadow-blue-600/75 dark:shadow-slate-300/50;
+    @apply text-white flex space-x-1 items-center font-semibold px-2 py-1 rounded-md transition-all duration-200 ease-in-out;
   }
 
   &__img {
@@ -179,13 +178,19 @@ export default {
     }
   }
 
-  &:not(.disabled):focus-within {
+  &:not(.disabled) {
     .navbar-filter__link {
-      @apply shadow-md shadow-blue-600/75 dark:shadow-slate-300/50;
+      @apply hover:shadow-sm hover:-translate-y-px shadow-blue-600/75 dark:shadow-slate-300/50;
     }
 
-    .navbar-filter-items {
-      @apply scale-y-100;
+    &:focus-within {
+      .navbar-filter__link {
+        @apply shadow-md shadow-blue-600/75 dark:shadow-slate-300/50 -translate-y-0.5;
+      }
+
+      .navbar-filter-items {
+        @apply scale-y-100;
+      }
     }
   }
 
@@ -267,7 +272,11 @@ export default {
 }
 
 .nav-search {
-  @apply inline-block mx-1 ml-3 flex-auto sm:flex-none relative;
+  @apply inline-block mx-1 ml-3 flex-auto sm:flex-none relative hover:-translate-y-px;
+
+  &:focus-within {
+    transform: translate(0, -2px) !important;
+  }
 
   &__svg {
     @apply absolute mt-2 ml-2 text-blue-500 dark:text-white;
