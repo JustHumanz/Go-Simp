@@ -12,6 +12,5 @@ services:
       - ../service/migrate/json:/json
     environment:
       - PROMETHEUS="http://prometheus:9090"
-    restart: on-failure
     networks:
       - go-simp-net
