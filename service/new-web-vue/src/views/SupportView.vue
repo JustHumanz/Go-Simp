@@ -9,14 +9,15 @@ import IconHome from "../components/icons/IconHome.vue"
     </span>
   </div>
   <section>
-    <div class="image-header">
+    <div class="image-header mt-4">
       <IconHome />
     </div>
     <h1 class="mt-2">About Vtbot</h1>
     <p>
       Vtbot (a.k.a Go-Simp) is a Open Source bot vtuber made by
-      <a href="https://go.dev/" target="_blank" rel="noopener noreferrer"
-        >Go Language</a
+      <a href="https://go.dev/" target="_blank" rel="noopener noreferrer">
+        <font-awesome-icon :icon="['fab', 'golang']" />
+        Go Language</a
       >
       for ping about sceduler, stats, share fanart, and more in Discord Server.
       Over 400 vtubers added and more to come.
@@ -30,7 +31,25 @@ import IconHome from "../components/icons/IconHome.vue"
         rel="noopener noreferrer"
         >here</a
       >
-      for feedback.
+      for feedback. When you have a poblem or you want to contribute, you can
+      request/join in our
+      <a
+        href="https://discord.gg/ydWC5knbJT"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <font-awesome-icon :icon="['fab', 'discord']" />
+        Discord Server</a
+      >
+      or fork repository from
+      <a
+        href="https://github.com/JustHumanz/Go-Simp"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <font-awesome-icon :icon="['fab', 'github']" />
+        Github</a
+      >
     </p>
     <h1 class="mt-2">About Website</h1>
     <p class="mb-4">
@@ -86,9 +105,10 @@ import {
   faVuejs,
   faSquareFontAwesome,
   faTwitter,
+  faGolang,
 } from "@fortawesome/free-brands-svg-icons"
 
-library.add(faSquareEnvelope, faVuejs, faSquareFontAwesome, faTwitter)
+library.add(faSquareEnvelope, faVuejs, faSquareFontAwesome, faTwitter, faGolang)
 export default {
   created() {
     document.title = "Support - Vtbot"

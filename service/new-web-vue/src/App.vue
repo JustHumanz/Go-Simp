@@ -560,10 +560,10 @@ export default {
         }
 
         &.dark-mode {
-          @apply bg-sky-500 dark:bg-slate-800 hover:shadow-sky-500/75 hover:dark:shadow-slate-100/75;
+          @apply bg-orange-500 dark:bg-slate-800 hover:shadow-sky-500/75 hover:dark:shadow-slate-100/75;
 
           .navbar-buttons__hover {
-            @apply bg-sky-500 dark:bg-slate-800 shadow-sky-500/75 dark:shadow-slate-100/75;
+            @apply bg-orange-500 dark:bg-slate-800 shadow-sky-500/75 dark:shadow-slate-100/75;
           }
         }
       }

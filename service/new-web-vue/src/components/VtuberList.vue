@@ -34,7 +34,7 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
         {{ group.GroupName.toLowerCase() }}</span
       >
     </h4>
-    <div class="group-detail__link" v-if="group.Youtube">
+    <div class="group-detail__link" v-if="group.Youtube || group.ID === 10">
       <a
         :href="`https://www.youtube.com/channel/${youtube.YtChannel}`"
         target="_blank"
@@ -46,6 +46,15 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
         <font-awesome-icon :icon="['fab', 'youtube']" class="fa-fw" />
         <span>{{ regions.find((r) => r.code === youtube.Region).name }}</span>
       </a>
+      <span v-if="group.ID === 10" class="text-gray-600 dark:text-gray-200">
+        This is a District Group,
+        <router-link
+          to="/docs/quick-start#about-independent-group"
+          class="text-gray-700 dark:text-gray-50 hover:text-gray-800 dark:hover:text-gray-300"
+        >
+          Read more</router-link
+        >
+      </span>
     </div>
   </section>
   <section class="vtuber-list" v-if="!nullData">
@@ -372,7 +381,7 @@ export default {
 }
 
 .group-detail {
-  @apply w-[95%] sm:w-[85%] md:w-[80%] lg:w-[75%] mx-auto grid bg-blue-400 dark:bg-slate-500 p-2 rounded-md shadow-md mb-3 gap-1;
+  @apply w-[95%] sm:w-[85%] md:w-[80%] lg:w-[75%] mx-auto grid bg-blue-300 dark:bg-slate-500 p-2 rounded-md shadow-md mb-3 gap-1;
   grid-template-columns: max-content auto;
   grid-template-areas: "image title" "image link";
 
