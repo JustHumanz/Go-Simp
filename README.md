@@ -23,23 +23,11 @@ And if you want ping some roles you can execute
 **Important rule**  
 independent group have strict rule if no one user/roles tagged live/fanart notif will be not send
 
-
-#### Deprecated
-##### ~~Livestream notification~~
-~~First create a channel for this bot,Example `holosimps_channel`~~
-~~then execute `vtbot>enable live hololive` command,after that you can wait until hololive member going live and got notification~~  
-
-##### ~~Fanart notification~~
-~~First create a channel for this bot,Example `nijisimps`~~  
-~~then execute `vtbot>enable art nijisanji` command,after that you can wait until new fanart from twitter appear~~
-
-
-
 ## Current Vtubers
-See at [Web](https://go-simp.humanz.moe)
+See at [Vtuber List](https://go-simp.humanz.moe/vtubers)
 
 ### Command
-See at [Exec](https://go-simp.humanz.moe/Exec/)
+See at [Docs](https://go-simp.humanz.moe/docs/)
 
 
 ### Notification&Command 
