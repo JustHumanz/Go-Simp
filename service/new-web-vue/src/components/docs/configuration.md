@@ -19,7 +19,7 @@ small{**Role permission required: Manage Channel or Higher**}
 
 ### Options
 - slash{**channel-name**} your channel name in **Discord server**.
-- slash{**vtuber-group**} available router-link{vtuber group name}(/docs/quick-start#get-vtuber-group-and-vtuber-name).
+- slash{**vtuber-group**} available router-link{vtuber group name}(/docs/get-data-groups).
 - slash{**liveonly**} only show live streaming (**without regular content**) (***livestream stage only***).
 - slash{**newupcoming**} Show upcoming live streaming (***livestream stage only***).
 - slash{**dynamic**} Show schedule and deleted after past live streaming (***livestream stage only***).

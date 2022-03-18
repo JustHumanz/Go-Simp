@@ -20,4 +20,7 @@
   
   router-link{« Read More}(/docs/roles-and-taging#taging-roles)
 
+  ### Important rule
+  Independent groups have a strict rule, if no [Users/roles] are tagged than [live/fan art/lewd art] won't send anything. Recommended slash{indie-notif} to **True** so notifications will be send even if no [users/roles] are tagged. 
+
   

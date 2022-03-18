@@ -1,3 +1,6 @@
+<script setup>
+import IconHome from "../components/icons/IconHome.vue"
+</script>
 <template>
   <div class="title">
     <span class="title__span">
@@ -6,13 +9,72 @@
     </span>
   </div>
   <section>
+    <div class="image-header">
+      <IconHome />
+    </div>
     <h1 class="mt-2">About Vtbot</h1>
     <p>
       Vtbot (a.k.a Go-Simp) is a Open Source bot vtuber made by
       <a href="https://go.dev/" target="_blank" rel="noopener noreferrer"
         >Go Language</a
       >
-      for sceduler, stats, share fanart, and more.
+      for ping about sceduler, stats, share fanart, and more in Discord Server.
+      Over 400 vtubers added and more to come.
+    </p>
+    <h1 class="mt-2">Support This Bot</h1>
+    <p>
+      For now, we haven't received any form of payment yet, but you can vote
+      <a
+        href="https://top.gg/bot/721964514018590802"
+        target="_blank"
+        rel="noopener noreferrer"
+        >here</a
+      >
+      for feedback.
+    </p>
+    <h1 class="mt-2">About Website</h1>
+    <p class="mb-4">
+      This is 3rd version of Vtbot website. This website using
+      <a href="https://vuejs.org/" target="_blank" rel="noopener noreferrer">
+        <font-awesome-icon :icon="['fab', 'vuejs']" class="fa-fw" />
+        Vue.js</a
+      >
+      ,
+      <a
+        href="https://tailwindcss.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Tailwind CSS</a
+      >
+      and some icon from
+      <a
+        href="https://fontawesome.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <font-awesome-icon
+          :icon="['fab', 'square-font-awesome']"
+          class="fa-fw"
+        />
+        Font Awesome</a
+      >
+      and some smol holo gif and art by
+      <a
+        href="https://twitter.com/walfieee"
+        target="_blank"
+        rel="noopener noreferrer"
+        ><font-awesome-icon :icon="['fab', 'twitter']" class="fa-fw" />
+        @walfie</a
+      >. This website create by
+      <a
+        href="https://github.com/yarndinasti"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Yarn</a
+      >. You can support me
+      <a href="https://yarn.my.id" target="_blank" rel="noopener noreferrer"
+        >here</a
+      >.
     </p>
   </section>
 </template>
@@ -20,8 +82,13 @@
 <script>
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faSquareEnvelope } from "@fortawesome/free-solid-svg-icons"
+import {
+  faVuejs,
+  faSquareFontAwesome,
+  faTwitter,
+} from "@fortawesome/free-brands-svg-icons"
 
-library.add(faSquareEnvelope)
+library.add(faSquareEnvelope, faVuejs, faSquareFontAwesome, faTwitter)
 export default {
   created() {
     document.title = "Support - Vtbot"
@@ -38,6 +105,14 @@ export default {
   }
   &__svg {
     @apply text-blue-200 dark:text-gray-200;
+  }
+}
+
+.image-header {
+  @apply py-3 w-full h-44 flex justify-center;
+
+  :deep(svg) {
+    @apply h-full object-contain;
   }
 }
 
