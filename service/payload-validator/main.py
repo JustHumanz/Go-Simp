@@ -1,4 +1,4 @@
-import requests,json,os
+import requests,json,os,time
 DATA_DIR = "service/migrate/json/"
 API = os.environ["APIURL"]
 
@@ -37,6 +37,8 @@ for i in vtuber_json:
     for agency in list_agency:
         if agency["GroupName"] == agency_json["GroupName"]:
             members = get_member(agency["ID"])
+            time.sleep(10)
+            
             for member_json in agency_json["Members"]:
                 for member in members:
                     if member["NickName"] == member_json["Name"]:
