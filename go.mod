@@ -6,7 +6,7 @@ require (
 	github.com/BurntSushi/toml v1.0.0
 	github.com/bwmarrin/discordgo v0.23.3-0.20211204170245-092735083ddf
 	github.com/cenkalti/dominantcolor v0.0.0-20220201165739-2603838b25d0
-	github.com/go-redis/redis/v8 v8.11.4
+	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gorilla/mux v1.8.0
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
