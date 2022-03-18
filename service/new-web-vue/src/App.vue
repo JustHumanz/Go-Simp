@@ -14,23 +14,23 @@ import "./index.css"
       <div class="navbar-group">
         <a
           href="#"
-          class="navbar-toggle"
+          class="navbar-toggle navbar-toggle-dark"
           @click="darkMode"
           onclick="return false"
         >
           <font-awesome-icon
             icon="moon"
-            class="navbar-toggle__icon fa-fw"
+            class="navbar-toggle-dark__icon fa-fw"
             v-if="theme === 'dark'"
           />
           <font-awesome-icon
             icon="sun"
-            class="navbar-toggle__icon fa-fw"
+            class="navbar-toggle-dark__icon fa-fw"
             v-else-if="theme === 'light'"
           />
           <font-awesome-icon
             icon="circle-half-stroke"
-            class="navbar-toggle__icon fa-fw"
+            class="navbar-toggle-dark__icon fa-fw"
             v-else
           />
         </a>
@@ -292,19 +292,28 @@ export default {
           // get href
           const href = e.target.getAttribute("href")
           //move router to href
-          this.$router.push(href)
+          this.$route.push(href)
         }
 
         // Vtuber List
         let classList = [...e.target.classList]
 
         if (e.target.tagName === "path") {
-          if (e.target.parentElement.classList.contains("dark-mode-btn__svg"))
+          if (
+            e.target.parentElement.classList.contains("dark-mode-btn__svg") ||
+            e.target.parentElement.classList.contains(
+              "navbar-toggle-dark__icon"
+            )
+          )
             return
           classList = [...e.target.parentElement.parentElement.classList]
         }
         if (e.target.tagName === "svg") {
-          if (e.target.classList.contains("dark-mode-btn__svg")) return
+          if (
+            e.target.classList.contains("dark-mode-btn__svg") ||
+            e.target.classList.contains("navbar-toggle-dark__icon")
+          )
+            return
           classList = [...e.target.parentElement.classList]
         }
 
@@ -332,10 +341,10 @@ export default {
             if (!this.menuDocs && document.activeElement === docsMenu) {
               docsMenu.blur()
             }
-          } else {
+          } else if (classList.find((c) => c === "tab-list__link")) {
             document.activeElement.blur()
             this.menuDocs = false
-          }
+          } else this.menuDocs = false
         }
 
         if (!this.$route.path.includes("/vtubers")) {
@@ -496,7 +505,8 @@ export default {
     .navbar-toggle {
       @apply block sm:hidden p-3;
 
-      &__icon {
+      &__icon,
+      &-dark__icon {
         @apply text-white;
       }
     }

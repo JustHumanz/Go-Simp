@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <img
-      class="header-banner bg-cyan-300"
+      class="header-banner bg-violet-400 dark:bg-slate-700"
       draggable="false"
       :src="`${vtuber.Youtube.Banner.replace(
         's1200',
@@ -12,7 +12,7 @@
       @contextmenu="disableContextMenu"
     />
     <img
-      class="header-banner bg-cyan-300"
+      class="header-banner bg-violet-400 dark:bg-slate-700"
       draggable="false"
       :src="
         vtuber.BiliBili.Banner.replace('.jpg', '') + '@1707w_282h_1c_1s.jpg'
@@ -22,7 +22,7 @@
       @contextmenu="disableContextMenu"
     />
     <div
-      class="header-banner bg-cyan-300"
+      class="header-banner bg-violet-400 dark:bg-slate-700"
       v-else
       @contextmenu="disableContextMenu"
     />
