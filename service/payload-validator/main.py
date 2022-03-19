@@ -33,9 +33,15 @@ for i in vtuber_json:
     if i == "Independent.json":
         agency_json["GroupName"] = "independent"
         agency_json["ID"] = "10"
+        agency_json["GroupChannel"] = None
 
     for agency in list_agency:
         if agency["GroupName"] == agency_json["GroupName"]:
+            if agency_json["GroupChannel"]["Youtube"] != None:
+                for i in agency_json["GroupChannel"]["Youtube"]:
+                    if i["Region"] == "":
+                        error_report.append(f"Detect null region in agency youtube channel {i['ChannelID']}")
+
             members = get_member(agency["ID"])
             time.sleep(10)
             
