@@ -33,7 +33,10 @@ for i in vtuber_json:
     if i == "Independent.json":
         agency_json["GroupName"] = "independent"
         agency_json["ID"] = "10"
-        agency_json["GroupChannel"] = None
+        agency_json["GroupChannel"] = {
+            "Youtube": None,
+            "BiliBili": None
+        }
 
     for agency in list_agency:
         if agency["GroupName"] == agency_json["GroupName"]:
@@ -55,29 +58,29 @@ for i in vtuber_json:
                             error_report.append(f"Detect duplicate nickname vtuber {member_json['Name']}")                        
 
                         if member["EnName"] != "" and member["EnName"] != member_json["EN_Name"]:
-                            print("[%s] EN name was updated, old %s new %s",member_json["Name"],member["EnName"],member_json["EN_Name"])
+                            print(f"[{member_json['Name']}] EN name was updated, old {member['EnName']} new {member_json['EN_Name']}")
 
                         if member["JpName"] != "" and member["JpName"] != member_json["JP_Name"]:
-                            print("[%s] JP name was updated, old %s new %s",member_json["Name"],member["JpName"],member_json["JP_Name"])
+                            print(f"[{member_json['Name']}] JP name was updated, old {member['JpName']} new {member_json['JP_Name']}")
 
                         if member["Region"] != "" and member["Region"] != member_json["Region"]:
-                            print("[%s] Region was updated, old %s new %s",membermember_json["Name"],["Region"],member_json["Region"])                            
+                            print(f"[{member_json['Name']}] Region was updated, old {member_json['Name']['Region']} new {member_json['Region']}")                            
 
                         if member["Fanbase"] != "" and member["Fanbase"] != member_json["Fanbase"]:
-                            print("[%s] Fanbase was updated, old %s new %s",member_json["Name"],member["Fanbase"],member_json["Fanbase"])                                                        
+                            print(f"[{member_json['Name']}] Fanbase was updated, old {member['Fanbase']} new {member_json['Fanbase']}")                                                        
 
                         if member["Status"] != "" and member["Status"] != member_json["Status"]:
-                            print("[%s] Status was updated, old %s new %s",member_json["Name"],member["Status"],member_json["Status"])                                                                                    
+                            print(f"[{member_json['Name']}] Status was updated, old {member['Status']} new {member_json['Status']}")                                                                                    
 
                         if member["Status"] != "" and member["Status"] != member_json["Status"]:
-                            print("[%s] Status was updated, old %s new %s",member_json["Name"],member["Status"],member_json["Status"])                             
+                            print(f"[{member_json['Name']}] Status was updated, old {member['Status']} new {member_json['Status']}")                             
 
                         #################BiliBili Stuff#################
                         if member["BiliBili"] == None != None and member_json["BiliBili"]:
-                            print("[%s] Bilibili was added, old %s new %s",member_json["Name"],None,member_json["BiliBili"])
+                            print(f"[{member_json['Name']}] Bilibili was added, old None new {member_json['BiliBili']}")
 
                         if member["BiliBili"] != None and member_json["BiliBili"] == None:
-                            print("[%s] Bilibili was deleted, old %s new %s",member_json["Name"],member["BiliBili"],None)
+                            print(f"[{member_json['Name']}] Bilibili was deleted, old {member['BiliBili']} new None")
 
                         if member["BiliBili"] != None and member_json["BiliBili"] != None:
 
@@ -101,10 +104,10 @@ for i in vtuber_json:
                         
                         #################Twitter Stuff#################
                         if member["Twitter"] == None != None and member_json["Twitter"]:
-                            print("[%s] Twitter was added, old %s new %s",member_json["Name"],None,member_json["Twitter"])
+                            print(f"[{member_json['Name']}] Twitter was added, old None new {member_json['Twitter']}")
 
                         if member["Twitter"] != None and member_json["Twitter"] == None:
-                            print("[%s] Twitter was deleted, old %s new %s",member_json["Name"],member["Twitter"],None)
+                            print(f"[{member_json['Name']}] Twitter was deleted, {member['Twitter']} %s new None")
 
                         if member["Twitter"] != None and member_json["Twitter"] != None:
                             if member_json["Twitter"]["Twitter_Fanart"] != "":
@@ -127,10 +130,10 @@ for i in vtuber_json:
 
                         #################Youtube Stuff#################
                         if member["Youtube"] == None != None and member_json["Youtube"]:
-                            print("[%s] Twitter was added, old %s new %s",member_json["Name"],None,member_json["Twitter"])
+                            print(f"[{member_json['Name']}] Twitter was added, old None new {member_json['Twitter']}")
 
                         if member["Youtube"] != None and member_json["Youtube"] == None:
-                            print("[%s] Twitter was deleted, old %s new %s",member_json["Name"],member["Twitter"],None)
+                            print(f"[{member_json['Name']}] Twitter was deleted, old {member['Twitter']} new None")
 
                         if member["Youtube"] != None and member_json["Youtube"] != None:
                             if member_json["Youtube"]["Yt_ID"] != "":
