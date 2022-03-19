@@ -168,7 +168,7 @@ func (i *checkTwJob) Run() {
 			engine.SendFanArtNude(Art, Bot)
 		}
 
-		if *lewd {
+		if *lewd && Member.TwitterLewd != "" {
 
 			log.WithFields(log.Fields{
 				"Hashtag": Member.TwitterLewd,
