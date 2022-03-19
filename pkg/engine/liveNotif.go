@@ -138,10 +138,14 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 									"ChannelID":        Channel.ID,
 									"DiscordChannelID": Channel.ChannelID,
 								}).Error(err)
-								err = Channel.DelChannel(err.Error())
-								if err != nil {
-									log.Error(err)
+								DiscordMsg := DecodeDiscordMessage(err.Error())
+								if DiscordMsg.isBadChannelSetting() {
+									err = Channel.DelChannel()
+									if err != nil {
+										log.Error(err)
+									}
 								}
+
 								return
 							}
 
@@ -253,10 +257,14 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 									"ChannelID":        Channel.ID,
 									"DiscordChannelID": Channel.ChannelID,
 								}).Error(err)
-								err = Channel.DelChannel(err.Error())
-								if err != nil {
-									log.Error(err)
+								DiscordMsg := DecodeDiscordMessage(err.Error())
+								if DiscordMsg.isBadChannelSetting() {
+									err = Channel.DelChannel()
+									if err != nil {
+										log.Error(err)
+									}
 								}
+
 								return
 							}
 
@@ -408,10 +416,15 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 									"ChannelID":        Channel.ID,
 									"DiscordChannelID": Channel.ChannelID,
 								}).Error(err)
-								err = Channel.DelChannel(err.Error())
-								if err != nil {
-									log.Error(err)
+
+								DiscordMsg := DecodeDiscordMessage(err.Error())
+								if DiscordMsg.isBadChannelSetting() {
+									err = Channel.DelChannel()
+									if err != nil {
+										log.Error(err)
+									}
 								}
+
 								return
 							}
 
@@ -505,8 +518,15 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 										"ChannelID":        Channel.ID,
 										"DiscordChannelID": Channel.ChannelID,
 									}).Error(err)
-									err = Channel.DelChannel(err.Error())
-									log.Error(err)
+
+									DiscordMsg := DecodeDiscordMessage(err.Error())
+									if DiscordMsg.isBadChannelSetting() {
+										err = Channel.DelChannel()
+										if err != nil {
+											log.Error(err)
+										}
+									}
+
 								}
 							} else {
 								break
@@ -730,11 +750,15 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 								"ChannelID":        Channel.ID,
 								"DiscordChannelID": Channel.ChannelID,
 							}).Error(err)
-							err = Channel.DelChannel(err.Error())
-							if err != nil {
-								log.Error(err)
+
+							DiscordMsg := DecodeDiscordMessage(err.Error())
+							if DiscordMsg.isBadChannelSetting() {
+								err = Channel.DelChannel()
+								if err != nil {
+									log.Error(err)
+								}
 							}
-							log.Error(err)
+
 						}
 
 						if Channel.Dynamic {
@@ -984,10 +1008,15 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 										"ChannelID":        Channel.ID,
 										"DiscordChannelID": Channel.ChannelID,
 									}).Error(err)
-									err = Channel.DelChannel(err.Error())
-									if err != nil {
-										log.Error(err)
+
+									DiscordMsg := DecodeDiscordMessage(err.Error())
+									if DiscordMsg.isBadChannelSetting() {
+										err = Channel.DelChannel()
+										if err != nil {
+											log.Error(err)
+										}
 									}
+
 								}
 
 								log.WithFields(log.Fields{
@@ -1080,10 +1109,15 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 										"ChannelID":        Channel.ID,
 										"DiscordChannelID": Channel.ChannelID,
 									}).Error(err)
-									err = Channel.DelChannel(err.Error())
-									if err != nil {
-										log.Error(err)
+
+									DiscordMsg := DecodeDiscordMessage(err.Error())
+									if DiscordMsg.isBadChannelSetting() {
+										err = Channel.DelChannel()
+										if err != nil {
+											log.Error(err)
+										}
 									}
+
 								}
 
 								log.WithFields(log.Fields{
@@ -1151,9 +1185,12 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							"ChannelID":        v.ID,
 							"DiscordChannelID": v.ChannelID,
 						}).Error(err)
-						err = v.DelChannel(err.Error())
-						if err != nil {
-							log.Error(err)
+						DiscordMsg := DecodeDiscordMessage(err.Error())
+						if DiscordMsg.isBadChannelSetting() {
+							err = v.DelChannel()
+							if err != nil {
+								log.Error(err)
+							}
 						}
 					}
 				}

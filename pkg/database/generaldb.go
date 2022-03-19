@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"regexp"
 	"strconv"
 	"strings"
 
@@ -427,52 +426,52 @@ func (Data *DiscordChannel) AddChannel() error {
 }
 
 //DelChannel delete discord channel from `disable` command
-func (Data *DiscordChannel) DelChannel(errmsg string) error {
-	match, err := regexp.MatchString("Unknown|403||Delete|Missing|non-text", errmsg)
+func (Data *DiscordChannel) DelChannel() error {
+	/*
+		match, err := regexp.MatchString("Unknown|403||Delete|Missing|non-text", errmsg)
+		if err != nil {
+			return err
+		}
+	*/
+
+	log.Warn("Delete Discord Channel ", Data.ChannelID)
+	var (
+		ID int64
+	)
+
+	row := DB.QueryRow("SELECT id FROM Channel WHERE DiscordChannelID=? AND VtuberGroup_id=?", Data.ChannelID, Data.Group.ID)
+	err := row.Scan(&ID)
 	if err != nil {
 		return err
 	}
 
-	if match {
-		log.Info("Delete Discord Channel ", Data.ChannelID)
-		var (
-			ID int64
-		)
+	rows, err := DB.Query(`SELECT id FROM User Where Channel_id=?`, ID)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
 
-		row := DB.QueryRow("SELECT id FROM Channel WHERE DiscordChannelID=? AND VtuberGroup_id=?", Data.ChannelID, Data.Group.ID)
-		err := row.Scan(&ID)
+	for rows.Next() {
+		var tmp int64
+		err = rows.Scan(&tmp)
 		if err != nil {
 			return err
 		}
 
-		rows, err := DB.Query(`SELECT id FROM User Where Channel_id=?`, ID)
-		if err != nil {
-			return err
-		}
-		defer rows.Close()
-
-		for rows.Next() {
-			var tmp int64
-			err = rows.Scan(&tmp)
-			if err != nil {
-				return err
-			}
-
-			stmt, err := DB.Prepare(`DELETE From User WHERE id=?`)
-			if err != nil {
-				return err
-			}
-			defer stmt.Close()
-			stmt.Exec(tmp)
-		}
-
-		stmt, err := DB.Prepare(`DELETE From Channel WHERE DiscordChannelID=? AND VtuberGroup_id=?`)
+		stmt, err := DB.Prepare(`DELETE From User WHERE id=?`)
 		if err != nil {
 			return err
 		}
 		defer stmt.Close()
-		stmt.Exec(Data.ChannelID, Data.Group.ID)
+		stmt.Exec(tmp)
 	}
+
+	stmt, err := DB.Prepare(`DELETE From Channel WHERE DiscordChannelID=? AND VtuberGroup_id=?`)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	stmt.Exec(Data.ChannelID, Data.Group.ID)
 	return nil
 }
 

@@ -2268,7 +2268,7 @@ var (
 						"Channel": v.ChannelID,
 					}).Info("channel-delete")
 
-					err := v.DelChannel("Delete")
+					err := v.DelChannel()
 					if err != nil {
 						log.Error(err)
 						_, err := s.ChannelMessageSend(i.ChannelID, "Something error XD")
