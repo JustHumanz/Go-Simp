@@ -2,12 +2,8 @@
 	"GroupName": "GuildCQ",
 	"GroupIcon": "https://cdn.humanz.moe/GuildCQ.png",
 	"GroupChannel": {
-		"Youtube": [
-			null
-		],
-		"BiliBili": [
-			null
-		]
+		"Youtube": null,
+		"BiliBili": null
 	},
 	"Members": [
       {

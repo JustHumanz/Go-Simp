@@ -2,12 +2,8 @@
 	"GroupName": "VShojo",
 	"GroupIcon": "https://cdn.humanz.moe/VShojo.png",
 	"GroupChannel": {
-		"Youtube": [
-			null
-		],
-		"BiliBili": [
-			null
-		]
+		"Youtube": null,
+		"BiliBili": null
 	},
 	"Members": [
 		{

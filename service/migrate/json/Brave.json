@@ -2,12 +2,8 @@
 	"GroupName": "Brave",
 	"GroupIcon": "https://cdn.humanz.moe/brave.png",
 	"GroupChannel": {
-		"Youtube": [
-			null
-		],
-		"BiliBili": [
-			null
-		]
+		"Youtube": null,
+		"BiliBili": null
 	},
 	"Members": [
 		{

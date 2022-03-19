@@ -2,12 +2,8 @@
 	"GroupName": "GoomStudio",
 	"GroupIcon": "https://cdn.humanz.moe/GoomStudio.png",
 	"GroupChannel": {
-		"Youtube": [
-			null
-		],
-		"BiliBili": [
-			null
-		]
+		"Youtube": null,
+		"BiliBili": null
 	},
 	"Members": [
 		{

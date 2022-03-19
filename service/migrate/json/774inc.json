@@ -2,12 +2,8 @@
 	"GroupName": "774inc",
 	"GroupIcon": "https://cdn.humanz.moe/774.png",
 	"GroupChannel": {
-		"Youtube": [
-			null
-		],
-		"BiliBili": [
-			null
-		]
+		"Youtube": null,
+		"BiliBili": null
 	},
 	"Members": [
 		{

@@ -2,12 +2,8 @@
 	"GroupName": "Re:Act",
 	"GroupIcon": "https://cdn.humanz.moe/ReAct.png",
 	"GroupChannel": {
-		"Youtube": [
-			null
-		],
-		"BiliBili": [
-			null
-		]
+		"Youtube": null,
+		"BiliBili": null
 	},
 	"Members": [
         {
