@@ -14,3 +14,7 @@ services:
       - PROMETHEUS="http://prometheus:9090"
     networks:
       - go-simp-net
+    deploy:
+        restart_policy:
+            condition: on-failure
+            max_attempts: 5
