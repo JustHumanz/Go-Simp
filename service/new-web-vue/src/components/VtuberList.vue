@@ -85,6 +85,7 @@ export default {
     },
     search_query: {
       type: String,
+      default: null,
     },
     groups: {
       type: Array,
@@ -324,12 +325,12 @@ export default {
       // Filter vtuber.EnName or vtuber.JpName from this.search_query
       const vtuber_data = this.sortingVtubers.filter((post) => {
         let EnName = post.EnName.toLowerCase().includes(
-          this.search_query.toLowerCase()
+          this.search_query ? this.search_query.toLowerCase() : ""
         )
         let JpName
         if (post.JpName != null) {
           JpName = post.JpName.toLowerCase().includes(
-            this.search_query.toLowerCase()
+            this.search_query ? this.search_query.toLowerCase() : ""
           )
         }
         return EnName || JpName

@@ -43,8 +43,9 @@ import SortMenu from "./SortMenu.vue"
       <input
         type="text"
         class="nav-search__input"
-        v-model="search_query"
-        :placeholder="placeholder || `Search Vtuber...`"
+        @keydown="searchData"
+        ref="search_input"
+        :placeholder="placeholder || `Search Vtubers...`"
         :disabled="disable_search"
       />
     </div>
@@ -61,7 +62,7 @@ export default {
   data() {
     return {
       platform: [],
-      search_query: "",
+      search_query: null,
       err_status: null,
     }
   },
@@ -76,7 +77,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: "Search Vtuber...",
+      default: "Search Vtubers...",
     },
     disable_search: {
       type: Boolean,
@@ -106,16 +107,16 @@ export default {
       { immediate: true }
     )
 
-    this.$watch(
-      () => this.search_query,
-      () => {
-        window.scrollTo({
-          top: 0,
-        })
-        this.$emit("search", this.search_query)
-      },
-      { immediate: true }
-    )
+    // this.$watch(
+    //   () => this.search_query,
+    //   () => {
+    //     window.scrollTo({
+    //       top: 0,
+    //     })
+    //     this.$emit("search", this.search_query)
+    //   },
+    //   { immediate: true }
+    // )
 
     this.$watch(
       () => this.$route,
@@ -125,12 +126,19 @@ export default {
           a.query.plat !== b.query.plat ||
           a.query.inac !== b.query.inac ||
           a.params.id !== b.params.id
-        )
-          this.search_query = ""
+        ) {
+          this.$refs.search_input.value = ""
+          this.$emit("search", null)
+        }
       }
     )
   },
-  methods: {},
+  methods: {
+    async searchData() {
+      await new Promise((resolve) => setTimeout(resolve, 60))
+      this.$emit("search", this.$refs.search_input.value)
+    },
+  },
 }
 </script>
 

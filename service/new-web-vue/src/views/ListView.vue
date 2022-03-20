@@ -68,7 +68,7 @@ export default {
       group_id: null,
       error_status: null,
       null_data: false,
-      search_query: "",
+      search_query: null,
       phName: "",
     }
   },
