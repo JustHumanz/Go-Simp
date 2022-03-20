@@ -292,7 +292,7 @@ export default {
           // get href
           const href = e.target.getAttribute("href")
           //move router to href
-          this.$route.push(href)
+          this.$router.push(href)
         }
 
         // Vtuber List
