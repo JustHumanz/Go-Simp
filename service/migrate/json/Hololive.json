@@ -5,29 +5,25 @@
     "Website": "https://hololive.hololivepro.com/en/",
     "Twitter": [
       {
-        "Twitter_Username": "UCotXwY6s8pWmuWd_snKYjhg",
+        "Twitter_Username": "hololive_En",
         "Region": "EN"
       },
       {
-        "Twitter_Username": "UCJFZiqLMntJufDCHc6bQixg",
+        "Twitter_Username": "hololivetv",
         "Region": "JP"
       },
       {
-        "Twitter_Username": "UCfrWoRGlawPQDQxxeIDRP0Q",
+        "Twitter_Username": "hololive_Id",
         "Region": "ID"
       }
     ],
     "TikTok": [
       {
-        "TikTok_Username": "UCotXwY6s8pWmuWd_snKYjhg",
-        "Region": "EN"
-      },
-      {
-        "TikTok_Username": "UCJFZiqLMntJufDCHc6bQixg",
+        "TikTok_Username": "hololive_official",
         "Region": "JP"
       },
       {
-        "TikTok_Username": "UCfrWoRGlawPQDQxxeIDRP0Q",
+        "TikTok_Username": "hololiveid_official",
         "Region": "ID"
       }
     ]
