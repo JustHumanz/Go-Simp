@@ -76,7 +76,7 @@ export default {
   async created() {
     document.title = "Vtuber Details - Vtbot"
 
-    this.history_back = window.history.state.back || `/vtuber`
+    this.history_back = window.history.state.back || `/vtubers`
 
     const member_data = await axios
       .get(Config.REST_API + "/v2/members/" + this.$route.params.id)
