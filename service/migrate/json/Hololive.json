@@ -1,6 +1,37 @@
 {
   "GroupName": "Hololive",
   "GroupIcon": "https://cdn.humanz.moe/holo.png",
+  "GroupLink": {
+    "Website": "https://hololive.hololivepro.com/en/",
+    "Twitter": [
+      {
+        "Twitter_Username": "UCotXwY6s8pWmuWd_snKYjhg",
+        "Region": "EN"
+      },
+      {
+        "Twitter_Username": "UCJFZiqLMntJufDCHc6bQixg",
+        "Region": "JP"
+      },
+      {
+        "Twitter_Username": "UCfrWoRGlawPQDQxxeIDRP0Q",
+        "Region": "ID"
+      }
+    ],
+    "TikTok": [
+      {
+        "TikTok_Username": "UCotXwY6s8pWmuWd_snKYjhg",
+        "Region": "EN"
+      },
+      {
+        "TikTok_Username": "UCJFZiqLMntJufDCHc6bQixg",
+        "Region": "JP"
+      },
+      {
+        "TikTok_Username": "UCfrWoRGlawPQDQxxeIDRP0Q",
+        "Region": "ID"
+      }
+    ]
+  },
   "GroupChannel": {
     "Youtube": [
       {
