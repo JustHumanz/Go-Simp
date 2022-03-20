@@ -2168,6 +2168,96 @@
       "Status": "Active"
     },
     {
+      "Name": "Yugo",
+      "EN_Name": "Yugo Asuma",
+      "JP_Name": "遊間ユーゴ",
+      "Twitter": {
+        "Twitter_Fanart": "#AsumArt",
+        "Twitter_Lewd": "#Asensored",
+        "Twitter_Username": "yugo_asuma"
+      },
+      "Youtube": {
+        "Yt_ID": "UCSc_KzY_9WYAx9LghggjVRA"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "YUGUYS",
+      "Status": "Active"
+    },
+    {
+      "Name": "Sonny",
+      "EN_Name": "Sonny Brisko",
+      "JP_Name": "サニー・ブリスコーだ",
+      "Twitter": {
+        "Twitter_Fanart": "#Briskart",
+        "Twitter_Lewd": "FriskyBrisky",
+        "Twitter_Username": "sonny_brisko"
+      },
+      "Youtube": {
+        "Yt_ID": "UCuuAb_72QzK0M1USPMEl1yw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Uki",
+      "EN_Name": "Uki Violeta",
+      "JP_Name": "浮奇ヴィオレタ",
+      "Twitter": {
+        "Twitter_Fanart": "#VioletAtelier",
+        "Twitter_Lewd": "#UKinky",
+        "Twitter_Username": "uki_violeta"
+      },
+      "Youtube": {
+        "Yt_ID": "UChJ5FTsHOu72_5OVx0rvsvQ"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "Stargazers",
+      "Status": "Active"
+    },
+    {
+      "Name": "Alban",
+      "EN_Name": "Alban Knox",
+      "JP_Name": "アルバーン・ノックス",
+      "Twitter": {
+        "Twitter_Fanart": "AlbanKnoxArt",
+        "Twitter_Lewd": "KnoxSFW",
+        "Twitter_Username": "alban_knox"
+      },
+      "Youtube": {
+        "Yt_ID": "UCQ1zGxHrfEmmW4CPpBx9-qw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Fulgur",
+      "EN_Name": "Fulgur Ovid",
+      "JP_Name": "ファルガー・オーヴィド",
+      "Twitter": {
+        "Twitter_Fanart": "#FulGallery",
+        "Twitter_Lewd": "#Cybussy",
+        "Twitter_Username": "Fulgur_Ovid"
+      },
+      "Youtube": {
+        "Yt_ID": "UCGhqxhovNfaPBpxfCruy9EA"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "Comfydants",
+      "Status": "Active"
+    },
+    {
       "Name": "Yukie",
       "EN_Name": "Yukie",
       "JP_Name": "ユキエ",
