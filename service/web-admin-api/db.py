@@ -40,7 +40,7 @@ def get_groups():
 def update_channel_db(data):
   VTDB,VTcursor = get_mysql_conn()
   if get_channel_info(data["agency_id"],data["channel_id"]) != []:
-    logging.info('Update channel %d %s',data["channel_id"],"agency",data["agency_id"])
+    logging.info('Update channel %s agency %d',data["channel_id"],data["agency_id"])
     query = "UPDATE Channel SET Type = %s,NewUpcoming = %s,Dynamic = %s,Region = %s,Lite= %s,IndieNotif= %s WHERE DiscordChannelID = %s and VtuberGroup_id = %s"
     var = (
       data["channel_type"],
@@ -55,7 +55,7 @@ def update_channel_db(data):
     VTcursor.execute(query,var)
     VTDB.commit()
   else:
-    logging.info('Add new channel %d %s',data["channel_id"],"agency",data["agency_id"])
+    logging.info('Add new channel %s "agency" %d',data["channel_id"],data["agency_id"])
     query = "INSERT INTO Channel (Type,NewUpcoming,Dynamic,Region,Lite,IndieNotif,DiscordChannelID,VtuberGroup_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
     var = (
       data["channel_type"],
@@ -72,7 +72,7 @@ def update_channel_db(data):
 
 def delete_channel_db(data):
     VTDB,VTcursor = get_mysql_conn()
-    logging.info('Add new channel %d %s',data["channel_id"],"agency",data["agency_id"])
+    logging.info('Add new channel %s "agency" %d',data["channel_id"],data["agency_id"])
     query = "DELETE FROM Channel where DiscordChannelID = %s and VtuberGroup_id = %s"
     var = (
       data["channel_id"],

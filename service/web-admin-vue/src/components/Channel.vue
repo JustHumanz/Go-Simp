@@ -216,8 +216,10 @@ export default {
                       console.log(res)
                   })
                   .catch((error) => {
-                      this.$toasted.show("Oops somethings error "+error)
-                      console.log(error)
+                      if (error.response.data.message == "Missmatch channel id") {
+                          this.$toasted.show("Oops somethings error : Missmatch channel id,redirect into home")              
+                          this.$router.push('/guilds')            
+                      }                      
                   }).finally(() => {
                       //Perform action in always
                   });                    
@@ -235,8 +237,10 @@ export default {
                       element.type = null
                   })
                   .catch((error) => {
-                      this.$toasted.show("Oops somethings error "+error)
-                      console.log(error)
+                      if (error.response.data.message == "Missmatch channel id") {
+                          this.$toasted.show("Oops somethings error : Missmatch channel id,redirect into home")              
+                          this.$router.push('/guilds')            
+                      }                      
                   }).finally(() => {
                       //Perform action in always
                   });                    
