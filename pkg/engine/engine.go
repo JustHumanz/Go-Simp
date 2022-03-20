@@ -756,10 +756,13 @@ func GetTwitchTkn() *helix.Client {
 
 func DecodeDiscordMessage(msg string) ErrorDiscord {
 	var errmsg ErrorDiscord
-	err := json.Unmarshal([]byte(msg), &errmsg)
+	msg2 := strings.Split(msg, ",")
+
+	err := json.Unmarshal([]byte(strings.Join(msg2[1:], "")), &errmsg)
 	if err != nil {
 		log.Error(err)
 	}
+
 	return errmsg
 }
 
