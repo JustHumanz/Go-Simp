@@ -103,8 +103,11 @@ for i in vtuber_json:
                                     error_report.append(f"Detect duplicate bilibili id {member_json['BiliBili']['BiliBili_ID']} vtuber {member_json['Name']}")
                         
                         #################Twitter Stuff#################
-                        if member["Twitter"] == None != None and member_json["Twitter"]:
+                        if member["Twitter"] == None and member_json["Twitter"]:
                             print(f"[{member_json['Name']}] Twitter was added, old None new {member_json['Twitter']}")
+
+                            if member_json["Twitter"]["Twitter_Fanart"] == "#" or member_json["Twitter"]["Twitter_Lewd"] == "#" or member_json["Twitter"]["Twitter_Lewd"].startswith('#') == False:
+                                error_report.append(f"Invalid twitter hashtag {member_json['Twitter']['Twitter_Fanart']} vtuber {member_json['Name']}")
 
                         if member["Twitter"] != None and member_json["Twitter"] == None:
                             print(f"[{member_json['Name']}] Twitter was deleted, {member['Twitter']} %s new None")
