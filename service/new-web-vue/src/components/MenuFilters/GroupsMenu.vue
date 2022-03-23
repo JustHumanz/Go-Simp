@@ -36,7 +36,7 @@
     <li class="navbar-pending" v-if="groups.length < 1">
       <img
         draggable="false"
-        :src="`/src/assets/loading/${Math.floor(Math.random() * 7)}.gif`"
+        :src="`/assets/loading/${Math.floor(Math.random() * 7)}.gif`"
         class="navbar-pending__img"
       />
     </li>

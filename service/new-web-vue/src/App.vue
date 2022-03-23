@@ -245,6 +245,7 @@ export default {
   data() {
     return {
       activeListMenu: null,
+      activeSubMenu: null,
       menuDocs: false,
       isActiveVtuber: false,
       isActiveDocs: false,
@@ -254,6 +255,19 @@ export default {
   async created() {
     this.getClickMenu()
     this.unfocusMenu()
+
+    // window.addEventListener("mousedown", (e) => {
+    //   const target = e.target.closest(".navbar-filter-item__link.sub-menu")
+
+    //   if (!target) return
+
+    //   if (this.activeSubMenu === target) {
+    //     target.parentElement.parentElement.parentElement.firstElementChild.focus()
+    //     this.activeSubMenu = null
+    //   } else {
+    //     this.activeSubMenu = target
+    //   }
+    // })
 
     this.theme = localStorage.getItem("theme")
 
@@ -286,62 +300,25 @@ export default {
   },
   methods: {
     getClickMenu() {
-      document.onclick = (e) => {
+      window.onclick = (e) => {
         if (e.target.id === "router-link") {
           e.preventDefault()
-          // get href
-          const href = e.target.getAttribute("href")
-          //move router to href
-          this.$router.push(href)
+          this.$router.push(e.target.getAttribute("href"))
         }
 
-        // Vtuber List
-        let classList = [...e.target.classList]
-
-        if (e.target.tagName === "path") {
-          if (
-            e.target.parentElement.classList.contains("dark-mode-btn__svg") ||
-            e.target.parentElement.classList.contains(
-              "navbar-toggle-dark__icon"
-            )
-          )
-            return
-          classList = [...e.target.parentElement.parentElement.classList]
-        }
-        if (e.target.tagName === "svg") {
-          if (
-            e.target.classList.contains("dark-mode-btn__svg") ||
-            e.target.classList.contains("navbar-toggle-dark__icon")
-          )
-            return
-          classList = [...e.target.parentElement.classList]
-        }
-
-        if (classList.find((c) => c === "navbar-link")) {
-          const mainNavbar =
-            e.target.tagName === "A"
-              ? e.target
-              : e.target.tagName === "path"
-              ? e.target.parentElement.parentElement
-              : e.target.parentElement
-
-          mainNavbar.blur()
+        if (e.target.closest(".navbar-link")) {
+          e.target.closest(".navbar-link").blur()
         }
 
         if (this.$route.path.includes("/docs")) {
-          if (classList.find((c) => c === "tab-link")) {
-            const docsMenu =
-              e.target.tagName === "A"
-                ? e.target
-                : e.target.tagName === "path"
-                ? e.target.parentElement.parentElement
-                : e.target.parentElement
+          if (e.target.closest(".docs-menu")) {
+            const docsMenu = e.target.closest(".docs-menu")
 
             this.menuDocs = !this.menuDocs
             if (!this.menuDocs && document.activeElement === docsMenu) {
               docsMenu.blur()
             }
-          } else if (classList.find((c) => c === "tab-list__link")) {
+          } else if (e.target.closest(".tab-list__link")) {
             document.activeElement.blur()
             this.menuDocs = false
           } else this.menuDocs = false
@@ -352,13 +329,8 @@ export default {
           return
         }
 
-        if (classList.find((c) => c.includes("navbar-filter__"))) {
-          const navbarFilter =
-            e.target.tagName === "A"
-              ? e.target
-              : e.target.tagName === "path"
-              ? e.target.parentElement.parentElement
-              : e.target.parentElement
+        if (e.target.closest(".navbar-filter__link")) {
+          const navbarFilter = e.target.closest(".navbar-filter__link")
 
           const liNavbarFilter = navbarFilter.parentElement
 
@@ -379,40 +351,25 @@ export default {
               this.activeListMenu = navbarFilter
               break
           }
-        } else if (classList.find((c) => c.includes("navbar-filter-item__"))) {
-          const navbarFilterItem =
-            e.target.tagName === "A"
-              ? e.target
-              : e.target.tagName === "path"
-              ? e.target.parentElement.parentElement
-              : e.target.parentElement
+        } else if (e.target.closest(".navbar-filter-item__link")) {
+          const navbarFilterItem = e.target.closest(".navbar-filter-item__link")
 
           if (!navbarFilterItem.classList.contains("sub-menu")) {
             this.activeListMenu = null
             navbarFilterItem.blur()
           }
-        } else if (classList.find((c) => c.includes("navbar-submenu-item__"))) {
-          const navbarSubItem =
-            e.target.tagName === "A"
-              ? e.target
-              : e.target.tagName === "path"
-              ? e.target.parentElement.parentElement
-              : e.target.parentElement
+        } else if (e.target.closest(".navbar-submenu-item__link")) {
+          const navbarSubItem = e.target.closest(".navbar-submenu-item__link")
 
           this.activeListMenu = null
           navbarSubItem.blur()
-        } else if (classList.find((c) => c.includes("nav-search"))) {
+        } else if (e.target.closest(".nav-search")) {
           if (this.activeListMenu !== null) {
             console.log("closing menu")
             this.activeListMenu = null
           }
 
-          const navbarSearchItem =
-            e.target.tagName === "DIV"
-              ? e.target
-              : e.target.tagName === "path"
-              ? e.target.parentElement.parentElement
-              : e.target.parentElement
+          const navbarSearchItem = e.target.closest(".nav-search")
 
           navbarSearchItem.children[1].focus()
         } else {
