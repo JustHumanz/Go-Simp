@@ -1,4 +1,6 @@
-import requests,json,os,time
+import requests,json,os,time,logging
+
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
 DATA_DIR = "service/migrate/json/"
 API = os.environ["APIURL"]
 
@@ -45,12 +47,17 @@ for i in vtuber_json:
                     if i["Region"] == "":
                         error_report.append(f"Detect null region in agency youtube channel {i['ChannelID']}")
 
+            logging.info(f"[{agency['GroupName']}] Get member data")
+
             members = get_member(agency["ID"])
             time.sleep(10)
             
             for member_json in agency_json["Members"]:
                 for member in members:
                     if member["NickName"] == member_json["Name"]:
+
+                        logging.info(f"[{agency['GroupName']}] check member [{member_json['Name']}]")
+
                         if member_json["Name"] not in variables_checker["Nickname"]:
                             variables_checker["Nickname"].append(member_json["Name"])
 
