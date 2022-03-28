@@ -902,7 +902,9 @@
         "BiliBili_ID": 674600645,
         "BiliRoom_ID": 22503360
       },
-      "Twitch": null,
+      "Twitch": {
+        "Twitch_Username": "moricalliope_hololiveen"
+      },
       "Region": "EN",
       "Fanbase": "Dead Beats",
       "Status": "Active"
