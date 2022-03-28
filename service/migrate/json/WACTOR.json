@@ -72,7 +72,7 @@
 			},
 			"Region": "JP",
 			"Fanbase": "",
-			"Status": "Active"
+			"Status": "Inactive"
 		},
 		{
 			"Name": "Hanapyon",
@@ -100,11 +100,7 @@
 			"Name": "Rui-chan",
 			"EN_Name": "Nanaha Rui",
 			"JP_Name": "ナナハルイ",
-			"Twitter": {
-				"Twitter_Fanart": "",
-				"Twitter_Lewd": "",
-				"Twitter_Username": ""
-			},
+			"Twitter": null,
 			"Youtube": {
 				"Yt_ID": ""
 			},
@@ -116,7 +112,7 @@
 			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "",
-			"Status": "Active"
+			"Status": "Inactive"
 		},
 		{
 			"Name": "Sabruja",
@@ -140,7 +136,7 @@
 			},
 			"Region": "JP",
 			"Fanbase": "Laisavant",
-			"Status": "Active"
+			"Status": "Inactive"
 		},
 		{
 			"Name": "Misopa",
