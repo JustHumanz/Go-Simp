@@ -1150,6 +1150,60 @@
       "Region": "JP",
       "Fanbase": "かざまが斬る",
       "Status": "Active"
+    },
+    {
+      "Name": "Vestia",
+      "EN_Name": "Vestia Zeta",
+      "JP_Name": "ベスティア・ゼータ",
+      "Twitter": {
+        "Twitter_Fanart": "#Zetacrylic",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "vestiazeta"
+      },
+      "Youtube": {
+        "Yt_ID": "UCTvHWSfBZgtxE4sILOaurIQ"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "Zecretary",
+      "Status": "Active"
+    },
+    {
+      "Name": "Kaela",
+      "EN_Name": "Kaela Kovalskia",
+      "JP_Name": "カエラ・コヴァルスキア",
+      "Twitter": {
+        "Twitter_Fanart": "#inKaela",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "kaelakovalskia"
+      },
+      "Youtube": {
+        "Yt_ID": "UCZLZ8Jjx_RN2CXloOmgTHVg"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Kobokan",
+      "EN_Name": "Kobo Kanaeru",
+      "JP_Name": "こぼ・かなえる",
+      "Twitter": {
+        "Twitter_Fanart": "#AeruSeni",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "kobokanaeru"
+      },
+      "Youtube": {
+        "Yt_ID": "UCjLEmnpCNeisMxy134KPwWw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "Kobokerz",
+      "Status": "Active"
     }
   ]
 }
