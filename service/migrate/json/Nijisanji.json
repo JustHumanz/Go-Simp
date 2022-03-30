@@ -2430,6 +2430,60 @@
       "Region": "CN",
       "Fanbase": "",
       "Status": "Active"
+    },
+    {
+      "Name": "Umise",
+      "EN_Name": "Umise Yotsuha",
+      "JP_Name": "海妹四葉",
+      "Twitter": {
+        "Twitter_Fanart": "#Yotsuh_Art",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "Yotsuha_Umise"
+      },
+      "Youtube": {
+        "Yt_ID": "UCtHY-tP0dyykhTRMmnfPs_g"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Muyu",
+      "EN_Name": "Amagase Muyu",
+      "JP_Name": "天ヶ瀬むゆ",
+      "Twitter": {
+        "Twitter_Fanart": "#むにゃーと",
+        "Twitter_Lewd": "#あまがせんしてぃぶ",
+        "Twitter_Username": "Muyu_Amagase"
+      },
+      "Youtube": {
+        "Yt_ID": "UCAQDFeCTVdx90GtwohwjHzQ"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Nei",
+      "EN_Name": "Ponto Nei",
+      "JP_Name": "先斗寧",
+      "Twitter": {
+        "Twitter_Fanart": "#ぽんとれーと",
+        "Twitter_Lewd": "#見ないで寧",
+        "Twitter_Username": "ponto_nei"
+      },
+      "Youtube": {
+        "Yt_ID": "UCe22Bcwd_GCpTjLxn83zl7A"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
     }
   ]
 }
