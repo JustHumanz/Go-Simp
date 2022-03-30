@@ -1,219 +1,291 @@
 {
-	"GroupName": "Holostars",
-	"GroupIcon": "https://cdn.humanz.moe/holostars.png",
-	"GroupChannel": {
-		"Youtube": [
-			{
-				"ChannelID": "UCWsfcksUUpoEvhia0_ut0bA",
-				"Region": "JP"
-			}
-		],
-		"BiliBili": null
-	},
-	"Members": [
-		{
-			"Name": "Izu-Izu",
-			"EN_Name": "Kanade Izuru",
-			"JP_Name": "奏手イヅル",
-			"Twitter": {
-				"Twitter_Fanart": "#イヅル描いたぞ",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "kanadeizuru"
-			},
-			"Youtube": {
-				"Yt_ID": "UCZgOv3YDEs-ZnZWDYVwJdmA"
-			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 456232604,
-				"BiliRoom_ID": 21749477
-			},
-			"Twitch": null,
-			"Region": "JP",
-			"Fanbase": "",
-			"Status": "Active"
-		},
-		{
-			"Name": "Miyabin",
-			"EN_Name": "Hanasaki Miyabi",
-			"JP_Name": "花咲みやび",
-			"Twitter": {
-				"Twitter_Fanart": "#みやびじゅつ",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "miyabihanasaki"
-			},
-			"Youtube": {
-				"Yt_ID": "UC6t3-_N8A6ME1JShZHHqOMw"
-			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 647375262,
-				"BiliRoom_ID": 22422987
-			},
-			"Twitch": null,
-			"Region": "JP",
-			"Fanbase": "",
-			"Status": "Active"
-		},
-		{
-			"Name": "Kiracchi",
-			"EN_Name": "Kagami Kira",
-			"JP_Name": "鏡見キラ",
-			"Twitter": {
-				"Twitter_Fanart": "#キラ絵",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "kagamikirach"
-			},
-			"Youtube": {
-				"Yt_ID": "UCEzsociuFqVwgZuMaZqaCsg"
-			},
-			"BiliBili": null,
-			"Twitch": null,
-			"Region": "JP",
-			"Fanbase": "",
-			"Status": "Active"
-		},
-		{
-			"Name": "Aruran",
-			"EN_Name": "Arurandeisu",
-			"JP_Name": "アルランディス",
-			"Twitter": {
-				"Twitter_Fanart": "#アランの画廊",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "arurandeisu"
-			},
-			"Youtube": {
-				"Yt_ID": "UCKeAhJvy8zgXWbh9duVjIaQ"
-			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 551114700,
-				"BiliRoom_ID": 22171183
-			},
-			"Twitch": null,
-			"Region": "JP",
-			"Fanbase": "",
-			"Status": "Active"
-		},
-		{
-			"Name": "Ricchan",
-			"EN_Name": "Rikka",
-			"JP_Name": "律可",
-			"Twitter": {
-				"Twitter_Fanart": "#りつあーと",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "rikkaroid"
-			},
-			"Youtube": {
-				"Yt_ID": "UC9mf_ZVpouoILRY9NUIaK-w"
-			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 350631685,
-				"BiliRoom_ID": 13009645
-			},
-			"Twitch": null,
-			"Region": "JP",
-			"Fanbase": "",
-			"Status": "Active"
-		},
-		{
-			"Name": "Roberu",
-			"EN_Name": "Yukoku Roberu",
-			"JP_Name": "夕刻ロベル",
-			"Twitter": {
-				"Twitter_Fanart": "#描クテル",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "yukokuroberu"
-			},
-			"Youtube": {
-				"Yt_ID": "UCANDOlYTJT7N5jlRC3zfzVA"
-			},
-			"BiliBili": null,
-			"Twitch": null,
-			"Region": "JP",
-			"Fanbase": "",
-			"Status": "Active"
-		},
-		{
-			"Name": "Temma",
-			"EN_Name": "Kishido Temma",
-			"JP_Name": "岸堂天真",
-			"Twitter": {
-				"Twitter_Fanart": "#騎士絵画",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "kishidotemma"
-			},
-			"Youtube": {
-				"Yt_ID": "UCGNI4MENvnsymYjKiZwv9eg"
-			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 647375261,
-				"BiliRoom_ID": 22423010
-			},
-			"Twitch": null,
-			"Region": "JP",
-			"Fanbase": "",
-			"Status": "Active"
-		},
-		{
-			"Name": "Astel",
-			"EN_Name": "Astel Leda",
-			"JP_Name": "アステル・レダ",
-			"Twitter": {
-				"Twitter_Fanart": "#アステル絵ダ",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "astelleda"
-			},
-			"Youtube": {
-				"Yt_ID": "UCNVEsYbiZjH5QLmGeSgTSzg"
-			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 551114698,
-				"BiliRoom_ID": 22171189
-			},
-			"Twitch": null,
-			"Region": "JP",
-			"Fanbase": "",
-			"Status": "Active"
-		},
-		{
-			"Name": "Eroga",
-			"EN_Name": "Aragami Oga",
-			"JP_Name": "荒咬オウガ",
-			"Twitter": {
-				"Twitter_Fanart": "#オウ画",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "aragamioga"
-			},
-			"Youtube": {
-				"Yt_ID": "UCwL7dgTxKo8Y4RFIKWaf8gA"
-			},
-			"BiliBili": null,
-			"Twitch": null,
-			"Region": "JP",
-			"Fanbase": "",
-			"Status": "Active"
-		},
-		{
-			"Name": "Shien",
-			"EN_Name": "Shien",
-			"JP_Name": "影山シエン",
-			"Twitter": {
-				"Twitter_Fanart": "#シ絵ン",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "kageyamashien"
-			},
-			"Youtube": {
-				"Yt_ID": "UChSvpZYRPh0FvG4SJGSga3g"
-			},
-			"BiliBili": null,
-			"Twitch": null,
-			"Region": "JP",
-			"Fanbase": "",
-			"Status": "Active"
-		}
-	]
+  "GroupName": "Holostars",
+  "GroupIcon": "https://cdn.humanz.moe/holostars.png",
+  "GroupChannel": {
+    "Youtube": [
+      {
+        "ChannelID": "UCWsfcksUUpoEvhia0_ut0bA",
+        "Region": "JP"
+      }
+    ],
+    "BiliBili": null
+  },
+  "Members": [
+    {
+      "Name": "Izu-Izu",
+      "EN_Name": "Kanade Izuru",
+      "JP_Name": "奏手イヅル",
+      "Twitter": {
+        "Twitter_Fanart": "#イヅル描いたぞ",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "kanadeizuru"
+      },
+      "Youtube": {
+        "Yt_ID": "UCZgOv3YDEs-ZnZWDYVwJdmA"
+      },
+      "BiliBili": {
+        "BiliBili_Fanart": "",
+        "BiliBili_ID": 456232604,
+        "BiliRoom_ID": 21749477
+      },
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Miyabin",
+      "EN_Name": "Hanasaki Miyabi",
+      "JP_Name": "花咲みやび",
+      "Twitter": {
+        "Twitter_Fanart": "#みやびじゅつ",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "miyabihanasaki"
+      },
+      "Youtube": {
+        "Yt_ID": "UC6t3-_N8A6ME1JShZHHqOMw"
+      },
+      "BiliBili": {
+        "BiliBili_Fanart": "",
+        "BiliBili_ID": 647375262,
+        "BiliRoom_ID": 22422987
+      },
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Kiracchi",
+      "EN_Name": "Kagami Kira",
+      "JP_Name": "鏡見キラ",
+      "Twitter": {
+        "Twitter_Fanart": "#キラ絵",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "kagamikirach"
+      },
+      "Youtube": {
+        "Yt_ID": "UCEzsociuFqVwgZuMaZqaCsg"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Aruran",
+      "EN_Name": "Arurandeisu",
+      "JP_Name": "アルランディス",
+      "Twitter": {
+        "Twitter_Fanart": "#アランの画廊",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "arurandeisu"
+      },
+      "Youtube": {
+        "Yt_ID": "UCKeAhJvy8zgXWbh9duVjIaQ"
+      },
+      "BiliBili": {
+        "BiliBili_Fanart": "",
+        "BiliBili_ID": 551114700,
+        "BiliRoom_ID": 22171183
+      },
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Ricchan",
+      "EN_Name": "Rikka",
+      "JP_Name": "律可",
+      "Twitter": {
+        "Twitter_Fanart": "#りつあーと",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "rikkaroid"
+      },
+      "Youtube": {
+        "Yt_ID": "UC9mf_ZVpouoILRY9NUIaK-w"
+      },
+      "BiliBili": {
+        "BiliBili_Fanart": "",
+        "BiliBili_ID": 350631685,
+        "BiliRoom_ID": 13009645
+      },
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Roberu",
+      "EN_Name": "Yukoku Roberu",
+      "JP_Name": "夕刻ロベル",
+      "Twitter": {
+        "Twitter_Fanart": "#描クテル",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "yukokuroberu"
+      },
+      "Youtube": {
+        "Yt_ID": "UCANDOlYTJT7N5jlRC3zfzVA"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Temma",
+      "EN_Name": "Kishido Temma",
+      "JP_Name": "岸堂天真",
+      "Twitter": {
+        "Twitter_Fanart": "#騎士絵画",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "kishidotemma"
+      },
+      "Youtube": {
+        "Yt_ID": "UCGNI4MENvnsymYjKiZwv9eg"
+      },
+      "BiliBili": {
+        "BiliBili_Fanart": "",
+        "BiliBili_ID": 647375261,
+        "BiliRoom_ID": 22423010
+      },
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Astel",
+      "EN_Name": "Astel Leda",
+      "JP_Name": "アステル・レダ",
+      "Twitter": {
+        "Twitter_Fanart": "#アステル絵ダ",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "astelleda"
+      },
+      "Youtube": {
+        "Yt_ID": "UCNVEsYbiZjH5QLmGeSgTSzg"
+      },
+      "BiliBili": {
+        "BiliBili_Fanart": "",
+        "BiliBili_ID": 551114698,
+        "BiliRoom_ID": 22171189
+      },
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Eroga",
+      "EN_Name": "Aragami Oga",
+      "JP_Name": "荒咬オウガ",
+      "Twitter": {
+        "Twitter_Fanart": "#オウ画",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "aragamioga"
+      },
+      "Youtube": {
+        "Yt_ID": "UCwL7dgTxKo8Y4RFIKWaf8gA"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Shien",
+      "EN_Name": "Shien",
+      "JP_Name": "影山シエン",
+      "Twitter": {
+        "Twitter_Fanart": "#シ絵ン",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "kageyamashien"
+      },
+      "Youtube": {
+        "Yt_ID": "UChSvpZYRPh0FvG4SJGSga3g"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Fuma",
+      "EN_Name": "Yatogami Fuma",
+      "JP_Name": "夜十神封魔",
+      "Twitter": {
+        "Twitter_Fanart": "#封魔絵",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "yatogamifuma"
+      },
+      "Youtube": {
+        "Yt_ID": "UCc88OV45ICgHbn3ZqLLb52w"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "憑人",
+      "Status": "Active"
+    },
+    {
+      "Name": "Uyu",
+      "EN_Name": "Utsugi Uyu",
+      "JP_Name": "羽継烏有",
+      "Twitter": {
+        "Twitter_Fanart": "#Uyu_Art",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "utsugiuyu"
+      },
+      "Youtube": {
+        "Yt_ID": "UCgRqGV1gBf2Esxh0Tz1vxzw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "Fantom",
+      "Status": "Active"
+    },
+    {
+      "Name": "Gamma",
+      "EN_Name": "Hizaki Gamma",
+      "JP_Name": "緋崎ガンマ",
+      "Twitter": {
+        "Twitter_Fanart": "#緋崎ガンマ",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "hizakigamma"
+      },
+      "Youtube": {
+        "Yt_ID": "UCkT1u65YS49ca_LsFwcTakw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Rio",
+      "EN_Name": "Minase Rio",
+      "JP_Name": "水無世燐央",
+      "Twitter": {
+        "Twitter_Fanart": "#燐央絵",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "minaserioch"
+      },
+      "Youtube": {
+        "Yt_ID": "UCdfMHxjcCc2HSd9qFvfJgjg"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "RIOFAM",
+      "Status": "Active"
+    }
+  ]
 }
