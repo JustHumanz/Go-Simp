@@ -3,7 +3,7 @@ module github.com/JustHumanz/Go-Simp
 go 1.17
 
 require (
-	github.com/BurntSushi/toml v1.0.0
+	github.com/BurntSushi/toml v1.1.0
 	github.com/bwmarrin/discordgo v0.23.3-0.20211204170245-092735083ddf
 	github.com/cenkalti/dominantcolor v0.0.0-20220201165739-2603838b25d0
 	github.com/go-redis/redis/v8 v8.11.4
