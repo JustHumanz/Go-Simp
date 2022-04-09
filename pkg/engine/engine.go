@@ -353,18 +353,16 @@ func UniCodetoCountryCode(Region string) string {
 }
 
 func YtFindType(title string) string {
-	yttype := ""
 	title = strings.ToLower(title)
 	if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|mv|covered)", title); Cover {
-		yttype = "Covering"
+		return "Covering"
 	} else if Chat, _ := regexp.MatchString("(?m)(chat|room)", title); Chat {
-		yttype = "ChatRoom"
+		return "ChatRoom"
 	} else if Singing, _ := regexp.MatchString("(?m)(sing|歌枠)", title); Singing {
-		yttype = "Singing"
+		return "Singing"
 	} else {
-		yttype = "Streaming"
+		return "Streaming"
 	}
-	return yttype
 }
 
 //GetAuthorAvatar Get twitter avatar
