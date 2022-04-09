@@ -570,7 +570,6 @@ func GetRSS(YtID string, proxy bool) ([]string, error) {
 	}
 
 	if err != nil {
-		log.Error(err, string(Data))
 		return nil, err
 	}
 
