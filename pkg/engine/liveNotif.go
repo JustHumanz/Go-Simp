@@ -39,7 +39,11 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 	)
 
 	if !Data.Member.IsMemberNill() {
-		loc := Zawarudo(Data.Member.Region)
+		loc, err := Zawarudo(Data.Member.Region)
+		if err != nil {
+			log.Error(err)
+		}
+
 		expiresAt := time.Now().In(loc)
 		VtuberName := FixName(Data.Member.EnName, Data.Member.JpName)
 		if Data.Member.Fanbase != "" {
@@ -937,7 +941,11 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 			wgg.Wait()
 		}
 	} else {
-		loc := Zawarudo(Data.GroupYoutube.Region)
+		loc, err := Zawarudo(Data.GroupYoutube.Region)
+		if err != nil {
+			log.Error(err)
+		}
+
 		expiresAt := time.Now().In(loc)
 		if Data.State == config.YoutubeLive {
 			var (

@@ -186,7 +186,12 @@ var (
 					if YoutubeData != nil {
 						for _, Youtube := range YoutubeData {
 							FanBase := "simps"
-							loc := engine.Zawarudo(member.Region)
+
+							loc, err := engine.Zawarudo(member.Region)
+							if err != nil {
+								log.Error(err)
+							}
+
 							duration := durafmt.Parse(Youtube.Schedul.In(loc).Sub(time.Now().In(loc))).LimitFirstN(2)
 
 							Color, err := engine.GetColor(config.TmpDir, Youtube.Thumb)
@@ -269,7 +274,11 @@ var (
 							FixName := engine.FixName(Youtube.Member.EnName, Youtube.Member.JpName)
 							FanBase := "simps"
 
-							loc := engine.Zawarudo(Youtube.Member.Region)
+							loc, err := engine.Zawarudo(Youtube.Member.Region)
+							if err != nil {
+								log.Error(err)
+							}
+
 							Color, err := engine.GetColor(config.TmpDir, Youtube.Thumb)
 							if err != nil {
 								if err.Error() == "Server Error,status get 404 Not Found" {
@@ -498,7 +507,11 @@ var (
 						}
 						for _, LiveData := range LiveTwitch {
 							FanBase := "simps"
-							loc := engine.Zawarudo(member.Region)
+							loc, err := engine.Zawarudo(member.Region)
+							if err != nil {
+								log.Error(err)
+							}
+
 							diff := time.Now().In(loc).Sub(LiveData.Schedul.In(loc))
 							view, err := strconv.Atoi(LiveData.Viewers)
 							if err != nil {
@@ -573,7 +586,11 @@ var (
 							}
 
 							LiveData.AddMember(Member)
-							loc := engine.Zawarudo(LiveData.Member.Region)
+							loc, err := engine.Zawarudo(LiveData.Member.Region)
+							if err != nil {
+								log.Error(err)
+							}
+
 							FixName := engine.FixName(LiveData.Member.EnName, LiveData.Member.JpName)
 							view, err := strconv.Atoi(LiveData.Viewers)
 							if err != nil {
