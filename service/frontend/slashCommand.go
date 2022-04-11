@@ -194,13 +194,12 @@ var (
 			for _, v := range *GroupsPayload {
 				if v.ID == int64(GroupSelected) {
 					group = v
-				}
-			}
-
-			for _, v := range *GroupsPayload {
-				for _, v2 := range v.Members {
-					if v2.Name == VtuberSelected {
-						member = v2
+					if VtuberSelected != "" {
+						for _, v2 := range v.Members {
+							if v2.Name == VtuberSelected {
+								member = v2
+							}
+						}
 					}
 				}
 			}
