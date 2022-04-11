@@ -83,21 +83,42 @@ var (
 			}
 		},
 		"livestream": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			state := i.ApplicationCommandData().Options[0].IntValue()
-			Avatar := i.Member.User.AvatarURL("128")
-			Nick := i.Member.User.Username
 			var group database.Group
 			var member database.Member
 			var embed []*discordgo.MessageEmbed
+
+			state := i.ApplicationCommandData().Options[0].IntValue()
+			Avatar := i.Member.User.AvatarURL("128")
+			Nick := i.Member.User.Username
+			GroupSelected := 0
+			VtuberSelected := ""
 			region := ""
 			status := ""
 
-			if i.ApplicationCommandData().Options[1].IntValue() == 1 {
-				status = config.LiveStatus
-			} else if i.ApplicationCommandData().Options[1].IntValue() == 2 {
-				status = config.UpcomingStatus
-			} else {
-				status = config.PastStatus
+			for _, v := range i.ApplicationCommandData().Options {
+				if v.Name == "group-name" {
+					GroupSelected = int(v.IntValue())
+				}
+
+				if v.Name == "vtuber-name" {
+					VtuberSelected = v.StringValue()
+				}
+
+				if v.Name == "status" {
+					status = func() string {
+						if v.IntValue() == 1 {
+							return config.LiveStatus
+						} else if v.IntValue() == 2 {
+							return config.UpcomingStatus
+						} else {
+							return config.PastStatus
+						}
+					}()
+				}
+
+				if v.Name == "region" {
+					region = v.StringValue()
+				}
 			}
 
 			log.WithFields(log.Fields{
@@ -108,11 +129,22 @@ var (
 
 			SendMessage := func(e []*discordgo.MessageEmbed) {
 				if len(e) > 10 {
+					err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+						Type: discordgo.InteractionResponseChannelMessageWithSource,
+						Data: &discordgo.InteractionResponseData{
+							Content: "On Progress",
+						},
+					})
+					if err != nil {
+						log.Error(err)
+					}
+
 					for _, v := range e {
 						_, err := s.ChannelMessageSendEmbed(i.ChannelID, v)
 						if err != nil {
 							log.Error(err)
 						}
+						time.Sleep(1 * time.Second)
 					}
 				} else if len(e) == 0 {
 					err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -158,22 +190,19 @@ var (
 					log.Error(err)
 				}
 			}
+
 			for _, v := range *GroupsPayload {
-				if v.ID == i.ApplicationCommandData().Options[2].IntValue() {
+				if v.ID == int64(GroupSelected) {
 					group = v
 				}
 			}
-			if len(i.ApplicationCommandData().Options) == 4 {
-				for _, v := range *GroupsPayload {
-					for _, v2 := range v.Members {
-						if v2.Name == i.ApplicationCommandData().Options[3].StringValue() {
-							member = v2
-						}
+
+			for _, v := range *GroupsPayload {
+				for _, v2 := range v.Members {
+					if v2.Name == VtuberSelected {
+						member = v2
 					}
 				}
-			}
-			if len(i.ApplicationCommandData().Options) == 5 {
-				region = i.ApplicationCommandData().Options[4].StringValue()
 			}
 
 			if state == 1 {
@@ -216,7 +245,7 @@ var (
 							if status == config.PastStatus {
 								durationlive := durafmt.Parse(Youtube.End.In(loc).Sub(Youtube.Schedul)).LimitFirstN(2)
 								embed = append(embed, engine.NewEmbed().
-									SetAuthor(Nick, BotInfo.Avatar).
+									SetAuthor(Nick, Avatar).
 									SetTitle(FixName).
 									SetDescription(Youtube.Title).
 									SetImage(Youtube.Thumb).
@@ -254,13 +283,7 @@ var (
 					}
 					SendMessage(embed)
 				} else {
-					YoutubeData, err := group.GetYtLiveStream(status, func() []string {
-						if region != "" {
-							return []string{region}
-						} else {
-							return nil
-						}
-					}())
+					YoutubeData, err := group.GetYtLiveStream(status, region)
 					if err != nil {
 						log.Error(err)
 					}
@@ -301,7 +324,7 @@ var (
 								duration := durafmt.Parse(Youtube.Schedul.In(loc).Sub(time.Now().In(loc))).LimitFirstN(2)
 								durationlive := durafmt.Parse(Youtube.End.In(loc).Sub(Youtube.Schedul)).LimitFirstN(2)
 								embed = append(embed, engine.NewEmbed().
-									SetAuthor(Nick, BotInfo.Avatar).
+									SetAuthor(Nick, Avatar).
 									SetTitle(FixName).
 									SetDescription(Youtube.Title).
 									SetImage(Youtube.Thumb).

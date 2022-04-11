@@ -140,7 +140,7 @@ func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
 
 }
 */
-func (Data *Group) GetYtLiveStream(status string, reg []string) ([]LiveStream, error) {
+func (Data *Group) GetYtLiveStream(status string, reg string) ([]LiveStream, error) {
 	var (
 		Query          string
 		LiveStreamData []LiveStream
@@ -149,8 +149,8 @@ func (Data *Group) GetYtLiveStream(status string, reg []string) ([]LiveStream, e
 		rows           *sql.Rows
 		err            error
 		Key            = func() string {
-			if reg != nil {
-				return fmt.Sprintf("%d-%s-%s-%s", Data.ID, Data.GroupName, status, strings.Join(reg, "-"))
+			if reg != "" {
+				return fmt.Sprintf("%d-%s-%s-%s", Data.ID, Data.GroupName, status, reg)
 			} else {
 				return fmt.Sprintf("%d-%s-%s", Data.ID, Data.GroupName, status)
 			}
@@ -185,7 +185,7 @@ func (Data *Group) GetYtLiveStream(status string, reg []string) ([]LiveStream, e
 			}
 		}()
 
-		if reg == nil {
+		if reg == "" {
 			if status == config.PastStatus {
 				Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where VtuberGroup.id=?  AND Youtube.Status=? Order by EndStream DESC Limit ?"
 			} else if status == config.UpcomingStatus {
@@ -201,13 +201,15 @@ func (Data *Group) GetYtLiveStream(status string, reg []string) ([]LiveStream, e
 			defer rows.Close()
 
 		} else {
-			args := make([]interface{}, len(reg))
-			for i, id := range reg {
-				args[i] = id
+			if status == config.PastStatus {
+				Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where VtuberGroup.id=?  AND Youtube.Status=? AND Region=? Order by EndStream DESC Limit ?"
+			} else if status == config.UpcomingStatus {
+				Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where VtuberGroup.id=?  AND Youtube.Status=? AND Region=? Order by PublishedAt DESC Limit ?"
+			} else {
+				Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where VtuberGroup.id=?  AND Youtube.Status=? AND Region=? Order by ScheduledStart DESC Limit ?"
 			}
 
-			Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where VtuberGroup.id=? AND Youtube.Status=? AND Region in (?" + strings.Repeat(",?", len(args)-1) + ") Order by ScheduledStart DESC Limit ?"
-			rows, err = DB.Query(Query, Data.ID, status, args, limit)
+			rows, err = DB.Query(Query, Data.ID, status, reg, limit)
 			if err != nil {
 				return nil, err
 			}
@@ -219,8 +221,9 @@ func (Data *Group) GetYtLiveStream(status string, reg []string) ([]LiveStream, e
 			if err != nil {
 				return nil, err
 			}
+
 			UpcominginHours := int(time.Until(Live.Schedul).Hours())
-			if UpcominginHours > 730 && status != config.PastStatus || status == config.Live && UpcominginHours > 168 {
+			if (UpcominginHours > 730 && status != config.PastStatus) || (status == config.Live && UpcominginHours > 168) {
 				continue
 			}
 

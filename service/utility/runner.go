@@ -290,7 +290,7 @@ func main() {
 		log.Info("Start Check Private video")
 		for _, Status := range []string{config.UpcomingStatus, config.PastStatus, config.LiveStatus, config.PrivateStatus} {
 			for _, Group := range *GroupPayload {
-				YtData, err := Group.GetYtLiveStream(Status, nil)
+				YtData, err := Group.GetYtLiveStream(Status, "")
 				if err != nil {
 					log.Error(err)
 				}
