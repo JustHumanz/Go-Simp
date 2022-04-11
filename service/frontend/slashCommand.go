@@ -671,6 +671,18 @@ var (
 		"art": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			var embed *discordgo.MessageEmbed
 			var DynamicData DynamicSvr
+			var SelectedAgency int64
+			var SelectedVtuber string
+
+			for _, v := range i.ApplicationCommandData().Options {
+				if v.Name == engine.AgencyOption {
+					SelectedAgency = v.IntValue()
+				}
+
+				if v.Name == engine.VtuberOption {
+					SelectedVtuber = v.StringValue()
+				}
+			}
 
 			Avatar := i.Member.User.AvatarURL("128")
 			Nick := i.Member.User.Username
@@ -682,11 +694,28 @@ var (
 				}
 
 				if Data.State == config.BiliBiliArt {
-					body, errcurl := network.CoolerCurl("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id="+Data.Dynamic_id, nil)
-					if errcurl != nil {
-						log.Error(errcurl)
+					if config.GoSimpConf.MultiTOR != "" {
+						body, errcurl := network.CoolerCurl("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id="+Data.Dynamic_id, nil)
+						if errcurl != nil {
+							log.Error(errcurl)
+						}
+
+						err := json.Unmarshal(body, &DynamicData)
+						if err != nil {
+							log.Error(err)
+						}
+					} else {
+						body, errcurl := network.Curl("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id="+Data.Dynamic_id, nil)
+						if errcurl != nil {
+							log.Error(errcurl)
+						}
+
+						err := json.Unmarshal(body, &DynamicData)
+						if err != nil {
+							log.Error(err)
+						}
 					}
-					json.Unmarshal(body, &DynamicData)
+
 					embed = engine.NewEmbed().
 						SetAuthor(Nick, Avatar).
 						SetTitle(Data.Author).
@@ -733,55 +762,57 @@ var (
 				}
 
 			}
-			if len(i.ApplicationCommandData().Options) == 2 {
-				VtuberName := i.ApplicationCommandData().Options[1].StringValue()
-				log.WithFields(log.Fields{
-					"Vtuber": VtuberName,
-				}).Info("FanArt")
-				for _, GroupData := range *GroupsPayload {
-					for _, v := range GroupData.Members {
-						if strings.EqualFold(v.Name, VtuberName) || strings.EqualFold(v.EnName, VtuberName) || strings.EqualFold(v.JpName, VtuberName) {
 
-							log.WithFields(log.Fields{
-								"User":    i.Member.User.Username,
-								"Channel": i.ChannelID,
-								"Vtuber":  v.Name,
-							}).Info("art")
-
-							FanArt, err := v.GetRandomFanart()
-
-							if err != nil {
-								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-									Type: discordgo.InteractionResponseChannelMessageWithSource,
-									Data: &discordgo.InteractionResponseData{
-										Content: "Oops,something error\n" + err.Error(),
-									},
-								})
-							} else {
-								SendNude(FanArt)
+			Agency := database.Group{}
+			VtuberName := database.Member{}
+			for _, v := range *GroupsPayload {
+				if v.ID == SelectedAgency {
+					Agency = v
+					if SelectedVtuber != "" {
+						for _, k := range v.Members {
+							if strings.EqualFold(SelectedVtuber, k.Name) {
+								VtuberName = k
 							}
 						}
 					}
 				}
-			} else {
-				GroupID := i.ApplicationCommandData().Options[0].IntValue()
+			}
+
+			if !VtuberName.IsMemberNill() {
 				log.WithFields(log.Fields{
-					"VtuberGroupID": GroupID,
+					"User":    i.Member.User.Username,
+					"Channel": i.ChannelID,
+					"Vtuber":  VtuberName.Name,
+				}).Info("art")
+
+				FanArt, err := VtuberName.GetRandomFanart()
+
+				if err != nil {
+					s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+						Type: discordgo.InteractionResponseChannelMessageWithSource,
+						Data: &discordgo.InteractionResponseData{
+							Content: "Oops,something error\n" + err.Error(),
+						},
+					})
+				} else {
+					SendNude(FanArt)
+				}
+			} else {
+				log.WithFields(log.Fields{
+					"User":         i.Member.User.Username,
+					"Channel":      i.ChannelID,
+					"VtuberAgency": Agency.GroupName,
 				}).Info("FanArt")
-				for _, v := range *GroupsPayload {
-					if v.ID == GroupID {
-						FanArt, err := v.GetRandomFanart()
-						if err != nil {
-							s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-								Type: discordgo.InteractionResponseChannelMessageWithSource,
-								Data: &discordgo.InteractionResponseData{
-									Content: "Oops,something error\n" + err.Error(),
-								},
-							})
-						} else {
-							SendNude(FanArt)
-						}
-					}
+				FanArt, err := Agency.GetRandomFanart()
+				if err != nil {
+					s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+						Type: discordgo.InteractionResponseChannelMessageWithSource,
+						Data: &discordgo.InteractionResponseData{
+							Content: "Oops,something error\n" + err.Error(),
+						},
+					})
+				} else {
+					SendNude(FanArt)
 				}
 			}
 		},
@@ -794,6 +825,18 @@ var (
 				var embed *discordgo.MessageEmbed
 				Avatar := i.Member.User.AvatarURL("128")
 				Nick := i.Member.User.Username
+				var SelectedAgency int64
+				var SelectedVtuber string
+
+				for _, v := range i.ApplicationCommandData().Options {
+					if v.Name == engine.AgencyOption {
+						SelectedAgency = v.IntValue()
+					}
+
+					if v.Name == engine.VtuberOption {
+						SelectedVtuber = v.StringValue()
+					}
+				}
 
 				SendNude := func(Data *database.DataFanart) {
 					Color, err := engine.GetColor(config.TmpDir, Avatar)
@@ -837,55 +880,59 @@ var (
 					}
 
 				}
-				if len(i.ApplicationCommandData().Options) == 2 {
-					VtuberName := i.ApplicationCommandData().Options[1].StringValue()
-					log.WithFields(log.Fields{
-						"Vtuber": VtuberName,
-					}).Info("Lewd")
-					for _, GroupData := range *GroupsPayload {
-						for _, v := range GroupData.Members {
-							if strings.EqualFold(v.Name, VtuberName) || strings.EqualFold(v.EnName, VtuberName) || strings.EqualFold(v.JpName, VtuberName) {
 
-								log.WithFields(log.Fields{
-									"User":    i.Member.User.Username,
-									"Channel": i.ChannelID,
-									"Vtuber":  v.Name,
-								}).Info("lewd")
-
-								FanArt, err := v.GetRandomLewd()
-								if err != nil {
-									s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-										Type: discordgo.InteractionResponseChannelMessageWithSource,
-										Data: &discordgo.InteractionResponseData{
-											Content: "Oops,something error\n" + err.Error(),
-										},
-									})
-								} else {
-									SendNude(FanArt)
+				Agency := database.Group{}
+				VtuberName := database.Member{}
+				for _, v := range *GroupsPayload {
+					if v.ID == SelectedAgency {
+						Agency = v
+						if SelectedVtuber != "" {
+							for _, k := range v.Members {
+								if strings.EqualFold(SelectedVtuber, k.Name) {
+									VtuberName = k
 								}
 							}
 						}
 					}
-				} else {
-					GroupID := i.ApplicationCommandData().Options[0].IntValue()
+				}
+
+				if !VtuberName.IsMemberNill() {
 					log.WithFields(log.Fields{
-						"VtuberGroupName": GroupID,
-					}).Info("Lewd")
-					for _, v := range *GroupsPayload {
-						if v.ID == GroupID {
-							FanArt, err := v.GetRandomFanart()
-							if err != nil {
-								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-									Type: discordgo.InteractionResponseChannelMessageWithSource,
-									Data: &discordgo.InteractionResponseData{
-										Content: "Oops,something error\n" + err.Error(),
-									},
-								})
-							} else {
-								SendNude(FanArt)
-							}
-						}
+						"User":    i.Member.User.Username,
+						"Channel": i.ChannelID,
+						"Vtuber":  VtuberName.Name,
+					}).Info("lewd")
+
+					FanArt, err := VtuberName.GetRandomLewd()
+					if err != nil {
+						s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+							Type: discordgo.InteractionResponseChannelMessageWithSource,
+							Data: &discordgo.InteractionResponseData{
+								Content: "Oops,something error\n" + err.Error(),
+							},
+						})
+					} else {
+						SendNude(FanArt)
 					}
+
+				} else {
+					log.WithFields(log.Fields{
+						"User":         i.Member.User.Username,
+						"Channel":      i.ChannelID,
+						"VtuberAgency": Agency.GroupName,
+					}).Info("Lewd")
+					FanArt, err := Agency.GetRandomFanart()
+					if err != nil {
+						s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+							Type: discordgo.InteractionResponseChannelMessageWithSource,
+							Data: &discordgo.InteractionResponseData{
+								Content: "Oops,something error\n" + err.Error(),
+							},
+						})
+					} else {
+						SendNude(FanArt)
+					}
+
 				}
 			} else {
 				err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
