@@ -100,7 +100,7 @@ var (
 					GroupSelected = int(v.IntValue())
 				}
 
-				if v.Name == "vtuber-name" {
+				if v.Name == engine.VtuberOption {
 					VtuberSelected = v.StringValue()
 				}
 
@@ -1071,13 +1071,13 @@ var (
 			}).Info("tag-me")
 
 			for _, v := range i.ApplicationCommandData().Options {
-				if v.Name == "vtuber-group" {
+				if v.Name == engine.AgencyOption {
 					GroupID = int(v.IntValue())
 				}
 				if v.Name == "reminder" {
 					Reminder = int(v.IntValue())
 				}
-				if v.Name == "vtuber-name" {
+				if v.Name == engine.VtuberOption {
 					MemberName = v.StringValue()
 				}
 			}
@@ -1192,10 +1192,10 @@ var (
 			}
 
 			for _, v := range i.ApplicationCommandData().Options {
-				if v.Name == "vtuber-group" {
+				if v.Name == engine.AgencyOption {
 					GroupID = int(v.IntValue())
 				}
-				if v.Name == "vtuber-name" {
+				if v.Name == engine.VtuberOption {
 					MemberName = v.StringValue()
 				}
 			}
@@ -1313,13 +1313,13 @@ var (
 			)
 
 			for _, v := range i.ApplicationCommandData().Options {
-				if v.Name == "vtuber-group" {
+				if v.Name == engine.AgencyOption {
 					GroupID = int(v.IntValue())
 				}
 				if v.Name == "reminder" {
 					Reminder = int(v.IntValue())
 				}
-				if v.Name == "vtuber-name" {
+				if v.Name == engine.VtuberOption {
 					MemberName = v.StringValue()
 				}
 				if v.Name == "role-name" {
@@ -1453,10 +1453,10 @@ var (
 			)
 
 			for _, v := range i.ApplicationCommandData().Options {
-				if v.Name == "vtuber-group" {
+				if v.Name == engine.AgencyOption {
 					GroupID = int(v.IntValue())
 				}
-				if v.Name == "vtuber-name" {
+				if v.Name == engine.VtuberOption {
 					MemberName = v.StringValue()
 				}
 				if v.Name == "role-name" {
@@ -1669,7 +1669,7 @@ var (
 							Channel = v2.ChannelValue(nil)
 						}
 
-						if v2.Name == "vtuber-group" {
+						if v2.Name == engine.AgencyOption {
 							for _, v3 := range *GroupsPayload {
 								if v3.ID == v2.IntValue() {
 									Group = v3
@@ -1747,7 +1747,7 @@ var (
 							Channel = v2.ChannelValue(nil)
 						}
 
-						if v2.Name == "vtuber-group" {
+						if v2.Name == engine.AgencyOption {
 							for _, v3 := range *GroupsPayload {
 								if v3.ID == v2.IntValue() {
 									Group = v3
@@ -1820,7 +1820,7 @@ var (
 							Channel = v2.ChannelValue(nil)
 						}
 
-						if v2.Name == "vtuber-group" {
+						if v2.Name == engine.AgencyOption {
 							for _, v3 := range *GroupsPayload {
 								if v3.ID == v2.IntValue() {
 									Group = v3

@@ -54,8 +54,8 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 									},
 									{
 										Type:        discordgo.ApplicationCommandOptionInteger,
-										Name:        "vtuber-group",
-										Description: "select vtuber-group",
+										Name:        AgencyOption,
+										Description: "select agency of vtuber",
 										Choices:     VtuberGroupChoices,
 										Required:    true,
 									},
@@ -111,7 +111,7 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 									{
 										Type:        discordgo.ApplicationCommandOptionInteger,
 										Name:        "vtuber-group",
-										Description: "select vtuber-group",
+										Description: "select agency of vtuber",
 										Choices:     VtuberGroupChoices,
 										Required:    true,
 									},
@@ -136,8 +136,8 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 									},
 									{
 										Type:        discordgo.ApplicationCommandOptionInteger,
-										Name:        "vtuber-group",
-										Description: "select vtuber-group",
+										Name:        AgencyOption,
+										Description: "select agency of vtuber",
 										Choices:     VtuberGroupChoices,
 										Required:    true,
 									},
@@ -309,7 +309,7 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 				Options: []*discordgo.ApplicationCommandOption{
 					{
 						Type:        discordgo.ApplicationCommandOptionInteger,
-						Name:        "vtuber-group",
+						Name:        AgencyOption,
 						Description: "select vtuber",
 						Choices:     VtuberGroupChoices,
 						Required:    false,
@@ -334,7 +334,7 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 				Options: []*discordgo.ApplicationCommandOption{
 					{
 						Type:        discordgo.ApplicationCommandOptionInteger,
-						Name:        "vtuber-group",
+						Name:        AgencyOption,
 						Description: "select vtuber",
 						Choices:     VtuberGroupChoices,
 						Required:    false,
@@ -369,7 +369,7 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 					},
 					{
 						Type:        discordgo.ApplicationCommandOptionInteger,
-						Name:        "vtuber-group",
+						Name:        AgencyOption,
 						Description: "select vtuber",
 						Choices:     VtuberGroupChoices,
 						Required:    false,
@@ -400,7 +400,7 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 					},
 					{
 						Type:        discordgo.ApplicationCommandOptionInteger,
-						Name:        "vtuber-group",
+						Name:        AgencyOption,
 						Description: "select vtuber",
 						Choices:     VtuberGroupChoices,
 						Required:    false,
