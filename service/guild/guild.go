@@ -12,6 +12,7 @@ import (
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
+	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -34,10 +35,31 @@ func main() {
 	}
 
 	var GroupsPayload *[]database.Group
-	err = json.Unmarshal(res.VtuberPayload, &GroupsPayload)
-	if err != nil {
-		log.Error(err)
+	GetPayload := func() {
+		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
+			Message: "Send me nude",
+			Service: "Guild",
+		})
+		if err != nil {
+			if configfile.Discord != "" {
+				pilot.ReportDeadService(err.Error(), "Guild")
+			}
+			log.Error("Error when request payload: %s", err)
+		}
+		err = json.Unmarshal(res.ConfigFile, &configfile)
+		if err != nil {
+			log.Error(err)
+		}
+
+		err = json.Unmarshal(res.VtuberPayload, &GroupsPayload)
+		if err != nil {
+			log.Error(err)
+		}
 	}
+	GetPayload()
+	c := cron.New()
+	c.Start()
+	c.AddFunc(config.CheckPayload, GetPayload)
 
 	Bot, err := discordgo.New("Bot " + configfile.Discord)
 	if err != nil {
