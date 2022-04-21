@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -207,14 +206,8 @@ func AddData(Data Vtuber) {
 							"Agency": GroupData.GroupName,
 							"Vtuber": VtuberMember.Name,
 						}).Error(msg, err)
-
-						match, _ := regexp.MatchString("Unknown Channel", err.Error())
-						if match {
+						if engine.IsBadChannelSetting(err) {
 							log.Info("Delete Discord Channel ", Channel)
-							log.WithFields(log.Fields{
-								"Agency": GroupData.GroupName,
-								"Vtuber": VtuberMember.Name,
-							}).Error(err)
 							DeleteChannel(Channel.ID)
 						}
 					}
@@ -324,9 +317,8 @@ func AddData(Data Vtuber) {
 						"Vtuber": NewVtuberNamesIndependen,
 					}).Error(msg, err)
 
-					match, _ := regexp.MatchString("Unknown Channel", err.Error())
-					if match {
-						log.Info("Delete Discord Channel ", Channel.ChannelID)
+					if engine.IsBadChannelSetting(err) {
+						log.Info("Delete Discord Channel ", Channel)
 						DeleteChannel(Channel.ID)
 					}
 				}
@@ -579,8 +571,7 @@ func AddData(Data Vtuber) {
 								"Vtuber": VtuberMember.Name,
 							}).Error(err, msg)
 
-							match, _ := regexp.MatchString("Unknown Channel", err.Error())
-							if match {
+							if engine.IsBadChannelSetting(err) {
 								log.Info("Delete Discord Channel ", Channel)
 								DeleteChannel(Channel.ID)
 							}
@@ -685,8 +676,7 @@ func AddData(Data Vtuber) {
 					msg, err := Bot.ChannelMessageSend(Channel.ChannelID, "New Update!!!! @here "+Vtubers)
 					if err != nil {
 						log.Error(msg, err)
-						match, _ := regexp.MatchString("Unknown Channel", err.Error())
-						if match {
+						if engine.IsBadChannelSetting(err) {
 							log.Info("Delete Discord Channel ", Channel)
 							DeleteChannel(Channel.ID)
 						}

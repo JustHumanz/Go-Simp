@@ -142,8 +142,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 									"ChannelID":        Channel.ID,
 									"DiscordChannelID": Channel.ChannelID,
 								}).Error(err)
-								DiscordMsg := DecodeDiscordMessage(err.Error())
-								if DiscordMsg.isBadChannelSetting() {
+								if IsBadChannelSetting(err) {
 									err = Channel.DelChannel()
 									if err != nil {
 										log.Error(err)
@@ -261,8 +260,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 									"ChannelID":        Channel.ID,
 									"DiscordChannelID": Channel.ChannelID,
 								}).Error(err)
-								DiscordMsg := DecodeDiscordMessage(err.Error())
-								if DiscordMsg.isBadChannelSetting() {
+								if IsBadChannelSetting(err) {
 									err = Channel.DelChannel()
 									if err != nil {
 										log.Error(err)
@@ -421,8 +419,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 									"DiscordChannelID": Channel.ChannelID,
 								}).Error(err)
 
-								DiscordMsg := DecodeDiscordMessage(err.Error())
-								if DiscordMsg.isBadChannelSetting() {
+								if IsBadChannelSetting(err) {
 									err = Channel.DelChannel()
 									if err != nil {
 										log.Error(err)
@@ -523,8 +520,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 										"DiscordChannelID": Channel.ChannelID,
 									}).Error(err)
 
-									DiscordMsg := DecodeDiscordMessage(err.Error())
-									if DiscordMsg.isBadChannelSetting() {
+									if IsBadChannelSetting(err) {
 										err = Channel.DelChannel()
 										if err != nil {
 											log.Error(err)
@@ -755,8 +751,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 								"DiscordChannelID": Channel.ChannelID,
 							}).Error(err)
 
-							DiscordMsg := DecodeDiscordMessage(err.Error())
-							if DiscordMsg.isBadChannelSetting() {
+							if IsBadChannelSetting(err) {
 								err = Channel.DelChannel()
 								if err != nil {
 									log.Error(err)
@@ -1017,8 +1012,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 										"DiscordChannelID": Channel.ChannelID,
 									}).Error(err)
 
-									DiscordMsg := DecodeDiscordMessage(err.Error())
-									if DiscordMsg.isBadChannelSetting() {
+									if IsBadChannelSetting(err) {
 										err = Channel.DelChannel()
 										if err != nil {
 											log.Error(err)
@@ -1118,8 +1112,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 										"DiscordChannelID": Channel.ChannelID,
 									}).Error(err)
 
-									DiscordMsg := DecodeDiscordMessage(err.Error())
-									if DiscordMsg.isBadChannelSetting() {
+									if IsBadChannelSetting(err) {
 										err = Channel.DelChannel()
 										if err != nil {
 											log.Error(err)
@@ -1193,8 +1186,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							"ChannelID":        v.ID,
 							"DiscordChannelID": v.ChannelID,
 						}).Error(err)
-						DiscordMsg := DecodeDiscordMessage(err.Error())
-						if DiscordMsg.isBadChannelSetting() {
+						if IsBadChannelSetting(err) {
 							err = v.DelChannel()
 							if err != nil {
 								log.Error(err)

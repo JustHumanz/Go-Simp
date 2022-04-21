@@ -742,20 +742,10 @@ func GetTwitchTkn() *helix.Client {
 	return TwitchClient
 }
 
-func DecodeDiscordMessage(msg string) ErrorDiscord {
-	var errmsg ErrorDiscord
-	msg2 := strings.Split(msg, ",")
-
-	err := json.Unmarshal([]byte(strings.Join(msg2[1:], "")), &errmsg)
-	if err != nil {
-		log.Error(err)
-	}
-
-	return errmsg
-}
-
-func (Data ErrorDiscord) isBadChannelSetting() bool {
-	if Data.Message == "Cannot send messages in a non-text channel" || Data.Message == "Unknown Channel" || Data.Message == "Missing Permissions" {
+func IsBadChannelSetting(msg error) bool {
+	var re = regexp.MustCompile(`(?m)(Missing Permissions|Missing Access|Unknown Channel|Cannot send messages in a non-text channel)`)
+	res := re.FindAllString(msg.Error(), -1)
+	if len(res) > 0 {
 		return true
 	}
 
