@@ -17,9 +17,6 @@ RUN go build -o twitter_fanart ../service/fanart/twitter/
 #frontend
 RUN go build -o fe ../service/frontend/
 
-#guild
-RUN go build -o guild ../service/guild/
-
 #live
 RUN go build -o livebili ../service/livestream/bilibili/live
 RUN go build -o spacebili ../service/livestream/bilibili/space
