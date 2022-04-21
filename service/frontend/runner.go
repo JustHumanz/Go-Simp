@@ -182,10 +182,24 @@ func main() {
 		}
 	})
 
+	guildID := func() []string {
+		ids := []string{}
+		for _, v := range Bot.State.Guilds {
+			ids = append(ids, v.ID)
+		}
+		return ids
+	}()
+
 	Bot.AddHandler(func(s *discordgo.Session, g *discordgo.GuildCreate) {
 		if g.Unavailable {
 			log.Error("joined unavailable guild", g.Guild.ID)
 			return
+		}
+
+		for _, v := range guildID {
+			if v == g.ID {
+				return
+			}
 		}
 
 		log.WithFields(log.Fields{
@@ -194,6 +208,26 @@ func main() {
 			"JoinDate":  g.JoinedAt.Format(time.RFC822),
 		}).Info("New invite")
 		engine.InitSlash(Bot, *GroupsPayload, g.Guild)
+
+	})
+
+	Bot.AddHandler(func(s *discordgo.Session, g *discordgo.GuildDelete) {
+		if g.Unavailable {
+			log.Error("joined unavailable guild", g.Guild.ID)
+			return
+		}
+
+		for k, v := range guildID {
+			if v == g.ID {
+				guildID[k] = ""
+			}
+		}
+
+		log.WithFields(log.Fields{
+			"GuildName": g.Name,
+			"OwnerID":   g.OwnerID,
+			"JoinDate":  g.JoinedAt.Format(time.RFC822),
+		}).Info("Bot got kicked")
 
 	})
 
