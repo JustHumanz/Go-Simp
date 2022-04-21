@@ -154,17 +154,7 @@ func main() {
 				log.Error(err)
 			}
 
-			//Bot.AddHandler(Fanart)
-			//Bot.AddHandler(Tags)
-			//Bot.AddHandler(EnableState)
-			//Bot.AddHandler(Status)
 			Bot.AddHandler(Help)
-			//Bot.AddHandler(BiliBiliMessage)
-			//Bot.AddHandler(BiliBiliSpace)
-			//Bot.AddHandler(YoutubeMessage)
-			//Bot.AddHandler(TwitchMessage)
-			//Bot.AddHandler(Lewd)
-			//Bot.AddHandler(StartRegister)
 			c.Stop()
 			c2 := cron.New()
 			c2.Start()
@@ -190,6 +180,26 @@ func main() {
 		if h, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
 			h(s, i)
 		}
+	})
+
+	Bot.AddHandler(func(s *discordgo.Session, g *discordgo.GuildCreate) {
+		if g.Unavailable {
+			log.Error("joined unavailable guild", g.Guild.ID)
+			return
+		}
+
+		Join, err := g.JoinedAt.Parse()
+		if err != nil {
+			log.Error(err)
+		}
+
+		log.WithFields(log.Fields{
+			"GuildName": g.Name,
+			"OwnerID":   g.OwnerID,
+			"JoinDate":  Join.Format(time.RFC822),
+		}).Info("New invite")
+		engine.InitSlash(Bot, *GroupsPayload, g.Guild)
+
 	})
 
 	runfunc.Run(Bot)

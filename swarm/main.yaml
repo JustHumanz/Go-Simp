@@ -44,14 +44,6 @@ services:
 #    networks:
 #      - go-simp-net
 
-  guild:
-    image: justhumanz/go-simp-guild:latest
-    depends_on:
-      - multi_tor
-      - pilot
-    networks:
-      - go-simp-net
-
   pilot:
     image: justhumanz/go-simp-pilot:latest
     depends_on:
