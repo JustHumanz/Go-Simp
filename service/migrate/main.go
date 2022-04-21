@@ -204,6 +204,8 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 			log.Error(err)
 		}
 
+		Avatar = Data.YtAvatar
+
 	} else {
 		Youtube = "✘"
 		URL = "https://space.bilibili.com/" + strconv.Itoa(Data.Member.BiliBili.BiliBiliID)
@@ -211,6 +213,8 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		if err != nil {
 			log.Error(err)
 		}
+
+		Avatar = Data.BiliAvatar
 	}
 
 	if Data.Member.Twitter.TwitterFanart != "" {
