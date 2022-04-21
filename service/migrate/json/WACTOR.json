@@ -180,7 +180,7 @@
 			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "Kurarisuner",
-			"Status": "Active"
+			"Status": "Inactive"
 		},
 		{
 			"Name": "MetalNeko",
@@ -266,6 +266,86 @@
 			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "Lunaris",
+			"Status": "Active"
+		},
+		{
+			"Name": "Saohime",
+			"EN_Name": "Saohime Yue",
+			"JP_Name": "サオヒメユエ",
+			"Twitter": {
+				"Twitter_Fanart": "#Yuelfanart",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "SaohimeYue"
+			},
+			"Youtube": {
+				"Yt_ID": "UCIm8pnnTNhCgGAtNxrQQv-g"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 1923344666,
+				"BiliRoom_ID": 24393990
+			},
+			"Twitch": null,
+			"Region": "JP",
+			"Fanbase": "Yuelfinos",
+			"Status": "Active"
+		},
+		{
+			"Name": "Ito",
+			"EN_Name": "Ito Shinonome",
+			"JP_Name": "シノノメイト",
+			"Twitter": {
+				"Twitter_Fanart": "#illusITO",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "ShinonomeIto"
+			},
+			"Youtube": {
+				"Yt_ID": "UCVtuciDzkjxCP_O7r-0QhXQ"
+			},
+			"BiliBili": {
+				"BiliBili_Fanart": "",
+				"BiliBili_ID": 1487440724,
+				"BiliRoom_ID": 24410959
+			},
+			"Twitch": null,
+			"Region": "JP",
+			"Fanbase": "naITOs",
+			"Status": "Active"
+		},
+		{
+			"Name": "Himea",
+			"EN_Name": "Himea D'Almaria",
+			"JP_Name": "ダルマリアヒメア",
+			"Twitter": {
+				"Twitter_Fanart": "#DalmariArt",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "himea_dalmaria"
+			},
+			"Youtube": {
+				"Yt_ID": "UCvm34tgJ0ZaKzTinWVyXpcA"
+			},
+			"BiliBili": null,
+			"Twitch": null,
+			"Region": "JP",
+			"Fanbase": "HorDAlmaria",
+			"Status": "Active"
+		},
+		{
+			"Name": "Mireille",
+			"EN_Name": "Mireille Kuuma",
+			"JP_Name": "クウマ ミレイ",
+			"Twitter": {
+				"Twitter_Fanart": "#GalleReille",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "KuumaMireille"
+			},
+			"Youtube": {
+				"Yt_ID": "UCUUjykb68Lf85CbWX6gAmog"
+			},
+			"BiliBili": null,
+			"Twitch": null,
+			"Region": "JP",
+			"Fanbase": "Kuupids",
 			"Status": "Active"
 		}
 	]
