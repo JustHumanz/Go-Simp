@@ -188,15 +188,10 @@ func main() {
 			return
 		}
 
-		Join, err := g.JoinedAt.Parse()
-		if err != nil {
-			log.Error(err)
-		}
-
 		log.WithFields(log.Fields{
 			"GuildName": g.Name,
 			"OwnerID":   g.OwnerID,
-			"JoinDate":  Join.Format(time.RFC822),
+			"JoinDate":  g.JoinedAt.Format(time.RFC822),
 		}).Info("New invite")
 		engine.InitSlash(Bot, *GroupsPayload, g.Guild)
 

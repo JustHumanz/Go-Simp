@@ -1139,7 +1139,7 @@ var (
 				}
 			}
 			if Already != nil {
-				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+				_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
 						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
 						SetDescription(i.Member.User.Mention() + " Already Added\n" + strings.Join(Already, " ")).
@@ -1148,7 +1148,7 @@ var (
 						SetColor(Color).MessageEmbed},
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Content: "Something went wrong",
 					})
 					return
@@ -1156,7 +1156,7 @@ var (
 			}
 
 			if Done != nil {
-				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+				_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
 						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
 						SetDescription(i.Member.User.Mention() + " notifications have been added to these members\n" + strings.Join(Done, " ")).
@@ -1165,7 +1165,7 @@ var (
 						SetColor(Color).MessageEmbed},
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Content: "Something went wrong",
 					})
 					return
@@ -1241,7 +1241,7 @@ var (
 				}
 			}
 			if Already != nil {
-				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+				_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
 						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
 						SetDescription(i.Member.User.Mention() + " You already removed this Group/Member from your list, or you never added them.\n" + strings.Join(Already, " ")).
@@ -1250,7 +1250,7 @@ var (
 						SetColor(Color).MessageEmbed},
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Content: "Something went wrong",
 					})
 					return
@@ -1258,7 +1258,7 @@ var (
 			}
 
 			if Done != nil {
-				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+				_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
 						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
 						SetDescription(i.Member.User.Mention() + " You removed these Members from your list.\n" + strings.Join(Done, " ")).
@@ -1267,7 +1267,7 @@ var (
 						SetColor(Color).MessageEmbed},
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Content: "Something went wrong",
 					})
 					return
@@ -1384,7 +1384,7 @@ var (
 				}
 			}
 			if Already != nil {
-				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+				_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
 						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
 						SetDescription(RoleState.Mention() + " Already Added\n" + strings.Join(Already, " ")).
@@ -1393,7 +1393,7 @@ var (
 						SetColor(Color).MessageEmbed},
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Content: "Something went wrong",
 					})
 					return
@@ -1401,7 +1401,7 @@ var (
 			}
 
 			if Done != nil {
-				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+				_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
 						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
 						SetDescription(RoleState.Mention() + " notifications have been added to these members\n" + strings.Join(Done, " ")).
@@ -1410,7 +1410,7 @@ var (
 						SetColor(Color).MessageEmbed},
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Content: "Something went wrong",
 					})
 					return
@@ -1505,7 +1505,7 @@ var (
 				}
 			}
 			if Already != nil {
-				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+				_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
 						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
 						SetDescription(RoleState.Mention() + " You already removed this Group/Member from your list, or you never added them.\n" + strings.Join(Already, " ")).
@@ -1514,7 +1514,7 @@ var (
 						SetColor(Color).MessageEmbed},
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Content: "Something went wrong",
 					})
 					return
@@ -1522,7 +1522,7 @@ var (
 			}
 
 			if Done != nil {
-				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+				_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
 						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
 						SetDescription(RoleState.Mention() + " You removed these Members from your list.\n" + strings.Join(Done, " ")).
@@ -1531,7 +1531,7 @@ var (
 						SetColor(Color).MessageEmbed},
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Content: "Something went wrong",
 					})
 					return
@@ -2051,11 +2051,11 @@ var (
 						}
 					}
 				} else {
-					_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Embeds: embed,
 					})
 					if err != nil {
-						s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+						s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 							Content: "Something went wrong",
 						})
 						return
@@ -2363,11 +2363,11 @@ var (
 						}
 						return
 					}
-					_, err = s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Content: "<@" + i.Member.User.ID + "> is disabled " + v.Group.GroupName + " from this channel",
 					})
 					if err != nil {
-						s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+						s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 							Content: "Something went wrong",
 						})
 						return
