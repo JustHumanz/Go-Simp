@@ -18,9 +18,12 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PilotServiceClient interface {
-	ReqData(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*VtubersData, error)
-	ModuleList(ctx context.Context, in *ModuleData, opts ...grpc.CallOption) (*Empty, error)
-	RunModuleJob(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*RunJob, error)
+	//Get config file from pilot
+	GetBotPayload(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*ServiceInit, error)
+	//Get and check approval from pilot (scaling scrapping only)
+	RequestRunJobsOfService(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*RunJob, error)
+	//Get agency payload for non scaling service only
+	GetAgencyPayload(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*AgencyPayload, error)
 	HeartBeat(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (PilotService_HeartBeatClient, error)
 	MetricReport(ctx context.Context, in *Metric, opts ...grpc.CallOption) (*Empty, error)
 	ReportError(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*Empty, error)
@@ -34,27 +37,27 @@ func NewPilotServiceClient(cc grpc.ClientConnInterface) PilotServiceClient {
 	return &pilotServiceClient{cc}
 }
 
-func (c *pilotServiceClient) ReqData(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*VtubersData, error) {
-	out := new(VtubersData)
-	err := c.cc.Invoke(ctx, "/pilot.PilotService/ReqData", in, out, opts...)
+func (c *pilotServiceClient) GetBotPayload(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*ServiceInit, error) {
+	out := new(ServiceInit)
+	err := c.cc.Invoke(ctx, "/pilot.PilotService/GetBotPayload", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *pilotServiceClient) ModuleList(ctx context.Context, in *ModuleData, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/pilot.PilotService/ModuleList", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *pilotServiceClient) RunModuleJob(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*RunJob, error) {
+func (c *pilotServiceClient) RequestRunJobsOfService(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*RunJob, error) {
 	out := new(RunJob)
-	err := c.cc.Invoke(ctx, "/pilot.PilotService/RunModuleJob", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pilot.PilotService/RequestRunJobsOfService", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pilotServiceClient) GetAgencyPayload(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*AgencyPayload, error) {
+	out := new(AgencyPayload)
+	err := c.cc.Invoke(ctx, "/pilot.PilotService/GetAgencyPayload", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -115,9 +118,12 @@ func (c *pilotServiceClient) ReportError(ctx context.Context, in *ServiceMessage
 // All implementations must embed UnimplementedPilotServiceServer
 // for forward compatibility
 type PilotServiceServer interface {
-	ReqData(context.Context, *ServiceMessage) (*VtubersData, error)
-	ModuleList(context.Context, *ModuleData) (*Empty, error)
-	RunModuleJob(context.Context, *ServiceMessage) (*RunJob, error)
+	//Get config file from pilot
+	GetBotPayload(context.Context, *ServiceMessage) (*ServiceInit, error)
+	//Get and check approval from pilot (scaling scrapping only)
+	RequestRunJobsOfService(context.Context, *ServiceMessage) (*RunJob, error)
+	//Get agency payload for non scaling service only
+	GetAgencyPayload(context.Context, *ServiceMessage) (*AgencyPayload, error)
 	HeartBeat(*ServiceMessage, PilotService_HeartBeatServer) error
 	MetricReport(context.Context, *Metric) (*Empty, error)
 	ReportError(context.Context, *ServiceMessage) (*Empty, error)
@@ -128,14 +134,14 @@ type PilotServiceServer interface {
 type UnimplementedPilotServiceServer struct {
 }
 
-func (UnimplementedPilotServiceServer) ReqData(context.Context, *ServiceMessage) (*VtubersData, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ReqData not implemented")
+func (UnimplementedPilotServiceServer) GetBotPayload(context.Context, *ServiceMessage) (*ServiceInit, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBotPayload not implemented")
 }
-func (UnimplementedPilotServiceServer) ModuleList(context.Context, *ModuleData) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ModuleList not implemented")
+func (UnimplementedPilotServiceServer) RequestRunJobsOfService(context.Context, *ServiceMessage) (*RunJob, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RequestRunJobsOfService not implemented")
 }
-func (UnimplementedPilotServiceServer) RunModuleJob(context.Context, *ServiceMessage) (*RunJob, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RunModuleJob not implemented")
+func (UnimplementedPilotServiceServer) GetAgencyPayload(context.Context, *ServiceMessage) (*AgencyPayload, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAgencyPayload not implemented")
 }
 func (UnimplementedPilotServiceServer) HeartBeat(*ServiceMessage, PilotService_HeartBeatServer) error {
 	return status.Errorf(codes.Unimplemented, "method HeartBeat not implemented")
@@ -159,56 +165,56 @@ func RegisterPilotServiceServer(s grpc.ServiceRegistrar, srv PilotServiceServer)
 	s.RegisterService(&PilotService_ServiceDesc, srv)
 }
 
-func _PilotService_ReqData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _PilotService_GetBotPayload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ServiceMessage)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PilotServiceServer).ReqData(ctx, in)
+		return srv.(PilotServiceServer).GetBotPayload(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pilot.PilotService/ReqData",
+		FullMethod: "/pilot.PilotService/GetBotPayload",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PilotServiceServer).ReqData(ctx, req.(*ServiceMessage))
+		return srv.(PilotServiceServer).GetBotPayload(ctx, req.(*ServiceMessage))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PilotService_ModuleList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ModuleData)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PilotServiceServer).ModuleList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pilot.PilotService/ModuleList",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PilotServiceServer).ModuleList(ctx, req.(*ModuleData))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PilotService_RunModuleJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _PilotService_RequestRunJobsOfService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ServiceMessage)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PilotServiceServer).RunModuleJob(ctx, in)
+		return srv.(PilotServiceServer).RequestRunJobsOfService(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pilot.PilotService/RunModuleJob",
+		FullMethod: "/pilot.PilotService/RequestRunJobsOfService",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PilotServiceServer).RunModuleJob(ctx, req.(*ServiceMessage))
+		return srv.(PilotServiceServer).RequestRunJobsOfService(ctx, req.(*ServiceMessage))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PilotService_GetAgencyPayload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ServiceMessage)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PilotServiceServer).GetAgencyPayload(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pilot.PilotService/GetAgencyPayload",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PilotServiceServer).GetAgencyPayload(ctx, req.(*ServiceMessage))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -278,16 +284,16 @@ var PilotService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*PilotServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ReqData",
-			Handler:    _PilotService_ReqData_Handler,
+			MethodName: "GetBotPayload",
+			Handler:    _PilotService_GetBotPayload_Handler,
 		},
 		{
-			MethodName: "ModuleList",
-			Handler:    _PilotService_ModuleList_Handler,
+			MethodName: "RequestRunJobsOfService",
+			Handler:    _PilotService_RequestRunJobsOfService_Handler,
 		},
 		{
-			MethodName: "RunModuleJob",
-			Handler:    _PilotService_RunModuleJob_Handler,
+			MethodName: "GetAgencyPayload",
+			Handler:    _PilotService_GetAgencyPayload_Handler,
 		},
 		{
 			MethodName: "MetricReport",

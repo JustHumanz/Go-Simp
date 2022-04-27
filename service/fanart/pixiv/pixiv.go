@@ -24,6 +24,7 @@ import (
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
+	"github.com/google/uuid"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 )
@@ -31,16 +32,16 @@ import (
 //Public variable
 var (
 	Bot          *discordgo.Session
-	GroupPayload *[]database.Group
 	lewd         = flag.Bool("LewdFanart", false, "Enable lewd fanart module")
 	torTransport = flag.Bool("Tor", false, "Enable multiTor for bot transport")
 	gRCPconn     pilot.PilotServiceClient
+	ServiceUUID  = uuid.New().String()
 )
 
 const (
 	BaseURL     = "https://www.pixiv.net/en/artworks/"
 	Limit       = 10
-	ModuleState = config.PixivModule
+	ServiceName = config.PixivService
 )
 
 func init() {
@@ -55,29 +56,22 @@ func main() {
 		configfile config.ConfigFile
 	)
 
-	GetPayload := func() {
-		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
-			Message: "Send me nude",
-			Service: ModuleState,
-		})
-		if err != nil {
-			if configfile.Discord != "" {
-				pilot.ReportDeadService(err.Error(), ModuleState)
-			}
-			log.Error("Error when request payload: %s", err)
+	res, err := gRCPconn.GetBotPayload(context.Background(), &pilot.ServiceMessage{
+		Message:     "Init " + ServiceName + " service",
+		ServiceUUID: ServiceUUID,
+		Service:     ServiceName,
+	})
+	if err != nil {
+		if configfile.Discord != "" {
+			pilot.ReportDeadService(err.Error(), ServiceName)
 		}
-		err = json.Unmarshal(res.ConfigFile, &configfile)
-		if err != nil {
-			log.Error(err)
-		}
-
-		err = json.Unmarshal(res.VtuberPayload, &GroupPayload)
-		if err != nil {
-			log.Error(err)
-		}
+		log.Error("Error when request payload: %s", err)
+	}
+	err = json.Unmarshal(res.ConfigFile, &configfile)
+	if err != nil {
+		log.Fatalln(err)
 	}
 
-	GetPayload()
 	configfile.InitConf()
 	Bot = engine.StartBot(*torTransport)
 
@@ -86,17 +80,15 @@ func main() {
 	c := cron.New()
 	c.Start()
 
-	c.AddFunc(config.CheckPayload, GetPayload)
-
 	if *lewd {
-		log.Info("Enable lewd " + ModuleState)
+		log.Info("Enable lewd " + ServiceName)
 
 	} else {
-		log.Info("Enable " + ModuleState)
+		log.Info("Enable " + ServiceName)
 
 	}
 
-	go pilot.RunHeartBeat(gRCPconn, ModuleState)
+	go pilot.RunHeartBeat(gRCPconn, ServiceName, ServiceUUID)
 	go ReqRunningJob(gRCPconn)
 	runfunc.Run(Bot)
 }
@@ -127,7 +119,7 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 
 	if response.StatusCode != http.StatusOK {
 		if l && response.StatusCode == http.StatusUnauthorized {
-			pilot.ReportDeadService("Pixiv Session outdate", ModuleState)
+			pilot.ReportDeadService("Pixiv Session outdate", ServiceUUID)
 		}
 		log.WithFields(log.Fields{
 			"Status":  response.StatusCode,
@@ -405,6 +397,7 @@ func DownloadImg(u string) (string, error) {
 
 type checkPxJob struct {
 	wg      sync.WaitGroup
+	Agency  []database.Group
 	Reverse bool
 }
 
@@ -413,14 +406,15 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 
 	for {
 		log.WithFields(log.Fields{
-			"Service": ModuleState,
-			"Running": true,
+			"Service": ServiceName,
+			"Running": false,
+			"UUID":    ServiceUUID,
 		}).Info("request for running job")
 
-		res, err := client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
-			Service: ModuleState,
-			Message: "Request",
-			Alive:   true,
+		res, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
+			Service:     ServiceName,
+			Message:     "Request",
+			ServiceUUID: ServiceUUID,
 		})
 		if err != nil {
 			log.Error(err)
@@ -428,23 +422,25 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 
 		if res.Run {
 			log.WithFields(log.Fields{
-				"Service": ModuleState,
+				"Service": ServiceName,
 				"Running": true,
+				"UUID":    ServiceUUID,
 			}).Info(res.Message)
 
+			Pix.Agency = engine.UnMarshalPayload(res.VtuberPayload)
 			Pix.Run()
-			_, _ = client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
-				Service: ModuleState,
-				Message: "Done",
-				Alive:   false,
+
+			_, _ = client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
+				Service:     ServiceName,
+				Message:     "Done",
+				ServiceUUID: ServiceUUID,
 			})
 			log.WithFields(log.Fields{
-				"Service": ModuleState,
+				"Service": ServiceName,
 				"Running": false,
+				"UUID":    ServiceUUID,
 			}).Info("reporting job was done")
-
 		}
-
 		time.Sleep(1 * time.Minute)
 	}
 }
@@ -476,7 +472,7 @@ func (k *checkPxJob) Run() {
 				log.Error(err)
 				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 					Message: err.Error(),
-					Service: ModuleState,
+					Service: ServiceName,
 				})
 			}
 		} else if Member.EnName != "" && Member.Region != "JP" {
@@ -491,7 +487,7 @@ func (k *checkPxJob) Run() {
 				log.Error(err)
 				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 					Message: err.Error(),
-					Service: ModuleState,
+					Service: ServiceName,
 				})
 			}
 		} else {
@@ -506,15 +502,15 @@ func (k *checkPxJob) Run() {
 				log.Error(err)
 				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 					Message: err.Error(),
-					Service: ModuleState,
+					Service: ServiceName,
 				})
 			}
 		}
 	}
 
 	if k.Reverse {
-		for j := len(*GroupPayload) - 1; j >= 0; j-- {
-			Group := *GroupPayload
+		for j := len(k.Agency) - 1; j >= 0; j-- {
+			Group := k.Agency
 			for _, Member := range Group[j].Members {
 				k.wg.Add(1)
 
@@ -530,7 +526,7 @@ func (k *checkPxJob) Run() {
 		}
 		k.Reverse = false
 	} else {
-		for _, Group := range *GroupPayload {
+		for _, Group := range k.Agency {
 			for i, Member := range Group.Members {
 				k.wg.Add(1)
 

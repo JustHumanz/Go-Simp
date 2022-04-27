@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/google/uuid"
 	"github.com/nicklaw5/helix"
 	"github.com/robfig/cron/v3"
 
@@ -25,19 +26,21 @@ import (
 var (
 	Bot          *discordgo.Session
 	configfile   config.ConfigFile
-	Payload      *[]database.Group
 	gRCPconn     pilot.PilotServiceClient
 	TwitchClient *helix.Client
 	Youtube      = flag.Bool("Youtube", false, "Enable youtube module")
 	BiliBili     = flag.Bool("BiliBili", false, "Enable bilibili module")
 	Twitter      = flag.Bool("Twitter", false, "Enable twitter module")
 	Twitch       = flag.Bool("Twitch", false, "Enable Twitch module")
+	ServiceUUID  = uuid.New().String()
+	Agency       []database.Group
 )
 
 const (
-	ModuleState = config.SubscriberModule
+	ServiceName = config.SubscriberService
 )
 
+//Init service
 func init() {
 	flag.Parse()
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
@@ -46,29 +49,23 @@ func init() {
 }
 
 func main() {
-	GetPayload := func() {
-		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
-			Message: "Send me nude",
-			Service: ModuleState,
-		})
-		if err != nil {
-			if configfile.Discord != "" {
-				pilot.ReportDeadService(err.Error(), ModuleState)
-			}
-			log.Error("Error when request payload: %s", err)
+	//Get config file from pilot
+	res, err := gRCPconn.GetBotPayload(context.Background(), &pilot.ServiceMessage{
+		Message:     "Init " + ServiceName + " service",
+		Service:     ServiceName,
+		ServiceUUID: ServiceUUID,
+	})
+	if err != nil {
+		if configfile.Discord != "" {
+			pilot.ReportDeadService(err.Error(), ServiceName)
 		}
-		err = json.Unmarshal(res.ConfigFile, &configfile)
-		if err != nil {
-			log.Error(err)
-		}
-
-		err = json.Unmarshal(res.VtuberPayload, &Payload)
-		if err != nil {
-			log.Error(err)
-		}
+		log.Error("Error when request payload: %s", err)
+	}
+	err = json.Unmarshal(res.ConfigFile, &configfile)
+	if err != nil {
+		log.Error(err)
 	}
 
-	GetPayload()
 	configfile.InitConf()
 	Bot = engine.StartBot(false)
 	TwitchClient = engine.GetTwitchTkn()
@@ -85,7 +82,6 @@ func main() {
 	c := cron.New()
 	c.Start()
 
-	c.AddFunc(config.CheckPayload, GetPayload)
 	if *Youtube {
 		c.AddFunc(config.YoutubeSubscriber, CheckYoutube)
 		log.Info("Add youtube subscriber to cronjob")
@@ -106,29 +102,24 @@ func main() {
 		log.Info("Add twitch followers to cronjob")
 	}
 
-	_, err = gRCPconn.ModuleList(context.Background(), &pilot.ModuleData{
-		Module:  "YoutubeSubscriber",
-		Enabled: *Youtube,
-	})
-	if err != nil {
-		log.Error(err)
-	}
-	_, err = gRCPconn.ModuleList(context.Background(), &pilot.ModuleData{
-		Module:  "BiliBiliFollowers",
-		Enabled: *BiliBili,
-	})
-	if err != nil {
-		log.Error(err)
-	}
-	_, err = gRCPconn.ModuleList(context.Background(), &pilot.ModuleData{
-		Module:  "TwitterFollowers",
-		Enabled: *Twitter,
-	})
-	if err != nil {
-		log.Error(err)
-	}
+	go pilot.RunHeartBeat(gRCPconn, ServiceName, ServiceUUID)
+	go func() {
+		tmp, err := gRCPconn.GetAgencyPayload(context.Background(), &pilot.ServiceMessage{
+			Service:     ServiceName,
+			Message:     "Refresh payload",
+			ServiceUUID: ServiceUUID,
+		})
+		if err != nil {
+			log.Error(err)
+		}
 
-	go pilot.RunHeartBeat(gRCPconn, "Subscriber")
+		err = json.Unmarshal(tmp.AgencyVtubers, &Agency)
+		if err != nil {
+			log.Error(err)
+		}
+
+		time.Sleep(1 * time.Hour)
+	}()
 	runfunc.Run(Bot)
 }
 

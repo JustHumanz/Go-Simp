@@ -751,3 +751,12 @@ func IsBadChannelSetting(msg error) bool {
 
 	return false
 }
+
+func UnMarshalPayload(Payload []byte) []database.Group {
+	var agency []database.Group
+	err := json.Unmarshal(Payload, &agency)
+	if err != nil {
+		log.Error(err)
+	}
+	return agency
+}

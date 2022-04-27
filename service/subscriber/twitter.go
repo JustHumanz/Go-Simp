@@ -15,7 +15,7 @@ import (
 )
 
 func CheckTwitter() {
-	for _, Group := range *Payload {
+	for _, Group := range Agency {
 		for _, Member := range Group.Members {
 			if Member.TwitterName != "" && Member.Active() {
 				Twitter, err := engine.GetTwitterFollow(Member.TwitterName)
@@ -25,8 +25,9 @@ func CheckTwitter() {
 						"Vtuber": Member.Name,
 					}).Error(err)
 					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message: err.Error(),
-						Service: ModuleState,
+						Message:     err.Error(),
+						Service:     ServiceName,
+						ServiceUUID: ServiceUUID,
 					})
 					continue
 				}
@@ -38,8 +39,9 @@ func CheckTwitter() {
 						"Vtuber": Member.Name,
 					}).Error(err)
 					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message: err.Error(),
-						Service: ModuleState,
+						Message:     err.Error(),
+						Service:     ServiceName,
+						ServiceUUID: ServiceUUID,
 					})
 					continue
 				}
@@ -135,8 +137,9 @@ func CheckTwitter() {
 									}).Error(err)
 
 									gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-										Message: err.Error(),
-										Service: ModuleState,
+										Message:     err.Error(),
+										Service:     ServiceName,
+										ServiceUUID: ServiceUUID,
 									})
 								}
 								SendNotif(
@@ -158,8 +161,9 @@ func CheckTwitter() {
 									}).Error(err)
 
 									gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-										Message: err.Error(),
-										Service: ModuleState,
+										Message:     err.Error(),
+										Service:     ServiceName,
+										ServiceUUID: ServiceUUID,
 									})
 								}
 								SendNotif(
@@ -181,8 +185,9 @@ func CheckTwitter() {
 									}).Error(err)
 
 									gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-										Message: err.Error(),
-										Service: ModuleState,
+										Message:     err.Error(),
+										Service:     ServiceName,
+										ServiceUUID: ServiceUUID,
 									})
 								}
 								SendNotif(
@@ -204,8 +209,9 @@ func CheckTwitter() {
 									}).Error(err)
 
 									gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-										Message: err.Error(),
-										Service: ModuleState,
+										Message:     err.Error(),
+										Service:     ServiceName,
+										ServiceUUID: ServiceUUID,
 									})
 								}
 								SendNotif(

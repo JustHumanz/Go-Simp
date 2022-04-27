@@ -11,7 +11,7 @@ import (
 )
 
 func CheckTwitch() {
-	for _, Group := range *Payload {
+	for _, Group := range Agency {
 		for _, Member := range Group.Members {
 			if Member.TwitchName != "" && Member.Active() {
 				res, err := TwitchClient.GetUsers(&helix.UsersParams{Logins: []string{Member.TwitchName}})
@@ -21,8 +21,9 @@ func CheckTwitch() {
 						"Vtuber": Member.Name,
 					}).Error(err)
 					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message: err.Error(),
-						Service: ModuleState,
+						Message:     err.Error(),
+						Service:     ServiceName,
+						ServiceUUID: ServiceUUID,
 					})
 				}
 				TotalFollowers := 0
@@ -35,8 +36,9 @@ func CheckTwitch() {
 							"Vtuber": Member.Name,
 						}).Error(err)
 						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-							Message: err.Error(),
-							Service: ModuleState,
+							Message:     err.Error(),
+							Service:     ServiceName,
+							ServiceUUID: ServiceUUID,
 						})
 					}
 					TotalFollowers = tmp.Data.Total
@@ -51,8 +53,9 @@ func CheckTwitch() {
 						"Vtuber": Member.Name,
 					}).Error(err)
 					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message: err.Error(),
-						Service: ModuleState,
+						Message:     err.Error(),
+						Service:     ServiceName,
+						ServiceUUID: ServiceUUID,
 					})
 					break
 				}

@@ -68,6 +68,7 @@ func GetGroups() ([]Group, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		list.Members, err = GetMembers(list.ID)
 		if err != nil {
 			return nil, err
@@ -76,6 +77,7 @@ func GetGroups() ([]Group, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		Data = append(Data, list)
 
 	}

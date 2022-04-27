@@ -16,7 +16,7 @@ func CacheChecker() {
 		log.Error(err)
 	}
 
-	for _, Agency := range *GroupPayload {
+	for _, Agency := range agency {
 		for _, Member := range Agency.Members {
 			liveStreamDb, err := Member.GetYtLiveStream(config.UpcomingStatus)
 			if err != nil {

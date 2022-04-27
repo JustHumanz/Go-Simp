@@ -18,7 +18,7 @@ import (
 func CheckYoutube() {
 	var YTstate Subs
 	Token := engine.GetYtToken()
-	for _, Group := range *Payload {
+	for _, Group := range Agency {
 		for _, Member := range Group.Members {
 			if !Member.IsYtNill() && Member.Active() {
 				body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+Member.YoutubeID+"&key="+*Token, nil)
@@ -32,8 +32,9 @@ func CheckYoutube() {
 						}).Error(err)
 
 						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-							Message: err.Error(),
-							Service: ModuleState,
+							Message:     err.Error(),
+							Service:     ServiceName,
+							ServiceUUID: ServiceUUID,
 						})
 					}
 				}
@@ -55,8 +56,9 @@ func CheckYoutube() {
 								"Vtuber": Member.Name,
 							}).Error(err)
 							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-								Message: err.Error(),
-								Service: ModuleState,
+								Message:     err.Error(),
+								Service:     ServiceName,
+								ServiceUUID: ServiceUUID,
 							})
 						}
 
@@ -191,8 +193,9 @@ func CheckYoutube() {
 												"Vtuber": Member.Name,
 											}).Error(err)
 											gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-												Message: err.Error(),
-												Service: ModuleState,
+												Message:     err.Error(),
+												Service:     ServiceName,
+												ServiceUUID: ServiceUUID,
 											})
 										}
 										SendNotif(
@@ -212,8 +215,9 @@ func CheckYoutube() {
 												"Vtuber": Member.Name,
 											}).Error(err)
 											gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-												Message: err.Error(),
-												Service: ModuleState,
+												Message:     err.Error(),
+												Service:     ServiceName,
+												ServiceUUID: ServiceUUID,
 											})
 										}
 										SendNotif(
@@ -233,8 +237,9 @@ func CheckYoutube() {
 												"Vtuber": Member.Name,
 											}).Error(err)
 											gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-												Message: err.Error(),
-												Service: ModuleState,
+												Message:     err.Error(),
+												Service:     ServiceName,
+												ServiceUUID: ServiceUUID,
 											})
 										}
 										SendNotif(
@@ -254,8 +259,9 @@ func CheckYoutube() {
 												"Vtuber": Member.Name,
 											}).Error(err)
 											gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-												Message: err.Error(),
-												Service: ModuleState,
+												Message:     err.Error(),
+												Service:     ServiceName,
+												ServiceUUID: ServiceUUID,
 											})
 										}
 										SendNotif(
