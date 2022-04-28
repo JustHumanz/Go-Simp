@@ -22,10 +22,9 @@ import (
 )
 
 var (
-	Bot          *discordgo.Session
-	GroupPayload *[]database.Group
-	gRCPconn     = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
-	ServiceUUID  = uuid.New().String()
+	Bot         *discordgo.Session
+	gRCPconn    = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
+	ServiceUUID = uuid.New().String()
 )
 
 const (
@@ -222,15 +221,15 @@ func (i *checkBlSpaceJob) Run() {
 	}
 
 	if i.Reverse {
-		for j := len(*GroupPayload) - 1; j >= 0; j-- {
+		for j := len(i.agency) - 1; j >= 0; j-- {
 			i.wg.Add(1)
-			Grp := *GroupPayload
+			Grp := i.agency
 			go Cek(Grp[j], &i.wg)
 		}
 		i.Reverse = false
 
 	} else {
-		for _, G := range *GroupPayload {
+		for _, G := range i.agency {
 			i.wg.Add(1)
 			go Cek(G, &i.wg)
 		}
