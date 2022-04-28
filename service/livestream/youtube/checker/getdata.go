@@ -116,6 +116,8 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 								NewYoutubeData.UpdateSchdule(NewYoutubeData.Published)
 							}
 
+							NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
+
 							oneDay := time.Now()
 							if oneDay.Sub(NewYoutubeData.Schedul).Hours() > 24 {
 								log.WithFields(log.Fields{
@@ -124,7 +126,6 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 								return
 							}
 
-							NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
 							engine.SendLiveNotif(NewYoutubeData, Bot)
 
 						} else {
@@ -495,6 +496,8 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 							NewYoutubeData.UpdateSchdule(NewYoutubeData.Published)
 						}
 
+						NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
+
 						oneDay := time.Now()
 						if oneDay.Sub(NewYoutubeData.Schedul).Hours() > 24 {
 							log.WithFields(log.Fields{
@@ -503,7 +506,6 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 							return
 						}
 
-						NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
 						engine.SendLiveNotif(NewYoutubeData, Bot)
 
 					} else {
