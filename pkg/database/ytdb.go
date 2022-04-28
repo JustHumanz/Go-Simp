@@ -423,7 +423,7 @@ func (Member Member) CheckYoutubeVideo(VideoID string) (*LiveStream, error) {
 			return nil, err
 		}
 	}
-	if Data.ID == 0 {
+	if Data.VideoID == "" {
 		return nil, errors.New("VideoID not found in database")
 	} else {
 		Data.AddMember(Member)
@@ -434,7 +434,7 @@ func (Member Member) CheckYoutubeVideo(VideoID string) (*LiveStream, error) {
 //Check new video or not
 func (Group GroupYtChannel) CheckYoutubeVideo(VideoID string) (*LiveStream, error) {
 	var Data LiveStream
-	rows, err := DB.Query(`SELECT * FROM Vtuber.GroupVideos Where VideoID=? AND VtuberGroup_id=?`, VideoID, Group.GroupID)
+	rows, err := DB.Query(`SELECT * FROM GroupVideos Where VideoID=? AND VtuberGroup_id=?`, VideoID, Group.GroupID)
 	if err != nil {
 		return nil, err
 	}
@@ -446,7 +446,8 @@ func (Group GroupYtChannel) CheckYoutubeVideo(VideoID string) (*LiveStream, erro
 			return nil, err
 		}
 	}
-	if Data.ID == 0 {
+
+	if Data.VideoID == "" {
 		return nil, errors.New("VideoID not found in database")
 	} else {
 		return &Data, nil
