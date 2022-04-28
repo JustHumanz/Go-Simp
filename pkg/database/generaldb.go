@@ -25,31 +25,34 @@ var (
 
 //Start Database session
 func Start(configfile config.ConfigFile) {
-	DB = configfile.CheckSQL()
-	RedisHost := configfile.Cached.Host + ":" + configfile.Cached.Port
-	UserTagCache = redis.NewClient(&redis.Options{
-		Addr:     RedisHost,
-		Password: "",
-		DB:       0,
-	})
+	if DB == nil {
+		DB = configfile.CheckSQL()
+		RedisHost := configfile.Cached.Host + ":" + configfile.Cached.Port
+		UserTagCache = redis.NewClient(&redis.Options{
+			Addr:     RedisHost,
+			Password: "",
+			DB:       0,
+		})
 
-	LiveCache = redis.NewClient(&redis.Options{
-		Addr:     RedisHost,
-		Password: "",
-		DB:       1,
-	})
+		LiveCache = redis.NewClient(&redis.Options{
+			Addr:     RedisHost,
+			Password: "",
+			DB:       1,
+		})
 
-	GeneralCache = redis.NewClient(&redis.Options{
-		Addr:     RedisHost,
-		Password: "",
-		DB:       2,
-	})
+		GeneralCache = redis.NewClient(&redis.Options{
+			Addr:     RedisHost,
+			Password: "",
+			DB:       2,
+		})
 
-	UpcomingCache = redis.NewClient(&redis.Options{
-		Addr:     RedisHost,
-		Password: "",
-		DB:       3,
-	})
+		UpcomingCache = redis.NewClient(&redis.Options{
+			Addr:     RedisHost,
+			Password: "",
+			DB:       3,
+		})
+
+	}
 	log.Info("Database module ready")
 }
 
@@ -101,7 +104,7 @@ func GetGroupsYtChannel(i int64) ([]GroupYtChannel, error) {
 		if err != nil {
 			return nil, err
 		}
-		list.ID = i
+		list.GroupID = i
 		Data = append(Data, list)
 	}
 	return Data, nil

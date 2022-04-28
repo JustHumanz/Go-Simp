@@ -16,7 +16,7 @@ type Group struct {
 }
 
 type GroupYtChannel struct {
-	ID        int64
+	GroupID   int64
 	YtChannel string
 	Region    string
 }
@@ -411,4 +411,9 @@ func (Data *DiscordChannel) IsLewd() bool {
 		return true
 	}
 	return false
+}
+
+//YtIsEmpty?
+func (Data LiveStream) YtIsEmpty() bool {
+	return Data.VideoID == ""
 }

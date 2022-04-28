@@ -3,15 +3,14 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
-	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/google/uuid"
@@ -23,9 +22,9 @@ import (
 )
 
 var (
-	MembersData   []map[string]interface{}
-	GroupsData    []map[string]interface{}
-	VtuberMembers []database.Member
+	VtuberMembers []MembersPayload
+	VtuberAgency  []GroupPayload
+	Payload       []*database.Group
 	ServiceUUID   = uuid.New().String()
 )
 
@@ -38,25 +37,25 @@ func init() {
 		configfile config.ConfigFile
 	)
 
+	res, err := gRCPconn.GetBotPayload(context.Background(), &pilot.ServiceMessage{
+		Message:     "Init " + config.ResetApiService + " service",
+		Service:     config.ResetApiService,
+		ServiceUUID: ServiceUUID,
+	})
+	if err != nil {
+		log.Fatalf("Error when request payload: %s", err)
+	}
+
+	err = json.Unmarshal(res.ConfigFile, &configfile)
+	if err != nil {
+		log.Panic(err)
+	}
+
 	RequestPayload := func() {
 		var (
-			MembersDataTMP   []map[string]interface{}
-			GroupsDataTMP    []map[string]interface{}
-			VtuberMembersTMP []database.Member
+			VtuberMembersTMP []MembersPayload
+			VtuberAgencyTMP  []GroupPayload
 		)
-		res, err := gRCPconn.GetBotPayload(context.Background(), &pilot.ServiceMessage{
-			Message:     "Init " + config.ResetApiService + " service",
-			Service:     config.ResetApiService,
-			ServiceUUID: ServiceUUID,
-		})
-		if err != nil {
-			log.Fatalf("Error when request payload: %s", err)
-		}
-		err = json.Unmarshal(res.ConfigFile, &configfile)
-		if err != nil {
-			log.Panic(err)
-		}
-
 		res2, err := gRCPconn.GetAgencyPayload(context.Background(), &pilot.ServiceMessage{
 			Service:     config.ResetApiService,
 			Message:     "Request",
@@ -75,106 +74,187 @@ func init() {
 		configfile.InitConf()
 		database.Start(configfile)
 
-		for _, Group := range Payload {
-			for _, Member := range Group.Members {
-				VtuberMembersTMP = append(VtuberMembersTMP, Member)
+		for _, Agency := range Payload {
+			VtuberAgencyTMP = append(VtuberAgencyTMP, GroupPayload{
+				ID:        Agency.ID,
+				GroupName: Agency.GroupName,
+				GroupIcon: Agency.IconURL,
+				Youtube: func() interface{} {
+					if Agency.YoutubeChannels != nil {
+						return Agency.YoutubeChannels
+					} else {
+						return nil
+					}
+				}(),
+			})
+			for _, Member := range Agency.Members {
 				Subs, err := Member.GetSubsCount()
 				if err != nil {
 					log.Error(err)
 				}
 
-				MemberData := FixMemberMap(Member)
-				MemberData["GroupID"] = Group.ID
-				MemberData["GroupName"] = Group.GroupName
-
-				if Member.YoutubeID != "" {
-					MemberData["Youtube"] = map[string]interface{}{
-						"ID":          Member.YoutubeID,
-						"Avatar":      Member.YoutubeAvatar,
-						"Subscriber":  Subs.YtSubs,
-						"ViwersCount": Subs.YtViews,
-						"TotalVideos": Subs.YtVideos,
-					}
-				} else {
-					MemberData["Youtube"] = nil
+				isYtLive, err := Member.GetYtLiveStream(config.LiveStatus)
+				if err != nil {
+					log.Error(err)
 				}
 
-				if Member.BiliBiliID != 0 {
-					var fanart interface{}
-					if Member.BiliBiliHashtag != "" {
-						fanart = Member.BiliBiliHashtag
-					} else {
-						fanart = nil
-					}
-					MemberData["BiliBili"] = map[string]interface{}{
-						"ID":          Member.BiliBiliID,
-						"RoomID":      Member.BiliBiliRoomID,
-						"Avatar":      Member.BiliBiliAvatar,
-						"Fanart":      fanart,
-						"Followers":   Subs.BiliFollow,
-						"TotalVideos": Subs.BiliVideos,
-						"ViwersCount": Subs.BiliViews,
-					}
-				} else {
-					MemberData["BiliBili"] = nil
+				isBlLive, err := Member.GetBlLiveStream(config.LiveStatus)
+				if err != nil {
+					log.Error(err)
 				}
 
-				if Member.TwitterName != "" {
-					var (
-						Lewd   interface{}
-						Fanart interface{}
-					)
-
-					if Member.TwitterLewd != "" {
-						Lewd = Member.TwitterLewd
-					} else {
-						Lewd = nil
-					}
-
-					if Member.TwitterHashtag != "" {
-						Fanart = Member.TwitterHashtag
-					} else {
-						Fanart = nil
-					}
-
-					MemberData["Twitter"] = map[string]interface{}{
-						"UserName":  Member.TwitterName,
-						"Fanart":    Fanart,
-						"Lewd":      Lewd,
-						"Followers": Subs.TwFollow,
-					}
-				} else {
-					MemberData["Twitter"] = nil
+				isTwitchLive, err := Member.GetTwitchLiveStream(config.LiveStatus)
+				if err != nil {
+					log.Error(err)
 				}
 
-				if Member.TwitchName != "" {
-					MemberData["Twitch"] = map[string]interface{}{
-						"UserName":    Member.TwitchName,
-						"Avatar":      Member.TwitchAvatar,
-						"Followers":   Subs.TwitchFollow,
-						"ViwersCount": Subs.TwitchViews,
-					}
-				} else {
-					MemberData["Twitch"] = nil
-				}
-				MembersDataTMP = append(MembersDataTMP, MemberData)
+				log.WithFields(log.Fields{
+					"Group":  Agency.GroupName,
+					"Vtuber": Member.EnName,
+					"isYtLive": func() bool {
+						if isYtLive != nil {
+							return true
+						} else {
+							return false
+						}
+					}(),
+					"isBiliLive":   isBlLive.ID,
+					"isTwitchLive": isTwitchLive.ID,
+				}).Info("Processing data")
+
+				VtuberMembersTMP = append(VtuberMembersTMP, MembersPayload{
+					ID:       Member.ID,
+					NickName: Member.Name,
+					EnName:   Member.EnName,
+					JpName:   Member.JpName,
+					Region:   Member.Region,
+					Status:   Member.Status,
+					Fanbase:  Member.Fanbase,
+					//Group: database.Group{
+					//	ID:              Agency.ID,
+					//	IconURL:         Agency.IconURL,
+					//	GroupName:       Agency.GroupName,
+					//	YoutubeChannels: Agency.YoutubeChannels,
+					//},
+					Group: map[string]interface{}{
+						"ID":        Agency.ID,
+						"IconURL":   Agency.IconURL,
+						"GroupName": Agency.GroupName,
+						"YoutubeChannels": func() []map[string]interface{} {
+							if Agency.YoutubeChannels != nil {
+								tmp := []map[string]interface{}{}
+								for _, v := range Agency.YoutubeChannels {
+									tmp = append(tmp, map[string]interface{}{
+										"YtChannel": v.YtChannel,
+										"Region":    v.Region,
+									})
+								}
+								return tmp
+							}
+							return nil
+						}(),
+					},
+					BiliBili: func() interface{} {
+						if Member.BiliBiliID != 0 {
+							return map[string]interface{}{
+								"Avatar":      Member.BiliBiliAvatar,
+								"Banner":      Member.BiliBiliBanner,
+								"Fanart":      Member.BiliBiliHashtag,
+								"SpaceID":     Member.BiliBiliID,
+								"LiveID":      Member.BiliBiliRoomID,
+								"TotalVideos": Subs.BiliVideos,
+								"ViwersCount": Subs.BiliViews,
+								"Followers":   Subs.BiliFollow,
+							}
+						} else {
+							return nil
+						}
+					}(),
+					Youtube: func() interface{} {
+						if Member.YoutubeID != "" {
+							return map[string]interface{}{
+								"Avatar":      Member.YoutubeAvatar,
+								"Banner":      Member.YoutubeBanner,
+								"YoutubeID":   Member.YoutubeID,
+								"Subscriber":  Subs.YtSubs,
+								"TotalVideos": Subs.YtVideos,
+								"ViwersCount": Subs.YtViews,
+							}
+						} else {
+							return nil
+						}
+					}(),
+					Twitter: func() interface{} {
+						if Member.TwitterName != "" {
+							return map[string]interface{}{
+								"Avatar":     Member.TwitterAvatar,
+								"Banner":     Member.TwitterBanner,
+								"Username":   Member.TwitterName,
+								"Fanart":     Member.TwitterHashtag,
+								"LewdFanart": Member.TwitterLewd,
+								"Followers":  Subs.TwFollow,
+							}
+						} else {
+							return nil
+						}
+					}(),
+					Twitch: func() interface{} {
+						if Member.TwitchName != "" {
+							return map[string]interface{}{
+								"Avatar":      Member.TwitchAvatar,
+								"Username":    Member.TwitchName,
+								"Followers":   Subs.TwitchFollow,
+								"ViwersCount": Subs.TwitchViews,
+							}
+						} else {
+							return nil
+						}
+					}(),
+					IsLive: func() interface{} {
+						tmp := make(map[string]interface{})
+
+						if len(isYtLive) > 0 {
+							for _, v := range isYtLive {
+								tmp["Youtube"] = map[string]interface{}{
+									"URL": "https://www.youtube.com/watch?v=" + v.VideoID,
+								}
+								break
+							}
+						} else {
+							tmp["Youtube"] = nil
+						}
+
+						if isBlLive.ID != 0 {
+							tmp["BiliBili"] = map[string]interface{}{
+								"URL": fmt.Sprintf("https://live.bilibili.com/%d", Member.BiliBiliRoomID),
+							}
+						} else {
+							tmp["BiliBili"] = nil
+						}
+
+						if isTwitchLive.ID != 0 {
+							tmp["Twitch"] = map[string]interface{}{
+								"URL": "https://www.twitch.tv/" + Member.TwitchName,
+							}
+						} else {
+							tmp["Twitch"] = nil
+						}
+
+						return tmp
+					}(),
+				})
 			}
-			GroupsDataTMP = append(GroupsDataTMP, map[string]interface{}{
-				"ID":        Group.ID,
-				"GroupIcon": Group.IconURL,
-				"GroupName": Group.GroupName,
-			})
 		}
+
+		VtuberAgency = VtuberAgencyTMP
 		VtuberMembers = VtuberMembersTMP
-		MembersData = MembersDataTMP
-		GroupsData = GroupsDataTMP
 	}
 
 	RequestPayload()
 	c := cron.New()
 	c.Start()
 	c.AddFunc(config.CheckPayload, RequestPayload)
-	go pilot.RunHeartBeat(gRCPconn, "Rest_API", ServiceUUID)
+	go pilot.RunHeartBeat(gRCPconn, config.ResetApiService, ServiceUUID)
 }
 
 func main() {
@@ -185,7 +265,7 @@ func main() {
 	router.HandleFunc("/groups/", getGroup).Methods("GET")
 	router.HandleFunc("/groups/{groupID}", getGroup).Methods("GET")
 
-	router.HandleFunc("/prediction/{memberID}", getPrediction).Methods("GET")
+	//router.HandleFunc("/prediction/{memberID}", getPrediction).Methods("GET")
 
 	router.HandleFunc("/members/", getMembers).Methods("GET")
 	router.HandleFunc("/members/{memberID}", getMembers).Methods("GET")
@@ -239,6 +319,8 @@ func invalidPath(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusBadRequest)
 }
 
+//Need rework
+/*
 func getPrediction(w http.ResponseWriter, r *http.Request) {
 	idstr := mux.Vars(r)["memberID"]
 	days := r.FormValue("days")
@@ -315,8 +397,8 @@ func getPrediction(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-		for _, Member := range MembersData {
-			if Member["ID"].(int64) == int64(idint) {
+		for _, Member := range VtuberMembers {
+			if Member.ID == int64(idint) {
 				FinalData := make(map[string]interface{})
 				isError := false
 				var Fetch = func(wg *sync.WaitGroup, State string, Days bool) {
@@ -324,7 +406,7 @@ func getPrediction(w http.ResponseWriter, r *http.Request) {
 					var DataPredic int
 					var err error
 					if Days {
-						DataPredic, err = engine.Prediction(database.Member{Name: Member["NickName"].(string)}, State, daysint)
+						DataPredic, err = engine.Prediction(database.Member{Name: Member.NickName}, State, daysint)
 						if err != nil {
 							log.Error(err)
 							isError = true
@@ -337,8 +419,7 @@ func getPrediction(w http.ResponseWriter, r *http.Request) {
 
 					Data := map[string]interface{}{}
 					if State == "Twitter" {
-						Tw := Member["Twitter"].(map[string]interface{})
-						Data["Current_followes/subscriber"] = Tw["Followers"]
+						Data["Current_followes/subscriber"] = Member.Twitter["Followers"]
 					} else if State == "Youtube" {
 						Yt := Member["Youtube"].(map[string]interface{})
 						Data["Current_followes/subscriber"] = Yt["Subscriber"]
@@ -402,13 +483,14 @@ func getPrediction(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
+*/
 
 func getGroup(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)["groupID"]
 	if vars != "" {
 		key := strings.Split(vars, ",")
-		var GroupsTMP []map[string]interface{}
-		for _, Group := range GroupsData {
+		var GroupsTMP []GroupPayload
+		for _, Group := range VtuberAgency {
 			for _, GroupIDstr := range key {
 				GroupIDint, err := strconv.Atoi(GroupIDstr)
 				if err != nil {
@@ -420,8 +502,8 @@ func getGroup(w http.ResponseWriter, r *http.Request) {
 					w.WriteHeader(http.StatusBadRequest)
 					return
 				}
-				GroupID := Group["ID"].(int64)
-				if GroupIDint == int(GroupID) {
+
+				if GroupIDint == int(Group.ID) {
 					GroupsTMP = append(GroupsTMP, Group)
 				}
 			}
@@ -444,7 +526,7 @@ func getGroup(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(GroupsData)
+		json.NewEncoder(w).Encode(VtuberAgency)
 		w.WriteHeader(http.StatusOK)
 	}
 }
@@ -452,127 +534,94 @@ func getGroup(w http.ResponseWriter, r *http.Request) {
 func getMembers(w http.ResponseWriter, r *http.Request) {
 	region := r.FormValue("region")
 	grpID := r.FormValue("groupid")
-	cekLive := r.FormValue("live")
 	idstr := mux.Vars(r)["memberID"]
-	var Members []map[string]interface{}
-	var ww sync.WaitGroup
 
-	var CekLiveMember = func(Member map[string]interface{}) map[string]interface{} {
-		if cekLive == "true" {
-			MemberID := Member["ID"].(int64)
-			MemberName := Member["NickName"].(string)
-			if Member["Youtube"] != nil {
-				Vtuber := database.Member{
-					ID:   MemberID,
-					Name: MemberName,
-				}
-
-				YTData, err := Vtuber.GetYtLiveStream(config.LiveStatus)
-				if err != nil {
-					log.Error(err)
-				}
-				if YTData != nil {
-					Member["IsYtLive"] = true
-					Member["LiveURL"] = "https://www.youtube.com/watch?v=" + YTData[0].VideoID
-				} else {
-					Member["IsYtLive"] = false
-				}
-			}
-
-			if Member["BiliBili"] != nil {
-				BiliData, _, err := database.BilGet(map[string]interface{}{
-					"MemberID": Member["ID"].(int64),
-					"Status":   config.LiveStatus,
-				})
-				if err != nil {
-					log.Error(err)
-				}
-
-				if BiliData != nil {
-					Bili := Member["BiliBili"].(map[string]interface{})
-					Member["IsBiliLive"] = true
-					Member["LiveURL"] = "https://live.bilibili.com/" + strconv.Itoa(Bili["RoomID"].(int))
-				} else {
-					Member["IsBiliLive"] = false
-				}
-			}
-
-			if Member["Twitch"] != nil {
-				TwitchData, err := database.TwitchGet(map[string]interface{}{
-					"MemberID": Member["ID"].(int64),
-					"Status":   config.LiveStatus,
-				})
-				if err != nil {
-					log.Error(err)
-				}
-				if TwitchData != nil {
-					Twitch := Member["Twitch"].(map[string]interface{})
-					Member["IsTwitchLive"] = true
-					Member["LiveURL"] = "https://www.twitch.tv/" + Twitch["UserName"].(string)
-				} else {
-					Member["IsTwitchLive"] = false
-				}
-			}
-		}
-		return Member
+	type simpleMember struct {
+		ID       int64
+		NickName string
+		EnName   string
+		JpName   string
+		Region   string
+		Fanbase  string
+		Status   string
+		BiliBili interface{}
+		Youtube  interface{}
+		Twitter  interface{}
+		Twitch   interface{}
+		Group    interface{}
+		IsLive   interface{}
 	}
-	if idstr != "" {
-		key := strings.Split(idstr, ",")
-		for _, M := range MembersData {
-			ww.Add(1)
-			go func(Member map[string]interface{}, wg *sync.WaitGroup) {
-				defer wg.Done()
-				for _, MemberStr := range key {
-					MemberInt, err := strconv.Atoi(MemberStr)
-					if err != nil {
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(MessageError{
-							Message: err.Error(),
-							Date:    time.Now(),
-						})
-						w.WriteHeader(http.StatusBadRequest)
-						return
-					}
-					if grpID != "" {
-						GroupID, err := strconv.Atoi(grpID)
-						if err != nil {
-							w.Header().Set("Content-Type", "application/json")
-							json.NewEncoder(w).Encode(MessageError{
-								Message: err.Error(),
-								Date:    time.Now(),
-							})
-							w.WriteHeader(http.StatusBadRequest)
-							return
-						}
-						if region != "" {
-							if GroupID == int(Member["GroupID"].(int64)) && strings.EqualFold(region, Member["Region"].(string)) {
-								Members = append(Members, CekLiveMember(Member))
-							}
-						} else {
-							if GroupID == int(Member["GroupID"].(int64)) {
-								Members = append(Members, CekLiveMember(Member))
-							}
-						}
-					} else {
-						if region != "" {
-							if MemberInt == int(Member["ID"].(int64)) && strings.EqualFold(region, Member["Region"].(string)) {
-								Members = append(Members, CekLiveMember(Member))
-							}
-						} else {
-							if MemberInt == int(Member["ID"].(int64)) {
-								Members = append(Members, CekLiveMember(Member))
-							}
-						}
+
+	var FixMember = func(Member MembersPayload) simpleMember {
+		tmp := simpleMember{
+			ID:       Member.ID,
+			NickName: Member.NickName,
+			EnName:   Member.EnName,
+			JpName:   Member.JpName,
+			Region:   Member.Region,
+			Fanbase:  Member.Fanbase,
+			Status:   Member.Status,
+			BiliBili: func() interface{} {
+				if Member.BiliBili != nil {
+					return map[string]interface{}{
+						"Avatar":      Member.BiliBili.(map[string]interface{})["Avatar"],
+						"SpaceID":     Member.BiliBili.(map[string]interface{})["SpaceID"],
+						"LiveID":      Member.BiliBili.(map[string]interface{})["LiveID"],
+						"ViwersCount": Member.BiliBili.(map[string]interface{})["ViwersCount"],
+						"Followers":   Member.BiliBili.(map[string]interface{})["Followers"],
 					}
 				}
-			}(M, &ww)
+				return nil
+			}(),
+			Youtube: func() interface{} {
+				if Member.Youtube != nil {
+					return map[string]interface{}{
+						"Avatar":      Member.Youtube.(map[string]interface{})["Avatar"],
+						"YoutubeID":   Member.Youtube.(map[string]interface{})["YoutubeID"],
+						"Subscriber":  Member.Youtube.(map[string]interface{})["Subscriber"],
+						"ViwersCount": Member.Youtube.(map[string]interface{})["ViwersCount"],
+					}
+				}
+				return nil
+			}(),
+			Twitter: func() interface{} {
+				if Member.Twitter != nil {
+					return map[string]interface{}{
+						"Avatar":    Member.Twitter.(map[string]interface{})["Avatar"],
+						"Username":  Member.Twitter.(map[string]interface{})["Username"],
+						"Followers": Member.Twitter.(map[string]interface{})["Followers"],
+					}
+				}
+				return nil
+			}(),
+			Twitch: Member.Twitch,
+			Group: func() interface{} {
+				return map[string]interface{}{
+					"ID":        Member.Group.(map[string]interface{})["ID"],
+					"IconURL":   Member.Group.(map[string]interface{})["IconURL"],
+					"GroupName": Member.Group.(map[string]interface{})["GroupName"],
+				}
+			}(),
+			IsLive: Member.IsLive,
 		}
-		ww.Wait()
-	} else if grpID != "" {
-		for _, M := range MembersData {
-			ww.Add(1)
-			go func(Member map[string]interface{}, wg *sync.WaitGroup) {
-				defer wg.Done()
+		return tmp
+	}
+
+	if idstr != "" {
+		var Members []MembersPayload
+		key := strings.Split(idstr, ",")
+		for _, Member := range VtuberMembers {
+			for _, MemberStr := range key {
+				MemberInt, err := strconv.Atoi(MemberStr)
+				if err != nil {
+					w.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(w).Encode(MessageError{
+						Message: err.Error(),
+						Date:    time.Now(),
+					})
+					w.WriteHeader(http.StatusBadRequest)
+					return
+				}
 				if grpID != "" {
 					GroupID, err := strconv.Atoi(grpID)
 					if err != nil {
@@ -584,89 +633,183 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 						w.WriteHeader(http.StatusBadRequest)
 						return
 					}
+
+					memberAgencyID := Member.Group.(map[string]interface{})
 					if region != "" {
-						if GroupID == int(Member["GroupID"].(int64)) && strings.EqualFold(region, Member["Region"].(string)) {
-							Members = append(Members, CekLiveMember(Member))
+						if GroupID == int(memberAgencyID["ID"].(int64)) && strings.EqualFold(region, Member.Region) {
+							Members = append(Members, Member)
 						}
 					} else {
-						if GroupID == int(Member["GroupID"].(int64)) {
-							Members = append(Members, CekLiveMember(Member))
+						if GroupID == int(memberAgencyID["ID"].(int64)) {
+							Members = append(Members, Member)
+						}
+					}
+				} else {
+					if region != "" {
+						if MemberInt == int(Member.ID) && strings.EqualFold(region, Member.Region) {
+							Members = append(Members, Member)
+						}
+					} else {
+						if MemberInt == int(Member.ID) {
+							Members = append(Members, Member)
 						}
 					}
 				}
-			}(M, &ww)
-		}
-		ww.Wait()
-	} else if region != "" {
-		for _, v := range MembersData {
-			if strings.EqualFold(region, v["Region"].(string)) {
-				Members = append(Members, CekLiveMember(v))
 			}
 		}
-	} else {
-		Members = MembersData
-	}
 
-	if Members != nil {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(Members)
-		w.WriteHeader(http.StatusOK)
+		if Members != nil {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
+			err := json.NewEncoder(w).Encode(Members)
+			if err != nil {
+				log.Error(err)
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(MessageError{
+					Message: err.Error(),
+					Date:    time.Now(),
+				})
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+		} else {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(MessageError{
+				Message: "Reqest not found,404",
+				Date:    time.Now(),
+			})
+			w.WriteHeader(http.StatusNotFound)
+		}
+		return
+	} else if grpID != "" {
+		var Members []simpleMember
+		GroupID, err := strconv.Atoi(grpID)
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(MessageError{
+				Message: err.Error(),
+				Date:    time.Now(),
+			})
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		for _, Member := range VtuberMembers {
+			memberAgencyID := Member.Group.(map[string]interface{})
+
+			if region != "" {
+				if GroupID == int(memberAgencyID["ID"].(int64)) && strings.EqualFold(region, Member.Region) {
+					Members = append(Members, FixMember(Member))
+				}
+			} else {
+				if GroupID == int(memberAgencyID["ID"].(int64)) {
+					Members = append(Members, FixMember(Member))
+				}
+			}
+		}
+
+		if Members != nil {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
+			err := json.NewEncoder(w).Encode(Members)
+			if err != nil {
+				log.Error(err)
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(MessageError{
+					Message: err.Error(),
+					Date:    time.Now(),
+				})
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+		} else {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(MessageError{
+				Message: "Reqest not found,404",
+				Date:    time.Now(),
+			})
+			w.WriteHeader(http.StatusNotFound)
+		}
+		return
+
+	} else if region != "" {
+		var Members []MembersPayload
+		for _, v := range VtuberMembers {
+			if strings.EqualFold(region, v.Region) {
+				Members = append(Members, v)
+			}
+		}
+
+		if Members != nil {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
+			err := json.NewEncoder(w).Encode(Members)
+			if err != nil {
+				log.Error(err)
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(MessageError{
+					Message: err.Error(),
+					Date:    time.Now(),
+				})
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+		} else {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(MessageError{
+				Message: "Reqest not found,404",
+				Date:    time.Now(),
+			})
+			w.WriteHeader(http.StatusNotFound)
+		}
+		return
+
 	} else {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode(MessageError{
-			Message: "Reqest not found,404",
-			Date:    time.Now(),
-		})
-		w.WriteHeader(http.StatusNotFound)
+		var Members []simpleMember
+		for _, Member := range VtuberMembers {
+			Members = append(Members, FixMember(Member))
+		}
+		if Members != nil {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
+			err := json.NewEncoder(w).Encode(Members)
+			if err != nil {
+				log.Error(err)
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(MessageError{
+					Message: err.Error(),
+					Date:    time.Now(),
+				})
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+		} else {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(MessageError{
+				Message: "Reqest not found,404",
+				Date:    time.Now(),
+			})
+			w.WriteHeader(http.StatusNotFound)
+		}
+		return
 	}
 }
 
 type MessageError struct {
 	Message string
 	Date    time.Time
-}
-
-func GetMember(i int64) database.Member {
-	for _, v := range VtuberMembers {
-		if v.ID == i {
-			return v
-		}
-	}
-	return database.Member{}
-}
-
-func FixMemberMap(Member database.Member) map[string]interface{} {
-	var EnName, JpName, Fanbase interface{}
-
-	if Member.EnName == "" {
-		EnName = nil
-	} else {
-		EnName = Member.EnName
-	}
-
-	if Member.JpName == "" {
-		JpName = nil
-	} else {
-		JpName = Member.JpName
-	}
-
-	if Member.Fanbase == "" {
-		Fanbase = nil
-	} else {
-		Fanbase = Member.Fanbase
-	}
-
-	return map[string]interface{}{
-		"ID":       Member.ID,
-		"NickName": Member.Name,
-		"EnName":   EnName,
-		"JpName":   JpName,
-		"Fanbase":  Fanbase,
-		"Region":   Member.Region,
-	}
 }
 
 func LowerCaseURI(h http.Handler) http.Handler {

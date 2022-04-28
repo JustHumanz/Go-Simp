@@ -39,9 +39,9 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 
 	if GroupIDs != "" {
 		key := strings.Split(GroupIDs, ",")
-		for _, GroupData := range GroupsData {
+		for _, GroupData := range Payload {
 			ww.Add(1)
-			go func(Group map[string]interface{}, wg *sync.WaitGroup) {
+			go func(Agency database.Group, wg *sync.WaitGroup) {
 				defer wg.Done()
 				for _, GroupIDstr := range key {
 					GroupIDint, err := strconv.Atoi(GroupIDstr)
@@ -54,13 +54,8 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 						w.WriteHeader(http.StatusBadRequest)
 						return
 					}
-					GroupID := Group["ID"].(int64)
-					if GroupIDint == int(GroupID) {
-						Agency := database.Group{
-							ID:        GroupID,
-							GroupName: Group["GroupName"].(string),
-						}
 
+					if GroupIDint == int(Agency.ID) {
 						YTData, err := Agency.GetYtLiveStream(
 							Status,
 							Region,
@@ -74,45 +69,41 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 						}
 					}
 				}
-			}(GroupData, &ww)
+			}(*GroupData, &ww)
 		}
 		ww.Wait()
 	} else if MemberIDs != "" {
 		key := strings.Split(MemberIDs, ",")
-		for _, M := range MembersData {
-			ww.Add(1)
-			go func(Member map[string]interface{}, wg *sync.WaitGroup) {
-				defer wg.Done()
-				for _, MemberIDstr := range key {
-					MemberIDint, err := strconv.Atoi(MemberIDstr)
-					if err != nil {
-						w.Header().Set("Content-Type", "application/json")
-						json.NewEncoder(w).Encode(MessageError{
-							Message: err.Error(),
-							Date:    time.Now(),
-						})
-						w.WriteHeader(http.StatusBadRequest)
-						return
-					}
-					MemberID := Member["ID"].(int64)
-					if MemberIDint == int(MemberID) {
-						MemberName := Member["Name"].(string)
-						Vtuber := database.Member{
-							ID:   MemberID,
-							Name: MemberName,
+		for _, Agency := range Payload {
+			for _, M := range Agency.Members {
+				ww.Add(1)
+				go func(Member database.Member, wg *sync.WaitGroup) {
+					defer wg.Done()
+					for _, MemberIDstr := range key {
+						MemberIDint, err := strconv.Atoi(MemberIDstr)
+						if err != nil {
+							w.Header().Set("Content-Type", "application/json")
+							json.NewEncoder(w).Encode(MessageError{
+								Message: err.Error(),
+								Date:    time.Now(),
+							})
+							w.WriteHeader(http.StatusBadRequest)
+							return
 						}
 
-						YTData, err := Vtuber.GetYtLiveStream(Status)
-						if err != nil {
-							log.Error(err)
-						}
-						for _, v := range YTData {
-							v.SetState(config.YoutubeLive)
-							YoutubeData = append(YoutubeData, FixLive(v))
+						if MemberIDint == int(Member.ID) {
+							YTData, err := Member.GetYtLiveStream(Status)
+							if err != nil {
+								log.Error(err)
+							}
+							for _, v := range YTData {
+								v.SetState(config.YoutubeLive)
+								YoutubeData = append(YoutubeData, FixLive(v))
+							}
 						}
 					}
-				}
-			}(M, &ww)
+				}(M, &ww)
+			}
 		}
 		ww.Wait()
 	}
@@ -154,7 +145,7 @@ func getBilibili(w http.ResponseWriter, r *http.Request) {
 	}
 	if GroupID != "" {
 		key := strings.Split(GroupID, ",")
-		for _, Group := range GroupsData {
+		for _, Group := range Payload {
 			for _, GroupIDstr := range key {
 				GroupIDint, err := strconv.Atoi(GroupIDstr)
 				if err != nil {
@@ -166,17 +157,26 @@ func getBilibili(w http.ResponseWriter, r *http.Request) {
 					w.WriteHeader(http.StatusBadRequest)
 					return
 				}
-				GroupID := Group["ID"].(int64)
-				if GroupIDint == int(GroupID) {
-					BiliData, _, err := database.BilGet(map[string]interface{}{
-						"GroupID": GroupID,
-						"Status":  Status,
-					})
+				if GroupIDint == int(Group.ID) {
+					BiliData, err := Group.GetBlLiveStream(Status)
 					if err != nil {
 						log.Error(err)
+						w.Header().Set("Content-Type", "application/json")
+						json.NewEncoder(w).Encode(MessageError{
+							Message: err.Error(),
+							Date:    time.Now(),
+						})
+						w.WriteHeader(http.StatusBadRequest)
+						return
+
 					}
+
 					for _, v := range BiliData {
-						v.AddMember(GetMember(v.Member.ID)).SetState(config.BiliLive)
+						if v.ID == 0 {
+							break
+						}
+
+						v.SetState(config.BiliLive)
 						BiliBiliData = append(BiliBiliData, FixLive(v))
 					}
 				}
@@ -184,30 +184,32 @@ func getBilibili(w http.ResponseWriter, r *http.Request) {
 		}
 	} else if MemberID != "" {
 		key := strings.Split(MemberID, ",")
-		for _, Member := range MembersData {
-			for _, MemberIDstr := range key {
-				MemberIDint, err := strconv.Atoi(MemberIDstr)
-				if err != nil {
-					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(MessageError{
-						Message: err.Error(),
-						Date:    time.Now(),
-					})
-					w.WriteHeader(http.StatusBadRequest)
-					return
-				}
-				MemberID := Member["ID"].(int64)
-				if MemberIDint == int(MemberID) {
-					BiliData, _, err := database.BilGet(map[string]interface{}{
-						"MemberID": MemberID,
-						"Status":   config.LiveStatus,
-					})
+		for _, Agency := range Payload {
+			for _, Member := range Agency.Members {
+				for _, MemberIDstr := range key {
+					MemberIDint, err := strconv.Atoi(MemberIDstr)
 					if err != nil {
-						log.Error(err)
+						w.Header().Set("Content-Type", "application/json")
+						json.NewEncoder(w).Encode(MessageError{
+							Message: err.Error(),
+							Date:    time.Now(),
+						})
+						w.WriteHeader(http.StatusBadRequest)
+						return
 					}
-					for _, v := range BiliData {
-						v.AddMember(GetMember(v.Member.ID)).SetState(config.BiliLive)
-						BiliBiliData = append(BiliBiliData, FixLive(v))
+
+					if MemberIDint == int(Member.ID) {
+						BiliData, err := Member.GetBlLiveStream(Status)
+						if err != nil {
+							log.Error(err)
+						}
+
+						if BiliData.ID == 0 {
+							break
+						}
+
+						BiliData.SetState(config.BiliLive)
+						BiliBiliData = append(BiliBiliData, FixLive(BiliData))
 					}
 				}
 			}

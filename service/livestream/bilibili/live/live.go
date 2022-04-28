@@ -119,33 +119,29 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 }
 
 func (i *checkBlLiveeJob) Run() {
-	Cek := func(Group database.Group, wg *sync.WaitGroup) {
+	Cek := func(Agency database.Group, wg *sync.WaitGroup) {
 		defer wg.Done()
 
 		for _, v := range []string{config.PastStatus, config.LiveStatus} {
-			LiveBili, Key, err := database.BilGet(map[string]interface{}{
-				"GroupID": Group.ID,
-				"Status":  v,
-			})
+			LiveBili, err := Agency.GetBlLiveStream(v)
 			if err != nil {
 				log.WithFields(log.Fields{
-					"Agency": Group.GroupName,
+					"Agency": Agency.GroupName,
 				}).Error(err)
 			}
 
 			if len(LiveBili) > 0 {
 				for _, Bili := range LiveBili {
-					for _, Member := range Group.Members {
+					for _, Member := range Agency.Members {
 						if Bili.Member.ID == Member.ID {
-							Bili.AddGroup(Group).AddMember(Member)
 							log.WithFields(log.Fields{
-								"Agency": Group.GroupName,
+								"Agency": Agency.GroupName,
 								"Vtuber": Member.Name,
 							}).Info("Checking LiveBiliBili")
 							Status, err := engine.GetRoomStatus(Member.BiliBiliRoomID)
 							if err != nil {
 								log.WithFields(log.Fields{
-									"Agency": Group.GroupName,
+									"Agency": Agency.GroupName,
 									"Vtuber": Member.Name,
 								}).Error(err)
 								gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
@@ -165,10 +161,10 @@ func (i *checkBlLiveeJob) Run() {
 									ScheduledStart = time.Now()
 								}
 
-								Group.RemoveNillIconURL()
+								Agency.RemoveNillIconURL()
 
 								log.WithFields(log.Fields{
-									"Group":  Group.GroupName,
+									"Group":  Agency.GroupName,
 									"Vtuber": Member.EnName,
 									"Start":  ScheduledStart,
 								}).Info("Start live right now")
@@ -189,15 +185,7 @@ func (i *checkBlLiveeJob) Run() {
 								err := Bili.UpdateLiveBili()
 								if err != nil {
 									log.WithFields(log.Fields{
-										"Agency": Group.GroupName,
-										"Vtuber": Member.Name,
-									}).Error(err)
-								}
-
-								err = Bili.RemoveCache(Key)
-								if err != nil {
-									log.WithFields(log.Fields{
-										"Agency": Group.GroupName,
+										"Agency": Agency.GroupName,
 										"Vtuber": Member.Name,
 									}).Error(err)
 								}
@@ -206,7 +194,7 @@ func (i *checkBlLiveeJob) Run() {
 									bit, err := Bili.MarshalBinary()
 									if err != nil {
 										log.WithFields(log.Fields{
-											"Agency": Group.GroupName,
+											"Agency": Agency.GroupName,
 											"Vtuber": Member.Name,
 										}).Error(err)
 									}
@@ -220,7 +208,7 @@ func (i *checkBlLiveeJob) Run() {
 
 							} else if !Status.CheckScheduleLive() && Bili.Status == config.LiveStatus {
 								log.WithFields(log.Fields{
-									"Group":  Group.GroupName,
+									"Group":  Agency.GroupName,
 									"Vtuber": Member.EnName,
 									"Start":  Bili.Schedul,
 								}).Info("Past live stream")
@@ -231,15 +219,7 @@ func (i *checkBlLiveeJob) Run() {
 								err = Bili.UpdateLiveBili()
 								if err != nil {
 									log.WithFields(log.Fields{
-										"Agency": Group.GroupName,
-										"Vtuber": Member.Name,
-									}).Error(err)
-								}
-
-								err = Bili.RemoveCache(Key)
-								if err != nil {
-									log.WithFields(log.Fields{
-										"Agency": Group.GroupName,
+										"Agency": Agency.GroupName,
 										"Vtuber": Member.Name,
 									}).Error(err)
 								}
@@ -248,7 +228,7 @@ func (i *checkBlLiveeJob) Run() {
 									bit, err := Bili.MarshalBinary()
 									if err != nil {
 										log.WithFields(log.Fields{
-											"Agency": Group.GroupName,
+											"Agency": Agency.GroupName,
 											"Vtuber": Member.Name,
 										}).Error(err)
 									}
@@ -263,7 +243,7 @@ func (i *checkBlLiveeJob) Run() {
 								err := Bili.UpdateLiveBili()
 								if err != nil {
 									log.WithFields(log.Fields{
-										"Agency": Group.GroupName,
+										"Agency": Agency.GroupName,
 										"Vtuber": Member.Name,
 									}).Error(err)
 								}
