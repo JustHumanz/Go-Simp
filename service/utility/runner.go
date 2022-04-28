@@ -16,12 +16,13 @@ import (
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
+	"github.com/google/uuid"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 	"github.com/top-gg/go-dbl"
 )
 
-const ModuleState = "Utility"
+const ServiceName = "Utility"
 
 var (
 	KanoPayload = []string{
@@ -57,6 +58,8 @@ var (
 		"cLJL6uRezSI",
 		"6XZek8E_SiE",
 	}
+
+	ServiceUUID = uuid.New().String()
 )
 
 func init() {
@@ -69,9 +72,10 @@ func main() {
 		configfile config.ConfigFile
 		GuildList  []string
 	)
-	res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
-		Message: "Send me nude",
-		Service: "Utility",
+	res, err := gRCPconn.GetBotPayload(context.Background(), &pilot.ServiceMessage{
+		Message:     "Init " + ServiceName + " service",
+		Service:     ServiceName,
+		ServiceUUID: ServiceUUID,
 	})
 	if err != nil {
 		if configfile.Discord != "" {
@@ -234,22 +238,15 @@ func main() {
 	c.AddFunc(config.YoutubePrivateSlayer, func() {
 		log.Info("Start Video private slayer")
 		var GroupPayload *[]database.Group
-		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
-			Message: "Send me nude",
-			Service: ModuleState,
+		req, err := gRCPconn.GetAgencyPayload(context.Background(), &pilot.ServiceMessage{
+			Message:     "Request agency data",
+			Service:     ServiceName,
+			ServiceUUID: ServiceUUID,
 		})
-		if err != nil {
-			if configfile.Discord != "" {
-				pilot.ReportDeadService(err.Error(), ModuleState)
-			}
-			log.Error("Error when request payload: %s", err)
-		}
-		err = json.Unmarshal(res.ConfigFile, &configfile)
 		if err != nil {
 			log.Error(err)
 		}
-
-		err = json.Unmarshal(res.VtuberPayload, &GroupPayload)
+		err = json.Unmarshal(req.AgencyVtubers, &GroupPayload)
 		if err != nil {
 			log.Error(err)
 		}
@@ -348,6 +345,6 @@ func main() {
 	log.Info("Start deleting user ", UsersDeleted)
 	database.DeleteDeletedUser(UsersDeleted)
 
-	go pilot.RunHeartBeat(gRCPconn, "Utility")
+	go pilot.RunHeartBeat(gRCPconn, ServiceName, ServiceUUID)
 	runfunc.Run(Bot)
 }

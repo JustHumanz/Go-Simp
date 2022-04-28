@@ -14,6 +14,7 @@ import (
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
+	"github.com/google/uuid"
 	"github.com/robfig/cron/v3"
 
 	log "github.com/sirupsen/logrus"
@@ -21,14 +22,14 @@ import (
 
 var (
 	Bot          *discordgo.Session
-	GroupPayload *[]database.Group
 	gRCPconn     pilot.PilotServiceClient
 	proxy        = flag.Bool("MultiTOR", false, "Enable MultiTOR for scrapping yt rss")
 	torTransport = flag.Bool("Tor", false, "Enable multiTor for bot transport")
+	ServiceUUID  = uuid.New().String()
 )
 
 const (
-	ModuleState = config.YoutubeCheckerModule
+	ServiceName = config.YoutubeCheckerService
 )
 
 func init() {
@@ -43,29 +44,22 @@ func main() {
 		configfile config.ConfigFile
 	)
 
-	GetPayload := func() {
-		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
-			Message: "Send me nude",
-			Service: ModuleState,
-		})
-		if err != nil {
-			if configfile.Discord != "" {
-				pilot.ReportDeadService(err.Error(), ModuleState)
-			}
-			log.Error("Error when request payload: %s", err)
+	res, err := gRCPconn.GetBotPayload(context.Background(), &pilot.ServiceMessage{
+		Message:     "Init " + ServiceName + " service",
+		Service:     ServiceName,
+		ServiceUUID: ServiceUUID,
+	})
+	if err != nil {
+		if configfile.Discord != "" {
+			pilot.ReportDeadService(err.Error(), ServiceName)
 		}
-		err = json.Unmarshal(res.ConfigFile, &configfile)
-		if err != nil {
-			log.Error(err)
-		}
-
-		err = json.Unmarshal(res.VtuberPayload, &GroupPayload)
-		if err != nil {
-			log.Error(err)
-		}
+		log.Error("Error when request payload: %s", err)
+	}
+	err = json.Unmarshal(res.ConfigFile, &configfile)
+	if err != nil {
+		log.Fatalln(err)
 	}
 
-	GetPayload()
 	configfile.InitConf()
 	Bot = engine.StartBot(*torTransport)
 
@@ -73,18 +67,18 @@ func main() {
 
 	c := cron.New()
 	c.Start()
-	c.AddFunc(config.CheckPayload, GetPayload)
 	c.AddFunc("0 */2 * * *", func() {
 		engine.ExTknList = nil
 	})
-	log.Info("Enable " + ModuleState)
-	go pilot.RunHeartBeat(gRCPconn, ModuleState)
+	log.Info("Enable " + ServiceName)
+	go pilot.RunHeartBeat(gRCPconn, ServiceName, ServiceUUID)
 	go ReqRunningJob(gRCPconn)
 	runfunc.Run(Bot)
 }
 
 type checkYtCekJob struct {
 	wg      sync.WaitGroup
+	agency  []database.Group
 	Reverse bool
 	Update  bool
 	Counter int
@@ -104,26 +98,26 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 
 		res := func() *pilot.RunJob {
 			log.WithFields(log.Fields{
-				"Service":  ModuleState,
+				"Service":  ServiceName,
 				"Running":  true,
 				"YtUpdate": YoutubeChecker.Update,
 			}).Info("request for running job")
 
 			if YoutubeChecker.Update {
-				tmp, err := client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
-					Service: ModuleState,
-					Message: "Update",
-					Alive:   true,
+				tmp, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
+					Service:     ServiceName,
+					Message:     "Update",
+					ServiceUUID: ServiceUUID,
 				})
 				if err != nil {
 					log.Error(err)
 				}
 				return tmp
 			} else {
-				tmp, err := client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
-					Service: ModuleState,
-					Message: "New",
-					Alive:   true,
+				tmp, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
+					Service:     ServiceName,
+					Message:     "New",
+					ServiceUUID: ServiceUUID,
 				})
 				if err != nil {
 					log.Error(err)
@@ -134,25 +128,30 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 
 		if res.Run {
 			log.WithFields(log.Fields{
-				"Service": ModuleState,
+				"Service": ServiceName,
 				"Running": true,
+				"UUID":    ServiceUUID,
 			}).Info(res.Message)
 
+			YoutubeChecker.agency = engine.UnMarshalPayload(res.VtuberPayload)
 			YoutubeChecker.Run()
-			_, _ = client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
-				Service: ModuleState,
-				Message: "Done",
-				Alive:   false,
+
+			_, _ = client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
+				Service:     ServiceName,
+				Message:     "Done",
+				ServiceUUID: ServiceUUID,
 			})
 
 			log.WithFields(log.Fields{
-				"Service": ModuleState,
+				"Service": ServiceName,
 				"Running": false,
+				"UUID":    ServiceUUID,
 			}).Info("reporting job was done")
 		} else {
 			log.WithFields(log.Fields{
-				"Service": ModuleState,
+				"Service": ServiceName,
 				"Running": false,
+				"UUID":    ServiceUUID,
 			}).Info(res.Message)
 		}
 
@@ -164,15 +163,15 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 
 func (i *checkYtCekJob) Run() {
 	if i.Reverse {
-		for j := len(*GroupPayload) - 1; j >= 0; j-- {
+		for j := len(i.agency) - 1; j >= 0; j-- {
 			i.wg.Add(1)
-			Grp := *GroupPayload
+			Grp := i.agency
 			go StartCheckYT(Grp[j], i.Update, &i.wg)
 		}
 		i.Reverse = false
 
 	} else {
-		for _, G := range *GroupPayload {
+		for _, G := range i.agency {
 			i.wg.Add(1)
 			go StartCheckYT(G, i.Update, &i.wg)
 		}

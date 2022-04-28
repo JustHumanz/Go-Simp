@@ -17,7 +17,7 @@ func CheckBiliBili() {
 	BiliBiliSession := map[string]string{
 		"Cookie": "SESSDATA=" + configfile.BiliSess,
 	}
-	for _, Group := range *Payload {
+	for _, Group := range Agency {
 		for _, Member := range Group.Members {
 			if Member.BiliBiliID != 0 && Member.Active() {
 				var (
@@ -31,8 +31,9 @@ func CheckBiliBili() {
 						"Vtuber": Member.Name,
 					})
 					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message: curlerr.Error(),
-						Service: ModuleState,
+						Message:     curlerr.Error(),
+						Service:     ServiceName,
+						ServiceUUID: ServiceUUID,
 					})
 				}
 				err := json.Unmarshal(body, &bilistate.Follow)
@@ -47,8 +48,9 @@ func CheckBiliBili() {
 						"Vtuber": Member.Name,
 					})
 					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message: curlerr.Error(),
-						Service: ModuleState,
+						Message:     curlerr.Error(),
+						Service:     ServiceName,
+						ServiceUUID: ServiceUUID,
 					})
 				}
 				err = json.Unmarshal(body, &bilistate.LikeView)
@@ -66,8 +68,9 @@ func CheckBiliBili() {
 							"Vtuber": Member.Name,
 						})
 						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-							Message: curlerr.Error(),
-							Service: ModuleState,
+							Message:     curlerr.Error(),
+							Service:     ServiceName,
+							ServiceUUID: ServiceUUID,
 						})
 					}
 					var video engine.SpaceVideo

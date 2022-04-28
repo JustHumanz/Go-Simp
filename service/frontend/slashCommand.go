@@ -191,7 +191,7 @@ var (
 				}
 			}
 
-			for _, v := range *GroupsPayload {
+			for _, v := range GroupsPayload {
 				if v.ID == int64(GroupSelected) {
 					group = v
 					if VtuberSelected != "" {
@@ -765,7 +765,7 @@ var (
 
 			Agency := database.Group{}
 			VtuberName := database.Member{}
-			for _, v := range *GroupsPayload {
+			for _, v := range GroupsPayload {
 				if v.ID == SelectedAgency {
 					Agency = v
 					if SelectedVtuber != "" {
@@ -883,7 +883,7 @@ var (
 
 				Agency := database.Group{}
 				VtuberName := database.Member{}
-				for _, v := range *GroupsPayload {
+				for _, v := range GroupsPayload {
 					if v.ID == SelectedAgency {
 						Agency = v
 						if SelectedVtuber != "" {
@@ -951,7 +951,7 @@ var (
 			}
 		},
 		"info": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			for _, v := range *GroupsPayload {
+			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
 					if strings.EqualFold(v2.Name, i.ApplicationCommandData().Options[0].StringValue()) {
 						var (
@@ -1088,7 +1088,7 @@ var (
 			}
 
 			One := true
-			for _, v := range *GroupsPayload {
+			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
 					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
@@ -1200,7 +1200,7 @@ var (
 				}
 			}
 
-			for _, v := range *GroupsPayload {
+			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
 					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
@@ -1333,7 +1333,7 @@ var (
 			}
 
 			One := true
-			for _, v := range *GroupsPayload {
+			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
 					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
@@ -1464,7 +1464,7 @@ var (
 				}
 			}
 
-			for _, v := range *GroupsPayload {
+			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
 					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
@@ -1670,7 +1670,7 @@ var (
 						}
 
 						if v2.Name == engine.AgencyOption {
-							for _, v3 := range *GroupsPayload {
+							for _, v3 := range GroupsPayload {
 								if v3.ID == v2.IntValue() {
 									Group = v3
 									break
@@ -1748,7 +1748,7 @@ var (
 						}
 
 						if v2.Name == engine.AgencyOption {
-							for _, v3 := range *GroupsPayload {
+							for _, v3 := range GroupsPayload {
 								if v3.ID == v2.IntValue() {
 									Group = v3
 									break
@@ -1821,7 +1821,7 @@ var (
 						}
 
 						if v2.Name == engine.AgencyOption {
-							for _, v3 := range *GroupsPayload {
+							for _, v3 := range GroupsPayload {
 								if v3.ID == v2.IntValue() {
 									Group = v3
 									break
@@ -2410,7 +2410,7 @@ var (
 				return
 			}
 
-			for k, v := range *GroupsPayload {
+			for k, v := range GroupsPayload {
 				for _, v2 := range v.Members {
 					if strings.EqualFold(VtuberInput, v2.EnName) || strings.EqualFold(VtuberInput, v2.JpName) || strings.EqualFold(VtuberInput, v2.Name) {
 						var (
@@ -2542,7 +2542,7 @@ var (
 						}
 					}
 				}
-				if k == len(*GroupsPayload)-1 {
+				if k == len(GroupsPayload)-1 {
 					err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 						Type: discordgo.InteractionResponseChannelMessageWithSource,
 						Data: &discordgo.InteractionResponseData{

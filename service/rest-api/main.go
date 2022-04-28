@@ -14,6 +14,7 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
+	"github.com/google/uuid"
 	muxlogrus "github.com/pytimer/mux-logrus"
 	"github.com/robfig/cron/v3"
 
@@ -25,6 +26,7 @@ var (
 	MembersData   []map[string]interface{}
 	GroupsData    []map[string]interface{}
 	VtuberMembers []database.Member
+	ServiceUUID   = uuid.New().String()
 )
 
 func init() {
@@ -42,9 +44,10 @@ func init() {
 			GroupsDataTMP    []map[string]interface{}
 			VtuberMembersTMP []database.Member
 		)
-		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
-			Message: "Send me nude",
-			Service: "Rest_API",
+		res, err := gRCPconn.GetBotPayload(context.Background(), &pilot.ServiceMessage{
+			Message:     "Init " + config.ResetApiService + " service",
+			Service:     config.ResetApiService,
+			ServiceUUID: ServiceUUID,
 		})
 		if err != nil {
 			log.Fatalf("Error when request payload: %s", err)
@@ -54,8 +57,17 @@ func init() {
 			log.Panic(err)
 		}
 
+		res2, err := gRCPconn.GetAgencyPayload(context.Background(), &pilot.ServiceMessage{
+			Service:     config.ResetApiService,
+			Message:     "Request",
+			ServiceUUID: ServiceUUID,
+		})
+		if err != nil {
+			log.Fatalf("Error when request payload: %s", err)
+		}
+
 		var Payload []*database.Group
-		err = json.Unmarshal(res.VtuberPayload, &Payload)
+		err = json.Unmarshal(res2.AgencyVtubers, &Payload)
 		if err != nil {
 			log.Panic(err)
 		}
@@ -162,7 +174,7 @@ func init() {
 	c := cron.New()
 	c.Start()
 	c.AddFunc(config.CheckPayload, RequestPayload)
-	go pilot.RunHeartBeat(gRCPconn, "Rest_API")
+	go pilot.RunHeartBeat(gRCPconn, "Rest_API", ServiceUUID)
 }
 
 func main() {

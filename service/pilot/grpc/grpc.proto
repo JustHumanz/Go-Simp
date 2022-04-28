@@ -2,22 +2,20 @@ syntax = "proto3";
 package pilot;
 option go_package = "github.com/justhumanz/service/pilot";
 
-message VtubersData {
-  bytes VtuberPayload = 1;
-  bytes ConfigFile = 2;
-  bool WaitMigrate = 3;
+message ServiceInit {
+  bytes ConfigFile = 1;
+}
+
+message AgencyPayload {
+  bytes AgencyVtubers = 1;
 }
 
 message ServiceMessage {
     string Message = 1;
     string Service = 2;
-    bool Alive = 3;
+    string ServiceUUID = 3;
 }
 
-message ModuleData {
-  string Module = 1;
-  bool Enabled = 2;
-}
 
 message Metric {
   bytes MetricData = 1;
@@ -30,14 +28,21 @@ message Empty {
 
 message RunJob {
   string Message = 1;
-  string Module = 2;
+  string Service = 2;
   bool Run = 3;
+  bytes VtuberPayload = 4;
 }
     
 service PilotService {
-  rpc ReqData(ServiceMessage) returns (VtubersData) {}
-  rpc ModuleList(ModuleData) returns (Empty){}
-  rpc RunModuleJob(ServiceMessage) returns (RunJob){}
+  //Get config file from pilot
+  rpc GetBotPayload(ServiceMessage) returns (ServiceInit) {}
+
+  //Get and check approval from pilot (scaling scrapping only)
+  rpc RequestRunJobsOfService(ServiceMessage) returns (RunJob){}
+
+  //Get agency payload for non scaling service only
+  rpc GetAgencyPayload(ServiceMessage) returns (AgencyPayload){}
+  
   rpc HeartBeat(ServiceMessage) returns (stream Empty){}
   rpc MetricReport(Metric) returns (Empty){}
   rpc ReportError(ServiceMessage) returns (Empty){}

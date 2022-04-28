@@ -13,52 +13,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-var M = []*pilot.ModuleList{
-	//Fanart
-	{
-		Name:    config.TBiliBiliModule,
-		Counter: 1,
-		CronJob: 7, //every 7 minutes
-	},
-	{
-		Name:    config.TwitterModule,
-		Counter: 1,
-		CronJob: 10, //every 10 minutes
-	},
-	{
-		Name:    config.PixivModule,
-		Counter: 1,
-		CronJob: 7, //every 7 minutes
-	},
-
-	//Live
-	{
-		Name:    config.SpaceBiliBiliModule,
-		Counter: 1,
-		CronJob: 12, //every 12 minutes
-	},
-	{
-		Name:    config.LiveBiliBiliModule,
-		Counter: 1,
-		CronJob: 7, //every 7 minutes
-	},
-	{
-		Name:    config.TwitchModule,
-		Counter: 1,
-		CronJob: 10, //every 10 minutes
-	},
-	{
-		Name:    config.YoutubeCheckerModule,
-		Counter: 1,
-		CronJob: 5, //every 5 minutes
-	},
-	{
-		Name:    config.YoutubeCounterModule,
-		Counter: 1,
-		CronJob: 1, //every 1 minutes
-	},
-}
-
 func main() {
 	pilot.Start()
 
@@ -69,59 +23,52 @@ func main() {
 
 	metric.Init()
 	lis := network.InitNet()
-	defmigrate := false
 	s := pilot.Server{
-		WaitMigrate: &defmigrate,
-		ServiceList: []pilot.ServiceMessage{
-			pilot.ServiceMessage{
-				Service: "Fanart",
+		Service: []*pilot.Service{
+			//Fanart
+			{
+				Name: config.TBiliBiliService,
+				//Counter: 1,
+				CronJob: 7, //every 7 minutes
 			},
-			pilot.ServiceMessage{
-				Service: "Livestream",
+			{
+				Name: config.TwitterService,
+				//Counter: 1,
+				CronJob: 10, //every 10 minutes
 			},
-			pilot.ServiceMessage{
-				Service: "Guild",
+			{
+				Name: config.PixivService,
+				//Counter: 1,
+				CronJob: 7, //every 7 minutes
 			},
-			pilot.ServiceMessage{
-				Service: "Subscriber",
+
+			//Live
+			{
+				Name: config.SpaceBiliBiliService,
+				//Counter: 1,
+				CronJob: 12, //every 12 minutes
 			},
-			pilot.ServiceMessage{
-				Service: "Utility",
+			{
+				Name: config.LiveBiliBiliService,
+				//Counter: 1,
+				CronJob: 7, //every 7 minutes
 			},
-			pilot.ServiceMessage{
-				Service: "Rest_API",
+			{
+				Name: config.TwitchService,
+				//Counter: 1,
+				CronJob: 10, //every 10 minutes
 			},
-		},
-		ModuleData: []pilot.ModuleData{
-			pilot.ModuleData{
-				Module: "TwitterFanart",
+			{
+				Name: config.YoutubeCheckerService,
+				//Counter: 1,
+				CronJob: 5, //every 5 minutes
 			},
-			pilot.ModuleData{
-				Module: "BiliBiliFanart",
-			},
-			pilot.ModuleData{
-				Module: "Youtube",
-			},
-			pilot.ModuleData{
-				Module: "SpaceBiliBili",
-			},
-			pilot.ModuleData{
-				Module: "LiveBiliBili",
-			},
-			pilot.ModuleData{
-				Module: "Twitch",
-			},
-			pilot.ModuleData{
-				Module: "YoutubeSubscriber",
-			},
-			pilot.ModuleData{
-				Module: "BiliBiliFollowers",
-			},
-			pilot.ModuleData{
-				Module: "TwitterFollowers",
+			{
+				Name: config.YoutubeCounterService,
+				//Counter: 1,
+				CronJob: 1, //every 1 minutes
 			},
 		},
-		Modules: M,
 	}
 
 	grpcServer := grpc.NewServer()

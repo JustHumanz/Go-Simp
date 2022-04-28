@@ -3,6 +3,7 @@ package pilot
 import (
 	context "context"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/database"
@@ -16,9 +17,10 @@ import (
 )
 
 var (
-	VtubersByte *[]byte
-	confByte    []byte
-	WeebHookURL string
+	confByte      []byte
+	WeebHookURL   string
+	VtubersAgency []database.Group
+	//Payload       = make(map[string]interface{})
 )
 
 func Start() {
@@ -34,24 +36,27 @@ func Start() {
 
 	GetGroups := func() {
 		log.Info("Start get groups from database")
-		var Grp []database.Group
-		GroupData, err := database.GetGroups()
+		VtubersAgency, err = database.GetGroups()
 		if err != nil {
 			log.Error(err)
-		}
-		for _, v := range GroupData {
-			v.Members, err = database.GetMembers(v.ID)
-			if err != nil {
-				log.Error(err)
-			}
-			Grp = append(Grp, v)
 		}
 
-		tmp, err := json.Marshal(Grp)
-		VtubersByte = &tmp
-		if err != nil {
-			log.Error(err)
-		}
+		/*
+			for _, v := range GroupData {
+				v.Members, err = database.GetMembers(v.ID)
+				if err != nil {
+					log.Error(err)
+				}
+				VtubersAgency = append(VtubersAgency, v)
+			}
+
+
+				tmp, err := json.Marshal(Grp)
+				VtubersByte = &tmp
+				if err != nil {
+					log.Error(err)
+				}
+		*/
 	}
 	GetGroups()
 
@@ -64,78 +69,67 @@ func Start() {
 	}
 }
 
-type ModuleList struct {
+type Service struct {
 	Name    string
-	Counter int
+	Unit    []*UnitService
 	CronJob int
 	Note    string
 	Run     bool
 }
 
+type UnitService struct {
+	UUID    string
+	Counter int
+	Payload []database.Group
+}
+
 type Server struct {
-	ServiceList []ServiceMessage
-	ModuleData  []ModuleData
-	Modules     []*ModuleList
-	WaitMigrate *bool
+	ServiceBootstrap []ServiceMessage
+	Service          []*Service
 	UnimplementedPilotServiceServer
 }
 
-func (s *Server) ReqData(ctx context.Context, in *ServiceMessage) (*VtubersData, error) {
+func (s *Server) GetAgencyPayload(ctx context.Context, in *ServiceMessage) (*AgencyPayload, error) {
 	log.WithFields(log.Fields{
 		"Service": in.Service,
 		"Message": in.Message,
-	}).Info("Request payload")
-	for _, v := range s.ServiceList {
-		if v.Service != in.Service {
-			v.Alive = false
-		} else {
-			v.Alive = true
-		}
-	}
+		"UUID":    in.ServiceUUID,
+	}).Info("Request agency payload")
 
-	if in.Service == "Migrate" && in.Message == "Start migrate new vtuber" {
-		log.Info("Migrate process detect")
-		migrate := true
-		s.WaitMigrate = &migrate
-	} else if in.Message == "Done migrate new vtuber" {
-		log.Info("Not detect any vtuber Migrate,Change value to false")
-		migrate := false
-		s.WaitMigrate = &migrate
+	BytePayload, err := json.Marshal(VtubersAgency)
+	if err != nil {
+		return nil, err
 	}
-
-	return &VtubersData{
-		VtuberPayload: *VtubersByte,
-		ConfigFile:    confByte,
-		WaitMigrate:   *s.WaitMigrate,
+	return &AgencyPayload{
+		AgencyVtubers: BytePayload,
 	}, nil
 }
 
-func (s *Server) ModuleList(ctx context.Context, in *ModuleData) (*Empty, error) {
+func (s *Server) GetBotPayload(ctx context.Context, in *ServiceMessage) (*ServiceInit, error) {
 	log.WithFields(log.Fields{
-		"Module":  in.Module,
-		"Enabled": in.Enabled,
-	}).Info("Report module list")
-	for _, v := range s.ModuleData {
-		if v.Module == in.Module {
-			v.Enabled = in.Enabled
-		}
-	}
-	return &Empty{}, nil
+		"Service": in.Service,
+		"Message": in.Message,
+		"UUID":    in.ServiceUUID,
+	}).Info("Request bot payload")
+
+	return &ServiceInit{
+		ConfigFile: confByte,
+	}, nil
 }
 
-func (i *ModuleList) SetRun(a bool) *ModuleList {
+func (i *Service) SetRun(a bool) *Service {
 	i.Run = a
 	return i
 }
 
-func (i *ModuleList) SetNote(n string) *ModuleList {
+func (i *Service) SetNote(n string) *Service {
 	i.Note = n
 	return i
 }
 
-func (s *Server) isYtCheckerRunning() bool {
-	for _, v := range s.Modules {
-		if v.Name == config.YoutubeCheckerModule {
+func (s *Server) IsYtCheckerRunning() bool {
+	for _, v := range s.Service {
+		if v.Name == config.YoutubeCheckerService {
 			if v.Run && v.Note == "Update" {
 				return true
 			}
@@ -144,85 +138,163 @@ func (s *Server) isYtCheckerRunning() bool {
 	return false
 }
 
-var ModuleWatcher = make(map[string]int)
+//var ModuleWatcher = make(map[string]int)
 
-func (s *Server) RunModuleJob(ctx context.Context, in *ServiceMessage) (*RunJob, error) {
-	for _, v := range s.Modules {
-		if v.Name == in.Service {
-			if in.Service == config.YoutubeCheckerModule {
-				v.SetNote(in.Message)
+func (s *Server) CheckUUID(UUID string) bool {
+	for _, v := range s.Service {
+		for _, v2 := range v.Unit {
+			if UUID == v2.UUID {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func (s *Service) RemapPayload() {
+	if len(s.Unit) > 0 {
+		limt := len(VtubersAgency) / len(s.Unit)
+		chunk := [][]database.Group{}
+
+		for i := 0; i < len(VtubersAgency); i += limt {
+			nextLimit := limt + i
+			if nextLimit+i > len(VtubersAgency) {
+				nextLimit = len(VtubersAgency)
 			}
 
-			if in.Service == config.YoutubeCounterModule && s.isYtCheckerRunning() {
+			chunk = append(chunk, VtubersAgency[i:nextLimit])
+			if VtubersAgency[nextLimit-1].ID == VtubersAgency[len(VtubersAgency)-1].ID {
+				break
+			}
+		}
+
+		for k, v := range chunk {
+			s.Unit[k].Payload = v
+		}
+	}
+}
+
+func (k *UnitService) Marshal() []byte {
+
+	dat, err := json.Marshal(k.Payload)
+	if err != nil {
+		log.Error(err)
+		return nil
+	}
+	return dat
+}
+
+func (k *UnitService) ResetCounter() *UnitService {
+	k.Counter = 1
+	return k
+}
+
+func (s *Service) RemoveUnitFromDeadSvc(UUID string) {
+	for k, v := range s.Unit {
+		if v.UUID == UUID {
+			s.Unit = append(s.Unit[0:k], s.Unit[k+1:]...)
+		}
+	}
+
+	s.RemapPayload()
+}
+
+func (s *Server) RequestRunJobsOfService(ctx context.Context, in *ServiceMessage) (*RunJob, error) {
+	for _, v := range s.Service {
+		if v.Name == in.Service {
+			//Check if request was new unit and if that unit was not scraping
+			if !s.CheckUUID(in.ServiceUUID) {
+				//New units detec
 				log.WithFields(log.Fields{
-					"Counter": v.CronJob,
 					"Service": in.Service,
-				}).Warn("Youtube Checker still running,skip Youtube Counter")
+					"UUID":    in.ServiceUUID,
+				}).Info("New Units detected,trying to register new unit")
+
+				v.Unit = append(v.Unit, &UnitService{
+					in.ServiceUUID,
+					1,
+					nil,
+				})
+
+				v.RemapPayload()
 
 				return &RunJob{
 					Run:     false,
-					Message: "skip Youtube Counter",
+					Message: "New units detected",
 				}, nil
 			}
 
-			if in.Alive && v.Counter%v.CronJob == 0 {
-				log.WithFields(log.Fields{
-					"Counter": v.CronJob,
-					"Service": in.Service,
-					"Running": v.Run,
-					"Note":    in.Message,
-				}).Info("Module request for running job")
+			for _, k := range v.Unit {
+				if k.UUID == in.ServiceUUID {
+					if in.Service == config.YoutubeCheckerService {
+						v.SetNote(in.Message)
+					}
 
-				if v.Run {
-					if ModuleWatcher[in.Service] > v.CronJob*2 {
+					if in.Service == config.YoutubeCounterService && s.IsYtCheckerRunning() {
 						log.WithFields(log.Fields{
-							"Counter":       v.CronJob,
-							"Service":       in.Service,
-							"ModuleWatcher": ModuleWatcher[in.Service],
-						}).Warn("Job running too long,force acc next request")
-						v.SetRun(false)
-						ModuleWatcher[in.Service] = 0
+							"Counter": v.CronJob,
+							"UUID":    in.ServiceUUID,
+							"Service": in.Service,
+						}).Warn("Youtube Checker still running,skip Youtube Counter")
+
 						return &RunJob{
 							Run:     false,
-							Message: "Job running too long,force acc next request",
+							Message: "skip Youtube Counter",
 						}, nil
 					}
 
-					log.WithFields(log.Fields{
-						"Counter":       v.CronJob,
-						"Service":       in.Service,
-						"ModuleWatcher": ModuleWatcher[in.Service],
-					}).Warn("Job still running")
+					if in.Message == "Done" {
+						v.SetRun(false)
+						k.ResetCounter()
+						log.WithFields(log.Fields{
+							"Counter": k.Counter,
+							"UUID":    in.ServiceUUID,
+							"Service": in.Service,
+							"Running": v.Run,
+							"Note":    v.Note,
+						}).Info("Unit complete running job")
+						return &RunJob{
+							Run:     false,
+							Message: fmt.Sprintf("Waiting schdule %d minutes remaining", v.CronJob-k.Counter),
+						}, nil
+					}
 
-					ModuleWatcher[in.Service]++
+					if k.Counter%v.CronJob == 0 {
+						log.WithFields(log.Fields{
+							"Counter": v.CronJob,
+							"UUID":    in.ServiceUUID,
+							"Service": in.Service,
+							"Running": v.Run,
+							"Note":    in.Message,
+						}).Info("Unit request for running job")
 
-					return &RunJob{
-						Run:     false,
-						Message: "job still running",
-					}, nil
+						log.WithFields(log.Fields{
+							"Counter": v.CronJob,
+							"UUID":    in.ServiceUUID,
+							"Service": in.Service,
+						}).Info("Approval request")
+
+						v.SetRun(true)
+						return &RunJob{
+							Message:       "OK,Unit approved",
+							Run:           true,
+							VtuberPayload: k.Marshal(),
+						}, nil
+
+					} else {
+						k.Counter++
+						log.WithFields(log.Fields{
+							"Counter": k.Counter,
+							"Service": in.Service,
+							"UUID":    in.ServiceUUID,
+						}).Info("Waiting RequestPayloadhdule")
+						return &RunJob{
+							Run:     false,
+							Message: fmt.Sprintf("Waiting schdule %d minutes remaining", v.CronJob-k.Counter),
+						}, nil
+					}
 				}
-
-				log.WithFields(log.Fields{
-					"Counter": v.CronJob,
-					"Service": in.Service,
-				}).Info("Approval request")
-
-				v.SetRun(true)
-				return &RunJob{
-					Message: "OK,module approved",
-					Run:     true,
-				}, nil
-
-			} else if !in.Alive && in.Message == "Done" {
-				v.SetRun(false)
-				log.WithFields(log.Fields{
-					"Counter": v.Counter,
-					"Service": in.Service,
-					"Running": v.Run,
-					"Note":    v.Note,
-				}).Info("Module complete running job")
 			}
-			v.Counter++
 		}
 	}
 	return &RunJob{}, nil
@@ -383,29 +455,42 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 
 func (s *Server) HeartBeat(in *ServiceMessage, stream PilotService_HeartBeatServer) error {
 	for {
-		if in.Alive {
-			log.WithFields(log.Fields{
-				"Service":  in.Service,
-				"Messsage": in.Message,
-				"Status":   "Running",
-			}).Debug("HeartBeat")
-		}
+		for _, v := range s.Service {
+			if v.Name == in.Service {
+				for _, v2 := range v.Unit {
+					if v2.UUID == in.ServiceUUID {
+						log.WithFields(log.Fields{
+							"Service":  in.Service,
+							"Messsage": in.Message,
+							"UUID":     in.ServiceUUID,
+							"Status":   "Running",
+						}).Debug("HeartBeat")
 
-		err := stream.Send(&Empty{})
-		if err != nil {
-			log.Error(in.Service + " Dead")
-			ReportDeadService(err.Error(), in.Service)
-			return err
+						err := stream.Send(&Empty{})
+						if err != nil {
+							log.WithFields(log.Fields{
+								"Service":  in.Service,
+								"Messsage": in.Message,
+								"UUID":     in.ServiceUUID,
+							}).Error(fmt.Sprintf("%s Removing unit if exist", err))
+							v.RemoveUnitFromDeadSvc(in.ServiceUUID)
+							ReportDeadService(err.Error(), in.Service)
+							return err
+						}
+						time.Sleep(5 * time.Second)
+
+					}
+				}
+			}
 		}
-		time.Sleep(5 * time.Second)
 	}
 }
 
-func RunHeartBeat(client PilotServiceClient, Service string) {
+func RunHeartBeat(client PilotServiceClient, Service string, UUID string) {
 	_, err := client.HeartBeat(context.Background(), &ServiceMessage{
-		Service: Service,
-		Message: "Service 200 daijoubu",
-		Alive:   true,
+		Service:     Service,
+		Message:     "Bep Bob",
+		ServiceUUID: UUID,
 	})
 	if err != nil {
 		ReportDeadService("Pilot down", Service)
@@ -414,7 +499,6 @@ func RunHeartBeat(client PilotServiceClient, Service string) {
 }
 
 func ReportDeadService(message, module string) {
-	log.Error(message, module)
 	PayloadBytes, err := json.Marshal(map[string]interface{}{
 		"embeds": []interface{}{
 			map[string]interface{}{

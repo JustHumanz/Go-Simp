@@ -39,7 +39,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 				}).Error(err)
 				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 					Message: err.Error(),
-					Service: ModuleState,
+					Service: ServiceName,
 				})
 			}
 			for _, ID := range VideoID {
@@ -58,7 +58,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						}).Error(err)
 						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 							Message: err.Error(),
-							Service: ModuleState,
+							Service: ServiceName,
 						})
 					}
 
@@ -170,7 +170,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 
 						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 							Message: err.Error(),
-							Service: ModuleState,
+							Service: ServiceName,
 						})
 					}
 
@@ -287,7 +287,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 
 				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 					Message: err.Error(),
-					Service: ModuleState,
+					Service: ServiceName,
 				})
 			}
 			for _, ID := range VideoID {
@@ -313,7 +313,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 
 						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 							Message: err.Error(),
-							Service: ModuleState,
+							Service: ServiceName,
 						})
 					}
 
@@ -324,7 +324,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 
 					if len(Data.Items) == 0 {
 						fmt.Println("Opps something error\n", Data)
-						pilot.ReportDeadService("Yt Item Nill", ModuleState)
+						pilot.ReportDeadService("Yt Item Nill", ServiceName)
 						continue
 					}
 
@@ -505,7 +505,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 					if err != nil {
 						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 							Message: err.Error(),
-							Service: ModuleState,
+							Service: ServiceName,
 						})
 						log.WithFields(log.Fields{
 							"Vtuber": Member.Name,
