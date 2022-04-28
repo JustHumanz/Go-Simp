@@ -56,6 +56,4 @@ services:
   rest_api:                                                                    
     image: justhumanz/go-simp-rest_api-v2:${RELEASE_VERSION}                                                                                                       
     networks:                                                                                  
-      - go-simp-net                                                                            
-    ports:                                                                                     
-      - "9393:2525"                                                                            
+      - go-simp-net                                                                                                                                                       
