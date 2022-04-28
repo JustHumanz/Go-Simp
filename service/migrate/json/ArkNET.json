@@ -2,12 +2,8 @@
 	"GroupName": "ArkNET",
 	"GroupIcon": "https://cdn.humanz.moe/ArkNet.png",
 	"GroupChannel": {
-		"Youtube": [
-			null
-		],
-		"BiliBili": [
-			null
-		]
+		"Youtube": null,
+		"BiliBili": null
 	},
 	"Members": [
 		{

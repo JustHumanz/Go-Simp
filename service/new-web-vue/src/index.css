@@ -1,0 +1,25 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Nunito:wght@300;400;500;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: "Nunito", sans-serif;
+}
+
+body {
+  @apply dark:bg-gray-600 dark:text-white transition-colors duration-100 ease-in-out;
+}
+
+@media (max-width: 767px) {
+  body {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+  }
+
+  body::-webkit-scrollbar {
+    /* Chromium and Safari */
+    display: none;
+  }
+}

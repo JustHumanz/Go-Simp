@@ -13,6 +13,7 @@ import (
 	"github.com/JustHumanz/Go-Simp/pkg/database"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
+	"github.com/google/uuid"
 	muxlogrus "github.com/pytimer/mux-logrus"
 	"github.com/robfig/cron/v3"
 
@@ -24,6 +25,7 @@ var (
 	VtuberMembers []MembersPayload
 	VtuberAgency  []GroupPayload
 	Payload       []*database.Group
+	ServiceUUID   = uuid.New().String()
 )
 
 func init() {
@@ -35,27 +37,36 @@ func init() {
 		configfile config.ConfigFile
 	)
 
-	RequestPayload := func() {
-		log.Info("Request payload")
+	res, err := gRCPconn.GetBotPayload(context.Background(), &pilot.ServiceMessage{
+		Message:     "Init " + config.ResetApiService + " service",
+		Service:     config.ResetApiService,
+		ServiceUUID: ServiceUUID,
+	})
+	if err != nil {
+		log.Fatalf("Error when request payload: %s", err)
+	}
 
-		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
-			Message: "Send me nude",
-			Service: "Rest_API",
-		})
-		if err != nil {
-			log.Fatalf("Error when request payload: %s", err)
-		}
+	err = json.Unmarshal(res.ConfigFile, &configfile)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	RequestPayload := func() {
 		var (
 			VtuberMembersTMP []MembersPayload
 			VtuberAgencyTMP  []GroupPayload
 		)
-
-		err = json.Unmarshal(res.ConfigFile, &configfile)
+		res2, err := gRCPconn.GetAgencyPayload(context.Background(), &pilot.ServiceMessage{
+			Service:     config.ResetApiService,
+			Message:     "Request",
+			ServiceUUID: ServiceUUID,
+		})
 		if err != nil {
-			log.Panic(err)
+			log.Fatalf("Error when request payload: %s", err)
 		}
 
-		err = json.Unmarshal(res.VtuberPayload, &Payload)
+		var Payload []*database.Group
+		err = json.Unmarshal(res2.AgencyVtubers, &Payload)
 		if err != nil {
 			log.Panic(err)
 		}
@@ -242,8 +253,8 @@ func init() {
 	RequestPayload()
 	c := cron.New()
 	c.Start()
-	c.AddFunc("@every 0h20m0s", RequestPayload)
-	go pilot.RunHeartBeat(gRCPconn, "Rest_API")
+	c.AddFunc(config.CheckPayload, RequestPayload)
+	go pilot.RunHeartBeat(gRCPconn, config.ResetApiService, ServiceUUID)
 }
 
 func main() {

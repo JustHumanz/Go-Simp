@@ -18,8 +18,8 @@ import (
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
+	"github.com/google/uuid"
 	"github.com/olekukonko/tablewriter"
-	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -30,37 +30,18 @@ var (
 	RegList            = make(map[string]string)
 	GroupsName         []string
 	GuildList          []string
-	GroupsPayload      *[]database.Group
+	GroupsPayload      []database.Group
 	configfile         config.ConfigFile
 	Bot                *discordgo.Session
+	ServiceUUID        = uuid.New().String()
 	VtuberGroupChoices []*discordgo.ApplicationCommandOptionChoice
 )
 
-//Prefix command
 const (
-	Enable        = "enable"
-	Disable       = "disable"
-	Update        = "update_v1"
-	Update2       = "update"
-	TagMe         = "tag me"
-	SetReminder   = "set reminder"
-	DelTag        = "del tag"
-	MyTags        = "my tags"
-	TagRoles      = "tag roles"
-	RolesTags     = "roles info"
-	DelRoles      = "del roles"
-	RolesReminder = "roles reminder"
-	ChannelState  = "channel state"
-	VtuberData    = "vtuber data"
-	Info          = "info"
-	Upcoming      = "upcoming"
-	Past          = "past"
-	Live          = "live"
-	ModuleInfo    = "module"
-	Setup         = "setup"
-	Kings         = "kings"
-	Upvote        = "upvote"
-	Predick       = "prediction"
+	Kings       = "kings"
+	Upvote      = "upvote"
+	UpdateState = "SelectChannel"
+	ServiceName = config.FrontendService
 )
 
 func init() {
@@ -71,123 +52,154 @@ func init() {
 func main() {
 	gRCPconn := pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 
-	var (
-		WaitMigrate = true
-		Counter     int
-	)
-	c := cron.New()
-	c.Start()
+	log.Info("Get Payload")
+	res, err := gRCPconn.GetBotPayload(context.Background(), &pilot.ServiceMessage{
+		Message:     "Init " + ServiceName + " service",
+		Service:     ServiceName,
+		ServiceUUID: ServiceUUID,
+	})
+	if err != nil {
+		if configfile.Discord != "" {
+			pilot.ReportDeadService(err.Error(), "Frontend")
+		}
+		log.Error("Error when request payload: %s", err)
+	}
 
-	StartBot := func() {
-		GetPayload := func() {
-			log.Info("Get Payload")
-			res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
-				Message: "Send me nude",
-				Service: "Frontend",
+	err = json.Unmarshal(res.ConfigFile, &configfile)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	configfile.InitConf()
+
+	go func() {
+		for {
+			log.WithFields(log.Fields{
+				"Service": ServiceName,
+				"Running": false,
+				"UUID":    ServiceUUID,
+			}).Info("request for running job")
+
+			res2, err := gRCPconn.GetAgencyPayload(context.Background(), &pilot.ServiceMessage{
+				Service:     ServiceName,
+				Message:     "Request",
+				ServiceUUID: ServiceUUID,
 			})
 			if err != nil {
-				if configfile.Discord != "" {
-					pilot.ReportDeadService(err.Error(), "Frontend")
+				log.Error(err)
+			}
+
+			err = json.Unmarshal(res2.AgencyVtubers, &GroupsPayload)
+			if err != nil {
+				log.Fatalln(err)
+			}
+
+			for _, Group := range GroupsPayload {
+				GroupsName = append(GroupsName, Group.GroupName)
+				list := []string{}
+				keys := make(map[string]bool)
+				for _, Member := range Group.Members {
+					if _, value := keys[Member.Region]; !value {
+						keys[Member.Region] = true
+						list = append(list, Member.Region)
+					}
 				}
-				log.Error("Error when request payload: %s", err)
+				RegList[Group.GroupName] = strings.Join(list, ",")
 			}
 
-			WaitMigrate = res.WaitMigrate
-			err = json.Unmarshal(res.ConfigFile, &configfile)
-			if err != nil {
-				log.Error(err)
-			}
-
-			configfile.InitConf()
-
-			err = json.Unmarshal(res.VtuberPayload, &GroupsPayload)
-			if err != nil {
-				log.Error(err)
-			}
+			time.Sleep(30 * time.Minute)
 		}
-		GetPayload()
+	}()
 
-		for _, Group := range *GroupsPayload {
-			GroupsName = append(GroupsName, Group.GroupName)
-			list := []string{}
-			keys := make(map[string]bool)
-			for _, Member := range Group.Members {
-				if _, value := keys[Member.Region]; !value {
-					keys[Member.Region] = true
-					list = append(list, Member.Region)
-				}
-			}
-			RegList[Group.GroupName] = strings.Join(list, ",")
-		}
+	log.Info("Start Frontend")
+	Bot = engine.StartBot(false)
 
-		if !WaitMigrate || Counter == 6 {
-			log.Info("Start Frontend")
-			Bot = engine.StartBot(false)
-
-			err := Bot.Open()
-			if err != nil {
-				log.Error(err)
-			}
-
-			BotInfo, err = Bot.User("@me")
-			if err != nil {
-				log.Error(err)
-			}
-
-			for _, GuildID := range Bot.State.Guilds {
-				GuildList = append(GuildList, GuildID.ID)
-			}
-
-			for _, v := range *GroupsPayload {
-				VtuberGroupChoices = append(VtuberGroupChoices, &discordgo.ApplicationCommandOptionChoice{
-					Name:  v.GroupName,
-					Value: v.ID,
-				})
-			}
-
-			database.Start(configfile)
-
-			err = Bot.UpdateStreamingStatus(0, config.GoSimpConf.BotPrefix.General+"help", config.VtubersData)
-			if err != nil {
-				log.Error(err)
-			}
-
-			Bot.AddHandler(Fanart)
-			Bot.AddHandler(Tags)
-			//Bot.AddHandler(EnableState)
-			Bot.AddHandler(Status)
-			Bot.AddHandler(Help)
-			Bot.AddHandler(BiliBiliMessage)
-			Bot.AddHandler(BiliBiliSpace)
-			Bot.AddHandler(YoutubeMessage)
-			Bot.AddHandler(TwitchMessage)
-			Bot.AddHandler(Lewd)
-			Bot.AddHandler(StartRegister)
-			c.Stop()
-			c2 := cron.New()
-			c2.Start()
-			c2.AddFunc(config.CheckPayload, GetPayload)
-
-		} else {
-			log.Info("Waiting migrate done")
-			Counter++
-		}
-	}
-	StartBot()
-
-	if WaitMigrate {
-		c.AddFunc("@every 0h5m0s", StartBot)
-	} else if !WaitMigrate || Counter == 6 {
-		c.Stop()
+	err = Bot.Open()
+	if err != nil {
+		log.Error(err)
 	}
 
-	go pilot.RunHeartBeat(gRCPconn, "Frontend")
-	go engine.InitSlash(Bot, *GroupsPayload, nil)
+	BotInfo, err = Bot.User("@me")
+	if err != nil {
+		log.Error(err)
+	}
+
+	for _, GuildID := range Bot.State.Guilds {
+		GuildList = append(GuildList, GuildID.ID)
+	}
+
+	for _, v := range GroupsPayload {
+		VtuberGroupChoices = append(VtuberGroupChoices, &discordgo.ApplicationCommandOptionChoice{
+			Name:  v.GroupName,
+			Value: v.ID,
+		})
+	}
+
+	database.Start(configfile)
+
+	err = Bot.UpdateStreamingStatus(0, config.GoSimpConf.BotPrefix.General+"help", config.VtubersData)
+	if err != nil {
+		log.Error(err)
+	}
+
+	Bot.AddHandler(Help)
+
+	go pilot.RunHeartBeat(gRCPconn, ServiceName, ServiceUUID)
+	go engine.InitSlash(Bot, GroupsPayload, nil)
 
 	Bot.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		if h, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
 			h(s, i)
 		}
+	})
+
+	guildID := func() []string {
+		ids := []string{}
+		for _, v := range Bot.State.Guilds {
+			ids = append(ids, v.ID)
+		}
+		return ids
+	}()
+
+	Bot.AddHandler(func(s *discordgo.Session, g *discordgo.GuildCreate) {
+		if g.Unavailable {
+			log.Error("joined unavailable guild", g.Guild.ID)
+			return
+		}
+
+		for _, v := range guildID {
+			if v == g.ID {
+				return
+			}
+		}
+
+		log.WithFields(log.Fields{
+			"GuildName": g.Name,
+			"OwnerID":   g.OwnerID,
+			"JoinDate":  g.JoinedAt.Format(time.RFC822),
+		}).Info("New invite")
+		engine.InitSlash(Bot, GroupsPayload, g.Guild)
+
+	})
+
+	Bot.AddHandler(func(s *discordgo.Session, g *discordgo.GuildDelete) {
+		if g.Unavailable {
+			log.Error("joined unavailable guild", g.Guild.ID)
+			return
+		}
+
+		for k, v := range guildID {
+			if v == g.ID {
+				guildID[k] = ""
+			}
+		}
+
+		log.WithFields(log.Fields{
+			"GuildName": g.Name,
+			"OwnerID":   g.OwnerID,
+			"JoinDate":  g.JoinedAt.Format(time.RFC822),
+		}).Info("Bot got kicked")
+
 	})
 
 	runfunc.Run(Bot)
@@ -197,7 +209,7 @@ func main() {
 func FindVtuber(M interface{}) (database.Member, error) {
 	MemberName, str := M.(string)
 	if str {
-		for _, Group := range *GroupsPayload {
+		for _, Group := range GroupsPayload {
 			for _, Name := range Group.Members {
 				if strings.ToLower(Name.Name) == MemberName || strings.ToLower(Name.JpName) == MemberName || MemberName == strconv.Itoa(int(Name.ID)) {
 					return Name, nil
@@ -206,7 +218,7 @@ func FindVtuber(M interface{}) (database.Member, error) {
 		}
 	} else {
 		MemberID := M.(int64)
-		for _, Group := range *GroupsPayload {
+		for _, Group := range GroupsPayload {
 			for _, Name := range Group.Members {
 				if MemberID == Name.ID {
 					return Name, nil
@@ -222,14 +234,14 @@ func FindVtuber(M interface{}) (database.Member, error) {
 func FindGropName(g interface{}) (database.Group, error) {
 	Grp, str := g.(string)
 	if str {
-		for _, Group := range *GroupsPayload {
+		for _, Group := range GroupsPayload {
 			if strings.EqualFold(Group.GroupName, Grp) || strconv.Itoa(int(Group.ID)) == Grp {
 				return Group, nil
 			}
 		}
 	} else {
 		GrpID := g.(int64)
-		for _, Group := range *GroupsPayload {
+		for _, Group := range GroupsPayload {
 			if Group.ID == GrpID {
 				return Group, nil
 			}

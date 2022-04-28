@@ -356,24 +356,6 @@
       "Status": "Active"
     },
     {
-      "Name": "Ichigo",
-      "EN_Name": "Ushimi Ichigo",
-      "JP_Name": "宇志海いちご",
-      "Twitter": {
-        "Twitter_Fanart": "#いちごのあとりえ",
-        "Twitter_Lewd": "",
-        "Twitter_Username": "ushimi_ichigo"
-      },
-      "Youtube": {
-        "Yt_ID": "UCmUjjW5zF1MMOhYUwwwQv9Q"
-      },
-      "BiliBili": null,
-      "Twitch": null,
-      "Region": "JP",
-      "Fanbase": "",
-      "Status": "Active"
-    },
-    {
       "Name": "Gilzaren",
       "EN_Name": "Gilzaren III",
       "JP_Name": "ギルザレン",
@@ -518,24 +500,6 @@
       },
       "Youtube": {
         "Yt_ID": "UC9V3Y3_uzU5e-usObb6IE1w"
-      },
-      "BiliBili": null,
-      "Twitch": null,
-      "Region": "JP",
-      "Fanbase": "",
-      "Status": "Active"
-    },
-    {
-      "Name": "Roa-chan",
-      "EN_Name": "Yuzuki Roa",
-      "JP_Name": "夢月ロア",
-      "Twitter": {
-        "Twitter_Fanart": "#ロアート",
-        "Twitter_Lewd": "",
-        "Twitter_Username": "yuzuki_roa"
-      },
-      "Youtube": {
-        "Yt_ID": "UCCVwhI5trmaSxfcze_Ovzfw"
       },
       "BiliBili": null,
       "Twitch": null,
@@ -1721,7 +1685,7 @@
       "Twitch": null,
       "Region": "KR",
       "Fanbase": "",
-      "Status": "Active"
+      "Status": "Inactive"
     },
     {
       "Name": "Jiyu",
@@ -2204,14 +2168,100 @@
       "Status": "Active"
     },
     {
+      "Name": "Yugo",
+      "EN_Name": "Yugo Asuma",
+      "JP_Name": "遊間ユーゴ",
+      "Twitter": {
+        "Twitter_Fanart": "#AsumArt",
+        "Twitter_Lewd": "#Asensored",
+        "Twitter_Username": "yugo_asuma"
+      },
+      "Youtube": {
+        "Yt_ID": "UCSc_KzY_9WYAx9LghggjVRA"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "YUGUYS",
+      "Status": "Active"
+    },
+    {
+      "Name": "Sonny",
+      "EN_Name": "Sonny Brisko",
+      "JP_Name": "サニー・ブリスコーだ",
+      "Twitter": {
+        "Twitter_Fanart": "#Briskart",
+        "Twitter_Lewd": "FriskyBrisky",
+        "Twitter_Username": "sonny_brisko"
+      },
+      "Youtube": {
+        "Yt_ID": "UCuuAb_72QzK0M1USPMEl1yw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Uki",
+      "EN_Name": "Uki Violeta",
+      "JP_Name": "浮奇ヴィオレタ",
+      "Twitter": {
+        "Twitter_Fanart": "#VioletAtelier",
+        "Twitter_Lewd": "#UKinky",
+        "Twitter_Username": "uki_violeta"
+      },
+      "Youtube": {
+        "Yt_ID": "UChJ5FTsHOu72_5OVx0rvsvQ"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "Stargazers",
+      "Status": "Active"
+    },
+    {
+      "Name": "Alban",
+      "EN_Name": "Alban Knox",
+      "JP_Name": "アルバーン・ノックス",
+      "Twitter": {
+        "Twitter_Fanart": "AlbanKnoxArt",
+        "Twitter_Lewd": "KnoxSFW",
+        "Twitter_Username": "alban_knox"
+      },
+      "Youtube": {
+        "Yt_ID": "UCQ1zGxHrfEmmW4CPpBx9-qw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Fulgur",
+      "EN_Name": "Fulgur Ovid",
+      "JP_Name": "ファルガー・オーヴィド",
+      "Twitter": {
+        "Twitter_Fanart": "#FulGallery",
+        "Twitter_Lewd": "#Cybussy",
+        "Twitter_Username": "Fulgur_Ovid"
+      },
+      "Youtube": {
+        "Yt_ID": "UCGhqxhovNfaPBpxfCruy9EA"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "Comfydants",
+      "Status": "Active"
+    },
+    {
       "Name": "Yukie",
       "EN_Name": "Yukie",
       "JP_Name": "ユキエ",
-      "Twitter": {
-        "Twitter_Fanart": "",
-        "Twitter_Lewd": "",
-        "Twitter_Username": ""
-      },
+      "Twitter": null,
       "Youtube": {
         "Yt_ID": ""
       },
@@ -2251,11 +2301,7 @@
       "Name": "Ruki",
       "EN_Name": "Ruki",
       "JP_Name": "ルキ",
-      "Twitter": {
-        "Twitter_Fanart": "",
-        "Twitter_Lewd": "",
-        "Twitter_Username": ""
-      },
+      "Twitter": null,
       "Youtube": {
         "Yt_ID": ""
       },
@@ -2267,17 +2313,13 @@
       "Twitch": null,
       "Region": "CN",
       "Fanbase": "",
-      "Status": "Active"
+      "Status": "Inactive"
     },
     {
       "Name": "Hoshimi",
       "EN_Name": "Hoshimi",
       "JP_Name": "ホシミ",
-      "Twitter": {
-        "Twitter_Fanart": "",
-        "Twitter_Lewd": "",
-        "Twitter_Username": ""
-      },
+      "Twitter": null,
       "Youtube": {
         "Yt_ID": ""
       },
@@ -2295,11 +2337,7 @@
       "Name": "Chiharu",
       "EN_Name": "Chiharu",
       "JP_Name": "チハル",
-      "Twitter": {
-        "Twitter_Fanart": "",
-        "Twitter_Lewd": "",
-        "Twitter_Username": ""
-      },
+      "Twitter": null,
       "Youtube": {
         "Yt_ID": ""
       },
@@ -2307,28 +2345,6 @@
         "BiliBili_Fanart": "千报屋",
         "BiliBili_ID": 558070433,
         "BiliRoom_ID": 22389319
-      },
-      "Twitch": null,
-      "Region": "CN",
-      "Fanbase": "",
-      "Status": "Active"
-    },
-    {
-      "Name": "Eine",
-      "EN_Name": "Eine",
-      "JP_Name": "艾因",
-      "Twitter": {
-        "Twitter_Fanart": "",
-        "Twitter_Lewd": "",
-        "Twitter_Username": "VirtuaRealEine"
-      },
-      "Youtube": {
-        "Yt_ID": ""
-      },
-      "BiliBili": {
-        "BiliBili_Fanart": "艾因的艺术",
-        "BiliBili_ID": 421267475,
-        "BiliRoom_ID": 21403601
       },
       "Twitch": null,
       "Region": "CN",
@@ -2361,11 +2377,7 @@
       "Name": "Plus",
       "EN_Name": "Plus",
       "JP_Name": "有加",
-      "Twitter": {
-        "Twitter_Fanart": "",
-        "Twitter_Lewd": "",
-        "Twitter_Username": ""
-      },
+      "Twitter": null,
       "Youtube": {
         "Yt_ID": ""
       },
@@ -2405,11 +2417,7 @@
       "Name": "Waku",
       "EN_Name": "Waku",
       "JP_Name": "惑姬",
-      "Twitter": {
-        "Twitter_Fanart": "",
-        "Twitter_Lewd": "",
-        "Twitter_Username": ""
-      },
+      "Twitter": null,
       "Youtube": {
         "Yt_ID": ""
       },
@@ -2420,6 +2428,60 @@
       },
       "Twitch": null,
       "Region": "CN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Umise",
+      "EN_Name": "Umise Yotsuha",
+      "JP_Name": "海妹四葉",
+      "Twitter": {
+        "Twitter_Fanart": "#Yotsuh_Art",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "Yotsuha_Umise"
+      },
+      "Youtube": {
+        "Yt_ID": "UCtHY-tP0dyykhTRMmnfPs_g"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Muyu",
+      "EN_Name": "Amagase Muyu",
+      "JP_Name": "天ヶ瀬むゆ",
+      "Twitter": {
+        "Twitter_Fanart": "#むにゃーと",
+        "Twitter_Lewd": "#あまがせんしてぃぶ",
+        "Twitter_Username": "Muyu_Amagase"
+      },
+      "Youtube": {
+        "Yt_ID": "UCAQDFeCTVdx90GtwohwjHzQ"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Nei",
+      "EN_Name": "Ponto Nei",
+      "JP_Name": "先斗寧",
+      "Twitter": {
+        "Twitter_Fanart": "#ぽんとれーと",
+        "Twitter_Lewd": "#見ないで寧",
+        "Twitter_Username": "ponto_nei"
+      },
+      "Youtube": {
+        "Yt_ID": "UCe22Bcwd_GCpTjLxn83zl7A"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
     }

@@ -58,13 +58,8 @@ func getYoutube(w http.ResponseWriter, r *http.Request) {
 					if GroupIDint == int(Agency.ID) {
 						YTData, err := Agency.GetYtLiveStream(
 							Status,
-							func() []string {
-								if Region != "" {
-									return []string{Region}
-								} else {
-									return nil
-								}
-							}())
+							Region,
+						)
 						if err != nil {
 							log.Error(err)
 						}

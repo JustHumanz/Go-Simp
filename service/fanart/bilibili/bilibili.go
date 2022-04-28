@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/google/uuid"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 
@@ -23,13 +24,13 @@ import (
 //Public variable
 var (
 	Bot          *discordgo.Session
-	GroupPayload *[]database.Group
 	gRCPconn     pilot.PilotServiceClient
 	torTransport = flag.Bool("Tor", false, "Enable multiTor for bot transport")
+	ServiceUUID  = uuid.New().String()
 )
 
 const (
-	ModuleState = config.TBiliBiliModule
+	ServiceName = config.TBiliBiliService
 )
 
 func init() {
@@ -44,40 +45,38 @@ func main() {
 		configfile config.ConfigFile
 	)
 
-	GetPayload := func() {
-		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
-			Message: "Send me nude",
-			Service: ModuleState,
-		})
-		if err != nil {
-			if configfile.Discord != "" {
-				pilot.ReportDeadService(err.Error(), ModuleState)
-			}
-			log.Error("Error when request payload: %s", err)
+	res, err := gRCPconn.GetBotPayload(context.Background(), &pilot.ServiceMessage{
+		Message:     "Init " + ServiceName + " service",
+		ServiceUUID: ServiceUUID,
+		Service:     ServiceName,
+	})
+	if err != nil {
+		if configfile.Discord != "" {
+			pilot.ReportDeadService(err.Error(), ServiceName)
 		}
-		err = json.Unmarshal(res.ConfigFile, &configfile)
-		if err != nil {
-			log.Error(err)
-		}
-
-		err = json.Unmarshal(res.VtuberPayload, &GroupPayload)
-		if err != nil {
-			log.Error(err)
-		}
+		log.Error("Error when request payload: %s", err)
+	}
+	err = json.Unmarshal(res.ConfigFile, &configfile)
+	if err != nil {
+		log.Fatalln(err)
 	}
 
-	GetPayload()
 	configfile.InitConf()
+
 	Bot = engine.StartBot(*torTransport)
+
+	err = Bot.Open()
+	if err != nil {
+		log.Error(err)
+	}
 
 	database.Start(configfile)
 
 	c := cron.New()
 	c.Start()
 
-	c.AddFunc(config.CheckPayload, GetPayload)
-	log.Info("Enable " + ModuleState)
-	go pilot.RunHeartBeat(gRCPconn, ModuleState)
+	log.Info("Enable " + ServiceName)
+	go pilot.RunHeartBeat(gRCPconn, ServiceName, ServiceUUID)
 	go ReqRunningJob(gRCPconn)
 	runfunc.Run(Bot)
 }
@@ -85,6 +84,7 @@ func main() {
 type checkBlJob struct {
 	wg          sync.WaitGroup
 	mutex       sync.Mutex
+	Agency      []database.Group
 	Reverse     bool
 	FanArtIDTMP map[string]string
 }
@@ -94,14 +94,15 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 
 	for {
 		log.WithFields(log.Fields{
-			"Service": ModuleState,
-			"Running": true,
+			"Service": ServiceName,
+			"Running": false,
+			"UUID":    ServiceUUID,
 		}).Info("request for running job")
 
-		res, err := client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
-			Service: ModuleState,
-			Message: "Request",
-			Alive:   true,
+		res, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
+			Service:     ServiceName,
+			Message:     "Request",
+			ServiceUUID: ServiceUUID,
 		})
 		if err != nil {
 			log.Error(err)
@@ -109,23 +110,26 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 
 		if res.Run {
 			log.WithFields(log.Fields{
-				"Service": ModuleState,
-				"Running": false,
+				"Service": ServiceName,
+				"Running": res.Run,
+				"UUID":    ServiceUUID,
 			}).Info(res.Message)
 
+			Bili.Agency = engine.UnMarshalPayload(res.VtuberPayload)
 			Bili.Run()
-			_, _ = client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
-				Service: ModuleState,
-				Message: "Done",
-				Alive:   false,
+
+			_, _ = client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
+				Service:     ServiceName,
+				Message:     "Done",
+				ServiceUUID: ServiceUUID,
 			})
+
 			log.WithFields(log.Fields{
-				"Service": ModuleState,
+				"Service": ServiceName,
 				"Running": false,
+				"UUID":    ServiceUUID,
 			}).Info("reporting job was done")
-
 		}
-
 		time.Sleep(1 * time.Minute)
 	}
 }
@@ -155,8 +159,8 @@ func (k *checkBlJob) Run() {
 		for _, Member := range Group.Members {
 			if Member.BiliBiliHashtag != "" {
 				log.WithFields(log.Fields{
-					"Group":  Group.GroupName,
-					"Vtuber": Member.EnName,
+					"Agency": Group.GroupName,
+					"Vtuber": Member.Name,
 				}).Info("Start crawler bilibili")
 
 				body, errcurl := network.CoolerCurl("https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_name="+url.QueryEscape(Member.BiliBiliHashtag), nil)
@@ -164,7 +168,7 @@ func (k *checkBlJob) Run() {
 					log.Error(errcurl)
 					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 						Message: errcurl.Error(),
-						Service: ModuleState,
+						Service: ServiceName,
 					})
 				}
 				var (
@@ -183,7 +187,10 @@ func (k *checkBlJob) Run() {
 						)
 						err := json.Unmarshal([]byte(v.Card), &STB)
 						if err != nil {
-							log.Error(err)
+							log.WithFields(log.Fields{
+								"Agency": Group.GroupName,
+								"Vtuber": Member.Name,
+							}).Error(err)
 						}
 						if STB.Item.Pictures != nil && v.Desc.Type == 2 { //type 2 is picture post (prob,heheheh)
 							for _, pic := range STB.Item.Pictures {
@@ -205,10 +212,13 @@ func (k *checkBlJob) Run() {
 
 							New, err := TBiliData.CheckTBiliBiliFanArt()
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Agency": Group.GroupName,
+									"Vtuber": Member.Name,
+								}).Error(err)
 								gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 									Message: err.Error(),
-									Service: ModuleState,
+									Service: ServiceName,
 								})
 							}
 							if New {
@@ -231,15 +241,15 @@ func (k *checkBlJob) Run() {
 	}
 
 	if k.Reverse {
-		for j := len(*GroupPayload) - 1; j >= 0; j-- {
-			Group := *GroupPayload
+		for j := len(k.Agency) - 1; j >= 0; j-- {
+			Group := k.Agency
 			k.wg.Add(1)
 			go Cek(&k.wg, Group[j])
 		}
 		k.Reverse = false
 
 	} else {
-		for _, G := range *GroupPayload {
+		for _, G := range k.Agency {
 			k.wg.Add(1)
 			go Cek(&k.wg, G)
 		}

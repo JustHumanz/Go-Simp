@@ -2,12 +2,8 @@
 	"GroupName": "Brave",
 	"GroupIcon": "https://cdn.humanz.moe/brave.png",
 	"GroupChannel": {
-		"Youtube": [
-			null
-		],
-		"BiliBili": [
-			null
-		]
+		"Youtube": null,
+		"BiliBili": null
 	},
 	"Members": [
 		{
@@ -195,7 +191,7 @@
 			"EN_Name": "Minazuki Natsuki",
 			"JP_Name": "水菜月夏希",
 			"Twitter": {
-				"Twitter_Fanart": "#あおぎり高校美術部",
+				"Twitter_Fanart": "",
 				"Twitter_Lewd": "",
 				"Twitter_Username": "natsuki_aogiri"
 			},
@@ -206,14 +202,14 @@
 			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "",
-			"Status": "Active"
+			"Status": "Inactive"
 		},
 		{
 			"Name": "Akari",
 			"EN_Name": "Ishikari Akari",
 			"JP_Name": "石狩あかり",
 			"Twitter": {
-				"Twitter_Fanart": "#あおぎり高校美術部",
+				"Twitter_Fanart": "",
 				"Twitter_Lewd": "",
 				"Twitter_Username": "ishikari_akari"
 			},
@@ -231,7 +227,7 @@
 			"EN_Name": "Oshiro Mashiro",
 			"JP_Name": "大代真白",
 			"Twitter": {
-				"Twitter_Fanart": "#あおぎり高校美術部",
+				"Twitter_Fanart": "",
 				"Twitter_Lewd": "",
 				"Twitter_Username": "oshiro_mashiro"
 			},

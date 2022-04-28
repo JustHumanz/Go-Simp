@@ -95,9 +95,11 @@ func SendFanArtNude(Art database.DataFanart, Bot *discordgo.Session) {
 								SetColor(Color).MessageEmbed)
 							if err != nil {
 								log.Error(tmp, err.Error())
-								err = Channel.DelChannel(err.Error())
-								if err != nil {
-									log.Error(err)
+								if IsBadChannelSetting(err) {
+									err = Channel.DelChannel()
+									if err != nil {
+										log.Error(err)
+									}
 								}
 							}
 							err = Reacting(map[string]string{

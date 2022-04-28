@@ -18,7 +18,7 @@ import (
 func CheckYoutube() {
 	var YTstate Subs
 	Token := engine.GetYtToken()
-	for _, Group := range *Payload {
+	for _, Group := range Agency {
 		for _, Member := range Group.Members {
 			if !Member.IsYtNill() && Member.Active() {
 				body, err := network.Curl("https://www.googleapis.com/youtube/v3/channels?part=statistics&id="+Member.YoutubeID+"&key="+*Token, nil)
@@ -26,35 +26,59 @@ func CheckYoutube() {
 					if err.Error() == "403 Forbidden" {
 						log.Error(err, string(body))
 					} else {
+						log.WithFields(log.Fields{
+							"Agency": Group.GroupName,
+							"Vtuber": Member.Name,
+						}).Error(err)
+
 						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-							Message: err.Error(),
-							Service: ModuleState,
+							Message:     err.Error(),
+							Service:     ServiceName,
+							ServiceUUID: ServiceUUID,
 						})
 					}
 				}
+
 				err = json.Unmarshal(body, &YTstate)
 				if err != nil {
-					log.Error(err)
+					log.WithFields(log.Fields{
+						"Agency": Group.GroupName,
+						"Vtuber": Member.Name,
+					}).Error(err)
 				}
+
 				for _, Item := range YTstate.Items {
 					if Member.YoutubeID == Item.ID && !Item.Statistics.HiddenSubscriberCount {
 						YtSubsDB, err := Member.GetSubsCount()
 						if err != nil {
-							log.Error(err)
+							log.WithFields(log.Fields{
+								"Agency": Group.GroupName,
+								"Vtuber": Member.Name,
+							}).Error(err)
 							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-								Message: err.Error(),
-								Service: ModuleState,
+								Message:     err.Error(),
+								Service:     ServiceName,
+								ServiceUUID: ServiceUUID,
 							})
 						}
+
 						YTSubscriberCount, err := strconv.Atoi(Item.Statistics.SubscriberCount)
 						if err != nil {
-							log.Error(err)
+							log.WithFields(log.Fields{
+								"Agency": Group.GroupName,
+								"Vtuber": Member.Name,
+							}).Error(err)
 						}
+
 						SendNotif := func(SubsCount, NextCount string, nextdt, score int64) {
 							err = Member.RemoveSubsCache()
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Agency": Group.GroupName,
+									"Vtuber": Member.Name,
+								}).Error(err)
 							}
+
 							log.WithFields(log.Fields{
 								"Vtuber":             Member.Name,
 								"Group":              Group.GroupName,
@@ -64,15 +88,26 @@ func CheckYoutube() {
 
 							Color, err := engine.GetColor(config.TmpDir, Member.YoutubeAvatar)
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Agency": Group.GroupName,
+									"Vtuber": Member.Name,
+								}).Error(err)
 							}
+
 							VideoCount, err := strconv.Atoi(Item.Statistics.VideoCount)
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Agency": Group.GroupName,
+									"Vtuber": Member.Name,
+								}).Error(err)
 							}
+
 							ViewCount, err := strconv.Atoi(Item.Statistics.ViewCount)
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Agency": Group.GroupName,
+									"Vtuber": Member.Name,
+								}).Error(err)
 							}
 
 							Graph := "[View as Graph](" + os.Getenv("PrometheusURL") + "/graph?g0.expr=get_subscriber%7Bstate%3D%22Youtube%22%2C%20vtuber%3D%22" + Member.Name + "%22%7D&g0.tab=0&g0.stacked=0&g0.range_input=4w)"
@@ -117,13 +152,21 @@ func CheckYoutube() {
 								"Current Youtube subscriber": YTSubscriberCount,
 								"Vtuber":                     Member.Name,
 							}).Info("Update Youtube subscriber")
+
 							VideoCount, err := strconv.Atoi(Item.Statistics.VideoCount)
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Agency": Group.GroupName,
+									"Vtuber": Member.Name,
+								}).Error(err)
 							}
+
 							ViewCount, err := strconv.Atoi(Item.Statistics.ViewCount)
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Agency": Group.GroupName,
+									"Vtuber": Member.Name,
+								}).Error(err)
 							}
 
 							err = YtSubsDB.SetMember(Member).SetGroup(Group).
@@ -133,7 +176,10 @@ func CheckYoutube() {
 								UpdateState(config.YoutubeLive).
 								UpdateSubs()
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Agency": Group.GroupName,
+									"Vtuber": Member.Name,
+								}).Error(err)
 							}
 
 							if YTSubscriberCount >= 1000000 {
@@ -142,10 +188,14 @@ func CheckYoutube() {
 										NextCount := YTSubscriberCount + 1000000
 										dt, sc, err := SubsPreDick(NextCount, "Youtube", Member.Name)
 										if err != nil {
-											log.Error(err)
+											log.WithFields(log.Fields{
+												"Agency": Group.GroupName,
+												"Vtuber": Member.Name,
+											}).Error(err)
 											gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-												Message: err.Error(),
-												Service: ModuleState,
+												Message:     err.Error(),
+												Service:     ServiceName,
+												ServiceUUID: ServiceUUID,
 											})
 										}
 										SendNotif(
@@ -160,10 +210,14 @@ func CheckYoutube() {
 										NextCount := YTSubscriberCount + 100000
 										dt, sc, err := SubsPreDick(NextCount, "Youtube", Member.Name)
 										if err != nil {
-											log.Error(err)
+											log.WithFields(log.Fields{
+												"Agency": Group.GroupName,
+												"Vtuber": Member.Name,
+											}).Error(err)
 											gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-												Message: err.Error(),
-												Service: ModuleState,
+												Message:     err.Error(),
+												Service:     ServiceName,
+												ServiceUUID: ServiceUUID,
 											})
 										}
 										SendNotif(
@@ -178,10 +232,14 @@ func CheckYoutube() {
 										NextCount := YTSubscriberCount + 10000
 										dt, sc, err := SubsPreDick(NextCount, "Youtube", Member.Name)
 										if err != nil {
-											log.Error(err)
+											log.WithFields(log.Fields{
+												"Agency": Group.GroupName,
+												"Vtuber": Member.Name,
+											}).Error(err)
 											gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-												Message: err.Error(),
-												Service: ModuleState,
+												Message:     err.Error(),
+												Service:     ServiceName,
+												ServiceUUID: ServiceUUID,
 											})
 										}
 										SendNotif(
@@ -196,10 +254,14 @@ func CheckYoutube() {
 										NextCount := YTSubscriberCount + 1000
 										dt, sc, err := SubsPreDick(NextCount, "Youtube", Member.Name)
 										if err != nil {
-											log.Error(err)
+											log.WithFields(log.Fields{
+												"Agency": Group.GroupName,
+												"Vtuber": Member.Name,
+											}).Error(err)
 											gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-												Message: err.Error(),
-												Service: ModuleState,
+												Message:     err.Error(),
+												Service:     ServiceName,
+												ServiceUUID: ServiceUUID,
 											})
 										}
 										SendNotif(
@@ -213,8 +275,12 @@ func CheckYoutube() {
 
 						bin, err := YtSubsDB.MarshalBinary()
 						if err != nil {
-							log.Error(err)
+							log.WithFields(log.Fields{
+								"Agency": Group.GroupName,
+								"Vtuber": Member.Name,
+							}).Error(err)
 						}
+
 						if config.GoSimpConf.Metric {
 							gRCPconn.MetricReport(context.Background(), &pilot.Metric{
 								MetricData: bin,

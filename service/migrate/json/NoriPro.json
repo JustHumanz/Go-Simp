@@ -2,12 +2,8 @@
 	"GroupName": "NoriPro",
 	"GroupIcon": "https://cdn.humanz.moe/noripro.png",
 	"GroupChannel": {
-		"Youtube": [
-			null
-		],
-		"BiliBili": [
-			null
-		]
+		"Youtube": null,
+		"BiliBili": null
 	},
 	"Members": [
 		{

@@ -6,7 +6,6 @@ RUN export CGO_ENABLED=1
 RUN mkdir /app
 COPY . /app/Go-Simp
 WORKDIR /app/Go-Simp
-RUN rm -rf Img
 WORKDIR /app/Go-Simp/bin
 
 #fanart
@@ -17,9 +16,6 @@ RUN go build -o twitter_fanart ../service/fanart/twitter/
 
 #frontend
 RUN go build -o fe ../service/frontend/
-
-#guild
-RUN go build -o guild ../service/guild/
 
 #live
 RUN go build -o livebili ../service/livestream/bilibili/live

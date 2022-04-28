@@ -39,7 +39,11 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 	)
 
 	if !Data.Member.IsMemberNill() {
-		loc := Zawarudo(Data.Member.Region)
+		loc, err := Zawarudo(Data.Member.Region)
+		if err != nil {
+			log.Error(err)
+		}
+
 		expiresAt := time.Now().In(loc)
 		VtuberName := FixName(Data.Member.EnName, Data.Member.JpName)
 		if Data.Member.Fanbase != "" {
@@ -138,10 +142,13 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 									"ChannelID":        Channel.ID,
 									"DiscordChannelID": Channel.ChannelID,
 								}).Error(err)
-								err = Channel.DelChannel(err.Error())
-								if err != nil {
-									log.Error(err)
+								if IsBadChannelSetting(err) {
+									err = Channel.DelChannel()
+									if err != nil {
+										log.Error(err)
+									}
 								}
+
 								return
 							}
 
@@ -253,10 +260,13 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 									"ChannelID":        Channel.ID,
 									"DiscordChannelID": Channel.ChannelID,
 								}).Error(err)
-								err = Channel.DelChannel(err.Error())
-								if err != nil {
-									log.Error(err)
+								if IsBadChannelSetting(err) {
+									err = Channel.DelChannel()
+									if err != nil {
+										log.Error(err)
+									}
 								}
+
 								return
 							}
 
@@ -408,10 +418,14 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 									"ChannelID":        Channel.ID,
 									"DiscordChannelID": Channel.ChannelID,
 								}).Error(err)
-								err = Channel.DelChannel(err.Error())
-								if err != nil {
-									log.Error(err)
+
+								if IsBadChannelSetting(err) {
+									err = Channel.DelChannel()
+									if err != nil {
+										log.Error(err)
+									}
 								}
+
 								return
 							}
 
@@ -505,8 +519,14 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 										"ChannelID":        Channel.ID,
 										"DiscordChannelID": Channel.ChannelID,
 									}).Error(err)
-									err = Channel.DelChannel(err.Error())
-									log.Error(err)
+
+									if IsBadChannelSetting(err) {
+										err = Channel.DelChannel()
+										if err != nil {
+											log.Error(err)
+										}
+									}
+
 								}
 							} else {
 								break
@@ -730,11 +750,14 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 								"ChannelID":        Channel.ID,
 								"DiscordChannelID": Channel.ChannelID,
 							}).Error(err)
-							err = Channel.DelChannel(err.Error())
-							if err != nil {
-								log.Error(err)
+
+							if IsBadChannelSetting(err) {
+								err = Channel.DelChannel()
+								if err != nil {
+									log.Error(err)
+								}
 							}
-							log.Error(err)
+
 						}
 
 						if Channel.Dynamic {
@@ -913,7 +936,11 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 			wgg.Wait()
 		}
 	} else {
-		loc := Zawarudo(Data.GroupYoutube.Region)
+		loc, err := Zawarudo(Data.GroupYoutube.Region)
+		if err != nil {
+			log.Error(err)
+		}
+
 		expiresAt := time.Now().In(loc)
 		if Data.State == config.YoutubeLive {
 			var (
@@ -984,10 +1011,14 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 										"ChannelID":        Channel.ID,
 										"DiscordChannelID": Channel.ChannelID,
 									}).Error(err)
-									err = Channel.DelChannel(err.Error())
-									if err != nil {
-										log.Error(err)
+
+									if IsBadChannelSetting(err) {
+										err = Channel.DelChannel()
+										if err != nil {
+											log.Error(err)
+										}
 									}
+
 								}
 
 								log.WithFields(log.Fields{
@@ -1080,10 +1111,14 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 										"ChannelID":        Channel.ID,
 										"DiscordChannelID": Channel.ChannelID,
 									}).Error(err)
-									err = Channel.DelChannel(err.Error())
-									if err != nil {
-										log.Error(err)
+
+									if IsBadChannelSetting(err) {
+										err = Channel.DelChannel()
+										if err != nil {
+											log.Error(err)
+										}
 									}
+
 								}
 
 								log.WithFields(log.Fields{
@@ -1151,9 +1186,11 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							"ChannelID":        v.ID,
 							"DiscordChannelID": v.ChannelID,
 						}).Error(err)
-						err = v.DelChannel(err.Error())
-						if err != nil {
-							log.Error(err)
+						if IsBadChannelSetting(err) {
+							err = v.DelChannel()
+							if err != nil {
+								log.Error(err)
+							}
 						}
 					}
 				}

@@ -23,37 +23,12 @@ services:
 
   multi_tor:
     image: justhumanz/go-multitor
-    command: ["./MultiTOR","-key","${KEY}"]   
-#    ports:
-#      - 8080:8080          
-    networks:
-      - go-simp-net
-
-#  db_migrate:
-#    build: ./service/migrate
-#    image: db_migrate
-#    volumes:
-#      - ../service/migrate/vtuber.json:/vtuber.json
-#    deploy:
-#      placement:
-#        constraints:
-#          - node.hostname == humanz-master
-#    environment:
-#      - PROMETHEUS="http://prometheus:9090"
-#    restart: on-failure
-#    networks:
-#      - go-simp-net
-
-  guild:
-    image: justhumanz/go-simp-guild:latest
-    depends_on:
-      - multi_tor
-      - pilot
+    command: ["./MultiTOR","-key","${KEY}"]            
     networks:
       - go-simp-net
 
   pilot:
-    image: justhumanz/go-simp-pilot:latest
+    image: justhumanz/go-simp-pilot:${RELEASE_VERSION}
     depends_on:
       - multi_tor
     volumes:
@@ -62,7 +37,7 @@ services:
      - go-simp-net
 
   utility:                                                                                                                                                                                                           
-    image: justhumanz/go-simp-utility                                                                                                                                                                                                   
+    image: justhumanz/go-simp-utility:${RELEASE_VERSION}                                                                                                                                                                                                   
     depends_on:                                                                                                                                                                                                      
       - multi_tor                                                                                                                                                                                                    
     environment:                                                                                                                                                                                                     

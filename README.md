@@ -2,7 +2,7 @@
 
 ![alt text](https://raw.githubusercontent.com/JustHumanz/Go-Simp/master/Img/go-simp.png "Go-Simp")  
 ##### [Original Source](https://twitter.com/any_star_/status/1288184424320790528)
-[![build go-simp main module](https://github.com/JustHumanz/Go-Simp/actions/workflows/build-main.yaml/badge.svg)](https://github.com/JustHumanz/Go-Simp/actions/workflows/build-main.yaml)
+[![build & deploy go-simp modules](https://github.com/JustHumanz/Go-Simp/actions/workflows/deploy-modules.yaml/badge.svg)](https://github.com/JustHumanz/Go-Simp/actions/workflows/deploy-modules.yaml)
 ----
 
 ## Introduction
@@ -23,23 +23,11 @@ And if you want ping some roles you can execute
 **Important rule**  
 independent group have strict rule if no one user/roles tagged live/fanart notif will be not send
 
-
-#### Deprecated
-##### ~~Livestream notification~~
-~~First create a channel for this bot,Example `holosimps_channel`~~
-~~then execute `vtbot>enable live hololive` command,after that you can wait until hololive member going live and got notification~~  
-
-##### ~~Fanart notification~~
-~~First create a channel for this bot,Example `nijisimps`~~  
-~~then execute `vtbot>enable art nijisanji` command,after that you can wait until new fanart from twitter appear~~
-
-
-
 ## Current Vtubers
-See at [Web](https://go-simp.humanz.moe)
+See at [Vtuber List](https://go-simp.humanz.moe/vtubers)
 
 ### Command
-See at [Exec](https://go-simp.humanz.moe/Exec/)
+See at [Docs](https://go-simp.humanz.moe/docs/)
 
 
 ### Notification&Command 

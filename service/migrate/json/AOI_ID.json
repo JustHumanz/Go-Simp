@@ -1,0 +1,105 @@
+{
+  "GroupName": "AOI_ID",
+  "GroupIcon": "https://cdn.humanz.moe/aoi.png",
+  "GroupChannel": {
+    "Youtube": [
+      {
+        "ChannelID": "UCD_K44-WVJMI_QpuQnBLTtQ",
+        "Region": "ID"
+      }
+    ],
+    "BiliBili": null
+  },
+  "Members": [
+    {
+      "Name": "Ravi",
+      "EN_Name": "Ravi Narendra",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#ravilust",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "RaviNarendra_"
+      },
+      "Youtube": {
+        "Yt_ID": "UCz9s-nuaBT0DxKBQDpDB3Hw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "Ravilatte",
+      "Status": "Active"
+    },
+    {
+      "Name": "Ratna",
+      "EN_Name": "Starla Adiratna",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#StarlArt",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "StarlaAdiratna"
+      },
+      "Youtube": {
+        "Yt_ID": "UCIwkHYx8tdZEU4693WOy6ng"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "Starlants",
+      "Status": "Active"
+    },
+    {
+      "Name": "Haru",
+      "EN_Name": "Haruta Danantya",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#HRTGraphics",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "HarutaDanantya"
+      },
+      "Youtube": {
+        "Yt_ID": "UC8tSY_wqlGbu7avr4oLteKQ"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "Harumates",
+      "Status": "Active"
+    },
+    {
+      "Name": "Adelaide",
+      "EN_Name": "Millie Adelaide",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#Artelaide",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "MillieAdelaide"
+      },
+      "Youtube": {
+        "Yt_ID": "UCaoMEH7IQ7OYYj73ZuoNJZg"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "FaMillie",
+      "Status": "Active"
+    },
+    {
+      "Name": "Gita",
+      "EN_Name": "Gita Melodia",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#Melochromia",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "GitaMelodia_"
+      },
+      "Youtube": {
+        "Yt_ID": "UC_kXwuVBllPLND_2sUtlxjg"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "SIMPhony",
+      "Status": "Active"
+    }
+  ]
+}

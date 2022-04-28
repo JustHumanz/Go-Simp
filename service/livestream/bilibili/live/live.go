@@ -14,24 +14,22 @@ import (
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
-	"github.com/robfig/cron/v3"
+	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
 )
 
 var (
-	loc          *time.Location
-	Bot          *discordgo.Session
-	GroupPayload *[]database.Group
-	gRCPconn     pilot.PilotServiceClient
+	Bot         *discordgo.Session
+	gRCPconn    pilot.PilotServiceClient
+	ServiceUUID = uuid.New().String()
 )
 
 const (
-	ModuleState = config.LiveBiliBiliModule
+	ServiceName = config.LiveBiliBiliService
 )
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
-	loc, _ = time.LoadLocation("Asia/Shanghai") /*Use CST*/
 	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 }
 
@@ -41,41 +39,29 @@ func main() {
 		configfile config.ConfigFile
 	)
 
-	GetPayload := func() {
-		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
-			Message: "Send me nude",
-			Service: ModuleState,
-		})
-		if err != nil {
-			if configfile.Discord != "" {
-				pilot.ReportDeadService(err.Error(), ModuleState)
-			}
-			log.Error("Error when request payload: %s", err)
+	res, err := gRCPconn.GetBotPayload(context.Background(), &pilot.ServiceMessage{
+		Message:     "Init " + ServiceName + " service",
+		Service:     ServiceName,
+		ServiceUUID: ServiceUUID,
+	})
+	if err != nil {
+		if configfile.Discord != "" {
+			pilot.ReportDeadService(err.Error(), ServiceName)
 		}
-		err = json.Unmarshal(res.ConfigFile, &configfile)
-		if err != nil {
-			log.Error(err)
-		}
-
-		err = json.Unmarshal(res.VtuberPayload, &GroupPayload)
-		if err != nil {
-			log.Error(err)
-		}
+		log.Error("Error when request payload: %s", err)
+	}
+	err = json.Unmarshal(res.ConfigFile, &configfile)
+	if err != nil {
+		log.Fatalln(err)
 	}
 
-	GetPayload()
 	configfile.InitConf()
 	Bot = engine.StartBot(false)
 
 	database.Start(configfile)
 
-	c := cron.New()
-	c.Start()
-
-	c.AddFunc(config.CheckPayload, GetPayload)
-
-	log.Info("Enable " + ModuleState)
-	go pilot.RunHeartBeat(gRCPconn, ModuleState)
+	log.Info("Enable " + ServiceName)
+	go pilot.RunHeartBeat(gRCPconn, ServiceName, ServiceUUID)
 	go ReqRunningJob(gRCPconn)
 	runfunc.Run(Bot)
 }
@@ -83,6 +69,7 @@ func main() {
 type checkBlLiveeJob struct {
 	wg      sync.WaitGroup
 	Reverse bool
+	Agency  []database.Group
 }
 
 func ReqRunningJob(client pilot.PilotServiceClient) {
@@ -90,14 +77,15 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 
 	for {
 		log.WithFields(log.Fields{
-			"Service": ModuleState,
-			"Running": true,
+			"Service": ServiceName,
+			"Running": false,
+			"UUID":    ServiceUUID,
 		}).Info("request for running job")
 
-		res, err := client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
-			Service: ModuleState,
-			Message: "Request",
-			Alive:   true,
+		res, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
+			Service:     ServiceName,
+			Message:     "Request",
+			ServiceUUID: ServiceUUID,
 		})
 		if err != nil {
 			log.Error(err)
@@ -105,19 +93,23 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 
 		if res.Run {
 			log.WithFields(log.Fields{
-				"Service": ModuleState,
-				"Running": false,
+				"Service": ServiceName,
+				"Running": true,
+				"UUID":    ServiceUUID,
 			}).Info(res.Message)
 
+			Bili.Agency = engine.UnMarshalPayload(res.VtuberPayload)
 			Bili.Run()
-			_, _ = client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
-				Service: ModuleState,
-				Message: "Done",
-				Alive:   false,
+
+			_, _ = client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
+				Service:     ServiceName,
+				Message:     "Done",
+				ServiceUUID: ServiceUUID,
 			})
 			log.WithFields(log.Fields{
-				"Service": ModuleState,
+				"Service": ServiceName,
 				"Running": false,
+				"UUID":    ServiceUUID,
 			}).Info("reporting job was done")
 
 		}
@@ -133,7 +125,9 @@ func (i *checkBlLiveeJob) Run() {
 		for _, v := range []string{config.PastStatus, config.LiveStatus} {
 			LiveBili, err := Agency.GetBlLiveStream(v)
 			if err != nil {
-				log.Error(err)
+				log.WithFields(log.Fields{
+					"Agency": Agency.GroupName,
+				}).Error(err)
 			}
 
 			if len(LiveBili) > 0 {
@@ -141,15 +135,18 @@ func (i *checkBlLiveeJob) Run() {
 					for _, Member := range Agency.Members {
 						if Bili.Member.ID == Member.ID {
 							log.WithFields(log.Fields{
-								"Group":  Agency.GroupName,
+								"Agency": Agency.GroupName,
 								"Vtuber": Member.Name,
 							}).Info("Checking LiveBiliBili")
 							Status, err := engine.GetRoomStatus(Member.BiliBiliRoomID)
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Agency": Agency.GroupName,
+									"Vtuber": Member.Name,
+								}).Error(err)
 								gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 									Message: err.Error(),
-									Service: ModuleState,
+									Service: ServiceName,
 								})
 								continue
 							}
@@ -159,9 +156,9 @@ func (i *checkBlLiveeJob) Run() {
 							if Status.CheckScheduleLive() && Bili.Status != config.LiveStatus {
 								//Live
 								if Status.Data.RoomInfo.LiveStartTime != 0 {
-									ScheduledStart = time.Unix(int64(Status.Data.RoomInfo.LiveStartTime), 0).In(loc)
+									ScheduledStart = time.Unix(int64(Status.Data.RoomInfo.LiveStartTime), 0)
 								} else {
-									ScheduledStart = time.Now().In(loc)
+									ScheduledStart = time.Now()
 								}
 
 								Agency.RemoveNillIconURL()
@@ -187,13 +184,19 @@ func (i *checkBlLiveeJob) Run() {
 
 								err := Bili.UpdateLiveBili()
 								if err != nil {
-									log.Error(err)
+									log.WithFields(log.Fields{
+										"Agency": Agency.GroupName,
+										"Vtuber": Member.Name,
+									}).Error(err)
 								}
 
 								if config.GoSimpConf.Metric {
 									bit, err := Bili.MarshalBinary()
 									if err != nil {
-										log.Error(err)
+										log.WithFields(log.Fields{
+											"Agency": Agency.GroupName,
+											"Vtuber": Member.Name,
+										}).Error(err)
 									}
 									gRCPconn.MetricReport(context.Background(), &pilot.Metric{
 										MetricData: bit,
@@ -210,18 +213,24 @@ func (i *checkBlLiveeJob) Run() {
 									"Start":  Bili.Schedul,
 								}).Info("Past live stream")
 								engine.RemoveEmbed(strconv.Itoa(Bili.Member.BiliBiliRoomID), Bot)
-								Bili.UpdateEnd(time.Now().In(loc)).
+								Bili.UpdateEnd(time.Now()).
 									UpdateStatus(config.PastStatus)
 
 								err = Bili.UpdateLiveBili()
 								if err != nil {
-									log.Error(err)
+									log.WithFields(log.Fields{
+										"Agency": Agency.GroupName,
+										"Vtuber": Member.Name,
+									}).Error(err)
 								}
 
 								if config.GoSimpConf.Metric {
 									bit, err := Bili.MarshalBinary()
 									if err != nil {
-										log.Error(err)
+										log.WithFields(log.Fields{
+											"Agency": Agency.GroupName,
+											"Vtuber": Member.Name,
+										}).Error(err)
 									}
 									gRCPconn.MetricReport(context.Background(), &pilot.Metric{
 										MetricData: bit,
@@ -233,7 +242,10 @@ func (i *checkBlLiveeJob) Run() {
 								Bili.UpdateViewers(strconv.Itoa(Status.Data.RoomInfo.Online))
 								err := Bili.UpdateLiveBili()
 								if err != nil {
-									log.Error(err)
+									log.WithFields(log.Fields{
+										"Agency": Agency.GroupName,
+										"Vtuber": Member.Name,
+									}).Error(err)
 								}
 							}
 						}
@@ -244,15 +256,15 @@ func (i *checkBlLiveeJob) Run() {
 	}
 
 	if i.Reverse {
-		for j := len(*GroupPayload) - 1; j >= 0; j-- {
+		for j := len(i.Agency) - 1; j >= 0; j-- {
 			i.wg.Add(1)
-			Grp := *GroupPayload
+			Grp := i.Agency
 			go Cek(Grp[j], &i.wg)
 		}
 		i.Reverse = false
 
 	} else {
-		for _, G := range *GroupPayload {
+		for _, G := range i.Agency {
 			i.wg.Add(1)
 			go Cek(G, &i.wg)
 		}

@@ -26,13 +26,6 @@ var (
 	Longcatttt  = "https://cdn.ebaumsworld.com/2020/09/20/013235/86394200/longcat-pic.jpg"
 	BSD         string
 	Sleep       string
-	Bonjour     string
-	Howdy       string
-	Guten       string
-	Koni        string
-	Selamat     string
-	Assalamu    string
-	Approaching string
 	CommandURL  string
 	GuideURL    string
 	VtubersData string
@@ -57,15 +50,17 @@ const (
 	Indie             = "independent"
 	Fe                = "frontend"
 
-	PixivModule          = "Pixiv Fanart"
-	TwitterModule        = "Twitter Fanart"
-	TBiliBiliModule      = "BiliBili Fanart"
-	LiveBiliBiliModule   = "LiveBiliBili"
-	SpaceBiliBiliModule  = "SpaceBiliBili"
-	TwitchModule         = "Twitch"
-	YoutubeCheckerModule = "Youtube_Checker"
-	YoutubeCounterModule = "Youtube_Counter"
-	SubscriberModule     = "Subscriber"
+	PixivService          = "PixivFanart"
+	TwitterService        = "TwitterFanart"
+	TBiliBiliService      = "BiliBiliFanart"
+	LiveBiliBiliService   = "LiveBiliBili"
+	SpaceBiliBiliService  = "SpaceBiliBili"
+	TwitchService         = "Twitch"
+	YoutubeCheckerService = "Youtube_Checker"
+	YoutubeCounterService = "Youtube_Counter"
+	SubscriberService     = "Subscriber"
+	FrontendService       = "Frontend"
+	ResetApiService       = "ApiService"
 
 	//Crontab
 	BiliBiliLive               = "@every 0h7m0s"
@@ -256,13 +251,6 @@ func (Data ConfigFile) InitConf() {
 	GoSimpIMG = fmt.Sprintf("https://cdn.%s/go-simp.png", Data.Domain)
 	BSD = fmt.Sprintf("https://cdn.%s/bsd.png", Data.Domain)
 	Sleep = fmt.Sprintf("https://cdn.%s/sleep.png", Data.Domain)
-	Bonjour = fmt.Sprintf("https://cdn.%s/bonjour.png", Data.Domain)
-	Howdy = fmt.Sprintf("https://cdn.%s/howdy.png", Data.Domain)
-	Guten = fmt.Sprintf("https://cdn.%s/guten.png", Data.Domain)
-	Koni = fmt.Sprintf("https://cdn.%s/koni.png", Data.Domain)
-	Selamat = fmt.Sprintf("https://cdn.%s/selamat.jpg", Data.Domain)
-	Assalamu = fmt.Sprintf("https://cdn.%s/Assalamu.jpg", Data.Domain)
-	Approaching = fmt.Sprintf("https://cdn.%s/approaching.jpg", Data.Domain)
 	CommandURL = fmt.Sprintf("https://go-simp.%s/Exec/", Data.Domain)
 	GuideURL = fmt.Sprintf("https://go-simp.%s/Guide/", Data.Domain)
 	VtubersData = fmt.Sprintf("https://go-simp.%s", Data.Domain)

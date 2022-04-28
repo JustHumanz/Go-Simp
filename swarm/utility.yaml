@@ -24,7 +24,7 @@ services:
       - go-simp-net                                  
                                                      
   web-vue:                                           
-    image: justhumanz/go-simp-web-vue:latest
+    image: justhumanz/go-simp-web-vue-v2:latest
     deploy:
       replicas: 2                                                         
     depends_on:                                                     

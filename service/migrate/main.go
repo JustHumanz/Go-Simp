@@ -19,6 +19,7 @@ import (
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
+	"github.com/google/uuid"
 	"github.com/nicklaw5/helix"
 
 	"github.com/bwmarrin/discordgo"
@@ -37,6 +38,7 @@ var (
 	TwitchClient    *helix.Client
 	configfile      config.ConfigFile
 	gRCPconn        pilot.PilotServiceClient
+	ServiceUUID     = uuid.New().String()
 )
 
 type NewVtuber struct {
@@ -47,9 +49,10 @@ type NewVtuber struct {
 }
 
 func RequestPay(Message string) {
-	res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
-		Message: Message,
-		Service: "Migrate",
+	res, err := gRCPconn.GetBotPayload(context.Background(), &pilot.ServiceMessage{
+		Message:     Message,
+		Service:     "Migrate",
+		ServiceUUID: ServiceUUID,
 	})
 	if err != nil {
 		log.Fatalf("Error when request payload: %s", err)
@@ -62,6 +65,7 @@ func RequestPay(Message string) {
 
 func init() {
 	fmt.Println("Reading json files...")
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
 
 	files, err := ioutil.ReadDir("json/")
 	if err != nil {
@@ -203,6 +207,8 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 			log.Error(err)
 		}
 
+		Avatar = Data.YtAvatar
+
 	} else {
 		Youtube = "✘"
 		URL = "https://space.bilibili.com/" + strconv.Itoa(Data.Member.BiliBili.BiliBiliID)
@@ -210,6 +216,8 @@ func (Data NewVtuber) SendNotif() *discordgo.MessageEmbed {
 		if err != nil {
 			log.Error(err)
 		}
+
+		Avatar = Data.BiliAvatar
 	}
 
 	if Data.Member.Twitter.TwitterFanart != "" {
@@ -268,9 +276,9 @@ func Dead(s *discordgo.Session, m *discordgo.MessageCreate) {
 			s.ChannelMessageSendEmbed(m.ChannelID, engine.NewEmbed().
 				SetAuthor(m.Author.Username, m.Author.AvatarURL("128")).
 				SetTitle("Bot update new Vtubers").
-				SetURL("https://github.com/JustHumanz/Go-Simp/blob/master/CHANGELOG.md").
+				SetURL("https://github.com/JustHumanz/Go-Simp/releases").
 				SetDescription("Still Processing new data,Comeback when i ready to bang you (around 10-20 minutes or more)").
-				AddField("See update at", "[Changelog](https://github.com/JustHumanz/Go-Simp/blob/master/CHANGELOG.md)").
+				AddField("See update at", "[Changelog](https://github.com/JustHumanz/Go-Simp/releases)").
 				SetThumbnail(config.Sleep).
 				SetImage(engine.MaintenanceIMG()).
 				SetColor(Color).

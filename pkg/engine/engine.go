@@ -229,77 +229,68 @@ func Reacting(Data map[string]string, s *discordgo.Session) error {
 	return nil
 }
 
-func Zawarudo(Region string) *time.Location {
+func Zawarudo(Region string) (*time.Location, error) {
 	Default := func() *time.Location {
 		loc, _ := time.LoadLocation("UTC")
 		return loc
-	}
+	}()
 
 	if Region == "ID" {
 		loc, err := time.LoadLocation("Asia/Jakarta")
 		if err != nil {
-			log.Error(err)
-			return Default()
+			return Default, err
 		}
-		return loc
+		return loc, nil
 	} else if Region == "JP" {
 		loc, err := time.LoadLocation("Asia/Tokyo")
 		if err != nil {
-			log.Error(err)
-			return Default()
+			return Default, err
 		}
-		return loc
+		return loc, nil
 	} else if Region == "CN" {
 		loc, err := time.LoadLocation("Asia/Shanghai")
 		if err != nil {
-			log.Error(err)
-			return Default()
+			return Default, err
 		}
-		return loc
+		return loc, nil
 	} else if Region == "KR" {
 		loc, err := time.LoadLocation("Asia/Seoul")
 		if err != nil {
-			log.Error(err)
-			return Default()
+			return Default, err
 		}
-		return loc
+		return loc, nil
 	} else if Region == "MY" {
 		loc, err := time.LoadLocation("Asia/Kuala_Lumpur")
 		if err != nil {
-			log.Error(err)
-			return Default()
+			return Default, err
 		}
-		return loc
+		return loc, nil
 	} else if Region == "IN" {
 		loc, err := time.LoadLocation("Asia/Dhaka")
 		if err != nil {
-			log.Error(err)
-			return Default()
+			return Default, err
 		}
-		return loc
+		return loc, nil
 	} else if Region == "PH" {
 		loc, err := time.LoadLocation("Asia/Manila")
 		if err != nil {
-			log.Error(err)
-			return Default()
+			return Default, err
 		}
-		return loc
+		return loc, nil
 	} else if Region == "AU" {
 		loc, err := time.LoadLocation("Australia/Sydney")
 		if err != nil {
-			log.Error(err)
-			return Default()
+			return Default, err
 		}
-		return loc
+		return loc, nil
 	} else if Region == "FI" {
 		loc, err := time.LoadLocation("Europe/Helsinki")
 		if err != nil {
-			log.Error(err)
-			return Default()
+			return Default, err
 		}
-		return loc
+		return loc, nil
 	} else {
-		return Default()
+		return Default, nil
 	}
 }
 
@@ -362,18 +353,16 @@ func UniCodetoCountryCode(Region string) string {
 }
 
 func YtFindType(title string) string {
-	yttype := ""
 	title = strings.ToLower(title)
 	if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|mv|covered)", title); Cover {
-		yttype = "Covering"
+		return "Covering"
 	} else if Chat, _ := regexp.MatchString("(?m)(chat|room)", title); Chat {
-		yttype = "ChatRoom"
+		return "ChatRoom"
 	} else if Singing, _ := regexp.MatchString("(?m)(sing|歌枠)", title); Singing {
-		yttype = "Singing"
+		return "Singing"
 	} else {
-		yttype = "Streaming"
+		return "Streaming"
 	}
-	return yttype
 }
 
 //GetAuthorAvatar Get twitter avatar
@@ -581,7 +570,6 @@ func GetRSS(YtID string, proxy bool) ([]string, error) {
 	}
 
 	if err != nil {
-		log.Error(err, string(Data))
 		return nil, err
 	}
 
@@ -752,4 +740,23 @@ func GetTwitchTkn() *helix.Client {
 		log.Panic(err)
 	}
 	return TwitchClient
+}
+
+func IsBadChannelSetting(msg error) bool {
+	var re = regexp.MustCompile(`(?m)(Missing Permissions|Missing Access|Unknown Channel|Cannot send messages in a non-text channel)`)
+	res := re.FindAllString(msg.Error(), -1)
+	if len(res) > 0 {
+		return true
+	}
+
+	return false
+}
+
+func UnMarshalPayload(Payload []byte) []database.Group {
+	var agency []database.Group
+	err := json.Unmarshal(Payload, &agency)
+	if err != nil {
+		log.Error(err)
+	}
+	return agency
 }

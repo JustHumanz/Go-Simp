@@ -2,12 +2,8 @@
 	"GroupName": "Kizuna_AI",
 	"GroupIcon": "https://cdn.humanz.moe/kizuna.png",
 	"GroupChannel": {
-		"Youtube": [
-			null
-		],
-		"BiliBili": [
-			null
-		]
+		"Youtube": null,
+		"BiliBili": null
 	},
 	"Members": [
 		{

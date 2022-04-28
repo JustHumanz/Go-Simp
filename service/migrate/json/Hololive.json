@@ -232,7 +232,9 @@
         "BiliBili_ID": 443305053,
         "BiliRoom_ID": 21560356
       },
-      "Twitch": null,
+      "Twitch": {
+        "Twitch_Username": "usadapekora_hololive"
+      },
       "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
@@ -764,7 +766,9 @@
         "BiliBili_ID": 491474051,
         "BiliRoom_ID": 21752710
       },
-      "Twitch": null,
+      "Twitch": {
+        "Twitch_Username": "tokoyamitowa_holo"
+      },
       "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
@@ -786,7 +790,9 @@
         "BiliBili_ID": 20813493,
         "BiliRoom_ID": 4664126
       },
-      "Twitch": null,
+      "Twitch": {
+        "Twitch_Username": "robocosan_hololive"
+      },
       "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
@@ -812,28 +818,6 @@
       "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
-    },
-    {
-      "Name": "Rushia",
-      "EN_Name": "Uruha Rushia",
-      "JP_Name": "潤羽るしあ",
-      "Twitter": {
-        "Twitter_Fanart": "#絵クロマンサー",
-        "Twitter_Lewd": "",
-        "Twitter_Username": "uruharushia"
-      },
-      "Youtube": {
-        "Yt_ID": "UCl_gCybOJRIgOXw6Qb4qJzQ"
-      },
-      "BiliBili": {
-        "BiliBili_Fanart": "",
-        "BiliBili_ID": 443300418,
-        "BiliRoom_ID": 21545232
-      },
-      "Twitch": null,
-      "Region": "JP",
-      "Fanbase": "",
-      "Status": "Inactive"
     },
     {
       "Name": "Gura",
@@ -896,7 +880,9 @@
         "BiliBili_ID": 674600645,
         "BiliRoom_ID": 22503360
       },
-      "Twitch": null,
+      "Twitch": {
+        "Twitch_Username": "moricalliope_hololiveen"
+      },
       "Region": "EN",
       "Fanbase": "Dead Beats",
       "Status": "Active"
@@ -1066,7 +1052,9 @@
         "Yt_ID": "UCENwRMx5Yh42zWpzURebzTw"
       },
       "BiliBili": null,
-      "Twitch": null,
+      "Twitch": {
+        "Twitch_Username": "laplusdarknesss_hololive"
+      },
       "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
@@ -1141,6 +1129,60 @@
       "Twitch": null,
       "Region": "JP",
       "Fanbase": "かざまが斬る",
+      "Status": "Active"
+    },
+    {
+      "Name": "Vestia",
+      "EN_Name": "Vestia Zeta",
+      "JP_Name": "ベスティア・ゼータ",
+      "Twitter": {
+        "Twitter_Fanart": "#Zetacrylic",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "vestiazeta"
+      },
+      "Youtube": {
+        "Yt_ID": "UCTvHWSfBZgtxE4sILOaurIQ"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "Zecretary",
+      "Status": "Active"
+    },
+    {
+      "Name": "Kaela",
+      "EN_Name": "Kaela Kovalskia",
+      "JP_Name": "カエラ・コヴァルスキア",
+      "Twitter": {
+        "Twitter_Fanart": "#inKaela",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "kaelakovalskia"
+      },
+      "Youtube": {
+        "Yt_ID": "UCZLZ8Jjx_RN2CXloOmgTHVg"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Kobokan",
+      "EN_Name": "Kobo Kanaeru",
+      "JP_Name": "こぼ・かなえる",
+      "Twitter": {
+        "Twitter_Fanart": "#AeruSeni",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "kobokanaeru"
+      },
+      "Youtube": {
+        "Yt_ID": "UCjLEmnpCNeisMxy134KPwWw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "Kobokerz",
       "Status": "Active"
     }
   ]

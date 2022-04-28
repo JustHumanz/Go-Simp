@@ -34,14 +34,10 @@ class User():
     def add_channel(self,channel):
         self.channel_id = channel
 
-    def verify_user(self,discord):
-        user = discord.get(API_BASE_URL + '/users/@me')
-        if user.status_code != 200:
-            return user
-
-        user = user.json()
-        if user['id'] == self.user_id:
+    def verify_user(self,session):
+        if session["discord_user_id"] == self.user_id:
             return True
+        return False    
 
 discord_user = User()
 
@@ -167,6 +163,8 @@ def channels(guild_id):
 
     discord_user.add_guild(guild_id)
     discord_user.add_user(user.json()['id'])
+    session["discord_guild_id"] = guild_id
+    session["discord_user_id"] = user.json()['id']
 
     channels = requests.get(API_BASE_URL + f'/guilds/{guild_id}/channels',headers=bot_headers).json()
     channels_info = {
@@ -193,6 +191,7 @@ def channel(channel_id):
 
     discord_channel = discord_channel.json()
     discord_user.add_channel(channel_id)
+    session["discord_channel_id"] = channel_id
 
     agency_list = {
         "agency_list": [],
@@ -249,8 +248,8 @@ def update_channel(channel_id):
     if len(discord.token.keys()) < 1:
         return prepare_response({"message":"Missing token"},401)
 
-    logging.info('%s %d %s',"update channel",discord_user.verify_user(discord),channel_id,discord_user.channel_id)
-    if discord_user.verify_user(discord) and channel_id == discord_user.channel_id:
+    logging.info('update channel %d %s',discord_user.verify_user(session),channel_id)
+    if discord_user.verify_user(session) and channel_id == discord_user.channel_id:
         form = request.json
         if form["agency_id"] != 10:
             form["indie_notif"] = False
@@ -291,7 +290,7 @@ def delete_channel(channel_id):
     if len(discord.token.keys()) < 1:
         return prepare_response({"message":"Missing token"},401)
 
-    logging.info('%s %d %s',"delete channel",discord_user.verify_user(discord),channel_id,discord_user.channel_id)
+    logging.info('delete channel %d %s',discord_user.verify_user(discord),channel_id)
     if discord_user.verify_user(discord) and channel_id == discord_user.channel_id:
         form = request.json
         if form["agency_id"] != 10:

@@ -2,12 +2,8 @@
 	"GroupName": "Re:Act",
 	"GroupIcon": "https://cdn.humanz.moe/ReAct.png",
 	"GroupChannel": {
-		"Youtube": [
-			null
-		],
-		"BiliBili": [
-			null
-		]
+		"Youtube": null,
+		"BiliBili": null
 	},
 	"Members": [
         {
@@ -95,7 +91,7 @@
             "BiliBili": null,
             "Twitch": null,
             "Twitter": {
-              "Twitter_Fanart": "#くまの自由帳",
+              "Twitter_Fanart": "#まりんちゅアート",
               "Twitter_Lewd": "",
               "Twitter_Username": "kashikomari_ch"
             },

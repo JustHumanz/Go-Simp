@@ -2,12 +2,8 @@
 	"GroupName": "774inc",
 	"GroupIcon": "https://cdn.humanz.moe/774.png",
 	"GroupChannel": {
-		"Youtube": [
-			null
-		],
-		"BiliBili": [
-			null
-		]
+		"Youtube": null,
+		"BiliBili": null
 	},
 	"Members": [
 		{
@@ -431,7 +427,7 @@
 			"Twitter": {
 				"Twitter_Fanart": "#アンナート",
 				"Twitter_Lewd": "",
-				"Twitter_Username": "Rene_Ryugasaki"
+				"Twitter_Username": "Anna_Kojo"
 			},
 			"Youtube": {
 				"Yt_ID": "UCvPPBoTOor5gm8zSlE2tg4w"

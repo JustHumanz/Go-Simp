@@ -83,21 +83,42 @@ var (
 			}
 		},
 		"livestream": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			state := i.ApplicationCommandData().Options[0].IntValue()
-			Avatar := i.Member.User.AvatarURL("128")
-			Nick := i.Member.User.Username
 			var group database.Group
 			var member database.Member
 			var embed []*discordgo.MessageEmbed
+
+			state := i.ApplicationCommandData().Options[0].IntValue()
+			Avatar := i.Member.User.AvatarURL("128")
+			Nick := i.Member.User.Username
+			GroupSelected := 0
+			VtuberSelected := ""
 			region := ""
 			status := ""
 
-			if i.ApplicationCommandData().Options[1].IntValue() == 1 {
-				status = config.LiveStatus
-			} else if i.ApplicationCommandData().Options[1].IntValue() == 2 {
-				status = config.UpcomingStatus
-			} else {
-				status = config.PastStatus
+			for _, v := range i.ApplicationCommandData().Options {
+				if v.Name == "group-name" {
+					GroupSelected = int(v.IntValue())
+				}
+
+				if v.Name == engine.VtuberOption {
+					VtuberSelected = v.StringValue()
+				}
+
+				if v.Name == "status" {
+					status = func() string {
+						if v.IntValue() == 1 {
+							return config.LiveStatus
+						} else if v.IntValue() == 2 {
+							return config.UpcomingStatus
+						} else {
+							return config.PastStatus
+						}
+					}()
+				}
+
+				if v.Name == "region" {
+					region = v.StringValue()
+				}
 			}
 
 			log.WithFields(log.Fields{
@@ -108,11 +129,22 @@ var (
 
 			SendMessage := func(e []*discordgo.MessageEmbed) {
 				if len(e) > 10 {
+					err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+						Type: discordgo.InteractionResponseChannelMessageWithSource,
+						Data: &discordgo.InteractionResponseData{
+							Content: "On Progress",
+						},
+					})
+					if err != nil {
+						log.Error(err)
+					}
+
 					for _, v := range e {
 						_, err := s.ChannelMessageSendEmbed(i.ChannelID, v)
 						if err != nil {
 							log.Error(err)
 						}
+						time.Sleep(1 * time.Second)
 					}
 				} else if len(e) == 0 {
 					err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -158,22 +190,18 @@ var (
 					log.Error(err)
 				}
 			}
-			for _, v := range *GroupsPayload {
-				if v.ID == i.ApplicationCommandData().Options[2].IntValue() {
+
+			for _, v := range GroupsPayload {
+				if v.ID == int64(GroupSelected) {
 					group = v
-				}
-			}
-			if len(i.ApplicationCommandData().Options) == 4 {
-				for _, v := range *GroupsPayload {
-					for _, v2 := range v.Members {
-						if v2.Name == i.ApplicationCommandData().Options[3].StringValue() {
-							member = v2
+					if VtuberSelected != "" {
+						for _, v2 := range v.Members {
+							if v2.Name == VtuberSelected {
+								member = v2
+							}
 						}
 					}
 				}
-			}
-			if len(i.ApplicationCommandData().Options) == 5 {
-				region = i.ApplicationCommandData().Options[4].StringValue()
 			}
 
 			if state == 1 {
@@ -186,7 +214,12 @@ var (
 					if YoutubeData != nil {
 						for _, Youtube := range YoutubeData {
 							FanBase := "simps"
-							loc := engine.Zawarudo(member.Region)
+
+							loc, err := engine.Zawarudo(member.Region)
+							if err != nil {
+								log.Error(err)
+							}
+
 							duration := durafmt.Parse(Youtube.Schedul.In(loc).Sub(time.Now().In(loc))).LimitFirstN(2)
 
 							Color, err := engine.GetColor(config.TmpDir, Youtube.Thumb)
@@ -211,7 +244,7 @@ var (
 							if status == config.PastStatus {
 								durationlive := durafmt.Parse(Youtube.End.In(loc).Sub(Youtube.Schedul)).LimitFirstN(2)
 								embed = append(embed, engine.NewEmbed().
-									SetAuthor(Nick, BotInfo.Avatar).
+									SetAuthor(Nick, Avatar).
 									SetTitle(FixName).
 									SetDescription(Youtube.Title).
 									SetImage(Youtube.Thumb).
@@ -249,13 +282,7 @@ var (
 					}
 					SendMessage(embed)
 				} else {
-					YoutubeData, err := group.GetYtLiveStream(status, func() []string {
-						if region != "" {
-							return []string{region}
-						} else {
-							return nil
-						}
-					}())
+					YoutubeData, err := group.GetYtLiveStream(status, region)
 					if err != nil {
 						log.Error(err)
 					}
@@ -269,7 +296,11 @@ var (
 							FixName := engine.FixName(Youtube.Member.EnName, Youtube.Member.JpName)
 							FanBase := "simps"
 
-							loc := engine.Zawarudo(Youtube.Member.Region)
+							loc, err := engine.Zawarudo(Youtube.Member.Region)
+							if err != nil {
+								log.Error(err)
+							}
+
 							Color, err := engine.GetColor(config.TmpDir, Youtube.Thumb)
 							if err != nil {
 								if err.Error() == "Server Error,status get 404 Not Found" {
@@ -292,7 +323,7 @@ var (
 								duration := durafmt.Parse(Youtube.Schedul.In(loc).Sub(time.Now().In(loc))).LimitFirstN(2)
 								durationlive := durafmt.Parse(Youtube.End.In(loc).Sub(Youtube.Schedul)).LimitFirstN(2)
 								embed = append(embed, engine.NewEmbed().
-									SetAuthor(Nick, BotInfo.Avatar).
+									SetAuthor(Nick, Avatar).
 									SetTitle(FixName).
 									SetDescription(Youtube.Title).
 									SetImage(Youtube.Thumb).
@@ -477,6 +508,18 @@ var (
 		"art": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			var embed *discordgo.MessageEmbed
 			var DynamicData DynamicSvr
+			var SelectedAgency int64
+			var SelectedVtuber string
+
+			for _, v := range i.ApplicationCommandData().Options {
+				if v.Name == engine.AgencyOption {
+					SelectedAgency = v.IntValue()
+				}
+
+				if v.Name == engine.VtuberOption {
+					SelectedVtuber = v.StringValue()
+				}
+			}
 
 			Avatar := i.Member.User.AvatarURL("128")
 			Nick := i.Member.User.Username
@@ -488,11 +531,28 @@ var (
 				}
 
 				if Data.State == config.BiliBiliArt {
-					body, errcurl := network.CoolerCurl("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id="+Data.Dynamic_id, nil)
-					if errcurl != nil {
-						log.Error(errcurl)
+					if config.GoSimpConf.MultiTOR != "" {
+						body, errcurl := network.CoolerCurl("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id="+Data.Dynamic_id, nil)
+						if errcurl != nil {
+							log.Error(errcurl)
+						}
+
+						err := json.Unmarshal(body, &DynamicData)
+						if err != nil {
+							log.Error(err)
+						}
+					} else {
+						body, errcurl := network.Curl("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id="+Data.Dynamic_id, nil)
+						if errcurl != nil {
+							log.Error(errcurl)
+						}
+
+						err := json.Unmarshal(body, &DynamicData)
+						if err != nil {
+							log.Error(err)
+						}
 					}
-					json.Unmarshal(body, &DynamicData)
+
 					embed = engine.NewEmbed().
 						SetAuthor(Nick, Avatar).
 						SetTitle(Data.Author).
@@ -539,55 +599,57 @@ var (
 				}
 
 			}
-			if len(i.ApplicationCommandData().Options) == 2 {
-				VtuberName := i.ApplicationCommandData().Options[1].StringValue()
-				log.WithFields(log.Fields{
-					"Vtuber": VtuberName,
-				}).Info("FanArt")
-				for _, GroupData := range *GroupsPayload {
-					for _, v := range GroupData.Members {
-						if strings.EqualFold(v.Name, VtuberName) || strings.EqualFold(v.EnName, VtuberName) || strings.EqualFold(v.JpName, VtuberName) {
 
-							log.WithFields(log.Fields{
-								"User":    i.Member.User.Username,
-								"Channel": i.ChannelID,
-								"Vtuber":  v.Name,
-							}).Info("art")
-
-							FanArt, err := v.GetRandomFanart()
-
-							if err != nil {
-								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-									Type: discordgo.InteractionResponseChannelMessageWithSource,
-									Data: &discordgo.InteractionResponseData{
-										Content: "Oops,something error\n" + err.Error(),
-									},
-								})
-							} else {
-								SendNude(FanArt)
+			Agency := database.Group{}
+			VtuberName := database.Member{}
+			for _, v := range GroupsPayload {
+				if v.ID == SelectedAgency {
+					Agency = v
+					if SelectedVtuber != "" {
+						for _, k := range v.Members {
+							if strings.EqualFold(SelectedVtuber, k.Name) {
+								VtuberName = k
 							}
 						}
 					}
 				}
-			} else {
-				GroupID := i.ApplicationCommandData().Options[0].IntValue()
+			}
+
+			if !VtuberName.IsMemberNill() {
 				log.WithFields(log.Fields{
-					"VtuberGroupID": GroupID,
+					"User":    i.Member.User.Username,
+					"Channel": i.ChannelID,
+					"Vtuber":  VtuberName.Name,
+				}).Info("art")
+
+				FanArt, err := VtuberName.GetRandomFanart()
+
+				if err != nil {
+					s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+						Type: discordgo.InteractionResponseChannelMessageWithSource,
+						Data: &discordgo.InteractionResponseData{
+							Content: "Oops,something error\n" + err.Error(),
+						},
+					})
+				} else {
+					SendNude(FanArt)
+				}
+			} else {
+				log.WithFields(log.Fields{
+					"User":         i.Member.User.Username,
+					"Channel":      i.ChannelID,
+					"VtuberAgency": Agency.GroupName,
 				}).Info("FanArt")
-				for _, v := range *GroupsPayload {
-					if v.ID == GroupID {
-						FanArt, err := v.GetRandomFanart()
-						if err != nil {
-							s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-								Type: discordgo.InteractionResponseChannelMessageWithSource,
-								Data: &discordgo.InteractionResponseData{
-									Content: "Oops,something error\n" + err.Error(),
-								},
-							})
-						} else {
-							SendNude(FanArt)
-						}
-					}
+				FanArt, err := Agency.GetRandomFanart()
+				if err != nil {
+					s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+						Type: discordgo.InteractionResponseChannelMessageWithSource,
+						Data: &discordgo.InteractionResponseData{
+							Content: "Oops,something error\n" + err.Error(),
+						},
+					})
+				} else {
+					SendNude(FanArt)
 				}
 			}
 		},
@@ -600,6 +662,18 @@ var (
 				var embed *discordgo.MessageEmbed
 				Avatar := i.Member.User.AvatarURL("128")
 				Nick := i.Member.User.Username
+				var SelectedAgency int64
+				var SelectedVtuber string
+
+				for _, v := range i.ApplicationCommandData().Options {
+					if v.Name == engine.AgencyOption {
+						SelectedAgency = v.IntValue()
+					}
+
+					if v.Name == engine.VtuberOption {
+						SelectedVtuber = v.StringValue()
+					}
+				}
 
 				SendNude := func(Data *database.DataFanart) {
 					Color, err := engine.GetColor(config.TmpDir, Avatar)
@@ -643,55 +717,59 @@ var (
 					}
 
 				}
-				if len(i.ApplicationCommandData().Options) == 2 {
-					VtuberName := i.ApplicationCommandData().Options[1].StringValue()
-					log.WithFields(log.Fields{
-						"Vtuber": VtuberName,
-					}).Info("Lewd")
-					for _, GroupData := range *GroupsPayload {
-						for _, v := range GroupData.Members {
-							if strings.EqualFold(v.Name, VtuberName) || strings.EqualFold(v.EnName, VtuberName) || strings.EqualFold(v.JpName, VtuberName) {
 
-								log.WithFields(log.Fields{
-									"User":    i.Member.User.Username,
-									"Channel": i.ChannelID,
-									"Vtuber":  v.Name,
-								}).Info("lewd")
-
-								FanArt, err := v.GetRandomLewd()
-								if err != nil {
-									s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-										Type: discordgo.InteractionResponseChannelMessageWithSource,
-										Data: &discordgo.InteractionResponseData{
-											Content: "Oops,something error\n" + err.Error(),
-										},
-									})
-								} else {
-									SendNude(FanArt)
+				Agency := database.Group{}
+				VtuberName := database.Member{}
+				for _, v := range GroupsPayload {
+					if v.ID == SelectedAgency {
+						Agency = v
+						if SelectedVtuber != "" {
+							for _, k := range v.Members {
+								if strings.EqualFold(SelectedVtuber, k.Name) {
+									VtuberName = k
 								}
 							}
 						}
 					}
-				} else {
-					GroupID := i.ApplicationCommandData().Options[0].IntValue()
+				}
+
+				if !VtuberName.IsMemberNill() {
 					log.WithFields(log.Fields{
-						"VtuberGroupName": GroupID,
-					}).Info("Lewd")
-					for _, v := range *GroupsPayload {
-						if v.ID == GroupID {
-							FanArt, err := v.GetRandomFanart()
-							if err != nil {
-								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-									Type: discordgo.InteractionResponseChannelMessageWithSource,
-									Data: &discordgo.InteractionResponseData{
-										Content: "Oops,something error\n" + err.Error(),
-									},
-								})
-							} else {
-								SendNude(FanArt)
-							}
-						}
+						"User":    i.Member.User.Username,
+						"Channel": i.ChannelID,
+						"Vtuber":  VtuberName.Name,
+					}).Info("lewd")
+
+					FanArt, err := VtuberName.GetRandomLewd()
+					if err != nil {
+						s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+							Type: discordgo.InteractionResponseChannelMessageWithSource,
+							Data: &discordgo.InteractionResponseData{
+								Content: "Oops,something error\n" + err.Error(),
+							},
+						})
+					} else {
+						SendNude(FanArt)
 					}
+
+				} else {
+					log.WithFields(log.Fields{
+						"User":         i.Member.User.Username,
+						"Channel":      i.ChannelID,
+						"VtuberAgency": Agency.GroupName,
+					}).Info("Lewd")
+					FanArt, err := Agency.GetRandomFanart()
+					if err != nil {
+						s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+							Type: discordgo.InteractionResponseChannelMessageWithSource,
+							Data: &discordgo.InteractionResponseData{
+								Content: "Oops,something error\n" + err.Error(),
+							},
+						})
+					} else {
+						SendNude(FanArt)
+					}
+
 				}
 			} else {
 				err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -710,7 +788,7 @@ var (
 			}
 		},
 		"info": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			for _, v := range *GroupsPayload {
+			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
 					if strings.EqualFold(v2.Name, i.ApplicationCommandData().Options[0].StringValue()) {
 						var (
@@ -830,13 +908,13 @@ var (
 			}).Info("tag-me")
 
 			for _, v := range i.ApplicationCommandData().Options {
-				if v.Name == "vtuber-group" {
+				if v.Name == engine.AgencyOption {
 					GroupID = int(v.IntValue())
 				}
 				if v.Name == "reminder" {
 					Reminder = int(v.IntValue())
 				}
-				if v.Name == "vtuber-name" {
+				if v.Name == engine.VtuberOption {
 					MemberName = v.StringValue()
 				}
 			}
@@ -847,7 +925,7 @@ var (
 			}
 
 			One := true
-			for _, v := range *GroupsPayload {
+			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
 					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
@@ -898,7 +976,7 @@ var (
 				}
 			}
 			if Already != nil {
-				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+				_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
 						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
 						SetDescription(i.Member.User.Mention() + " Already Added\n" + strings.Join(Already, " ")).
@@ -907,7 +985,7 @@ var (
 						SetColor(Color).MessageEmbed},
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Content: "Something went wrong",
 					})
 					return
@@ -915,7 +993,7 @@ var (
 			}
 
 			if Done != nil {
-				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+				_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
 						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
 						SetDescription(i.Member.User.Mention() + " notifications have been added to these members\n" + strings.Join(Done, " ")).
@@ -924,7 +1002,7 @@ var (
 						SetColor(Color).MessageEmbed},
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Content: "Something went wrong",
 					})
 					return
@@ -951,15 +1029,15 @@ var (
 			}
 
 			for _, v := range i.ApplicationCommandData().Options {
-				if v.Name == "vtuber-group" {
+				if v.Name == engine.AgencyOption {
 					GroupID = int(v.IntValue())
 				}
-				if v.Name == "vtuber-name" {
+				if v.Name == engine.VtuberOption {
 					MemberName = v.StringValue()
 				}
 			}
 
-			for _, v := range *GroupsPayload {
+			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
 					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
@@ -1000,7 +1078,7 @@ var (
 				}
 			}
 			if Already != nil {
-				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+				_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
 						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
 						SetDescription(i.Member.User.Mention() + " You already removed this Group/Member from your list, or you never added them.\n" + strings.Join(Already, " ")).
@@ -1009,7 +1087,7 @@ var (
 						SetColor(Color).MessageEmbed},
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Content: "Something went wrong",
 					})
 					return
@@ -1017,7 +1095,7 @@ var (
 			}
 
 			if Done != nil {
-				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+				_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
 						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
 						SetDescription(i.Member.User.Mention() + " You removed these Members from your list.\n" + strings.Join(Done, " ")).
@@ -1026,7 +1104,7 @@ var (
 						SetColor(Color).MessageEmbed},
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Content: "Something went wrong",
 					})
 					return
@@ -1072,13 +1150,13 @@ var (
 			)
 
 			for _, v := range i.ApplicationCommandData().Options {
-				if v.Name == "vtuber-group" {
+				if v.Name == engine.AgencyOption {
 					GroupID = int(v.IntValue())
 				}
 				if v.Name == "reminder" {
 					Reminder = int(v.IntValue())
 				}
-				if v.Name == "vtuber-name" {
+				if v.Name == engine.VtuberOption {
 					MemberName = v.StringValue()
 				}
 				if v.Name == "role-name" {
@@ -1092,7 +1170,7 @@ var (
 			}
 
 			One := true
-			for _, v := range *GroupsPayload {
+			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
 					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
@@ -1143,7 +1221,7 @@ var (
 				}
 			}
 			if Already != nil {
-				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+				_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
 						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
 						SetDescription(RoleState.Mention() + " Already Added\n" + strings.Join(Already, " ")).
@@ -1152,7 +1230,7 @@ var (
 						SetColor(Color).MessageEmbed},
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Content: "Something went wrong",
 					})
 					return
@@ -1160,7 +1238,7 @@ var (
 			}
 
 			if Done != nil {
-				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+				_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
 						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
 						SetDescription(RoleState.Mention() + " notifications have been added to these members\n" + strings.Join(Done, " ")).
@@ -1169,7 +1247,7 @@ var (
 						SetColor(Color).MessageEmbed},
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Content: "Something went wrong",
 					})
 					return
@@ -1212,10 +1290,10 @@ var (
 			)
 
 			for _, v := range i.ApplicationCommandData().Options {
-				if v.Name == "vtuber-group" {
+				if v.Name == engine.AgencyOption {
 					GroupID = int(v.IntValue())
 				}
-				if v.Name == "vtuber-name" {
+				if v.Name == engine.VtuberOption {
 					MemberName = v.StringValue()
 				}
 				if v.Name == "role-name" {
@@ -1223,7 +1301,7 @@ var (
 				}
 			}
 
-			for _, v := range *GroupsPayload {
+			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
 					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
@@ -1264,7 +1342,7 @@ var (
 				}
 			}
 			if Already != nil {
-				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+				_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
 						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
 						SetDescription(RoleState.Mention() + " You already removed this Group/Member from your list, or you never added them.\n" + strings.Join(Already, " ")).
@@ -1273,7 +1351,7 @@ var (
 						SetColor(Color).MessageEmbed},
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Content: "Something went wrong",
 					})
 					return
@@ -1281,7 +1359,7 @@ var (
 			}
 
 			if Done != nil {
-				_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+				_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 					Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
 						SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
 						SetDescription(RoleState.Mention() + " You removed these Members from your list.\n" + strings.Join(Done, " ")).
@@ -1290,7 +1368,7 @@ var (
 						SetColor(Color).MessageEmbed},
 				})
 				if err != nil {
-					s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Content: "Something went wrong",
 					})
 					return
@@ -1428,8 +1506,8 @@ var (
 							Channel = v2.ChannelValue(nil)
 						}
 
-						if v2.Name == "vtuber-group" {
-							for _, v3 := range *GroupsPayload {
+						if v2.Name == engine.AgencyOption {
+							for _, v3 := range GroupsPayload {
 								if v3.ID == v2.IntValue() {
 									Group = v3
 									break
@@ -1506,8 +1584,8 @@ var (
 							Channel = v2.ChannelValue(nil)
 						}
 
-						if v2.Name == "vtuber-group" {
-							for _, v3 := range *GroupsPayload {
+						if v2.Name == engine.AgencyOption {
+							for _, v3 := range GroupsPayload {
 								if v3.ID == v2.IntValue() {
 									Group = v3
 									break
@@ -1579,8 +1657,8 @@ var (
 							Channel = v2.ChannelValue(nil)
 						}
 
-						if v2.Name == "vtuber-group" {
-							for _, v3 := range *GroupsPayload {
+						if v2.Name == engine.AgencyOption {
+							for _, v3 := range GroupsPayload {
 								if v3.ID == v2.IntValue() {
 									Group = v3
 									break
@@ -1810,11 +1888,11 @@ var (
 						}
 					}
 				} else {
-					_, err := s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					_, err := s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Embeds: embed,
 					})
 					if err != nil {
-						s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+						s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 							Content: "Something went wrong",
 						})
 						return
@@ -2113,7 +2191,7 @@ var (
 						"Channel": v.ChannelID,
 					}).Info("channel-delete")
 
-					err := v.DelChannel("Delete")
+					err := v.DelChannel()
 					if err != nil {
 						log.Error(err)
 						_, err := s.ChannelMessageSend(i.ChannelID, "Something error XD")
@@ -2122,11 +2200,11 @@ var (
 						}
 						return
 					}
-					_, err = s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+					_, err = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 						Content: "<@" + i.Member.User.ID + "> is disabled " + v.Group.GroupName + " from this channel",
 					})
 					if err != nil {
-						s.FollowupMessageCreate(s.State.User.ID, i.Interaction, true, &discordgo.WebhookParams{
+						s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
 							Content: "Something went wrong",
 						})
 						return
@@ -2169,7 +2247,7 @@ var (
 				return
 			}
 
-			for k, v := range *GroupsPayload {
+			for k, v := range GroupsPayload {
 				for _, v2 := range v.Members {
 					if strings.EqualFold(VtuberInput, v2.EnName) || strings.EqualFold(VtuberInput, v2.JpName) || strings.EqualFold(VtuberInput, v2.Name) {
 						var (
@@ -2301,7 +2379,7 @@ var (
 						}
 					}
 				}
-				if k == len(*GroupsPayload)-1 {
+				if k == len(GroupsPayload)-1 {
 					err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 						Type: discordgo.InteractionResponseChannelMessageWithSource,
 						Data: &discordgo.InteractionResponseData{

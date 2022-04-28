@@ -1,0 +1,77 @@
+[
+  {
+    "code": "EN",
+    "name": "English",
+    "flagCode": "gb-eng"
+  },
+  {
+    "code": "ID",
+    "name": "Indonesia",
+    "flagCode": "id"
+  },
+  {
+    "code": "JP",
+    "name": "Japan",
+    "flagCode": "jp"
+  },
+  {
+    "code": "CN",
+    "name": "China",
+    "flagCode": "cn"
+  },
+  {
+    "code": "IN",
+    "name": "India",
+    "flagCode": "in"
+  },
+  {
+    "code": "KR",
+    "name": "Korea",
+    "flagCode": "kr"
+  },
+  {
+    "code": "AU",
+    "name": "Australia",
+    "flagCode": "au"
+  },
+  {
+    "code": "FI",
+    "name": "Finland",
+    "flagCode": "fi"
+  },
+  {
+    "code": "PH",
+    "name": "Philippines",
+    "flagCode": "ph"
+  },
+  {
+    "code": "UK",
+    "name": "United Kingdom",
+    "flagCode": "gb"
+  },
+  {
+    "code": "US",
+    "name": "United States",
+    "flagCode": "us"
+  },
+  {
+    "code": "FR",
+    "name": "France",
+    "flagCode": "fr"
+  },
+  {
+    "code": "MY",
+    "name": "Malaysia",
+    "flagCode": "my"
+  },
+  {
+    "code": "RU",
+    "name": "Russia",
+    "flagCode": "ru"
+  },
+  {
+    "code": "CA",
+    "name": "Canada",
+    "flagCode": "ca"
+  }
+]

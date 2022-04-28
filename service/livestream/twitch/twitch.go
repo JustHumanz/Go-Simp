@@ -15,20 +15,20 @@ import (
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
+	"github.com/google/uuid"
 	"github.com/nicklaw5/helix"
-	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 )
 
 var (
 	Bot          *discordgo.Session
 	TwitchClient *helix.Client
-	GroupPayload *[]database.Group
 	gRCPconn     pilot.PilotServiceClient
+	ServiceUUID  = uuid.New().String()
 )
 
 const (
-	ModuleState = config.TwitchModule
+	ServiceName = config.TwitchService
 )
 
 func init() {
@@ -42,58 +42,48 @@ func main() {
 		configfile config.ConfigFile
 	)
 
-	GetPayload := func() {
-		res, err := gRCPconn.ReqData(context.Background(), &pilot.ServiceMessage{
-			Message: "Send me nude",
-			Service: ModuleState,
-		})
-		if err != nil {
-			if configfile.Discord != "" {
-				pilot.ReportDeadService(err.Error(), ModuleState)
-			}
-			log.Error("Error when request payload: %s", err)
+	res, err := gRCPconn.GetBotPayload(context.Background(), &pilot.ServiceMessage{
+		Message:     "Init " + ServiceName + " service",
+		Service:     ServiceName,
+		ServiceUUID: ServiceUUID,
+	})
+	if err != nil {
+		if configfile.Discord != "" {
+			pilot.ReportDeadService(err.Error(), ServiceName)
 		}
-		err = json.Unmarshal(res.ConfigFile, &configfile)
-		if err != nil {
-			log.Error(err)
-		}
-
-		err = json.Unmarshal(res.VtuberPayload, &GroupPayload)
-		if err != nil {
-			log.Error(err)
-		}
+		log.Error("Error when request payload: %s", err)
+	}
+	err = json.Unmarshal(res.ConfigFile, &configfile)
+	if err != nil {
+		log.Fatalln(err)
 	}
 
-	GetPayload()
 	configfile.InitConf()
 	Bot = engine.StartBot(false)
 	TwitchClient = engine.GetTwitchTkn()
 
 	database.Start(configfile)
 
-	c := cron.New()
-	c.Start()
-
 	resp, err := TwitchClient.RequestAppAccessToken([]string{"user:read:email"})
 	if err != nil {
-		log.Panic(err)
 		gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 			Message: err.Error(),
-			Service: ModuleState,
+			Service: ServiceName,
 		})
+		log.Panic(err)
 	}
 
 	TwitchClient.SetAppAccessToken(resp.Data.AccessToken)
-	c.AddFunc(config.CheckPayload, GetPayload)
 
-	log.Info("Enable " + ModuleState)
-	go pilot.RunHeartBeat(gRCPconn, ModuleState)
+	log.Info("Enable " + ServiceName)
+	go pilot.RunHeartBeat(gRCPconn, ServiceName, ServiceUUID)
 	go ReqRunningJob(gRCPconn)
 	runfunc.Run(Bot)
 }
 
 type checkTwcJob struct {
 	wg      sync.WaitGroup
+	Agency  []database.Group
 	Reverse bool
 }
 
@@ -102,14 +92,15 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 
 	for {
 		log.WithFields(log.Fields{
-			"Service": ModuleState,
-			"Running": true,
+			"Service": ServiceName,
+			"Running": false,
+			"UUID":    ServiceUUID,
 		}).Info("request for running job")
 
-		res, err := client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
-			Service: ModuleState,
-			Message: "Request",
-			Alive:   true,
+		res, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
+			Service:     ServiceName,
+			Message:     "Request",
+			ServiceUUID: ServiceUUID,
 		})
 		if err != nil {
 			log.Error(err)
@@ -117,23 +108,26 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 
 		if res.Run {
 			log.WithFields(log.Fields{
-				"Service": ModuleState,
-				"Running": false,
+				"Service": ServiceName,
+				"Running": true,
+				"UUID":    ServiceUUID,
 			}).Info(res.Message)
 
+			Twitch.Agency = engine.UnMarshalPayload(res.VtuberPayload)
 			Twitch.Run()
-			_, _ = client.RunModuleJob(context.Background(), &pilot.ServiceMessage{
-				Service: ModuleState,
-				Message: "Done",
-				Alive:   false,
+
+			_, _ = client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
+				Service:     ServiceName,
+				Message:     "Done",
+				ServiceUUID: ServiceUUID,
 			})
+
 			log.WithFields(log.Fields{
-				"Service": ModuleState,
+				"Service": ServiceName,
 				"Running": false,
+				"UUID":    ServiceUUID,
 			}).Info("reporting job was done")
-
 		}
-
 		time.Sleep(1 * time.Minute)
 	}
 }
@@ -145,27 +139,35 @@ func (i *checkTwcJob) Run() {
 		for _, Member := range Group.Members {
 			if Member.TwitchName != "" && Member.Active() {
 				log.WithFields(log.Fields{
-					"Group":      Group.GroupName,
-					"VtuberName": Member.Name,
+					"Agency": Group.GroupName,
+					"Vtuber": Member.Name,
 				}).Info("Checking Twitch")
 
 				result, err := TwitchClient.GetStreams(&helix.StreamsParams{
 					UserLogins: []string{Member.TwitchName},
 				})
+
 				if err != nil || result.ErrorMessage != "" {
-					log.Error(err, result.ErrorMessage)
+					log.WithFields(log.Fields{
+						"Agency": Group.GroupName,
+						"Vtuber": Member.Name,
+					}).Error(err, result.ErrorMessage)
 					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 						Message: err.Error() + " " + result.ErrorMessage,
-						Service: ModuleState,
+						Service: ServiceName,
 					})
 					return
 				}
 
 				ResultDB, err := database.GetTwitch(Member.ID)
 				if err != nil {
-					log.Error(err)
+					log.WithFields(log.Fields{
+						"Agency": Group.GroupName,
+						"Vtuber": Member.Name,
+					}).Error(err)
 					return
 				}
+
 				ResultDB.AddMember(Member).AddGroup(Group).SetState(config.TwitchLive)
 
 				if len(result.Data.Streams) > 0 {
@@ -175,7 +177,10 @@ func (i *checkTwcJob) Run() {
 								IDs: []string{Stream.GameID},
 							})
 							if err != nil || GameResult.ErrorMessage != "" {
-								log.Error(err, GameResult.ErrorMessage)
+								log.WithFields(log.Fields{
+									"Agency": Group.GroupName,
+									"Vtuber": Member.Name,
+								}).Error(err, GameResult.ErrorMessage)
 							}
 
 							Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{width}", "1280", -1)
@@ -195,13 +200,19 @@ func (i *checkTwcJob) Run() {
 
 							err = ResultDB.UpdateTwitch()
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Agency": Group.GroupName,
+									"Vtuber": Member.Name,
+								}).Error(err)
 							}
 
 							if config.GoSimpConf.Metric {
 								bit, err := ResultDB.MarshalBinary()
 								if err != nil {
-									log.Error(err)
+									log.WithFields(log.Fields{
+										"Agency": Group.GroupName,
+										"Vtuber": Member.Name,
+									}).Error(err)
 								}
 								gRCPconn.MetricReport(context.Background(), &pilot.Metric{
 									MetricData: bit,
@@ -229,18 +240,25 @@ func (i *checkTwcJob) Run() {
 					ResultDB.UpdateEnd(time.Now()).UpdateStatus(config.PastStatus)
 					err = ResultDB.UpdateTwitch()
 					if err != nil {
-						log.Error(err)
+						log.WithFields(log.Fields{
+							"Agency": Group.GroupName,
+							"Vtuber": Member.Name,
+						}).Error(err)
 					}
 					log.WithFields(log.Fields{
 						"Group":      Group.GroupName,
 						"VtuberName": Member.Name,
 					}).Info("Change Twitch status to Past")
+
 					engine.RemoveEmbed("Twitch"+Member.TwitchName, Bot)
 
 					if config.GoSimpConf.Metric {
 						bit, err := ResultDB.MarshalBinary()
 						if err != nil {
-							log.Error(err)
+							log.WithFields(log.Fields{
+								"Agency": Group.GroupName,
+								"Vtuber": Member.Name,
+							}).Error(err)
 						}
 						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
 							MetricData: bit,
@@ -253,16 +271,16 @@ func (i *checkTwcJob) Run() {
 		}
 	}
 	if i.Reverse {
-		for j := len(*GroupPayload) - 1; j >= 0; j-- {
+		for j := len(i.Agency) - 1; j >= 0; j-- {
 			i.wg.Add(1)
 
-			Grp := *GroupPayload
+			Grp := i.Agency
 			go Cek(Grp[j], &i.wg)
 		}
 		i.Reverse = false
 
 	} else {
-		for _, G := range *GroupPayload {
+		for _, G := range i.Agency {
 			i.wg.Add(1)
 			Cek(G, &i.wg)
 		}

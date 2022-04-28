@@ -1236,3 +1236,8 @@ type YtData struct {
 		} `json:"liveStreamingDetails"`
 	} `json:"items"`
 }
+
+type ErrorDiscord struct {
+	Code    int
+	Message string
+}
