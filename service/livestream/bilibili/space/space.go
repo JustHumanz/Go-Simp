@@ -169,8 +169,9 @@ func (i *checkBlSpaceJob) Run() {
 						"Vtuber": Member.Name,
 					}).Error(curlerr)
 					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message: curlerr.Error(),
-						Service: ServiceName,
+						Message:     curlerr.Error(),
+						Service:     ServiceName,
+						ServiceUUID: ServiceUUID,
 					})
 					return
 				}

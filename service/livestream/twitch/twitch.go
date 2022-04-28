@@ -153,8 +153,9 @@ func (i *checkTwcJob) Run() {
 						"Vtuber": Member.Name,
 					}).Error(err, result.ErrorMessage)
 					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message: err.Error() + " " + result.ErrorMessage,
-						Service: ServiceName,
+						Message:     err.Error() + " " + result.ErrorMessage,
+						Service:     ServiceName,
+						ServiceUUID: ServiceUUID,
 					})
 					return
 				}

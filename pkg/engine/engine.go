@@ -553,7 +553,7 @@ func RemoveTwitterShortLink(text string) string {
 	return regexp.MustCompile(`(?m)^(.*?)https:\/\/t.co\/.+`).ReplaceAllString(text, "${1}$2")
 }
 
-//GetRSS GetRSS from Channel
+//GetRSS from Channel
 func GetRSS(YtID string, proxy bool) ([]string, error) {
 	var (
 		DataXML YtXML

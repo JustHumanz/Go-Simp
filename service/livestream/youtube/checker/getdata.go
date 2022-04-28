@@ -38,8 +38,9 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 					"region":    YtChan.Region,
 				}).Error(err)
 				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-					Message: err.Error(),
-					Service: ServiceName,
+					Message:     err.Error(),
+					Service:     ServiceName,
+					ServiceUUID: ServiceUUID,
 				})
 			}
 			for _, ID := range VideoID {
@@ -169,8 +170,9 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						}).Error(err)
 
 						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-							Message: err.Error(),
-							Service: ServiceName,
+							Message:     err.Error(),
+							Service:     ServiceName,
+							ServiceUUID: ServiceUUID,
 						})
 					}
 
@@ -286,8 +288,9 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 				}).Error(err)
 
 				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-					Message: err.Error(),
-					Service: ServiceName,
+					Message:     err.Error(),
+					Service:     ServiceName,
+					ServiceUUID: ServiceUUID,
 				})
 			}
 			for _, ID := range VideoID {
@@ -312,8 +315,9 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						}).Error(err)
 
 						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-							Message: err.Error(),
-							Service: ServiceName,
+							Message:     err.Error(),
+							Service:     ServiceName,
+							ServiceUUID: ServiceUUID,
 						})
 					}
 
@@ -504,8 +508,9 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 					Data, err := engine.YtAPI([]string{ID})
 					if err != nil {
 						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-							Message: err.Error(),
-							Service: ServiceName,
+							Message:     err.Error(),
+							Service:     ServiceName,
+							ServiceUUID: ServiceUUID,
 						})
 						log.WithFields(log.Fields{
 							"Vtuber": Member.Name,

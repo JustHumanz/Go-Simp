@@ -471,8 +471,9 @@ func (k *checkPxJob) Run() {
 			if err != nil {
 				log.Error(err)
 				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-					Message: err.Error(),
-					Service: ServiceName,
+					Message:     err.Error(),
+					Service:     ServiceName,
+					ServiceUUID: ServiceUUID,
 				})
 			}
 		} else if Member.EnName != "" && Member.Region != "JP" {
@@ -486,8 +487,9 @@ func (k *checkPxJob) Run() {
 			if err != nil {
 				log.Error(err)
 				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-					Message: err.Error(),
-					Service: ServiceName,
+					Message:     err.Error(),
+					Service:     ServiceName,
+					ServiceUUID: ServiceUUID,
 				})
 			}
 		} else {
@@ -501,8 +503,9 @@ func (k *checkPxJob) Run() {
 			if err != nil {
 				log.Error(err)
 				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-					Message: err.Error(),
-					Service: ServiceName,
+					Message:     err.Error(),
+					Service:     ServiceName,
+					ServiceUUID: ServiceUUID,
 				})
 			}
 		}

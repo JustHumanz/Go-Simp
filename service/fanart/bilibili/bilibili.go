@@ -167,8 +167,9 @@ func (k *checkBlJob) Run() {
 				if errcurl != nil {
 					log.Error(errcurl)
 					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message: errcurl.Error(),
-						Service: ServiceName,
+						Message:     errcurl.Error(),
+						Service:     ServiceName,
+						ServiceUUID: ServiceUUID,
 					})
 				}
 				var (
@@ -217,8 +218,9 @@ func (k *checkBlJob) Run() {
 									"Vtuber": Member.Name,
 								}).Error(err)
 								gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-									Message: err.Error(),
-									Service: ServiceName,
+									Message:     err.Error(),
+									Service:     ServiceName,
+									ServiceUUID: ServiceUUID,
 								})
 							}
 							if New {
