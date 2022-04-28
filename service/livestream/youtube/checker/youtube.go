@@ -157,7 +157,7 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 
 		YoutubeChecker.Counter++
 		YoutubeChecker.Update = false
-		time.Sleep(1 * time.Second)
+		time.Sleep(1 * time.Minute)
 	}
 }
 
