@@ -46,6 +46,8 @@ func CheckTwitter() {
 					continue
 				}
 
+				TwFollowDB.SetMember(Member).SetGroup(Group).UpdateState(config.TwitterArt)
+
 				SendNotif := func(SubsCount, Tweets, NextCount string, nextdt, score int64) {
 					err = Member.RemoveSubsCache()
 					if err != nil {

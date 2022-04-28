@@ -364,7 +364,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 					log.Panic(err)
 				}
 
-				oneWeek := time.Now()
+				oneWeek := time.Now().AddDate(0, 0, 7)
 				if expiresAt.Hour() > oneWeek.Hour() {
 					log.WithFields(log.Fields{
 						"Past video": "video more than 1 week",

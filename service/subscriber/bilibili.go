@@ -89,6 +89,8 @@ func CheckBiliBili() {
 					})
 				}
 
+				BiliFollowDB.SetMember(Member).SetGroup(Group).UpdateState(config.BiliLive)
+
 				if bilistate.Follow.Data.Follower != 0 {
 					log.WithFields(log.Fields{
 						"Past BiliBili Follower":    BiliFollowDB.BiliFollow,
