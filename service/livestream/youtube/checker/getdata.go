@@ -116,6 +116,14 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 								NewYoutubeData.UpdateSchdule(NewYoutubeData.Published)
 							}
 
+							oneDay := time.Now()
+							if oneDay.Sub(NewYoutubeData.Schedul).Hours() > 24 {
+								log.WithFields(log.Fields{
+									"Past video": "video more than 1 day",
+								}).Warn("From private to past")
+								return
+							}
+
 							NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
 							engine.SendLiveNotif(NewYoutubeData, Bot)
 
@@ -485,6 +493,14 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 						}).Info("Suddenly upload new video")
 						if NewYoutubeData.Schedul.IsZero() {
 							NewYoutubeData.UpdateSchdule(NewYoutubeData.Published)
+						}
+
+						oneDay := time.Now()
+						if oneDay.Sub(NewYoutubeData.Schedul).Hours() > 24 {
+							log.WithFields(log.Fields{
+								"Past video": "video more than 1 day",
+							}).Warn("From private to past")
+							return
 						}
 
 						NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
