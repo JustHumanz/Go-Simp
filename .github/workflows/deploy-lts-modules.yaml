@@ -1,6 +1,12 @@
 name: build go-simp lts module
 
-on: workflow_dispatch
+on: 
+  workflow_dispatch:
+    inputs:
+      versionTag:
+        description: 'new version of this build'
+        required: true  
+        default: 'latest'
 
 jobs:
   build:
@@ -36,7 +42,7 @@ jobs:
         with:
           context: ./service/pilot
           push: true
-          tags: justhumanz/go-simp-pilot:latest
+          tags: justhumanz/go-simp-pilot:${{ github.event.inputs.versionTag }}
           build-args: |
             BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}
 
@@ -46,7 +52,7 @@ jobs:
         with:
           context: ./service/utility
           push: true
-          tags: justhumanz/go-simp-utility:latest
+          tags: justhumanz/go-simp-utility:${{ github.event.inputs.versionTag }}
           build-args: |
             BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}          
 
@@ -67,6 +73,7 @@ jobs:
           user: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           command: |
+            export RELEASE_VERSION=${{ github.event.inputs.versionTag }}
             export TOPGG=${{ env.TOPGG }}
             cd Go-Simp/swarm
             sudo git pull
