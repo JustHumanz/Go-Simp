@@ -22,7 +22,7 @@ func StartCheckYT(Group database.Group, Update bool, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	//check vtuber agency youtube channel
-	if Group.YoutubeChannels != nil {
+	if Group.YoutubeChannels != nil && *agency {
 		for _, YtChan := range Group.YoutubeChannels {
 			log.WithFields(log.Fields{
 				"Agency":    Group.GroupName,

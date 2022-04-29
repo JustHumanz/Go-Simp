@@ -25,6 +25,7 @@ var (
 	gRCPconn     pilot.PilotServiceClient
 	proxy        = flag.Bool("MultiTOR", false, "Enable MultiTOR for scrapping yt rss")
 	torTransport = flag.Bool("Tor", false, "Enable multiTor for bot transport")
+	agency       = flag.Bool("Agency", false, "Enable scraping for vtuber agency")
 	ServiceUUID  = uuid.New().String()
 )
 
