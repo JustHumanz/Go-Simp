@@ -619,7 +619,7 @@ func StartCheckYT(Group database.Group, Update bool) {
 			log.WithFields(log.Fields{
 				"Wait wg": 10,
 				"Counter": k,
-			}).Info("Wait")
+			}).Info("Waiting 10 waitgroup")
 			wg.Wait()
 		}
 	}
