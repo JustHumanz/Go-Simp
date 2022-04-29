@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"flag"
-	"sync"
 	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
@@ -78,7 +77,6 @@ func main() {
 }
 
 type checkYtCekJob struct {
-	wg      sync.WaitGroup
 	agency  []database.Group
 	Reverse bool
 	Update  bool
@@ -165,18 +163,13 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 func (i *checkYtCekJob) Run() {
 	if i.Reverse {
 		for j := len(i.agency) - 1; j >= 0; j-- {
-			i.wg.Add(1)
 			Grp := i.agency
-			go StartCheckYT(Grp[j], i.Update, &i.wg)
+			StartCheckYT(Grp[j], i.Update)
 		}
-		i.Reverse = false
 
 	} else {
 		for _, G := range i.agency {
-			i.wg.Add(1)
-			go StartCheckYT(G, i.Update, &i.wg)
+			StartCheckYT(G, i.Update)
 		}
-		i.Reverse = true
 	}
-	i.wg.Wait()
 }

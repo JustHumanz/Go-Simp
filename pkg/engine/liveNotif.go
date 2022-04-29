@@ -364,6 +364,14 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 					log.Panic(err)
 				}
 
+				oneDay := time.Now()
+				if oneDay.Sub(Timestart).Hours() > 24 {
+					log.WithFields(log.Fields{
+						"Past video": "video more than 1 day",
+					}).Warn("From private to past")
+					return
+				}
+
 				for i, v := range ChannelData {
 					v.SetMember(Data.Member)
 
@@ -1157,6 +1165,14 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 					}
 				}
 			} else if Data.Status == config.PastStatus {
+				oneDay := time.Now()
+				if oneDay.Sub(Data.Schedul).Hours() > 24 {
+					log.WithFields(log.Fields{
+						"Past video": "video more than 1 day",
+					}).Warn("From private to past")
+					return
+				}
+
 				for _, v := range ChannelData {
 					msg, err := Bot.ChannelMessageSendEmbed(v.ChannelID, NewEmbed().
 						SetAuthor(Data.Group.GroupName+" "+Data.GroupYoutube.Region, Data.Group.IconURL, YtChannel).
