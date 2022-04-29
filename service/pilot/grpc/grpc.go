@@ -287,7 +287,7 @@ func (s *Server) RequestRunJobsOfService(ctx context.Context, in *ServiceMessage
 							"Counter": k.Counter,
 							"Service": in.Service,
 							"UUID":    in.ServiceUUID,
-						}).Info("Waiting RequestPayloadhdule")
+						}).Info("Waiting Request payload service")
 						return &RunJob{
 							Run:     false,
 							Message: fmt.Sprintf("Waiting schdule %d minutes remaining", v.CronJob-k.Counter),
