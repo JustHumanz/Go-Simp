@@ -137,6 +137,7 @@ func (i *checkTwcJob) Run() {
 		var wg sync.WaitGroup
 		for k, v := range Group.Members {
 			if v.TwitchName != "" && v.Active() {
+				wg.Add(1)
 
 				go func(Member database.Member, w *sync.WaitGroup) {
 					defer w.Done()
