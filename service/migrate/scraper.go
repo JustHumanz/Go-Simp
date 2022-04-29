@@ -29,7 +29,7 @@ func TwitterFanart() {
 	}
 	for _, Group := range Groups {
 		for _, Member := range Group.Members {
-			_, err := Member.ScrapTwitterFanart(scraper, false)
+			_, err := Member.ScrapTwitterFanart(scraper, false, true)
 			if err != nil {
 				log.WithFields(log.Fields{
 					"Vtuber": Member.Name,

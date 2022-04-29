@@ -24,6 +24,7 @@ var (
 	Bot          *discordgo.Session
 	lewd         = flag.Bool("LewdFanart", false, "Enable lewd fanart module")
 	torTransport = flag.Bool("Tor", false, "Enable multiTor for bot transport")
+	like         = flag.Bool("Like", false, "Update like fanart")
 	gRCPconn     pilot.PilotServiceClient
 	ServiceUUID  = uuid.New().String()
 )
@@ -155,12 +156,12 @@ func (i *checkTwJob) Run() {
 			"Lewd":    false,
 		}).Info("Start curl twitter")
 
-		Fanarts, err := Member.ScrapTwitterFanart(engine.InitTwitterScraper(), false)
+		Fanarts, err := Member.ScrapTwitterFanart(engine.InitTwitterScraper(), false, *like)
 		if err != nil {
 			log.WithFields(log.Fields{
-				"vtuber":  Member.Name,
-				"agency":  Member.Group.GroupName,
-				"hashtag": Member.TwitterHashtag,
+				"Vtuber":  Member.Name,
+				"Agency":  Member.Group.GroupName,
+				"Hashtag": Member.TwitterHashtag,
 			}).Error(err)
 			return
 		}
@@ -183,12 +184,12 @@ func (i *checkTwJob) Run() {
 				"Lewd":    true,
 			}).Info("Start curl twitter")
 
-			Fanarts, err := Member.ScrapTwitterFanart(engine.InitTwitterScraper(), true)
+			Fanarts, err := Member.ScrapTwitterFanart(engine.InitTwitterScraper(), true, *like)
 			if err != nil {
 				log.WithFields(log.Fields{
-					"vtuber":  Member.Name,
-					"agency":  Member.Group.GroupName,
-					"hashtag": Member.TwitterLewd,
+					"Vtuber":  Member.Name,
+					"Agency":  Member.Group.GroupName,
+					"Hashtag": Member.TwitterLewd,
 				}).Error(err)
 				return
 			}

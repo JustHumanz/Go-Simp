@@ -214,7 +214,7 @@ func (Data DataFanart) AddLewd() error {
 }
 
 //CheckMemberFanart Check if `that` was a new fanart
-func (FanArt DataFanart) CheckTweetFanArt() (bool, error) {
+func (FanArt DataFanart) CheckTweetFanArt(Update bool) (bool, error) {
 	if FanArt.Lewd {
 		var (
 			id int
@@ -258,7 +258,7 @@ func (FanArt DataFanart) CheckTweetFanArt() (bool, error) {
 			return true, nil
 		} else if err != nil {
 			return false, err
-		} else {
+		} else if Update {
 			//update like
 			log.WithFields(log.Fields{
 				"Name":    FanArt.Member.EnName,
@@ -488,7 +488,7 @@ func (p *Member) GetRandomLewd() (*DataFanart, error) {
 	return b, nil
 }
 
-func (Member Member) ScrapTwitterFanart(Scraper *twitterscraper.Scraper, Lewd bool) ([]DataFanart, error) {
+func (Member Member) ScrapTwitterFanart(Scraper *twitterscraper.Scraper, Lewd bool, update bool) ([]DataFanart, error) {
 
 	var (
 		FanartList []DataFanart
@@ -535,7 +535,7 @@ func (Member Member) ScrapTwitterFanart(Scraper *twitterscraper.Scraper, Lewd bo
 					TweetArt.Videos = tweet.Videos[0].Preview
 				}
 
-				New, err := TweetArt.CheckTweetFanArt()
+				New, err := TweetArt.CheckTweetFanArt(update)
 				if err != nil {
 					return nil, err
 				}
