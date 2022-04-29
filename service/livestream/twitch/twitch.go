@@ -82,7 +82,6 @@ func main() {
 }
 
 type checkTwcJob struct {
-	wg      sync.WaitGroup
 	Agency  []database.Group
 	Reverse bool
 }
@@ -134,158 +133,167 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 
 func (i *checkTwcJob) Run() {
 
-	Cek := func(Group database.Group, wg *sync.WaitGroup) {
-		defer wg.Done()
-		for _, Member := range Group.Members {
-			if Member.TwitchName != "" && Member.Active() {
-				log.WithFields(log.Fields{
-					"Agency": Group.GroupName,
-					"Vtuber": Member.Name,
-				}).Info("Checking Twitch")
+	Cek := func(Group database.Group) {
+		var wg sync.WaitGroup
+		for k, v := range Group.Members {
+			if v.TwitchName != "" && v.Active() {
 
-				result, err := TwitchClient.GetStreams(&helix.StreamsParams{
-					UserLogins: []string{Member.TwitchName},
-				})
-
-				if err != nil || result.ErrorMessage != "" {
+				go func(Member database.Member, w *sync.WaitGroup) {
+					defer w.Done()
 					log.WithFields(log.Fields{
 						"Agency": Group.GroupName,
 						"Vtuber": Member.Name,
-					}).Error(err, result.ErrorMessage)
-					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message:     err.Error() + " " + result.ErrorMessage,
-						Service:     ServiceName,
-						ServiceUUID: ServiceUUID,
+					}).Info("Checking Twitch")
+
+					result, err := TwitchClient.GetStreams(&helix.StreamsParams{
+						UserLogins: []string{Member.TwitchName},
 					})
-					return
-				}
 
-				ResultDB, err := database.GetTwitch(Member.ID)
-				if err != nil {
-					log.WithFields(log.Fields{
-						"Agency": Group.GroupName,
-						"Vtuber": Member.Name,
-					}).Error(err)
-					return
-				}
+					if err != nil || result.ErrorMessage != "" {
+						log.WithFields(log.Fields{
+							"Agency": Group.GroupName,
+							"Vtuber": Member.Name,
+						}).Error(err, result.ErrorMessage)
+						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+							Message:     err.Error() + " " + result.ErrorMessage,
+							Service:     ServiceName,
+							ServiceUUID: ServiceUUID,
+						})
+						return
+					}
 
-				ResultDB.AddMember(Member).AddGroup(Group).SetState(config.TwitchLive)
+					ResultDB, err := database.GetTwitch(Member.ID)
+					if err != nil {
+						log.WithFields(log.Fields{
+							"Agency": Group.GroupName,
+							"Vtuber": Member.Name,
+						}).Error(err)
+						return
+					}
 
-				if len(result.Data.Streams) > 0 {
-					for _, Stream := range result.Data.Streams {
-						if ResultDB.Status == config.PastStatus && Stream.Type == config.LiveStatus {
-							GameResult, err := TwitchClient.GetGames(&helix.GamesParams{
-								IDs: []string{Stream.GameID},
-							})
-							if err != nil || GameResult.ErrorMessage != "" {
-								log.WithFields(log.Fields{
-									"Agency": Group.GroupName,
-									"Vtuber": Member.Name,
-								}).Error(err, GameResult.ErrorMessage)
-							}
+					ResultDB.AddMember(Member).AddGroup(Group).SetState(config.TwitchLive)
 
-							Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{width}", "1280", -1)
-							Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{height}", "720", -1)
+					if len(result.Data.Streams) > 0 {
+						for _, Stream := range result.Data.Streams {
+							if ResultDB.Status == config.PastStatus && Stream.Type == config.LiveStatus {
+								GameResult, err := TwitchClient.GetGames(&helix.GamesParams{
+									IDs: []string{Stream.GameID},
+								})
+								if err != nil || GameResult.ErrorMessage != "" {
+									log.WithFields(log.Fields{
+										"Agency": Group.GroupName,
+										"Vtuber": Member.Name,
+									}).Error(err, GameResult.ErrorMessage)
+								}
 
-							ResultDB.UpdateStatus(config.LiveStatus).
-								UpdateViewers(strconv.Itoa(Stream.ViewerCount)).
-								UpdateThumbnail(Stream.ThumbnailURL).
-								SetState(config.TwitchLive).
-								UpdateSchdule(Stream.StartedAt)
+								Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{width}", "1280", -1)
+								Stream.ThumbnailURL = strings.Replace(Stream.ThumbnailURL, "{height}", "720", -1)
 
-							if len(GameResult.Data.Games) > 0 {
-								ResultDB.UpdateGame(GameResult.Data.Games[0].Name)
-							} else {
-								ResultDB.UpdateGame("-")
-							}
+								ResultDB.UpdateStatus(config.LiveStatus).
+									UpdateViewers(strconv.Itoa(Stream.ViewerCount)).
+									UpdateThumbnail(Stream.ThumbnailURL).
+									SetState(config.TwitchLive).
+									UpdateSchdule(Stream.StartedAt)
 
-							err = ResultDB.UpdateTwitch()
-							if err != nil {
-								log.WithFields(log.Fields{
-									"Agency": Group.GroupName,
-									"Vtuber": Member.Name,
-								}).Error(err)
-							}
+								if len(GameResult.Data.Games) > 0 {
+									ResultDB.UpdateGame(GameResult.Data.Games[0].Name)
+								} else {
+									ResultDB.UpdateGame("-")
+								}
 
-							if config.GoSimpConf.Metric {
-								bit, err := ResultDB.MarshalBinary()
+								err = ResultDB.UpdateTwitch()
 								if err != nil {
 									log.WithFields(log.Fields{
 										"Agency": Group.GroupName,
 										"Vtuber": Member.Name,
 									}).Error(err)
 								}
-								gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-									MetricData: bit,
-									State:      config.LiveStatus,
-								})
+
+								if config.GoSimpConf.Metric {
+									bit, err := ResultDB.MarshalBinary()
+									if err != nil {
+										log.WithFields(log.Fields{
+											"Agency": Group.GroupName,
+											"Vtuber": Member.Name,
+										}).Error(err)
+									}
+									gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+										MetricData: bit,
+										State:      config.LiveStatus,
+									})
+								}
+
+								engine.SendLiveNotif(ResultDB, Bot)
+
+								log.WithFields(log.Fields{
+									"Group":      Group.GroupName,
+									"VtuberName": Member.Name,
+								}).Info("Change Twitch status to Live")
+							} else if Stream.Type == config.LiveStatus && ResultDB.Status == config.LiveStatus {
+								log.WithFields(log.Fields{
+									"Group":      Group.GroupName,
+									"VtuberName": Member.Name,
+									"Viewers":    Stream.ViewerCount,
+								}).Info("Update Viewers")
+
+								ResultDB.UpdateViewers(strconv.Itoa(Stream.ViewerCount)).UpdateTwitch()
 							}
-
-							engine.SendLiveNotif(ResultDB, Bot)
-
-							log.WithFields(log.Fields{
-								"Group":      Group.GroupName,
-								"VtuberName": Member.Name,
-							}).Info("Change Twitch status to Live")
-						} else if Stream.Type == config.LiveStatus && ResultDB.Status == config.LiveStatus {
-							log.WithFields(log.Fields{
-								"Group":      Group.GroupName,
-								"VtuberName": Member.Name,
-								"Viewers":    Stream.ViewerCount,
-							}).Info("Update Viewers")
-
-							ResultDB.UpdateViewers(strconv.Itoa(Stream.ViewerCount)).UpdateTwitch()
 						}
-					}
-				} else if ResultDB.Status == config.LiveStatus && len(result.Data.Streams) == 0 {
-					ResultDB.UpdateEnd(time.Now()).UpdateStatus(config.PastStatus)
-					err = ResultDB.UpdateTwitch()
-					if err != nil {
-						log.WithFields(log.Fields{
-							"Agency": Group.GroupName,
-							"Vtuber": Member.Name,
-						}).Error(err)
-					}
-					log.WithFields(log.Fields{
-						"Group":      Group.GroupName,
-						"VtuberName": Member.Name,
-					}).Info("Change Twitch status to Past")
-
-					engine.RemoveEmbed("Twitch"+Member.TwitchName, Bot)
-
-					if config.GoSimpConf.Metric {
-						bit, err := ResultDB.MarshalBinary()
+					} else if ResultDB.Status == config.LiveStatus && len(result.Data.Streams) == 0 {
+						ResultDB.UpdateEnd(time.Now()).UpdateStatus(config.PastStatus)
+						err = ResultDB.UpdateTwitch()
 						if err != nil {
 							log.WithFields(log.Fields{
 								"Agency": Group.GroupName,
 								"Vtuber": Member.Name,
 							}).Error(err)
 						}
-						gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-							MetricData: bit,
-							State:      config.PastStatus,
-						})
+						log.WithFields(log.Fields{
+							"Group":      Group.GroupName,
+							"VtuberName": Member.Name,
+						}).Info("Change Twitch status to Past")
+
+						engine.RemoveEmbed("Twitch"+Member.TwitchName, Bot)
+
+						if config.GoSimpConf.Metric {
+							bit, err := ResultDB.MarshalBinary()
+							if err != nil {
+								log.WithFields(log.Fields{
+									"Agency": Group.GroupName,
+									"Vtuber": Member.Name,
+								}).Error(err)
+							}
+							gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+								MetricData: bit,
+								State:      config.PastStatus,
+							})
+						}
 					}
+
+				}(v, &wg)
+
+				if k%10 == 0 && k != 0 {
+					log.WithFields(log.Fields{
+						"Wait wg": 10,
+						"Counter": k,
+					}).Info("Waiting 10 waitgroup")
+					wg.Wait()
 				}
 			}
-
+			wg.Wait()
 		}
 	}
 	if i.Reverse {
 		for j := len(i.Agency) - 1; j >= 0; j-- {
-			i.wg.Add(1)
-
 			Grp := i.Agency
-			go Cek(Grp[j], &i.wg)
+			Cek(Grp[j])
 		}
 		i.Reverse = false
 
 	} else {
 		for _, G := range i.Agency {
-			i.wg.Add(1)
-			Cek(G, &i.wg)
+			Cek(G)
 		}
 		i.Reverse = true
 	}
-	i.wg.Wait()
 }
