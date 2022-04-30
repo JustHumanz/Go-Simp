@@ -12,24 +12,6 @@
   },
   "Members": [
     {
-      "Name": "Evelyn",
-      "EN_Name": "Evelyn",
-      "JP_Name": "",
-      "Twitter": {
-        "Twitter_Fanart": "#PienEpelPaint",
-        "Twitter_Lewd": "#Evelewd",
-        "Twitter_Username": "EvelynVtuber"
-      },
-      "Youtube": {
-        "Yt_ID": "UCMxxFFeuhFQ30quuePTym0A"
-      },
-      "BiliBili": null,
-      "Twitch": null,
-      "Region": "ID",
-      "Fanbase": "",
-      "Status": "Active"
-    },
-    {
       "Name": "Chloe",
       "EN_Name": "Chloe Pawapua",
       "JP_Name": "",

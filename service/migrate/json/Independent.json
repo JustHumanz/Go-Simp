@@ -926,27 +926,45 @@
       "Fanbase": "Hylarem",
       "Status": "Active"
     },
-		{
-			"Name": "hina-chan",
-			"EN_Name": "Nekomiya Hinata",
-			"JP_Name": "猫宮ひなた",
-			"Twitter": {
-				"Twitter_Fanart": "#ルーブルひなた",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "nekomiya_hinata"
-			},
-			"Youtube": {
-				"Yt_ID": "UCevD0wKzJFpfIkvHOiQsfLQ"
-			},
-			"BiliBili": {
-				"BiliBili_Fanart": "",
-				"BiliBili_ID": 291296062,
-				"BiliRoom_ID": 9286381
-			},
-			"Twitch": null,
-			"Region": "JP",
-			"Fanbase": "",
-			"Status": "Active"
-		}
+    {
+      "Name": "hina-chan",
+      "EN_Name": "Nekomiya Hinata",
+      "JP_Name": "猫宮ひなた",
+      "Twitter": {
+        "Twitter_Fanart": "#ルーブルひなた",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "nekomiya_hinata"
+      },
+      "Youtube": {
+        "Yt_ID": "UCevD0wKzJFpfIkvHOiQsfLQ"
+      },
+      "BiliBili": {
+        "BiliBili_Fanart": "",
+        "BiliBili_ID": 291296062,
+        "BiliRoom_ID": 9286381
+      },
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Evelyn",
+      "EN_Name": "Evelyn",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#PienEpelPaint",
+        "Twitter_Lewd": "#Evelewd",
+        "Twitter_Username": "EvelynVtuber"
+      },
+      "Youtube": {
+        "Yt_ID": "UCMxxFFeuhFQ30quuePTym0A"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    }
   ]
 }
