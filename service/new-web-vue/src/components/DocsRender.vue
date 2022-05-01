@@ -4,7 +4,7 @@
 
 <script>
 import { marked } from "marked"
-const mdfiles = import.meta.glob("./docs/*.md", { assert: { type: "raw" } })
+const mdfiles = import.meta.glob("./docs/*.md", { as: "raw" })
 
 export default {
   props: {
@@ -101,7 +101,7 @@ export default {
     th {
       @apply bg-slate-300 dark:bg-slate-700 text-center;
     }
-    
+
     td {
       @apply bg-slate-100 dark:bg-slate-500 py-px px-2 border-t-2 border-r-2 last:border-r-0 border-slate-300 dark:border-slate-700 text-center;
     }

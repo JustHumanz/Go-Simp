@@ -5,9 +5,7 @@ import NotFound from "./NotFound.vue"
 
 <template>
   <div
-    v-if="
-      markdowns && markdowns[`./../components/docs/${$route.params.page}.md`]
-    "
+    v-if="markdowns && markdowns.find((md) => md.slug === $route.params.page)"
   >
     <div class="header-title">
       <div class="title">
@@ -19,7 +17,7 @@ import NotFound from "./NotFound.vue"
           Documentation
         </span>
         <a
-          :href="`https://github.com/JustHumanz/Go-Simp/blob/new-web-lets-go/service/new-web-vue/src/components/docs/${$route.params.page}.md`"
+          :href="`https://github.com/JustHumanz/Go-Simp/blob/master/service/new-web-vue/src/components/docs/${$route.params.page}.md`"
           target="_blank"
           rel="noopener noreferrer"
           class="edit-github"
@@ -42,28 +40,12 @@ import NotFound from "./NotFound.vue"
       >
       <ul class="tab-lists">
         <li class="tab-list">
-          <router-link to="/docs/quick-start" class="tab-list__link"
-            >Quick Start</router-link
-          >
-        </li>
-        <li class="tab-list">
-          <router-link to="/docs/configuration" class="tab-list__link"
-            >Configuration</router-link
-          >
-        </li>
-        <li class="tab-list">
-          <router-link to="/docs/roles-and-taging" class="tab-list__link"
-            >Roles and Taging</router-link
-          >
-        </li>
-        <li class="tab-list">
-          <router-link to="/docs/utilities" class="tab-list__link"
-            >Utilities</router-link
-          >
-        </li>
-        <li class="tab-list">
-          <router-link to="/docs/get-data-groups" class="tab-list__link"
-            >Get Data Groups</router-link
+          <router-link
+            v-for="md in markdowns"
+            :key="md.slug"
+            :to="`/docs/${md.slug}`"
+            class="tab-list__link"
+            >{{ md.title }}</router-link
           >
         </li>
       </ul>
@@ -77,7 +59,7 @@ import NotFound from "./NotFound.vue"
 
 <script>
 const mdfiles = import.meta.glob("./../components/docs/*.md", {
-  assert: { type: "raw" },
+  as: "raw",
 })
 import { library } from "@fortawesome/fontawesome-svg-core"
 
@@ -92,19 +74,35 @@ export default {
     return {
       markdowns: null,
       fly: false,
+      title: "",
     }
   },
   mounted() {
-    this.markdowns = mdfiles
+    this.markdowns = Object.keys(mdfiles).map((path) => {
+      const slug = path.replace("./../components/docs/", "").replace(".md", "")
+      return {
+        slug,
+        title: this.convertToTitle(slug),
+      }
+    })
+    // sort quick-start slug to the top
+    this.markdowns.sort((a, b) => {
+      if (a.slug === "quick-start") {
+        return -1
+      }
+      if (b.slug === "quick-start") {
+        return 1
+      }
+      return 0
+    })
 
     this.$watch(
       () => this.$route.params.page,
       () => {
         if (!this.$route.params.page) return
-        document.title = `${this.$route.params.page
-          .split("-")
-          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(" ")} - Documentation`
+        this.title = this.convertToTitle(this.$route.params.page)
+
+        document.title = `${this.title} - Documentation`
       },
       {
         immediate: true,
@@ -119,6 +117,12 @@ export default {
     })
   },
   methods: {
+    convertToTitle(str) {
+      return str
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ")
+    },
     resetFocus() {
       this.$refs.search.focus()
     },
