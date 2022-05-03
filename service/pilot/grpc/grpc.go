@@ -218,9 +218,23 @@ func (s *Server) RequestRunJobsOfService(ctx context.Context, in *ServiceMessage
 
 				v.RemapPayload()
 
+				payload := []string{}
+				for _, v2 := range v.Unit {
+					if v2.UUID == in.ServiceUUID {
+
+						for _, v3 := range v2.Payload {
+							payload = append(payload, v3.GroupName)
+						}
+
+						log.WithFields(log.Fields{
+							"Agency Payload": payload,
+							"UUID":           v2.UUID,
+						})
+					}
+				}
 				return &RunJob{
 					Run:     false,
-					Message: "New units detected",
+					Message: fmt.Sprintln("New units detected %s", payload),
 				}, nil
 			}
 
@@ -478,7 +492,6 @@ func (s *Server) HeartBeat(in *ServiceMessage, stream PilotService_HeartBeatServ
 							return err
 						}
 						time.Sleep(5 * time.Second)
-
 					}
 				}
 			}
