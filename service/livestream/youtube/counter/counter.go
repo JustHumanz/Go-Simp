@@ -116,6 +116,12 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 			}).Info(res.Message)
 
 			YoutubeCounter.agency = engine.UnMarshalPayload(res.VtuberPayload)
+			if len(YoutubeCounter.agency) == 0 {
+				msg := "vtuber agency was nill,force close the unit"
+				pilot.ReportDeadService(msg, ServiceName)
+				log.Fatalln(msg)
+			}
+
 			agency = YoutubeCounter.agency
 			YoutubeCounter.Run()
 
