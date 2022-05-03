@@ -69,6 +69,10 @@
           {{ vtuber.EnName }}{{ vtuber.JpName ? ` (${vtuber.JpName})` : "" }}
           <div class="nickname">
             {{ vtuber.NickName.toLowerCase() }}
+            <font-awesome-icon
+              :icon="['far', 'circle-question']"
+              class="text-gray-400"
+            />
             <span class="nickname-hover"
               >This nickname is used for initials when calling in the Discord
               command
@@ -171,7 +175,9 @@ import {
   faTwitter,
 } from "@fortawesome/free-brands-svg-icons"
 
-library.add(faYoutube, faTwitch, faBilibili, faTwitter)
+import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons"
+
+library.add(faYoutube, faTwitch, faBilibili, faTwitter, faCircleQuestion)
 
 export default {
   props: {
