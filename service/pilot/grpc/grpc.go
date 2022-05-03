@@ -234,7 +234,7 @@ func (s *Server) RequestRunJobsOfService(ctx context.Context, in *ServiceMessage
 						log.WithFields(log.Fields{
 							"Agency Payload": payload,
 							"UUID":           v2.UUID,
-						})
+						}).Info("New Unit payload")
 					}
 				}
 				return &RunJob{
