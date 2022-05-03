@@ -290,9 +290,10 @@ func (s *Server) RequestRunJobsOfService(ctx context.Context, in *ServiceMessage
 
 						v.SetRun(true)
 						return &RunJob{
-							Message:       "OK,Unit approved",
-							Run:           true,
-							VtuberPayload: k.Marshal(),
+							Message:        "OK,Unit approved",
+							Run:            true,
+							VtuberPayload:  k.Marshal(),
+							VtuberMetadata: fmt.Sprintf("%s", k.GetAgencyList()),
 						}, nil
 
 					} else {

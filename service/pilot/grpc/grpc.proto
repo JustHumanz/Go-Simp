@@ -31,6 +31,7 @@ message RunJob {
   string Service = 2;
   bool Run = 3;
   bytes VtuberPayload = 4;
+  string VtuberMetadata = 5;
 }
     
 service PilotService {
