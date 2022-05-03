@@ -75,7 +75,6 @@ func main() {
 	go func() {
 		for {
 			log.WithFields(log.Fields{
-				"Service": ServiceName,
 				"Running": false,
 				"UUID":    ServiceUUID,
 			}).Info("request for running job")
