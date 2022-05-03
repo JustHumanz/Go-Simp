@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <img
-      class="header-banner bg-violet-400 dark:bg-slate-700"
+      class="header-banner"
       draggable="false"
       :src="`${vtuber.Youtube.Banner.replace(
         's1200',
@@ -9,23 +9,21 @@
       )}s1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj`"
       referrerpolicy="no-referrer"
       v-if="vtuber.Youtube"
+      @error="onError"
       @contextmenu="disableContextMenu"
     />
     <img
-      class="header-banner bg-violet-400 dark:bg-slate-700"
+      class="header-banner"
       draggable="false"
       :src="
         vtuber.BiliBili.Banner.replace('.jpg', '') + '@1707w_282h_1c_1s.jpg'
       "
       referrerpolicy="no-referrer"
       v-else-if="vtuber.BiliBili"
+      @error="onError"
       @contextmenu="disableContextMenu"
     />
-    <div
-      class="header-banner bg-violet-400 dark:bg-slate-700"
-      v-else
-      @contextmenu="disableContextMenu"
-    />
+    <div class="header-banner" v-else @contextmenu="disableContextMenu" />
     <div class="header-info">
       <div
         class="header-profile-pic"
@@ -65,31 +63,6 @@
           src="/assets/smolame.jpg"
           alt="Card image cap"
         />
-        <span
-          class="live-tag"
-          v-if="
-            vtuber.IsLive.Youtube ||
-            vtuber.IsLive.Twitch ||
-            vtuber.IsLive.BiliBili
-          "
-        >
-          <font-awesome-icon
-            :icon="['fab', 'youtube']"
-            class="fa-fw"
-            v-if="vtuber.IsLive.Youtube"
-          />
-          <font-awesome-icon
-            :icon="['fab', 'twitch']"
-            class="fa-fw"
-            v-if="vtuber.IsLive.Twitch"
-          />
-          <font-awesome-icon
-            :icon="['fab', 'bilibili']"
-            class="fa-fw"
-            v-if="vtuber.IsLive.BiliBili"
-          />
-          LIVE
-        </span>
       </div>
       <div class="header-vtuber-name">
         <h4 class="header-vtuber-name__name">
@@ -106,7 +79,10 @@
           </div>
         </h4>
         <div class="header-vtuber-name__group">
-          <router-link :to="`/vtubers/${vtuber.Group.ID}`">
+          <router-link
+            :to="`/vtubers/${vtuber.Group.ID}`"
+            class="header-vtuber-name__group-link"
+          >
             <img
               :src="vtuber.Group.IconURL"
               :alt="vtuber.Group.GroupName"
@@ -128,171 +104,62 @@
           ><router-link to="/vtubers?inac=true">
             {{ vtuber.Status === "Inactive" ? " (Inactive)" : "" }}
           </router-link>
+          <div
+            class="live-link"
+            v-if="
+              vtuber.IsLive.Youtube ||
+              vtuber.IsLive.Twitch ||
+              vtuber.IsLive.BiliBili
+            "
+          >
+            <a
+              :href="vtuber.IsLive.Youtube.URL"
+              v-if="vtuber.IsLive.Youtube"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="live-link__link"
+            >
+              <font-awesome-icon
+                :icon="['fab', 'youtube']"
+                size="lg"
+                class="live-link__link-icon"
+              ></font-awesome-icon>
+              <span class="live-link__link-text">LIVE</span>
+            </a>
+            <a
+              :href="vtuber.IsLive.Twitch.URL"
+              v-if="vtuber.IsLive.Twitch"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="live-link__link"
+            >
+              <font-awesome-icon
+                :icon="['fab', 'twitch']"
+                size="lg"
+                class="live-link__link-icon"
+              ></font-awesome-icon>
+              <span class="live-link__link-text">LIVE</span>
+            </a>
+            <a
+              :href="vtuber.IsLive.BiliBili.URL"
+              v-if="vtuber.IsLive.BiliBili"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="live-link__link"
+            >
+              <font-awesome-icon
+                :icon="['fab', 'bilibili']"
+                size="lg"
+                class="live-link__link-icon"
+              ></font-awesome-icon>
+              <span class="live-link__link-text">LIVE</span>
+            </a>
+          </div>
         </div>
       </div>
     </div>
   </header>
   <hr class="m-2 mt-3 mb-2" />
-  <div class="link-header">
-    <a
-      :href="`https://youtube.com/channel/${vtuber.Youtube.YoutubeID}`"
-      v-if="vtuber.Youtube"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="link-header__link bg-youtube"
-    >
-      <font-awesome-icon
-        :icon="['fab', 'youtube']"
-        size="lg"
-        class="link-header__link-icon"
-      ></font-awesome-icon>
-      <span class="link-header__link-text">YouTube</span>
-    </a>
-    <a
-      :href="`https://twitch.tv/${vtuber.Twitch.Username}`"
-      v-if="vtuber.Twitch"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="link-header__link bg-twitch"
-    >
-      <font-awesome-icon
-        :icon="['fab', 'twitch']"
-        size="lg"
-        class="link-header__link-icon"
-      ></font-awesome-icon>
-      <span class="link-header__link-text">Twitch</span>
-    </a>
-    <a
-      :href="`https://live.bilibili.com/${vtuber.BiliBili.LiveID}`"
-      v-if="vtuber.BiliBili"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="link-header__link bg-bilibili"
-    >
-      <font-awesome-icon
-        :icon="['fab', 'bilibili']"
-        size="lg"
-        class="link-header__link-icon"
-      ></font-awesome-icon>
-      <span class="link-header__link-text">Live</span>
-    </a>
-    <a
-      :href="`https://space.bilibili.com/${vtuber.BiliBili.SpaceID}`"
-      v-if="vtuber.BiliBili"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="link-header__link bg-bilibili"
-    >
-      <font-awesome-icon
-        :icon="['fab', 'bilibili']"
-        size="lg"
-        class="link-header__link-icon"
-      ></font-awesome-icon>
-      <span class="link-header__link-text">Space</span>
-    </a>
-    <a
-      class="link-header__link bg-twitter"
-      :href="`https://twitter.com/${vtuber.Twitter.Username}`"
-      v-if="vtuber.Twitter"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <font-awesome-icon
-        :icon="['fab', 'twitter']"
-        size="lg"
-        class="link-header__link-icon"
-      ></font-awesome-icon>
-      <span class="link-header__link-text">@{{ vtuber.Twitter.Username }}</span>
-    </a>
-    <a
-      :href="`https://twitter.com/hashtag/${vtuber.Twitter.Fanart.replace(
-        '#',
-        ''
-      )}`"
-      v-if="vtuber.Twitter && vtuber.Twitter.Fanart"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="link-header__link bg-twitter"
-    >
-      <font-awesome-icon
-        icon="paint-brush"
-        size="lg"
-        class="link-header__link-icon"
-      ></font-awesome-icon>
-      <span class="link-header__link-text"
-        >Twitter (#{{ vtuber.Twitter.Fanart.replace("#", "") }})</span
-      >
-    </a>
-    <a
-      :href="`https://www.pixiv.net/en/tags/${fanart_pixiv}`"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="link-header__link bg-pixiv"
-    >
-      <font-awesome-icon
-        icon="paint-brush"
-        size="lg"
-        class="link-header__link-icon"
-      />
-      <span class="link-header__link-text"> Pixiv (#{{ fanart_pixiv }}) </span>
-    </a>
-  </div>
-  <hr class="m-2" />
-  <div
-    class="link-header"
-    v-if="
-      vtuber.IsLive.Youtube || vtuber.IsLive.Twitch || vtuber.IsLive.BiliBili
-    "
-  >
-    <a
-      :href="vtuber.IsLive.Youtube.URL"
-      v-if="vtuber.IsLive.Youtube"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="link-header__link bg-red-600 hover:bg-red-700"
-    >
-      <font-awesome-icon
-        :icon="['fab', 'youtube']"
-        size="lg"
-        class="link-header__link-icon"
-      ></font-awesome-icon>
-      <span class="link-header__link-text">LIVE on YouTube</span>
-    </a>
-    <a
-      :href="vtuber.IsLive.Twitch.URL"
-      v-if="vtuber.IsLive.Twitch"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="link-header__link bg-red-600 hover:bg-red-700"
-    >
-      <font-awesome-icon
-        :icon="['fab', 'twitch']"
-        size="lg"
-        class="link-header__link-icon"
-      ></font-awesome-icon>
-      <span class="link-header__link-text">LIVE on Twitch</span>
-    </a>
-    <a
-      :href="vtuber.IsLive.BiliBili.URL"
-      v-if="vtuber.IsLive.BiliBili"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="link-header__link bg-red-600 hover:bg-red-700"
-    >
-      <font-awesome-icon
-        :icon="['fab', 'bilibili']"
-        size="lg"
-        class="link-header__link-icon"
-      ></font-awesome-icon>
-      <span class="link-header__link-text">LIVE on BiliBili</span>
-    </a>
-  </div>
-  <hr
-    class="m-2 mt-3 mb-2"
-    v-if="
-      vtuber.IsLive.Youtube || vtuber.IsLive.Twitch || vtuber.IsLive.BiliBili
-    "
-  />
 </template>
 
 <script>
@@ -303,27 +170,28 @@ import {
   faBilibili,
   faTwitter,
 } from "@fortawesome/free-brands-svg-icons"
-import { faPaintBrush } from "@fortawesome/free-solid-svg-icons"
 
-library.add(faYoutube, faTwitch, faBilibili, faTwitter, faPaintBrush)
+library.add(faYoutube, faTwitch, faBilibili, faTwitter)
 
 export default {
   props: {
     vtuber: Object,
   },
-
-  computed: {
-    fanart_pixiv() {
-      return this.vtuber.JpName
-        ? this.vtuber.JpName.split("/")[0]
-            .split(" ")
-            .reduce((acc, cur) => (acc + acc !== "" ? "・" : "" + cur), "")
-        : this.vtuber.EnName.split(" ").reduce((acc, cur) => acc + cur, "")
-    },
-  },
   methods: {
     disableContextMenu(e) {
       e.preventDefault()
+    },
+    onError(e) {
+      const parent = e.target.parentElement
+      // delete img
+      parent.removeChild(e.target)
+      // create div with class .header-banner
+      const banner = document.createElement("div")
+      banner.classList.add("header-banner")
+      // add scope id in banner attribute
+      banner.setAttribute(this.$options.__scopeId, "")
+      // append div to parent in first position
+      parent.insertBefore(banner, parent.firstChild)
     },
   },
 }
@@ -331,19 +199,20 @@ export default {
 
 <style lang="scss" scoped>
 .live-tag {
-  @apply w-full inline-block bg-red-600 text-white font-semibold text-center text-xs py-1 absolute bottom-0 select-none;
+  @apply absolute bottom-0 inline-block w-full select-none bg-red-600 py-1 text-center text-xs font-semibold text-white;
 }
 
 .inactive {
-  @apply bg-rip bg-contain bg-no-repeat bg-gray-600;
+  @apply bg-gray-600 bg-rip bg-contain bg-no-repeat;
   .header-profile-pic__img {
-    @apply grayscale opacity-40;
+    @apply opacity-40 grayscale;
   }
 }
 
 .header {
   &-banner {
-    @apply w-full /*&h-[11.25rem]*/ /*bg-center bg-cover bg-no-repeat*/ object-cover object-center;
+    @apply /*&h-[11.25rem]*/ /*bg-center bg-no-repeat*/ w-full bg-slate-200 bg-cover object-cover object-center dark:bg-slate-700;
+    min-height: calc(16.1290322581vw - 1px);
     height: calc(16.1290322581vw - 1px);
 
     // @media (min-width: 640px) {
@@ -351,79 +220,65 @@ export default {
     // }
 
     @media (min-width: 768px) {
+      min-height: calc((100vw - 240px) / 6.2 - 1px);
       height: calc((100vw - 240px) / 6.2 - 1px);
     }
   }
   &-info {
-    @apply flex items-center flex-col sm:flex-row sm:pb-2 relative;
+    @apply relative flex flex-col items-center sm:flex-row sm:pb-2;
   }
   &-profile-pic {
-    @apply absolute -top-9 sm:-top-14 sm:ml-10 w-24 sm:w-32 rounded-md shadow-md overflow-hidden;
+    @apply absolute -top-9 w-24 overflow-hidden rounded-md shadow-md sm:-top-14 sm:ml-10 sm:w-32;
   }
   &-vtuber-name {
-    @apply w-full flex items-center sm:items-stretch mt-14 px-3 sm:mt-0 sm:ml-[10.5rem] flex-col text-center sm:text-left;
+    @apply mt-14 flex w-full flex-col items-center px-3 text-center sm:mt-0 sm:ml-[10.5rem] sm:items-stretch sm:text-left;
 
     &__name {
-      @apply text-xl font-semibold pt-3;
+      @apply pt-3 text-xl font-semibold;
       .nickname {
-        @apply text-gray-600 dark:text-slate-300 text-xl font-thin block sm:inline-block relative cursor-pointer;
+        @apply relative block cursor-pointer text-xl font-thin text-gray-600 dark:text-slate-300 sm:inline-block;
 
         a {
           @apply text-white hover:text-gray-100 dark:hover:text-gray-300;
         }
 
         &-hover {
-          @apply bg-sky-300 dark:bg-slate-700 text-sm font-normal px-2 py-1 rounded-md w-44 text-left inline-block absolute top-7 left-1/2 -translate-x-1/2 -translate-y-5 invisible opacity-0 delay-100 duration-300 ease-in-out;
+          @apply invisible absolute top-7 left-1/2 z-[5] inline-block w-44 -translate-x-1/2 -translate-y-5 rounded-md bg-sky-300 px-2 py-1 text-left text-sm font-normal opacity-0 delay-100 duration-300 ease-in-out dark:bg-slate-700;
           transition-property: opacity, transform;
 
           &::before {
             // add arrow up in center using tailwind
-            @apply content-[''] border-x-8 border-b-8 border-solid border-x-transparent border-b-sky-300 dark:border-b-slate-700 absolute -top-1 left-1/2 -translate-x-1/2;
+            @apply absolute -top-1 left-1/2 -translate-x-1/2 border-x-8 border-b-8 border-solid border-x-transparent border-b-sky-300 content-[''] dark:border-b-slate-700;
           }
         }
 
         &:hover {
           .nickname-hover {
-            @apply opacity-100 translate-y-0 visible;
+            @apply visible translate-y-0 opacity-100;
           }
         }
       }
     }
 
     &__group {
-      @apply text-sm font-light text-gray-500 dark:text-gray-300 inline-block mt-px;
+      @apply mt-px inline-flex flex-col items-center text-sm font-light sm:flex-row;
 
-      a {
-        @apply hover:text-gray-700 dark:hover:text-gray-400;
+      &-link {
+        @apply text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-400;
       }
 
       &-icon {
-        @apply w-5 h-5 object-contain rounded-md inline-block -mt-1;
+        @apply -mt-1 inline-block h-5 w-5 rounded-md object-contain;
       }
     }
   }
 }
 
-.link-header {
-  @apply flex justify-center items-center px-2 flex-wrap;
+.live-link {
+  @apply mt-2 flex w-fit space-x-1 text-xs sm:mt-0 sm:ml-2 sm:inline-block;
 
   &__link {
-    @apply inline-flex items-center text-white px-3 m-px py-2 rounded-full;
-
-    &-icon {
-      @apply w-5 h-5 object-contain rounded-md mr-2;
-    }
-    &-text {
-      @apply text-sm font-semibold;
-    }
-
-    &:hover {
-      @apply brightness-90;
-    }
-  }
-
-  & > span {
-    @apply hidden;
+    @apply relative inline-flex -translate-y-px items-center space-x-1 rounded-full bg-red-600 py-1 px-2 font-semibold text-white shadow-sm shadow-red-700 transition duration-300 ease-in-out hover:translate-y-0 hover:text-white hover:shadow-none dark:shadow-red-300/25;
   }
 }
 </style>
