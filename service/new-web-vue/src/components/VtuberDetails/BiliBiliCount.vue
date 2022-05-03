@@ -53,19 +53,19 @@ export default {
 
 <style lang="scss" scoped>
 .platform {
-  @apply grid mx-4 items-center;
+  @apply mx-4 grid items-center;
   grid-template-columns: 1fr;
   grid-template-areas:
     "platform-title"
     "platform-card";
 
   &-title {
-    @apply text-lg font-semibold underline decoration-2 underline-offset-4 decoration-bilibili;
+    @apply text-lg font-semibold underline decoration-bilibili decoration-2 underline-offset-4;
     grid-area: platform-title;
   }
 
   &-cards {
-    @apply p-2 grid;
+    @apply grid p-2;
     grid-template-columns: 1fr;
     grid-area: platform-card;
 
@@ -75,7 +75,7 @@ export default {
   }
 
   &-card {
-    @apply inline-flex flex-col items-center justify-center bg-bilibili py-6 px-2 m-1 rounded-md;
+    @apply m-1 inline-flex flex-col items-center justify-center rounded-md bg-bilibili py-6 px-2;
   }
 }
 

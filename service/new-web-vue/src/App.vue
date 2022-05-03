@@ -104,7 +104,7 @@ import "./index.css"
           target="_blank"
           ><font-awesome-icon icon="right-to-bracket" class="fa-fw" />
           <span
-            class="navbar-buttons__hover group-hover:!opacity-100 group-hover:!scale-100"
+            class="navbar-buttons__hover group-hover:!scale-100 group-hover:!opacity-100"
             >Invite Me</span
           >
         </a>
@@ -114,7 +114,7 @@ import "./index.css"
           target="_blank"
           ><font-awesome-icon icon="gauge-simple" class="fa-fw" />
           <span
-            class="navbar-buttons__hover group-hover:!opacity-100 group-hover:!scale-100"
+            class="navbar-buttons__hover group-hover:!scale-100 group-hover:!opacity-100"
             >Dashboard</span
           >
         </a>
@@ -141,7 +141,7 @@ import "./index.css"
             v-else
           />
           <span
-            class="navbar-buttons__hover group-hover:!opacity-100 group-hover:!scale-100"
+            class="navbar-buttons__hover group-hover:!scale-100 group-hover:!opacity-100"
           >
             {{
               theme === "dark"
@@ -300,12 +300,7 @@ export default {
   },
   methods: {
     getClickMenu() {
-      window.onclick = (e) => {
-        if (e.target.id === "router-link") {
-          e.preventDefault()
-          this.$router.push(e.target.getAttribute("href"))
-        }
-
+      document.body.addEventListener("click", (e) => {
         if (e.target.closest(".navbar-link")) {
           e.target.closest(".navbar-link").blur()
         }
@@ -377,7 +372,7 @@ export default {
           console.log("closing menu")
           this.activeListMenu = null
         }
-      }
+      })
     },
     unfocusMenu() {
       // when document unfocus
@@ -440,9 +435,9 @@ export default {
 <style lang="scss" scoped>
 .nav {
   font-family: "Nunito", sans-serif;
-  @apply h-16 bg-cyan-500 dark:bg-slate-700 shadow-md shadow-cyan-500/50 dark:shadow-slate-700/50 fixed top-0 left-0 w-screen z-[11] flex justify-center select-none;
+  @apply fixed top-0 left-0 z-[11] flex h-16 w-screen select-none justify-center bg-cyan-500 shadow-md shadow-cyan-500/50 dark:bg-slate-700 dark:shadow-slate-700/50;
   .navbar {
-    @apply mx-4 h-full flex justify-between md:justify-around items-center w-full md:w-[90%] lg:w-[85%];
+    @apply mx-4 flex h-full w-full items-center justify-between md:w-[90%] md:justify-around lg:w-[85%];
 
     &-group {
       @apply flex;
@@ -453,14 +448,14 @@ export default {
     }
 
     &-icon {
-      @apply w-auto h-full p-3 cursor-pointer flex items-center;
+      @apply flex h-full w-auto cursor-pointer items-center p-3;
 
       &__span {
-        @apply ml-2 text-2xl font-semibold text-center uppercase sm:hidden text-white;
+        @apply ml-2 text-center text-2xl font-semibold uppercase text-white sm:hidden;
       }
     }
     .navbar-toggle {
-      @apply block sm:hidden p-3;
+      @apply block p-3 sm:hidden;
 
       &__icon,
       &-dark__icon {
@@ -474,18 +469,18 @@ export default {
 
     .navbar-items {
       // make nav-menu items using tailwind
-      @apply flex items-start sm:items-center flex-col sm:flex-row bg-cyan-500 dark:bg-slate-600 sm:dark:bg-slate-700 rounded-md sm:bg-transparent w-[13rem] sm:w-auto absolute top-3 right-3 sm:top-auto sm:right-auto sm:static shadow-md shadow-black/50 sm:shadow-none overflow-hidden sm:overflow-visible scale-0 sm:scale-100 origin-top-right transition sm:transition-none duration-200 ease-in-out;
+      @apply absolute top-3 right-3 flex w-[13rem] origin-top-right scale-0 flex-col items-start overflow-hidden rounded-md bg-cyan-500 shadow-md shadow-black/50 transition duration-200 ease-in-out dark:bg-slate-600 sm:static sm:top-auto sm:right-auto sm:w-auto sm:scale-100 sm:flex-row sm:items-center sm:overflow-visible sm:bg-transparent sm:shadow-none sm:transition-none sm:dark:bg-slate-700;
     }
 
     .navbar-item {
-      @apply w-full sm:w-auto sm:mx-1;
+      @apply w-full sm:mx-1 sm:w-auto;
 
       .navbar-link {
-        @apply w-full inline-block cursor-pointer text-white py-2 sm:py-1 px-2 sm:rounded-md transition sm:hover:shadow-sm sm:hover:shadow-cyan-600/75 sm:dark:hover:shadow-slate-200/75 hover:bg-black/20 sm:hover:bg-transparent sm:hover:dark:bg-transparent font-semibold hover:sm:-translate-y-px;
+        @apply inline-block w-full cursor-pointer py-2 px-2 font-semibold text-white transition hover:bg-black/20 sm:rounded-md sm:py-1 hover:sm:-translate-y-px sm:hover:bg-transparent sm:hover:shadow-sm sm:hover:shadow-cyan-600/75 sm:hover:dark:bg-transparent sm:dark:hover:shadow-slate-200/75;
 
         &.router-link-active,
         &.active {
-          @apply sm:shadow-md bg-cyan-600 dark:bg-slate-800 sm:bg-transparent dark:sm:bg-transparent sm:shadow-cyan-600/75 sm:dark:shadow-slate-200/75 sm:-translate-y-0.5;
+          @apply bg-cyan-600 dark:bg-slate-800 sm:-translate-y-0.5 sm:bg-transparent sm:shadow-md sm:shadow-cyan-600/75 dark:sm:bg-transparent sm:dark:shadow-slate-200/75;
         }
       }
 
@@ -505,32 +500,32 @@ export default {
       @apply hidden sm:block;
 
       &__hover {
-        @apply absolute top-9 w-max left-1/2 -translate-x-1/2 rounded-md px-2 py-1 shadow-md transition inline-block opacity-0 scale-0;
+        @apply absolute top-9 left-1/2 inline-block w-max -translate-x-1/2 scale-0 rounded-md px-2 py-1 opacity-0 shadow-md transition;
       }
 
       &__button {
-        @apply my-3 py-1 px-2 rounded-md font-semibold text-white cursor-pointer shadow-none transition-shadow hover:shadow-md relative hover:-translate-y-0.5;
+        @apply relative my-3 cursor-pointer rounded-md py-1 px-2 font-semibold text-white shadow-none transition-shadow hover:-translate-y-0.5 hover:shadow-md;
 
         &.dashboard {
-          @apply bg-rose-500 dark:bg-slate-900 hover:shadow-rose-500/75 hover:dark:shadow-slate-100/75 mr-2;
+          @apply mr-2 bg-rose-500 hover:shadow-rose-500/75 dark:bg-slate-900 hover:dark:shadow-slate-100/75;
 
           .navbar-buttons__hover {
-            @apply bg-rose-500 dark:bg-slate-900 shadow-rose-500/75 dark:shadow-slate-100/75;
+            @apply bg-rose-500 shadow-rose-500/75 dark:bg-slate-900 dark:shadow-slate-100/75;
           }
         }
         &.invite {
-          @apply bg-indigo-500 dark:bg-slate-800 hover:shadow-indigo-500/75 hover:dark:shadow-slate-100/75 mr-2;
+          @apply mr-2 bg-indigo-500 hover:shadow-indigo-500/75 dark:bg-slate-800 hover:dark:shadow-slate-100/75;
 
           .navbar-buttons__hover {
-            @apply bg-indigo-500 dark:bg-slate-800 shadow-indigo-500/75 dark:shadow-slate-100/75;
+            @apply bg-indigo-500 shadow-indigo-500/75 dark:bg-slate-800 dark:shadow-slate-100/75;
           }
         }
 
         &.dark-mode {
-          @apply bg-orange-500 dark:bg-slate-800 hover:shadow-sky-500/75 hover:dark:shadow-slate-100/75;
+          @apply bg-orange-500 hover:shadow-sky-500/75 dark:bg-slate-800 hover:dark:shadow-slate-100/75;
 
           .navbar-buttons__hover {
-            @apply bg-orange-500 dark:bg-slate-800 shadow-sky-500/75 dark:shadow-slate-100/75;
+            @apply bg-orange-500 shadow-sky-500/75 dark:bg-slate-800 dark:shadow-slate-100/75;
           }
         }
       }
@@ -538,7 +533,7 @@ export default {
   }
 }
 .footer {
-  @apply pt-3 bg-cyan-500 dark:bg-slate-700 font-semibold w-full justify-around grid;
+  @apply grid w-full justify-around bg-cyan-500 pt-3 font-semibold dark:bg-slate-700;
 
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
@@ -546,7 +541,7 @@ export default {
     "credit credit";
 
   &-page {
-    @apply flex justify-center flex-col sm:px-4 pl-5 md:pl-8 lg:pl-12 xl:pl-20;
+    @apply flex flex-col justify-center pl-5 sm:px-4 md:pl-8 lg:pl-12 xl:pl-20;
     grid-area: page;
 
     &__title {
@@ -578,13 +573,13 @@ export default {
     @apply w-full;
 
     &__link {
-      @apply text-white hover:text-cyan-100 dark:hover:text-slate-300 inline-block w-full;
+      @apply inline-block w-full text-white hover:text-cyan-100 dark:hover:text-slate-300;
     }
   }
 
   .footer-credit {
     grid-area: credit;
-    @apply text-center text-cyan-50 py-2 mt-3 bg-cyan-700 dark:bg-slate-800;
+    @apply mt-3 bg-cyan-700 py-2 text-center text-cyan-50 dark:bg-slate-800;
     &__link {
       @apply text-white hover:text-cyan-100 dark:hover:text-slate-300;
     }

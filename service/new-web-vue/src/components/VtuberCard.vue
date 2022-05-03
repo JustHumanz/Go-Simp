@@ -199,10 +199,10 @@ export default {
 
 <style lang="scss" scoped>
 .card-vtuber {
-  @apply bg-white dark:bg-slate-500 rounded-md overflow-hidden shadow-sm hover:bg-slate-100 dark:hover:bg-slate-700 hover:shadow-md dark:shadow-white/5 hover:scale-105 select-none transition duration-300 ease-in-out;
+  @apply select-none overflow-hidden rounded-md bg-white shadow-sm transition duration-300 ease-in-out hover:scale-105 hover:bg-slate-100 hover:shadow-md dark:bg-slate-500 dark:shadow-white/5 dark:hover:bg-slate-700;
 
   &-image {
-    @apply w-full aspect-square bg-smolame bg-cover relative;
+    @apply relative aspect-square w-full bg-smolame bg-cover;
   }
 
   &-name {
@@ -211,7 +211,7 @@ export default {
     }
 
     &__title {
-      @apply font-bold text-lg tracking-tight leading-6 truncate dark:text-white;
+      @apply truncate text-lg font-bold leading-6 tracking-tight dark:text-white;
     }
 
     &__nickname {
@@ -221,23 +221,23 @@ export default {
 }
 
 .tag-vtuber {
-  @apply absolute flex items-center bg-slate-100/80 dark:bg-slate-500/80 rounded-br-md text-xs select-none;
+  @apply absolute flex select-none items-center rounded-br-md bg-slate-100/80 text-xs dark:bg-slate-500/80;
 
   &-agency {
-    @apply px-[0.325rem] flex items-center space-x-2 justify-center h-6 cursor-pointer;
+    @apply flex h-6 cursor-pointer items-center justify-center space-x-2 px-[0.325rem];
 
     &__icon {
-      @apply w-5 object-contain drop-shadow-md rounded-md;
+      @apply w-5 rounded-md object-contain drop-shadow-md;
       image-rendering: smooth;
     }
 
     &__flag {
-      @apply h-3 object-contain rounded-sm drop-shadow-md;
+      @apply h-3 rounded-sm object-contain drop-shadow-md;
       image-rendering: smooth;
     }
 
     &__hover {
-      @apply absolute top-6 px-2 py-1 -left-2 max-w-[10rem] truncate bg-slate-100/80 dark:bg-slate-500/80 font-semibold rounded-r-md scale-0 origin-top-left transition-transform ease-in-out duration-200;
+      @apply absolute top-6 -left-2 max-w-[10rem] origin-top-left scale-0 truncate rounded-r-md bg-slate-100/80 px-2 py-1 font-semibold transition-transform duration-200 ease-in-out dark:bg-slate-500/80;
     }
 
     &:hover &__hover {
@@ -250,15 +250,15 @@ export default {
   }
 
   &-live {
-    @apply bg-red-500 px-[0.325rem] h-6 rounded-br-md flex items-center space-x-1 font-semibold text-white;
+    @apply flex h-6 items-center space-x-1 rounded-br-md bg-red-500 px-[0.325rem] font-semibold text-white;
   }
 }
 
 .vtuber-link {
-  @apply absolute bottom-0 right-0 bg-slate-100/80  dark:bg-slate-500/80 rounded-tl-md px-[0.325rem] space-x-1;
+  @apply absolute bottom-0 right-0 space-x-1  rounded-tl-md bg-slate-100/80 px-[0.325rem] dark:bg-slate-500/80;
 
   &__link {
-    @apply inline-block py-[0.125rem] px-1 text-stone-700 dark:text-slate-50 transition-colors duration-200 ease-in-out;
+    @apply inline-block py-[0.125rem] px-1 text-stone-700 transition-colors duration-200 ease-in-out dark:text-slate-50;
   }
 }
 
@@ -268,9 +268,9 @@ export default {
   }
 
   .card-vtuber-image {
-    @apply bg-rip bg-contain bg-no-repeat bg-gray-600;
+    @apply bg-gray-600 bg-rip bg-contain bg-no-repeat;
     &__img {
-      @apply grayscale opacity-40;
+      @apply opacity-40 grayscale;
     }
   }
 }

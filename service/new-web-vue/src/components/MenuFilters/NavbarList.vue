@@ -144,26 +144,26 @@ export default {
 
 <style lang="scss">
 .list-nav {
-  @apply bg-blue-400 dark:bg-slate-500 fixed top-16 py-2 px-5 w-screen flex flex-wrap-reverse items-center sm:justify-around justify-center z-10 select-none;
+  @apply fixed top-16 z-10 flex w-screen select-none flex-wrap-reverse items-center justify-center bg-blue-400 py-2 px-5 dark:bg-slate-500 sm:justify-around;
 }
 
 .navbar-filters {
-  @apply flex space-x-1 sm:space-x-2 first:mt-2 xs:first:mt-0 items-center;
+  @apply flex items-center space-x-1 first:mt-2 sm:space-x-2 xs:first:mt-0;
 }
 
 .navbar-pending {
-  @apply w-screen h-[100vw] sm:w-[10.5rem] sm:h-[10.5rem] p-3 flex justify-center items-center;
+  @apply flex h-[100vw] w-screen items-center justify-center p-3 sm:h-[10.5rem] sm:w-[10.5rem];
 }
 
 .navbar-filter {
   @apply sm:relative;
 
   &__link {
-    @apply text-white flex space-x-1 items-center font-semibold px-2 py-1 rounded-md transition-all duration-200 ease-in-out;
+    @apply flex items-center space-x-1 rounded-md px-2 py-1 font-semibold text-white transition-all duration-200 ease-in-out;
   }
 
   &__img {
-    @apply min-w-[1.5rem] w-6 object-contain inline-block drop-shadow-md;
+    @apply inline-block w-6 min-w-[1.5rem] object-contain drop-shadow-md;
   }
 
   &__svg {
@@ -188,12 +188,12 @@ export default {
 
   &:not(.disabled) {
     .navbar-filter__link {
-      @apply hover:shadow-sm hover:-translate-y-px shadow-blue-600/75 dark:shadow-slate-300/50;
+      @apply shadow-blue-600/75 hover:-translate-y-px hover:shadow-sm dark:shadow-slate-300/50;
     }
 
     &:focus-within {
       .navbar-filter__link {
-        @apply shadow-md shadow-blue-600/75 dark:shadow-slate-300/50 -translate-y-0.5;
+        @apply -translate-y-0.5 shadow-md shadow-blue-600/75 dark:shadow-slate-300/50;
       }
 
       .navbar-filter-items {
@@ -203,7 +203,7 @@ export default {
   }
 
   &-items {
-    @apply absolute flex flex-col bg-blue-400 dark:bg-slate-700 sm:shadow-md sm:shadow-blue-600/75 sm:dark:shadow-slate-200/75 sm:rounded-md transition-all overflow-y-auto overflow-x-hidden max-h-[83.8vh] sm:max-h-60 left-0 mt-2 sm:mt-0 sm:left-auto scale-y-0 origin-top;
+    @apply absolute left-0 mt-2 flex max-h-[83.8vh] origin-top scale-y-0 flex-col overflow-y-auto overflow-x-hidden bg-blue-400 transition-all dark:bg-slate-700 sm:left-auto sm:mt-0 sm:max-h-60 sm:rounded-md sm:shadow-md sm:shadow-blue-600/75 sm:dark:shadow-slate-200/75;
     @media (min-width: 640px) {
       scrollbar-width: none; /* Firefox */
       -ms-overflow-style: none; /* IE 10+ */
@@ -223,7 +223,7 @@ export default {
 
   &-item {
     &__img {
-      @apply min-w-[1.25rem] w-5 object-contain inline-block drop-shadow-md rounded-md;
+      @apply inline-block w-5 min-w-[1.25rem] rounded-md object-contain drop-shadow-md;
     }
 
     &__svg {
@@ -231,7 +231,7 @@ export default {
     }
 
     &__link {
-      @apply flex space-x-2 items-center font-semibold px-2 py-1 hover:bg-blue-500/60 dark:hover:bg-slate-900/40 text-white w-screen sm:w-44;
+      @apply flex w-screen items-center space-x-2 px-2 py-1 font-semibold text-white hover:bg-blue-500/60 dark:hover:bg-slate-900/40 sm:w-44;
 
       &.active {
         @apply bg-blue-600 dark:bg-slate-900;
@@ -239,7 +239,7 @@ export default {
 
       &.sub-menu::after {
         // add arrow right icon
-        @apply content-[''] absolute right-3 rotate-90 transition border-y-5 border-l-5 border-solid border-y-transparent border-l-current;
+        @apply absolute right-3 rotate-90 border-y-5 border-l-5 border-solid border-y-transparent border-l-current transition content-[''];
       }
     }
     &:focus-within {
@@ -259,10 +259,10 @@ export default {
   }
 
   &-item {
-    @apply bg-blue-500/20 dark:bg-slate-900/20 flex items-center w-full;
+    @apply flex w-full items-center bg-blue-500/20 dark:bg-slate-900/20;
 
     &__link {
-      @apply text-white flex space-x-2 items-center w-full font-semibold px-2 py-1 hover:bg-blue-500/40 dark:hover:bg-slate-900/40 pl-7 sm:pl-4;
+      @apply flex w-full items-center space-x-2 px-2 py-1 pl-7 font-semibold text-white hover:bg-blue-500/40 dark:hover:bg-slate-900/40 sm:pl-4;
 
       &.active {
         @apply bg-blue-600 dark:bg-slate-900;
@@ -270,7 +270,7 @@ export default {
     }
 
     &__img {
-      @apply min-w-[1.25rem] w-5 object-contain inline-block rounded-sm;
+      @apply inline-block w-5 min-w-[1.25rem] rounded-sm object-contain;
     }
 
     &__svg {
@@ -280,7 +280,7 @@ export default {
 }
 
 .nav-search {
-  @apply inline-block mx-1 ml-3 flex-auto sm:flex-none relative hover:-translate-y-px;
+  @apply relative mx-1 ml-3 inline-block flex-auto hover:-translate-y-px sm:flex-none;
 
   &:focus-within {
     transform: translate(0, -2px) !important;
@@ -291,7 +291,7 @@ export default {
   }
 
   &__input {
-    @apply bg-blue-300 dark:bg-slate-300/20 focus:bg-blue-200 dark:focus:bg-slate-400 disabled:bg-blue-600 dark:disabled:bg-slate-700 py-1 px-2 rounded-lg transition-all hover:shadow-sm hover:shadow-blue-600/75 dark:hover:shadow-slate-100/75 focus:shadow-md focus:shadow-blue-600/75 dark:focus:shadow-slate-100/75  w-full text-gray-600 dark:text-white font-semibold placeholder:italic placeholder:text-blue-500 dark:placeholder:text-gray-300 disabled:placeholder:text-blue-200 placeholder:font-normal pl-8 focus:outline-none;
+    @apply w-full rounded-lg bg-blue-300 py-1 px-2 pl-8 font-semibold text-gray-600 transition-all placeholder:font-normal placeholder:italic placeholder:text-blue-500 hover:shadow-sm hover:shadow-blue-600/75 focus:bg-blue-200 focus:shadow-md  focus:shadow-blue-600/75 focus:outline-none disabled:bg-blue-600 disabled:placeholder:text-blue-200 dark:bg-slate-300/20 dark:text-white dark:placeholder:text-gray-300 dark:hover:shadow-slate-100/75 dark:focus:bg-slate-400 dark:focus:shadow-slate-100/75 dark:disabled:bg-slate-700;
   }
 }
 </style>

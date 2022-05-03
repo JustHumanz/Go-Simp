@@ -10,7 +10,7 @@
 
 <style lang="scss" scoped>
 .ame-loading {
-  @apply flex flex-col items-center justify-center w-full h-40;
+  @apply flex h-40 w-full flex-col items-center justify-center;
 
   &__img {
     @apply h-32 object-contain;

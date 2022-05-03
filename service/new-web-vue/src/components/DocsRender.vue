@@ -37,6 +37,13 @@ export default {
         immediate: true,
       }
     )
+
+    document.body.addEventListener("click", (e) => {
+      if (e.target.id === "router-link") {
+        e.preventDefault()
+        this.$router.push(e.target.getAttribute("href"))
+      }
+    })
   },
   computed: {
     rendered() {
@@ -68,55 +75,55 @@ export default {
   }
 
   h2 {
-    @apply text-2xl font-bold mt-6;
+    @apply mt-6 text-2xl font-bold;
   }
 
   h3 {
-    @apply text-lg font-bold mt-4;
+    @apply mt-4 text-lg font-bold;
   }
 
   pre {
-    @apply bg-slate-200 dark:bg-slate-700 px-3 py-2 rounded-lg my-2 text-sm whitespace-pre-line;
+    @apply my-2 whitespace-pre-line rounded-lg bg-slate-200 px-3 py-2 text-sm dark:bg-slate-700;
   }
 
   .value-slash {
-    @apply py-px px-2 bg-slate-300 dark:bg-slate-800 inline-block whitespace-nowrap rounded-md my-px font-mono;
+    @apply my-px inline-block whitespace-nowrap rounded-md bg-slate-300 py-px px-2 font-mono dark:bg-slate-800;
   }
 
   a {
-    @apply text-blue-500 dark:text-gray-300 hover:underline;
+    @apply text-blue-500 hover:underline dark:text-gray-300;
   }
 
   ul {
-    @apply list-disc ml-5 my-2;
+    @apply my-2 ml-5 list-disc;
   }
 
   ol {
-    @apply list-decimal ml-5 my-2;
+    @apply my-2 ml-5 list-decimal;
   }
 
   table {
-    @apply w-full table-auto border-collapse rounded-md overflow-hidden max-w-screen-sm;
+    @apply w-full max-w-screen-sm table-auto border-collapse overflow-hidden rounded-md;
 
     th {
-      @apply bg-slate-300 dark:bg-slate-700 text-center;
+      @apply bg-slate-300 text-center dark:bg-slate-700;
     }
 
     td {
-      @apply bg-slate-100 dark:bg-slate-500 py-px px-2 border-t-2 border-r-2 last:border-r-0 border-slate-300 dark:border-slate-700 text-center;
+      @apply border-t-2 border-r-2 border-slate-300 bg-slate-100 py-px px-2 text-center last:border-r-0 dark:border-slate-700 dark:bg-slate-500;
     }
   }
 
   .d-channel {
-    @apply text-blue-500 font-semibold;
+    @apply font-semibold text-blue-500;
   }
 
   .d-role {
-    @apply text-orange-500 font-semibold;
+    @apply font-semibold text-orange-500;
   }
 
   .flex-center {
-    @apply flex justify-center items-center;
+    @apply flex items-center justify-center;
   }
 }
 </style>

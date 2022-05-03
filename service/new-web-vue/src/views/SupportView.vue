@@ -118,10 +118,10 @@ export default {
 
 <style lang="scss" scoped>
 .title {
-  @apply bg-blue-400 dark:bg-slate-500 py-3 w-full;
+  @apply w-full bg-blue-400 py-3 dark:bg-slate-500;
 
   &__span {
-    @apply text-white text-2xl w-[90%] md:w-[70%] lg:w-[65%] font-semibold uppercase block mx-auto;
+    @apply mx-auto block w-[90%] text-2xl font-semibold uppercase text-white md:w-[70%] lg:w-[65%];
   }
   &__svg {
     @apply text-blue-200 dark:text-gray-200;
@@ -129,7 +129,7 @@ export default {
 }
 
 .image-header {
-  @apply py-3 w-full h-44 flex justify-center;
+  @apply flex h-44 w-full justify-center py-3;
 
   :deep(svg) {
     @apply h-full object-contain;
@@ -137,7 +137,7 @@ export default {
 }
 
 section {
-  @apply w-[90%] md:w-[70%] lg:w-[65%] mx-auto;
+  @apply mx-auto w-[90%] md:w-[70%] lg:w-[65%];
 }
 
 h1 {
@@ -145,6 +145,6 @@ h1 {
 }
 
 a {
-  @apply text-blue-500 dark:text-gray-300 hover:underline;
+  @apply text-blue-500 hover:underline dark:text-gray-300;
 }
 </style>

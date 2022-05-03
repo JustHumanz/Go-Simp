@@ -1,20 +1,16 @@
 <template>
   <section class="ame-error">
-    <img
-      :src="`/assets/smolame/${img}.png`"
-      alt=""
-      class="ame-error-image"
-    />
+    <img :src="`/assets/smolame/${img}.png`" alt="" class="ame-error-image" />
     <div class="ame-error-text">
       <h2 class="ame-error-text__title">
         <font-awesome-icon
           icon="circle-exclamation"
-          class="fa-fw text-red-600 ml-2 ame-error-text__icon"
+          class="fa-fw ame-error-text__icon ml-2 text-red-600"
           v-if="type === `error`"
         />
         <font-awesome-icon
           icon="exclamation-triangle"
-          class="fa-fw text-yellow-400 ml-2 ame-error-text__icon"
+          class="fa-fw ame-error-text__icon ml-2 text-yellow-400"
           v-else-if="type === `warning`"
         />
         <span>{{ title }}</span>
@@ -59,23 +55,23 @@ export default {
 
 <style lang="scss">
 .ame-error-text__link {
-  @apply underline text-gray-700 hover:text-blue-400 dark:text-slate-200 dark:hover:text-slate-400 hover:decoration-2 underline-offset-1 decoration-dotted;
+  @apply text-gray-700 underline decoration-dotted underline-offset-1 hover:text-blue-400 hover:decoration-2 dark:text-slate-200 dark:hover:text-slate-400;
 }
 </style>
 
 <style lang="scss" scoped>
 .ame-error {
-  @apply w-full h-screen flex flex-col md:flex-row items-center justify-center;
+  @apply flex h-screen w-full flex-col items-center justify-center md:flex-row;
 
   &-image {
-    @apply w-24 h-24 object-contain;
+    @apply h-24 w-24 object-contain;
   }
 
   &-text {
     @apply max-w-[29.5rem] px-5;
 
     &__title {
-      @apply text-center text-gray-800 dark:text-white font-semibold text-xl sm:text-2xl;
+      @apply text-center text-xl font-semibold text-gray-800 dark:text-white sm:text-2xl;
     }
 
     &__icon {
@@ -83,11 +79,11 @@ export default {
     }
 
     &__description {
-      @apply inline-block text-center text-gray-600 dark:text-slate-100 font-semibold text-sm sm:text-base leading-5 my-2;
+      @apply my-2 inline-block text-center text-sm font-semibold leading-5 text-gray-600 dark:text-slate-100 sm:text-base;
     }
 
     &__err-msg {
-      @apply inline-block w-full text-center text-gray-400 dark:text-gray-200 text-sm;
+      @apply inline-block w-full text-center text-sm text-gray-400 dark:text-gray-200;
     }
   }
 }

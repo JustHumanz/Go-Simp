@@ -1,20 +1,37 @@
 <template>
   <header class="header">
     <div class="header-image">
-      <img src="/src/assets/vtuber.png" draggable="false" alt="" class="header-image__img" />
+      <img
+        src="/src/assets/vtuber.png"
+        draggable="false"
+        alt=""
+        class="header-image__img"
+      />
     </div>
     <h3 class="header-title">Friend for get notification from vtuber</h3>
-    <a href="https://discord.com/oauth2/authorize?client_id=721964514018590802&permissions=456720&scope=bot%20applications.commands" target="_blank" class="header-button">
+    <a
+      href="https://discord.com/oauth2/authorize?client_id=721964514018590802&permissions=456720&scope=bot%20applications.commands"
+      target="_blank"
+      class="header-button"
+    >
       <font-awesome-icon :icon="['fab', 'discord']" class="fa-fw" />
       Add to Discord
     </a>
     <div class="header-links">
-      <a href="https://discord.gg/ydWC5knbJT" class="header-links__link"  target="_blank">
+      <a
+        href="https://discord.gg/ydWC5knbJT"
+        class="header-links__link"
+        target="_blank"
+      >
         <font-awesome-icon :icon="['fab', 'discord']" class="fa-fw" />
         Discord Server
       </a>
       <span class="header-links__separator">|</span>
-      <a href="https://github.com/JustHumanz/Go-Simp" class="header-links__link"  target="_blank">
+      <a
+        href="https://github.com/JustHumanz/Go-Simp"
+        class="header-links__link"
+        target="_blank"
+      >
         <font-awesome-icon :icon="['fab', 'github']" class="fa-fw" />
         Source Code
       </a>
@@ -90,12 +107,17 @@
     <div class="ending-content">
       <h3 class="ending-content__title">
         Your favorite vtuber cannot be here?
-        </h3>
+      </h3>
       <p class="ending-content__description">
         Request your favorite vtuber to be here.
       </p>
     </div>
-    <a href="https://github.com/JustHumanz/Go-Simp/issues/new?assignees=JustHumanz&labels=enhancement&template=add_vtuber.md&title=Add+%5BVtuber+Nickname%5D+from+%5BGroup%2FAgency%5D" class="ending-button" target="_blank">Request Here</a>
+    <a
+      href="https://github.com/JustHumanz/Go-Simp/issues/new?assignees=JustHumanz&labels=enhancement&template=add_vtuber.md&title=Add+%5BVtuber+Nickname%5D+from+%5BGroup%2FAgency%5D"
+      class="ending-button"
+      target="_blank"
+      >Request Here</a
+    >
   </section>
 </template>
 
@@ -122,10 +144,10 @@ export default {
 
 <style lang="scss" scoped>
 .header {
-  @apply bg-indigo-300 dark:bg-slate-600 h-[90vh] px-12 flex flex-col items-center justify-center;
+  @apply flex h-[90vh] flex-col items-center justify-center bg-indigo-300 px-12 dark:bg-slate-600;
 
   &-image {
-    @apply overflow-hidden h-[19vmax] flex items-start drop-shadow-sm;
+    @apply flex h-[19vmax] items-start overflow-hidden drop-shadow-sm;
 
     &__img {
       @apply w-[35vmax] object-contain;
@@ -133,31 +155,31 @@ export default {
   }
 
   &-title {
-    @apply mt-3 text-center text-[3vmax] font-bold uppercase text-white tracking-tight;
+    @apply mt-3 text-center text-[3vmax] font-bold uppercase tracking-tight text-white;
   }
 
   &-button {
-    @apply mt-2 bg-indigo-500 dark:bg-slate-800 text-white text-lg font-bold rounded-md px-4 py-2 shadow-sm shadow-indigo-600/50 dark:shadow-slate-800/50 hover:shadow-lg transition-shadow;
+    @apply mt-2 rounded-md bg-indigo-500 px-4 py-2 text-lg font-bold text-white shadow-sm shadow-indigo-600/50 transition-shadow hover:shadow-lg dark:bg-slate-800 dark:shadow-slate-800/50;
   }
 
   &-links {
     @apply mt-3 flex justify-center;
 
     &__link {
-      @apply text-white hover:text-indigo-600 dark:hover:text-slate-400 text-sm font-thin tracking-tight;
+      @apply text-sm font-thin tracking-tight text-white hover:text-indigo-600 dark:hover:text-slate-400;
     }
 
     &__separator {
-      @apply mx-1 text-indigo-500 dark:text-black text-sm font-thin tracking-tight;
+      @apply mx-1 text-sm font-thin tracking-tight text-indigo-500 dark:text-black;
     }
   }
 }
 
 .feature {
-  @apply h-[90vh] flex justify-center md:justify-evenly items-center flex-col md:flex-row;
+  @apply flex h-[90vh] flex-col items-center justify-center md:flex-row md:justify-evenly;
 
   &-image {
-    @apply w-[37vmax] object-contain rounded-xl shadow-sm hover:shadow-md transition-all hover:scale-105 overflow-hidden relative;
+    @apply relative w-[37vmax] overflow-hidden rounded-xl object-contain shadow-sm transition-all hover:scale-105 hover:shadow-md;
   }
 
   &.reverse {
@@ -168,7 +190,7 @@ export default {
   }
 
   &-content {
-    @apply flex flex-col max-w-[37vmax] mt-12 md:mt-0 text-center md:text-right;
+    @apply mt-12 flex max-w-[37vmax] flex-col text-center md:mt-0 md:text-right;
 
     &__title {
       @apply text-3xl font-bold tracking-tight;
@@ -181,15 +203,15 @@ export default {
 }
 
 .img-light {
-  @apply dark:opacity-0 transition-opacity duration-300 ease-in-out;
+  @apply transition-opacity duration-300 ease-in-out dark:opacity-0;
 }
 
 .img-dark {
-  @apply absolute top-0 transition-opacity duration-300 ease-in-out opacity-0 dark:opacity-100;
+  @apply absolute top-0 opacity-0 transition-opacity duration-300 ease-in-out dark:opacity-100;
 }
 
 .ending {
-  @apply h-[90vh] flex justify-center items-center flex-col bg-sky-200 dark:bg-slate-500;
+  @apply flex h-[90vh] flex-col items-center justify-center bg-sky-200 dark:bg-slate-500;
 
   &-content {
     @apply flex flex-col text-center;
@@ -204,7 +226,7 @@ export default {
   }
 
   &-button {
-    @apply mt-4 bg-sky-500 dark:bg-zinc-500 text-white text-lg font-bold rounded-md px-4 py-2 shadow-sm shadow-sky-600/50 dark:shadow-zinc-700/50 hover:shadow-lg transition-shadow;
+    @apply mt-4 rounded-md bg-sky-500 px-4 py-2 text-lg font-bold text-white shadow-sm shadow-sky-600/50 transition-shadow hover:shadow-lg dark:bg-zinc-500 dark:shadow-zinc-700/50;
   }
 }
 </style>

@@ -77,7 +77,7 @@ a.platform-card {
   @apply hover:brightness-90;
 }
 .platform {
-  @apply grid mx-4 items-center;
+  @apply mx-4 grid items-center;
   grid-template-columns: 1fr;
   grid-template-areas:
     "platform-title"
@@ -92,17 +92,17 @@ a.platform-card {
   }
 
   &-title {
-    @apply text-lg font-semibold underline decoration-2 underline-offset-4 decoration-twitter;
+    @apply text-lg font-semibold underline decoration-twitter decoration-2 underline-offset-4;
     grid-area: platform-title;
   }
 
   &-link {
-    @apply text-sm font-semibold py-2 justify-self-end text-right hover:underline hover:text-slate-700 dark:hover:text-slate-300;
+    @apply justify-self-end py-2 text-right text-sm font-semibold hover:text-slate-700 hover:underline dark:hover:text-slate-300;
     grid-area: platform-link;
   }
 
   &-cards {
-    @apply p-2 grid;
+    @apply grid p-2;
     grid-template-columns: 1fr;
     grid-area: platform-card;
 
@@ -112,7 +112,7 @@ a.platform-card {
   }
 
   &-card {
-    @apply inline-flex flex-col items-center justify-center bg-twitter py-6 px-2 m-1 rounded-md;
+    @apply m-1 inline-flex flex-col items-center justify-center rounded-md bg-twitter py-6 px-2;
   }
 }
 

@@ -50,7 +50,7 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
         This is a District Group,
         <router-link
           to="/docs/quick-start#about-independent-group"
-          class="text-gray-700 dark:text-gray-50 hover:text-gray-800 dark:hover:text-gray-300"
+          class="text-gray-700 hover:text-gray-800 dark:text-gray-50 dark:hover:text-gray-300"
         >
           Read more</router-link
         >
@@ -377,22 +377,22 @@ export default {
 
 <style lang="scss" scoped>
 .vtuber-list {
-  @apply pb-4 w-[95%] sm:w-[85%] md:w-[80%] lg:w-[75%] mx-auto grid gap-[1.5rem];
+  @apply mx-auto grid w-[95%] gap-[1.5rem] pb-4 sm:w-[85%] md:w-[80%] lg:w-[75%];
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
 }
 
 .group-detail {
-  @apply w-[95%] sm:w-[85%] md:w-[80%] lg:w-[75%] mx-auto grid bg-blue-300 dark:bg-slate-500 p-2 rounded-md shadow-md mb-3 gap-1;
+  @apply mx-auto mb-3 grid w-[95%] gap-1 rounded-md bg-blue-300 p-2 shadow-md dark:bg-slate-500 sm:w-[85%] md:w-[80%] lg:w-[75%];
   grid-template-columns: max-content auto;
   grid-template-areas: "image title" "image link";
 
   &__img {
-    @apply w-14 h-14 m-1 object-cover justify-self-start self-center drop-shadow-md;
+    @apply m-1 h-14 w-14 self-center justify-self-start object-cover drop-shadow-md;
     grid-area: image;
   }
 
   &__title {
-    @apply text-2xl ml-1 font-bold text-center text-gray-700 dark:text-white justify-self-start self-center;
+    @apply ml-1 self-center justify-self-start text-center text-2xl font-bold text-gray-700 dark:text-white;
     grid-area: title;
 
     // when &__title is end item
@@ -410,13 +410,13 @@ export default {
     grid-area: link;
 
     &-item {
-      @apply inline-flex items-center space-x-2 px-3 py-1 m-[2px] rounded-full text-white bg-youtube hover:brightness-90;
+      @apply m-[2px] inline-flex items-center space-x-2 rounded-full bg-youtube px-3 py-1 text-white hover:brightness-90;
     }
   }
 }
 
 .scroll-to-top {
-  @apply fixed bottom-0 right-0 m-4 z-[2] text-2xl bg-sky-400 dark:bg-slate-800 text-white px-3 pb-2
-  pt-3 rounded-full shadow-sm hover:shadow-md shadow-sky-700/50 dark:shadow-slate-100/50 transition-transform;
+  @apply fixed bottom-0 right-0 z-[2] m-4 rounded-full bg-sky-400 px-3 pb-2 pt-3 text-2xl
+  text-white shadow-sm shadow-sky-700/50 transition-transform hover:shadow-md dark:bg-slate-800 dark:shadow-slate-100/50;
 }
 </style>

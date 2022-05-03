@@ -151,14 +151,14 @@ export default {
 
 <style lang="scss" scoped>
 .header-title {
-  @apply bg-blue-400 dark:bg-slate-500 py-3 w-full;
+  @apply w-full bg-blue-400 py-3 dark:bg-slate-500;
 }
 
 .title {
-  @apply w-[90%] md:w-[70%] lg:w-[65%] mx-auto flex flex-wrap justify-between;
+  @apply mx-auto flex w-[90%] flex-wrap justify-between md:w-[70%] lg:w-[65%];
 
   &__span {
-    @apply text-white text-2xl font-semibold uppercase;
+    @apply text-2xl font-semibold uppercase text-white;
   }
   &__svg {
     @apply text-blue-200 dark:text-gray-200;
@@ -166,7 +166,7 @@ export default {
 }
 
 .edit-github {
-  @apply px-2 py-1 inline-block rounded-md shadow-sm -translate-y-px hover:shadow-md hover:-translate-y-0.5 shadow-blue-600/75 dark:shadow-slate-300/50 text-sm font-semibold text-white transition duration-200 ease-in-out;
+  @apply inline-block -translate-y-px rounded-md px-2 py-1 text-sm font-semibold text-white shadow-sm shadow-blue-600/75 transition duration-200 ease-in-out hover:-translate-y-0.5 hover:shadow-md dark:shadow-slate-300/50;
 }
 
 .fly {
@@ -174,19 +174,19 @@ export default {
   @apply top-16;
 
   .tab-link {
-    @apply shadow-md bg-blue-400 text-white dark:bg-slate-500 dark:text-white;
+    @apply bg-blue-400 text-white shadow-md dark:bg-slate-500 dark:text-white;
   }
 
   .tab-lists {
-    @apply shadow-md md:shadow-none z-[2];
+    @apply z-[2] shadow-md md:shadow-none;
   }
 }
 
 .tab {
-  @apply flex-col md:py-2 md:border-r-2 border-blue-300 dark:border-white w-full md:w-48 md:mx-0 md:ml-3 md:absolute md:h-screen;
+  @apply w-full flex-col border-blue-300 dark:border-white md:absolute md:mx-0 md:ml-3 md:h-screen md:w-48 md:border-r-2 md:py-2;
 
   &-link {
-    @apply text-xl py-3 w-full inline-block md:hidden transition-all font-semibold px-6 bg-blue-300 dark:bg-slate-400 dark:text-gray-700;
+    @apply inline-block w-full bg-blue-300 py-3 px-6 text-xl font-semibold transition-all dark:bg-slate-400 dark:text-gray-700 md:hidden;
 
     &__svg {
       @apply mr-2;
@@ -200,18 +200,18 @@ export default {
   }
 
   &-lists {
-    @apply scale-y-0 origin-top md:scale-y-100 flex flex-col w-full absolute md:static md:z-auto bg-blue-100 dark:bg-slate-500 md:bg-transparent dark:md:bg-transparent transition-all duration-200 ease-in-out;
+    @apply absolute flex w-full origin-top scale-y-0 flex-col bg-blue-100 transition-all duration-200 ease-in-out dark:bg-slate-500 md:static md:z-auto md:scale-y-100 md:bg-transparent dark:md:bg-transparent;
   }
 
   &-list {
     @apply text-blue-400 dark:text-slate-200;
 
     &__link {
-      @apply w-full h-full inline-block px-3 py-1 md:rounded-l-full hover:bg-blue-200 dark:hover:bg-slate-700;
+      @apply inline-block h-full w-full px-3 py-1 hover:bg-blue-200 dark:hover:bg-slate-700 md:rounded-l-full;
       transition: all 0.2s ease-in-out;
 
       &.router-link-active {
-        @apply bg-blue-300 dark:text-slate-800 dark:bg-white text-white font-semibold;
+        @apply bg-blue-300 font-semibold text-white dark:bg-white dark:text-slate-800;
       }
     }
   }
