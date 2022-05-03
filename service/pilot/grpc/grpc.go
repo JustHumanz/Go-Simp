@@ -189,6 +189,14 @@ func (k *UnitService) ResetCounter() *UnitService {
 	return k
 }
 
+func (k *UnitService) GetAgencyList() []string {
+	AgencyName := []string{}
+	for _, v := range k.Payload {
+		AgencyName = append(AgencyName, v.GroupName)
+	}
+	return AgencyName
+}
+
 func (s *Service) RemoveUnitFromDeadSvc(UUID string) {
 	for k, v := range s.Unit {
 		if v.UUID == UUID {
@@ -221,10 +229,7 @@ func (s *Server) RequestRunJobsOfService(ctx context.Context, in *ServiceMessage
 				payload := []string{}
 				for _, v2 := range v.Unit {
 					if v2.UUID == in.ServiceUUID {
-
-						for _, v3 := range v2.Payload {
-							payload = append(payload, v3.GroupName)
-						}
+						payload = v2.GetAgencyList()
 
 						log.WithFields(log.Fields{
 							"Agency Payload": payload,
@@ -234,7 +239,7 @@ func (s *Server) RequestRunJobsOfService(ctx context.Context, in *ServiceMessage
 				}
 				return &RunJob{
 					Run:     false,
-					Message: fmt.Sprintln("New units detected %s", payload),
+					Message: fmt.Sprint("New units detected ", payload),
 				}, nil
 			}
 
@@ -280,12 +285,7 @@ func (s *Server) RequestRunJobsOfService(ctx context.Context, in *ServiceMessage
 							"Service": in.Service,
 							"Running": v.Run,
 							"Note":    in.Message,
-						}).Info("Unit request for running job")
-
-						log.WithFields(log.Fields{
-							"Counter": v.CronJob,
-							"UUID":    in.ServiceUUID,
-							"Service": in.Service,
+							"Payload": k.GetAgencyList(),
 						}).Info("Approval request")
 
 						v.SetRun(true)
