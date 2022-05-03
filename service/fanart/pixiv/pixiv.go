@@ -428,6 +428,11 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 			}).Info(res.Message)
 
 			Pix.Agency = engine.UnMarshalPayload(res.VtuberPayload)
+			if len(Pix.Agency) == 0 {
+				msg := "vtuber agency was nill,force close the unit"
+				pilot.ReportDeadService(msg, ServiceName)
+				log.Fatalln(msg)
+			}
 			Pix.Run()
 
 			_, _ = client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
