@@ -77,7 +77,7 @@
         </h4>
         <div class="header-vtuber-name__group">
           <router-link
-            :to="`/vtubers/${vtuber.Group.ID}`"
+            :to="`/vtubers/${vtuber.Group.ID}?reg=${vtuber.Region}`"
             class="header-vtuber-name__group-link"
           >
             <img

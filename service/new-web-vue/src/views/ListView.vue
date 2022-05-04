@@ -97,7 +97,8 @@ export default {
 
         await this.getVtuberData()
         if (this.error_status) return
-        this.getFilter()
+        await this.getFilter()
+        this.calculateFilters()
       },
       { immediate: true }
     )
@@ -344,6 +345,16 @@ export default {
 
         this.activeListMenu = null
         this.activeSubMenu = null
+      })
+    },
+    calculateFilters() {
+      const subMenus = document.querySelectorAll(".navbar-submenu-items")
+
+      // count children inside each submenu and substract 75
+      subMenus.forEach((subMenu) => {
+        const totalHeight = subMenu.children.length * 32
+        // add --totalHeight in submenu
+        subMenu.style.setProperty("--totalHeight", `${totalHeight}px`)
       })
     },
   },

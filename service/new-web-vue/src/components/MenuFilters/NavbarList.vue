@@ -222,6 +222,7 @@ export default {
   }
 
   &-item {
+    @apply bg-blue-400 dark:bg-slate-700;
     &__img {
       @apply inline-block w-5 min-w-[1.25rem] rounded-md object-contain drop-shadow-md;
     }
@@ -247,7 +248,7 @@ export default {
         @apply rotate-0;
       }
       .navbar-submenu-items {
-        @apply flex flex-col;
+        @apply h-[var(--totalHeight)] scale-y-100;
       }
     }
   }
@@ -255,7 +256,8 @@ export default {
 
 .navbar-submenu {
   &-items {
-    @apply hidden;
+    transition-property: transform height;
+    @apply flex h-0 origin-top scale-y-0 flex-col duration-200 ease-in-out;
   }
 
   &-item {
