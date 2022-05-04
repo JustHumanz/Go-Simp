@@ -11,6 +11,7 @@ import (
 	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
+	"github.com/go-redis/redis/v8"
 	twitterscraper "github.com/n0madic/twitter-scraper"
 	log "github.com/sirupsen/logrus"
 )
@@ -189,7 +190,7 @@ func (Data DataFanart) DeleteFanart(e string) error {
 }
 
 //Add new lewd fanart
-func (Data DataFanart) AddLewd() error {
+func (Data DataFanart) AddLewd() (int64, error) {
 	log.WithFields(log.Fields{
 		"Vtuber": Data.Member.Name,
 		"Img":    Data.Photos,
@@ -197,79 +198,84 @@ func (Data DataFanart) AddLewd() error {
 	}).Info("New Lewd Fanart")
 	stmt, err := DB.Prepare(`INSERT INTO Lewd (PermanentURL,Author,Photos,Videos,Text,TweetID,PixivID,VtuberMember_id) values(?,?,?,?,?,?,?,?)`)
 	if err != nil {
-		return err
+		return -1, err
 	}
 	defer stmt.Close()
 
 	res, err := stmt.Exec(Data.PermanentURL, Data.Author, strings.Join(Data.Photos, "\n"), Data.Videos, Data.Text, Data.TweetID, Data.PixivID, Data.Member.ID)
 	if err != nil {
-		return err
+		return -1, err
 	}
 
-	_, err = res.LastInsertId()
+	id, err := res.LastInsertId()
 	if err != nil {
-		return err
+		return -1, err
 	}
-	return nil
+	return id, nil
 }
 
 //CheckMemberFanart Check if `that` was a new fanart
 func (FanArt DataFanart) CheckTweetFanArt(Update bool) (bool, error) {
-	if FanArt.Lewd {
-		var (
-			id int
-		)
-		err := DB.QueryRow(`SELECT id FROM Lewd WHERE TweetID=?`, FanArt.TweetID).Scan(&id)
-		if err == sql.ErrNoRows {
-			err = FanArt.AddLewd()
-			if err != nil {
+	var (
+		id int
+	)
+
+	FanartCache := FanArt.CheckFanartFromCache()
+	if FanartCache.ID == 0 {
+		if FanArt.Lewd {
+			err := DB.QueryRow(`SELECT id FROM Lewd WHERE TweetID=?`, FanArt.TweetID).Scan(&id)
+			if err == sql.ErrNoRows {
+				id, err := FanArt.AddLewd()
+				if err != nil {
+					return false, err
+				}
+				FanArt.AddFanartToCache(id)
+
+				return true, nil
+			}
+		} else {
+			err := DB.QueryRow(`SELECT id FROM Twitter WHERE TweetID=?`, FanArt.TweetID).Scan(&id)
+			if err == sql.ErrNoRows {
+				log.WithFields(log.Fields{
+					"Name":    FanArt.Member.EnName,
+					"Hashtag": FanArt.Member.TwitterHashtag,
+					"Lewd":    FanArt.Lewd,
+					"URL":     FanArt.PermanentURL,
+				}).Info("New Fanart")
+
+				stmt, err := DB.Prepare(`INSERT INTO Twitter (PermanentURL,Author,Likes,Photos,Videos,Text,TweetID,VtuberMember_id) values(?,?,?,?,?,?,?,?)`)
+				if err != nil {
+					return false, err
+				}
+				defer stmt.Close()
+
+				res, err := stmt.Exec(FanArt.PermanentURL, FanArt.Author, FanArt.Likes, strings.Join(FanArt.Photos, "\n"), FanArt.Videos, FanArt.Text, FanArt.TweetID, FanArt.Member.ID)
+				if err != nil {
+					return false, err
+				}
+
+				id, err := res.LastInsertId()
+				if err != nil {
+					return false, err
+				}
+				FanArt.AddFanartToCache(id)
+				return true, nil
+			} else if err != nil {
 				return false, err
 			}
-			return true, nil
 		}
-	} else {
-		var (
-			id int
-		)
-		err := DB.QueryRow(`SELECT id FROM Twitter WHERE TweetID=?`, FanArt.TweetID).Scan(&id)
-		if err == sql.ErrNoRows {
-			log.WithFields(log.Fields{
-				"Name":    FanArt.Member.EnName,
-				"Hashtag": FanArt.Member.TwitterHashtag,
-				"Lewd":    FanArt.Lewd,
-				"URL":     FanArt.PermanentURL,
-			}).Info("New Fanart")
-
-			stmt, err := DB.Prepare(`INSERT INTO Twitter (PermanentURL,Author,Likes,Photos,Videos,Text,TweetID,VtuberMember_id) values(?,?,?,?,?,?,?,?)`)
-			if err != nil {
-				return false, err
-			}
-			defer stmt.Close()
-
-			res, err := stmt.Exec(FanArt.PermanentURL, FanArt.Author, FanArt.Likes, strings.Join(FanArt.Photos, "\n"), FanArt.Videos, FanArt.Text, FanArt.TweetID, FanArt.Member.ID)
-			if err != nil {
-				return false, err
-			}
-
-			_, err = res.LastInsertId()
-			if err != nil {
-				return false, err
-			}
-			return true, nil
-		} else if err != nil {
+	} else if Update {
+		//update like
+		log.WithFields(log.Fields{
+			"Name":    FanArt.Member.EnName,
+			"Hashtag": FanArt.Member.TwitterHashtag,
+			"Likes":   FanArt.Likes,
+		}).Info("Update like")
+		_, err := DB.Exec(`Update Twitter set Likes=? Where id=? `, FanArt.Likes, FanartCache.ID)
+		if err != nil {
 			return false, err
-		} else if Update {
-			//update like
-			log.WithFields(log.Fields{
-				"Name":    FanArt.Member.EnName,
-				"Hashtag": FanArt.Member.TwitterHashtag,
-				"Likes":   FanArt.Likes,
-			}).Info("Update like")
-			_, err := DB.Exec(`Update Twitter set Likes=? Where id=? `, FanArt.Likes, id)
-			if err != nil {
-				return false, err
-			}
 		}
+
 	}
 	return false, nil
 }
@@ -295,29 +301,64 @@ func (FanArt DataFanart) CheckTBiliBiliFanArt() (bool, error) {
 			return false, err
 		}
 
-		_, err = res.LastInsertId()
+		id, err := res.LastInsertId()
 		if err != nil {
 			return false, err
 		}
+		FanArt.AddFanartToCache(id)
 		return true, nil
 	} else if err != nil {
-		log.Error(err)
+		return false, err
 	}
 	return false, nil
 
 }
 
+func (Data DataFanart) CheckFanartFromCache() DataFanart {
+	var Fanart DataFanart
+	val2, err := FanartCache.Get(context.Background(), Data.PermanentURL).Result()
+	if err == redis.Nil {
+		return Fanart
+	} else if err != nil {
+		log.Fatal(err)
+	}
+
+	err = json.Unmarshal([]byte(val2), &Fanart)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return Fanart
+
+}
+
+func (Data DataFanart) AddFanartToCache(id int64) {
+	log.WithFields(log.Fields{
+		"Key": Data.PermanentURL,
+	}).Info("Add fanart into cache")
+
+	Data.ID = id
+	bytefanart, err := json.Marshal(Data)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = FanartCache.Set(context.Background(), Data.PermanentURL, bytefanart, 10*time.Minute).Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 //Check if `this` was a new fanart
 func (FanArt DataFanart) CheckPixivFanArt() (bool, error) {
+	var tmp int64
 	if FanArt.Lewd {
-		var tmp int64
 		row := DB.QueryRow("SELECT id FROM Vtuber.Lewd where PixivID=?", FanArt.PixivID)
 		err := row.Scan(&tmp)
 		if err == sql.ErrNoRows {
-			err = FanArt.AddLewd()
+			id, err := FanArt.AddLewd()
 			if err != nil {
 				return false, err
 			}
+			FanArt.AddFanartToCache(id)
 			return true, nil
 		} else if err != nil {
 			return false, err
@@ -325,7 +366,6 @@ func (FanArt DataFanart) CheckPixivFanArt() (bool, error) {
 			return false, errors.New(FanArt.Member.Name + " Still same")
 		}
 	} else {
-		var tmp int64
 		row := DB.QueryRow("SELECT id FROM Vtuber.Pixiv where PixivID=?", FanArt.PixivID)
 		err := row.Scan(&tmp)
 		if err == sql.ErrNoRows {

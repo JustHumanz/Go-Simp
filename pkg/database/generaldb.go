@@ -21,6 +21,7 @@ var (
 	LiveCache     *redis.Client
 	GeneralCache  *redis.Client
 	UpcomingCache *redis.Client
+	FanartCache   *redis.Client
 )
 
 //Start Database session
@@ -52,6 +53,11 @@ func Start(configfile config.ConfigFile) {
 			DB:       3,
 		})
 
+		FanartCache = redis.NewClient(&redis.Options{
+			Addr:     RedisHost,
+			Password: "",
+			DB:       4,
+		})
 	}
 	log.Info("Database module ready")
 }
