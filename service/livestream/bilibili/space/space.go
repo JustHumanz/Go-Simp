@@ -166,19 +166,39 @@ func (i *checkBlSpaceJob) Run() {
 					PushVideo engine.SpaceVideo
 				)
 
-				body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/space/arc/search?mid="+strconv.Itoa(Data.Member.BiliBiliID)+"&ps="+strconv.Itoa(config.GoSimpConf.LimitConf.SpaceBiliBili), nil)
-				if curlerr != nil {
-					log.WithFields(log.Fields{
-						"Agency": Group.GroupName,
-						"Vtuber": Member.Name,
-					}).Error(curlerr)
-					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message:     curlerr.Error(),
-						Service:     ServiceName,
-						ServiceUUID: ServiceUUID,
-					})
-					return
-				}
+				body := func() []byte {
+					if config.GoSimpConf.MultiTOR != "" {
+						body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/space/arc/search?mid="+strconv.Itoa(Data.Member.BiliBiliID)+"&ps="+strconv.Itoa(config.GoSimpConf.LimitConf.SpaceBiliBili), nil)
+						if curlerr != nil {
+							log.WithFields(log.Fields{
+								"Agency": Group.GroupName,
+								"Vtuber": Member.Name,
+							}).Error(curlerr)
+							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+								Message:     curlerr.Error(),
+								Service:     ServiceName,
+								ServiceUUID: ServiceUUID,
+							})
+						}
+						return body
+
+					} else {
+						body, curlerr := network.Curl("https://api.bilibili.com/x/space/arc/search?mid="+strconv.Itoa(Data.Member.BiliBiliID)+"&ps="+strconv.Itoa(config.GoSimpConf.LimitConf.SpaceBiliBili), nil)
+						if curlerr != nil {
+							log.WithFields(log.Fields{
+								"Agency": Group.GroupName,
+								"Vtuber": Member.Name,
+							}).Error(curlerr)
+							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+								Message:     curlerr.Error(),
+								Service:     ServiceName,
+								ServiceUUID: ServiceUUID,
+							})
+						}
+						return body
+					}
+
+				}()
 
 				err := json.Unmarshal(body, &PushVideo)
 				if err != nil {
