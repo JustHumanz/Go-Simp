@@ -96,12 +96,6 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 		}
 
 		res := func() *pilot.RunJob {
-			log.WithFields(log.Fields{
-				"Service":  ServiceName,
-				"Running":  true,
-				"YtUpdate": YoutubeChecker.Update,
-			}).Info("request for running job")
-
 			if YoutubeChecker.Update {
 				tmp, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
 					Service:     ServiceName,

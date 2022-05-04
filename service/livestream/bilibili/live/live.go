@@ -76,10 +76,6 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 	Bili := &checkBlLiveeJob{}
 
 	for {
-		log.WithFields(log.Fields{
-			"Running": false,
-			"UUID":    ServiceUUID,
-		}).Info("request for running job")
 
 		res, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
 			Service:     ServiceName,
@@ -115,6 +111,11 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 				"UUID":    ServiceUUID,
 			}).Info("reporting job was done")
 
+		} else {
+			log.WithFields(log.Fields{
+				"Running": false,
+				"UUID":    ServiceUUID,
+			}).Info(res.Message)
 		}
 
 		time.Sleep(1 * time.Minute)
