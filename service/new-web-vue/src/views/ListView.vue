@@ -260,6 +260,14 @@ export default {
         }
       })
 
+      // on mouse up
+      window.addEventListener("mouseup", async (e) => {
+        if (this.clickedSubMenu) {
+          await new Promise((resolve) => setTimeout(resolve, 300))
+          this.clickedSubMenu = false
+        }
+      })
+
       // on click
       document.addEventListener("click", (e) => {
         if (e.target.closest(".navbar-filter__link")) {
@@ -295,12 +303,7 @@ export default {
               ".navbar-filter-item__link.sub-menu"
             )
 
-            if (this.clickedSubMenu) {
-              this.clickedSubMenu = false
-              return
-            }
-
-            if (this.activeSubMenu === filterSub) {
+            if (this.activeSubMenu === filterSub && !this.clickedSubMenu) {
               console.log("closing submenu")
               this.activeSubMenu.blur()
               this.activeListMenu.focus()

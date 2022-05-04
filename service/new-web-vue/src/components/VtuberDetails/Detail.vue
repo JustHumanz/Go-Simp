@@ -195,7 +195,7 @@ export default {
       return this.vtuber.JpName
         ? this.vtuber.JpName.split("/")[0]
             .split(" ")
-            .reduce((acc, cur) => (acc + acc !== "" ? "・" : "" + cur), "")
+            .reduce((acc, cur) => `${acc}${acc !== "" ? "・" : ""}${cur}`, "")
         : this.vtuber.EnName.split(" ").reduce((acc, cur) => acc + cur, "")
     },
   },
