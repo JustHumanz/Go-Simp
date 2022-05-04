@@ -5,6 +5,7 @@ import VtuberView from "../views/VtuberView.vue"
 import DocsView from "../views/DocsView.vue"
 import NotFoundView from "../views/NotFound.vue"
 import SupportView from "../views/SupportView.vue"
+import NewVtuber from "../views/NewVtuber.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,7 +36,6 @@ const router = createRouter({
     },
     {
       path: "/docs",
-
       redirect: "/docs/quick-start",
     },
     {
@@ -47,6 +47,11 @@ const router = createRouter({
       path: "/support",
       name: "Support",
       component: SupportView,
+    },
+    {
+      path: "/new-vtuber",
+      name: "New Vtuber",
+      component: NewVtuber,
     },
     {
       path: "/:pathMatch(.*)",

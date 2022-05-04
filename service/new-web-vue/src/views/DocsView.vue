@@ -75,6 +75,7 @@ export default {
       markdowns: null,
       fly: false,
       title: "",
+      menuDocs: false,
     }
   },
   mounted() {
@@ -108,6 +109,26 @@ export default {
         immediate: true,
       }
     )
+
+    document.body.addEventListener("click", (e) => {
+      if (e.target.closest(".tab-link")) {
+        const docsMenu = e.target.closest(".tab-link")
+
+        this.menuDocs = !this.menuDocs
+        if (!this.menuDocs && document.activeElement === docsMenu) {
+          docsMenu.blur()
+        }
+      } else if (e.target.closest(".tab-list__link")) {
+        document.activeElement.blur()
+        this.menuDocs = false
+      } else this.menuDocs = false
+    })
+
+    document.body.addEventListener("blur", () => {
+      if (!this.menuDocs) return
+      document.activeElement.blur()
+      this.menuDocs = false
+    })
   },
   async created() {
     window.addEventListener("scroll", () => {

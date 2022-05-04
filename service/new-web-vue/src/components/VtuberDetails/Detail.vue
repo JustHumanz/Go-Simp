@@ -166,6 +166,14 @@ import PixivLogo from "../icons/PixivLogo.vue"
           {{ vtuber.Fanbase }}
         </span>
       </div>
+
+      <div class="detail-info-item">
+        <span class="detail-info-item__title"></span>
+        <a href="#" onclick="return false" class="detail-info-item__value">
+          <font-awesome-icon icon="triangle-exclamation" class="fa-fw mr-1" />
+          Send issue
+        </a>
+      </div>
     </div>
   </div>
   <hr class="m-2" />
@@ -199,7 +207,7 @@ export default {
   @apply mx-2 grid gap-2 transition-colors duration-100 ease-in-out md:mx-0;
 
   @media (min-width: 768px) {
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: 1.75fr auto 1fr;
   }
 
   &-link {

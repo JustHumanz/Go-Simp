@@ -71,15 +71,8 @@
             {{ vtuber.NickName.toLowerCase() }}
             <font-awesome-icon
               :icon="['far', 'circle-question']"
-              class="text-gray-400"
+              class="fa-fw"
             />
-            <span class="nickname-hover"
-              >This nickname is used for initials when calling in the Discord
-              command
-              <router-link to="/docs/get-data-groups#get-vtuber-name"
-                >Learn More</router-link
-              ></span
-            >
           </div>
         </h4>
         <div class="header-vtuber-name__group">
@@ -242,26 +235,10 @@ export default {
     &__name {
       @apply pt-3 text-xl font-semibold;
       .nickname {
-        @apply relative block cursor-pointer text-xl font-thin text-gray-600 dark:text-slate-300 sm:inline-block;
+        @apply relative block cursor-pointer text-xl font-thin text-gray-400 sm:inline-block;
 
         a {
           @apply text-white hover:text-gray-100 dark:hover:text-gray-300;
-        }
-
-        &-hover {
-          @apply invisible absolute top-7 left-1/2 z-[5] inline-block w-44 -translate-x-1/2 -translate-y-5 rounded-md bg-sky-300 px-2 py-1 text-left text-sm font-normal opacity-0 delay-100 duration-300 ease-in-out dark:bg-slate-700;
-          transition-property: opacity, transform;
-
-          &::before {
-            // add arrow up in center using tailwind
-            @apply absolute -top-1 left-1/2 -translate-x-1/2 border-x-8 border-b-8 border-solid border-x-transparent border-b-sky-300 content-[''] dark:border-b-slate-700;
-          }
-        }
-
-        &:hover {
-          .nickname-hover {
-            @apply visible translate-y-0 opacity-100;
-          }
         }
       }
     }
