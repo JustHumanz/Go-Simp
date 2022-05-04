@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/go-redis/redis/v8"
@@ -166,25 +167,35 @@ func (Data LiveStream) InputSpaceVideo() error {
 		return err
 	}
 
-	_, err = res.LastInsertId()
+	id, err := res.LastInsertId()
 	if err != nil {
 		return err
 	}
+
+	Data.AddBiliBiliSpaceToCache(id)
+
 	return nil
 }
 
 //CheckVideo Check New video from SpaceBiliBili
-func (Data LiveStream) CheckVideo() (bool, int) {
+func (Data LiveStream) SpaceCheckVideo() error {
 	var tmp int
 	row := DB.QueryRow("SELECT id FROM Vtuber.BiliBili WHERE VideoID=? AND VtuberMember_id=?", Data.VideoID, Data.Member.ID)
 	err := row.Scan(&tmp)
 	if err == sql.ErrNoRows {
-		return true, 0
+		log.WithFields(log.Fields{
+			"Agency": Data.Group.GroupName,
+			"Vtuber": Data.Member.Name,
+		}).Info("New video uploaded")
+		err := Data.InputSpaceVideo()
+		if err != nil {
+			return err
+		}
+
 	} else if err != nil {
-		return false, 0
-	} else {
-		return false, tmp
+		return err
 	}
+	return nil
 }
 
 //UpdateView Update SpaceBiliBili data
@@ -198,4 +209,22 @@ func (Data LiveStream) UpdateSpaceViews(id int) error {
 		return err
 	}
 	return nil
+}
+
+//Add new bilibili space video id into cache layer
+func (Data LiveStream) AddBiliBiliSpaceToCache(id int64) {
+	key := fmt.Sprintf("cache-layer-%s", Data.VideoID)
+	log.WithFields(log.Fields{
+		"Key": key,
+	}).Info("Add space bilibili into cache")
+
+	Data.ID = id
+	bytelive, err := json.Marshal(Data)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = LiveCache.Set(context.Background(), key, bytelive, 10*time.Minute).Err()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

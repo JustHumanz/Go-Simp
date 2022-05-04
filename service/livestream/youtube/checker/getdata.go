@@ -43,122 +43,129 @@ func StartCheckYT(Group database.Group, Update bool) {
 				})
 			}
 			for _, ID := range VideoID {
-				YoutubeData, err := YtChan.CheckYoutubeVideo(ID)
-				if err != nil {
-					log.Warn(err)
-				}
+				YoutubeCache := database.CheckVideoIDFromCache(ID)
 
-				if YoutubeData == nil {
-					Data, err := engine.YtAPI([]string{ID})
+				if YoutubeCache.ID == 0 {
+					YoutubeData, err := YtChan.CheckYoutubeVideo(ID)
 					if err != nil {
-						log.WithFields(log.Fields{
-							"Agency":    Group.GroupName,
-							"ChannelID": YtChan.YtChannel,
-							"Region":    YtChan.Region,
-						}).Error(err)
-						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-							Message: err.Error(),
-							Service: ServiceName,
-						})
+						log.Warn(err)
 					}
 
-					if len(Data.Items) == 0 {
-						fmt.Println("Opps something error\n", Data)
-						continue
-					}
-					Items := Data.Items[0]
+					if YoutubeData == nil {
+						Data, err := engine.YtAPI([]string{ID})
+						if err != nil {
+							log.WithFields(log.Fields{
+								"Agency":    Group.GroupName,
+								"ChannelID": YtChan.YtChannel,
+								"Region":    YtChan.Region,
+							}).Error(err)
+							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+								Message: err.Error(),
+								Service: ServiceName,
+							})
+						}
 
-					YtType := engine.YtFindType(Items.Snippet.Title)
-					if YtType == "Streaming" && Items.ContentDetails.Duration != "P0D" && Items.LiveDetails.StartTime.IsZero() {
-						YtType = "Regular video"
-					}
+						if len(Data.Items) == 0 {
+							fmt.Println("Opps something error\n", Data)
+							continue
+						}
+						Items := Data.Items[0]
 
-					NewYoutubeData := &database.LiveStream{
-						Status:  Items.Snippet.VideoStatus,
-						VideoID: ID,
-						Title:   Items.Snippet.Title,
-						Thumb: func() string {
-							_, err = network.Curl("http://i3.ytimg.com/vi/"+ID+"/maxresdefault.jpg", nil)
-							if err != nil {
-								return "http://i3.ytimg.com/vi/" + ID + "/hqdefault.jpg"
+						YtType := engine.YtFindType(Items.Snippet.Title)
+						if YtType == "Streaming" && Items.ContentDetails.Duration != "P0D" && Items.LiveDetails.StartTime.IsZero() {
+							YtType = "Regular video"
+						}
+
+						NewYoutubeData := &database.LiveStream{
+							Status:  Items.Snippet.VideoStatus,
+							VideoID: ID,
+							Title:   Items.Snippet.Title,
+							Thumb: func() string {
+								_, err = network.Curl("http://i3.ytimg.com/vi/"+ID+"/maxresdefault.jpg", nil)
+								if err != nil {
+									return "http://i3.ytimg.com/vi/" + ID + "/hqdefault.jpg"
+								} else {
+									return "http://i3.ytimg.com/vi/" + ID + "/maxresdefault.jpg"
+								}
+
+							}(),
+							Desc:         Items.Snippet.Description,
+							Schedul:      Items.LiveDetails.StartTime,
+							Published:    Items.Snippet.PublishedAt,
+							Type:         YtType,
+							Viewers:      Items.Statistics.ViewCount,
+							Length:       durafmt.Parse(engine.ParseDuration(Items.ContentDetails.Duration)).String(),
+							Group:        Group,
+							GroupYoutube: YtChan,
+							State:        config.YoutubeLive,
+						}
+						if Items.Snippet.VideoStatus == "none" {
+							if YtType == "Covering" {
+								log.WithFields(log.Fields{
+									"YtID":      ID,
+									"GroupName": Group.GroupName,
+								}).Info("New MV or Cover")
+
+								NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
+								engine.SendLiveNotif(NewYoutubeData, Bot)
+
+							} else if !Items.Snippet.PublishedAt.IsZero() {
+								log.WithFields(log.Fields{
+									"YtID":      ID,
+									"GroupName": Group.GroupName,
+								}).Info("Suddenly upload new video")
+								if NewYoutubeData.Schedul.IsZero() {
+									NewYoutubeData.UpdateSchdule(NewYoutubeData.Published)
+								}
+
+								NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
+								engine.SendLiveNotif(NewYoutubeData, Bot)
+
 							} else {
-								return "http://i3.ytimg.com/vi/" + ID + "/maxresdefault.jpg"
+								log.WithFields(log.Fields{
+									"YtID":      ID,
+									"GroupName": Group.GroupName,
+								}).Info("Past live stream")
+								NewYoutubeData.UpdateStatus(config.PastStatus)
+								engine.SendLiveNotif(NewYoutubeData, Bot)
+							}
+						} else if Items.Snippet.VideoStatus == config.UpcomingStatus {
+							log.WithFields(log.Fields{
+								"YtID":      ID,
+								"GroupName": Group.GroupName,
+								"Message":   "Send to notify",
+							}).Info("New Upcoming live schedule")
+
+							NewYoutubeData.UpdateStatus(config.UpcomingStatus)
+							_, err := NewYoutubeData.InputYt()
+							if err != nil {
+								log.WithFields(log.Fields{
+									"agency":    Group.GroupName,
+									"channelID": YtChan.YtChannel,
+									"region":    YtChan.Region,
+								}).Error(err)
 							}
 
-						}(),
-						Desc:         Items.Snippet.Description,
-						Schedul:      Items.LiveDetails.StartTime,
-						Published:    Items.Snippet.PublishedAt,
-						Type:         YtType,
-						Viewers:      Items.Statistics.ViewCount,
-						Length:       durafmt.Parse(engine.ParseDuration(Items.ContentDetails.Duration)).String(),
-						Group:        Group,
-						GroupYoutube: YtChan,
-						State:        config.YoutubeLive,
-					}
-					if Items.Snippet.VideoStatus == "none" {
-						if YtType == "Covering" {
-							log.WithFields(log.Fields{
-								"YtID":      ID,
-								"GroupName": Group.GroupName,
-							}).Info("New MV or Cover")
-
-							NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
-							engine.SendLiveNotif(NewYoutubeData, Bot)
-
-						} else if !Items.Snippet.PublishedAt.IsZero() {
-							log.WithFields(log.Fields{
-								"YtID":      ID,
-								"GroupName": Group.GroupName,
-							}).Info("Suddenly upload new video")
-							if NewYoutubeData.Schedul.IsZero() {
-								NewYoutubeData.UpdateSchdule(NewYoutubeData.Published)
+							err = NewYoutubeData.SendToCache(true)
+							if err != nil {
+								log.WithFields(log.Fields{
+									"agency":    Group.GroupName,
+									"channelID": YtChan.YtChannel,
+									"region":    YtChan.Region,
+								}).Error(err)
 							}
 
-							NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
-							engine.SendLiveNotif(NewYoutubeData, Bot)
-
-						} else {
-							log.WithFields(log.Fields{
-								"YtID":      ID,
-								"GroupName": Group.GroupName,
-							}).Info("Past live stream")
-							NewYoutubeData.UpdateStatus(config.PastStatus)
 							engine.SendLiveNotif(NewYoutubeData, Bot)
 						}
-					} else if Items.Snippet.VideoStatus == config.UpcomingStatus {
-						log.WithFields(log.Fields{
-							"YtID":      ID,
-							"GroupName": Group.GroupName,
-							"Message":   "Send to notify",
-						}).Info("New Upcoming live schedule")
-
-						NewYoutubeData.UpdateStatus(config.UpcomingStatus)
-						_, err := NewYoutubeData.InputYt()
-						if err != nil {
-							log.WithFields(log.Fields{
-								"agency":    Group.GroupName,
-								"channelID": YtChan.YtChannel,
-								"region":    YtChan.Region,
-							}).Error(err)
-						}
-
-						err = NewYoutubeData.SendToCache(true)
-						if err != nil {
-							log.WithFields(log.Fields{
-								"agency":    Group.GroupName,
-								"channelID": YtChan.YtChannel,
-								"region":    YtChan.Region,
-							}).Error(err)
-						}
-
-						engine.SendLiveNotif(NewYoutubeData, Bot)
 					}
+
 				} else if Update {
 					log.WithFields(log.Fields{
 						"Group":   Group.GroupName,
 						"VideoID": ID,
 					}).Info("Update VideoID")
+
+					YoutubeData := &YoutubeCache
 
 					Data, err := engine.YtAPI([]string{ID})
 					if err != nil {
@@ -267,6 +274,7 @@ func StartCheckYT(Group database.Group, Update bool) {
 						}
 					}
 				}
+
 			}
 		}
 	}
@@ -297,210 +305,215 @@ func StartCheckYT(Group database.Group, Update bool) {
 					})
 				}
 				for _, ID := range VideoID {
-					YoutubeData, err := Member.CheckYoutubeVideo(ID)
-					if err != nil {
-						log.WithFields(log.Fields{
-							"Vtuber": Member.Name,
-							"Agency": Group.GroupName,
-						}).Warn(err)
-					}
+					YoutubeCache := database.CheckVideoIDFromCache(ID)
 
-					if YoutubeData == nil {
-						var (
-							Viewers string
-						)
-
-						Data, err := engine.YtAPI([]string{ID})
+					if YoutubeCache.ID == 0 {
+						YoutubeData, err := Member.CheckYoutubeVideo(ID)
 						if err != nil {
 							log.WithFields(log.Fields{
 								"Vtuber": Member.Name,
 								"Agency": Group.GroupName,
-							}).Error(err)
-
-							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-								Message:     err.Error(),
-								Service:     ServiceName,
-								ServiceUUID: ServiceUUID,
-							})
+							}).Warn(err)
 						}
 
-						log.WithFields(log.Fields{
-							"Group":  Group.GroupName,
-							"Member": Member.Name,
-						}).Info("Checking New VideoID")
+						if YoutubeData == nil {
+							var (
+								Viewers string
+							)
 
-						if len(Data.Items) == 0 {
-							fmt.Println("Opps something error\n", Data)
-							pilot.ReportDeadService("Yt Item Nill", ServiceName)
-							continue
-						}
-
-						Items := Data.Items[0]
-
-						if Items.Snippet.VideoStatus == config.UpcomingStatus {
-							if YoutubeData == nil {
-								Viewers, err = engine.GetWaiting(ID)
-								if err != nil {
-									log.WithFields(log.Fields{
-										"Vtuber": Member.Name,
-										"Agency": Group.GroupName,
-									}).Error(err)
-								}
-							} else if YoutubeData.Viewers != config.Ytwaiting {
-								Viewers = YoutubeData.Viewers
-							} else {
-								Viewers, err = engine.GetWaiting(ID)
-								if err != nil {
-									log.WithFields(log.Fields{
-										"Vtuber": Member.Name,
-										"Agency": Group.GroupName,
-									}).Error(err)
-								}
-							}
-						} else if Items.LiveDetails.Viewers == "" {
-							Viewers = Items.Statistics.ViewCount
-						} else {
-							Viewers = Items.LiveDetails.Viewers
-						}
-
-						YtType := engine.YtFindType(Items.Snippet.Title)
-						if YtType == "Streaming" && Items.ContentDetails.Duration != "P0D" && Items.LiveDetails.StartTime.IsZero() {
-							YtType = "Regular video"
-						}
-
-						NewYoutubeData := &database.LiveStream{
-							Status:  Items.Snippet.VideoStatus,
-							VideoID: ID,
-							Title:   Items.Snippet.Title,
-							Thumb: func() string {
-								_, err = network.Curl("http://i3.ytimg.com/vi/"+ID+"/maxresdefault.jpg", nil)
-								if err != nil {
-									return "http://i3.ytimg.com/vi/" + ID + "/hqdefault.jpg"
-								} else {
-									return "http://i3.ytimg.com/vi/" + ID + "/maxresdefault.jpg"
-								}
-
-							}(),
-							Desc:      Items.Snippet.Description,
-							Schedul:   Items.LiveDetails.StartTime,
-							Published: Items.Snippet.PublishedAt,
-							Type:      YtType,
-							Viewers:   Viewers,
-							Length:    durafmt.Parse(engine.ParseDuration(Items.ContentDetails.Duration)).String(),
-							Member:    Member,
-							Group:     Group,
-							State:     config.YoutubeLive,
-						}
-
-						if Items.Snippet.VideoStatus == config.UpcomingStatus {
-							log.WithFields(log.Fields{
-								"YtID":       ID,
-								"MemberName": Member.Name,
-								"Message":    "Send to notify",
-							}).Info("New Upcoming live schedule")
-
-							NewYoutubeData.UpdateStatus(config.UpcomingStatus)
-							_, err := NewYoutubeData.InputYt()
+							Data, err := engine.YtAPI([]string{ID})
 							if err != nil {
 								log.WithFields(log.Fields{
 									"Vtuber": Member.Name,
 									"Agency": Group.GroupName,
 								}).Error(err)
-							}
 
-							err = NewYoutubeData.SendToCache(false)
-							if err != nil {
-								log.WithFields(log.Fields{
-									"Vtuber": Member.Name,
-									"Agency": Group.GroupName,
-								}).Error(err)
-							}
-
-							UpcominginHours := int(time.Until(NewYoutubeData.Schedul).Hours())
-							if UpcominginHours > 6 {
-								engine.SendLiveNotif(NewYoutubeData, Bot)
-							}
-
-						} else if Items.Snippet.VideoStatus == config.LiveStatus {
-							log.WithFields(log.Fields{
-								"YtID":       ID,
-								"MemberName": Member.Name,
-								"Message":    "Send to notify",
-							}).Info("Suddenly live stream")
-
-							NewYoutubeData.UpdateStatus(config.LiveStatus)
-							_, err := NewYoutubeData.InputYt()
-							if err != nil {
-								log.WithFields(log.Fields{
-									"Vtuber": Member.Name,
-									"Agency": Group.GroupName,
-								}).Error(err)
-							}
-
-							if Member.BiliBiliRoomID != 0 {
-								LiveBili, err := engine.GetRoomStatus(Member.BiliBiliRoomID)
-								if err != nil {
-									log.WithFields(log.Fields{
-										"Vtuber": Member.Name,
-										"Agency": Group.GroupName,
-									}).Error(err)
-								}
-								if LiveBili.CheckScheduleLive() {
-									NewYoutubeData.SetBiliLive(true).UpdateBiliToLive()
-								}
-							}
-
-							if config.GoSimpConf.Metric {
-								bit, err := NewYoutubeData.MarshalBinary()
-								if err != nil {
-									log.WithFields(log.Fields{
-										"Vtuber": Member.Name,
-										"Agency": Group.GroupName,
-									}).Error(err)
-								}
-								gRCPconn.MetricReport(context.Background(), &pilot.Metric{
-									MetricData: bit,
-									State:      config.LiveStatus,
+								gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+									Message:     err.Error(),
+									Service:     ServiceName,
+									ServiceUUID: ServiceUUID,
 								})
 							}
 
-							if !Items.LiveDetails.ActualStartTime.IsZero() {
-								NewYoutubeData.UpdateSchdule(Items.LiveDetails.ActualStartTime)
+							log.WithFields(log.Fields{
+								"Group":  Group.GroupName,
+								"Member": Member.Name,
+							}).Info("Checking New VideoID")
+
+							if len(Data.Items) == 0 {
+								fmt.Println("Opps something error\n", Data)
+								pilot.ReportDeadService("Yt Item Nill", ServiceName)
+								continue
+							}
+
+							Items := Data.Items[0]
+
+							if Items.Snippet.VideoStatus == config.UpcomingStatus {
+								if YoutubeData == nil {
+									Viewers, err = engine.GetWaiting(ID)
+									if err != nil {
+										log.WithFields(log.Fields{
+											"Vtuber": Member.Name,
+											"Agency": Group.GroupName,
+										}).Error(err)
+									}
+								} else if YoutubeData.Viewers != config.Ytwaiting {
+									Viewers = YoutubeData.Viewers
+								} else {
+									Viewers, err = engine.GetWaiting(ID)
+									if err != nil {
+										log.WithFields(log.Fields{
+											"Vtuber": Member.Name,
+											"Agency": Group.GroupName,
+										}).Error(err)
+									}
+								}
+							} else if Items.LiveDetails.Viewers == "" {
+								Viewers = Items.Statistics.ViewCount
+							} else {
+								Viewers = Items.LiveDetails.Viewers
+							}
+
+							YtType := engine.YtFindType(Items.Snippet.Title)
+							if YtType == "Streaming" && Items.ContentDetails.Duration != "P0D" && Items.LiveDetails.StartTime.IsZero() {
+								YtType = "Regular video"
+							}
+
+							NewYoutubeData := &database.LiveStream{
+								Status:  Items.Snippet.VideoStatus,
+								VideoID: ID,
+								Title:   Items.Snippet.Title,
+								Thumb: func() string {
+									_, err = network.Curl("http://i3.ytimg.com/vi/"+ID+"/maxresdefault.jpg", nil)
+									if err != nil {
+										return "http://i3.ytimg.com/vi/" + ID + "/hqdefault.jpg"
+									} else {
+										return "http://i3.ytimg.com/vi/" + ID + "/maxresdefault.jpg"
+									}
+
+								}(),
+								Desc:      Items.Snippet.Description,
+								Schedul:   Items.LiveDetails.StartTime,
+								Published: Items.Snippet.PublishedAt,
+								Type:      YtType,
+								Viewers:   Viewers,
+								Length:    durafmt.Parse(engine.ParseDuration(Items.ContentDetails.Duration)).String(),
+								Member:    Member,
+								Group:     Group,
+								State:     config.YoutubeLive,
+							}
+
+							if Items.Snippet.VideoStatus == config.UpcomingStatus {
+								log.WithFields(log.Fields{
+									"YtID":       ID,
+									"MemberName": Member.Name,
+									"Message":    "Send to notify",
+								}).Info("New Upcoming live schedule")
+
+								NewYoutubeData.UpdateStatus(config.UpcomingStatus)
+								_, err := NewYoutubeData.InputYt()
+								if err != nil {
+									log.WithFields(log.Fields{
+										"Vtuber": Member.Name,
+										"Agency": Group.GroupName,
+									}).Error(err)
+								}
+
+								err = NewYoutubeData.SendToCache(false)
+								if err != nil {
+									log.WithFields(log.Fields{
+										"Vtuber": Member.Name,
+										"Agency": Group.GroupName,
+									}).Error(err)
+								}
+
+								UpcominginHours := int(time.Until(NewYoutubeData.Schedul).Hours())
+								if UpcominginHours > 6 {
+									engine.SendLiveNotif(NewYoutubeData, Bot)
+								}
+
+							} else if Items.Snippet.VideoStatus == config.LiveStatus {
+								log.WithFields(log.Fields{
+									"YtID":       ID,
+									"MemberName": Member.Name,
+									"Message":    "Send to notify",
+								}).Info("Suddenly live stream")
+
+								NewYoutubeData.UpdateStatus(config.LiveStatus)
+								_, err := NewYoutubeData.InputYt()
+								if err != nil {
+									log.WithFields(log.Fields{
+										"Vtuber": Member.Name,
+										"Agency": Group.GroupName,
+									}).Error(err)
+								}
+
+								if Member.BiliBiliRoomID != 0 {
+									LiveBili, err := engine.GetRoomStatus(Member.BiliBiliRoomID)
+									if err != nil {
+										log.WithFields(log.Fields{
+											"Vtuber": Member.Name,
+											"Agency": Group.GroupName,
+										}).Error(err)
+									}
+									if LiveBili.CheckScheduleLive() {
+										NewYoutubeData.SetBiliLive(true).UpdateBiliToLive()
+									}
+								}
+
+								if config.GoSimpConf.Metric {
+									bit, err := NewYoutubeData.MarshalBinary()
+									if err != nil {
+										log.WithFields(log.Fields{
+											"Vtuber": Member.Name,
+											"Agency": Group.GroupName,
+										}).Error(err)
+									}
+									gRCPconn.MetricReport(context.Background(), &pilot.Metric{
+										MetricData: bit,
+										State:      config.LiveStatus,
+									})
+								}
+
+								if !Items.LiveDetails.ActualStartTime.IsZero() {
+									NewYoutubeData.UpdateSchdule(Items.LiveDetails.ActualStartTime)
+									engine.SendLiveNotif(NewYoutubeData, Bot)
+
+								} else {
+									engine.SendLiveNotif(NewYoutubeData, Bot)
+								}
+
+							} else if Items.Snippet.VideoStatus == "none" && YtType == "Covering" {
+								log.WithFields(log.Fields{
+									"YtID":       ID,
+									"MemberName": Member.Name,
+								}).Info("New MV or Cover")
+
+								NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
+								engine.SendLiveNotif(NewYoutubeData, Bot)
+
+							} else if !Items.Snippet.PublishedAt.IsZero() && Items.Snippet.VideoStatus == "none" {
+								log.WithFields(log.Fields{
+									"YtID":       ID,
+									"MemberName": Member.Name,
+								}).Info("Suddenly upload new video")
+								if NewYoutubeData.Schedul.IsZero() {
+									NewYoutubeData.UpdateSchdule(NewYoutubeData.Published)
+								}
+
+								NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
 								engine.SendLiveNotif(NewYoutubeData, Bot)
 
 							} else {
+								log.WithFields(log.Fields{
+									"YtID":       ID,
+									"MemberName": Member.Name,
+								}).Info("Past live stream")
+								NewYoutubeData.UpdateStatus(config.PastStatus)
 								engine.SendLiveNotif(NewYoutubeData, Bot)
 							}
-
-						} else if Items.Snippet.VideoStatus == "none" && YtType == "Covering" {
-							log.WithFields(log.Fields{
-								"YtID":       ID,
-								"MemberName": Member.Name,
-							}).Info("New MV or Cover")
-
-							NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
-							engine.SendLiveNotif(NewYoutubeData, Bot)
-
-						} else if !Items.Snippet.PublishedAt.IsZero() && Items.Snippet.VideoStatus == "none" {
-							log.WithFields(log.Fields{
-								"YtID":       ID,
-								"MemberName": Member.Name,
-							}).Info("Suddenly upload new video")
-							if NewYoutubeData.Schedul.IsZero() {
-								NewYoutubeData.UpdateSchdule(NewYoutubeData.Published)
-							}
-
-							NewYoutubeData.UpdateStatus(config.PastStatus).InputYt()
-							engine.SendLiveNotif(NewYoutubeData, Bot)
-
-						} else {
-							log.WithFields(log.Fields{
-								"YtID":       ID,
-								"MemberName": Member.Name,
-							}).Info("Past live stream")
-							NewYoutubeData.UpdateStatus(config.PastStatus)
-							engine.SendLiveNotif(NewYoutubeData, Bot)
 						}
+
 					} else if Update {
 						log.WithFields(log.Fields{
 							"Group":   Group.GroupName,
@@ -525,6 +538,8 @@ func StartCheckYT(Group database.Group, Update bool) {
 							fmt.Println("Opps something error\n", Data)
 							continue
 						}
+
+						YoutubeData := &YoutubeCache
 
 						Items := Data.Items[0]
 
@@ -612,6 +627,7 @@ func StartCheckYT(Group database.Group, Update bool) {
 							}
 						}
 					}
+
 				}
 			}(v, &wg)
 		}

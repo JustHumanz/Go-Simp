@@ -166,15 +166,33 @@ func (k *checkBlJob) Run() {
 					"Vtuber": Member.Name,
 				}).Info("Start crawler bilibili")
 
-				body, errcurl := network.CoolerCurl("https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_name="+url.QueryEscape(Member.BiliBiliHashtag), nil)
-				if errcurl != nil {
-					log.Error(errcurl)
-					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message:     errcurl.Error(),
-						Service:     ServiceName,
-						ServiceUUID: ServiceUUID,
-					})
-				}
+				body := func() []byte {
+					if config.GoSimpConf.MultiTOR != "" {
+						body, errcurl := network.CoolerCurl("https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_name="+url.QueryEscape(Member.BiliBiliHashtag), nil)
+						if errcurl != nil {
+							log.Error(errcurl)
+							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+								Message:     errcurl.Error(),
+								Service:     ServiceName,
+								ServiceUUID: ServiceUUID,
+							})
+						}
+						return body
+
+					} else {
+						body, errcurl := network.Curl("https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_name="+url.QueryEscape(Member.BiliBiliHashtag), nil)
+						if errcurl != nil {
+							log.Error(errcurl)
+							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+								Message:     errcurl.Error(),
+								Service:     ServiceName,
+								ServiceUUID: ServiceUUID,
+							})
+						}
+						return body
+					}
+
+				}()
 				var (
 					TB engine.TBiliBili
 				)
