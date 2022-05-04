@@ -280,8 +280,11 @@ func StartCheckYT(Group database.Group, Update bool) {
 	}
 
 	//check vtuber agency members youtube channel
-	var wg sync.WaitGroup
-	for k, v := range Group.Members {
+	var (
+		wg      sync.WaitGroup
+		counter = 0
+	)
+	for _, v := range Group.Members {
 		if !v.IsYtNill() && v.Active() {
 			wg.Add(1)
 			go func(Member database.Member, w *sync.WaitGroup) {
@@ -630,12 +633,13 @@ func StartCheckYT(Group database.Group, Update bool) {
 
 				}
 			}(v, &wg)
+			counter++
 		}
-		if k%10 == 0 && k != 0 {
+		if counter%10 == 0 && counter != 0 {
 			log.WithFields(log.Fields{
 				"Wait wg": 10,
-				"Counter": k,
-			}).Info("Waiting 10 waitgroup")
+				"Counter": counter,
+			}).Info("Waiting waitgroup")
 			wg.Wait()
 		}
 	}
