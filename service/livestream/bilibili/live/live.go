@@ -77,7 +77,6 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 
 	for {
 		log.WithFields(log.Fields{
-			"Service": ServiceName,
 			"Running": false,
 			"UUID":    ServiceUUID,
 		}).Info("request for running job")
@@ -93,9 +92,9 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 
 		if res.Run {
 			log.WithFields(log.Fields{
-				"Service": ServiceName,
-				"Running": true,
-				"UUID":    ServiceUUID,
+				"Running":        true,
+				"UUID":           ServiceUUID,
+				"Agency Payload": res.VtuberMetadata,
 			}).Info(res.Message)
 
 			Bili.Agency = engine.UnMarshalPayload(res.VtuberPayload)
@@ -112,7 +111,6 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 				ServiceUUID: ServiceUUID,
 			})
 			log.WithFields(log.Fields{
-				"Service": ServiceName,
 				"Running": false,
 				"UUID":    ServiceUUID,
 			}).Info("reporting job was done")
