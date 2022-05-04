@@ -216,7 +216,7 @@ func (Data LiveStream) AddBiliBiliSpaceToCache(id int64) {
 	key := fmt.Sprintf("cache-layer-%s", Data.VideoID)
 	log.WithFields(log.Fields{
 		"Key": key,
-	}).Info("Add fanart into cache")
+	}).Info("Add space bilibili into cache")
 
 	Data.ID = id
 	bytelive, err := json.Marshal(Data)

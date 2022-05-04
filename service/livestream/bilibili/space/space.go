@@ -240,7 +240,13 @@ func (i *checkBlSpaceJob) Run() {
 								engine.SendLiveNotif(Data, Bot)
 							}
 						} else {
-							Data.UpdateSpaceViews(int(SpaceCache.ID))
+							err := SpaceCache.UpdateSpaceViews(int(SpaceCache.ID))
+							if err != nil {
+								log.WithFields(log.Fields{
+									"Agency": Data.Group.GroupName,
+									"Vtuber": Data.Member.Name,
+								}).Error(err)
+							}
 						}
 					}
 					i.AddVideoID(Member.Name, FirstVideoID)
