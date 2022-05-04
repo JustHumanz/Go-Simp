@@ -282,36 +282,38 @@ func (FanArt DataFanart) CheckTweetFanArt(Update bool) (bool, error) {
 
 //Check if `this` was a new fanart
 func (FanArt DataFanart) CheckTBiliBiliFanArt() (bool, error) {
-	var tmp int64
-	row := DB.QueryRow("SELECT id FROM Vtuber.TBiliBili where Dynamic_id=?", FanArt.Dynamic_id)
-	err := row.Scan(&tmp)
-	if err == sql.ErrNoRows {
-		log.WithFields(log.Fields{
-			"Vtuber": FanArt.Member.EnName,
-			"Img":    FanArt.Photos,
-		}).Info("New Fanart")
-		stmt, err := DB.Prepare(`INSERT INTO TBiliBili (PermanentURL,Author,Likes,Photos,Videos,Text,Dynamic_id,VtuberMember_id) values(?,?,?,?,?,?,?,?)`)
-		if err != nil {
-			return false, err
-		}
-		defer stmt.Close()
+	FanartCache := FanArt.CheckFanartFromCache()
+	if FanartCache.ID == 0 {
+		var tmp int64
+		row := DB.QueryRow("SELECT id FROM Vtuber.TBiliBili where Dynamic_id=?", FanArt.Dynamic_id)
+		err := row.Scan(&tmp)
+		if err == sql.ErrNoRows {
+			log.WithFields(log.Fields{
+				"Vtuber": FanArt.Member.EnName,
+				"Img":    FanArt.Photos,
+			}).Info("New Fanart")
+			stmt, err := DB.Prepare(`INSERT INTO TBiliBili (PermanentURL,Author,Likes,Photos,Videos,Text,Dynamic_id,VtuberMember_id) values(?,?,?,?,?,?,?,?)`)
+			if err != nil {
+				return false, err
+			}
+			defer stmt.Close()
 
-		res, err := stmt.Exec(FanArt.PermanentURL, FanArt.Author, FanArt.Likes, strings.Join(FanArt.Photos, "\n"), FanArt.Videos, FanArt.Text, FanArt.Dynamic_id, FanArt.Member.ID)
-		if err != nil {
-			return false, err
-		}
+			res, err := stmt.Exec(FanArt.PermanentURL, FanArt.Author, FanArt.Likes, strings.Join(FanArt.Photos, "\n"), FanArt.Videos, FanArt.Text, FanArt.Dynamic_id, FanArt.Member.ID)
+			if err != nil {
+				return false, err
+			}
 
-		id, err := res.LastInsertId()
-		if err != nil {
+			id, err := res.LastInsertId()
+			if err != nil {
+				return false, err
+			}
+			FanArt.AddFanartToCache(id)
+			return true, nil
+		} else if err != nil {
 			return false, err
 		}
-		FanArt.AddFanartToCache(id)
-		return true, nil
-	} else if err != nil {
-		return false, err
 	}
 	return false, nil
-
 }
 
 func (Data DataFanart) CheckFanartFromCache() DataFanart {
