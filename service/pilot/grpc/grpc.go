@@ -225,21 +225,9 @@ func (s *Server) RequestRunJobsOfService(ctx context.Context, in *ServiceMessage
 				})
 
 				v.RemapPayload()
-
-				payload := []string{}
-				for _, v2 := range v.Unit {
-					if v2.UUID == in.ServiceUUID {
-						payload = v2.GetAgencyList()
-
-						log.WithFields(log.Fields{
-							"Agency Payload": payload,
-							"UUID":           v2.UUID,
-						}).Info("New Unit payload")
-					}
-				}
 				return &RunJob{
 					Run:     false,
-					Message: fmt.Sprint("New units detected ", payload),
+					Message: "New units detected",
 				}, nil
 			}
 
