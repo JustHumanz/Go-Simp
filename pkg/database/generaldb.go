@@ -1016,3 +1016,22 @@ func DeleteDeletedUser(users []string) {
 		log.Error(err)
 	}
 }
+
+//Check if videoid is exist or not in cache
+func (Data LiveStream) CheckVideoIDFromCache() LiveStream {
+	key := fmt.Sprintf("cache-layer-%s", Data.VideoID)
+	var Live LiveStream
+	val2, err := LiveCache.Get(context.Background(), key).Result()
+	if err == redis.Nil {
+		return Live
+	} else if err != nil {
+		log.Fatal(err)
+	}
+
+	err = json.Unmarshal([]byte(val2), &Live)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return Live
+
+}

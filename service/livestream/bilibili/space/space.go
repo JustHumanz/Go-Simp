@@ -206,17 +206,21 @@ func (i *checkBlSpaceJob) Run() {
 							UpdateTitle(video.Title).
 							UpdateThumbnail(video.Pic).UpdateSchdule(time.Unix(int64(video.Created), 0)).
 							UpdateViewers(strconv.Itoa(video.Play)).UpdateLength(video.Length).SetState(config.SpaceBili)
-						new, id := Data.CheckVideo()
-						if new {
-							log.WithFields(log.Fields{
-								"Vtuber": Data.Member.Name,
-							}).Info("New video uploaded")
 
-							Data.InputSpaceVideo()
-							video.VideoType = Videotype
-							engine.SendLiveNotif(Data, Bot)
+						SpaceCache := Data.CheckVideoIDFromCache()
+						if SpaceCache.ID == 0 {
+							err := Data.SpaceCheckVideo()
+							if err != nil {
+								log.WithFields(log.Fields{
+									"Agency": Data.Group.GroupName,
+									"Vtuber": Data.Member.Name,
+								}).Info("New video uploaded")
+
+								video.VideoType = Videotype
+								engine.SendLiveNotif(Data, Bot)
+							}
 						} else {
-							Data.UpdateSpaceViews(id)
+							Data.UpdateSpaceViews(int(SpaceCache.ID))
 						}
 					}
 					i.AddVideoID(Member.Name, FirstVideoID)
