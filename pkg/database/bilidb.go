@@ -211,7 +211,7 @@ func (Data LiveStream) UpdateSpaceViews(id int) error {
 	return nil
 }
 
-//
+//Add new bilibili space video id into cache layer
 func (Data LiveStream) AddBiliBiliSpaceToCache(id int64) {
 	key := fmt.Sprintf("cache-layer-%s", Data.VideoID)
 	log.WithFields(log.Fields{
