@@ -386,6 +386,8 @@ func (Data *LiveStream) InputYt() (int64, error) {
 			return 0, err
 		}
 
+		Data.AddYoutubeToCache(id)
+
 		return id, nil
 	} else {
 		stmt, err := DB.Prepare(`INSERT INTO GroupVideos (VideoID,Type,Status,Title,Thumbnails,Description,PublishedAt,ScheduledStart,EndStream,Viewers,Length,LiveBili,VtuberGroup_id) values(?,?,?,?,?,?,?,?,?,?,?,?,?)`)
@@ -403,6 +405,8 @@ func (Data *LiveStream) InputYt() (int64, error) {
 		if err != nil {
 			return 0, err
 		}
+
+		Data.AddYoutubeToCache(id)
 
 		return id, nil
 	}
@@ -428,6 +432,24 @@ func (Member Member) CheckYoutubeVideo(VideoID string) (*LiveStream, error) {
 	} else {
 		Data.AddMember(Member)
 		return &Data, nil
+	}
+}
+
+//Add new bilibili space video id into cache layer
+func (Data LiveStream) AddYoutubeToCache(id int64) {
+	key := fmt.Sprintf("cache-layer-%s", Data.VideoID)
+	log.WithFields(log.Fields{
+		"Key": key,
+	}).Info("Add fanart into cache")
+
+	Data.ID = id
+	bytelive, err := json.Marshal(Data)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = LiveCache.Set(context.Background(), key, bytelive, 10*time.Minute).Err()
+	if err != nil {
+		log.Fatal(err)
 	}
 }
 
