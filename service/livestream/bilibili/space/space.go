@@ -196,19 +196,19 @@ func (i *checkBlSpaceJob) Run() {
 					}
 
 					for _, video := range PushVideo.Data.List.Vlist {
-						if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|翻唱|mv|歌曲)", strings.ToLower(video.Title)); Cover || video.Typeid == 31 {
-							Videotype = "Covering"
-						} else {
-							Videotype = "Streaming"
-						}
-
-						Data.AddVideoID(video.Bvid).SetType(Videotype).
-							UpdateTitle(video.Title).
-							UpdateThumbnail(video.Pic).UpdateSchdule(time.Unix(int64(video.Created), 0)).
-							UpdateViewers(strconv.Itoa(video.Play)).UpdateLength(video.Length).SetState(config.SpaceBili)
-
-						SpaceCache := Data.CheckVideoIDFromCache()
+						SpaceCache := database.CheckVideoIDFromCache(video.Bvid)
 						if SpaceCache.ID == 0 {
+							if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|翻唱|mv|歌曲)", strings.ToLower(video.Title)); Cover || video.Typeid == 31 {
+								Videotype = "Covering"
+							} else {
+								Videotype = "Streaming"
+							}
+
+							Data.AddVideoID(video.Bvid).SetType(Videotype).
+								UpdateTitle(video.Title).
+								UpdateThumbnail(video.Pic).UpdateSchdule(time.Unix(int64(video.Created), 0)).
+								UpdateViewers(strconv.Itoa(video.Play)).UpdateLength(video.Length).SetState(config.SpaceBili)
+
 							err := Data.SpaceCheckVideo()
 							if err != nil {
 								log.WithFields(log.Fields{

@@ -220,7 +220,7 @@ func (FanArt DataFanart) CheckTweetFanArt(Update bool) (bool, error) {
 		id int
 	)
 
-	FanartCache := FanArt.CheckFanartFromCache()
+	FanartCache := CheckFanartFromCache(FanArt.PermanentURL)
 	if FanartCache.ID == 0 {
 		if FanArt.Lewd {
 			err := DB.QueryRow(`SELECT id FROM Lewd WHERE TweetID=?`, FanArt.TweetID).Scan(&id)
@@ -283,7 +283,7 @@ func (FanArt DataFanart) CheckTweetFanArt(Update bool) (bool, error) {
 
 //Check if `this` was a new fanart
 func (FanArt DataFanart) CheckTBiliBiliFanArt() (bool, error) {
-	FanartCache := FanArt.CheckFanartFromCache()
+	FanartCache := CheckFanartFromCache(FanArt.PermanentURL)
 	if FanartCache.ID == 0 {
 		var tmp int64
 		row := DB.QueryRow("SELECT id FROM Vtuber.TBiliBili where Dynamic_id=?", FanArt.Dynamic_id)
@@ -318,9 +318,9 @@ func (FanArt DataFanart) CheckTBiliBiliFanArt() (bool, error) {
 	return false, nil
 }
 
-func (Data DataFanart) CheckFanartFromCache() DataFanart {
+func CheckFanartFromCache(PermanentURL string) DataFanart {
 	var Fanart DataFanart
-	val2, err := FanartCache.Get(context.Background(), Data.PermanentURL).Result()
+	val2, err := FanartCache.Get(context.Background(), PermanentURL).Result()
 	if err == redis.Nil {
 		return Fanart
 	} else if err != nil {
@@ -353,7 +353,7 @@ func (Data DataFanart) AddFanartToCache(id int64) {
 
 //Check if `this` was a new fanart
 func (FanArt DataFanart) CheckPixivFanArt() (bool, error) {
-	FanartCache := FanArt.CheckFanartFromCache()
+	FanartCache := CheckFanartFromCache(FanArt.PermanentURL)
 	if FanartCache.ID == 0 {
 		var tmp int64
 		if FanArt.Lewd {

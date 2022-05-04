@@ -43,11 +43,7 @@ func StartCheckYT(Group database.Group, Update bool) {
 				})
 			}
 			for _, ID := range VideoID {
-				YoutubeCache := database.LiveStream{
-					VideoID: ID,
-				}
-
-				YoutubeCache = YoutubeCache.CheckVideoIDFromCache()
+				YoutubeCache := database.CheckVideoIDFromCache(ID)
 
 				if YoutubeCache.ID == 0 {
 					YoutubeData, err := YtChan.CheckYoutubeVideo(ID)
@@ -309,11 +305,7 @@ func StartCheckYT(Group database.Group, Update bool) {
 					})
 				}
 				for _, ID := range VideoID {
-					YoutubeCache := database.LiveStream{
-						VideoID: ID,
-					}
-
-					YoutubeCache = YoutubeCache.CheckVideoIDFromCache()
+					YoutubeCache := database.CheckVideoIDFromCache(ID)
 
 					if YoutubeCache.ID == 0 {
 						YoutubeData, err := Member.CheckYoutubeVideo(ID)
