@@ -92,11 +92,6 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 		CekCounter: make(map[string]bool),
 	}
 	for {
-		log.WithFields(log.Fields{
-			"Service": ServiceName,
-			"Running": false,
-			"UUID":    ServiceUUID,
-		}).Info("request for running job")
 
 		res, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
 			Service:     ServiceName,

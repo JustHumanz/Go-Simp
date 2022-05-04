@@ -90,11 +90,6 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 	Twitch := &checkTwcJob{}
 
 	for {
-		log.WithFields(log.Fields{
-			"Running": false,
-			"UUID":    ServiceUUID,
-		}).Info("request for running job")
-
 		res, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
 			Service:     ServiceName,
 			Message:     "Request",
@@ -129,6 +124,11 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 				"Running": false,
 				"UUID":    ServiceUUID,
 			}).Info("reporting job was done")
+		} else {
+			log.WithFields(log.Fields{
+				"Running": false,
+				"UUID":    ServiceUUID,
+			}).Info(res.Message)
 		}
 		time.Sleep(1 * time.Minute)
 	}
