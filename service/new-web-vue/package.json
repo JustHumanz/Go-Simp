@@ -17,6 +17,7 @@
     "axios": "^0.25.0",
     "marked": "^4.0.12",
     "sharp": "^0.30.4",
+    "validator": "^13.7.0",
     "vue": "^3.2.29",
     "vue-router": "^4.0.12",
     "vue3-count-to": "^1.1.2"

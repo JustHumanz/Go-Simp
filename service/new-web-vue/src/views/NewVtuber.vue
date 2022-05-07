@@ -1,3 +1,8 @@
+<script setup>
+import GroupPage from "../components/NewVtuber/GroupPage.vue"
+import CreateGroup from "../components/NewVtuber/CreateGroup.vue"
+</script>
+
 <template>
   <div class="title">
     <span class="title__span">
@@ -6,31 +11,20 @@
     </span>
   </div>
   <div class="form">
-    <transition
-      enter-active-class="slide-active"
-      enter-from-class="slide-right"
-      enter-to-class="slide-center"
-      leave-active-class="slide-active"
-      leave-from-class="slide-center"
-      leave-to-class="slide-left"
-    >
-      <div v-if="step === 1">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae inventore
-        architecto explicabo in quibusdam possimus totam ut temporibus.
-        Architecto beatae facere odit aspernatur quos eveniet! Consequuntur
-        doloribus qui et eveniet at eligendi maxime, nihil id distinctio nulla
-        neque laudantium ipsum voluptate ad aliquid. Reprehenderit consequuntur
-        ea velit ex quam autem, deserunt, nulla asperiores, hic quae eaque.
-        Eaque illum inventore reprehenderit recusandae fugit culpa ut qui
-        maiores dolor, sapiente, excepturi ea, maxime expedita. Voluptatem
-        blanditiis qui obcaecati dolorum quisquam, ratione optio nesciunt
-        dolorem, consequatur voluptatibus hic? Sint, non. Autem id voluptatem
-        asperiores quos dignissimos odio sequi quasi aperiam sed inventore.
+    <transition name="close" @before-enter="test">
+      <div v-if="step === 1" class="select-group">
+        <group-page @group="getGroup" />
       </div>
     </transition>
-    <transition></transition>
+    <transition name="close" @before-enter="test">
+      <div v-if="step === 2" class="create-group">
+        <create-group @group="getGroup" @back="backAction" />
+      </div>
+    </transition>
+    <transition name="close">
+      <div v-if="step === 3"></div>
+    </transition>
   </div>
-  <button @click="showHide">hide/show</button>
 </template>
 
 <script>
@@ -42,13 +36,35 @@ library.add(faCirclePlus)
 export default {
   data() {
     return {
+      group: null,
       step: 1,
     }
   },
+  mounted() {
+    // this.checkHeightDiv()
+  },
   methods: {
-    showHide(e) {
-      this.step = this.step === 3 ? 1 : this.step + 1
-      console.log(this.show)
+    getGroup(group) {
+      if (group.ID === -1) this.step = 2
+      else this.step = 3
+      this.group = group
+    },
+    async checkHeightDiv() {
+      // await new Promise((resolve) => setTimeout(resolve, 500))
+      // const getchild = document.querySelector(".form").children
+      // console.log(getchild)
+      // const childs = [...getchild]
+      // // add var style with feiled --height-div
+      // childs.forEach((child) => {
+      //   const totalHeight = child.offsetHeight
+      //   child.style.setProperty("--totalHeight", `${totalHeight}px`)
+      // })
+    },
+    backAction() {
+      this.step -= 1
+    },
+    test(e) {
+      console.log(e)
     },
   },
 }
@@ -67,24 +83,22 @@ export default {
 }
 
 .form {
-  @apply mx-auto mt-28 w-full overflow-x-hidden sm:w-[90%] md:w-[80%] lg:w-[75%];
+  @apply mx-auto mt-28 w-[95%] overflow-x-hidden sm:w-[90%] md:w-[80%] lg:w-[75%];
 }
 
-.slide {
-  &-left {
-    @apply -translate-x-[110%];
+.close {
+  &-enter-to,
+  &-leave-form {
+    @apply scale-y-100;
   }
-
-  &-center {
-    @apply translate-x-0;
+  &-enter-from,
+  &-leave-to {
+    @apply scale-y-0;
   }
-
-  &-right {
-    @apply translate-x-[110%];
-  }
-
-  &-active {
-    @apply transition-transform duration-300 ease-in-out;
+  &-enter-active,
+  &-leave-active {
+    transition-property: transform height;
+    @apply origin-top duration-300 ease-in-out;
   }
 }
 </style>

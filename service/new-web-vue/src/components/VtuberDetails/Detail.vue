@@ -214,7 +214,7 @@ export default {
     @apply flex h-max flex-wrap justify-center self-center text-sm font-semibold;
 
     &__link {
-      @apply m-0.5 flex items-center justify-center rounded-full px-2.5 py-1 text-white hover:brightness-90;
+      @apply m-0.5 flex items-center justify-center rounded-full px-2.5 py-1 text-white transition duration-300 ease-in-out hover:brightness-90;
 
       &-icon {
         @apply mr-2;

@@ -107,17 +107,6 @@ export default {
       { immediate: true }
     )
 
-    // this.$watch(
-    //   () => this.search_query,
-    //   () => {
-    //     window.scrollTo({
-    //       top: 0,
-    //     })
-    //     this.$emit("search", this.search_query)
-    //   },
-    //   { immediate: true }
-    // )
-
     this.$watch(
       () => this.$route,
       (a, b) => {
