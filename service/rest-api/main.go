@@ -72,7 +72,7 @@ func init() {
 		}
 
 		configfile.InitConf()
-		database.Start(configfile)
+		database.StartDB(configfile)
 
 		for _, Agency := range Payload {
 			VtuberAgencyTMP = append(VtuberAgencyTMP, GroupPayload{

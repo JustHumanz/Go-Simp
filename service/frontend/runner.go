@@ -134,7 +134,7 @@ func main() {
 		})
 	}
 
-	database.Start(configfile)
+	database.StartDB(configfile)
 
 	err = Bot.UpdateStreamingStatus(0, config.GoSimpConf.BotPrefix.General+"help", config.VtubersData)
 	if err != nil {

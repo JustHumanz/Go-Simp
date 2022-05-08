@@ -32,7 +32,7 @@ func Start() {
 	c := cron.New()
 	c.Start()
 	configfile.InitConf()
-	database.Start(configfile)
+	database.StartDB(configfile)
 
 	GetGroups := func() {
 		log.Info("Start get groups from database")

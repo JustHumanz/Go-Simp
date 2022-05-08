@@ -25,6 +25,7 @@ var (
 	TwitchClient *helix.Client
 	gRCPconn     pilot.PilotServiceClient
 	ServiceUUID  = uuid.New().String()
+	configfile   config.ConfigFile
 )
 
 const (
@@ -38,9 +39,6 @@ func init() {
 
 //main start twitter module
 func main() {
-	var (
-		configfile config.ConfigFile
-	)
 
 	res, err := gRCPconn.GetBotPayload(context.Background(), &pilot.ServiceMessage{
 		Message:     "Init " + ServiceName + " service",
@@ -61,8 +59,6 @@ func main() {
 	configfile.InitConf()
 	Bot = engine.StartBot(false)
 	TwitchClient = engine.GetTwitchTkn()
-
-	database.Start(configfile)
 
 	resp, err := TwitchClient.RequestAppAccessToken([]string{"user:read:email"})
 	if err != nil {
@@ -100,6 +96,8 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 		}
 
 		if res.Run {
+			database.StartDB(configfile)
+
 			log.WithFields(log.Fields{
 				"Running":        true,
 				"UUID":           ServiceUUID,
@@ -120,10 +118,13 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 				ServiceUUID: ServiceUUID,
 			})
 
+			database.StopDB()
+
 			log.WithFields(log.Fields{
 				"Running": false,
 				"UUID":    ServiceUUID,
 			}).Info("reporting job was done")
+
 		} else {
 			log.WithFields(log.Fields{
 				"Running": false,

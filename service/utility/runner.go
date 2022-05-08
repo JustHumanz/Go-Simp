@@ -88,7 +88,7 @@ func main() {
 		log.Panic(err)
 	}
 	configfile.InitConf()
-	database.Start(configfile)
+	database.StartDB(configfile)
 
 	Bot := engine.StartBot(false)
 

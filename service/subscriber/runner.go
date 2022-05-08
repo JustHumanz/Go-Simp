@@ -70,7 +70,7 @@ func main() {
 	Bot = engine.StartBot(false)
 	TwitchClient = engine.GetTwitchTkn()
 
-	database.Start(configfile)
+	database.StartDB(configfile)
 
 	resp, err := TwitchClient.RequestAppAccessToken([]string{"user:read:email"})
 	if err != nil {

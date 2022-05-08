@@ -27,6 +27,7 @@ var (
 	gRCPconn     pilot.PilotServiceClient
 	torTransport = flag.Bool("Tor", false, "Enable multiTor for bot transport")
 	ServiceUUID  = uuid.New().String()
+	configfile   config.ConfigFile
 )
 
 const (
@@ -41,10 +42,6 @@ func init() {
 
 //Start start tbilibili module
 func main() {
-	var (
-		configfile config.ConfigFile
-	)
-
 	res, err := gRCPconn.GetBotPayload(context.Background(), &pilot.ServiceMessage{
 		Message:     "Init " + ServiceName + " service",
 		ServiceUUID: ServiceUUID,
@@ -69,8 +66,6 @@ func main() {
 	if err != nil {
 		log.Error(err)
 	}
-
-	database.Start(configfile)
 
 	c := cron.New()
 	c.Start()
@@ -103,6 +98,8 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 		}
 
 		if res.Run {
+			database.StartDB(configfile)
+
 			log.WithFields(log.Fields{
 				"Running":        res.Run,
 				"UUID":           ServiceUUID,
@@ -122,6 +119,8 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 				Message:     "Done",
 				ServiceUUID: ServiceUUID,
 			})
+
+			database.StopDB()
 
 			log.WithFields(log.Fields{
 				"Running": false,

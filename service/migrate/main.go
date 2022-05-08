@@ -111,7 +111,7 @@ func init() {
 	RequestPay("Start migrate new vtuber")
 
 	db = configfile.CheckSQL()
-	database.Start(configfile)
+	database.StartDB(configfile)
 	configfile.InitConf()
 
 	YoutubeToken = engine.GetYtToken()

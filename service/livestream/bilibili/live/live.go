@@ -22,6 +22,7 @@ var (
 	Bot         *discordgo.Session
 	gRCPconn    pilot.PilotServiceClient
 	ServiceUUID = uuid.New().String()
+	configfile  config.ConfigFile
 )
 
 const (
@@ -35,9 +36,6 @@ func init() {
 
 //Start start twitter module
 func main() {
-	var (
-		configfile config.ConfigFile
-	)
 
 	res, err := gRCPconn.GetBotPayload(context.Background(), &pilot.ServiceMessage{
 		Message:     "Init " + ServiceName + " service",
@@ -57,8 +55,6 @@ func main() {
 
 	configfile.InitConf()
 	Bot = engine.StartBot(false)
-
-	database.Start(configfile)
 
 	log.Info("Enable " + ServiceName)
 	go pilot.RunHeartBeat(gRCPconn, ServiceName, ServiceUUID)
@@ -87,6 +83,8 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 		}
 
 		if res.Run {
+			database.StartDB(configfile)
+
 			log.WithFields(log.Fields{
 				"Running":        true,
 				"UUID":           ServiceUUID,
@@ -106,6 +104,9 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 				Message:     "Done",
 				ServiceUUID: ServiceUUID,
 			})
+
+			database.DbStop()
+
 			log.WithFields(log.Fields{
 				"Running": false,
 				"UUID":    ServiceUUID,

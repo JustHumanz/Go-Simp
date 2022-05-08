@@ -25,34 +25,43 @@ var (
 )
 
 //Start Database session
-func Start(configfile config.ConfigFile) {
+func StartDB(configfile config.ConfigFile) *sql.DB {
+	RedisHost := configfile.Cached.Host + ":" + configfile.Cached.Port
+
 	if DB == nil {
 		DB = configfile.CheckSQL()
-		RedisHost := configfile.Cached.Host + ":" + configfile.Cached.Port
 		UserTagCache = redis.NewClient(&redis.Options{
 			Addr:     RedisHost,
 			Password: "",
 			DB:       0,
 		})
+	}
 
+	if LiveCache == nil {
 		LiveCache = redis.NewClient(&redis.Options{
 			Addr:     RedisHost,
 			Password: "",
 			DB:       1,
 		})
+	}
 
+	if GeneralCache == nil {
 		GeneralCache = redis.NewClient(&redis.Options{
 			Addr:     RedisHost,
 			Password: "",
 			DB:       2,
 		})
+	}
 
+	if UpcomingCache == nil {
 		UpcomingCache = redis.NewClient(&redis.Options{
 			Addr:     RedisHost,
 			Password: "",
 			DB:       3,
 		})
+	}
 
+	if FanartCache == nil {
 		FanartCache = redis.NewClient(&redis.Options{
 			Addr:     RedisHost,
 			Password: "",
@@ -60,6 +69,47 @@ func Start(configfile config.ConfigFile) {
 		})
 	}
 	log.Info("Database module ready")
+	return DB
+}
+
+func StopDB() *sql.DB {
+
+	if DB != nil {
+		err := DB.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	if LiveCache != nil {
+		err := LiveCache.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	if GeneralCache != nil {
+		err := GeneralCache.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	if UpcomingCache != nil {
+		err := UpcomingCache.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	if FanartCache != nil {
+		err := FanartCache.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	log.Info("Database module closed")
+	return DB
 }
 
 //GetGroups Get all vtuber groupData
