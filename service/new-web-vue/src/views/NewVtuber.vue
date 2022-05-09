@@ -18,7 +18,7 @@ import CreateGroup from "../components/NewVtuber/CreateGroup.vue"
     </transition>
     <transition name="close" @before-enter="test">
       <div v-if="step === 2" class="create-group">
-        <create-group @group="getGroup" @back="backAction" />
+        <create-group @group="getGroup" @back="backAction" :groups="groups" />
       </div>
     </transition>
     <transition name="close">

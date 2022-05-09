@@ -34,7 +34,7 @@
         </select>
       </div>
       <div class="platform-group__content-item" v-if="platform === `youtube`">
-        <label for="youtube-id">YouTube ID</label>
+        <label for="youtube-id">YouTube channel ID</label>
         <input type="text" id="youtube-id" name="youtube-id" />
         <small class="description"
           >You can find the ID in the URL <br />(Example:

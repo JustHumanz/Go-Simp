@@ -56,26 +56,42 @@ import GroupPlatform from "./GroupPlatform.vue"
 
 <script>
 import trim from "validator/lib/trim"
+import isUrl from "validator/lib/isURL"
 export default {
   data() {
     return {
       platforms: [],
     }
   },
+  props: {
+    groups: {
+      type: Number,
+      default: [],
+    },
+  },
   mounted() {
+    console.log(this.groups)
     const submitBtn = document.querySelector(".submit")
 
     submitBtn.disabled = true
 
     document.body.addEventListener("input", (e) => {
-      this.checkFilled(e.target)
+      e.target.parentElement.classList.toggle(
+        "has-error",
+        !this.checkFilled(e.target)
+      )
+
+      this.checkAllFilled()
     })
 
     let activeElement = null
 
     document.body.addEventListener("click", (e) => {
-      if (e.target !== activeElement) {
-        this.checkFilled(e.target)
+      if (activeElement && e.target !== activeElement) {
+        activeElement.parentElement.classList.toggle(
+          "has-error",
+          !this.checkFilled(activeElement)
+        )
       }
 
       activeElement = e.target
@@ -86,12 +102,15 @@ export default {
       e.preventDefault()
       console.log(e.target)
     },
-    addPlatform(e) {
+    async addPlatform(e) {
       if (this.platforms.length == 9) e.target.disabled = true
       this.platforms.push({
         id: this.platforms.length,
         set: "youtube",
       })
+
+      await new Promise((resolve) => setTimeout(resolve, 60))
+      this.checkAllFilled()
     },
     async deletePlatform(id) {
       const addPlatformBtn = document.querySelector("[name=add-platform]")
@@ -108,6 +127,9 @@ export default {
       })
       this.platforms.splice(id, 1)
 
+      await new Promise((resolve) => setTimeout(resolve, 60))
+      this.checkAllFilled()
+
       if (!filteredPlatforms.length) return
 
       this.platforms.map((platform, index) => {
@@ -119,7 +141,6 @@ export default {
         this.platforms[index].set = select.value
       })
 
-      await new Promise((resolve) => setTimeout(resolve, 60))
       const newPlatforms = [...document.querySelector(".platforms").children]
 
       newPlatforms.forEach((platform, index) => {
@@ -131,7 +152,64 @@ export default {
         input.forEach((inp, i) => (inp.value = oldInput[i].value))
       })
     },
-    checkFilled(element) {},
+    checkFilled(element) {
+      const notInput = element.tagName !== "INPUT"
+      const iconUrl = element.id === "group-icon"
+
+      if (notInput) return true
+
+      // trim input value
+      const value = trim(element.value)
+
+      // toggle error class in parent element
+      if (!iconUrl && !value) return false
+
+      // when group name same
+      if (element.name === "group-name") {
+        const groupNameExist = this.groups.some(
+          (group) =>
+            group.GroupName.toLowerCase().replace("_", " ") ===
+            value.toLowerCase()
+        )
+
+        if (groupNameExist) return false
+      }
+
+      // when is url
+      if (iconUrl) if (!isUrl(value)) return false
+
+      // check is valid youtube id
+      if (element.name === "youtube-id") {
+        const isChannelId = value.match(/^UC[a-zA-Z0-9-_]{22}$/)
+
+        if (!isChannelId) return false
+      }
+
+      // check is valid bilibili live id or space id
+      if (element.name === "live-id") {
+        const isBiliBiliLiveId = value.match(/^\d+$/)
+
+        if (!isBiliBiliLiveId) return false
+      }
+
+      if (element.name === "space-id") {
+        const isBiliBiliSpaceId = value.match(/^\d+$/)
+
+        if (!isBiliBiliSpaceId) return false
+      }
+
+      // check region/language code
+      if (element.name === "region-code") {
+        const isRegionCode = value.match(/^[a-zA-Z]{2}$/)
+
+        if (!isRegionCode) return false
+      }
+      return true
+    },
+    checkAllFilled() {
+      const input = document.querySelectorAll("input")
+      console.log(input)
+    },
   },
 }
 </script>
