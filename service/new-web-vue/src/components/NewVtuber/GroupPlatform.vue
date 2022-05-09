@@ -37,25 +37,31 @@
         <label for="youtube-id">YouTube channel ID</label>
         <input type="text" id="youtube-id" name="youtube-id" />
         <small class="description"
-          >You can find the ID in the URL <br />(Example:
-          https://www.youtube.com/channel/<b>UCCzUftO8KOVkV4wQG1vkUvg</b>)</small
+          >You can find the ID in the URL
+          (https://www.youtube.com/channel/<b>HERE</b>) <br />(Example:
+          <b>UCCzUftO8KOVkV4wQG1vkUvg</b>)</small
         >
+        <small class="error"></small>
       </div>
       <div class="platform-group__content-item" v-if="platform === `bilibili`">
         <label for="space-id">Bilibili Space ID</label>
         <input type="text" id="space-id" name="space-id" />
         <small class="description">
-          You can find the ID in the URL (not work in Bstation)
-          <br />(Example: https://space.bilibili.com/<b>339567211</b>)
+          You can find the ID in the URL
+          (https://space.bilibili.com/<b>HERE</b>) (not work in Bstation)
+          <br />(Example: <b>339567211</b>)
         </small>
+        <small class="error"></small>
       </div>
       <div class="platform-group__content-item" v-if="platform === `bilibili`">
         <label for="live-id">Bilibili Live ID</label>
         <input type="text" id="live-id" name="live-id" />
         <small class="description">
-          You can find the ID in the URL (not work in Bstation)
-          <br />(Example: https://live.bilibili.com/<b>14275133</b>)
+          You can find the ID in the URL (https://live.bilibili.com/<b>HERE</b>)
+          <br />(not work in Bstation) (Live ID and Space ID is not the same)
+          <br />(Example: <b>14275133</b>)
         </small>
+        <small class="error"></small>
       </div>
       <div class="platform-group__content-item">
         <label for="lang-code">Region/Language Code</label>
@@ -63,6 +69,7 @@
         <small class="description"
           >Minimum 2 characters (Example: <b>EN</b>)</small
         >
+        <small class="error"></small>
       </div>
     </div>
   </div>
@@ -93,11 +100,6 @@ export default {
 
     const platformContent = this.$refs.content
     const platformGroup = this.$refs.platform
-    // set style variable (--contentHeight)
-    platformContent.style.setProperty(
-      "--contentHeight",
-      `${this.platform === "youtube" ? "286" : "398"}px`
-    )
 
     const filteredGroups = [...platformGroups].filter(
       (c) => c !== platformGroup
@@ -107,12 +109,30 @@ export default {
 
     this.$watch(
       () => this.platform,
-      () => {
+      async () => {
+        await new Promise((resolve) => setTimeout(resolve, 60))
+        const calculatedHeight = [...this.$refs.content.children].reduce(
+          (t, c) => {
+            // get margin and padding
+            const margin =
+              parseInt(getComputedStyle(c).marginTop) +
+              parseInt(getComputedStyle(c).marginBottom)
+            const padding =
+              parseInt(getComputedStyle(c).paddingTop) +
+              parseInt(getComputedStyle(c).paddingBottom)
+
+            // get total height
+            return t + c.offsetHeight + margin + padding
+          },
+          0
+        )
+
         platformContent.style.setProperty(
           "--contentHeight",
-          `${this.platform === "youtube" ? "286" : "398"}px`
+          `${calculatedHeight}px`
         )
-      }
+      },
+      { immediate: true }
     )
 
     document.body.addEventListener("click", (e) => {
@@ -148,8 +168,7 @@ export default {
 
       groups.forEach((c) => c.classList.remove("show"))
 
-      if (group.classList.contains("show")) group.classList.remove("show")
-      else group.classList.add("show")
+      group.classList.toggle("show")
     },
   },
 }
@@ -170,11 +189,25 @@ export default {
     }
 
     &__content {
-      transition-property: transform, height;
+      transition-property: "transform, height";
       @apply flex  h-0 origin-top scale-y-0 flex-col duration-300 ease-in-out;
 
       &-item {
         @apply mx-2 my-1 flex flex-col;
+
+        &.has-error {
+          input {
+            @apply bg-red-200;
+          }
+
+          .description {
+            @apply hidden;
+          }
+
+          .error {
+            @apply block;
+          }
+        }
 
         label {
           @apply ml-1;
@@ -197,7 +230,7 @@ export default {
         }
 
         .error {
-          @apply text-red-500;
+          @apply hidden text-red-500;
         }
       }
     }

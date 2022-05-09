@@ -12,9 +12,10 @@ import GroupPlatform from "./GroupPlatform.vue"
         id="group-name"
         name="group-name"
         class="form-control"
-        autocorrect="off"
+        autocomplete="off"
         placeholder="Group Name"
       />
+      <small class="error"></small>
     </div>
     <div class="form-group">
       <label for="group-icon">URL Icon</label>
@@ -23,13 +24,14 @@ import GroupPlatform from "./GroupPlatform.vue"
         id="group-icon"
         name="group-icon"
         class="form-control"
-        autocorrect="off"
+        autocomplete="off"
         placeholder="URL Icon"
       />
       <small class="description"
         >(Optional) It is recommended to fill this in accordingly to make it
         easier to find the icon.</small
       >
+      <small class="error"></small>
     </div>
     <div class="form-group">
       <button type="button" name="add-platform" @click="addPlatform">
@@ -154,15 +156,19 @@ export default {
     },
     checkFilled(element) {
       const notInput = element.tagName !== "INPUT"
-      const iconUrl = element.id === "group-icon"
+      const iconUrl = element.name === "group-icon"
+      const errorText = element.parentElement.querySelector(".error")
+
+      this.calculateHeight(element)
 
       if (notInput) return true
-
-      // trim input value
       const value = trim(element.value)
 
       // toggle error class in parent element
-      if (!iconUrl && !value) return false
+      if (!iconUrl && !value) {
+        errorText.innerText = "This field is required"
+        return false
+      }
 
       // when group name same
       if (element.name === "group-name") {
@@ -172,43 +178,85 @@ export default {
             value.toLowerCase()
         )
 
-        if (groupNameExist) return false
+        if (groupNameExist) {
+          errorText.innerText = "Group name already exist, please find new one"
+          return false
+        }
       }
 
       // when is url
-      if (iconUrl) if (!isUrl(value)) return false
+      if (iconUrl) {
+        if (value && !isUrl(value)) {
+          errorText.innerText = "Please enter a valid URL (image)"
+          return false
+        }
+      }
 
       // check is valid youtube id
       if (element.name === "youtube-id") {
         const isChannelId = value.match(/^UC[a-zA-Z0-9-_]{22}$/)
 
-        if (!isChannelId) return false
+        if (!isChannelId) {
+          errorText.innerText =
+            "This is not a valid channel ID, find inside URL"
+          return false
+        }
       }
 
       // check is valid bilibili live id or space id
       if (element.name === "live-id") {
         const isBiliBiliLiveId = value.match(/^\d+$/)
 
-        if (!isBiliBiliLiveId) return false
+        if (!isBiliBiliLiveId) {
+          errorText.innerText = "This is not a valid live ID, find inside URL"
+          return false
+        }
       }
 
       if (element.name === "space-id") {
         const isBiliBiliSpaceId = value.match(/^\d+$/)
 
-        if (!isBiliBiliSpaceId) return false
+        if (!isBiliBiliSpaceId) {
+          errorText.innerText = "This is not a valid space ID, find inside URL"
+          return false
+        }
       }
 
       // check region/language code
-      if (element.name === "region-code") {
+      if (element.name === "lang-code") {
         const isRegionCode = value.match(/^[a-zA-Z]{2}$/)
 
-        if (!isRegionCode) return false
+        if (!isRegionCode) {
+          errorText.innerText = "Please enter a valid region/language code"
+          return false
+        }
       }
       return true
     },
     checkAllFilled() {
       const input = document.querySelectorAll("input")
       console.log(input)
+    },
+    async calculateHeight(element) {
+      const outsideDiv = element.parentElement.parentElement
+
+      if (!outsideDiv.classList.contains("platform-group__content")) return
+      await new Promise((resolve) => setTimeout(resolve, 60))
+
+      const calculatedHeight = [...outsideDiv.children].reduce((t, c) => {
+        // get margin and padding
+        const margin =
+          parseInt(getComputedStyle(c).marginTop) +
+          parseInt(getComputedStyle(c).marginBottom)
+        const padding =
+          parseInt(getComputedStyle(c).paddingTop) +
+          parseInt(getComputedStyle(c).paddingBottom)
+
+        // get total height
+        return t + c.offsetHeight + margin + padding
+      }, 0)
+
+      outsideDiv.style.setProperty("--contentHeight", `${calculatedHeight}px`)
     },
   },
 }
@@ -225,6 +273,20 @@ export default {
 .form-group {
   @apply flex flex-col md:ml-2;
 
+  &.has-error {
+    input {
+      @apply bg-red-200;
+    }
+
+    .description {
+      @apply hidden;
+    }
+
+    .error {
+      @apply block;
+    }
+  }
+
   input {
     @apply my-1 -translate-y-0.5 rounded-lg bg-slate-200 p-2 shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none focus:outline-none;
   }
@@ -238,7 +300,7 @@ export default {
   }
 
   .error {
-    @apply text-red-500;
+    @apply hidden text-red-500;
   }
 
   button {
