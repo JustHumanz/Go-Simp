@@ -1,3 +1,7 @@
+<script setup>
+import GroupPlatform from "./GroupPlatform.vue"
+</script>
+
 <template>
   <h1 class="title-req-group">Request new Group</h1>
   <form @submit="sendGroup" class="form-req-group">
@@ -32,7 +36,14 @@
         Add Platform
       </button>
     </div>
-    <div class="platforms"></div>
+    <div class="platforms">
+      <group-platform
+        v-for="platform in platforms"
+        :id="platform.id"
+        :set="platform.set"
+        @delete="deletePlatform"
+      />
+    </div>
     <!-- Submit and back btn -->
     <div class="form-group-btn">
       <button type="submit" class="submit">Submit</button>
@@ -44,38 +55,31 @@
 </template>
 
 <script>
-import {} from "validator"
+import trim from "validator/lib/trim"
 export default {
+  data() {
+    return {
+      platforms: [],
+    }
+  },
   mounted() {
-    document.body.addEventListener("click", (e) => {
-      if (e.target.name === "del-platform") {
-        // get div platform
-        const divPlatform = e.target.closest(".platform")
-        // get div platforms
-        const platforms = divPlatform.closest(".platforms")
-        // delete div platform
-        divPlatform.remove()
+    const submitBtn = document.querySelector(".submit")
 
-        // check add platform disabled
-        document.querySelector("[name=add-platform]").disabled = false
+    submitBtn.disabled = true
 
-        // looping platforms
-        platforms.childNodes.forEach((pl, index) => {
-          // get label
-          const label = pl.querySelector("label")
-          // change for inside label
-          label.setAttribute("for", `platform-${index + 1}`)
-
-          // get select
-          const select = pl.querySelector("select")
-          // change name and id inside select
-          select.setAttribute("name", `platform-${index + 1}`)
-          select.setAttribute("id", `platform-${index + 1}`)
-        })
-      }
+    document.body.addEventListener("input", (e) => {
+      this.checkFilled(e.target)
     })
 
-    document.body.addEventListener("change", this.selectPlatform)
+    let activeElement = null
+
+    document.body.addEventListener("click", (e) => {
+      if (e.target !== activeElement) {
+        this.checkFilled(e.target)
+      }
+
+      activeElement = e.target
+    })
   },
   methods: {
     sendGroup(e) {
@@ -83,78 +87,51 @@ export default {
       console.log(e.target)
     },
     addPlatform(e) {
-      const platforms = document.querySelector(".platforms")
-      const scopeId = this.$options.__scopeId
-      // check total childs
-      const totalChilds = platforms.children.length
-      if (totalChilds === 9) e.target.disabled = true
-      // add div platform inside platforms
-      const divPlatform = platforms.appendChild(document.createElement("div"))
-      divPlatform.classList.add("platform")
-      divPlatform.setAttribute(scopeId, "")
-
-      // add label inside div platform
-      const label = divPlatform.appendChild(document.createElement("label"))
-      label.setAttribute("for", `platform-${totalChilds + 1}`)
-      label.setAttribute(scopeId, "")
-      label.innerText = "Platform"
-
-      // add select with option youtube or bilibili inside div platform
-      const select = divPlatform.appendChild(document.createElement("select"))
-      select.setAttribute("name", `platform-${totalChilds + 1}`)
-      select.setAttribute("id", `platform-${totalChilds + 1}`)
-      select.setAttribute(scopeId, "")
-      select.value = ""
-
-      // add value null disabled inside select
-      const option = select.appendChild(document.createElement("option"))
-      option.setAttribute("value", "")
-      option.setAttribute("disabled", "")
-      option.innerText = "Select Platform"
-
-      const optionYoutube = select.appendChild(document.createElement("option"))
-      optionYoutube.setAttribute(scopeId, "")
-      optionYoutube.setAttribute("value", "youtube")
-      optionYoutube.innerText = "Youtube"
-
-      const optionBilibili = select.appendChild(
-        document.createElement("option")
-      )
-      optionBilibili.setAttribute(scopeId, "")
-      optionBilibili.setAttribute("value", "bilibili")
-      optionBilibili.innerText = "BiliBili"
-
-      // add delete btn inside div platform
-      const deleteBtn = divPlatform.appendChild(
-        document.createElement("button")
-      )
-      deleteBtn.setAttribute(scopeId, "")
-      deleteBtn.classList.add("delete-btn")
-      deleteBtn.setAttribute("name", "del-platform")
-      deleteBtn.setAttribute("type", "button")
-      deleteBtn.innerText = "Delete"
+      if (this.platforms.length == 9) e.target.disabled = true
+      this.platforms.push({
+        id: this.platforms.length,
+        set: "youtube",
+      })
     },
-    selectPlatform(e) {
-      // get element select
-      if (
-        !e.target.tagName === "SELECT" &&
-        !e.target.name.includes("platform-")
-      )
-        return
+    async deletePlatform(id) {
+      const addPlatformBtn = document.querySelector("[name=add-platform]")
+      if (addPlatformBtn.disabled) addPlatformBtn.disabled = false
 
-      const divPlatform = e.target.closest(".platform")
-      // delete input-platform-group when exist
-      const existPlatformGroup = divPlatform.querySelector(
-        ".input-platform-group"
-      )
-      if (existPlatformGroup) existPlatformGroup.remove()
-      // create div input-platform-group
-      const divInputPlatformGroup = divPlatform.appendChild(
-        document.createElement("div")
-      )
-      divInputPlatformGroup.classList.add("input-platform-group")
-      divInputPlatformGroup.innerText = e.target.value
+      const platforms = [...document.querySelector(".platforms").children]
+      // remove confirm class from delete-platform
+      platforms.forEach((platform) => {
+        platform.querySelector(".delete-platform").classList.remove("confirm")
+      })
+
+      const filteredPlatforms = platforms.filter((platform, index) => {
+        return index !== id
+      })
+      this.platforms.splice(id, 1)
+
+      if (!filteredPlatforms.length) return
+
+      this.platforms.map((platform, index) => {
+        platform.id = index
+      })
+
+      filteredPlatforms.forEach((platform, index) => {
+        const select = platform.querySelector("select")
+        this.platforms[index].set = select.value
+      })
+
+      await new Promise((resolve) => setTimeout(resolve, 60))
+      const newPlatforms = [...document.querySelector(".platforms").children]
+
+      newPlatforms.forEach((platform, index) => {
+        const input = platform.querySelectorAll("input")
+        const oldInput = filteredPlatforms[index].querySelectorAll("input")
+
+        platform.classList = filteredPlatforms[index].classList
+
+        input.forEach((inp, i) => (inp.value = oldInput[i].value))
+      })
     },
+    checkFilled(element) {},
   },
 }
 </script>
@@ -169,10 +146,6 @@ export default {
 
 .form-group {
   @apply flex flex-col md:ml-2;
-
-  label {
-    @apply text-lg;
-  }
 
   input {
     @apply my-1 -translate-y-0.5 rounded-lg bg-slate-200 p-2 shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none focus:outline-none;
@@ -199,7 +172,7 @@ export default {
   @apply grid grid-rows-2 gap-2 pb-4 md:grid-cols-2 md:grid-rows-none;
 
   button {
-    @apply -translate-y-0.5 rounded-lg p-2 font-semibold text-white shadow-md transition duration-200 ease-in-out first:bg-green-500 last:bg-red-600 hover:translate-y-0 hover:shadow-sm;
+    @apply -translate-y-0.5 rounded-lg p-2 font-semibold text-white shadow-md transition duration-200 ease-in-out first:bg-green-500 last:bg-red-600 hover:translate-y-0 hover:shadow-sm disabled:translate-y-0 disabled:opacity-70 disabled:shadow-none;
   }
 
   .platforms {
