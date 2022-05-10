@@ -11,18 +11,39 @@ import CreateGroup from "../components/NewVtuber/CreateGroup.vue"
     </span>
   </div>
   <div class="form">
-    <transition name="close" @before-enter="test">
-      <div v-if="step === 1" class="select-group">
+    <transition
+      leave-from-class="slide-center"
+      leave-to-class="slide-left"
+      leave-active-class="slide-active"
+      enter-from-class="slide-left"
+      enter-to-class="slide-center"
+      enter-active-class="slide-active"
+    >
+      <div v-if="step === 1" class="select-group" ref="container">
         <group-page @group="getGroup" :groups="groups" />
       </div>
     </transition>
-    <transition name="close" @before-enter="test">
-      <div v-if="step === 2" class="create-group">
-        <create-group @group="getGroup" @back="backAction" :groups="groups" />
+    <transition
+      :enter-from-class="oldStep === 1 ? 'slide-right' : 'slide-left'"
+      enter-to-class="slide-center"
+      enter-active-class="slide-active"
+      leave-from-class="slide-center"
+      :leave-to-class="step === 3 ? 'slide-left' : 'slide-right'"
+      leave-active-class="slide-active"
+    >
+      <div v-if="step === 2" class="create-group" ref="container">
+        <create-group
+          @group="newGroupfunction"
+          @back="backAction"
+          :groups="groups"
+          :newGroup="newGroup"
+        />
       </div>
     </transition>
-    <transition name="close">
-      <div v-if="step === 3"></div>
+    <transition name="slide">
+      <div v-if="step === 3">
+        <button @click="backAction">Back</button>
+      </div>
     </transition>
   </div>
 </template>
@@ -40,13 +61,21 @@ export default {
   data() {
     return {
       group: null,
+      newGroup: null,
       step: 1,
+      oldStep: 0,
       groups: [],
     }
   },
   async mounted() {
     await this.getGroupData()
-    // this.checkHeightDiv()
+
+    this.$watch(
+      () => this.step,
+      (newValue, oldValue) => {
+        this.oldStep = oldValue
+      }
+    )
   },
   methods: {
     async getGroupData() {
@@ -77,27 +106,34 @@ export default {
       console.log(`Total group: ${this.groups.length}`)
     },
     getGroup(group) {
-      if (group.ID === -1) this.step = 2
+      if (!group) this.step = 2
       else this.step = 3
       this.group = group
     },
-    async checkHeightDiv() {
-      // await new Promise((resolve) => setTimeout(resolve, 500))
-      // const getchild = document.querySelector(".form").children
-      // console.log(getchild)
-      // const childs = [...getchild]
-      // // add var style with feiled --height-div
-      // childs.forEach((child) => {
-      //   const totalHeight = child.offsetHeight
-      //   child.style.setProperty("--totalHeight", `${totalHeight}px`)
-      // })
+    newGroupfunction(group) {
+      this.newGroup = group
+      this.step = 3
     },
     backAction() {
+      if (this.group) return (this.step = 1)
+      if (this.step === 2 && this.newGroup) this.newGroup = null
       this.step -= 1
     },
-    test(e) {
-      console.log(e)
-    },
+    // async checkHeight(e) {
+    //   const calculatedHeight = [...e.children].reduce((t, c) => {
+    //     // get margin and padding
+    //     const margin =
+    //       parseInt(getComputedStyle(c).marginTop) +
+    //       parseInt(getComputedStyle(c).marginBottom)
+    //     const padding =
+    //       parseInt(getComputedStyle(c).paddingTop) +
+    //       parseInt(getComputedStyle(c).paddingBottom)
+    //     // get total height
+    //     return t + c.offsetHeight + margin + padding
+    //   }, 0)
+    //   await new Promise((resolve) => setTimeout(resolve, 90))
+    //   console.log(calculatedHeight)
+    // },
   },
 }
 </script>
@@ -131,6 +167,25 @@ export default {
   &-leave-active {
     transition-property: transform height;
     @apply origin-top duration-300 ease-in-out;
+  }
+}
+
+.slide {
+  &-left {
+    @apply -translate-x-[150%];
+  }
+
+  &-right {
+    @apply translate-x-[150%];
+  }
+
+  &-center {
+    @apply translate-x-0;
+  }
+
+  &-active {
+    transition-property: transform height;
+    @apply absolute w-[95vw] overflow-hidden duration-300 ease-in-out sm:w-[90vw] md:w-[80vw] lg:w-[75vw];
   }
 }
 </style>

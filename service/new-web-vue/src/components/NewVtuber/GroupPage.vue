@@ -1,5 +1,11 @@
+<script setup>
+import AmeLoading from "../AmeComp/AmeLoading.vue"
+</script>
 <template>
-  <h4 class="mt-2 text-lg font-semibold">Select your group...</h4>
+  <AmeLoading v-if="!groups.length" class="!h-screen" />
+  <h4 class="mt-2 text-lg font-semibold" v-if="groups.length">
+    Select your group...
+  </h4>
   <ul class="group-list">
     <li class="group-list-item" v-for="group in groups">
       <a
@@ -41,6 +47,7 @@
         class="group-list-item__link"
         onclick="return false"
         @click="setGroup"
+        v-if="groups.length"
       >
         <font-awesome-icon
           class="fa-fw group-list-item__svg fa-fw"
@@ -65,59 +72,12 @@ export default {
       default: [],
     },
   },
-  async created() {
-    // const checkGroup = await this.getGroupData()
-    // if (!checkGroup) {
-    //   // err here
-    // }
-    // console.log(this.groups)
-  },
   methods: {
-    // async getGroupData() {
-    //   if (this.groups.length > 0) return
-    //   console.log("Fetching group data...")
-
-    //   // this.cancelGroups = axios.CancelToken.source()
-
-    //   const data_groups = await axios
-    //     .get(Config.REST_API + "/v2/groups/", {
-    //       // cancelToken: this.cancelGroups.token,
-    //     })
-    //     .then((response) => response.data)
-    //     .catch((error) => {
-    //       if (!axios.isCancel(error)) this.error_msg = error.message
-    //     })
-
-    //   if (this.error_msg) return false
-
-    //   // sort group data from GroupName
-    //   data_groups.sort((a, b) => {
-    //     if (a.GroupName.toLowerCase() < b.GroupName.toLowerCase()) return -1
-    //     if (a.GroupName.toLowerCase() > b.GroupName.toLowerCase()) return 1
-    //     return 0
-    //   })
-
-    //   this.groups = data_groups
-    //   console.log(`Total group: ${this.groups.length}`)
-    //   await new Promise((resolve) => setTimeout(resolve, 500))
-    //   this.checkHeightDiv()
-    //   return true
-    // },
     async setGroup(e) {
       const id = e.target.closest(".group-list-item__link").dataset.id
       const group = this.groups.find((group) => group.ID == id)
-      if (!group) this.$emit("group", { ID: -1 })
+      if (!group) this.$emit("group", null)
       else this.$emit("group", group)
-    },
-    checkHeightDiv() {
-      // const getchild = document.querySelector(".form").children
-      // console.log(getchild)
-      // const childs = [...getchild]
-      // // add var style with feiled --height-div
-      // childs.forEach((child) => {
-      //   const totalHeight = child.offsetHeight
-      //   child.style.setProperty("--totalHeight", `${totalHeight}px`)
-      // })
     },
   },
 }
