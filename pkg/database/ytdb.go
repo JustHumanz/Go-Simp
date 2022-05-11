@@ -447,7 +447,7 @@ func (Data LiveStream) AddYoutubeToCache(id int64) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = LiveCache.Set(context.Background(), key, bytelive, 10*time.Minute).Err()
+	err = LiveCache.Set(context.Background(), key, bytelive, 1*time.Hour).Err()
 	if err != nil {
 		log.Fatal(err)
 	}
