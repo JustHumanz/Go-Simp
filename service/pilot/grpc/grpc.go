@@ -153,23 +153,24 @@ func (s *Server) CheckUUID(UUID string) bool {
 
 func (s *Service) RemapPayload() {
 	if len(s.Unit) > 0 {
-		limt := len(VtubersAgency) / len(s.Unit)
-		chunk := [][]database.Group{}
+		chunks := make([][]database.Group, len(s.Unit))
 
-		for i := 0; i < len(VtubersAgency); i += limt {
-			nextLimit := limt + i
-			if nextLimit+i > len(VtubersAgency) {
-				nextLimit = len(VtubersAgency)
-			}
-
-			chunk = append(chunk, VtubersAgency[i:nextLimit])
-			if VtubersAgency[nextLimit-1].ID == VtubersAgency[len(VtubersAgency)-1].ID {
-				break
-			}
+		for i := 0; i < len(VtubersAgency); i++ {
+			tmp := i % len(s.Unit)
+			chunks[tmp] = append(chunks[tmp], VtubersAgency[i])
 		}
 
-		for k, v := range chunk {
+		for k, v := range chunks {
 			s.Unit[k].Payload = v
+		}
+
+		AgencyCount := 0
+		for _, v := range s.Unit {
+			AgencyCount += len(v.Payload)
+		}
+
+		if AgencyCount < 29 {
+			log.Fatal("Agency payload less than 29, len ", AgencyCount)
 		}
 	}
 }
