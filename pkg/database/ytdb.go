@@ -326,7 +326,7 @@ func (Data *Member) GetYtLiveStream(status string) ([]LiveStream, error) {
 
 }
 
-func (Data *LiveStream) SendToCache(isAgency bool) error {
+func (Data *LiveStream) SendToUpcomingCache(isAgency bool) error {
 	key := []string{}
 	if isAgency {
 		key = append(key, Data.Group.GroupName, Data.VideoID)

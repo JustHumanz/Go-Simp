@@ -140,18 +140,18 @@ func StartCheckYT(Group database.Group, Update bool) {
 							_, err := NewYoutubeData.InputYt()
 							if err != nil {
 								log.WithFields(log.Fields{
-									"agency":    Group.GroupName,
-									"channelID": YtChan.YtChannel,
-									"region":    YtChan.Region,
+									"Agency":    Group.GroupName,
+									"ChannelID": YtChan.YtChannel,
+									"Region":    YtChan.Region,
 								}).Error(err)
 							}
 
-							err = NewYoutubeData.SendToCache(true)
+							err = NewYoutubeData.SendToUpcomingCache(true)
 							if err != nil {
 								log.WithFields(log.Fields{
-									"agency":    Group.GroupName,
-									"channelID": YtChan.YtChannel,
-									"region":    YtChan.Region,
+									"Agency":    Group.GroupName,
+									"ChannelID": YtChan.YtChannel,
+									"Region":    YtChan.Region,
 								}).Error(err)
 							}
 
@@ -170,9 +170,9 @@ func StartCheckYT(Group database.Group, Update bool) {
 					Data, err := engine.YtAPI([]string{ID})
 					if err != nil {
 						log.WithFields(log.Fields{
-							"agency":    Group.GroupName,
-							"channelID": YtChan.YtChannel,
-							"region":    YtChan.Region,
+							"Agency":    Group.GroupName,
+							"ChannelID": YtChan.YtChannel,
+							"Region":    YtChan.Region,
 						}).Error(err)
 
 						gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
@@ -422,7 +422,7 @@ func StartCheckYT(Group database.Group, Update bool) {
 									}).Error(err)
 								}
 
-								err = NewYoutubeData.SendToCache(false)
+								err = NewYoutubeData.SendToUpcomingCache(false)
 								if err != nil {
 									log.WithFields(log.Fields{
 										"Vtuber": Member.Name,
