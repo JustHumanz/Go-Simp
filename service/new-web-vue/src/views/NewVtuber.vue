@@ -36,11 +36,18 @@ import CreateGroup from "../components/NewVtuber/CreateGroup.vue"
           @group="newGroupfunction"
           @back="backAction"
           :groups="groups"
-          :newGroup="newGroup"
+          :NewGroup="newGroup"
         />
       </div>
     </transition>
-    <transition name="slide">
+    <transition
+      :enter-from-class="oldStep < 3 ? 'slide-right' : 'slide-left'"
+      enter-to-class="slide-center"
+      enter-active-class="slide-active"
+      leave-from-class="slide-center"
+      :leave-to-class="step === 4 ? 'slide-left' : 'slide-right'"
+      leave-active-class="slide-active"
+    >
       <div v-if="step === 3">
         <button @click="backAction">Back</button>
       </div>
@@ -68,13 +75,12 @@ export default {
     }
   },
   async mounted() {
+    document.title = "Add New Vtuber - Vtbot"
     await this.getGroupData()
 
     this.$watch(
       () => this.step,
-      (newValue, oldValue) => {
-        this.oldStep = oldValue
-      }
+      (newValue, oldValue) => (this.oldStep = oldValue)
     )
   },
   methods: {
@@ -116,7 +122,7 @@ export default {
     },
     backAction() {
       if (this.group) return (this.step = 1)
-      if (this.step === 2 && this.newGroup) this.newGroup = null
+      // if (this.step === 2 && this.newGroup) this.newGroup = null
       this.step -= 1
     },
     // async checkHeight(e) {

@@ -35,7 +35,12 @@
       </div>
       <div class="platform-group__content-item" v-if="platform === `youtube`">
         <label for="youtube-id">YouTube channel ID</label>
-        <input type="text" id="youtube-id" name="youtube-id" />
+        <input
+          type="text"
+          id="youtube-id"
+          name="youtube-id"
+          autocomplete="off"
+        />
         <small class="description"
           >You can find the ID in the URL
           (https://www.youtube.com/channel/<b>HERE</b>) <br />(Example:
@@ -45,7 +50,7 @@
       </div>
       <div class="platform-group__content-item" v-if="platform === `bilibili`">
         <label for="space-id">Bilibili Space ID</label>
-        <input type="text" id="space-id" name="space-id" />
+        <input type="text" id="space-id" name="space-id" autocomplete="off" />
         <small class="description">
           You can find the ID in the URL
           (https://space.bilibili.com/<b>HERE</b>) (not work in Bstation)
@@ -55,7 +60,7 @@
       </div>
       <div class="platform-group__content-item" v-if="platform === `bilibili`">
         <label for="live-id">Bilibili Live ID</label>
-        <input type="text" id="live-id" name="live-id" />
+        <input type="text" id="live-id" name="live-id" autocomplete="off" />
         <small class="description">
           You can find the ID in the URL (https://live.bilibili.com/<b>HERE</b>)
           <br />(not work in Bstation) (Live ID and Space ID is not the same)
@@ -65,7 +70,7 @@
       </div>
       <div class="platform-group__content-item">
         <label for="lang-code">Region/Language Code</label>
-        <input type="text" id="lang-code" name="lang-code" />
+        <input type="text" id="lang-code" name="lang-code" autocomplete="off" />
         <small class="description"
           >Minimum 2 characters (Example: <b>EN</b>)</small
         >

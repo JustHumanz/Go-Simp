@@ -8,17 +8,16 @@ export default {
   },
   props: {
     groups: {
-      type: Number,
+      type: Array,
       default: [],
     },
     NewGroup: {
       type: Object,
+      default: {},
     },
   },
-  mounted() {
-    // const submitBtn = document.querySelector(".submit")
-
-    // submitBtn.disabled = true
+  async mounted() {
+    await this.assignNewGroup(this.NewGroup)
 
     document.body.addEventListener("input", (e) => {
       e.target.parentElement.classList.toggle(
@@ -130,12 +129,27 @@ export default {
     },
     checkFilled(element) {
       const notInput = element.tagName !== "INPUT"
-      const iconUrl = element.name === "group-icon"
-      const errorText = element.parentElement.querySelector(".error")
-
       this.calculateHeight(element)
 
       if (notInput) return true
+      return this.checkValidate(element)
+    },
+    checkAllFilled() {
+      const inputs = document.querySelectorAll("input")
+      let count = 0
+
+      for (const input of inputs) {
+        if (!this.checkValidate(input)) break
+        count++
+      }
+
+      // get submit button
+      const submitBtn = document.querySelector("[type=submit]")
+      submitBtn.disabled = count < inputs.length
+    },
+    checkValidate(element) {
+      const errorText = element.parentElement.querySelector(".error")
+      const iconUrl = element.name === "group-icon"
       const value = trim(element.value)
 
       // toggle error class in parent element
@@ -207,67 +221,6 @@ export default {
       }
       return true
     },
-    checkAllFilled() {
-      const inputs = document.querySelectorAll("input")
-      let count = 0
-
-      for (const input of inputs) {
-        const iconUrl = input.name === "group-icon"
-        const value = trim(input.value)
-
-        // toggle error class in parent input
-        if (!iconUrl && !value) break
-
-        // when group name same
-        if (input.name === "group-name") {
-          const groupNameExist = this.groups.some(
-            (group) =>
-              group.GroupName.toLowerCase().replace("_", " ") ===
-              value.toLowerCase()
-          )
-
-          if (groupNameExist) break
-        }
-
-        // when is url
-        if (iconUrl) {
-          if (value && !isUrl(value)) break
-        }
-
-        // check is valid youtube id
-        if (input.name === "youtube-id") {
-          const isChannelId = value.match(/^UC[a-zA-Z0-9-_]{22}$/)
-
-          if (!isChannelId) break
-        }
-
-        // check is valid bilibili live id or space id
-        if (input.name === "live-id") {
-          const isBiliBiliLiveId = value.match(/^\d+$/)
-
-          if (!isBiliBiliLiveId) break
-        }
-
-        if (input.name === "space-id") {
-          const isBiliBiliSpaceId = value.match(/^\d+$/)
-
-          if (!isBiliBiliSpaceId) break
-        }
-
-        // check region/language code
-        if (input.name === "lang-code") {
-          const isRegionCode = value.match(/^[a-zA-Z]{2}$/)
-
-          if (!isRegionCode) break
-        }
-
-        count++
-      }
-
-      // get submit button
-      const submitBtn = document.querySelector("[type=submit]")
-      submitBtn.disabled = count < inputs.length
-    },
     async calculateHeight(element) {
       const outsideDiv = element.parentElement.parentElement
 
@@ -288,6 +241,74 @@ export default {
       }, 0)
 
       outsideDiv.style.setProperty("--contentHeight", `${calculatedHeight}px`)
+    },
+    async assignNewGroup(group) {
+      console.log(group)
+
+      if (!group) return
+
+      const youtubeChannels = group.GroupChannel.youtube
+      const bilibiliChannels = group.GroupChannel.bilibili
+
+      if (youtubeChannels) {
+        for (const youtube of youtubeChannels) {
+          this.platforms.push({
+            id: this.platforms.length,
+            set: "youtube",
+          })
+        }
+      }
+
+      if (bilibiliChannels) {
+        for (const bilibili of bilibiliChannels) {
+          this.platforms.push({
+            id: this.platforms.length,
+            set: "bilibili",
+          })
+        }
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 60))
+      const platformGroup = document.querySelectorAll(".platform-group")
+
+      platformGroup.forEach((platform) => {
+        platform.classList.remove("show")
+      })
+
+      // fill all inputs
+
+      const nameInput = document.querySelector("[name=group-name]")
+      const iconInput = document.querySelector("[name=group-icon]")
+
+      nameInput.value = group.GroupName
+      iconInput.value = "" ?? group.GroupIcon
+
+      let indexyt = 0
+      let indexbili = 0
+
+      platformGroup.forEach((platform) => {
+        const platformSelect = platform.querySelector("select")
+        const platformInputs = platform.querySelectorAll("input")
+
+        platformInputs[0].value =
+          platformSelect.value === "youtube"
+            ? youtubeChannels[indexyt].ChannelID
+            : bilibiliChannels[indexbili].BiliBili_ID
+
+        platformInputs[1].value =
+          platformSelect.value === "youtube"
+            ? youtubeChannels[indexyt].Region
+            : bilibiliChannels[indexbili].BiliRoom_ID
+
+        if (platformSelect.value === "bilibili")
+          platformInputs[2] = bilibiliChannels[indexbili].Region
+
+        if (platformSelect.value === "youtube") indexyt++
+        else indexbili++
+      })
+
+      await new Promise((resolve) => setTimeout(resolve, 60))
+      this.checkAllFilled()
     },
   },
 }

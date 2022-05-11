@@ -62,7 +62,6 @@ import AmeLoading from "../AmeComp/AmeLoading.vue"
 export default {
   data() {
     return {
-      // groups: [],
       toggle: false,
     }
   },
