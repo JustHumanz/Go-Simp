@@ -319,6 +319,12 @@ func StartCheckYT(Group database.Group, Update bool) {
 							}).Warn(err)
 						}
 
+						//Send into cache
+						if YoutubeData != nil {
+							YoutubeData.AddYoutubeToCache(YoutubeData.ID)
+						}
+
+						//New Yt video
 						if YoutubeData == nil {
 							var (
 								Viewers string
