@@ -67,9 +67,6 @@ func main() {
 
 	c := cron.New()
 	c.Start()
-	c.AddFunc("0 */2 * * *", func() {
-		engine.ExTknList = nil
-	})
 	log.Info("Enable " + ServiceName)
 	go pilot.RunHeartBeat(gRCPconn, ServiceName, ServiceUUID)
 	go ReqRunningJob(gRCPconn)
