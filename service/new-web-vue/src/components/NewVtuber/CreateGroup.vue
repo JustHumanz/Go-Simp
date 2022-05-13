@@ -48,7 +48,7 @@ import GroupPlatform from "./GroupPlatform.vue"
     </div>
     <!-- Submit and back btn -->
     <div class="form-group-btn">
-      <button type="submit" class="submit" disabled>Submit</button>
+      <button type="submit" class="submit" disabled>Next</button>
       <button type="button" class="back" @click="$emit(`back`, true)">
         Back
       </button>

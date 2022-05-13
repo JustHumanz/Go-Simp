@@ -1,6 +1,7 @@
 <script setup>
 import GroupPage from "../components/NewVtuber/GroupPage.vue"
 import CreateGroup from "../components/NewVtuber/CreateGroup.vue"
+import VtuberForm from "../components/NewVtuber/VtuberForm.vue"
 </script>
 
 <template>
@@ -49,7 +50,7 @@ import CreateGroup from "../components/NewVtuber/CreateGroup.vue"
       leave-active-class="slide-active"
     >
       <div v-if="step === 3">
-        <button @click="backAction">Back</button>
+        <vtuber-form :group="group ? group : newGroup" @back="backAction" />
       </div>
     </transition>
   </div>
@@ -113,7 +114,10 @@ export default {
     },
     getGroup(group) {
       if (!group) this.step = 2
-      else this.step = 3
+      else {
+        this.newGroup = null
+        this.step = 3
+      }
       this.group = group
     },
     newGroupfunction(group) {

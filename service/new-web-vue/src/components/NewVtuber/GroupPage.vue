@@ -71,6 +71,7 @@ export default {
       default: [],
     },
   },
+  emits: ["group"],
   methods: {
     async setGroup(e) {
       const id = e.target.closest(".group-list-item__link").dataset.id

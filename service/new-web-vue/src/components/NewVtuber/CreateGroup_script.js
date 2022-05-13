@@ -16,6 +16,7 @@ export default {
       default: {},
     },
   },
+  emits: ["group", "back"],
   async mounted() {
     await this.assignNewGroup(this.NewGroup)
 

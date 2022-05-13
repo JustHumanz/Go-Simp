@@ -33,6 +33,7 @@
           <option value="bilibili">BiliBili</option>
         </select>
       </div>
+
       <div class="platform-group__content-item" v-if="platform === `youtube`">
         <label for="youtube-id">YouTube channel ID</label>
         <input
@@ -48,6 +49,7 @@
         >
         <small class="error"></small>
       </div>
+
       <div class="platform-group__content-item" v-if="platform === `bilibili`">
         <label for="space-id">Bilibili Space ID</label>
         <input type="text" id="space-id" name="space-id" autocomplete="off" />
@@ -58,6 +60,7 @@
         </small>
         <small class="error"></small>
       </div>
+
       <div class="platform-group__content-item" v-if="platform === `bilibili`">
         <label for="live-id">Bilibili Live ID</label>
         <input type="text" id="live-id" name="live-id" autocomplete="off" />
@@ -68,6 +71,7 @@
         </small>
         <small class="error"></small>
       </div>
+
       <div class="platform-group__content-item">
         <label for="lang-code">Region/Language Code</label>
         <input type="text" id="lang-code" name="lang-code" autocomplete="off" />
@@ -100,6 +104,7 @@ export default {
       type: String,
     },
   },
+  emits: ["delete"],
   mounted() {
     const platformGroups = document.querySelectorAll(".platform-group")
 
@@ -195,7 +200,7 @@ export default {
 
     &__content {
       transition-property: "transform, height";
-      @apply flex  h-0 origin-top scale-y-0 flex-col duration-300 ease-in-out;
+      @apply flex h-0 origin-top scale-y-0 flex-col duration-300 ease-in-out;
 
       &-item {
         @apply mx-2 my-1 flex flex-col;
@@ -242,7 +247,7 @@ export default {
   }
 
   &-link {
-    @apply flex items-center justify-between rounded-lg bg-slate-300 px-4 py-2 shadow-md;
+    @apply mb-2 flex items-center justify-between rounded-lg bg-slate-300 px-4 py-2 shadow-md;
 
     &__icon {
       @apply flex items-center space-x-4;
