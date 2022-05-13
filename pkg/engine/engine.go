@@ -582,23 +582,10 @@ func GetRSS(YtID string, proxy bool) ([]string, error) {
 	return VideoID, nil
 }
 
-type QuotaExceededError struct {
-	Error struct {
-		Code    int    `json:"code"`
-		Message string `json:"message"`
-		Errors  []struct {
-			Message string `json:"message"`
-			Domain  string `json:"domain"`
-			Reason  string `json:"reason"`
-		} `json:"errors"`
-	} `json:"error"`
-}
-
 //YtAPI Get data from youtube api
 func YtAPI(VideoID []string) (YtData, error) {
 	var (
-		Data       YtData
-		QoutaLimit QuotaExceededError
+		Data YtData
 	)
 	log.WithFields(log.Fields{
 		"VideoID": VideoID,
@@ -609,15 +596,10 @@ func YtAPI(VideoID []string) (YtData, error) {
 		bdy, curlerr := network.Curl(url, nil)
 		if curlerr != nil {
 			if curlerr.Error() == strconv.Itoa(http.StatusForbidden) {
-				err := json.Unmarshal(bdy, &QoutaLimit)
-				if err != nil {
-					log.Error(err)
-				}
-
-				for _, v := range QoutaLimit.Error.Errors {
-					if v.Reason == "quotaExceeded" {
-						continue
-					}
+				var re = regexp.MustCompile(`(?m)(quotaExceeded)`)
+				res := re.FindAllString(string(bdy), -1)
+				if len(res) > 0 {
+					continue
 				}
 			}
 			log.Error(curlerr)

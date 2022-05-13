@@ -436,7 +436,7 @@ func (Member Member) CheckYoutubeVideo(VideoID string) (*LiveStream, error) {
 }
 
 func (Data *LiveStream) GetYtVideoDetail() {
-	rows, err := DB.Query(`SELECT * FROM Vtuber.Youtube Where id`, Data.ID)
+	rows, err := DB.Query(`SELECT * FROM Vtuber.Youtube Where id=?`, Data.ID)
 	if err != nil {
 		log.Error(err)
 	}
