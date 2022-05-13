@@ -6,7 +6,7 @@
       onclick="return false"
       @click="toggleVtuber"
     >
-      <span class="vtuber-link__text">Test</span>
+      <span class="vtuber-link__text">{{ getVtuberName }}</span>
       <span class="vtuber-link__icon">
         <a
           class="delete-vtuber"
@@ -30,7 +30,13 @@
 
       <div class="vtuber__content-item">
         <label for="en-name">Vtuber Name</label>
-        <input type="text" id="en-name" name="en-name" autocomplete="off" />
+        <input
+          type="text"
+          id="en-name"
+          name="en-name"
+          autocomplete="off"
+          v-model="vtuberName"
+        />
         <small class="description"> Name Vtuber in English </small>
         <small class="error"></small>
       </div>
@@ -172,7 +178,21 @@
   </div>
 </template>
 
-<script></script>
+<script>
+export default {
+  data() {
+    return {
+      vtuberName: "",
+    }
+  },
+  async mounted() {},
+  computed: {
+    getVtuberName() {
+      return this.vtuberName ? this.vtuberName : "New Vtuber"
+    },
+  },
+}
+</script>
 
 <style lang="scss" scoped>
 .vtuber {
