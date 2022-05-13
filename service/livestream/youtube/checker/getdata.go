@@ -549,6 +549,7 @@ func StartCheckYT(Group database.Group, Update bool) {
 						}
 
 						YoutubeData := &YoutubeCache
+						YoutubeData.GetYtVideoDetail()
 
 						Items := Data.Items[0]
 

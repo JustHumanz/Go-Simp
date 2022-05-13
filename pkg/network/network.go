@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"net"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
@@ -52,7 +53,7 @@ func Curl(url string, addheader map[string]string) ([]byte, error) {
 			"Reason": response.Status,
 			"URL":    url,
 		}).Error("Status code not daijobu")
-		return nil, errors.New(response.Status)
+		return nil, errors.New(strconv.Itoa(response.StatusCode))
 	}
 
 	body, err = ioutil.ReadAll(response.Body)

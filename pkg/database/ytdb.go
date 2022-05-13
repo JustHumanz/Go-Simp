@@ -415,23 +415,38 @@ func (Data *LiveStream) InputYt() (int64, error) {
 //Check new video or not
 func (Member Member) CheckYoutubeVideo(VideoID string) (*LiveStream, error) {
 	var Data LiveStream
-	rows, err := DB.Query(`SELECT * FROM Vtuber.Youtube Where VideoID=? AND VtuberMember_id=?`, VideoID, Member.ID)
+	rows, err := DB.Query(`SELECT id FROM Vtuber.Youtube Where VideoID=? AND VtuberMember_id=?`, VideoID, Member.ID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&Data.ID, &Data.VideoID, &Data.Type, &Data.Status, &Data.Title, &Data.Thumb, &Data.Desc, &Data.Published, &Data.Schedul, &Data.End, &Data.Viewers, &Data.Length, &Data.Member.ID)
+		err = rows.Scan(&Data.ID)
 		if err != nil {
 			return nil, err
 		}
 	}
-	if Data.VideoID == "" {
+	if Data.ID == 0 {
 		return nil, errors.New("VideoID not found in database")
 	} else {
 		Data.AddMember(Member)
 		return &Data, nil
+	}
+}
+
+func (Data *LiveStream) GetYtVideoDetail() {
+	rows, err := DB.Query(`SELECT * FROM Vtuber.Youtube Where id`, Data.ID)
+	if err != nil {
+		log.Error(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err = rows.Scan(&Data.ID, &Data.VideoID, &Data.Type, &Data.Status, &Data.Title, &Data.Thumb, &Data.Desc, &Data.Published, &Data.Schedul, &Data.End, &Data.Viewers, &Data.Length, &Data.Member.ID)
+		if err != nil {
+			log.Error(err)
+		}
 	}
 }
 
