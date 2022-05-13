@@ -47,19 +47,19 @@ func Curl(url string, addheader map[string]string) ([]byte, error) {
 
 	defer response.Body.Close()
 
+	body, err = ioutil.ReadAll(response.Body)
+	if err != nil {
+		return body, err
+
+	}
+
 	if response.StatusCode != http.StatusOK {
 		log.WithFields(log.Fields{
 			"Status": response.StatusCode,
 			"Reason": response.Status,
 			"URL":    url,
 		}).Error("Status code not daijobu")
-		return nil, errors.New(strconv.Itoa(response.StatusCode))
-	}
-
-	body, err = ioutil.ReadAll(response.Body)
-	if err != nil {
-		return body, err
-
+		return body, errors.New(strconv.Itoa(response.StatusCode))
 	}
 
 	return body, nil
