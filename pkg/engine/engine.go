@@ -582,46 +582,49 @@ func GetRSS(YtID string, proxy bool) ([]string, error) {
 	return VideoID, nil
 }
 
-var ExTknList []string
+type QuotaExceededError struct {
+	Error struct {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+		Errors  []struct {
+			Message string `json:"message"`
+			Domain  string `json:"domain"`
+			Reason  string `json:"reason"`
+		} `json:"errors"`
+	} `json:"error"`
+}
 
 //YtAPI Get data from youtube api
 func YtAPI(VideoID []string) (YtData, error) {
 	var (
-		Data YtData
+		Data       YtData
+		QoutaLimit QuotaExceededError
 	)
 	log.WithFields(log.Fields{
 		"VideoID": VideoID,
 	}).Info("Checking from youtubeAPI")
 
 	for i, Token := range config.GoSimpConf.YtToken {
-		if ExTknList != nil {
-			isExhaustion := false
-			for _, v := range ExTknList {
-				if v == Token {
-					isExhaustion = true
-					break
-				}
-			}
-
-			if isExhaustion {
-				continue
-			}
-		}
 		url := "https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id=" + strings.Join(VideoID, ",") + "&key=" + Token
-
 		bdy, curlerr := network.Curl(url, nil)
 		if curlerr != nil {
-			log.Error(curlerr)
-			if curlerr.Error() == "403 Forbidden" {
-				ExTknList = append(ExTknList, Token)
-			} else {
-				time.Sleep(10 * time.Second)
+			if curlerr.Error() == strconv.Itoa(http.StatusForbidden) {
+				err := json.Unmarshal(bdy, &QoutaLimit)
+				if err != nil {
+					log.Error(err)
+				}
+
+				for _, v := range QoutaLimit.Error.Errors {
+					if v.Reason == "quotaExceeded" {
+						continue
+					}
+				}
 			}
+			log.Error(curlerr)
 
 			if i == len(config.GoSimpConf.YtToken)-1 {
 				break
 			}
-			continue
 		}
 
 		err := json.Unmarshal(bdy, &Data)
