@@ -14,7 +14,6 @@ import (
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
 	"github.com/google/uuid"
-	"github.com/robfig/cron/v3"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -65,8 +64,6 @@ func main() {
 
 	database.Start(configfile)
 
-	c := cron.New()
-	c.Start()
 	log.Info("Enable " + ServiceName)
 	go pilot.RunHeartBeat(gRCPconn, ServiceName, ServiceUUID)
 	go ReqRunningJob(gRCPconn)
