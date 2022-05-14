@@ -70,7 +70,7 @@ func main() {
 
 	c := cron.New()
 	c.Start()
-	c.AddFunc("@every 0h15m0s", CacheChecker)
+	c.AddFunc("@every 3h0m0s", CacheChecker)
 	log.Info("Enable " + ServiceName)
 	go pilot.RunHeartBeat(gRCPconn, ServiceName, ServiceUUID)
 	go ReqRunningJob(gRCPconn)
