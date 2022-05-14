@@ -1,5 +1,5 @@
 <template>
-  <div class="vtuber-form">
+  <div class="vtuber-form" ref="form">
     <a
       class="vtuber-link"
       href="#"
@@ -73,6 +73,7 @@
           id="youtube-id"
           name="youtube-id"
           autocomplete="off"
+          ref="ytid"
         />
         <small class="description"
           >You can find the ID in the URL
@@ -83,12 +84,13 @@
       </div>
 
       <div class="vtuber__content-item">
-        <label for="nickname_twitch">Twitch Nickname</label>
+        <label for="nickname-twitch">Twitch Nickname</label>
         <input
           type="text"
-          id="nickname_twitch"
-          name="nickname_twitch"
+          id="nickname-twitch"
+          name="nickname-twitch"
           autocomplete="off"
+          ref="twitchname"
         />
         <small class="description">
           You can find the Nickname in the URL (https://twitch.tv/<b>HERE</b>)
@@ -99,7 +101,13 @@
 
       <div class="vtuber__content-item">
         <label for="space-id">Bilibili Space ID</label>
-        <input type="text" id="space-id" name="space-id" autocomplete="off" />
+        <input
+          type="text"
+          id="space-id"
+          name="space-id"
+          autocomplete="off"
+          ref="biliid"
+        />
         <small class="description">
           You can find the ID in the URL
           (https://space.bilibili.com/<b>HERE</b>) (not work in Bstation)
@@ -110,7 +118,13 @@
 
       <div class="vtuber__content-item">
         <label for="live-id">Bilibili Live ID</label>
-        <input type="text" id="live-id" name="live-id" autocomplete="off" />
+        <input
+          type="text"
+          id="live-id"
+          name="live-id"
+          autocomplete="off"
+          ref="liveid"
+        />
         <small class="description">
           You can find the ID in the URL (https://live.bilibili.com/<b>HERE</b>)
           <br />(not work in Bstation) (Live ID and Space ID is not the same)
@@ -179,25 +193,23 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      vtuberName: "",
-    }
-  },
-  async mounted() {},
-  computed: {
-    getVtuberName() {
-      return this.vtuberName ? this.vtuberName : "New Vtuber"
-    },
-  },
-}
+import VtuberPlatform from "./VtuberPlatform_script.js"
+
+export default { ...VtuberPlatform }
 </script>
 
 <style lang="scss" scoped>
 .vtuber {
   &-form {
     @apply mb-2 rounded-lg bg-slate-200 md:ml-2;
+
+    &.errors {
+      @apply bg-red-200;
+
+      .vtuber-link {
+        @apply bg-red-300;
+      }
+    }
   }
   &-link {
     @apply mb-2 flex items-center justify-between rounded-lg bg-slate-300 px-4 py-2 shadow-md;
@@ -216,7 +228,7 @@ export default {
 
       &.has-error {
         input {
-          @apply bg-red-200;
+          @apply bg-red-400 text-white;
         }
 
         .description {
