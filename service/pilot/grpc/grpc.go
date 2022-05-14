@@ -78,9 +78,15 @@ type Service struct {
 }
 
 type UnitService struct {
-	UUID    string
-	Counter int
-	Payload []database.Group
+	UUID     string
+	Counter  int
+	Payload  []database.Group
+	Metadata UnitMetadata
+}
+
+type UnitMetadata struct {
+	Length     int
+	AgencyList []string
 }
 
 type Server struct {
@@ -167,6 +173,10 @@ func (s *Service) RemapPayload() {
 		AgencyCount := 0
 		for _, v := range s.Unit {
 			AgencyCount += len(v.Payload)
+			v.Metadata.Length = len(v.Payload)
+			for _, v2 := range v.Payload {
+				v.Metadata.AgencyList = append(v.Metadata.AgencyList, v2.GroupName)
+			}
 		}
 
 		if AgencyCount < 29 {
@@ -223,6 +233,7 @@ func (s *Server) RequestRunJobsOfService(ctx context.Context, in *ServiceMessage
 					in.ServiceUUID,
 					1,
 					nil,
+					UnitMetadata{},
 				})
 
 				v.RemapPayload()

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"net/http"
 
@@ -73,9 +74,53 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
+	http.HandleFunc("/youtube/units/", func(w http.ResponseWriter, r *http.Request) {
+		Data := GetUnitsMetadata(s, config.YoutubeCheckerService)
+		if Data != nil {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(Data)
+			w.WriteHeader(http.StatusOK)
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+		}
+	})
+
+	http.HandleFunc("/twitter/units/", func(w http.ResponseWriter, r *http.Request) {
+		Data := GetUnitsMetadata(s, config.TwitterService)
+		if Data != nil {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(Data)
+			w.WriteHeader(http.StatusOK)
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+		}
+	})
+
+	go http.ListenAndServe(":8181", nil)
+
 	pilot.RegisterPilotServiceServer(grpcServer, &s)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %s", err)
 	}
+}
+
+func GetUnitsMetadata(s pilot.Server, name string) []pilot.UnitMetadata {
+	for _, v := range s.Service {
+		if v.Name == name {
+			if len(v.Unit) > 0 {
+				Data := []pilot.UnitMetadata{}
+
+				for _, v2 := range v.Unit {
+					Data = append(Data, v2.Metadata)
+				}
+				return Data
+
+			}
+		}
+	}
+
+	return nil
 }
