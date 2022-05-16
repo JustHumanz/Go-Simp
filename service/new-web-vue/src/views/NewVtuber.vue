@@ -50,7 +50,11 @@ import VtuberForm from "../components/NewVtuber/VtuberForm.vue"
       leave-active-class="slide-active"
     >
       <div v-if="step === 3">
-        <vtuber-form :group="group ? group : newGroup" @back="backAction" />
+        <vtuber-form
+          :group="group ? group : newGroup"
+          :nicknames="nicknames"
+          @back="backAction"
+        />
       </div>
     </transition>
   </div>
@@ -73,11 +77,13 @@ export default {
       step: 1,
       oldStep: 0,
       groups: [],
+      nicknames: [],
     }
   },
   async mounted() {
     document.title = "Add New Vtuber - Vtbot"
     await this.getGroupData()
+    this.getNickname()
 
     this.$watch(
       () => this.step,
@@ -129,21 +135,19 @@ export default {
       // if (this.step === 2 && this.newGroup) this.newGroup = null
       this.step -= 1
     },
-    // async checkHeight(e) {
-    //   const calculatedHeight = [...e.children].reduce((t, c) => {
-    //     // get margin and padding
-    //     const margin =
-    //       parseInt(getComputedStyle(c).marginTop) +
-    //       parseInt(getComputedStyle(c).marginBottom)
-    //     const padding =
-    //       parseInt(getComputedStyle(c).paddingTop) +
-    //       parseInt(getComputedStyle(c).paddingBottom)
-    //     // get total height
-    //     return t + c.offsetHeight + margin + padding
-    //   }, 0)
-    //   await new Promise((resolve) => setTimeout(resolve, 90))
-    //   console.log(calculatedHeight)
-    // },
+    async getNickname() {
+      const vtuber_data = await axios
+        .get(Config.REST_API + "/v2/members/", {})
+        .then((response) => {
+          return response.data.map((vtuber) => vtuber.NickName)
+        })
+        .catch((error) => {
+          if (!axios.isCancel(error)) this.error_status = error.response.status
+        })
+      if (!vtuber_data) return
+
+      this.nicknames = vtuber_data
+    },
   },
 }
 </script>

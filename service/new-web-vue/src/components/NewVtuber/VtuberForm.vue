@@ -6,14 +6,20 @@ import VtuberPlatform from "./VtuberPlatform.vue"
   <h1 class="title-req-vtuber">
     Request new Vtuber from {{ group.GroupName }}
   </h1>
-  <form @submit="" class="form-req-vtuber">
+  <form @submit="requestVtuber" class="form-req-vtuber">
     <div class="form-group">
       <button type="button" name="add-vtuber" @click="addVtuber">
         Add Vtuber
       </button>
     </div>
     <div class="vtubers">
-      <vtuber-platform v-for="vtuber in vtubers" />
+      <vtuber-platform
+        v-for="vtuber in vtubers"
+        :id="vtuber.id"
+        :nicknames="nicknames"
+        @error="checkError"
+        @delete="deletePlatform"
+      />
     </div>
     <!-- Submit and back btn -->
     <div class="form-group-btn">

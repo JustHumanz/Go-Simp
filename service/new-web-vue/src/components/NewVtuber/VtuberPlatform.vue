@@ -1,10 +1,10 @@
 <template>
-  <div class="vtuber-form" ref="form">
+  <div class="vtuber-form show" ref="form" :data-id="id">
     <a
       class="vtuber-link"
       href="#"
       onclick="return false"
-      @click="toggleVtuber"
+      @click="toggleContent"
     >
       <span class="vtuber-link__text">{{ getVtuberName }}</span>
       <span class="vtuber-link__icon">
@@ -142,7 +142,8 @@
           autocomplete="off"
         />
         <small class="description">
-          You can find the Username in the URL (https://twitter.com/<b>HERE</b>)
+          (Optional) You can find the Username in the URL
+          (https://twitter.com/<b>HERE</b>)
           <br />(Example: <b>Hana_Macchia</b>)
         </small>
         <small class="error"></small>
@@ -163,8 +164,8 @@
             target="_blank"
             rel="noopener noreferrer"
             >wiki</a
-          >.</small
-        >
+          >. <br />(Example: <b>#ioarts</b> or <b>#しいなーと</b>)
+        </small>
         <small class="error"></small>
       </div>
 
@@ -203,6 +204,15 @@ export default { ...VtuberPlatform }
   &-form {
     @apply mb-2 rounded-lg bg-slate-200 md:ml-2;
 
+    &.show {
+      .arrow {
+        @apply -rotate-90;
+      }
+      .vtuber__content {
+        @apply h-[var(--contentHeight)] scale-y-100;
+      }
+    }
+
     &.errors {
       @apply bg-red-200;
 
@@ -212,7 +222,7 @@ export default { ...VtuberPlatform }
     }
   }
   &-link {
-    @apply mb-2 flex items-center justify-between rounded-lg bg-slate-300 px-4 py-2 shadow-md;
+    @apply flex items-center justify-between rounded-lg bg-slate-300 px-4 py-2 shadow-md;
 
     &__icon {
       @apply flex items-center space-x-4;
@@ -221,10 +231,10 @@ export default { ...VtuberPlatform }
 
   &__content {
     transition-property: "transform, height";
-    @apply /*h-0 scale-y-0*/ flex origin-top flex-col duration-300 ease-in-out;
+    @apply flex h-0 origin-top scale-y-0 flex-col duration-300 ease-in-out;
 
     &-item {
-      @apply mx-2 my-1 flex flex-col;
+      @apply mx-2 my-1 flex flex-col first:mt-2;
 
       &.has-error {
         input {
@@ -265,6 +275,10 @@ export default { ...VtuberPlatform }
       }
     }
   }
+}
+
+.arrow {
+  @apply transition-transform duration-300 ease-in-out;
 }
 
 .delete-vtuber {

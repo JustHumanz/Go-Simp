@@ -6,31 +6,84 @@ export default {
       vtuberName: "",
     }
   },
-  emits: ["error"],
+  props: {
+    id: {
+      type: Number,
+      required: true,
+    },
+    nicknames: {
+      type: Array,
+      default: [],
+    },
+  },
+  emits: ["error", "delete"],
   async mounted() {
-    await new Promise((resolve) => setTimeout(resolve, 60))
-    document.body.addEventListener("input", (e) => {
+    this.$refs.form
+      .querySelectorAll(".vtuber__content-item")
+      .forEach((item) => {
+        item.querySelector("input").value = ""
+        item.classList.remove("has-error")
+        item.querySelector(".error").innerHTML = ""
+      })
+
+    await this.checkHeight()
+
+    document.body.addEventListener("input", async (e) => {
       e.target.parentElement.classList.toggle(
         "has-error",
-        !this.checkFilled(e.target)
+        !(await this.checkFilled(e.target))
       )
 
-      this.checkAllFilled()
+      await new Promise((resolve) => setTimeout(resolve, 60))
+      await this.checkAllFilled(e.target)
+      this.checkHeight()
     })
 
     let activeElement = null
 
-    document.body.addEventListener("click", (e) => {
-      if (activeElement && e.target !== activeElement) {
+    document.body.addEventListener("click", async (e) => {
+      if (
+        activeElement &&
+        e.target !== activeElement &&
+        activeElement.tagName === "INPUT"
+      ) {
         activeElement.parentElement.classList.toggle(
           "has-error",
-          !this.checkFilled(activeElement)
+          !(await this.checkFilled(activeElement))
         )
 
-        this.checkAllFilled()
+        await new Promise((resolve) => setTimeout(resolve, 60))
+        await this.checkAllFilled(activeElement)
+        this.checkHeight()
       }
 
       activeElement = e.target
+    })
+
+    this.$watch(
+      () => this.id,
+      async () => {
+        const inputs = this.$refs.form.querySelectorAll("input")
+
+        inputs.forEach(async (input) =>
+          input.parentElement.classList.toggle(
+            "has-error",
+            !(await this.checkFilled(activeElement))
+          )
+        )
+
+        await new Promise((resolve) => setTimeout(resolve, 60))
+        await this.checkAllFilled(null)
+        this.checkHeight()
+      }
+    )
+
+    document.body.addEventListener("click", (e) => {
+      if (!e.target.closest(".delete-vtuber")) {
+        document.querySelectorAll(".delete-vtuber").forEach((vtuber) => {
+          vtuber.classList.remove("confirm")
+        })
+      }
     })
   },
   computed: {
@@ -40,33 +93,42 @@ export default {
   },
 
   methods: {
-    checkFilled(element) {
+    async checkFilled(element) {
       const notInput = element.tagName !== "INPUT"
       // this.calculateHeight(element)
-
       if (notInput) return true
-      return this.checkValidate(element)
+      return await this.checkValidate(element)
     },
-    checkAllFilled() {
-      const inputs = this.$refs.form.querySelectorAll("input")
+    async checkAllFilled(e) {
+      const form = this.$refs.form
+      if (!form) return
+
+      const inputs = form.querySelectorAll("input")
       let count = 0
-
       for (const input of inputs) {
-        if (!this.checkValidate(input, false)) break
-
+        const validate = await this.checkValidate(input)
+        if (!validate) break
         count++
       }
 
-      console.log(count, inputs.length)
+      let isFilled
+      const youtubeId = e?.name === "youtube-id"
+      const twitchName = e?.name === "nickname-twitch"
+      const biliSpaceId = e?.name === "space-id"
+      const biliLiveId = e?.name === "live-id"
 
-      const error = count < inputs.length
-      console.log(error)
+      if (
+        e !== null &&
+        (youtubeId || twitchName || biliSpaceId || biliLiveId)
+      ) {
+        isFilled = this.CheckPlatform(e.name)
+      }
 
+      const error = count < inputs.length || !isFilled
       this.$refs.form.classList.toggle("errors", error)
-
-      this.$emit("error", error)
+      this.$emit("error", { id: this.id, error })
     },
-    checkValidate(e, checked = true) {
+    async checkValidate(e) {
       const name = e.name === "name"
       const ENname = e.name === "en-name"
       const JPname = e.name === "jp-name"
@@ -96,6 +158,28 @@ export default {
         return false
       }
 
+      // check nickname exist
+      if (name) {
+        await new Promise((resolve) => {
+          const waitNicknames = setInterval(() => {
+            if (this.nicknames.length > 0) {
+              clearInterval(waitNicknames)
+
+              resolve()
+            }
+          }, 80)
+        })
+
+        const getNickname = this.nicknames.find(
+          (nickname) => nickname.toLowerCase() === value.toLowerCase()
+        )
+
+        if (getNickname) {
+          errorText.innerText = "This nickname is already taken"
+          return false
+        }
+      }
+
       // when jpname is not japanese character
       const isJapaneseChar = value.match(
         /[一-龠]+|[ぁ-ゔ]+|[ァ-ヴー]+|[々〆〤・]+/gu
@@ -110,43 +194,6 @@ export default {
       if (region && !isRegionCode) {
         errorText.innerText = "Please enter a valid region/language code"
         return false
-      }
-
-      const youtube = this.$refs.ytid
-      const twitch = this.$refs.twitchname
-      const biliSpace = this.$refs.biliid
-      const biliLive = this.$refs.liveid
-
-      const parentYt = youtube.parentElement
-      const parentTwitch = twitch.parentElement
-      const parentBili = biliSpace.parentElement
-      const parentBiliLive = biliLive.parentElement
-
-      const errTextYt = parentYt.querySelector(".error")
-      const errTextTwitch = parentTwitch.querySelector(".error")
-      const errTextBili = parentBili.querySelector(".error")
-      const errTextBiliLive = parentBiliLive.querySelector(".error")
-
-      const isEmpty =
-        !youtube.value && !twitch.value && (!biliSpace.value || !biliLive.value)
-
-      if (isEmpty) {
-        errTextYt.innerText = "Please at least add one platform"
-        errTextTwitch.innerText = "Please at least add one platform"
-        errTextBili.innerText = "Please at least add one platform"
-        errTextBiliLive.innerText = "Please at least add one platform"
-
-        if (!youtubeId && checked) parentYt.classList.add("has-error")
-        if (!twitchName && checked) parentTwitch.classList.add("has-error")
-        if (!biliSpaceId && checked) parentBili.classList.add("has-error")
-        if (!biliLiveId && checked) parentBiliLive.classList.add("has-error")
-
-        if (youtubeId || twitchName || biliSpaceId || biliLiveId) return false
-      } else {
-        if (!youtubeId && checked) parentYt.classList.remove("has-error")
-        if (!twitchName && checked) parentTwitch.classList.remove("has-error")
-        if (!biliSpaceId && checked) parentBili.classList.remove("has-error")
-        if (!biliLiveId && checked) parentBiliLive.classList.remove("has-error")
       }
 
       const isytId = value.match(/^UC[a-zA-Z0-9-_]{22}$/)
@@ -195,6 +242,88 @@ export default {
       }
 
       return true
+    },
+    CheckPlatform(name) {
+      const youtube = this.$refs.ytid
+      const twitch = this.$refs.twitchname
+      const biliSpace = this.$refs.biliid
+      const biliLive = this.$refs.liveid
+      const parentYt = youtube.parentElement
+      const parentTwitch = twitch.parentElement
+      const parentBili = biliSpace.parentElement
+      const parentBiliLive = biliLive.parentElement
+      const errTextYt = parentYt.querySelector(".error")
+      const errTextTwitch = parentTwitch.querySelector(".error")
+      const errTextBili = parentBili.querySelector(".error")
+      const errTextBiliLive = parentBiliLive.querySelector(".error")
+      const isEmpty =
+        !youtube.value && !twitch.value && (!biliSpace.value || !biliLive.value)
+      if (isEmpty) {
+        errTextYt.innerText = "Please at least add one platform"
+        errTextTwitch.innerText = "Please at least add one platform"
+        errTextBili.innerText = "Please at least add one platform"
+        errTextBiliLive.innerText = "Please at least add one platform"
+        parentYt.classList.add("has-error")
+        parentTwitch.classList.add("has-error")
+        parentBili.classList.add("has-error")
+        parentBiliLive.classList.add("has-error")
+        return false
+      } else {
+        if (name !== "youtube-id") parentYt.classList.remove("has-error")
+        if (name !== "nickname-twitch")
+          parentTwitch.classList.remove("has-error")
+        if (name !== "space-id") parentBili.classList.remove("has-error")
+        if (name !== "live-id") parentBiliLive.classList.remove("has-error")
+        return true
+      }
+    },
+    async checkHeight() {
+      if (!this.$refs.content) return
+      await new Promise((resolve) => setTimeout(resolve, 60))
+      const calculatedHeight = [...this.$refs.content.children].reduce(
+        (t, c) => {
+          // get margin and padding
+          const margin =
+            parseInt(getComputedStyle(c).marginTop) +
+            parseInt(getComputedStyle(c).marginBottom)
+          const padding =
+            parseInt(getComputedStyle(c).paddingTop) +
+            parseInt(getComputedStyle(c).paddingBottom)
+
+          // get total height
+          return t + c.offsetHeight + margin + padding
+        },
+        0
+      )
+
+      this.$refs.content.style.setProperty(
+        "--contentHeight",
+        `${calculatedHeight}px`
+      )
+    },
+    deletePlatform(e) {
+      const vtuberForms = document.querySelectorAll(".vtuber-form")
+      if (vtuberForms.length < 2) return
+
+      document.querySelectorAll(".delete-vtuber").forEach((platform) => {
+        if (platform !== e.target.closest(".delete-vtuber"))
+          platform.classList.remove("confirm")
+      })
+      if (e.target.closest(".delete-vtuber").classList.contains("confirm"))
+        this.$emit("delete", this.id)
+      else e.target.closest(".delete-vtuber").classList.add("confirm")
+    },
+    toggleContent(e) {
+      if (e.target.closest(".delete-vtuber")) return
+      const group = e.target.closest(".vtuber-form")
+
+      const groups = [...document.querySelectorAll(".vtuber-form")].filter(
+        (c) => c !== group
+      )
+
+      groups.forEach((c) => c.classList.remove("show"))
+
+      group.classList.toggle("show")
     },
   },
 }

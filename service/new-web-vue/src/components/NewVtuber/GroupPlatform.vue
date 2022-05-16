@@ -106,6 +106,10 @@ export default {
   },
   emits: ["delete"],
   mounted() {
+    this.$refs.platform
+      .querySelectorAll("input")
+      .forEach((input) => (input.value = ""))
+
     const platformGroups = document.querySelectorAll(".platform-group")
 
     const platformContent = this.$refs.content
@@ -203,7 +207,7 @@ export default {
       @apply flex h-0 origin-top scale-y-0 flex-col duration-300 ease-in-out;
 
       &-item {
-        @apply mx-2 my-1 flex flex-col;
+        @apply mx-2 my-1 flex flex-col first:mt-2;
 
         &.has-error {
           input {
@@ -247,7 +251,7 @@ export default {
   }
 
   &-link {
-    @apply mb-2 flex items-center justify-between rounded-lg bg-slate-300 px-4 py-2 shadow-md;
+    @apply flex items-center justify-between rounded-lg bg-slate-300 px-4 py-2 shadow-md;
 
     &__icon {
       @apply flex items-center space-x-4;
