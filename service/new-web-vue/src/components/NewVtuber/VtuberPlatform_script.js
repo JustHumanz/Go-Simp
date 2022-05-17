@@ -27,8 +27,9 @@ export default {
       })
 
     await this.checkHeight()
+    const vtuberForm = this.$refs.form
 
-    document.body.addEventListener("input", async (e) => {
+    vtuberForm.addEventListener("input", async (e) => {
       e.target.parentElement.classList.toggle(
         "has-error",
         !(await this.checkFilled(e.target))
@@ -63,7 +64,7 @@ export default {
     this.$watch(
       () => this.id,
       async () => {
-        const inputs = this.$refs.form.querySelectorAll("input")
+        const inputs = vtuberForm.querySelectorAll("input")
 
         inputs.forEach(async (input) =>
           input.parentElement.classList.toggle(

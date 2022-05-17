@@ -54,6 +54,7 @@ import VtuberForm from "../components/NewVtuber/VtuberForm.vue"
           :group="group ? group : newGroup"
           :nicknames="nicknames"
           @back="backAction"
+          @vtuber="newVtuberFunction"
         />
       </div>
     </transition>
@@ -74,6 +75,7 @@ export default {
     return {
       group: null,
       newGroup: null,
+      newVtuber: [],
       step: 1,
       oldStep: 0,
       groups: [],
@@ -129,6 +131,10 @@ export default {
     newGroupfunction(group) {
       this.newGroup = group
       this.step = 3
+    },
+    newVtuberFunction(vtuber) {
+      this.newVtuber = vtuber
+      this.step = 4
     },
     backAction() {
       if (this.group) return (this.step = 1)

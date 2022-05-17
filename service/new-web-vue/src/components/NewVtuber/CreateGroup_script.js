@@ -80,9 +80,15 @@ export default {
     },
     async addPlatform(e) {
       if (this.platforms.length == 9) e.target.disabled = true
+
+      const platformGroups = document.querySelectorAll(".platform-group")
+
+      platformGroups.forEach((c) => c.classList.remove("show"))
+
       this.platforms.push({
         id: this.platforms.length,
         set: "youtube",
+        error: true,
       })
 
       await new Promise((resolve) => setTimeout(resolve, 60))
@@ -128,13 +134,14 @@ export default {
         input.forEach((inp, i) => (inp.value = oldInput[i].value))
       })
     },
+
     checkFilled(element) {
       const notInput = element.tagName !== "INPUT"
-      this.calculateHeight(element)
 
       if (notInput) return true
       return this.checkValidate(element)
     },
+
     checkAllFilled() {
       const inputs = document.querySelectorAll("input")
       let count = 0
@@ -144,105 +151,49 @@ export default {
         count++
       }
 
+      const platformError = this.platforms.find(
+        (platform) => platform.error === true
+      )
+
       // get submit button
       const submitBtn = document.querySelector("[type=submit]")
-      submitBtn.disabled = count < inputs.length
+      submitBtn.disabled = count < inputs.length || platformError
     },
+
     checkValidate(element) {
-      const errorText = element.parentElement.querySelector(".error")
+      const groupName = element.name === "group-name"
       const iconUrl = element.name === "group-icon"
+
+      const errorText = element.parentElement.querySelector(".error")
       const value = trim(element.value)
 
       // toggle error class in parent element
-      if (!iconUrl && !value) {
+      if (groupName && !value) {
         errorText.innerText = "This field is required"
         return false
       }
 
       // when group name same
-      if (element.name === "group-name") {
-        const groupNameExist = this.groups.some(
-          (group) =>
-            group.GroupName.toLowerCase().replace("_", " ") ===
-            value.toLowerCase()
-        )
+      const groupNameExist = this.groups.some(
+        (group) =>
+          group.GroupName.toLowerCase().replace("_", " ") ===
+          value.toLowerCase()
+      )
 
-        if (groupNameExist) {
-          errorText.innerText = "Group name already exist, please find new one"
-          return false
-        }
+      if (groupName && groupNameExist) {
+        errorText.innerText = "Group name already exist, please find new one"
+        return false
       }
 
       // when is url
-      if (iconUrl) {
-        if (value && !isUrl(value)) {
-          errorText.innerText = "Please enter a valid URL (image)"
-          return false
-        }
+      if (iconUrl && value && !isUrl(value)) {
+        errorText.innerText = "Please enter a valid URL (image)"
+        return false
       }
 
-      // check is valid youtube id
-      if (element.name === "youtube-id") {
-        const isChannelId = value.match(/^UC[a-zA-Z0-9-_]{22}$/)
-
-        if (!isChannelId) {
-          errorText.innerText =
-            "This is not a valid channel ID, find inside URL"
-          return false
-        }
-      }
-
-      // check is valid bilibili live id or space id
-      if (element.name === "live-id") {
-        const isBiliBiliLiveId = value.match(/^\d+$/)
-
-        if (!isBiliBiliLiveId) {
-          errorText.innerText = "This is not a valid live ID, find inside URL"
-          return false
-        }
-      }
-
-      if (element.name === "space-id") {
-        const isBiliBiliSpaceId = value.match(/^\d+$/)
-
-        if (!isBiliBiliSpaceId) {
-          errorText.innerText = "This is not a valid space ID, find inside URL"
-          return false
-        }
-      }
-
-      // check region/language code
-      if (element.name === "lang-code") {
-        const isRegionCode = value.match(/^[a-zA-Z]{2}$/)
-
-        if (!isRegionCode) {
-          errorText.innerText = "Please enter a valid region/language code"
-          return false
-        }
-      }
       return true
     },
-    async calculateHeight(element) {
-      const outsideDiv = element.parentElement.parentElement
 
-      if (!outsideDiv?.classList.contains("platform-group__content")) return
-      await new Promise((resolve) => setTimeout(resolve, 60))
-
-      const calculatedHeight = [...outsideDiv.children].reduce((t, c) => {
-        // get margin and padding
-        const margin =
-          parseInt(getComputedStyle(c).marginTop) +
-          parseInt(getComputedStyle(c).marginBottom)
-        const padding =
-          parseInt(getComputedStyle(c).paddingTop) +
-          parseInt(getComputedStyle(c).paddingBottom)
-
-        // get total height
-        return t + c.offsetHeight + margin + padding
-      }, 0)
-
-      outsideDiv.style.setProperty("--contentHeight", `${calculatedHeight}px`)
-    },
     async assignNewGroup(group) {
       console.log(group)
 
@@ -256,6 +207,7 @@ export default {
           this.platforms.push({
             id: this.platforms.length,
             set: "youtube",
+            error: false,
           })
         }
       }
@@ -265,6 +217,7 @@ export default {
           this.platforms.push({
             id: this.platforms.length,
             set: "bilibili",
+            error: false,
           })
         }
       }
@@ -310,6 +263,14 @@ export default {
 
       await new Promise((resolve) => setTimeout(resolve, 60))
       this.checkAllFilled()
+    },
+
+    checkError(data = null) {
+      if (data) {
+        this.platforms.map((platform) => {
+          if (platform.id == data.id) platform.error = data.error
+        })
+      }
     },
   },
 }

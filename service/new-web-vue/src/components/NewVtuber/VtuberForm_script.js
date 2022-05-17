@@ -1,8 +1,3 @@
-import axios from "axios"
-import Config from "../../config.json"
-import TwitterCountVue from "../VtuberDetails/TwitterCount.vue"
-import BiliBiliCountVue from "../VtuberDetails/BiliBiliCount.vue"
-
 export default {
   data() {
     return {
@@ -19,12 +14,12 @@ export default {
       default: [],
     },
   },
-  emits: ["back"],
+  emits: ["back", "vtuber"],
   async mounted() {
     this.addVtuber()
   },
   methods: {
-    addVtuber(e = null) {
+    async addVtuber(e = null) {
       if (e === null) e = document.querySelector("[name=add-vtuber]")
       if (this.vtubers.length == 14) e.target.disabled = true
 
@@ -34,6 +29,9 @@ export default {
       }
 
       this.vtubers.push({ id: this.vtubers.length, error: true })
+
+      await new Promise((resolve) => setTimeout(resolve, 60))
+      this.disabledDelBtn()
     },
     checkError(data = null) {
       if (data) {
@@ -79,6 +77,8 @@ export default {
 
         input.forEach((inp, i) => (inp.value = oldInput[i].value))
       })
+
+      this.disabledDelBtn()
     },
     requestVtuber(e) {
       e.preventDefault()
@@ -115,7 +115,15 @@ export default {
         result.push(vtuberData)
       })
 
-      console.log(result)
+      this.$emit("vtuber", result)
+    },
+
+    disabledDelBtn() {
+      // get all delete buttons
+      const deleteButtons = document.querySelectorAll(".delete-vtuber")
+      for (const deleteButton of deleteButtons) {
+        deleteButton.classList.toggle("one", this.vtubers.length == 1)
+      }
     },
   },
 }

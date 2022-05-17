@@ -284,6 +284,10 @@ export default { ...VtuberPlatform }
 .delete-vtuber {
   @apply rounded-full bg-white p-1 px-1.5;
 
+  &.one {
+    @apply bg-slate-200 opacity-70;
+  }
+
   &.confirm {
     @apply bg-red-500 text-white;
   }
