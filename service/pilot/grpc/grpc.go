@@ -492,7 +492,7 @@ func (s *Server) HeartBeat(in *ServiceMessage, stream PilotService_HeartBeatServ
 							ReportDeadService(err.Error(), in.Service)
 							return err
 						}
-						time.Sleep(5 * time.Second)
+						time.Sleep(1 * time.Second)
 					}
 				}
 			}
