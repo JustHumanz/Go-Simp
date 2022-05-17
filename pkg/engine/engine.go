@@ -745,3 +745,21 @@ func UnMarshalPayload(Payload []byte) []database.Group {
 	}
 	return agency
 }
+
+func GetHostname() string {
+	hostname, err := os.Hostname()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return hostname
+}
+
+func LowerCaseURI(h http.Handler) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		r.URL.Path = strings.ToLower(r.URL.Path)
+		h.ServeHTTP(w, r)
+	}
+
+	return http.HandlerFunc(fn)
+}

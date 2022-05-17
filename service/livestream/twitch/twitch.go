@@ -88,12 +88,14 @@ type checkTwcJob struct {
 
 func ReqRunningJob(client pilot.PilotServiceClient) {
 	Twitch := &checkTwcJob{}
+	hostname := engine.GetHostname()
 
 	for {
 		res, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
 			Service:     ServiceName,
 			Message:     "Request",
 			ServiceUUID: ServiceUUID,
+			Hostname:    hostname,
 		})
 		if err != nil {
 			log.Error(err)

@@ -14,6 +14,7 @@ message ServiceMessage {
     string Message = 1;
     string Service = 2;
     string ServiceUUID = 3;
+    string Hostname = 4;
 }
 
 

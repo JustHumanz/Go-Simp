@@ -103,11 +103,15 @@ func main() {
 	}
 
 	go pilot.RunHeartBeat(gRCPconn, ServiceName, ServiceUUID)
+
+	hostname := engine.GetHostname()
+
 	go func() {
 		tmp, err := gRCPconn.GetAgencyPayload(context.Background(), &pilot.ServiceMessage{
 			Service:     ServiceName,
 			Message:     "Refresh payload",
 			ServiceUUID: ServiceUUID,
+			Hostname:    hostname,
 		})
 		if err != nil {
 			log.Error(err)

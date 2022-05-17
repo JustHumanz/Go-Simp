@@ -49,10 +49,12 @@ type NewVtuber struct {
 }
 
 func RequestPay(Message string) {
+	hostname := engine.GetHostname()
 	res, err := gRCPconn.GetBotPayload(context.Background(), &pilot.ServiceMessage{
 		Message:     Message,
 		Service:     "Migrate",
 		ServiceUUID: ServiceUUID,
+		Hostname:    hostname,
 	})
 	if err != nil {
 		log.Fatalf("Error when request payload: %s", err)

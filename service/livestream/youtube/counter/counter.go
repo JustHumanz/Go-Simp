@@ -88,12 +88,16 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 	YoutubeCounter := &checkYtJob{
 		CekCounter: make(map[string]bool),
 	}
+
+	hostname := engine.GetHostname()
+
 	for {
 
 		res, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
 			Service:     ServiceName,
 			Message:     "Request",
 			ServiceUUID: ServiceUUID,
+			Hostname:    hostname,
 		})
 
 		if err != nil {

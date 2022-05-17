@@ -82,6 +82,9 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 		Counter: 1,
 		Update:  true,
 	}
+
+	hostname := engine.GetHostname()
+
 	for {
 
 		if YoutubeChecker.Counter == 15 {
@@ -95,6 +98,7 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 					Service:     ServiceName,
 					Message:     "Update",
 					ServiceUUID: ServiceUUID,
+					Hostname:    hostname,
 				})
 				if err != nil {
 					log.Error(err)
@@ -105,6 +109,7 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 					Service:     ServiceName,
 					Message:     "New",
 					ServiceUUID: ServiceUUID,
+					Hostname:    hostname,
 				})
 				if err != nil {
 					log.Error(err)

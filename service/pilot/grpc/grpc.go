@@ -78,9 +78,17 @@ type Service struct {
 }
 
 type UnitService struct {
-	UUID    string
-	Counter int
-	Payload []database.Group
+	UUID     string
+	Counter  int
+	Payload  []database.Group
+	Metadata UnitMetadata
+}
+
+type UnitMetadata struct {
+	UUID       string
+	Hostname   string
+	Length     int
+	AgencyList []string
 }
 
 type Server struct {
@@ -167,9 +175,11 @@ func (s *Service) RemapPayload() {
 		AgencyCount := 0
 		for _, v := range s.Unit {
 			AgencyCount += len(v.Payload)
+			v.Metadata.Length = len(v.Payload)
+			v.Metadata.AgencyList = v.GetAgencyList()
 		}
 
-		if AgencyCount < 29 {
+		if AgencyCount < 29 && AgencyCount != 0 {
 			log.Fatal("Agency payload less than 29, len ", AgencyCount)
 		}
 	}
@@ -223,6 +233,10 @@ func (s *Server) RequestRunJobsOfService(ctx context.Context, in *ServiceMessage
 					in.ServiceUUID,
 					1,
 					nil,
+					UnitMetadata{
+						Hostname: in.Hostname,
+						UUID:     in.ServiceUUID,
+					},
 				})
 
 				v.RemapPayload()
@@ -481,11 +495,12 @@ func (s *Server) HeartBeat(in *ServiceMessage, stream PilotService_HeartBeatServ
 							ReportDeadService(err.Error(), in.Service)
 							return err
 						}
-						time.Sleep(5 * time.Second)
+						time.Sleep(1 * time.Second)
 					}
 				}
 			}
 		}
+		time.Sleep(5 * time.Second)
 	}
 }
 
