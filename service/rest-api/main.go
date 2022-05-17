@@ -310,7 +310,7 @@ func main() {
 	LiveBili.HandleFunc("/group/{groupID}/{status}", getBilibili).Methods("GET")
 	LiveBili.HandleFunc("/member/{memberID}/{status}", getBilibili).Methods("GET")
 	router.Use(muxlogrus.NewLogger().Middleware)
-	http.ListenAndServe(":2525", LowerCaseURI(router))
+	http.ListenAndServe(":2525", engine.LowerCaseURI(router))
 }
 
 func invalidPath(w http.ResponseWriter, r *http.Request) {
@@ -814,13 +814,4 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 type MessageError struct {
 	Message string
 	Date    time.Time
-}
-
-func LowerCaseURI(h http.Handler) http.Handler {
-	fn := func(w http.ResponseWriter, r *http.Request) {
-		r.URL.Path = strings.ToLower(r.URL.Path)
-		h.ServeHTTP(w, r)
-	}
-
-	return http.HandlerFunc(fn)
 }
