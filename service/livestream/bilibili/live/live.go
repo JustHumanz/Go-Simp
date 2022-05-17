@@ -74,6 +74,7 @@ type checkBlLiveeJob struct {
 
 func ReqRunningJob(client pilot.PilotServiceClient) {
 	Bili := &checkBlLiveeJob{}
+	hostname := engine.GetHostname()
 
 	for {
 
@@ -81,6 +82,7 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 			Service:     ServiceName,
 			Message:     "Request",
 			ServiceUUID: ServiceUUID,
+			Hostname:    hostname,
 		})
 		if err != nil {
 			log.Error(err)

@@ -88,6 +88,7 @@ func main() {
 
 func ReqRunningJob(client pilot.PilotServiceClient) {
 	Twit := &checkTwJob{}
+	hostname := engine.GetHostname()
 
 	for {
 
@@ -95,6 +96,7 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 			Service:     ServiceName,
 			Message:     "Request",
 			ServiceUUID: ServiceUUID,
+			Hostname:    hostname,
 		})
 		if err != nil {
 			log.Error(err)

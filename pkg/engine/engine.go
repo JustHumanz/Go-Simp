@@ -760,3 +760,12 @@ func UnMarshalPayload(Payload []byte) []database.Group {
 	}
 	return agency
 }
+
+func GetHostname() string {
+	hostname, err := os.Hostname()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return hostname
+}

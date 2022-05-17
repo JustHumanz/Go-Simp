@@ -85,6 +85,8 @@ type UnitService struct {
 }
 
 type UnitMetadata struct {
+	UUID       string
+	Hostname   string
 	Length     int
 	AgencyList []string
 }
@@ -174,12 +176,10 @@ func (s *Service) RemapPayload() {
 		for _, v := range s.Unit {
 			AgencyCount += len(v.Payload)
 			v.Metadata.Length = len(v.Payload)
-			for _, v2 := range v.Payload {
-				v.Metadata.AgencyList = append(v.Metadata.AgencyList, v2.GroupName)
-			}
+			v.Metadata.AgencyList = v.GetAgencyList()
 		}
 
-		if AgencyCount < 29 {
+		if AgencyCount < 29 && AgencyCount != 0 {
 			log.Fatal("Agency payload less than 29, len ", AgencyCount)
 		}
 	}
@@ -233,7 +233,10 @@ func (s *Server) RequestRunJobsOfService(ctx context.Context, in *ServiceMessage
 					in.ServiceUUID,
 					1,
 					nil,
-					UnitMetadata{},
+					UnitMetadata{
+						Hostname: in.Hostname,
+						UUID:     in.ServiceUUID,
+					},
 				})
 
 				v.RemapPayload()

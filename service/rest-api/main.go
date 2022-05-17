@@ -11,6 +11,7 @@ import (
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
+	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/google/uuid"
@@ -51,6 +52,8 @@ func init() {
 		log.Panic(err)
 	}
 
+	hostname := engine.GetHostname()
+
 	RequestPayload := func() {
 		var (
 			VtuberMembersTMP []MembersPayload
@@ -60,6 +63,7 @@ func init() {
 			Service:     config.ResetApiService,
 			Message:     "Request",
 			ServiceUUID: ServiceUUID,
+			Hostname:    hostname,
 		})
 		if err != nil {
 			log.Fatalf("Error when request payload: %s", err)

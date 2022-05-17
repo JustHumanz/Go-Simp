@@ -91,12 +91,14 @@ type checkBlJob struct {
 
 func ReqRunningJob(client pilot.PilotServiceClient) {
 	Bili := &checkBlJob{}
+	hostname := engine.GetHostname()
 
 	for {
 		res, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
 			Service:     ServiceName,
 			Message:     "Request",
 			ServiceUUID: ServiceUUID,
+			Hostname:    hostname,
 		})
 		if err != nil {
 			log.Error(err)
