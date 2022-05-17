@@ -769,3 +769,12 @@ func GetHostname() string {
 
 	return hostname
 }
+
+func LowerCaseURI(h http.Handler) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		r.URL.Path = strings.ToLower(r.URL.Path)
+		h.ServeHTTP(w, r)
+	}
+
+	return http.HandlerFunc(fn)
+}
