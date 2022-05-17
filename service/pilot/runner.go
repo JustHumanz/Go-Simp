@@ -110,18 +110,6 @@ func main() {
 		}
 	})
 
-	http.HandleFunc("/twitter/units/", func(w http.ResponseWriter, r *http.Request) {
-		Data := GetUnitsMetadata(s, config.TwitterService)
-		if Data != nil {
-			w.Header().Set("Access-Control-Allow-Origin", "*")
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(Data)
-			w.WriteHeader(http.StatusOK)
-		} else {
-			w.WriteHeader(http.StatusNotFound)
-		}
-	})
-
 	router.Use(muxlogrus.NewLogger().Middleware)
 	go http.ListenAndServe(":8181", engine.LowerCaseURI(router))
 
