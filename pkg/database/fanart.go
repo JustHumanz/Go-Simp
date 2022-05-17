@@ -345,7 +345,7 @@ func (Data DataFanart) AddFanartToCache(id int64) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = FanartCache.Set(context.Background(), Data.PermanentURL, bytefanart, 10*time.Minute).Err()
+	err = FanartCache.Set(context.Background(), Data.PermanentURL, bytefanart, 2*time.Hour).Err()
 	if err != nil {
 		log.Fatal(err)
 	}

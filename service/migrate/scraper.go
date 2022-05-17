@@ -86,6 +86,8 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 		if YtData != nil {
 			continue
 		} else {
+			YtData.GetYtVideoDetail()
+
 			log.WithFields(log.Fields{
 				"Vtuber": Dat.Name,
 			}).Info("New video")
@@ -115,7 +117,7 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 			}
 
 			if Item.Snippet.VideoStatus == config.UpcomingStatus {
-				err := NewData.SendToCache(false)
+				err := NewData.SendToUpcomingCache(false)
 				if err != nil {
 					log.WithFields(log.Fields{
 						"Vtuber": Dat.Name,
