@@ -2,7 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"flag"
+	"fmt"
 	"net/http"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
@@ -31,37 +33,64 @@ func main() {
 	grpcServer := grpc.NewServer()
 	router := mux.NewRouter()
 
-	router.HandleFunc("/{service}/units/", func(w http.ResponseWriter, r *http.Request) {
-		Service := mux.Vars(r)["service"]
-		Data := []pilot.UnitMetadata{}
-
-		if Service == "checker_youtube" {
-			Data = GetUnitsMetadata(pilot.S, config.YoutubeCheckerService)
-		} else if Service == "counter_youtube" {
-			Data = GetUnitsMetadata(pilot.S, config.YoutubeCounterService)
-		} else if Service == "space_bilibili" {
-			Data = GetUnitsMetadata(pilot.S, config.SpaceBiliBiliService)
-		} else if Service == "live_bilibili" {
-			Data = GetUnitsMetadata(pilot.S, config.LiveBiliBiliService)
-		} else if Service == "twitch" {
-			Data = GetUnitsMetadata(pilot.S, config.TwitchService)
-		} else if Service == "twitter" {
-			Data = GetUnitsMetadata(pilot.S, config.TwitterService)
-		} else if Service == "tbilibili" {
-			Data = GetUnitsMetadata(pilot.S, config.TBiliBiliService)
-		} else if Service == "pixiv" {
-			Data = GetUnitsMetadata(pilot.S, config.PixivService)
+	ServiceName := func(Name string) string {
+		if Name == "checker_youtube" {
+			return config.YoutubeCheckerService
+		} else if Name == "counter_youtube" {
+			return config.YoutubeCounterService
+		} else if Name == "space_bilibili" {
+			return config.SpaceBiliBiliService
+		} else if Name == "live_bilibili" {
+			return config.LiveBiliBiliService
+		} else if Name == "twitch" {
+			return config.TwitchService
+		} else if Name == "twitter" {
+			return config.TwitterService
+		} else if Name == "tbilibili" {
+			return config.TBiliBiliService
+		} else if Name == "pixiv" {
+			return config.PixivService
 		}
+		return ""
+	}
 
+	router.HandleFunc("/get/{service}/units/", func(w http.ResponseWriter, r *http.Request) {
+		Service := mux.Vars(r)["service"]
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
+
+		Data := GetUnitsMetadata(pilot.S, ServiceName(Service))
 		if Data != nil {
-			w.Header().Set("Access-Control-Allow-Origin", "*")
-			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(Data)
 			w.WriteHeader(http.StatusOK)
 		} else {
+			json.NewEncoder(w).Encode(nil)
 			w.WriteHeader(http.StatusNotFound)
 		}
-	})
+	}).Methods(http.MethodGet)
+
+	//Admin can delete the unit payload in case the unit is killed or dead but the payload still remaining
+	router.HandleFunc("/delete/{service}/{uuid}/", func(w http.ResponseWriter, r *http.Request) {
+		Service := mux.Vars(r)["service"]
+		UUID := mux.Vars(r)["uuid"]
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
+
+		err := DeleteUnitsMetadata(pilot.S, ServiceName(Service), UUID)
+		if err != nil {
+			json.NewEncoder(w).Encode(map[string]interface{}{
+				"Error":   true,
+				"Message": err.Error(),
+			})
+			w.WriteHeader(http.StatusBadRequest)
+		} else {
+			json.NewEncoder(w).Encode(map[string]interface{}{
+				"Error":   false,
+				"Message": nil,
+			})
+			w.WriteHeader(http.StatusOK)
+		}
+	}).Methods(http.MethodDelete)
 
 	router.Use(muxlogrus.NewLogger().Middleware)
 	go http.ListenAndServe(":8181", engine.LowerCaseURI(router))
@@ -87,6 +116,27 @@ func GetUnitsMetadata(s pilot.Server, name string) []pilot.UnitMetadata {
 			}
 		}
 	}
-
 	return nil
+}
+
+func DeleteUnitsMetadata(s pilot.Server, Service, UUID string) error {
+	log.WithFields(log.Fields{
+		"Service": Service,
+		"UUID":    UUID,
+	}).Warn("Deleting unit payload")
+
+	for _, v := range s.Service {
+		if v.Name == Service {
+			if len(v.Unit) > 0 {
+				for _, v2 := range v.Unit {
+					if v2.UUID == UUID {
+						v.RemoveUnitFromDeadNode(v2.UUID)
+						fmt.Println(v)
+						return nil
+					}
+				}
+			}
+		}
+	}
+	return errors.New("invalid uuid")
 }
