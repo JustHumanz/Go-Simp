@@ -112,20 +112,20 @@ export default {
         count++
       }
 
-      let isFilled
       const youtubeId = e?.name === "youtube-id"
       const twitchName = e?.name === "nickname-twitch"
       const biliSpaceId = e?.name === "space-id"
       const biliLiveId = e?.name === "live-id"
 
-      if (
-        e !== null &&
-        (youtubeId || twitchName || biliSpaceId || biliLiveId)
-      ) {
-        isFilled = this.CheckPlatform(e.name)
-      }
+      const platforms =
+        youtubeId || twitchName || biliSpaceId || biliLiveId ? e.name : null
+
+      const isFilled = this.CheckPlatform(platforms)
+
+      console.log(count, inputs.length, isFilled)
 
       const error = count < inputs.length || !isFilled
+      console.log(error)
       this.$refs.form.classList.toggle("errors", error)
       this.$emit("error", { id: this.id, error })
     },
@@ -139,6 +139,7 @@ export default {
       const twitchName = e.name === "nickname-twitch"
       const biliSpaceId = e.name === "space-id"
       const biliLiveId = e.name === "live-id"
+      const biliFanArt = e.name === "bili-art"
       const twitterUser = e.name === "twitter-username"
       const fanartHash = e.name === "fanart-hashtag"
       const lewdHash = e.name === "lewd-hashtag"
@@ -200,6 +201,8 @@ export default {
       const isytId = value.match(/^UC[a-zA-Z0-9-_]{22}$/)
       const isTwitchName = value.match(/^[a-zA-Z0-9_]{1,20}$/)
       const isBiliBiliId = value.match(/^\d+$/)
+      //no space char
+      const noSpace = value.match(/\s/)
 
       // when youtubeId is invalid
       if (youtubeId && value && !isytId) {
@@ -225,8 +228,14 @@ export default {
         return false
       }
 
+      // when biliFanArt is invalid
+      if (biliFanArt && value && noSpace) {
+        errorText.innerText = "Please enter a without space"
+        return false
+      }
+
       // check twitterUser is invalid
-      const isTwitterUser = value.match(/^(@)?[a-zA-Z0-9_]$/)
+      const isTwitterUser = value.match(/^(@)?[a-zA-Z0-9_]*$/)
       if (twitterUser && value && !isTwitterUser) {
         errorText.innerText = "Please enter a valid Twitter username"
         return false
@@ -234,7 +243,7 @@ export default {
 
       // check HashtagTwitter is invalid
       const isHashtagTwitter = value.match(
-        /^(#)?[一-龠ぁ-ゔァ-ヴーa-zA-Z0-9々〆〤_]$/
+        /^(#)?[一-龠ぁ-ゔァ-ヴーa-zA-Z0-9々〆〤_]*$/
       )
 
       if ((fanartHash || lewdHash) && value && !isHashtagTwitter) {
@@ -244,7 +253,7 @@ export default {
 
       return true
     },
-    CheckPlatform(name) {
+    CheckPlatform(name = null) {
       const youtube = this.$refs.ytid
       const twitch = this.$refs.twitchname
       const biliSpace = this.$refs.biliid
@@ -264,10 +273,13 @@ export default {
         errTextTwitch.innerText = "Please at least add one platform"
         errTextBili.innerText = "Please at least add one platform"
         errTextBiliLive.innerText = "Please at least add one platform"
-        parentYt.classList.add("has-error")
-        parentTwitch.classList.add("has-error")
-        parentBili.classList.add("has-error")
-        parentBiliLive.classList.add("has-error")
+        if (name !== null) {
+          console.log(name)
+          parentYt.classList.add("has-error")
+          parentTwitch.classList.add("has-error")
+          parentBili.classList.add("has-error")
+          parentBiliLive.classList.add("has-error")
+        }
         return false
       } else {
         if (name !== "youtube-id") parentYt.classList.remove("has-error")

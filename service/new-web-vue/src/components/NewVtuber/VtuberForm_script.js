@@ -103,6 +103,7 @@ export default {
           bilibili: {
             space_id: vtuber.querySelector("[name=space-id]").value,
             live_id: vtuber.querySelector("[name=live-id]").value,
+            bili_fanart: vtuber.querySelector("[name=bili-art]").value,
           },
         }
 
@@ -123,6 +124,43 @@ export default {
       const deleteButtons = document.querySelectorAll(".delete-vtuber")
       for (const deleteButton of deleteButtons) {
         deleteButton.classList.toggle("one", this.vtubers.length == 1)
+      }
+    },
+
+    async assignNewVtuber(vtubers) {
+      if (!vtubers) return
+
+      for (const vtuber of vtubers) {
+        this.vtubers.push({ id: this.vtubers.length, error: false })
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 60))
+      const vtuberForms = document.querySelectorAll(".vtuber-form")
+
+      vtuberForms.forEach((platform) => {
+        platform.classList.remove("show")
+      })
+
+      let index = 0
+
+      for (const form of vtuberForms) {
+        const Inputs = form.querySelectorAll("input")
+
+        Inputs[0].value = vtubers[index].nickname
+        Inputs[1].value = vtubers[index].name_en
+        Inputs[2].value = "" ?? vtubers[index].name_jp
+        Inputs[3].value = "" ?? vtubers[index].fanbase
+        Inputs[4].value = vtubers[index].region
+        Inputs[5].value = "" ?? vtubers[index].platform.youtube?.channel_id
+        Inputs[6].value = "" ?? vtubers[index].platform.twitch?.username
+        Inputs[7].value = "" ?? vtubers[index].platform.bilibili?.space_id
+        Inputs[8].value = "" ?? vtubers[index].platform.bilibili?.live_id
+        Inputs[9].value = "" ?? vtubers[index].platform.bilibili?.bili_fanart
+        Inputs[9].value = "" ?? vtubers[index].twitter?.username
+        Inputs[10].value = "" ?? vtubers[index].twitter?.fanart_hashtag
+        Inputs[11].value = "" ?? vtubers[index].twitter?.lewd_hashtag
+
+        index++
       }
     },
   },

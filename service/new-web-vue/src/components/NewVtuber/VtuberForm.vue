@@ -49,36 +49,6 @@ export default { ...VtuberForm }
 .form-group {
   @apply flex flex-col md:ml-2;
 
-  //   &.has-error {
-  //     input {
-  //       @apply bg-red-200;
-  //     }
-
-  //     .description {
-  //       @apply hidden;
-  //     }
-
-  //     .error {
-  //       @apply block;
-  //     }
-  //   }
-
-  //   input {
-  //     @apply my-1 -translate-y-0.5 rounded-lg bg-slate-200 p-2 shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none focus:outline-none;
-  //   }
-
-  //   small {
-  //     @apply text-xs;
-  //   }
-
-  //   .description {
-  //     @apply text-gray-600;
-  //   }
-
-  //   .error {
-  //     @apply hidden text-red-500;
-  //   }
-
   button {
     @apply -translate-y-0.5 rounded-lg bg-blue-400 p-2 font-semibold text-white shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm disabled:translate-y-0.5 disabled:opacity-70 disabled:shadow-none;
   }

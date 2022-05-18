@@ -134,6 +134,21 @@
       </div>
 
       <div class="vtuber__content-item">
+        <label for="live-id">Bilibili Fanart</label>
+        <input
+          type="text"
+          id="bili-art"
+          name="bili-art"
+          autocomplete="off"
+          ref="liveid"
+        />
+        <small class="description">
+         (Optional)
+        </small>
+        <small class="error"></small>
+      </div>
+
+      <div class="vtuber__content-item">
         <label for="twitter-username">Twitter Username</label>
         <input
           type="text"

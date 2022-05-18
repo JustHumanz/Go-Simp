@@ -2,6 +2,7 @@
 import GroupPage from "../components/NewVtuber/GroupPage.vue"
 import CreateGroup from "../components/NewVtuber/CreateGroup.vue"
 import VtuberForm from "../components/NewVtuber/VtuberForm.vue"
+import FinalStep from "../components/NewVtuber/FinalStep.vue"
 </script>
 
 <template>
@@ -55,6 +56,23 @@ import VtuberForm from "../components/NewVtuber/VtuberForm.vue"
           :nicknames="nicknames"
           @back="backAction"
           @vtuber="newVtuberFunction"
+        />
+      </div>
+    </transition>
+    <transition
+      enter-from-class="slide-right"
+      enter-to-class="slide-center"
+      enter-active-class="slide-active"
+      leave-from-class="slide-center"
+      leave-to-class="slide-right"
+      leave-active-class="slide-active"
+    >
+      <div v-if="step === 4">
+        <final-step
+          :group="group"
+          :newGroup="newGroup"
+          :vtuber="newVtuber"
+          @back="backAction"
         />
       </div>
     </transition>
