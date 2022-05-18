@@ -20,7 +20,54 @@ var (
 	confByte      []byte
 	WeebHookURL   string
 	VtubersAgency []database.Group
-	//Payload       = make(map[string]interface{})
+
+	S = Server{
+		Service: []*Service{
+			//Fanart
+			{
+				Name: config.TBiliBiliService,
+				//Counter: 1,
+				CronJob: 7, //every 7 minutes
+			},
+			{
+				Name: config.TwitterService,
+				//Counter: 1,
+				CronJob: 10, //every 10 minutes
+			},
+			{
+				Name: config.PixivService,
+				//Counter: 1,
+				CronJob: 7, //every 7 minutes
+			},
+
+			//Live
+			{
+				Name: config.SpaceBiliBiliService,
+				//Counter: 1,
+				CronJob: 12, //every 12 minutes
+			},
+			{
+				Name: config.LiveBiliBiliService,
+				//Counter: 1,
+				CronJob: 7, //every 7 minutes
+			},
+			{
+				Name: config.TwitchService,
+				//Counter: 1,
+				CronJob: 10, //every 10 minutes
+			},
+			{
+				Name: config.YoutubeCheckerService,
+				//Counter: 1,
+				CronJob: 5, //every 5 minutes
+			},
+			{
+				Name: config.YoutubeCounterService,
+				//Counter: 1,
+				CronJob: 1, //every 1 minutes
+			},
+		},
+	}
 )
 
 func Start() {
@@ -208,7 +255,7 @@ func (k *UnitService) GetAgencyList() []string {
 	return AgencyName
 }
 
-func (s *Service) RemoveUnitFromDeadSvc(UUID string) {
+func (s *Service) RemoveUnitFromDeadNode(UUID string) {
 	for k, v := range s.Unit {
 		if v.UUID == UUID {
 			s.Unit = append(s.Unit[0:k], s.Unit[k+1:]...)
@@ -318,12 +365,14 @@ func (s *Server) RequestRunJobsOfService(ctx context.Context, in *ServiceMessage
 	return &RunJob{}, nil
 }
 
-func (s *Server) ReportError(ctx context.Context, in *ServiceMessage) (*Empty, error) {
+func (s *Server) ReportError(ctx context.Context, in *ServiceMessage) (*Message, error) {
 	ReportDeadService(in.Message, in.Service)
-	return &Empty{}, nil
+	return &Message{
+		Message: "Sending error report done",
+	}, nil
 }
 
-func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
+func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Message, error) {
 	if in.State == config.FanartState {
 		var FanArt database.DataFanart
 		err := json.Unmarshal(in.MetricData, &FanArt)
@@ -435,7 +484,9 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 		}
 
 		if LiveData.End.IsZero() {
-			return &Empty{}, nil
+			return &Message{
+				Message: "Invalid end time",
+			}, nil
 		}
 
 		Time := LiveData.End.Sub(LiveData.Schedul).Minutes()
@@ -468,39 +519,30 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 		}
 	}
 
-	return &Empty{}, nil
+	return &Message{
+		Message: "Metric updated",
+	}, nil
 }
 
 func (s *Server) HeartBeat(in *ServiceMessage, stream PilotService_HeartBeatServer) error {
 	for {
-		for _, v := range s.Service {
-			if v.Name == in.Service {
-				for _, v2 := range v.Unit {
-					if v2.UUID == in.ServiceUUID {
-						log.WithFields(log.Fields{
-							"Service":  in.Service,
-							"Messsage": in.Message,
-							"UUID":     in.ServiceUUID,
-							"Status":   "Running",
-						}).Debug("HeartBeat")
-
-						err := stream.Send(&Empty{})
-						if err != nil {
-							log.WithFields(log.Fields{
-								"Service":  in.Service,
-								"Messsage": in.Message,
-								"UUID":     in.ServiceUUID,
-							}).Error(fmt.Sprintf("%s Removing unit if exist", err))
-							v.RemoveUnitFromDeadSvc(in.ServiceUUID)
-							ReportDeadService(err.Error(), in.Service)
-							return err
-						}
-						time.Sleep(1 * time.Second)
-					}
-				}
+		err := stream.Send(&Message{
+			Message: "Cek",
+		})
+		if err != nil {
+			log.WithFields(log.Fields{
+				"Service":  in.Service,
+				"Messsage": in.Message,
+				"UUID":     in.ServiceUUID,
+			}).Error(fmt.Sprintf("%s Removing unit if exist", err))
+			Svc := GetServiceFromUUID(&S, in.ServiceUUID)
+			if Svc != nil {
+				Svc.RemoveUnitFromDeadNode(in.ServiceUUID)
 			}
+			ReportDeadService(err.Error(), in.Service)
+			return err
 		}
-		time.Sleep(5 * time.Second)
+		time.Sleep(1 * time.Second)
 	}
 }
 
@@ -555,4 +597,15 @@ func BoolString(a bool) string {
 		return "true"
 	}
 	return "false"
+}
+
+func GetServiceFromUUID(s *Server, UUID string) *Service {
+	for _, v := range s.Service {
+		for _, v2 := range v.Unit {
+			if v2.UUID == UUID {
+				return v
+			}
+		}
+	}
+	return nil
 }

@@ -27,53 +27,6 @@ func main() {
 
 	metric.Init()
 	lis := network.InitNet()
-	s := pilot.Server{
-		Service: []*pilot.Service{
-			//Fanart
-			{
-				Name: config.TBiliBiliService,
-				//Counter: 1,
-				CronJob: 7, //every 7 minutes
-			},
-			{
-				Name: config.TwitterService,
-				//Counter: 1,
-				CronJob: 10, //every 10 minutes
-			},
-			{
-				Name: config.PixivService,
-				//Counter: 1,
-				CronJob: 7, //every 7 minutes
-			},
-
-			//Live
-			{
-				Name: config.SpaceBiliBiliService,
-				//Counter: 1,
-				CronJob: 12, //every 12 minutes
-			},
-			{
-				Name: config.LiveBiliBiliService,
-				//Counter: 1,
-				CronJob: 7, //every 7 minutes
-			},
-			{
-				Name: config.TwitchService,
-				//Counter: 1,
-				CronJob: 10, //every 10 minutes
-			},
-			{
-				Name: config.YoutubeCheckerService,
-				//Counter: 1,
-				CronJob: 5, //every 5 minutes
-			},
-			{
-				Name: config.YoutubeCounterService,
-				//Counter: 1,
-				CronJob: 1, //every 1 minutes
-			},
-		},
-	}
 
 	grpcServer := grpc.NewServer()
 	router := mux.NewRouter()
@@ -83,21 +36,21 @@ func main() {
 		Data := []pilot.UnitMetadata{}
 
 		if Service == "checker_youtube" {
-			Data = GetUnitsMetadata(s, config.YoutubeCheckerService)
+			Data = GetUnitsMetadata(pilot.S, config.YoutubeCheckerService)
 		} else if Service == "counter_youtube" {
-			Data = GetUnitsMetadata(s, config.YoutubeCounterService)
+			Data = GetUnitsMetadata(pilot.S, config.YoutubeCounterService)
 		} else if Service == "space_bilibili" {
-			Data = GetUnitsMetadata(s, config.SpaceBiliBiliService)
+			Data = GetUnitsMetadata(pilot.S, config.SpaceBiliBiliService)
 		} else if Service == "live_bilibili" {
-			Data = GetUnitsMetadata(s, config.LiveBiliBiliService)
+			Data = GetUnitsMetadata(pilot.S, config.LiveBiliBiliService)
 		} else if Service == "twitch" {
-			Data = GetUnitsMetadata(s, config.TwitchService)
+			Data = GetUnitsMetadata(pilot.S, config.TwitchService)
 		} else if Service == "twitter" {
-			Data = GetUnitsMetadata(s, config.TwitterService)
+			Data = GetUnitsMetadata(pilot.S, config.TwitterService)
 		} else if Service == "tbilibili" {
-			Data = GetUnitsMetadata(s, config.TBiliBiliService)
+			Data = GetUnitsMetadata(pilot.S, config.TBiliBiliService)
 		} else if Service == "pixiv" {
-			Data = GetUnitsMetadata(s, config.PixivService)
+			Data = GetUnitsMetadata(pilot.S, config.PixivService)
 		}
 
 		if Data != nil {
@@ -113,7 +66,7 @@ func main() {
 	router.Use(muxlogrus.NewLogger().Middleware)
 	go http.ListenAndServe(":8181", engine.LowerCaseURI(router))
 
-	pilot.RegisterPilotServiceServer(grpcServer, &s)
+	pilot.RegisterPilotServiceServer(grpcServer, &pilot.S)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %s", err)
