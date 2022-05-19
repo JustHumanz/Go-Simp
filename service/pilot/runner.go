@@ -29,7 +29,6 @@ func main() {
 
 	metric.Init()
 	lis := network.InitNet()
-
 	grpcServer := grpc.NewServer()
 	router := mux.NewRouter()
 

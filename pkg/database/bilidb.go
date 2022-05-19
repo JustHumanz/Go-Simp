@@ -68,19 +68,13 @@ func (Data *Member) GetBlLiveStream(status string) (LiveStream, error) {
 		defer rows.Close()
 
 		for rows.Next() {
-			var list LiveStream
-			err = rows.Scan(&list.ID, &list.Member.BiliBiliRoomID, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.Viewers, &list.End, &list.Member.ID)
+			err = rows.Scan(&Live.ID, &Live.Member.BiliBiliRoomID, &Live.Status, &Live.Title, &Live.Thumb, &Live.Desc, &Live.Published, &Live.Schedul, &Live.Viewers, &Live.End, &Live.Member.ID)
 			if err != nil {
 				return LiveStream{}, err
 			}
 		}
 
-		err = LiveCache.Set(ctx, Key, Live, 0).Err()
-		if err != nil {
-			return LiveStream{}, err
-		}
-
-		err = LiveCache.Expire(ctx, Key, config.YtGetStatusTTL).Err()
+		err = LiveCache.Set(ctx, Key, Live, config.YtGetStatusTTL).Err()
 		if err != nil {
 			return LiveStream{}, err
 		}
@@ -103,16 +97,19 @@ func (Data *Member) GetBlLiveStream(status string) (LiveStream, error) {
 func (Data *Group) GetBlLiveStream(status string) ([]LiveStream, error) {
 	var LiveStreamData []LiveStream
 	for _, Member := range Data.Members {
-		Live, err := Member.GetBlLiveStream(status)
-		if err != nil {
-			return nil, err
-		}
+		if Member.BiliBiliID != 0 {
+			Live, err := Member.GetBlLiveStream(status)
+			if err != nil {
+				return nil, err
+			}
 
-		if Live.ID == 0 {
-			continue
-		}
+			if Live.ID == 0 {
+				continue
+			}
 
-		LiveStreamData = append(LiveStreamData, Live)
+			LiveStreamData = append(LiveStreamData, Live)
+
+		}
 	}
 
 	return LiveStreamData, nil

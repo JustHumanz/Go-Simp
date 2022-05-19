@@ -1,12 +1,8 @@
 package engine
 
 import (
-	"encoding/json"
 	"encoding/xml"
-	"strconv"
 	"time"
-
-	network "github.com/JustHumanz/Go-Simp/pkg/network"
 )
 
 //TBiliBili TopicBiliBili struct
@@ -1111,21 +1107,6 @@ func (Data getInfoByRoom) CheckScheduleLive() bool {
 	} else {
 		return false
 	}
-}
-
-func GetRoomStatus(RoomID int) (getInfoByRoom, error) {
-	var (
-		tmp getInfoByRoom
-	)
-	body, curlerr := network.CoolerCurl("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id="+strconv.Itoa(RoomID), nil)
-	if curlerr != nil {
-		return getInfoByRoom{}, curlerr
-	}
-	err := json.Unmarshal(body, &tmp)
-	if err != nil {
-		return getInfoByRoom{}, err
-	}
-	return tmp, nil
 }
 
 type YtXML struct {
