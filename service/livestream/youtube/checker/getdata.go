@@ -18,7 +18,7 @@ import (
 )
 
 //StartCheckYT Youtube rss and API
-func StartCheckYT(Group database.Group, Update bool) {
+func StartCheckYT(Group database.Group) {
 
 	//check vtuber agency youtube channel
 	if Group.YoutubeChannels != nil && *agency {
@@ -159,7 +159,7 @@ func StartCheckYT(Group database.Group, Update bool) {
 						}
 					}
 
-				} else if Update {
+				} else if YoutubeCache.ID != 0 {
 					log.WithFields(log.Fields{
 						"Group":   Group.GroupName,
 						"VideoID": ID,
@@ -199,7 +199,7 @@ func StartCheckYT(Group database.Group, Update bool) {
 						log.WithFields(log.Fields{
 							"VideoData ID": ID,
 							"Status":       config.PastStatus,
-						}).Info("Update video status from " + Items.Snippet.VideoStatus + " to past")
+						}).Info("Update video status from " + YoutubeData.Status + " to past")
 						YoutubeData.UpdateGroupYt(config.PastStatus)
 
 						engine.RemoveEmbed(ID, Bot)
@@ -208,9 +208,9 @@ func StartCheckYT(Group database.Group, Update bool) {
 							bit, err := YoutubeData.MarshalBinary()
 							if err != nil {
 								log.WithFields(log.Fields{
-									"agency":    Group.GroupName,
-									"channelID": YtChan.YtChannel,
-									"region":    YtChan.Region,
+									"Agency":    Group.GroupName,
+									"ChannelID": YtChan.YtChannel,
+									"Region":    YtChan.Region,
 								}).Error(err)
 							}
 
@@ -264,8 +264,8 @@ func StartCheckYT(Group database.Group, Update bool) {
 						if Items.LiveDetails.StartTime != YoutubeData.Schedul {
 							log.WithFields(log.Fields{
 								"VideoData ID": ID,
-								"old schdule":  YoutubeData.Schedul,
-								"new schdule":  Items.LiveDetails.StartTime,
+								"Old schdule":  YoutubeData.Schedul,
+								"New schdule":  Items.LiveDetails.StartTime,
 								"Status":       config.UpcomingStatus,
 							}).Info("Livestream schdule changed")
 
@@ -274,7 +274,6 @@ func StartCheckYT(Group database.Group, Update bool) {
 						}
 					}
 				}
-
 			}
 		}
 	}
@@ -524,7 +523,7 @@ func StartCheckYT(Group database.Group, Update bool) {
 							}
 						}
 
-					} else if Update {
+					} else if YoutubeCache.ID != 0 {
 						log.WithFields(log.Fields{
 							"Group":   Group.GroupName,
 							"Member":  Member.Name,
@@ -565,7 +564,7 @@ func StartCheckYT(Group database.Group, Update bool) {
 							log.WithFields(log.Fields{
 								"VideoData ID": ID,
 								"Status":       config.PastStatus,
-							}).Info("Update video status from " + Items.Snippet.VideoStatus + " to past")
+							}).Info("Update video status from " + YoutubeData.Status + " to past")
 							YoutubeData.UpdateYt(config.PastStatus)
 
 							engine.RemoveEmbed(ID, Bot)
@@ -628,8 +627,8 @@ func StartCheckYT(Group database.Group, Update bool) {
 							if Items.LiveDetails.StartTime != YoutubeData.Schedul {
 								log.WithFields(log.Fields{
 									"VideoData ID": ID,
-									"old schdule":  YoutubeData.Schedul,
-									"new schdule":  Items.LiveDetails.StartTime,
+									"Old schdule":  YoutubeData.Schedul,
+									"New schdule":  Items.LiveDetails.StartTime,
 									"Status":       config.UpcomingStatus,
 								}).Info("Livestream schdule changed")
 
