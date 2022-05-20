@@ -247,7 +247,7 @@ func StartCheckYT(Group database.Group) {
 						log.WithFields(log.Fields{
 							"Group":   Group.GroupName,
 							"Member":  Member.Name,
-							"VideoID": YoutubeCache,
+							"VideoID": YoutubeCache.VideoID,
 						}).Info("Update VideoID")
 
 						Data, err := engine.YtAPI([]string{YoutubeCache.VideoID})
