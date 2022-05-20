@@ -95,7 +95,7 @@ jobs:
       - name: Build and push youtube checker livestream
         uses: docker/build-push-action@v2
         with:
-          context: ./service/livestream/youtube/checker/
+          context: ./service/livestream/youtube/UpcomingChecker/
           push: true
           tags: justhumanz/go-simp-youtube-checker-livestream:${{ env.RELEASE_VERSION }}
           build-args: |
@@ -104,12 +104,30 @@ jobs:
       - name: Build and push youtube counter livestream
         uses: docker/build-push-action@v2
         with:
-          context: ./service/livestream/youtube/counter/
+          context: ./service/livestream/youtube/UpcomingCounter/
           push: true
           tags: justhumanz/go-simp-youtube-counter-livestream:${{ env.RELEASE_VERSION }}
           build-args: |
             BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}           
-      
+
+      - name: Build and push youtube PastTracker livestream
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/livestream/youtube/PastTracker/
+          push: true
+          tags: justhumanz/go-simp-youtube-past-tracker-livestream:${{ env.RELEASE_VERSION }}
+          build-args: |
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}      
+
+      - name: Build and push youtube LiveTracker livestream
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/livestream/youtube/LiveTracker/
+          push: true
+          tags: justhumanz/go-simp-youtube-live-tracker-livestream:${{ env.RELEASE_VERSION }}
+          build-args: |
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}      
+
       - name: Build and push twitch livestream
         uses: docker/build-push-action@v2
         with:
