@@ -4,6 +4,9 @@
     All fields automatically convert to markdown for GitHub Issues.
   </p>
 
+  <h3 class="title-preview">Preview</h3>
+  <div class="my-contents" v-html="html"></div>
+
   <div class="links">
     <a :href="url" target="_blank" rel="noopener noreferrer">Finish</a>
     <button type="button" class="back" @click="$emit(`back`, true)">
@@ -13,6 +16,7 @@
 </template>
 <script>
 import trim from "validator/lib/trim"
+import { marked } from "marked"
 export default {
   props: {
     vtuber: {
@@ -26,6 +30,7 @@ export default {
       type: Object,
     },
   },
+  emits: ["back"],
   mounted() {
     // const title = encodeURIComponent(
     //   `Add to ${this.group.GroupName ?? this.newGroup.GroupName}`
@@ -87,27 +92,41 @@ export default {
           `
             })
 
-        newGroup = `# New Group
+        newGroup = `### New Group
           \`\`\`
       Group_Name = "${this.newGroup.GroupName}"
       Group_Icon = "${this.newGroup.IconUrl}"
-
-      [Platforms]
+${
+  !this.newGroup.youtube && !this.newGroup.bilibili
+    ? ""
+    : `      [Platforms]
 
       ${platformYt}
 
       ${platformBili}
-      \`\`\``
+      `
+}\`\`\``
       }
 
       return this.trims(`${newGroup}
 
+### New Vtuber
       ${vtubers.join("\n\n")}
       `)
     },
+    html() {
+      const htmlData = marked(this.convert)
+      console.log(htmlData)
+      const getTag = /(<[^/][^>]+)(>)/gm
+      const scopeId = this.$options.__scopeId
+
+      return htmlData.replace(getTag, (match, p1, p2) => {
+        return p1 + ` ${scopeId}=""` + p2
+      })
+    },
     url() {
       const title = encodeURIComponent(
-        `Add to ${this.group.GroupName ?? this.newGroup.GroupName}`
+        `Add to ${this.group?.GroupName ?? this.newGroup?.GroupName}`
       )
       const issue = encodeURIComponent(this.convert)
 
@@ -133,6 +152,10 @@ export default {
   @apply my-2 text-lg font-semibold;
 }
 
+.title-preview {
+  @apply my-2 font-semibold;
+}
+
 .description-final {
   @apply my-2 text-gray-600;
 }
@@ -143,6 +166,18 @@ export default {
   a,
   button {
     @apply -translate-y-0.5 rounded-lg p-2 text-center font-semibold text-white shadow-md transition duration-200 ease-in-out first:bg-green-500 last:bg-red-600 hover:translate-y-0 hover:shadow-sm disabled:translate-y-0 disabled:opacity-70 disabled:shadow-none;
+  }
+}
+
+.my-contents {
+  @apply mb-4 space-y-2 overflow-y-auto rounded-md bg-slate-200 p-2 md:h-72 md:w-3/6;
+
+  h3 {
+    @apply text-lg font-semibold;
+  }
+
+  pre {
+    @apply rounded-md bg-slate-300 py-1 px-2 text-xs;
   }
 }
 </style>

@@ -13,10 +13,15 @@ export default {
       type: Array,
       default: [],
     },
+    newVtubers: {
+      type: Array,
+      default: [],
+    },
   },
   emits: ["back", "vtuber"],
   async mounted() {
-    this.addVtuber()
+    if (this.newVtubers.length > 0) this.assignNewVtuber(this.newVtubers)
+    else this.addVtuber()
   },
   methods: {
     async addVtuber(e = null) {
@@ -130,6 +135,8 @@ export default {
     async assignNewVtuber(vtubers) {
       if (!vtubers) return
 
+      console.log(vtubers)
+
       for (const vtuber of vtubers) {
         this.vtubers.push({ id: this.vtubers.length, error: false })
       }
@@ -145,23 +152,29 @@ export default {
 
       for (const form of vtuberForms) {
         const Inputs = form.querySelectorAll("input")
+        const vtuberText = form.querySelector(".vtuber-link__text")
 
+        vtuberText.innerText = vtubers[index].name_en
         Inputs[0].value = vtubers[index].nickname
         Inputs[1].value = vtubers[index].name_en
-        Inputs[2].value = "" ?? vtubers[index].name_jp
-        Inputs[3].value = "" ?? vtubers[index].fanbase
+        Inputs[2].value = vtubers[index].name_jp
+        Inputs[3].value = vtubers[index].fanbase
         Inputs[4].value = vtubers[index].region
-        Inputs[5].value = "" ?? vtubers[index].platform.youtube?.channel_id
-        Inputs[6].value = "" ?? vtubers[index].platform.twitch?.username
-        Inputs[7].value = "" ?? vtubers[index].platform.bilibili?.space_id
-        Inputs[8].value = "" ?? vtubers[index].platform.bilibili?.live_id
-        Inputs[9].value = "" ?? vtubers[index].platform.bilibili?.bili_fanart
-        Inputs[9].value = "" ?? vtubers[index].twitter?.username
-        Inputs[10].value = "" ?? vtubers[index].twitter?.fanart_hashtag
-        Inputs[11].value = "" ?? vtubers[index].twitter?.lewd_hashtag
+        Inputs[5].value = vtubers[index].platform.youtube?.channel_id
+        Inputs[6].value = vtubers[index].platform.twitch?.username
+        Inputs[7].value = vtubers[index].platform.bilibili?.space_id
+        Inputs[8].value = vtubers[index].platform.bilibili?.live_id
+        Inputs[9].value = vtubers[index].platform.bilibili?.bili_fanart
+        Inputs[10].value = vtubers[index].twitter?.username
+        Inputs[11].value = vtubers[index].twitter?.fanart_hashtag
+        Inputs[12].value = vtubers[index].twitter?.lewd_hashtag
 
         index++
       }
+
+      // get submit button
+      const submitButton = document.querySelector(".submit")
+      submitButton.disabled = this.vtubers.find((vtuber) => vtuber.error)
     },
   },
 }

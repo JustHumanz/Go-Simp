@@ -13,26 +13,17 @@ import FinalStep from "../components/NewVtuber/FinalStep.vue"
     </span>
   </div>
   <div class="form">
-    <transition
+    <transition-group
       leave-from-class="slide-center"
-      leave-to-class="slide-left"
+      :leave-to-class="step > oldStep ? 'slide-left' : 'slide-right'"
       leave-active-class="slide-active"
-      enter-from-class="slide-left"
+      :enter-from-class="oldStep < step ? 'slide-right' : 'slide-left'"
       enter-to-class="slide-center"
       enter-active-class="slide-active"
     >
       <div v-if="step === 1" class="select-group" ref="container">
         <group-page @group="getGroup" :groups="groups" />
       </div>
-    </transition>
-    <transition
-      :enter-from-class="oldStep === 1 ? 'slide-right' : 'slide-left'"
-      enter-to-class="slide-center"
-      enter-active-class="slide-active"
-      leave-from-class="slide-center"
-      :leave-to-class="step === 3 ? 'slide-left' : 'slide-right'"
-      leave-active-class="slide-active"
-    >
       <div v-if="step === 2" class="create-group" ref="container">
         <create-group
           @group="newGroupfunction"
@@ -41,32 +32,15 @@ import FinalStep from "../components/NewVtuber/FinalStep.vue"
           :NewGroup="newGroup"
         />
       </div>
-    </transition>
-    <transition
-      :enter-from-class="oldStep < 3 ? 'slide-right' : 'slide-left'"
-      enter-to-class="slide-center"
-      enter-active-class="slide-active"
-      leave-from-class="slide-center"
-      :leave-to-class="step === 4 ? 'slide-left' : 'slide-right'"
-      leave-active-class="slide-active"
-    >
       <div v-if="step === 3">
         <vtuber-form
           :group="group ? group : newGroup"
           :nicknames="nicknames"
+          :newVtubers="newVtuber"
           @back="backAction"
           @vtuber="newVtuberFunction"
         />
       </div>
-    </transition>
-    <transition
-      enter-from-class="slide-right"
-      enter-to-class="slide-center"
-      enter-active-class="slide-active"
-      leave-from-class="slide-center"
-      leave-to-class="slide-right"
-      leave-active-class="slide-active"
-    >
       <div v-if="step === 4">
         <final-step
           :group="group"
@@ -75,7 +49,7 @@ import FinalStep from "../components/NewVtuber/FinalStep.vue"
           @back="backAction"
         />
       </div>
-    </transition>
+    </transition-group>
   </div>
 </template>
 
@@ -95,7 +69,7 @@ export default {
       newGroup: null,
       newVtuber: [],
       step: 1,
-      oldStep: 0,
+      oldStep: 1,
       groups: [],
       nicknames: [],
     }
@@ -108,6 +82,19 @@ export default {
     this.$watch(
       () => this.step,
       (newValue, oldValue) => (this.oldStep = oldValue)
+    )
+
+    this.$watch(
+      () => this.group,
+      () => {
+        if (this.newVtuber.length > 0) {
+          this.newVtuber = []
+        }
+
+        if (this.group) {
+          this.newGroup = null
+        }
+      }
     )
   },
   methods: {
@@ -155,7 +142,7 @@ export default {
       this.step = 4
     },
     backAction() {
-      if (this.group) return (this.step = 1)
+      if (this.group && this.step == 3) return (this.step = 1)
       // if (this.step === 2 && this.newGroup) this.newGroup = null
       this.step -= 1
     },
