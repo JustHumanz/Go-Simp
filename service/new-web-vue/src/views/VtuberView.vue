@@ -1,5 +1,6 @@
 <script setup>
 import AmeLoading from "../components/AmeComp/AmeLoading.vue"
+import AmeError from "../components/AmeComp/AmeError.vue"
 import VtuberHeader from "../components/VtuberDetails/VtuberHeader.vue"
 import Detail from "../components/VtuberDetails/Detail.vue"
 import YoutubeCount from "../components/VtuberDetails/YoutubeCount.vue"
@@ -19,6 +20,13 @@ import TwitterCount from "../components/VtuberDetails/TwitterCount.vue"
     </span>
   </div>
   <AmeLoading v-if="!vtuber && !error_status" class="!h-screen" />
+  <AmeError
+    v-if="!vtuber && error_status && error_status === 404"
+    type="error"
+    img="laptop"
+    title="Your vtuber is not available"
+    :description="`Check another available vtuber, or you can request a member vtuber ${link_request}`"
+  />
   <section class="vtuber-details" v-if="vtuber">
     <VtuberHeader :vtuber="vtuber" />
     <Detail :vtuber="vtuber" />
@@ -97,6 +105,11 @@ export default {
     console.log(this.vtuber)
 
     document.title = this.vtuber.EnName + " - Vtuber Details"
+  },
+  computed: {
+    link_request() {
+      return `<a href="/new-vtuber" id="router-link" class="ame-error-text__link">here</a>`
+    },
   },
 }
 </script>

@@ -37,13 +37,6 @@ export default {
         immediate: true,
       }
     )
-
-    document.body.addEventListener("click", (e) => {
-      if (e.target.id === "router-link") {
-        e.preventDefault()
-        this.$router.push(e.target.getAttribute("href"))
-      }
-    })
   },
   computed: {
     rendered() {

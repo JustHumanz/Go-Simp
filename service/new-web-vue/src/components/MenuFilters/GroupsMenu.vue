@@ -75,8 +75,6 @@
 </template>
 
 <script>
-import axios from "axios"
-import Config from "../../config.json"
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faUsers, faUser } from "@fortawesome/free-solid-svg-icons"
 

@@ -112,12 +112,9 @@
         Request your favorite vtuber to be here.
       </p>
     </div>
-    <a
-      href="https://github.com/JustHumanz/Go-Simp/issues/new?assignees=JustHumanz&labels=enhancement&template=add_vtuber.md&title=Add+%5BVtuber+Nickname%5D+from+%5BGroup%2FAgency%5D"
-      class="ending-button"
-      target="_blank"
-      >Request Here</a
-    >
+    <router-link to="/new-vtuber" class="ending-button">
+      Request Here
+    </router-link>
   </section>
 </template>
 
