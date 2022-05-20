@@ -66,6 +66,15 @@ var (
 				//Counter: 1,
 				CronJob: 1, //every 1 minutes
 			},
+			{
+				Name: config.YoutubeLiveTrackerService,
+				//Counter: 1,
+				CronJob: 15, //every 15 minutes
+			}, {
+				Name: config.YoutubePastTrackerService,
+				//Counter: 1,
+				CronJob: 60, //every 1h
+			},
 		},
 	}
 )
