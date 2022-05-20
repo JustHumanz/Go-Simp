@@ -59,7 +59,7 @@ var (
 			{
 				Name: config.YoutubeCheckerService,
 				//Counter: 1,
-				CronJob: 5, //every 15 minutes
+				CronJob: 5, //every 5 minutes
 			},
 			{
 				Name: config.YoutubeCounterService,
