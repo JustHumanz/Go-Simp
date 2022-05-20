@@ -20,8 +20,12 @@ RUN go build -o fe ../service/frontend/
 #live
 RUN go build -o livebili ../service/livestream/bilibili/live
 RUN go build -o spacebili ../service/livestream/bilibili/space
-RUN go build -o liveyoutube ../service/livestream/youtube/checker
-RUN go build -o liveyoutube_counter ../service/livestream/youtube/counter
+
+RUN go build -o liveyoutube_upcoming_counter ../service/livestream/youtube/UpcomingCounter
+RUN go build -o liveyoutube_upcoming_checker ../service/livestream/youtube/UpcomingChecker
+RUN go build -o liveyoutube_live_tracker ../service/livestream/youtube/LiveTracker
+RUN go build -o liveyoutube_past_tracker ../service/livestream/youtube/PastTracker
+
 RUN go build -o livetwitch ../service/livestream/twitch
 
 #migrate

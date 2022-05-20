@@ -157,7 +157,7 @@ func (Data *Member) GetYtLiveStream(status string) ([]LiveStream, error) {
 		if status == config.PastStatus {
 			Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id where VtuberMember.id=?  AND Youtube.Status=? Order by EndStream DESC Limit 3"
 		} else if status == config.UpcomingStatus {
-			Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id where VtuberMember.id=? AND Youtube.Status=? Order by PublishedAt DESC Limit 1"
+			Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id where VtuberMember.id=? AND Youtube.Status=? Order by PublishedAt DESC Limit 10"
 		} else {
 			Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id where VtuberMember.id=?  AND Youtube.Status=? Order by ScheduledStart DESC Limit 1"
 		}
