@@ -73,13 +73,10 @@ func main() {
 type checkYtCekJob struct {
 	agency  []database.Group
 	Reverse bool
-	Counter int
 }
 
 func ReqRunningJob(client pilot.PilotServiceClient) {
-	YoutubeChecker := &checkYtCekJob{
-		Counter: 1,
-	}
+	YoutubeChecker := &checkYtCekJob{}
 
 	hostname := engine.GetHostname()
 
@@ -126,7 +123,6 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 			}).Info(res.Message)
 		}
 
-		YoutubeChecker.Counter++
 		time.Sleep(1 * time.Minute)
 	}
 }
