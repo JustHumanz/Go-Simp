@@ -166,6 +166,14 @@ import PixivLogo from "../icons/PixivLogo.vue"
           {{ vtuber.Fanbase }}
         </span>
       </div>
+
+      <div class="detail-info-item">
+        <span class="detail-info-item__title"></span>
+        <a href="#" onclick="return false" class="detail-info-item__value">
+          <font-awesome-icon icon="triangle-exclamation" class="fa-fw mr-1" />
+          Send issue
+        </a>
+      </div>
     </div>
   </div>
   <hr class="m-2" />
@@ -187,7 +195,7 @@ export default {
       return this.vtuber.JpName
         ? this.vtuber.JpName.split("/")[0]
             .split(" ")
-            .reduce((acc, cur) => (acc + acc !== "" ? "・" : "" + cur), "")
+            .reduce((acc, cur) => `${acc}${acc !== "" ? "・" : ""}${cur}`, "")
         : this.vtuber.EnName.split(" ").reduce((acc, cur) => acc + cur, "")
     },
   },
@@ -199,14 +207,14 @@ export default {
   @apply mx-2 grid gap-2 transition-colors duration-100 ease-in-out md:mx-0;
 
   @media (min-width: 768px) {
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: 1.75fr auto 1fr;
   }
 
   &-link {
     @apply flex h-max flex-wrap justify-center self-center text-sm font-semibold;
 
     &__link {
-      @apply m-0.5 flex items-center justify-center rounded-full px-2.5 py-1 text-white hover:brightness-90;
+      @apply m-0.5 flex items-center justify-center rounded-full px-2.5 py-1 text-white transition duration-300 ease-in-out hover:brightness-90;
 
       &-icon {
         @apply mr-2;

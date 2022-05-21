@@ -107,17 +107,6 @@ export default {
       { immediate: true }
     )
 
-    // this.$watch(
-    //   () => this.search_query,
-    //   () => {
-    //     window.scrollTo({
-    //       top: 0,
-    //     })
-    //     this.$emit("search", this.search_query)
-    //   },
-    //   { immediate: true }
-    // )
-
     this.$watch(
       () => this.$route,
       (a, b) => {
@@ -222,6 +211,7 @@ export default {
   }
 
   &-item {
+    @apply bg-blue-400 dark:bg-slate-700;
     &__img {
       @apply inline-block w-5 min-w-[1.25rem] rounded-md object-contain drop-shadow-md;
     }
@@ -247,7 +237,7 @@ export default {
         @apply rotate-0;
       }
       .navbar-submenu-items {
-        @apply flex flex-col;
+        @apply h-[var(--totalHeight)] scale-y-100;
       }
     }
   }
@@ -255,7 +245,8 @@ export default {
 
 .navbar-submenu {
   &-items {
-    @apply hidden;
+    transition-property: transform height;
+    @apply flex h-0 origin-top scale-y-0 flex-col duration-200 ease-in-out;
   }
 
   &-item {

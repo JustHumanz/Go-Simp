@@ -14,7 +14,6 @@ import (
 	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
 	"github.com/bwmarrin/discordgo"
 	"github.com/google/uuid"
-	"github.com/robfig/cron/v3"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -65,11 +64,6 @@ func main() {
 
 	database.Start(configfile)
 
-	c := cron.New()
-	c.Start()
-	c.AddFunc("0 */2 * * *", func() {
-		engine.ExTknList = nil
-	})
 	log.Info("Enable " + ServiceName)
 	go pilot.RunHeartBeat(gRCPconn, ServiceName, ServiceUUID)
 	go ReqRunningJob(gRCPconn)
@@ -79,57 +73,29 @@ func main() {
 type checkYtCekJob struct {
 	agency  []database.Group
 	Reverse bool
-	Update  bool
-	Counter int
 }
 
 func ReqRunningJob(client pilot.PilotServiceClient) {
-	YoutubeChecker := &checkYtCekJob{
-		Counter: 1,
-		Update:  true,
-	}
+	YoutubeChecker := &checkYtCekJob{}
+
+	hostname := engine.GetHostname()
+
 	for {
-
-		if YoutubeChecker.Counter == 15 {
-			YoutubeChecker.Update = true
-			YoutubeChecker.Counter = 1
+		res, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
+			Service:     ServiceName,
+			Message:     "New",
+			ServiceUUID: ServiceUUID,
+			Hostname:    hostname,
+		})
+		if err != nil {
+			log.Error(err)
 		}
-
-		res := func() *pilot.RunJob {
-			log.WithFields(log.Fields{
-				"Service":  ServiceName,
-				"Running":  true,
-				"YtUpdate": YoutubeChecker.Update,
-			}).Info("request for running job")
-
-			if YoutubeChecker.Update {
-				tmp, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
-					Service:     ServiceName,
-					Message:     "Update",
-					ServiceUUID: ServiceUUID,
-				})
-				if err != nil {
-					log.Error(err)
-				}
-				return tmp
-			} else {
-				tmp, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
-					Service:     ServiceName,
-					Message:     "New",
-					ServiceUUID: ServiceUUID,
-				})
-				if err != nil {
-					log.Error(err)
-				}
-				return tmp
-			}
-		}()
 
 		if res.Run {
 			log.WithFields(log.Fields{
-				"Service": ServiceName,
-				"Running": true,
-				"UUID":    ServiceUUID,
+				"Running":        true,
+				"UUID":           ServiceUUID,
+				"Agency Payload": res.VtuberMetadata,
 			}).Info(res.Message)
 
 			YoutubeChecker.agency = engine.UnMarshalPayload(res.VtuberPayload)
@@ -147,20 +113,16 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 			})
 
 			log.WithFields(log.Fields{
-				"Service": ServiceName,
 				"Running": false,
 				"UUID":    ServiceUUID,
 			}).Info("reporting job was done")
 		} else {
 			log.WithFields(log.Fields{
-				"Service": ServiceName,
 				"Running": false,
 				"UUID":    ServiceUUID,
 			}).Info(res.Message)
 		}
 
-		YoutubeChecker.Counter++
-		YoutubeChecker.Update = false
 		time.Sleep(1 * time.Minute)
 	}
 }
@@ -169,12 +131,12 @@ func (i *checkYtCekJob) Run() {
 	if i.Reverse {
 		for j := len(i.agency) - 1; j >= 0; j-- {
 			Grp := i.agency
-			StartCheckYT(Grp[j], i.Update)
+			StartCheckYT(Grp[j])
 		}
 
 	} else {
 		for _, G := range i.agency {
-			StartCheckYT(G, i.Update)
+			StartCheckYT(G)
 		}
 	}
 }

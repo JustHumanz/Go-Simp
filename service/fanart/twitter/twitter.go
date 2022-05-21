@@ -88,18 +88,15 @@ func main() {
 
 func ReqRunningJob(client pilot.PilotServiceClient) {
 	Twit := &checkTwJob{}
+	hostname := engine.GetHostname()
 
 	for {
-		log.WithFields(log.Fields{
-			"Service": ServiceName,
-			"Running": false,
-			"UUID":    ServiceUUID,
-		}).Info("request for running job")
 
 		res, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
 			Service:     ServiceName,
 			Message:     "Request",
 			ServiceUUID: ServiceUUID,
+			Hostname:    hostname,
 		})
 		if err != nil {
 			log.Error(err)
@@ -107,9 +104,9 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 
 		if res.Run {
 			log.WithFields(log.Fields{
-				"Service": ServiceName,
-				"Running": true,
-				"UUID":    ServiceUUID,
+				"Running":        true,
+				"UUID":           ServiceUUID,
+				"Agency Payload": res.VtuberMetadata,
 			}).Info(res.Message)
 
 			Twit.Agency = engine.UnMarshalPayload(res.VtuberPayload)
@@ -127,14 +124,12 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 			})
 
 			log.WithFields(log.Fields{
-				"Service": ServiceName,
 				"Running": false,
 				"UUID":    ServiceUUID,
 			}).Info("reporting job was done")
 
 		} else {
 			log.WithFields(log.Fields{
-				"Service": ServiceName,
 				"Running": res.Run,
 				"UUID":    ServiceUUID,
 			}).Info(res.Message)

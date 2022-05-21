@@ -589,7 +589,8 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							Start := durafmt.Parse(expiresAt.Sub(Data.Schedul.In(loc))).LimitFirstN(1)
 							MsgEmbed, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
 								SetAuthor(VtuberName, Data.Member.BiliBiliAvatar, BiliBiliAccount).
-								SetTitle(Data.Title).
+								SetTitle("Live right now").
+								SetDescription(Data.Title).
 								SetThumbnail(Data.Group.IconURL).
 								SetImage(Data.Thumb).
 								SetURL(BiliBiliURL).

@@ -244,9 +244,6 @@ library.add(
 export default {
   data() {
     return {
-      activeListMenu: null,
-      activeSubMenu: null,
-      menuDocs: false,
       isActiveVtuber: false,
       isActiveDocs: false,
       theme: null,
@@ -254,20 +251,6 @@ export default {
   },
   async created() {
     this.getClickMenu()
-    this.unfocusMenu()
-
-    // window.addEventListener("mousedown", (e) => {
-    //   const target = e.target.closest(".navbar-filter-item__link.sub-menu")
-
-    //   if (!target) return
-
-    //   if (this.activeSubMenu === target) {
-    //     target.parentElement.parentElement.parentElement.firstElementChild.focus()
-    //     this.activeSubMenu = null
-    //   } else {
-    //     this.activeSubMenu = target
-    //   }
-    // })
 
     this.theme = localStorage.getItem("theme")
 
@@ -301,95 +284,15 @@ export default {
   methods: {
     getClickMenu() {
       document.body.addEventListener("click", (e) => {
+        if (e.target.id === "router-link") {
+          e.preventDefault()
+          this.$router.push(e.target.getAttribute("href"))
+        }
+
         if (e.target.closest(".navbar-link")) {
           e.target.closest(".navbar-link").blur()
         }
-
-        if (this.$route.path.includes("/docs")) {
-          if (e.target.closest(".docs-menu")) {
-            const docsMenu = e.target.closest(".docs-menu")
-
-            this.menuDocs = !this.menuDocs
-            if (!this.menuDocs && document.activeElement === docsMenu) {
-              docsMenu.blur()
-            }
-          } else if (e.target.closest(".tab-list__link")) {
-            document.activeElement.blur()
-            this.menuDocs = false
-          } else this.menuDocs = false
-        }
-
-        if (!this.$route.path.includes("/vtubers")) {
-          this.activeListMenu = null
-          return
-        }
-
-        if (e.target.closest(".navbar-filter__link")) {
-          const navbarFilter = e.target.closest(".navbar-filter__link")
-
-          const liNavbarFilter = navbarFilter.parentElement
-
-          if (liNavbarFilter.classList.contains("disabled")) {
-            navbarFilter.blur()
-            return
-          }
-
-          switch (this.activeListMenu) {
-            case navbarFilter:
-              this.activeListMenu.blur()
-              this.activeListMenu = null
-              break
-            case null:
-              this.activeListMenu = navbarFilter
-              break
-            default:
-              this.activeListMenu = navbarFilter
-              break
-          }
-        } else if (e.target.closest(".navbar-filter-item__link")) {
-          const navbarFilterItem = e.target.closest(".navbar-filter-item__link")
-
-          if (!navbarFilterItem.classList.contains("sub-menu")) {
-            this.activeListMenu = null
-            navbarFilterItem.blur()
-          }
-        } else if (e.target.closest(".navbar-submenu-item__link")) {
-          const navbarSubItem = e.target.closest(".navbar-submenu-item__link")
-
-          this.activeListMenu = null
-          navbarSubItem.blur()
-        } else if (e.target.closest(".nav-search")) {
-          if (this.activeListMenu !== null) {
-            console.log("closing menu")
-            this.activeListMenu = null
-          }
-
-          const navbarSearchItem = e.target.closest(".nav-search")
-
-          navbarSearchItem.children[1].focus()
-        } else {
-          if (this.activeListMenu === null) return
-          console.log("closing menu")
-          this.activeListMenu = null
-        }
       })
-    },
-    unfocusMenu() {
-      // when document unfocus
-      document.onblur = (e) => {
-        if (
-          this.activeListMenu &&
-          this.activeListMenu === document.activeElement
-        )
-          this.activeListMenu.blur()
-        else if (
-          !document.activeElement.classList.contains("nav-search__input")
-        )
-          document.activeElement.blur()
-
-        this.menuDocs = false
-        this.activeListMenu = null
-      }
     },
 
     darkMode() {

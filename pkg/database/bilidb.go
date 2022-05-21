@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/go-redis/redis/v8"
@@ -67,19 +68,13 @@ func (Data *Member) GetBlLiveStream(status string) (LiveStream, error) {
 		defer rows.Close()
 
 		for rows.Next() {
-			var list LiveStream
-			err = rows.Scan(&list.ID, &list.Member.BiliBiliRoomID, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.Viewers, &list.End, &list.Member.ID)
+			err = rows.Scan(&Live.ID, &Live.Member.BiliBiliRoomID, &Live.Status, &Live.Title, &Live.Thumb, &Live.Desc, &Live.Published, &Live.Schedul, &Live.Viewers, &Live.End, &Live.Member.ID)
 			if err != nil {
 				return LiveStream{}, err
 			}
 		}
 
-		err = LiveCache.Set(ctx, Key, Live, 0).Err()
-		if err != nil {
-			return LiveStream{}, err
-		}
-
-		err = LiveCache.Expire(ctx, Key, config.YtGetStatusTTL).Err()
+		err = LiveCache.Set(ctx, Key, Live, config.YtGetStatusTTL).Err()
 		if err != nil {
 			return LiveStream{}, err
 		}
@@ -102,16 +97,19 @@ func (Data *Member) GetBlLiveStream(status string) (LiveStream, error) {
 func (Data *Group) GetBlLiveStream(status string) ([]LiveStream, error) {
 	var LiveStreamData []LiveStream
 	for _, Member := range Data.Members {
-		Live, err := Member.GetBlLiveStream(status)
-		if err != nil {
-			return nil, err
-		}
+		if Member.BiliBiliID != 0 {
+			Live, err := Member.GetBlLiveStream(status)
+			if err != nil {
+				return nil, err
+			}
 
-		if Live.ID == 0 {
-			continue
-		}
+			if Live.ID == 0 {
+				continue
+			}
 
-		LiveStreamData = append(LiveStreamData, Live)
+			LiveStreamData = append(LiveStreamData, Live)
+
+		}
 	}
 
 	return LiveStreamData, nil
@@ -166,25 +164,35 @@ func (Data LiveStream) InputSpaceVideo() error {
 		return err
 	}
 
-	_, err = res.LastInsertId()
+	id, err := res.LastInsertId()
 	if err != nil {
 		return err
 	}
+
+	Data.AddBiliBiliSpaceToCache(id)
+
 	return nil
 }
 
 //CheckVideo Check New video from SpaceBiliBili
-func (Data LiveStream) CheckVideo() (bool, int) {
+func (Data LiveStream) SpaceCheckVideo() error {
 	var tmp int
 	row := DB.QueryRow("SELECT id FROM Vtuber.BiliBili WHERE VideoID=? AND VtuberMember_id=?", Data.VideoID, Data.Member.ID)
 	err := row.Scan(&tmp)
 	if err == sql.ErrNoRows {
-		return true, 0
+		log.WithFields(log.Fields{
+			"Agency": Data.Group.GroupName,
+			"Vtuber": Data.Member.Name,
+		}).Info("New video uploaded")
+		err := Data.InputSpaceVideo()
+		if err != nil {
+			return err
+		}
+
 	} else if err != nil {
-		return false, 0
-	} else {
-		return false, tmp
+		return err
 	}
+	return nil
 }
 
 //UpdateView Update SpaceBiliBili data
@@ -198,4 +206,22 @@ func (Data LiveStream) UpdateSpaceViews(id int) error {
 		return err
 	}
 	return nil
+}
+
+//Add new bilibili space video id into cache layer
+func (Data LiveStream) AddBiliBiliSpaceToCache(id int64) {
+	key := fmt.Sprintf("cache-layer-%s", Data.VideoID)
+	log.WithFields(log.Fields{
+		"Key": key,
+	}).Info("Add space bilibili into cache")
+
+	Data.ID = id
+	bytelive, err := json.Marshal(Data)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = LiveCache.Set(context.Background(), key, bytelive, 10*time.Minute).Err()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

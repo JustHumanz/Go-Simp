@@ -72,10 +72,11 @@ func main() {
 
 	configfile.InitConf()
 
+	hostname := engine.GetHostname()
+
 	go func() {
 		for {
 			log.WithFields(log.Fields{
-				"Service": ServiceName,
 				"Running": false,
 				"UUID":    ServiceUUID,
 			}).Info("request for running job")
@@ -84,6 +85,7 @@ func main() {
 				Service:     ServiceName,
 				Message:     "Request",
 				ServiceUUID: ServiceUUID,
+				Hostname:    hostname,
 			})
 			if err != nil {
 				log.Error(err)

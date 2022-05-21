@@ -100,17 +100,15 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 		VideoIDTMP: make(map[string]string),
 	}
 
+	hostname := engine.GetHostname()
+
 	for {
-		log.WithFields(log.Fields{
-			"Service": ServiceName,
-			"Running": false,
-			"UUID":    ServiceUUID,
-		}).Info("request for running job")
 
 		res, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
 			Service:     ServiceName,
 			Message:     "Request",
 			ServiceUUID: ServiceUUID,
+			Hostname:    hostname,
 		})
 		if err != nil {
 			log.Error(err)
@@ -118,8 +116,9 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 
 		if res.Run {
 			log.WithFields(log.Fields{
-				"Service": ServiceName,
-				"Running": true,
+				"Running":        true,
+				"UUID":           ServiceUUID,
+				"Agency Payload": res.VtuberMetadata,
 			}).Info(res.Message)
 
 			SpaceBiliBili.agency = engine.UnMarshalPayload(res.VtuberPayload)
@@ -136,11 +135,15 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 				ServiceUUID: ServiceUUID,
 			})
 			log.WithFields(log.Fields{
-				"Service": ServiceName,
 				"Running": false,
 				"UUID":    ServiceUUID,
 			}).Info("reporting job was done")
 
+		} else {
+			log.WithFields(log.Fields{
+				"Running": false,
+				"UUID":    ServiceUUID,
+			}).Info(res.Message)
 		}
 
 		time.Sleep(1 * time.Minute)
@@ -167,19 +170,39 @@ func (i *checkBlSpaceJob) Run() {
 					PushVideo engine.SpaceVideo
 				)
 
-				body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/space/arc/search?mid="+strconv.Itoa(Data.Member.BiliBiliID)+"&ps="+strconv.Itoa(config.GoSimpConf.LimitConf.SpaceBiliBili), nil)
-				if curlerr != nil {
-					log.WithFields(log.Fields{
-						"Agency": Group.GroupName,
-						"Vtuber": Member.Name,
-					}).Error(curlerr)
-					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-						Message:     curlerr.Error(),
-						Service:     ServiceName,
-						ServiceUUID: ServiceUUID,
-					})
-					return
-				}
+				body := func() []byte {
+					if config.GoSimpConf.MultiTOR != "" {
+						body, curlerr := network.CoolerCurl("https://api.bilibili.com/x/space/arc/search?mid="+strconv.Itoa(Data.Member.BiliBiliID)+"&ps="+strconv.Itoa(config.GoSimpConf.LimitConf.SpaceBiliBili), nil)
+						if curlerr != nil {
+							log.WithFields(log.Fields{
+								"Agency": Group.GroupName,
+								"Vtuber": Member.Name,
+							}).Error(curlerr)
+							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+								Message:     curlerr.Error(),
+								Service:     ServiceName,
+								ServiceUUID: ServiceUUID,
+							})
+						}
+						return body
+
+					} else {
+						body, curlerr := network.Curl("https://api.bilibili.com/x/space/arc/search?mid="+strconv.Itoa(Data.Member.BiliBiliID)+"&ps="+strconv.Itoa(config.GoSimpConf.LimitConf.SpaceBiliBili), nil)
+						if curlerr != nil {
+							log.WithFields(log.Fields{
+								"Agency": Group.GroupName,
+								"Vtuber": Member.Name,
+							}).Error(curlerr)
+							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+								Message:     curlerr.Error(),
+								Service:     ServiceName,
+								ServiceUUID: ServiceUUID,
+							})
+						}
+						return body
+					}
+
+				}()
 
 				err := json.Unmarshal(body, &PushVideo)
 				if err != nil {
@@ -197,27 +220,37 @@ func (i *checkBlSpaceJob) Run() {
 					}
 
 					for _, video := range PushVideo.Data.List.Vlist {
-						if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|翻唱|mv|歌曲)", strings.ToLower(video.Title)); Cover || video.Typeid == 31 {
-							Videotype = "Covering"
-						} else {
-							Videotype = "Streaming"
-						}
+						SpaceCache := database.CheckVideoIDFromCache(video.Bvid)
+						if SpaceCache.ID == 0 {
+							if Cover, _ := regexp.MatchString("(?m)(cover|song|feat|music|翻唱|mv|歌曲)", strings.ToLower(video.Title)); Cover || video.Typeid == 31 {
+								Videotype = "Covering"
+							} else {
+								Videotype = "Streaming"
+							}
 
-						Data.AddVideoID(video.Bvid).SetType(Videotype).
-							UpdateTitle(video.Title).
-							UpdateThumbnail(video.Pic).UpdateSchdule(time.Unix(int64(video.Created), 0)).
-							UpdateViewers(strconv.Itoa(video.Play)).UpdateLength(video.Length).SetState(config.SpaceBili)
-						new, id := Data.CheckVideo()
-						if new {
-							log.WithFields(log.Fields{
-								"Vtuber": Data.Member.Name,
-							}).Info("New video uploaded")
+							Data.AddVideoID(video.Bvid).SetType(Videotype).
+								UpdateTitle(video.Title).
+								UpdateThumbnail(video.Pic).UpdateSchdule(time.Unix(int64(video.Created), 0)).
+								UpdateViewers(strconv.Itoa(video.Play)).UpdateLength(video.Length).SetState(config.SpaceBili)
 
-							Data.InputSpaceVideo()
-							video.VideoType = Videotype
-							engine.SendLiveNotif(Data, Bot)
+							err := Data.SpaceCheckVideo()
+							if err != nil {
+								log.WithFields(log.Fields{
+									"Agency": Data.Group.GroupName,
+									"Vtuber": Data.Member.Name,
+								}).Info("New video uploaded")
+
+								video.VideoType = Videotype
+								engine.SendLiveNotif(Data, Bot)
+							}
 						} else {
-							Data.UpdateSpaceViews(id)
+							err := SpaceCache.UpdateSpaceViews(int(SpaceCache.ID))
+							if err != nil {
+								log.WithFields(log.Fields{
+									"Agency": Data.Group.GroupName,
+									"Vtuber": Data.Member.Name,
+								}).Error(err)
+							}
 						}
 					}
 					i.AddVideoID(Member.Name, FirstVideoID)

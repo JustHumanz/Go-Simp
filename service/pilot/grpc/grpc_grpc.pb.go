@@ -25,8 +25,8 @@ type PilotServiceClient interface {
 	//Get agency payload for non scaling service only
 	GetAgencyPayload(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*AgencyPayload, error)
 	HeartBeat(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (PilotService_HeartBeatClient, error)
-	MetricReport(ctx context.Context, in *Metric, opts ...grpc.CallOption) (*Empty, error)
-	ReportError(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*Empty, error)
+	MetricReport(ctx context.Context, in *Metric, opts ...grpc.CallOption) (*Message, error)
+	ReportError(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*Message, error)
 }
 
 type pilotServiceClient struct {
@@ -80,7 +80,7 @@ func (c *pilotServiceClient) HeartBeat(ctx context.Context, in *ServiceMessage, 
 }
 
 type PilotService_HeartBeatClient interface {
-	Recv() (*Empty, error)
+	Recv() (*Message, error)
 	grpc.ClientStream
 }
 
@@ -88,16 +88,16 @@ type pilotServiceHeartBeatClient struct {
 	grpc.ClientStream
 }
 
-func (x *pilotServiceHeartBeatClient) Recv() (*Empty, error) {
-	m := new(Empty)
+func (x *pilotServiceHeartBeatClient) Recv() (*Message, error) {
+	m := new(Message)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
 	return m, nil
 }
 
-func (c *pilotServiceClient) MetricReport(ctx context.Context, in *Metric, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *pilotServiceClient) MetricReport(ctx context.Context, in *Metric, opts ...grpc.CallOption) (*Message, error) {
+	out := new(Message)
 	err := c.cc.Invoke(ctx, "/pilot.PilotService/MetricReport", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -105,8 +105,8 @@ func (c *pilotServiceClient) MetricReport(ctx context.Context, in *Metric, opts 
 	return out, nil
 }
 
-func (c *pilotServiceClient) ReportError(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *pilotServiceClient) ReportError(ctx context.Context, in *ServiceMessage, opts ...grpc.CallOption) (*Message, error) {
+	out := new(Message)
 	err := c.cc.Invoke(ctx, "/pilot.PilotService/ReportError", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -125,8 +125,8 @@ type PilotServiceServer interface {
 	//Get agency payload for non scaling service only
 	GetAgencyPayload(context.Context, *ServiceMessage) (*AgencyPayload, error)
 	HeartBeat(*ServiceMessage, PilotService_HeartBeatServer) error
-	MetricReport(context.Context, *Metric) (*Empty, error)
-	ReportError(context.Context, *ServiceMessage) (*Empty, error)
+	MetricReport(context.Context, *Metric) (*Message, error)
+	ReportError(context.Context, *ServiceMessage) (*Message, error)
 	mustEmbedUnimplementedPilotServiceServer()
 }
 
@@ -146,10 +146,10 @@ func (UnimplementedPilotServiceServer) GetAgencyPayload(context.Context, *Servic
 func (UnimplementedPilotServiceServer) HeartBeat(*ServiceMessage, PilotService_HeartBeatServer) error {
 	return status.Errorf(codes.Unimplemented, "method HeartBeat not implemented")
 }
-func (UnimplementedPilotServiceServer) MetricReport(context.Context, *Metric) (*Empty, error) {
+func (UnimplementedPilotServiceServer) MetricReport(context.Context, *Metric) (*Message, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MetricReport not implemented")
 }
-func (UnimplementedPilotServiceServer) ReportError(context.Context, *ServiceMessage) (*Empty, error) {
+func (UnimplementedPilotServiceServer) ReportError(context.Context, *ServiceMessage) (*Message, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReportError not implemented")
 }
 func (UnimplementedPilotServiceServer) mustEmbedUnimplementedPilotServiceServer() {}
@@ -228,7 +228,7 @@ func _PilotService_HeartBeat_Handler(srv interface{}, stream grpc.ServerStream) 
 }
 
 type PilotService_HeartBeatServer interface {
-	Send(*Empty) error
+	Send(*Message) error
 	grpc.ServerStream
 }
 
@@ -236,7 +236,7 @@ type pilotServiceHeartBeatServer struct {
 	grpc.ServerStream
 }
 
-func (x *pilotServiceHeartBeatServer) Send(m *Empty) error {
+func (x *pilotServiceHeartBeatServer) Send(m *Message) error {
 	return x.ServerStream.SendMsg(m)
 }
 

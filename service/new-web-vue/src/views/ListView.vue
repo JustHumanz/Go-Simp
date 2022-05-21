@@ -70,6 +70,10 @@ export default {
       null_data: false,
       search_query: null,
       phName: "",
+      // for menu handler
+      activeListMenu: null,
+      activeSubMenu: null,
+      clickedSubMenu: false,
     }
   },
   async created() {
@@ -93,14 +97,18 @@ export default {
 
         await this.getVtuberData()
         if (this.error_status) return
-        this.getFilter()
+        await this.getFilter()
+        this.calculateFilters()
       },
       { immediate: true }
     )
+
+    // add abilty menu
+    this.menuHandler()
   },
   computed: {
     link_request() {
-      return `<a href="https://github.com/JustHumanz/Go-Simp/issues/new?assignees=JustHumanz&labels=enhancement&template=add_vtuber.md&title=Add+%5BVtuber+Nickname%5D+from+%5BGroup%2FAgency%5D" target="_blank" class="ame-error-text__link">here</a>`
+      return `<a href="/new-vtuber" id="router-link" class="ame-error-text__link">here</a>`
     },
   },
   methods: {
@@ -239,6 +247,118 @@ export default {
 
     nullData(bool) {
       this.null_data = bool
+    },
+    menuHandler() {
+      // ON MOUSE DOWN
+      window.addEventListener("mousedown", (e) => {
+        const target = e.target.closest(".navbar-filter-item__link.sub-menu")
+
+        if (!target) return
+        if (!this.activeSubMenu || this.activeSubMenu !== target) {
+          this.activeSubMenu = target
+          this.clickedSubMenu = true
+        }
+      })
+
+      // on mouse up
+      window.addEventListener("mouseup", async (e) => {
+        if (this.clickedSubMenu) {
+          await new Promise((resolve) => setTimeout(resolve, 300))
+          this.clickedSubMenu = false
+        }
+      })
+
+      // on click
+      document.addEventListener("click", (e) => {
+        if (e.target.closest(".navbar-filter__link")) {
+          const navbarFilter = e.target.closest(".navbar-filter__link")
+
+          const liNavbarFilter = navbarFilter.parentElement
+
+          if (liNavbarFilter.classList.contains("disabled")) {
+            navbarFilter.blur()
+            return
+          }
+
+          switch (this.activeListMenu) {
+            case navbarFilter:
+              this.activeListMenu.blur()
+              this.activeListMenu = null
+              break
+            case null:
+              this.activeListMenu = navbarFilter
+              break
+            default:
+              this.activeListMenu = navbarFilter
+              break
+          }
+        } else if (e.target.closest(".navbar-filter-item__link")) {
+          const navbarFilterItem = e.target.closest(".navbar-filter-item__link")
+
+          if (!navbarFilterItem.classList.contains("sub-menu")) {
+            this.activeListMenu = null
+            navbarFilterItem.blur()
+          } else {
+            const filterSub = e.target.closest(
+              ".navbar-filter-item__link.sub-menu"
+            )
+
+            if (this.activeSubMenu === filterSub && !this.clickedSubMenu) {
+              console.log("closing submenu")
+              this.activeSubMenu.blur()
+              this.activeListMenu.focus()
+              this.activeSubMenu = null
+            }
+          }
+        } else if (e.target.closest(".navbar-submenu-item__link")) {
+          const navbarSubItem = e.target.closest(".navbar-submenu-item__link")
+
+          this.activeListMenu = null
+          this.activeSubMenu = null
+          navbarSubItem.blur()
+        } else if (e.target.closest(".nav-search")) {
+          if (this.activeListMenu !== null) {
+            console.log("closing menu")
+            this.activeListMenu = null
+            this.activeSubMenu = null
+          }
+
+          const navbarSearchItem = e.target.closest(".nav-search")
+
+          navbarSearchItem.children[1].focus()
+        } else {
+          if (this.activeListMenu === null) return
+          console.log("closing menu")
+          this.activeListMenu = null
+          this.activeSubMenu = null
+        }
+      })
+
+      // unfocus
+      document.addEventListener("unfocus", (e) => {
+        if (
+          this.activeListMenu &&
+          this.activeListMenu === document.activeElement
+        )
+          this.activeListMenu.blur()
+        else if (
+          !document.activeElement.classList.contains("nav-search__input")
+        )
+          document.activeElement.blur()
+
+        this.activeListMenu = null
+        this.activeSubMenu = null
+      })
+    },
+    calculateFilters() {
+      const subMenus = document.querySelectorAll(".navbar-submenu-items")
+
+      // count children inside each submenu and substract 75
+      subMenus.forEach((subMenu) => {
+        const totalHeight = subMenu.children.length * 32
+        // add --totalHeight in submenu
+        subMenu.style.setProperty("--totalHeight", `${totalHeight}px`)
+      })
     },
   },
 }

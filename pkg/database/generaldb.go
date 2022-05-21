@@ -21,6 +21,7 @@ var (
 	LiveCache     *redis.Client
 	GeneralCache  *redis.Client
 	UpcomingCache *redis.Client
+	FanartCache   *redis.Client
 )
 
 //Start Database session
@@ -52,6 +53,11 @@ func Start(configfile config.ConfigFile) {
 			DB:       3,
 		})
 
+		FanartCache = redis.NewClient(&redis.Options{
+			Addr:     RedisHost,
+			Password: "",
+			DB:       4,
+		})
 	}
 	log.Info("Database module ready")
 }
@@ -1009,4 +1015,23 @@ func DeleteDeletedUser(users []string) {
 	if err != nil {
 		log.Error(err)
 	}
+}
+
+//Check if videoid is exist or not in cache
+func CheckVideoIDFromCache(VideoID string) LiveStream {
+	key := fmt.Sprintf("cache-layer-%s", VideoID)
+	var Live LiveStream
+	val2, err := LiveCache.Get(context.Background(), key).Result()
+	if err == redis.Nil {
+		return Live
+	} else if err != nil {
+		log.Fatal(err)
+	}
+
+	err = json.Unmarshal([]byte(val2), &Live)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return Live
+
 }
