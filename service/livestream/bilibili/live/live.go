@@ -176,6 +176,7 @@ func (i *checkBlLiveeJob) Run() {
 								}).Info("Start live right now")
 
 								Bili.UpdateStatus(config.LiveStatus).
+									SetState(config.BiliLive).
 									UpdateSchdule(ScheduledStart).
 									UpdateViewers(strconv.Itoa(Status.Data.RoomInfo.Online)).
 									UpdateThumbnail(Status.Data.RoomInfo.Cover).
