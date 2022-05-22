@@ -599,7 +599,19 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 								SetFooter(Data.Schedul.In(loc).Format(time.RFC822), config.BiliBiliIMG).
 								SetColor(Color).MessageEmbed)
 							if err != nil {
-								log.Error(err)
+								log.WithFields(log.Fields{
+									"Message":          MsgEmbed,
+									"ChannelID":        Channel.ID,
+									"DiscordChannelID": Channel.ChannelID,
+								}).Error(err)
+
+								if IsBadChannelSetting(err) {
+									err = Channel.DelChannel()
+									if err != nil {
+										log.Error(err)
+									}
+								}
+								return
 							}
 
 							if Channel.Dynamic {
@@ -892,7 +904,20 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							SetFooter(Data.Schedul.In(loc).Format(time.RFC822), config.BiliBiliIMG).
 							SetColor(Color).MessageEmbed)
 						if err != nil {
-							log.Error(msg, err)
+							log.WithFields(log.Fields{
+								"Message":          msg,
+								"ChannelID":        Channel.ID,
+								"DiscordChannelID": Channel.ChannelID,
+							}).Error(err)
+
+							if IsBadChannelSetting(err) {
+								err = Channel.DelChannel()
+								if err != nil {
+									log.Error(err)
+								}
+							}
+							return
+
 						} else {
 							if UserTagsList != nil {
 								msg, err = Bot.ChannelMessageSend(Channel.ChannelID, "UserTags: "+strings.Join(UserTagsList, " "))
