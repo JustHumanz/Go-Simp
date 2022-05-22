@@ -165,11 +165,11 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							}
 
 							log.WithFields(log.Fields{
-								"vtuberAgency": Data.Group.GroupName,
-								"vtuber":       Data.Member.Name,
-								"ytChannel":    Data.Member.YoutubeID,
-								"dynamic":      Channel.Dynamic,
-								"liteMode":     Channel.LiteMode,
+								"VtuberAgency": Data.Group.GroupName,
+								"Vtuber":       Data.Member.Name,
+								"YTChannel":    Data.Member.YoutubeID,
+								"Dynamic":      Channel.Dynamic,
+								"LiteMode":     Channel.LiteMode,
 							}).Info("Send Message to " + Channel.ChannelID)
 
 							done <- struct{}{}
@@ -182,10 +182,10 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						case <-ctx.Done():
 							{
 								log.WithFields(log.Fields{
-									"channelID":      Channel.ID,
-									"discordChannel": Channel.ChannelID,
-									"vtuber":         Data.Member.Name,
-									"videoID":        Data.VideoID,
+									"ChannelID":      Channel.ID,
+									"DiscordChannel": Channel.ChannelID,
+									"Vtuber":         Data.Member.Name,
+									"VideoID":        Data.VideoID,
 								}).Error(ctx.Err())
 							}
 						}
@@ -312,11 +312,11 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							}
 
 							log.WithFields(log.Fields{
-								"vtuberAgency": Data.Group.GroupName,
-								"vtuber":       Data.Member.Name,
-								"ytChannel":    Data.Member.YoutubeID,
-								"dynamic":      Channel.Dynamic,
-								"liteMode":     Channel.LiteMode,
+								"VtuberAgency": Data.Group.GroupName,
+								"Vtuber":       Data.Member.Name,
+								"YTChannel":    Data.Member.YoutubeID,
+								"Dynamic":      Channel.Dynamic,
+								"LiteMode":     Channel.LiteMode,
 							}).Info("Send Message to " + Channel.ChannelID)
 
 							Channel.PushReddis()
@@ -331,10 +331,10 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						case <-ctx.Done():
 							{
 								log.WithFields(log.Fields{
-									"channelID":      Channel.ID,
-									"discordChannel": Channel.ChannelID,
-									"vtuber":         Data.Member.Name,
-									"videoID":        Data.VideoID,
+									"ChannelID":      Channel.ID,
+									"DiscordChannel": Channel.ChannelID,
+									"Vtuber":         Data.Member.Name,
+									"VideoID":        Data.VideoID,
 								}).Error(ctx.Err())
 							}
 						}
@@ -430,11 +430,11 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							}
 
 							log.WithFields(log.Fields{
-								"vtuberAgency": Data.Group.GroupName,
-								"vtuber":       Data.Member.Name,
-								"ytChannel":    Data.Member.YoutubeID,
-								"dynamic":      Channel.Dynamic,
-								"liteMode":     Channel.LiteMode,
+								"VtuberAgency": Data.Group.GroupName,
+								"Vtuber":       Data.Member.Name,
+								"YtChannel":    Data.Member.YoutubeID,
+								"Dynamic":      Channel.Dynamic,
+								"LiteMode":     Channel.LiteMode,
 							}).Info("Send Message to " + Channel.ChannelID)
 
 							if UserTagsList == nil {
@@ -459,10 +459,10 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						case <-ctx.Done():
 							{
 								log.WithFields(log.Fields{
-									"channelID":      Channel.ID,
-									"discordChannel": Channel.ChannelID,
-									"vtuber":         Data.Member.Name,
-									"videoID":        Data.VideoID,
+									"ChannelID":      Channel.ID,
+									"DiscordChannel": Channel.ChannelID,
+									"Vtuber":         Data.Member.Name,
+									"VideoID":        Data.VideoID,
 								}).Error(ctx.Err())
 							}
 						}
@@ -634,7 +634,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							}
 
 							log.WithFields(log.Fields{
-								"vtuberAgency":   Data.Group.GroupName,
+								"VtuberAgency":   Data.Group.GroupName,
 								"Vtuber":         Data.Member.Name,
 								"BiliBiliRoomID": BiliBiliRoomID,
 								"Dynamic":        Channel.Dynamic,
@@ -654,10 +654,10 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						case <-ctx.Done():
 							{
 								log.WithFields(log.Fields{
-									"channelID":      Channel.ID,
-									"discordChannel": Channel.ChannelID,
-									"vtuber":         Data.Member.Name,
-									"videoID":        Data.VideoID,
+									"ChannelID":      Channel.ID,
+									"DiscordChannel": Channel.ChannelID,
+									"Vtuber":         Data.Member.Name,
+									"VideoID":        Data.VideoID,
 								}).Error(ctx.Err())
 							}
 						}
@@ -794,11 +794,11 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						}
 
 						log.WithFields(log.Fields{
-							"vtuberAgency": Data.Group.GroupName,
-							"vtuber":       Data.Member.Name,
-							"twitchID":     Data.Member.TwitchName,
-							"dynamic":      Channel.Dynamic,
-							"liteMode":     Channel.LiteMode,
+							"VtuberAgency": Data.Group.GroupName,
+							"Vtuber":       Data.Member.Name,
+							"TwitchID":     Data.Member.TwitchName,
+							"Dynamic":      Channel.Dynamic,
+							"LiteMode":     Channel.LiteMode,
 						}).Info("Send Message to " + Channel.ChannelID)
 
 						Channel.PushReddis()
@@ -813,10 +813,10 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 					case <-ctx.Done():
 						{
 							log.WithFields(log.Fields{
-								"channelID":      Channel.ID,
-								"discordChannel": Channel.ChannelID,
-								"vtuber":         Data.Member.Name,
-								"videoID":        Data.VideoID,
+								"ChannelID":      Channel.ID,
+								"DiscordChannel": Channel.ChannelID,
+								"Vtuber":         Data.Member.Name,
+								"VideoID":        Data.VideoID,
 							}).Error(ctx.Err())
 						}
 					}
@@ -911,10 +911,10 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 					case <-ctx.Done():
 						{
 							log.WithFields(log.Fields{
-								"channelID":      Channel.ID,
-								"discordChannel": Channel.ChannelID,
-								"vtuber":         Data.Member.Name,
-								"videoID":        Data.VideoID,
+								"ChannelID":      Channel.ID,
+								"DiscordChannel": Channel.ChannelID,
+								"Vtuber":         Data.Member.Name,
+								"VideoID":        Data.VideoID,
 							}).Error(ctx.Err())
 						}
 					}
@@ -1023,10 +1023,10 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 								}
 
 								log.WithFields(log.Fields{
-									"vtuberAgency": Data.Group.GroupName,
-									"vtuberRegion": Data.GroupYoutube.Region,
-									"dynamic":      Channel.Dynamic,
-									"liteMode":     Channel.LiteMode,
+									"VtuberAgency": Data.Group.GroupName,
+									"VtuberRegion": Data.GroupYoutube.Region,
+									"Dynamic":      Channel.Dynamic,
+									"LiteMode":     Channel.LiteMode,
 								}).Info("Send Message to " + Channel.ChannelID)
 
 								done <- struct{}{}
@@ -1039,10 +1039,10 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							case <-ctx.Done():
 								{
 									log.WithFields(log.Fields{
-										"channelID":      Channel.ID,
-										"discordChannel": Channel.ChannelID,
-										"vtuber":         Data.Member.Name,
-										"videoID":        Data.VideoID,
+										"ChannelID":      Channel.ID,
+										"DiscordChannel": Channel.ChannelID,
+										"Vtuber":         Data.Member.Name,
+										"VideoID":        Data.VideoID,
 									}).Error(ctx.Err())
 								}
 							}
@@ -1123,10 +1123,10 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 								}
 
 								log.WithFields(log.Fields{
-									"vtuberAgency": Data.Group.GroupName,
-									"vtuberRegion": Data.GroupYoutube.Region,
-									"dynamic":      Channel.Dynamic,
-									"liteMode":     Channel.LiteMode,
+									"VtuberAgency": Data.Group.GroupName,
+									"VtuberRegion": Data.GroupYoutube.Region,
+									"Dynamic":      Channel.Dynamic,
+									"LiteMode":     Channel.LiteMode,
 								}).Info("Send Message to " + Channel.ChannelID)
 
 								done <- struct{}{}
@@ -1140,10 +1140,10 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 							case <-ctx.Done():
 								{
 									log.WithFields(log.Fields{
-										"channelID":      Channel.ID,
-										"discordChannel": Channel.ChannelID,
-										"vtuber":         Data.Member.Name,
-										"videoID":        Data.VideoID,
+										"ChannelID":      Channel.ID,
+										"DiscordChannel": Channel.ChannelID,
+										"Vtuber":         Data.Member.Name,
+										"VideoID":        Data.VideoID,
 									}).Error(ctx.Err())
 								}
 							}

@@ -83,8 +83,8 @@ var (
 			}
 		},
 		"livestream": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			var group database.Group
-			var member database.Member
+			var Agency database.Group
+			var Member database.Member
 			var embed []*discordgo.MessageEmbed
 
 			state := i.ApplicationCommandData().Options[0].IntValue()
@@ -193,11 +193,11 @@ var (
 
 			for _, v := range GroupsPayload {
 				if v.ID == int64(GroupSelected) {
-					group = v
+					Agency = v
 					if VtuberSelected != "" {
 						for _, v2 := range v.Members {
 							if v2.Name == VtuberSelected {
-								member = v2
+								Member = v2
 							}
 						}
 					}
@@ -205,17 +205,17 @@ var (
 			}
 
 			if state == 1 {
-				if !member.IsMemberNill() {
-					YoutubeData, err := member.GetYtLiveStream(status)
+				if !Member.IsMemberNill() {
+					YoutubeData, err := Member.GetYtLiveStream(status)
 					if err != nil {
 						log.Error(err)
 					}
-					FixName := engine.FixName(member.EnName, member.JpName)
+					FixName := engine.FixName(Member.EnName, Member.JpName)
 					if YoutubeData != nil {
 						for _, Youtube := range YoutubeData {
 							FanBase := "simps"
 
-							loc, err := engine.Zawarudo(member.Region)
+							loc, err := engine.Zawarudo(Member.Region)
 							if err != nil {
 								log.Error(err)
 							}
@@ -231,8 +231,8 @@ var (
 								}
 							}
 
-							if member.Fanbase != "" {
-								FanBase = member.Fanbase
+							if Member.Fanbase != "" {
+								FanBase = Member.Fanbase
 							}
 
 							view, err := strconv.Atoi(Youtube.Viewers)
@@ -248,7 +248,7 @@ var (
 									SetTitle(FixName).
 									SetDescription(Youtube.Title).
 									SetImage(Youtube.Thumb).
-									SetThumbnail(member.YoutubeAvatar).
+									SetThumbnail(Member.YoutubeAvatar).
 									SetURL("https://www.youtube.com/watch?v="+Youtube.VideoID).
 									AddField("Live duration", durationlive.String()).
 									AddField("Live ended", duration.String()+" Ago").
@@ -262,7 +262,7 @@ var (
 									SetTitle(FixName).
 									SetDescription(Youtube.Title).
 									SetImage(Youtube.Thumb).
-									SetThumbnail(member.YoutubeAvatar).
+									SetThumbnail(Member.YoutubeAvatar).
 									SetURL("https://www.youtube.com/watch?v="+Youtube.VideoID).
 									AddField("Start live in", duration.String()).
 									AddField("Viewers", Viewers+" "+FanBase).
@@ -282,7 +282,7 @@ var (
 					}
 					SendMessage(embed)
 				} else {
-					YoutubeData, err := group.GetYtLiveStream(status, region)
+					YoutubeData, err := Agency.GetYtLiveStream(status, region)
 					if err != nil {
 						log.Error(err)
 					}
@@ -327,7 +327,7 @@ var (
 									SetTitle(FixName).
 									SetDescription(Youtube.Title).
 									SetImage(Youtube.Thumb).
-									SetThumbnail(member.YoutubeAvatar).
+									SetThumbnail(Member.YoutubeAvatar).
 									SetURL("https://www.youtube.com/watch?v="+Youtube.VideoID).
 									AddField("Live duration", durationlive.String()).
 									AddField("Live ended", duration.String()+" Ago").
@@ -343,7 +343,7 @@ var (
 									SetTitle(FixName).
 									SetDescription(Youtube.Title).
 									SetImage(Youtube.Thumb).
-									SetThumbnail(member.YoutubeAvatar).
+									SetThumbnail(Member.YoutubeAvatar).
 									SetURL("https://www.youtube.com/watch?v="+Youtube.VideoID).
 									AddField("Start live in", duration.String()).
 									AddField("Viewers", Viewers+" "+FanBase).
@@ -371,8 +371,8 @@ var (
 					} else {
 						embed = append(embed, engine.NewEmbed().
 							SetAuthor(Nick, Avatar).
-							SetTitle(group.GroupName).
-							SetDescription("It looks like `"+group.GroupName+"` doesn't have a `"+status+"` schedule for now").
+							SetTitle(Agency.GroupName).
+							SetDescription("It looks like `"+Agency.GroupName+"` doesn't have a `"+status+"` schedule for now").
 							SetImage(engine.NotFoundIMG()).MessageEmbed)
 					}
 					SendMessage(embed)
@@ -384,8 +384,8 @@ var (
 				}
 
 				loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
-				if !member.IsMemberNill() {
-					LiveData, err := member.GetBlLiveStream(status)
+				if !Member.IsMemberNill() {
+					LiveData, err := Member.GetBlLiveStream(status)
 					if err != nil {
 						log.Error(err)
 					}
@@ -438,12 +438,12 @@ var (
 				} else {
 					embed = append(embed, engine.NewEmbed().
 						SetAuthor(Nick, Avatar).
-						SetDescription("It looks like `"+group.GroupName+"` doesn't have a `"+status+"` schedule right now").
+						SetDescription("It looks like `"+Agency.GroupName+"` doesn't have a `"+status+"` schedule right now").
 						SetImage(engine.NotFoundIMG()).MessageEmbed)
 				}
 				SendMessage(embed)
 			} else {
-				LiveBili, err := group.GetBlLiveStream(status)
+				LiveBili, err := Agency.GetBlLiveStream(status)
 				if err != nil {
 					log.Error(err)
 				}
@@ -498,7 +498,7 @@ var (
 				} else {
 					embed = append(embed, engine.NewEmbed().
 						SetAuthor(Nick, Avatar).
-						SetDescription("It looks like `"+group.GroupName+"` doesn't have a `"+status+"` schedule right now").
+						SetDescription("It looks like `"+Agency.GroupName+"` doesn't have a `"+status+"` schedule right now").
 						SetImage(engine.NotFoundIMG()).MessageEmbed)
 				}
 				SendMessage(embed)
