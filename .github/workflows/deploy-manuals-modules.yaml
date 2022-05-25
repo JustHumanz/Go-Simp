@@ -77,7 +77,7 @@ jobs:
         with:
           context: ./service/livestream/bilibili/space/
           push: true
-          tags: justhumanz/go-simp-bilispace-livestream:${{ env.RELEASE_VERSION }}
+          tags: justhumanz/go-simp-bilispace-livestream:${{ github.event.inputs.versionTag }}
           build-args: |
             BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}           
       
@@ -86,7 +86,7 @@ jobs:
         with:
           context: ./service/livestream/bilibili/live/
           push: true
-          tags: justhumanz/go-simp-bililive-livestream:${{ env.RELEASE_VERSION }}
+          tags: justhumanz/go-simp-bililive-livestream:${{ github.event.inputs.versionTag }}
           build-args: |
             BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}           
 
@@ -96,7 +96,7 @@ jobs:
         with:
           context: ./service/livestream/youtube/UpcomingChecker/
           push: true
-          tags: justhumanz/go-simp-youtube-checker-livestream:${{ env.RELEASE_VERSION }}
+          tags: justhumanz/go-simp-youtube-checker-livestream:${{ github.event.inputs.versionTag }}
           build-args: |
             BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}           
       
@@ -105,7 +105,7 @@ jobs:
         with:
           context: ./service/livestream/youtube/UpcomingCounter/
           push: true
-          tags: justhumanz/go-simp-youtube-counter-livestream:${{ env.RELEASE_VERSION }}
+          tags: justhumanz/go-simp-youtube-counter-livestream:${{ github.event.inputs.versionTag }}
           build-args: |
             BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}           
 
@@ -114,7 +114,7 @@ jobs:
         with:
           context: ./service/livestream/youtube/PastTracker/
           push: true
-          tags: justhumanz/go-simp-youtube-past-tracker-livestream:${{ env.RELEASE_VERSION }}
+          tags: justhumanz/go-simp-youtube-past-tracker-livestream:${{ github.event.inputs.versionTag }}
           build-args: |
             BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}      
 
@@ -123,7 +123,7 @@ jobs:
         with:
           context: ./service/livestream/youtube/LiveTracker/
           push: true
-          tags: justhumanz/go-simp-youtube-live-tracker-livestream:${{ env.RELEASE_VERSION }}
+          tags: justhumanz/go-simp-youtube-live-tracker-livestream:${{ github.event.inputs.versionTag }}
           build-args: |
             BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}      
 
@@ -132,7 +132,7 @@ jobs:
         with:
           context: ./service/livestream/twitch/
           push: true
-          tags: justhumanz/go-simp-twitch-livestream:${{ env.RELEASE_VERSION }}
+          tags: justhumanz/go-simp-twitch-livestream:${{ github.event.inputs.versionTag }}
           build-args: |
             BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}            
 
