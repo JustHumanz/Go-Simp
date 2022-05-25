@@ -18,6 +18,18 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+var SendSimpleMsg = func(s *discordgo.Session, i *discordgo.InteractionCreate, msg string) {
+	err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		Data: &discordgo.InteractionResponseData{
+			Content: msg,
+		},
+	})
+	if err != nil {
+		log.Error(err)
+	}
+}
+
 var (
 	commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
 		"mytags": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -121,24 +133,17 @@ var (
 				}
 			}
 
-			log.WithFields(log.Fields{
-				"User":    i.Member.User.Username,
-				"Channel": i.ChannelID,
-				"Status":  status,
-			}).Info("livestream")
-
 			SendMessage := func(e []*discordgo.MessageEmbed) {
-				if len(e) > 10 {
-					err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-						Type: discordgo.InteractionResponseChannelMessageWithSource,
-						Data: &discordgo.InteractionResponseData{
-							Content: "On Progress",
-						},
-					})
-					if err != nil {
-						log.Error(err)
-					}
+				log.WithFields(log.Fields{
+					"User":        i.Member.User.Username,
+					"Channel":     i.ChannelID,
+					"Status":      status,
+					"Payload len": len(e),
+					"Agency":      Agency.GroupName,
+					"Vtuber":      Member.Name,
+				}).Info("livestream")
 
+				if len(e) > 10 {
 					for _, v := range e {
 						_, err := s.ChannelMessageSendEmbed(i.ChannelID, v)
 						if err != nil {
@@ -196,9 +201,15 @@ var (
 					Agency = v
 					if VtuberSelected != "" {
 						for _, v2 := range v.Members {
-							if v2.Name == VtuberSelected {
+							if engine.CheckVtuberName(v2, VtuberSelected) {
 								Member = v2
 							}
+						}
+
+						//Retrun invalid vtuber name
+						if Member.IsMemberNill() {
+							SendSimpleMsg(s, i, fmt.Sprintf("Invalid vtuber name %s", VtuberSelected))
+							return
 						}
 					}
 				}
@@ -210,6 +221,11 @@ var (
 					if err != nil {
 						log.Error(err)
 					}
+
+					if len(YoutubeData) > 10 {
+						SendSimpleMsg(s, i, "On progress~")
+					}
+
 					FixName := engine.FixName(Member.EnName, Member.JpName)
 					if YoutubeData != nil {
 						for _, Youtube := range YoutubeData {
@@ -280,12 +296,19 @@ var (
 							SetDescription("It looks like `"+FixName+"` doesn't have a `"+status+"` schedule for now").
 							SetImage(engine.NotFoundIMG()).MessageEmbed)
 					}
+
 					SendMessage(embed)
-				} else {
+
+				} else if !Agency.IsNull() {
 					YoutubeData, err := Agency.GetYtLiveStream(status, region)
 					if err != nil {
 						log.Error(err)
 					}
+
+					if len(YoutubeData) > 10 {
+						SendSimpleMsg(s, i, "On progress~")
+					}
+
 					if YoutubeData != nil {
 						for _, Youtube := range YoutubeData {
 							Member, err := FindVtuber(Youtube.Member.ID)
@@ -375,8 +398,10 @@ var (
 							SetDescription("It looks like `"+Agency.GroupName+"` doesn't have a `"+status+"` schedule for now").
 							SetImage(engine.NotFoundIMG()).MessageEmbed)
 					}
+
 					SendMessage(embed)
 				}
+
 			} else if state == 2 {
 				if status == config.UpcomingStatus {
 					NotSupportUp(status, "BiliBili")
@@ -389,6 +414,7 @@ var (
 					if err != nil {
 						log.Error(err)
 					}
+
 					if LiveData.ID != 0 {
 						Color, err := engine.GetColor(config.TmpDir, LiveData.Thumb)
 						if err != nil {
@@ -441,13 +467,21 @@ var (
 						SetDescription("It looks like `"+Agency.GroupName+"` doesn't have a `"+status+"` schedule right now").
 						SetImage(engine.NotFoundIMG()).MessageEmbed)
 				}
+
 				SendMessage(embed)
+
 			} else {
 				LiveBili, err := Agency.GetBlLiveStream(status)
 				if err != nil {
 					log.Error(err)
 				}
+
+				if len(LiveBili) > 10 {
+					SendSimpleMsg(s, i, "On progress~")
+				}
+
 				loc, _ := time.LoadLocation("Asia/Shanghai") /*Use CST*/
+
 				if LiveBili != nil {
 					for _, LiveData := range LiveBili {
 						Member, err := FindVtuber(LiveData.Member.ID)
@@ -525,6 +559,14 @@ var (
 			Nick := i.Member.User.Username
 
 			SendNude := func(Data *database.DataFanart) {
+
+				log.WithFields(log.Fields{
+					"User":    i.Member.User.Username,
+					"Channel": i.ChannelID,
+					"Vtuber":  SelectedVtuber,
+					"Agency":  SelectedAgency,
+				}).Info("art")
+
 				Color, err := engine.GetColor(config.TmpDir, Avatar)
 				if err != nil {
 					log.Error(err)
@@ -607,21 +649,20 @@ var (
 					Agency = v
 					if SelectedVtuber != "" {
 						for _, k := range v.Members {
-							if strings.EqualFold(SelectedVtuber, k.Name) {
+							if engine.CheckVtuberName(k, SelectedVtuber) {
 								VtuberName = k
 							}
+						}
+
+						if VtuberName.IsMemberNill() {
+							SendSimpleMsg(s, i, fmt.Sprintf("Invalid vtuber name %s ", SelectedVtuber))
+							return
 						}
 					}
 				}
 			}
 
 			if !VtuberName.IsMemberNill() {
-				log.WithFields(log.Fields{
-					"User":    i.Member.User.Username,
-					"Channel": i.ChannelID,
-					"Vtuber":  VtuberName.Name,
-				}).Info("art")
-
 				FanArt, err := VtuberName.GetRandomFanart()
 
 				if err != nil {
@@ -634,12 +675,8 @@ var (
 				} else {
 					SendNude(FanArt)
 				}
+
 			} else {
-				log.WithFields(log.Fields{
-					"User":         i.Member.User.Username,
-					"Channel":      i.ChannelID,
-					"VtuberAgency": Agency.GroupName,
-				}).Info("FanArt")
 				FanArt, err := Agency.GetRandomFanart()
 				if err != nil {
 					s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -676,6 +713,13 @@ var (
 				}
 
 				SendNude := func(Data *database.DataFanart) {
+					log.WithFields(log.Fields{
+						"User":    i.Member.User.Username,
+						"Channel": i.ChannelID,
+						"Vtuber":  SelectedVtuber,
+						"Agency":  SelectedAgency,
+					}).Info("lewd")
+
 					Color, err := engine.GetColor(config.TmpDir, Avatar)
 					if err != nil {
 						log.Error(err)
@@ -725,21 +769,21 @@ var (
 						Agency = v
 						if SelectedVtuber != "" {
 							for _, k := range v.Members {
-								if strings.EqualFold(SelectedVtuber, k.Name) {
+								if engine.CheckVtuberName(k, SelectedVtuber) {
 									VtuberName = k
 								}
 							}
+
+							if VtuberName.IsMemberNill() {
+								SendSimpleMsg(s, i, fmt.Sprintf("Invalid vtuber name %s", SelectedVtuber))
+								return
+							}
+
 						}
 					}
 				}
 
 				if !VtuberName.IsMemberNill() {
-					log.WithFields(log.Fields{
-						"User":    i.Member.User.Username,
-						"Channel": i.ChannelID,
-						"Vtuber":  VtuberName.Name,
-					}).Info("lewd")
-
 					FanArt, err := VtuberName.GetRandomLewd()
 					if err != nil {
 						s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -753,11 +797,6 @@ var (
 					}
 
 				} else {
-					log.WithFields(log.Fields{
-						"User":         i.Member.User.Username,
-						"Channel":      i.ChannelID,
-						"VtuberAgency": Agency.GroupName,
-					}).Info("Lewd")
 					FanArt, err := Agency.GetRandomFanart()
 					if err != nil {
 						s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -788,9 +827,10 @@ var (
 			}
 		},
 		"info": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			VtuberInput := i.ApplicationCommandData().Options[0].StringValue()
 			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
-					if strings.EqualFold(v2.Name, i.ApplicationCommandData().Options[0].StringValue()) {
+					if engine.CheckVtuberName(v2, VtuberInput) {
 						var (
 							Avatar string
 						)
@@ -882,6 +922,8 @@ var (
 					}
 				}
 			}
+
+			SendSimpleMsg(s, i, fmt.Sprintf("Invalid vtuber name %s", VtuberInput))
 		},
 		"tag-me": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			if len(i.ApplicationCommandData().Options) < 1 {
@@ -895,11 +937,11 @@ var (
 			}
 
 			var (
-				Already    []string
-				Done       []string
-				GroupID    int
-				Reminder   int
-				MemberName string
+				Already        []string
+				Done           []string
+				GroupID        int
+				Reminder       int
+				VtuberSelected string
 			)
 
 			log.WithFields(log.Fields{
@@ -915,7 +957,7 @@ var (
 					Reminder = int(v.IntValue())
 				}
 				if v.Name == engine.VtuberOption {
-					MemberName = v.StringValue()
+					VtuberSelected = v.StringValue()
 				}
 			}
 
@@ -927,7 +969,7 @@ var (
 			One := true
 			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
-					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
+					if (GroupID == 0 && engine.CheckVtuberName(v2, VtuberSelected)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
 							if (Reminder > 60 && Reminder < 10) && Reminder != 0 {
 								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -1011,10 +1053,10 @@ var (
 		},
 		"del-tag": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			var (
-				Already    []string
-				Done       []string
-				GroupID    int
-				MemberName string
+				Already        []string
+				Done           []string
+				GroupID        int
+				VtuberSelected string
 			)
 			One := true
 
@@ -1033,13 +1075,13 @@ var (
 					GroupID = int(v.IntValue())
 				}
 				if v.Name == engine.VtuberOption {
-					MemberName = v.StringValue()
+					VtuberSelected = v.StringValue()
 				}
 			}
 
 			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
-					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
+					if (GroupID == 0 && engine.CheckVtuberName(v2, VtuberSelected)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
 
 							User := &database.UserStruct{
@@ -1141,12 +1183,12 @@ var (
 			}).Info("tag-role")
 
 			var (
-				Already    []string
-				Done       []string
-				GroupID    int
-				Reminder   int
-				MemberName string
-				RoleState  *discordgo.Role
+				Already        []string
+				Done           []string
+				GroupID        int
+				Reminder       int
+				VtuberSelected string
+				RoleState      *discordgo.Role
 			)
 
 			for _, v := range i.ApplicationCommandData().Options {
@@ -1157,7 +1199,7 @@ var (
 					Reminder = int(v.IntValue())
 				}
 				if v.Name == engine.VtuberOption {
-					MemberName = v.StringValue()
+					VtuberSelected = v.StringValue()
 				}
 				if v.Name == "role-name" {
 					RoleState = v.RoleValue(nil, "")
@@ -1172,7 +1214,7 @@ var (
 			One := true
 			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
-					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
+					if (GroupID == 0 && engine.CheckVtuberName(v2, VtuberSelected)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
 							if (Reminder > 60 && Reminder < 10) && Reminder != 0 {
 								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -1282,11 +1324,11 @@ var (
 			}
 
 			var (
-				Already    []string
-				Done       []string
-				GroupID    int
-				MemberName string
-				RoleState  *discordgo.Role
+				Already        []string
+				Done           []string
+				GroupID        int
+				VtuberSelected string
+				RoleState      *discordgo.Role
 			)
 
 			for _, v := range i.ApplicationCommandData().Options {
@@ -1294,7 +1336,7 @@ var (
 					GroupID = int(v.IntValue())
 				}
 				if v.Name == engine.VtuberOption {
-					MemberName = v.StringValue()
+					VtuberSelected = v.StringValue()
 				}
 				if v.Name == "role-name" {
 					RoleState = v.RoleValue(nil, "")
@@ -1303,7 +1345,7 @@ var (
 
 			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
-					if (GroupID == 0 && strings.EqualFold(v2.Name, MemberName)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
+					if (GroupID == 0 && engine.CheckVtuberName(v2, VtuberSelected)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
 
 							User := &database.UserStruct{

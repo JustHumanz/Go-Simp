@@ -789,3 +789,7 @@ func GetRoomStatus(RoomID int) (getInfoByRoom, error) {
 	}
 	return tmp, nil
 }
+
+func CheckVtuberName(Member database.Member, VtuberName string) bool {
+	return strings.EqualFold(Member.Name, VtuberName) || strings.EqualFold(Member.EnName, VtuberName) || strings.EqualFold(Member.JpName, VtuberName)
+}
