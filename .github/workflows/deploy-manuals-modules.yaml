@@ -121,12 +121,39 @@ jobs:
 
       ### Subscriber
       
-      - name: Build and push Subscriber
+      - name: Build and push bilibili subs watcher
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/subscriber/bilibili
+          push: true
+          tags: justhumanz/go-simp-subscriber-bilibili:${{ github.event.inputs.versionTag }}
+          build-args: |
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}
+
+      - name: Build and push twitch subs watcher
         uses: docker/build-push-action@v2
         with:
           context: ./service/subscriber/
           push: true
-          tags: justhumanz/go-simp-subscriber:${{ github.event.inputs.versionTag }}
+          tags: justhumanz/go-simp-subscriber-twitch:${{ github.event.inputs.versionTag }}
+          build-args: |
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}
+
+      - name: Build and push twitter subs watcher
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/subscriber/
+          push: true
+          tags: justhumanz/go-simp-subscriber-twitter:${{ github.event.inputs.versionTag }}
+          build-args: |
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}
+
+      - name: Build and push youtube subs watcher
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/subscriber/
+          push: true
+          tags: justhumanz/go-simp-subscriber-youtube:${{ github.event.inputs.versionTag }}
           build-args: |
             BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}
 
