@@ -5,15 +5,43 @@ networks:
     external: true                                                                                                                                                                                                                                                                                                                                                                                                         
                                                                                                                                                                                                                      
 services:                                                                                                                                                                                                            
-  subscriber:                                                                                                                                                                                                        
-    image: justhumanz/go-simp-subscriber:${RELEASE_VERSION}                                                                                                                                                                                                
+  subscriber_bilibili:                                                                                                                                                                                                        
+    image: justhumanz/go-simp-subscriber-bilibili:${RELEASE_VERSION}                                                                                                                                                                                                
     depends_on:                                                                                                                                                                                                      
       - multi_tor                                                                                                                                                                                                    
     environment:                          
       - PrometheusURL=https://prometheus.humanz.moe  
     networks:                                      
       - go-simp-net    
-                                                                                                                        
+
+  subscriber_twitch:                                                                                                                                                                                                        
+    image: justhumanz/go-simp-subscriber-twitch:${RELEASE_VERSION}                                                                                                                                                                                                
+    depends_on:                                                                                                                                                                                                      
+      - multi_tor                                                                                                                                                                                                    
+    environment:                          
+      - PrometheusURL=https://prometheus.humanz.moe  
+    networks:                                      
+      - go-simp-net    
+
+  subscriber_twitter:                                                                                                                                                                                                        
+    image: justhumanz/go-simp-subscriber-twitter:${RELEASE_VERSION}                                                                                                                                                                                                
+    depends_on:                                                                                                                                                                                                      
+      - multi_tor                                                                                                                                                                                                    
+    environment:                          
+      - PrometheusURL=https://prometheus.humanz.moe  
+    networks:                                      
+      - go-simp-net    
+
+  subscriber_youtube:
+    image: justhumanz/go-simp-subscriber-youtube:${RELEASE_VERSION}                                                                                                                                                                                                
+    depends_on:                                                                                                                                                                                                      
+      - multi_tor                                                                                                                                                                                                    
+    environment:                          
+      - PrometheusURL=https://prometheus.humanz.moe  
+    networks:                                      
+      - go-simp-net    
+
+
   frontend:                                          
     image: justhumanz/go-simp-frontend:${RELEASE_VERSION}
     depends_on:                           
