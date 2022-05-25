@@ -37,6 +37,10 @@ func main() {
 			return config.YoutubeCheckerService
 		} else if Name == "counter_youtube" {
 			return config.YoutubeCounterService
+		} else if Name == "live_youtube" {
+			return config.YoutubeLiveTrackerService
+		} else if Name == "past_youtube" {
+			return config.YoutubePastTrackerService
 		} else if Name == "space_bilibili" {
 			return config.SpaceBiliBiliService
 		} else if Name == "live_bilibili" {
