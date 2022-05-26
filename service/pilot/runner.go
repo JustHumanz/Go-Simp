@@ -106,12 +106,15 @@ func main() {
 			for _, Service := range pilot.S.Service {
 				for _, Unit := range Service.Unit {
 					if time.Since(Unit.Metadata.LastUpdate) > 5*time.Second {
+						msg := "Unit not sending heartbeat for 5 sec,Removing unit"
 						log.WithFields(log.Fields{
 							"Service": Service.Name,
 							"UUID":    Unit.UUID,
-						}).Error("Unit not sending heartbeat for 5 sec,Removing unit")
+						}).Error(msg)
 
 						Service.RemoveUnitFromDeadNode(Unit.UUID)
+
+						pilot.ReportDeadService(msg, Service.Name)
 					}
 				}
 			}
