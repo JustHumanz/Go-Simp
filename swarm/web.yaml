@@ -1,24 +1,24 @@
-version: "3.7"                                                                                                                                                                                                       
-                                                                                                                                                                                                                     
-networks:                                                                                                                                                                                                            
-  go-simp-net:                                                                                                                                                                                                       
-    external: true  
+version: "3.7"
+
+networks:
+  go-simp-net:
+    external: true
 
 services:
-  web-vue:                                           
+  web-vue:
     image: justhumanz/go-simp-web-vue-v2:${RELEASE_VERSION}
     deploy:
-      replicas: 2                                                         
-    depends_on:                                                     
-    - rest_api                                                                                       
-    networks:                                                       
-      - go-simp-net                                                            
-    ports:                                                                     
-      - "9292:80"                                                              
-                             
-  web-admin-api:                                           
-    image: justhumanz/go-simp-web-admin-api:${RELEASE_VERSION}         
-    environment:                                     
+      replicas: 2
+    depends_on:
+      - rest_api
+    networks:
+      - go-simp-net
+    ports:
+      - "9292:80"
+
+  web-admin-api:
+    image: justhumanz/go-simp-web-admin-api:${RELEASE_VERSION}
+    environment:
       - SECRET=${BOT_SECRET}
       - CLIENTID=${BOT_CLIENTID}
       - CALLBACK_URL=https://web-admin.humanz.moe/callback
@@ -26,16 +26,16 @@ services:
       - BOT=${BOT}
       - DB_PASS=${DB_PASS}
       - DB_USER=root
-      - DB_HOST=mysql              
-    networks:                                                       
+      - DB_HOST=mysql
+    networks:
       - go-simp-net
 
-  web-admin-vue:                                           
+  web-admin-vue:
     image: justhumanz/go-simp-web-admin-vue:${RELEASE_VERSION}
-    networks:                                                       
-      - go-simp-net               
+    networks:
+      - go-simp-net
 
-  rest_api:                                                                    
-    image: justhumanz/go-simp-rest_api-v2:${RELEASE_VERSION}                                                                                                       
-    networks:                                                                                  
-      - go-simp-net        
+  rest_api:
+    image: justhumanz/go-simp-rest_api-v2:${RELEASE_VERSION}
+    networks:
+      - go-simp-net
