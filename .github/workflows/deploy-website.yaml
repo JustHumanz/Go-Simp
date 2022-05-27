@@ -83,7 +83,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        
+
       - name: SSH and deploy to server
         uses: fifsky/ssh-action@master
         with:
@@ -91,7 +91,7 @@ jobs:
           user: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           command: |
-            export RELEASE_VERSION=${{ env.RELEASE_VERSION }}
+            export RELEASE_VERSION=${{ github.event.inputs.versionTag }}         
             export TOPGG=${{ secrets.TOPGG }}
             export BOT_SECRET=${{ secrets.SECRET }}
             export BOT_CLIENTID=${{ secrets.CLIENTID }}
