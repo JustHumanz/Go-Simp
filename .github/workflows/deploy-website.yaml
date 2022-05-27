@@ -49,7 +49,7 @@ jobs:
 
       ### Web admin api
       
-      - name: Build and push web admin
+      - name: Build and push web admin api
         uses: docker/build-push-action@v2
         with:
           context: ./service/web-admin-api
@@ -67,7 +67,7 @@ jobs:
 
       ### Go simp web
       
-      - name: Build and push web admin
+      - name: Build and push go-simp web 
         uses: docker/build-push-action@v2
         with:
           context: ./service/new-web-vue
