@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/engine"
@@ -99,6 +100,27 @@ func main() {
 	go http.ListenAndServe(":8181", engine.LowerCaseURI(router))
 
 	pilot.RegisterPilotServiceServer(grpcServer, &pilot.S)
+
+	go func() {
+		for {
+			for _, Service := range pilot.S.Service {
+				for _, Unit := range Service.Unit {
+					if time.Since(Unit.Metadata.LastUpdate) > 5*time.Second {
+						msg := "Unit not sending heartbeat for 5 sec,Removing unit"
+						log.WithFields(log.Fields{
+							"Service": Service.Name,
+							"UUID":    Unit.UUID,
+						}).Error(msg)
+
+						Service.RemoveUnitFromDeadNode(Unit.UUID)
+
+						pilot.ReportDeadService(msg, Service.Name)
+					}
+				}
+			}
+			time.Sleep(1 * time.Second)
+		}
+	}()
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %s", err)

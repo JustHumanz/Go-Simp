@@ -15,6 +15,7 @@ message ServiceMessage {
     string Service = 2;
     string ServiceUUID = 3;
     string Hostname = 4;
+    int64 Timestamp = 5;
 }
 
 
@@ -45,7 +46,7 @@ service PilotService {
   //Get agency payload for non scaling service only
   rpc GetAgencyPayload(ServiceMessage) returns (AgencyPayload){}
   
-  rpc HeartBeat(ServiceMessage) returns (stream Message){}
+  rpc HeartBeat(ServiceMessage) returns (Message){}
   rpc MetricReport(Metric) returns (Message){}
   rpc ReportError(ServiceMessage) returns (Message){}
 }

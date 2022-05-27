@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/database"
+	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/JustHumanz/Go-Simp/pkg/metric"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
@@ -145,6 +146,7 @@ type UnitMetadata struct {
 	Hostname   string
 	Length     int
 	AgencyList []string
+	LastUpdate time.Time
 }
 
 type Server struct {
@@ -200,6 +202,11 @@ func (s *Server) IsYtCheckerRunning() bool {
 		}
 	}
 	return false
+}
+
+func (u *UnitService) UpdateLastReport(toki int64) {
+	TimeUnit := time.Unix(toki, 0)
+	u.Metadata.LastUpdate = TimeUnit
 }
 
 //var ModuleWatcher = make(map[string]int)
@@ -290,8 +297,9 @@ func (s *Server) RequestRunJobsOfService(ctx context.Context, in *ServiceMessage
 					1,
 					nil,
 					UnitMetadata{
-						Hostname: in.Hostname,
-						UUID:     in.ServiceUUID,
+						Hostname:   in.Hostname,
+						UUID:       in.ServiceUUID,
+						LastUpdate: time.Now(),
 					},
 				})
 
@@ -533,37 +541,34 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Message, error)
 	}, nil
 }
 
-func (s *Server) HeartBeat(in *ServiceMessage, stream PilotService_HeartBeatServer) error {
-	for {
-		err := stream.Send(&Message{
-			Message: "Cek",
-		})
-		if err != nil {
-			log.WithFields(log.Fields{
-				"Service":  in.Service,
-				"Messsage": in.Message,
-				"UUID":     in.ServiceUUID,
-			}).Error(fmt.Sprintf("%s Removing unit if exist", err))
-			Svc := GetServiceFromUUID(&S, in.ServiceUUID)
-			if Svc != nil {
-				Svc.RemoveUnitFromDeadNode(in.ServiceUUID)
-			}
-			ReportDeadService(err.Error(), in.Service)
-			return err
-		}
-		time.Sleep(1 * time.Second)
+func (s *Server) HeartBeat(ctx context.Context, in *ServiceMessage) (*Message, error) {
+	Svc, Unit := GetServiceUnitFromUUID(&S, in.ServiceUUID)
+	if Svc != nil {
+		Unit.UpdateLastReport(in.Timestamp)
 	}
+
+	return &Message{
+		Message: "Cek",
+	}, nil
+
 }
 
 func RunHeartBeat(client PilotServiceClient, Service string, UUID string) {
-	_, err := client.HeartBeat(context.Background(), &ServiceMessage{
-		Service:     Service,
-		Message:     "Bep Bob",
-		ServiceUUID: UUID,
-	})
-	if err != nil {
-		ReportDeadService("Pilot down", Service)
-		log.Fatal(err)
+
+	for {
+		_, err := client.HeartBeat(context.Background(), &ServiceMessage{
+			Service:     Service,
+			Message:     "Bep Bob",
+			ServiceUUID: UUID,
+			Timestamp:   time.Now().Unix(),
+			Hostname:    engine.GetHostname(),
+		})
+		if err != nil {
+			ReportDeadService("Pilot down", Service)
+			log.Fatal(err)
+		}
+
+		time.Sleep(1 * time.Second)
 	}
 }
 
@@ -608,13 +613,13 @@ func BoolString(a bool) string {
 	return "false"
 }
 
-func GetServiceFromUUID(s *Server, UUID string) *Service {
+func GetServiceUnitFromUUID(s *Server, UUID string) (*Service, *UnitService) {
 	for _, v := range s.Service {
 		for _, v2 := range v.Unit {
 			if v2.UUID == UUID {
-				return v
+				return v, v2
 			}
 		}
 	}
-	return nil
+	return nil, nil
 }
