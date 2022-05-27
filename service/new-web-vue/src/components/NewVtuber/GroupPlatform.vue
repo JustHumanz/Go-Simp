@@ -138,9 +138,9 @@ export default {
       if (
         activeElement &&
         e.target !== activeElement &&
-        activeElement.tagName === "INPUT"
+        activeElement.tagName === "INPUT" &&
+        activeElement.closest(".platform-group__content")
       ) {
-        if (!activeElement.closest(".platform-group__content")) return
         activeElement.parentElement.classList.toggle(
           "has-error",
           !(await this.checkFilled(activeElement))
@@ -204,7 +204,7 @@ export default {
         count++
       }
 
-      const error = count < inputs.length
+      const error = count < inputs.length && e.tagName === "INPUT"
       platform.classList.toggle("errors", error)
       this.$emit("error", { id: this.id, error })
     },
@@ -314,10 +314,10 @@ export default {
     }
 
     &.errors {
-      @apply bg-red-200 dark:bg-red-400;
+      // @apply bg-red-200 dark:bg-red-400;
 
       .platform-link {
-        @apply bg-red-300 dark:bg-red-500;
+        @apply bg-red-300 dark:bg-red-400;
       }
     }
 
