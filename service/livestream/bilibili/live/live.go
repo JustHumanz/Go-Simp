@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strconv"
 	"sync"
 	"time"
@@ -189,7 +190,16 @@ func (i *checkBlLiveeJob) Run() {
 										}
 									}())
 
-								err := Bili.UpdateLiveBili()
+									//Remove cache before update the status
+								err := Bili.RemoveCache(fmt.Sprintf("%d-%s-%s-%d", Member.ID, Member.Name, config.PastStatus, Member.BiliBiliID))
+								if err != nil {
+									log.WithFields(log.Fields{
+										"Agency": Agency.GroupName,
+										"Vtuber": Member.Name,
+									}).Error(err)
+								}
+
+								err = Bili.UpdateLiveBili()
 								if err != nil {
 									log.WithFields(log.Fields{
 										"Agency": Agency.GroupName,
@@ -222,6 +232,15 @@ func (i *checkBlLiveeJob) Run() {
 								engine.RemoveEmbed(strconv.Itoa(Bili.Member.BiliBiliRoomID), Bot)
 								Bili.UpdateEnd(time.Now()).
 									UpdateStatus(config.PastStatus)
+
+									//Remove cache before update the status
+								err := Bili.RemoveCache(fmt.Sprintf("%d-%s-%s-%d", Member.ID, Member.Name, config.LiveStatus, Member.BiliBiliID))
+								if err != nil {
+									log.WithFields(log.Fields{
+										"Agency": Agency.GroupName,
+										"Vtuber": Member.Name,
+									}).Error(err)
+								}
 
 								err = Bili.UpdateLiveBili()
 								if err != nil {
