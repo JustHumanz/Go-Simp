@@ -140,6 +140,7 @@ export default {
         e.target !== activeElement &&
         activeElement.tagName === "INPUT"
       ) {
+        if (!activeElement.closest(".platform-group__content")) return
         activeElement.parentElement.classList.toggle(
           "has-error",
           !(await this.checkFilled(activeElement))
