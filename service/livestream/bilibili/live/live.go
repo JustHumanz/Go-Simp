@@ -139,7 +139,7 @@ func (i *checkBlLiveeJob) Run() {
 			if len(LiveBili) > 0 {
 				for _, Bili := range LiveBili {
 					for _, Member := range Agency.Members {
-						if Bili.Member.ID == Member.ID {
+						if Bili.Member.ID == Member.ID && Member.Active() {
 							log.WithFields(log.Fields{
 								"Agency": Agency.GroupName,
 								"Vtuber": Member.Name,
