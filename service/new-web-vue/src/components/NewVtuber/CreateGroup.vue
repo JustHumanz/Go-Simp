@@ -77,7 +77,7 @@ export default { ...CreateGroup_script }
 
   &.has-error {
     input {
-      @apply bg-red-200;
+      @apply bg-red-200 dark:bg-red-600;
     }
 
     .description {
@@ -90,7 +90,7 @@ export default { ...CreateGroup_script }
   }
 
   input {
-    @apply my-1 -translate-y-0.5 rounded-lg bg-slate-200 p-2 shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none focus:outline-none;
+    @apply my-1 -translate-y-0.5 rounded-lg bg-slate-200 p-2 shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none focus:outline-none dark:bg-slate-500;
   }
 
   small {
@@ -106,7 +106,7 @@ export default { ...CreateGroup_script }
   }
 
   button {
-    @apply -translate-y-0.5 rounded-lg bg-blue-400 p-2 font-semibold text-white shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm disabled:translate-y-0.5 disabled:opacity-70 disabled:shadow-none;
+    @apply -translate-y-0.5 rounded-lg bg-blue-400 p-2 font-semibold text-white shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm disabled:translate-y-0.5 disabled:opacity-70 disabled:shadow-none dark:bg-slate-700;
   }
 }
 
@@ -141,7 +141,7 @@ export default { ...CreateGroup_script }
     }
 
     input {
-      @apply my-1 -translate-y-0.5 rounded-lg bg-slate-200 p-2 shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none focus:outline-none;
+      @apply my-1 -translate-y-0.5 rounded-lg bg-slate-200  p-2 shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none focus:outline-none;
     }
 
     small {

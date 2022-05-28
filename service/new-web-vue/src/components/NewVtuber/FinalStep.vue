@@ -170,14 +170,14 @@ ${
 }
 
 .my-contents {
-  @apply mb-4 space-y-2 overflow-y-auto rounded-md bg-slate-200 p-2 md:h-72 md:w-3/6;
+  @apply mb-4 space-y-2 overflow-y-auto rounded-md bg-slate-200 p-2 dark:bg-gray-500 md:h-72 md:w-3/6;
 
   h3 {
     @apply text-lg font-semibold;
   }
 
   pre {
-    @apply rounded-md bg-slate-300 py-1 px-2 text-xs;
+    @apply rounded-md bg-slate-300 py-1 px-2 text-xs dark:bg-slate-600;
   }
 }
 </style>

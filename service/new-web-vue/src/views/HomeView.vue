@@ -223,7 +223,7 @@ export default {
   }
 
   &-button {
-    @apply mt-4 rounded-md bg-sky-500 px-4 py-2 text-lg font-bold text-white shadow-sm shadow-sky-600/50 transition-shadow hover:shadow-lg dark:bg-zinc-500 dark:shadow-zinc-700/50;
+    @apply mt-4 rounded-md bg-sky-500 px-4 py-2 text-lg font-bold text-white shadow-sm shadow-sky-600/50 transition-shadow hover:shadow-lg dark:bg-slate-600 dark:shadow-zinc-700/50;
   }
 }
 </style>

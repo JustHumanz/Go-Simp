@@ -32,7 +32,12 @@ export default {
     let activeElement = null
 
     document.body.addEventListener("click", (e) => {
-      if (activeElement && e.target !== activeElement) {
+      if (
+        activeElement &&
+        e.target !== activeElement &&
+        activeElement?.tagName === "INPUT" &&
+        !activeElement.closest(".platform-group__content")
+      ) {
         activeElement.parentElement.classList.toggle(
           "has-error",
           !this.checkFilled(activeElement)

@@ -89,7 +89,7 @@ export default {
     grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
 
     &-item {
-      @apply overflow-hidden rounded-md bg-blue-400;
+      @apply overflow-hidden rounded-md bg-blue-400 dark:bg-slate-700;
 
       &__link {
         @apply flex h-full items-center space-x-1 px-2 py-1 font-semibold text-white transition-all duration-200 ease-in-out hover:bg-black/10;

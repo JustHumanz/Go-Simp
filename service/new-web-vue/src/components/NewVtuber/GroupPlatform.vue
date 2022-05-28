@@ -138,7 +138,8 @@ export default {
       if (
         activeElement &&
         e.target !== activeElement &&
-        activeElement.tagName === "INPUT"
+        activeElement.tagName === "INPUT" &&
+        activeElement.closest(".platform-group__content")
       ) {
         activeElement.parentElement.classList.toggle(
           "has-error",
@@ -203,7 +204,7 @@ export default {
         count++
       }
 
-      const error = count < inputs.length
+      const error = count < inputs.length && e.tagName === "INPUT"
       platform.classList.toggle("errors", error)
       this.$emit("error", { id: this.id, error })
     },
@@ -301,7 +302,7 @@ export default {
 <style lang="scss" scoped>
 .platform {
   &-group {
-    @apply mb-2 rounded-lg bg-slate-200 md:ml-2;
+    @apply mb-2 rounded-lg bg-slate-200 dark:bg-slate-500 md:ml-2;
 
     &.show {
       .arrow {
@@ -313,10 +314,10 @@ export default {
     }
 
     &.errors {
-      @apply bg-red-200;
+      // @apply bg-red-200 dark:bg-red-400;
 
       .platform-link {
-        @apply bg-red-300;
+        @apply bg-red-300 dark:bg-red-600;
       }
     }
 
@@ -329,7 +330,7 @@ export default {
 
         &.has-error {
           input {
-            @apply bg-red-400;
+            @apply bg-red-400 dark:bg-red-600;
           }
 
           .description {
@@ -346,11 +347,11 @@ export default {
         }
 
         select {
-          @apply my-1 -translate-y-0.5 rounded-lg bg-slate-100 p-2 shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none;
+          @apply my-1 -translate-y-0.5 rounded-lg bg-slate-100 p-2 shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none dark:bg-slate-600;
         }
 
         input {
-          @apply my-1 -translate-y-0.5 rounded-lg bg-slate-100 p-2 shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none focus:outline-none;
+          @apply my-1 -translate-y-0.5 rounded-lg bg-slate-100 p-2 shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none focus:outline-none dark:bg-slate-600;
         }
 
         small {
@@ -358,7 +359,7 @@ export default {
         }
 
         .description {
-          @apply text-gray-600;
+          @apply text-gray-600 dark:text-slate-50;
         }
 
         .error {
@@ -369,7 +370,7 @@ export default {
   }
 
   &-link {
-    @apply flex items-center justify-between rounded-lg bg-slate-300 px-4 py-2 shadow-md;
+    @apply flex items-center justify-between rounded-lg bg-slate-300 px-4 py-2 shadow-md dark:bg-slate-600;
 
     &__icon {
       @apply flex items-center space-x-4;
@@ -382,7 +383,7 @@ export default {
 }
 
 .delete-platform {
-  @apply rounded-full bg-white p-1 px-1.5;
+  @apply rounded-full bg-white p-1 px-1.5 transition duration-200 ease-in-out dark:text-slate-700;
 
   &.confirm {
     @apply bg-red-500 text-white;
