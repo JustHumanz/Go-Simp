@@ -415,19 +415,17 @@ func (i *checkYtJob) Run() {
 											SetState(config.YoutubeLive).
 											UpdateYt(config.LiveStatus)
 
-										if Member.BiliBiliRoomID != 0 {
-											LiveBili, err := engine.GetRoomStatus(Member.BiliBiliRoomID)
-											if err != nil {
-												log.WithFields(log.Fields{
-													"Vtuber":  Member.EnName,
-													"Agency":  Group.GroupName,
-													"VideoID": Youtube.VideoID,
-												}).Error(err)
-											}
+										BiliBiliLive := Member.IsBiliBiliLive()
+										TwitchLive := Member.IsTwitchLive()
+										if TwitchLive || BiliBiliLive {
+											log.WithFields(log.Fields{
+												"Agency":   Group.GroupName,
+												"Vtuber":   Member.Name,
+												"Twitch":   TwitchLive,
+												"BiliBili": BiliBiliLive,
+											}).Info("vtuber already have live in other platform,skiping send notif")
 
-											if LiveBili.CheckScheduleLive() {
-												Youtube.SetBiliLive(true).UpdateBiliToLive()
-											}
+											continue
 										}
 
 										if config.GoSimpConf.Metric {
