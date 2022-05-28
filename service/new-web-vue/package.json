@@ -16,6 +16,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.0-5",
     "axios": "^0.25.0",
     "marked": "^4.0.12",
+    "pinia": "^2.0.14",
     "sharp": "^0.30.4",
     "validator": "^13.7.0",
     "vue": "^3.2.29",
@@ -24,8 +25,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.1.0",
-    "concurrently": "^7.0.0",
     "autoprefixer": "^10.4.2",
+    "concurrently": "^7.0.0",
     "postcss": "^8.4.6",
     "prettier": "^2.6.2",
     "prettier-plugin-tailwindcss": "^0.1.10",
