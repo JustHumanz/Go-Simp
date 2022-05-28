@@ -302,7 +302,7 @@ export default {
 <style lang="scss" scoped>
 .platform {
   &-group {
-    @apply mb-2 rounded-lg bg-slate-200 dark:bg-slate-400 md:ml-2;
+    @apply mb-2 rounded-lg bg-slate-200 dark:bg-slate-500 md:ml-2;
 
     &.show {
       .arrow {
@@ -317,7 +317,7 @@ export default {
       // @apply bg-red-200 dark:bg-red-400;
 
       .platform-link {
-        @apply bg-red-300 dark:bg-red-400;
+        @apply bg-red-300 dark:bg-red-600;
       }
     }
 
@@ -330,7 +330,7 @@ export default {
 
         &.has-error {
           input {
-            @apply bg-red-400 dark:bg-red-700;
+            @apply bg-red-400 dark:bg-red-600;
           }
 
           .description {
@@ -347,11 +347,11 @@ export default {
         }
 
         select {
-          @apply my-1 -translate-y-0.5 rounded-lg bg-slate-100 p-2 shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none dark:bg-slate-500;
+          @apply my-1 -translate-y-0.5 rounded-lg bg-slate-100 p-2 shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none dark:bg-slate-600;
         }
 
         input {
-          @apply my-1 -translate-y-0.5 rounded-lg bg-slate-100 p-2 shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none focus:outline-none dark:bg-slate-500;
+          @apply my-1 -translate-y-0.5 rounded-lg bg-slate-100 p-2 shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none focus:outline-none dark:bg-slate-600;
         }
 
         small {

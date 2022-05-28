@@ -77,7 +77,7 @@ export default { ...CreateGroup_script }
 
   &.has-error {
     input {
-      @apply bg-red-200 dark:bg-red-700;
+      @apply bg-red-200 dark:bg-red-600;
     }
 
     .description {

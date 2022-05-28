@@ -135,16 +135,8 @@
 
       <div class="vtuber__content-item">
         <label for="live-id">Bilibili Fanart</label>
-        <input
-          type="text"
-          id="bili-art"
-          name="bili-art"
-          autocomplete="off"
-          ref="liveid"
-        />
-        <small class="description">
-         (Optional)
-        </small>
+        <input type="text" id="bili-art" name="bili-art" autocomplete="off" />
+        <small class="description"> (Optional) </small>
         <small class="error"></small>
       </div>
 
@@ -217,7 +209,7 @@ export default { ...VtuberPlatform }
 <style lang="scss" scoped>
 .vtuber {
   &-form {
-    @apply mb-2 rounded-lg bg-slate-200 md:ml-2;
+    @apply mb-2 rounded-lg bg-slate-200 dark:bg-slate-500 md:ml-2;
 
     &.show {
       .arrow {
@@ -229,15 +221,15 @@ export default { ...VtuberPlatform }
     }
 
     &.errors {
-      @apply bg-red-200;
+      // @apply bg-red-200;
 
       .vtuber-link {
-        @apply bg-red-300;
+        @apply bg-red-300 dark:bg-red-600;
       }
     }
   }
   &-link {
-    @apply flex items-center justify-between rounded-lg bg-slate-300 px-4 py-2 shadow-md;
+    @apply flex items-center justify-between rounded-lg bg-slate-300 px-4 py-2 shadow-md dark:bg-slate-600;
 
     &__icon {
       @apply flex items-center space-x-4;
@@ -253,7 +245,7 @@ export default { ...VtuberPlatform }
 
       &.has-error {
         input {
-          @apply bg-red-400 text-white;
+          @apply bg-red-400 dark:bg-red-600;
         }
 
         .description {
@@ -270,7 +262,7 @@ export default { ...VtuberPlatform }
       }
 
       input {
-        @apply my-1 -translate-y-0.5 rounded-lg bg-slate-100 p-2 shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none focus:outline-none;
+        @apply my-1 -translate-y-0.5 rounded-lg bg-slate-100 p-2 shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none focus:outline-none dark:bg-slate-600;
       }
 
       small {
@@ -278,7 +270,7 @@ export default { ...VtuberPlatform }
       }
 
       .description {
-        @apply text-gray-600;
+        @apply text-gray-600 dark:text-slate-50;
 
         a {
           @apply text-blue-500 hover:text-blue-700;
@@ -297,7 +289,7 @@ export default { ...VtuberPlatform }
 }
 
 .delete-vtuber {
-  @apply rounded-full bg-white p-1 px-1.5;
+  @apply rounded-full bg-white p-1 px-1.5 transition duration-200 ease-in-out dark:text-slate-700;
 
   &.one {
     @apply bg-slate-200 opacity-70;
