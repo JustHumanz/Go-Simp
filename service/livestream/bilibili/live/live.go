@@ -221,6 +221,22 @@ func (i *checkBlLiveeJob) Run() {
 									})
 								}
 
+								//Add checker to check if vtuber was already live in yt or not
+								YoutubeLive := Member.IsYoutubeLive()
+								TwitchLive := Member.IsTwitchLive()
+								if YoutubeLive || TwitchLive {
+									log.WithFields(log.Fields{
+										"Agency":  Agency.GroupName,
+										"Vtuber":  Member.Name,
+										"Youtube": YoutubeLive,
+										"Twitch":  TwitchLive,
+									}).Info("vtuber already have live in other platform,skiping send notif")
+
+									continue
+								}
+
+								//shall i check it from api too?,let see later
+
 								engine.SendLiveNotif(&Bili, Bot)
 
 							} else if !Status.CheckScheduleLive() && Bili.Status == config.LiveStatus {

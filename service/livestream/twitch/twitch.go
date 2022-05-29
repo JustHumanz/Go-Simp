@@ -229,6 +229,20 @@ func (i *checkTwcJob) Run() {
 									})
 								}
 
+								//Add checker to check if vtuber was already live in yt or not
+								YoutubeLive := Member.IsYoutubeLive()
+								BiliBiliLive := Member.IsBiliBiliLive()
+								if YoutubeLive || BiliBiliLive {
+									log.WithFields(log.Fields{
+										"Agency":   Group.GroupName,
+										"Vtuber":   Member.Name,
+										"Youtube":  YoutubeLive,
+										"BiliBili": BiliBiliLive,
+									}).Info("vtuber already have live in other platform,skiping send notif")
+
+									continue
+								}
+
 								engine.SendLiveNotif(ResultDB, Bot)
 
 								log.WithFields(log.Fields{

@@ -1035,3 +1035,48 @@ func CheckVideoIDFromCache(VideoID string) LiveStream {
 	return Live
 
 }
+
+func (Data Member) IsYoutubeLive() bool {
+	if Data.YoutubeID != "" {
+		yt, err := Data.GetYtLiveStream(config.LiveStatus)
+		if err != nil {
+			log.Error(err)
+
+		}
+
+		if yt != nil {
+			return true
+		}
+	}
+	return false
+}
+
+func (Data Member) IsTwitchLive() bool {
+	if Data.TwitchName != "" {
+		tw, err := Data.GetTwitchLiveStream(config.LiveStatus)
+		if err != nil {
+			log.Error(err)
+
+		}
+
+		if tw.ID != 0 {
+			return true
+		}
+	}
+	return false
+}
+
+func (Data Member) IsBiliBiliLive() bool {
+	if Data.BiliBiliRoomID != 0 {
+		bl, err := Data.GetBlLiveStream(config.LiveStatus)
+		if err != nil {
+			log.Error(err)
+
+		}
+
+		if bl.ID != 0 {
+			return true
+		}
+	}
+	return false
+}
