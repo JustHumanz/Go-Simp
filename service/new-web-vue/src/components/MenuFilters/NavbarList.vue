@@ -15,7 +15,7 @@ import SortMenu from "./SortMenu.vue"
             (error_status && error_status != 404),
         }"
       >
-        <GroupsMenu :groups="groups" />
+        <GroupsMenu />
       </li>
       <li
         class="navbar-filter"
@@ -67,10 +67,6 @@ export default {
     }
   },
   props: {
-    groups: {
-      type: Array,
-      default: [],
-    },
     filters: {
       type: Object,
       default: null,

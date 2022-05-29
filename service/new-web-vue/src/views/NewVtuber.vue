@@ -61,6 +61,7 @@ library.add(faCirclePlus)
 
 import axios from "axios"
 import Config from "../config.json"
+import { useGroupStore } from "@/stores/groups"
 
 export default {
   data() {
@@ -102,28 +103,27 @@ export default {
       if (this.groups.length > 0) return
       console.log("Fetching group data...")
 
-      // this.cancelGroups = axios.CancelToken.source()
+      let data_groups
+      let err
 
-      const data_groups = await axios
-        .get(Config.REST_API + "/v2/groups/", {
-          // cancelToken: this.cancelGroups.token,
-        })
-        .then((response) => response.data)
-        .catch((error) => {
-          if (!axios.isCancel(error)) this.error_msg = error.message
-        })
+      await new Promise((resolve) => {
+        const gettingData = setInterval(() => {
+          data_groups = [...useGroupStore().groups.data]
+          err = useGroupStore().groups.error
 
-      if (this.error_msg) return false
-
-      // sort group data from GroupName
-      data_groups.sort((a, b) => {
-        if (a.GroupName.toLowerCase() < b.GroupName.toLowerCase()) return -1
-        if (a.GroupName.toLowerCase() > b.GroupName.toLowerCase()) return 1
-        return 0
+          if (data_groups.length > 0 || err) {
+            clearInterval(gettingData)
+            resolve()
+          }
+        }, 100)
       })
 
+      if (err) {
+        this.error_status = useGroupStore().status
+        return
+      }
+
       this.groups = data_groups
-      console.log(`Total group: ${this.groups.length}`)
     },
     getGroup(group) {
       if (!group) this.step = 2

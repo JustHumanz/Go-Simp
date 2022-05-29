@@ -78,6 +78,8 @@ import regionConfig from "../region.json"
 
 library.add(faCaretUp)
 
+import { useGroupStore } from "@/stores/groups"
+
 export default {
   props: {
     vtubers: {
@@ -87,10 +89,6 @@ export default {
       type: String,
       default: null,
     },
-    groups: {
-      type: Array,
-      default: [],
-    },
   },
   emits: ["getPlaceholder", "null-data"],
   data() {
@@ -98,24 +96,11 @@ export default {
       limitedVtubers: [],
       nullData: false,
       hide_scroll_up: true,
-      group: null,
       regions: null,
     }
   },
   async created() {
     this.regions = regionConfig
-
-    this.$watch(
-      () => this.groups,
-      () => {
-        if (this.groups.length > 0 && this.$route.params?.id) {
-          this.group = this.groups.find(
-            (group) => group.ID == this.$route.params.id
-          )
-        }
-      },
-      { immediate: true }
-    )
 
     this.$watch(
       () => this.$route.query,
@@ -136,6 +121,13 @@ export default {
     this.ScrollFuncions()
   },
   computed: {
+    group() {
+      return (
+        useGroupStore().groups.data.find(
+          (group) => group.ID == this.$route.params?.id
+        ) || null
+      )
+    },
     filteredVtubers() {
       let vtuber_data = this.vtubers
 
