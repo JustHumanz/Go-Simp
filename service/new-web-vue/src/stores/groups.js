@@ -10,18 +10,6 @@ export const useGroupStore = defineStore("groups", () => {
     data: [],
   })
 
-  const id = ref({ id: null })
-
-  const singleGroup = computed(() =>
-    groups.value.data.find((group) => group.id === id.value.id)
-  )
-
-  const getId = (idGroup) => {
-    id.value.id = idGroup
-  }
-
-  // const getGroups = () => computed(() => groups)
-
   const fetchGroups = async () => {
     let err = false
     groups.value.status = ""
@@ -51,8 +39,6 @@ export const useGroupStore = defineStore("groups", () => {
 
   return {
     groups,
-    getId,
-    singleGroup,
     fetchGroups,
   }
 })

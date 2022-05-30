@@ -57,7 +57,7 @@ import axios from "axios"
 import Config from "../config.json"
 import regionConfig from "../region.json"
 
-import { useGroupStore } from "@/stores/groups"
+import { useMemberStore } from "@/stores/members.js"
 
 export default {
   data() {
@@ -76,6 +76,8 @@ export default {
     }
   },
   async created() {
+    console.log(window.location)
+
     this.$watch(
       () => this.$route.params,
       () => (this.group_id = this.$route.params?.id || null),
@@ -240,6 +242,9 @@ export default {
           const liNavbarFilter = navbarFilter.parentElement
 
           if (liNavbarFilter.classList.contains("disabled")) {
+            this.activeListMenu = null
+            this.activeSubMenu = null
+            this.clickedSubMenu = false
             navbarFilter.blur()
             return
           }
