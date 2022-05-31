@@ -2,6 +2,13 @@
 import { RouterLink, RouterView } from "vue-router"
 import IconHome from "@/components/icons/IconHome.vue"
 import "./index.css"
+
+import { useGroupStore } from "@/stores/groups"
+import { onMounted } from "vue"
+
+onMounted(() => {
+  useGroupStore().fetchGroups()
+})
 </script>
 
 <template>

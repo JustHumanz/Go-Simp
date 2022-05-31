@@ -1,12 +1,13 @@
 <template>
   <a href="#" class="navbar-filter__link" onclick="return false">Sort</a>
   <ul class="navbar-filter-items">
-    <li class="navbar-filter-item" v-if="filters">
+    <li class="navbar-filter-item" v-if="platforms.length">
       <router-link
         :to="{
           params: { id: $route.params.id },
           query: { ...reg, ...plat, ...inac },
         }"
+        @click="setSort()"
         class="navbar-filter-item__link sm:!w-64"
         :class="{ active: !sort.sort }"
       >
@@ -17,12 +18,13 @@
         <span class="navbar-filter-item__span">Name (A - Z)</span>
       </router-link>
     </li>
-    <li class="navbar-filter-item" v-if="filters">
+    <li class="navbar-filter-item" v-if="platforms.length">
       <router-link
         :to="{
           params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...inac, sort: '-name' },
+          query: { ...reg, ...plat, ...liveplat, ...inac, sort: '-name' },
         }"
+        @click="setSort()"
         class="navbar-filter-item__link sm:!w-64"
         :class="{ active: sort.sort == '-name' }"
       >
@@ -33,12 +35,16 @@
         <span class="navbar-filter-item__span">Name (Z - A)</span>
       </router-link>
     </li>
-    <li class="navbar-filter-item" v-if="filters && filters.youtube">
+    <li
+      class="navbar-filter-item"
+      v-if="platforms.length && platforms.includes(`youtube`)"
+    >
       <router-link
         :to="{
           params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...inac, sort: 'yt' },
+          query: { ...reg, ...plat, ...liveplat, ...inac, sort: 'yt' },
         }"
+        @click="setSort()"
         class="navbar-filter-item__link sm:!w-64"
         :class="{ active: sort.sort == 'yt' }"
       >
@@ -49,12 +55,16 @@
         <span class="navbar-filter-item__span">YouTube Subs (Bigger)</span>
       </router-link>
     </li>
-    <li class="navbar-filter-item" v-if="filters && filters.youtube">
+    <li
+      class="navbar-filter-item"
+      v-if="platforms.length && platforms.includes(`youtube`)"
+    >
       <router-link
         :to="{
           params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...inac, sort: '-yt' },
+          query: { ...reg, ...plat, ...liveplat, ...inac, sort: '-yt' },
         }"
+        @click="setSort()"
         class="navbar-filter-item__link sm:!w-64"
         :class="{ active: sort.sort == '-yt' }"
       >
@@ -65,12 +75,56 @@
         <span class="navbar-filter-item__span">YouTube Subs (Smaller)</span>
       </router-link>
     </li>
-    <li class="navbar-filter-item" v-if="filters && filters.twitch">
+    <li
+      class="navbar-filter-item"
+      v-if="platforms.length && platforms.includes(`youtube`)"
+    >
       <router-link
         :to="{
           params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...inac, sort: 'tw' },
+          query: { ...reg, ...plat, ...liveplat, ...inac, sort: 'ytv' },
         }"
+        @click="setSort()"
+        class="navbar-filter-item__link sm:!w-64"
+        :class="{ active: sort.sort == 'ytv' }"
+      >
+        <font-awesome-icon
+          class="fa-fw navbar-filter-item__svg"
+          :icon="['fab', 'youtube']"
+        />
+        <span class="navbar-filter-item__span">YouTube Views (Bigger)</span>
+      </router-link>
+    </li>
+    <li
+      class="navbar-filter-item"
+      v-if="platforms.length && platforms.includes(`youtube`)"
+    >
+      <router-link
+        :to="{
+          params: { id: $route.params.id },
+          query: { ...reg, ...plat, ...liveplat, ...inac, sort: '-ytv' },
+        }"
+        @click="setSort()"
+        class="navbar-filter-item__link sm:!w-64"
+        :class="{ active: sort.sort == '-ytv' }"
+      >
+        <font-awesome-icon
+          class="fa-fw navbar-filter-item__svg"
+          :icon="['fab', 'youtube']"
+        />
+        <span class="navbar-filter-item__span">YouTube Views (Smaller)</span>
+      </router-link>
+    </li>
+    <li
+      class="navbar-filter-item"
+      v-if="platforms.length && platforms.includes(`twitch`)"
+    >
+      <router-link
+        :to="{
+          params: { id: $route.params.id },
+          query: { ...reg, ...plat, ...liveplat, ...inac, sort: 'tw' },
+        }"
+        @click="setSort()"
         class="navbar-filter-item__link sm:!w-64"
         :class="{ active: sort.sort == 'tw' }"
       >
@@ -81,12 +135,16 @@
         <span class="navbar-filter-item__span">Twitch Followers (Bigger)</span>
       </router-link>
     </li>
-    <li class="navbar-filter-item" v-if="filters && filters.twitch">
+    <li
+      class="navbar-filter-item"
+      v-if="platforms.length && platforms.includes(`twitch`)"
+    >
       <router-link
         :to="{
           params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...inac, sort: '-tw' },
+          query: { ...reg, ...plat, ...liveplat, ...inac, sort: '-tw' },
         }"
+        @click="setSort()"
         class="navbar-filter-item__link sm:!w-64"
         :class="{ active: sort.sort == '-tw' }"
       >
@@ -97,12 +155,16 @@
         <span class="navbar-filter-item__span">Twitch Followers (Smaller)</span>
       </router-link>
     </li>
-    <li class="navbar-filter-item" v-if="filters && filters.bilibili">
+    <li
+      class="navbar-filter-item"
+      v-if="platforms.length && platforms.includes(`bilibili`)"
+    >
       <router-link
         :to="{
           params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...inac, sort: 'bl' },
+          query: { ...reg, ...plat, ...liveplat, ...inac, sort: 'bl' },
         }"
+        @click="setSort()"
         class="navbar-filter-item__link sm:!w-64"
         :class="{ active: sort.sort == 'bl' }"
       >
@@ -110,15 +172,21 @@
           class="fa-fw navbar-filter-item__svg"
           :icon="['fab', 'bilibili']"
         />
-        <span class="navbar-filter-item__span">Bilibili Fans (Bigger)</span>
+        <span class="navbar-filter-item__span"
+          >BiliBili Followers (Bigger)</span
+        >
       </router-link>
     </li>
-    <li class="navbar-filter-item" v-if="filters && filters.bilibili">
+    <li
+      class="navbar-filter-item"
+      v-if="platforms.length && platforms.includes(`bilibili`)"
+    >
       <router-link
         :to="{
           params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...inac, sort: '-bl' },
+          query: { ...reg, ...plat, ...liveplat, ...inac, sort: '-bl' },
         }"
+        @click="setSort()"
         class="navbar-filter-item__link sm:!w-64"
         :class="{ active: sort.sort == '-bl' }"
       >
@@ -126,15 +194,58 @@
           class="fa-fw navbar-filter-item__svg"
           :icon="['fab', 'bilibili']"
         />
-        <span class="navbar-filter-item__span">Bilibili Fans (Smaller)</span>
+        <span class="navbar-filter-item__span"
+          >BiliBili Followers (Smaller)</span
+        >
       </router-link>
     </li>
-    <li class="navbar-filter-item" v-if="filters && filters.twitter">
+    <li
+      class="navbar-filter-item"
+      v-if="platforms.length && platforms.includes(`bilibili`)"
+    >
       <router-link
         :to="{
           params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...inac, sort: 'twr' },
+          query: { ...reg, ...plat, ...liveplat, ...inac, sort: 'blv' },
         }"
+        @click="setSort()"
+        class="navbar-filter-item__link sm:!w-64"
+        :class="{ active: sort.sort == 'blv' }"
+      >
+        <font-awesome-icon
+          class="fa-fw navbar-filter-item__svg"
+          :icon="['fab', 'bilibili']"
+        />
+        <span class="navbar-filter-item__span">BiliBili Views (Bigger)</span>
+      </router-link>
+    </li>
+    <li
+      class="navbar-filter-item"
+      v-if="platforms.length && platforms.includes(`bilibili`)"
+    >
+      <router-link
+        :to="{
+          params: { id: $route.params.id },
+          query: { ...reg, ...plat, ...liveplat, ...inac, sort: '-blv' },
+        }"
+        @click="setSort()"
+        class="navbar-filter-item__link sm:!w-64"
+        :class="{ active: sort.sort == '-blv' }"
+      >
+        <font-awesome-icon
+          class="fa-fw navbar-filter-item__svg"
+          :icon="['fab', 'bilibili']"
+        />
+        <span class="navbar-filter-item__span">BiliBili Views (Smaller)</span>
+      </router-link>
+    </li>
+    <li class="navbar-filter-item">
+      <router-link
+        :to="{
+          params: { id: $route.params.id },
+          query: { ...reg, ...plat, ...liveplat, ...inac, sort: 'twr' },
+        }"
+        @click="setSort()"
         class="navbar-filter-item__link sm:!w-64"
         :class="{ active: sort.sort == 'twr' }"
       >
@@ -145,12 +256,13 @@
         <span class="navbar-filter-item__span">Twitter Followers (Bigger)</span>
       </router-link>
     </li>
-    <li class="navbar-filter-item" v-if="filters && filters.twitter">
+    <li class="navbar-filter-item">
       <router-link
         :to="{
           params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...inac, sort: '-twr' },
+          query: { ...reg, ...plat, ...liveplat, ...inac, sort: '-twr' },
         }"
+        @click="setSort()"
         class="navbar-filter-item__link sm:!w-64"
         :class="{ active: sort.sort == '-twr' }"
       >
@@ -187,16 +299,14 @@ library.add(
   faTwitter
 )
 
+import { useMemberStore } from "@/stores/members.js"
+
 export default {
-  props: {
-    filters: {
-      type: Object,
-    },
-  },
   data() {
     return {
       reg: {},
       plat: {},
+      liveplat: {},
       inac: {},
       sort: {},
     }
@@ -209,6 +319,9 @@ export default {
         this.plat = this.$route.query.plat
           ? { plat: this.$route.query.plat }
           : {}
+        this.liveplat = this.$route.query.liveplat
+          ? { liveplat: this.$route.query.liveplat }
+          : {}
         this.inac = this.$route.query.inac
           ? { inac: this.$route.query.inac }
           : {}
@@ -218,6 +331,17 @@ export default {
       },
       { immediate: true }
     )
+  },
+  computed: {
+    platforms() {
+      return useMemberStore().members.config.menu.platform
+    },
+  },
+  methods: {
+    async setSort() {
+      await new Promise((r) => setTimeout(r, 0))
+      useMemberStore().sortingMembers()
+    },
   },
 }
 </script>

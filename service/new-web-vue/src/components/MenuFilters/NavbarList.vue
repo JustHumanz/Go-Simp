@@ -10,29 +10,21 @@ import SortMenu from "./SortMenu.vue"
       <li
         class="navbar-filter group"
         :class="{
-          disabled:
-            (disabled && error_status != 404) ||
-            (error_status && error_status != 404),
+          disabled: !enabledGroups,
         }"
       >
-        <GroupsMenu :groups="groups" />
+        <GroupsMenu />
       </li>
       <li
         class="navbar-filter"
         :class="{
-          disabled:
-            disabled ||
-            error_status ||
-            (filters &&
-              filters.region.length < 2 &&
-              platform.length < 2 &&
-              !filters.inactive),
+          disabled: !enabledFilters,
         }"
       >
-        <FilterMenu :filters="filters" />
+        <FilterMenu />
       </li>
-      <li class="navbar-filter" :class="{ disabled: disabled || error_status }">
-        <SortMenu :filters="filters" />
+      <li class="navbar-filter" :class="{ disabled: !checkFilteredData }">
+        <SortMenu />
       </li>
     </ul>
     <div class="nav-search">
@@ -45,8 +37,8 @@ import SortMenu from "./SortMenu.vue"
         class="nav-search__input"
         @keydown="searchData"
         ref="search_input"
-        :placeholder="placeholder || `Search Vtubers...`"
-        :disabled="disable_search"
+        :placeholder="placeholderSearch"
+        :disabled="!checkFilteredData"
       />
     </div>
   </nav>
@@ -58,55 +50,11 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
 
 library.add(faMagnifyingGlass)
 
+import { useGroupStore } from "@/stores/groups"
+import { useMemberStore } from "@/stores/members.js"
+
 export default {
-  data() {
-    return {
-      platform: [],
-      search_query: null,
-      err_status: null,
-    }
-  },
-  props: {
-    groups: {
-      type: Array,
-      default: [],
-    },
-    filters: {
-      type: Object,
-      default: null,
-    },
-    placeholder: {
-      type: String,
-      default: "Search Vtubers...",
-    },
-    disable_search: {
-      type: Boolean,
-      default: false,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    error_status: {
-      type: Number,
-      default: null,
-    },
-  },
   async created() {
-    this.$watch(
-      () => this.filters,
-      () => {
-        this.platform = []
-
-        if (this.filters) {
-          if (this.filters.youtube) this.platform.push("youtube")
-          if (this.filters.twitch) this.platform.push("twitch")
-          if (this.filters.bilibili) this.platform.push("bilibili")
-        }
-      },
-      { immediate: true }
-    )
-
     this.$watch(
       () => this.$route,
       (a, b) => {
@@ -122,10 +70,64 @@ export default {
       }
     )
   },
+  computed: {
+    enabledGroups() {
+      const storeGroup = useGroupStore()
+      const storeMember = useMemberStore()
+
+      return !storeGroup.groups.status && storeMember.members.data.length > 0
+    },
+
+    enabledFilters() {
+      const filtersMenu = useMemberStore().members.config.menu
+
+      return (
+        useMemberStore().members.data.length > 0 &&
+        (filtersMenu.region.length > 1 ||
+          filtersMenu.platform.length > 1 ||
+          filtersMenu.live.length > 1 ||
+          filtersMenu.inactive)
+      )
+    },
+    // enabledSort() {
+    //   const filtersMenu = useMemberStore().members.config.menu
+
+    //   return (
+    //     useMemberStore().members.data.length > 0 &&
+    //     filtersMenu.platform.length > 1
+    //   )
+    // },
+    checkFilteredData() {
+      return useMemberStore().members.filteredData.length > 0
+    },
+    placeholderSearch() {
+      const store = useMemberStore()
+
+      if (!this.checkFilteredData) return "Search Vtubers..."
+
+      // get all EnName and JpName from filteredData
+      const EnNames = store.members.filteredData.map((member) => {
+        return member.EnName
+      })
+
+      const JpNames = store.members.filteredData.map((member) => {
+        return member.JpName ? member.JpName : false
+      })
+
+      // join all EnName and JpName to one array
+      const allNames = EnNames.concat(JpNames)
+
+      // random one name from allNames
+      const randomName = allNames[Math.floor(Math.random() * allNames.length)]
+
+      return randomName || "Search Vtubers..."
+    },
+  },
   methods: {
     async searchData() {
       await new Promise((resolve) => setTimeout(resolve, 60))
-      this.$emit("search", this.$refs.search_input.value)
+      useMemberStore().searchMembers(this.$refs.search_input.value)
+      // this.$emit("search", this.$refs.search_input.value)
     },
   },
 }
