@@ -89,14 +89,6 @@ export default {
           filtersMenu.inactive)
       )
     },
-    // enabledSort() {
-    //   const filtersMenu = useMemberStore().members.config.menu
-
-    //   return (
-    //     useMemberStore().members.data.length > 0 &&
-    //     filtersMenu.platform.length > 1
-    //   )
-    // },
     checkFilteredData() {
       return useMemberStore().members.filteredData.length > 0
     },
@@ -127,7 +119,6 @@ export default {
     async searchData() {
       await new Promise((resolve) => setTimeout(resolve, 60))
       useMemberStore().searchMembers(this.$refs.search_input.value)
-      // this.$emit("search", this.$refs.search_input.value)
     },
   },
 }

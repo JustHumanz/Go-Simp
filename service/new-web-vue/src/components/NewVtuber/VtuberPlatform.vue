@@ -220,10 +220,7 @@ export default { ...VtuberPlatform }
       }
     }
 
-    &.errors {
-      // @apply bg-red-200;
-
-      .vtuber-link {
+    &.errors .vtuber-link {
         @apply bg-red-300 dark:bg-red-600;
       }
     }

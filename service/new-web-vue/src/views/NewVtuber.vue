@@ -143,7 +143,6 @@ export default {
     },
     backAction() {
       if (this.group && this.step == 3) return (this.step = 1)
-      // if (this.step === 2 && this.newGroup) this.newGroup = null
       this.step -= 1
     },
     async getNickname() {

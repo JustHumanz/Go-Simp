@@ -313,10 +313,7 @@ export default {
       }
     }
 
-    &.errors {
-      // @apply bg-red-200 dark:bg-red-400;
-
-      .platform-link {
+    &.errors .platform-link {
         @apply bg-red-300 dark:bg-red-600;
       }
     }

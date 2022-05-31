@@ -79,15 +79,6 @@ import { useGroupStore } from "@/stores/groups"
 import { useMemberStore } from "@/stores/members.js"
 
 export default {
-  // props: {
-  //   vtubers: {
-  //     type: Array,
-  //   },
-  //   search_query: {
-  //     type: String,
-  //     default: null,
-  //   },
-  // },
   emits: ["getPlaceholder", "null-data"],
   data() {
     return {

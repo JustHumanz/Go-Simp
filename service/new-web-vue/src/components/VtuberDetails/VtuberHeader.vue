@@ -210,13 +210,9 @@ export default {
 
 .header {
   &-banner {
-    @apply /*&h-[11.25rem]*/ /*bg-center bg-no-repeat*/ w-full bg-slate-200 bg-cover object-cover object-center dark:bg-slate-700;
+    @apply w-full bg-slate-200 bg-cover object-cover object-center dark:bg-slate-700;
     min-height: calc(16.1290322581vw - 1px);
     height: calc(16.1290322581vw - 1px);
-
-    // @media (min-width: 640px) {
-    //   height: calc(16.1290322581vw - 1px);
-    // }
 
     @media (min-width: 768px) {
       min-height: calc((100vw - 240px) / 6.2 - 1px);

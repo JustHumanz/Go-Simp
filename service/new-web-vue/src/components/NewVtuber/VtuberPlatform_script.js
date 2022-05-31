@@ -133,7 +133,6 @@ export default {
       const name = e.name === "name"
       const ENname = e.name === "en-name"
       const JPname = e.name === "jp-name"
-      // const fanbase = e.name === "fanbase"
       const region = e.name === "lang-code"
       const youtubeId = e.name === "youtube-id"
       const twitchName = e.name === "nickname-twitch"
