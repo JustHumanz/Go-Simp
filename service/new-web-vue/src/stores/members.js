@@ -40,9 +40,6 @@ export const useMemberStore = defineStore("members", () => {
     members.value.status = null
     members.value.error = false
 
-    members.value.query = ""
-    members.value.searchedData = []
-
     if (members.value.config.group === id) return
 
     members.value.data = []
@@ -246,6 +243,9 @@ export const useMemberStore = defineStore("members", () => {
   }
 
   const sortingMembers = () => {
+    members.value.query = ""
+    members.value.searchedData = []
+
     const { sort, live: liveLink } = parse(window.location.href, true).query
 
     // if link is not /vtubers
