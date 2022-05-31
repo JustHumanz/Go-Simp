@@ -314,8 +314,7 @@ export default {
     }
 
     &.errors .platform-link {
-        @apply bg-red-300 dark:bg-red-600;
-      }
+      @apply bg-red-300 dark:bg-red-600;
     }
 
     &__content {
