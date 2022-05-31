@@ -43,6 +43,7 @@
     <li class="navbar-filter-item" v-for="group in groups" :key="group.ID">
       <router-link
         :to="`/vtubers/${group.ID || ''}`"
+        @click="getVtuberData(group.ID)"
         class="navbar-filter-item__link"
       >
         <font-awesome-icon
@@ -81,6 +82,7 @@ import { faUsers, faUser } from "@fortawesome/free-solid-svg-icons"
 library.add(faUsers, faUser)
 
 import { useGroupStore } from "@/stores/groups"
+import { useMemberStore } from "@/stores/members.js"
 
 // read props groupid
 export default {
@@ -113,6 +115,11 @@ export default {
   methods: {
     convertToNormalText(name) {
       return name.charAt(0).toUpperCase() + name.slice(1).replace("_", " ")
+    },
+    async getVtuberData(id) {
+      await useMemberStore().fetchMembers(id || null)
+      useMemberStore().filterMembers()
+      useMemberStore().sortingMembers()
     },
   },
 }

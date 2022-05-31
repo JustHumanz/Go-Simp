@@ -8,9 +8,10 @@ import parse from "url-parse"
 export const useMemberStore = defineStore("members", () => {
   const members = ref({
     error: false,
-    status: "",
+    query: "",
+    status: null,
     config: {
-      group: null,
+      group: -1,
       menu: {
         region: [],
         platform: [],
@@ -36,14 +37,16 @@ export const useMemberStore = defineStore("members", () => {
 
   const fetchMembers = async (id = null) => {
     let err = false
-    members.value.status = ""
+    members.value.status = null
     members.value.error = false
 
-    members.value.data = []
-    members.value.filteredData = []
+    members.value.query = ""
     members.value.searchedData = []
 
     if (members.value.config.group === id) return
+
+    members.value.data = []
+    members.value.filteredData = []
 
     members.value.config.group = id
 
@@ -113,10 +116,13 @@ export const useMemberStore = defineStore("members", () => {
     }
 
     members.value.data = vtuber_data
+    return true
   }
 
   const searchMembers = (keyword) => {
     keyword = keyword.toLowerCase()
+
+    members.value.query = keyword
 
     if (!keyword) {
       members.value.searchedData = []
@@ -131,10 +137,13 @@ export const useMemberStore = defineStore("members", () => {
         return EnName || JpName || false
       }
     )
+
+    console.log(
+      `Search result from keyword "${keyword}": ${members.value.searchedData.length}`
+    )
   }
 
   const filterMembers = () => {
-    if (window.location.pathname !== "/vtubers") return
     const { reg, plat, liveplat, inac } = parse(
       window.location.href,
       true
@@ -212,6 +221,8 @@ export const useMemberStore = defineStore("members", () => {
                 return IsLive.Twitch && !IsLive.Youtube && !IsLive.BiliBili
               else if (live === "-bl")
                 return IsLive.BiliBili && !IsLive.Twitch && !IsLive.Youtube
+              else if (live === "-yt,tw,bl")
+                return IsLive.Youtube || IsLive.Twitch || IsLive.BiliBili
               else if (live.match(/^-(yt,tw|tw,yt)/g)) return !IsLive.BiliBili
               else if (live.match(/^-(tw,bl|bl,tw)/g)) return !IsLive.Youtube
               else if (live.match(/^-(yt,bl|bl,yt)/g)) return !IsLive.Twitch
@@ -222,18 +233,29 @@ export const useMemberStore = defineStore("members", () => {
       }
     }
 
+    if (inactive !== null) {
+      vtuber_data = vtuber_data.filter(({ Status }) => {
+        if (inactive) return Status === "Inactive"
+        return Status === "Active"
+      })
+    }
+
+    console.log(`Total member after filtering: ${vtuber_data.length}`)
+
     members.value.filteredData = vtuber_data
   }
 
   const sortingMembers = () => {
-    let { type, order, live } = members.value.config.sort
-    const { sort } = parse(window.location.href, true).query
+    const { sort, live: liveLink } = parse(window.location.href, true).query
 
     // if link is not /vtubers
-    if (window.location.pathname !== "/vtubers") return
+    if (!window.location.pathname.match(/\/vtubers/g)) return
 
-    type = sort ? sort?.replace("-", "") : "name"
-    order = sort?.includes("-") ? "desc" : "asc"
+    members.value.config.sort.type = sort ? sort?.replace("-", "") : "name"
+    members.value.config.sort.order = sort?.includes("-") ? "desc" : "asc"
+    members.value.config.sort.live = liveLink === "false" ? false : true
+
+    let { type, order, live } = members.value.config.sort
 
     const vtuber_data = [...toRaw(members.value.filteredData)]
 
@@ -324,7 +346,6 @@ export const useMemberStore = defineStore("members", () => {
     }
 
     members.value.filteredData = vtuber_data
-    console.log(members.value.filteredData)
   }
 
   return {

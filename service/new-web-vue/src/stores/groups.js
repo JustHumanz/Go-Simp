@@ -6,7 +6,7 @@ import Config from "../config.json"
 export const useGroupStore = defineStore("groups", () => {
   const groups = ref({
     error: false,
-    status: "",
+    status: null,
     data: [],
   })
 
