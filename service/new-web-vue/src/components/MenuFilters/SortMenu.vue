@@ -173,7 +173,7 @@
           :icon="['fab', 'bilibili']"
         />
         <span class="navbar-filter-item__span"
-          >Bilibili Followers (Bigger)</span
+          >BiliBili Followers (Bigger)</span
         >
       </router-link>
     </li>
@@ -195,7 +195,7 @@
           :icon="['fab', 'bilibili']"
         />
         <span class="navbar-filter-item__span"
-          >Bilibili Followers (Smaller)</span
+          >BiliBili Followers (Smaller)</span
         >
       </router-link>
     </li>
@@ -216,7 +216,7 @@
           class="fa-fw navbar-filter-item__svg"
           :icon="['fab', 'bilibili']"
         />
-        <span class="navbar-filter-item__span">Bilibili Views (Bigger)</span>
+        <span class="navbar-filter-item__span">BiliBili Views (Bigger)</span>
       </router-link>
     </li>
     <li
@@ -236,7 +236,7 @@
           class="fa-fw navbar-filter-item__svg"
           :icon="['fab', 'bilibili']"
         />
-        <span class="navbar-filter-item__span">Bilibili Views (Smaller)</span>
+        <span class="navbar-filter-item__span">BiliBili Views (Smaller)</span>
       </router-link>
     </li>
     <li class="navbar-filter-item">
