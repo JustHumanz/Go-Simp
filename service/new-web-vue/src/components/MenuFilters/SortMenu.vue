@@ -1,6 +1,146 @@
 <template>
-  <a href="#" class="navbar-filter__link" onclick="return false">Sort</a>
+  <a href="#" class="navbar-filter__link" onclick="return false">
+    <font-awesome-icon icon="sort" class="fa-fw" />
+    <span class="navbar-filter__span">Sorting</span>
+  </a>
   <ul class="navbar-filter-items">
+    <li class="navbar-filter-item">
+      <a
+        href="#"
+        class="navbar-filter-item__link sub-menu"
+        onclick="return false"
+      >
+        <font-awesome-icon class="fa-fw navbar-filter-item__svg" icon="globe" />
+        <span class="navbar-filter-item__span">Order</span>
+      </a>
+      <ul class="navbar-submenu-items">
+        <li class="navbar-submenu-item">
+          <router-link
+            :to="{
+              params: { id: $route.params.id },
+              query: { ...plat, ...liveplat, ...inac, ...sort },
+            }"
+            @click="changeFilter()"
+            class="navbar-submenu-item__link"
+            :class="{ active: !reg.reg }"
+          >
+            <font-awesome-icon
+              class="fa-fw navbar-submenu-item__svg"
+              icon="earth-americas"
+            />
+            <span class="navbar-submenu-item__span">Name</span>
+          </router-link>
+        </li>
+
+        <li class="navbar-submenu-item">
+          <router-link
+            :to="{
+              params: { id: $route.params.id },
+              query: { ...plat, ...liveplat, ...inac, ...sort },
+            }"
+            @click="changeFilter()"
+            class="navbar-submenu-item__link"
+            :class="{ active: !reg.reg }"
+          >
+            <font-awesome-icon
+              class="fa-fw navbar-submenu-item__svg"
+              icon="earth-americas"
+            />
+            <span class="navbar-submenu-item__span">Youtube</span>
+          </router-link>
+        </li>
+
+        <li class="navbar-submenu-item">
+          <router-link
+            :to="{
+              params: { id: $route.params.id },
+              query: { ...plat, ...liveplat, ...inac, ...sort },
+            }"
+            @click="changeFilter()"
+            class="navbar-submenu-item__link"
+            :class="{ active: !reg.reg }"
+          >
+            <font-awesome-icon
+              class="fa-fw navbar-submenu-item__svg"
+              icon="earth-americas"
+            />
+            <span class="navbar-submenu-item__span">Youtube (Views)</span>
+          </router-link>
+        </li>
+
+        <li class="navbar-submenu-item">
+          <router-link
+            :to="{
+              params: { id: $route.params.id },
+              query: { ...plat, ...liveplat, ...inac, ...sort },
+            }"
+            @click="changeFilter()"
+            class="navbar-submenu-item__link"
+            :class="{ active: !reg.reg }"
+          >
+            <font-awesome-icon
+              class="fa-fw navbar-submenu-item__svg"
+              icon="earth-americas"
+            />
+            <span class="navbar-submenu-item__span">Twitch</span>
+          </router-link>
+        </li>
+
+        <li class="navbar-submenu-item">
+          <router-link
+            :to="{
+              params: { id: $route.params.id },
+              query: { ...plat, ...liveplat, ...inac, ...sort },
+            }"
+            @click="changeFilter()"
+            class="navbar-submenu-item__link"
+            :class="{ active: !reg.reg }"
+          >
+            <font-awesome-icon
+              class="fa-fw navbar-submenu-item__svg"
+              icon="earth-americas"
+            />
+            <span class="navbar-submenu-item__span">BiliBili</span>
+          </router-link>
+        </li>
+
+        <li class="navbar-submenu-item">
+          <router-link
+            :to="{
+              params: { id: $route.params.id },
+              query: { ...plat, ...liveplat, ...inac, ...sort },
+            }"
+            @click="changeFilter()"
+            class="navbar-submenu-item__link"
+            :class="{ active: !reg.reg }"
+          >
+            <font-awesome-icon
+              class="fa-fw navbar-submenu-item__svg"
+              icon="earth-americas"
+            />
+            <span class="navbar-submenu-item__span">BiliBili (Views)</span>
+          </router-link>
+        </li>
+
+        <li class="navbar-submenu-item">
+          <router-link
+            :to="{
+              params: { id: $route.params.id },
+              query: { ...plat, ...liveplat, ...inac, ...sort },
+            }"
+            @click="changeFilter()"
+            class="navbar-submenu-item__link"
+            :class="{ active: !reg.reg }"
+          >
+            <font-awesome-icon
+              class="fa-fw navbar-submenu-item__svg"
+              icon="earth-americas"
+            />
+            <span class="navbar-submenu-item__span">Twitter</span>
+          </router-link>
+        </li>
+      </ul>
+    </li>
     <li class="navbar-filter-item" v-if="platforms.length">
       <router-link
         :to="{
@@ -8,17 +148,17 @@
           query: { ...reg, ...plat, ...inac },
         }"
         @click="setSort()"
-        class="navbar-filter-item__link sm:!w-64"
+        class="navbar-filter-item__link"
         :class="{ active: !sort.sort }"
       >
         <font-awesome-icon
           class="fa-fw navbar-filter-item__svg"
           icon="arrow-down-a-z"
         />
-        <span class="navbar-filter-item__span">Name (A - Z)</span>
+        <span class="navbar-filter-item__span">Reverse Order</span>
       </router-link>
     </li>
-    <li class="navbar-filter-item" v-if="platforms.length">
+    <!--- <li class="navbar-filter-item" v-if="platforms.length">
       <router-link
         :to="{
           params: { id: $route.params.id },
@@ -274,14 +414,18 @@
           >Twitter Followers (Smaller)</span
         >
       </router-link>
-    </li>
+    </li> -->
   </ul>
 </template>
 
 <script>
 // Add arrow-down-a-z and arrow-up-z-a to font-awesome
 import { library } from "@fortawesome/fontawesome-svg-core"
-import { faArrowDownAZ, faArrowUpZA } from "@fortawesome/free-solid-svg-icons"
+import {
+  faArrowDownAZ,
+  faArrowUpZA,
+  faSort,
+} from "@fortawesome/free-solid-svg-icons"
 // Add fa brand for youtube, twitch, bilibili, twitter
 import {
   faYoutube,
@@ -296,7 +440,8 @@ library.add(
   faYoutube,
   faTwitch,
   faBilibili,
-  faTwitter
+  faTwitter,
+  faSort
 )
 
 import { useMemberStore } from "@/stores/members.js"

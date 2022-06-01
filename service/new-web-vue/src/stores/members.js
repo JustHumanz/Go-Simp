@@ -17,6 +17,7 @@ export const useMemberStore = defineStore("members", () => {
         platform: [],
         live: [],
         inactive: false,
+        twitter: false,
       },
       filter: {
         region: null,
@@ -82,6 +83,7 @@ export const useMemberStore = defineStore("members", () => {
     let newPlatform = []
     let newLive = []
     let newInac = false
+    let newTwitter = false
 
     members.value.config.menu.inactive = false
 
@@ -103,6 +105,7 @@ export const useMemberStore = defineStore("members", () => {
         newLive.push("bilibili")
 
       if (vt.Status === "Inactive") newInac = true
+      if (vt.Twitter) newTwitter = true
     }
 
     members.value.config.menu = {
@@ -110,6 +113,7 @@ export const useMemberStore = defineStore("members", () => {
       platform: newPlatform,
       live: newLive,
       inactive: newInac,
+      twitter: newTwitter,
     }
 
     members.value.data = vtuber_data

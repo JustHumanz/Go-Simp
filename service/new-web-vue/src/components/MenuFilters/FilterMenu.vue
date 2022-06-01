@@ -1,5 +1,8 @@
 <template>
-  <a href="#" class="navbar-filter__link" onclick="return false"> Filters </a>
+  <a href="#" class="navbar-filter__link" onclick="return false">
+    <font-awesome-icon class="fa-fw" icon="filter" />
+    <span class="navbar-filter__span"> Filters</span>
+  </a>
   <ul class="navbar-filter-items">
     <li class="navbar-filter-item" v-if="getRegions.length > 1">
       <a
@@ -254,17 +257,14 @@
       </ul>
     </li>
 
-    <li class="navbar-filter-item">
+    <li class="navbar-filter-item" v-if="inactiveCheck">
       <a
         href="#"
         class="navbar-filter-item__link sub-menu"
         onclick="return false"
       >
-        <font-awesome-icon
-          class="fa-fw navbar-filter-item__svg"
-          icon="filter"
-        />
-        <span class="navbar-filter-item__span">Other</span>
+        <font-awesome-icon class="fa-fw navbar-filter-item__svg" icon="user" />
+        <span class="navbar-filter-item__span">Activity Status</span>
       </a>
 
       <ul class="navbar-submenu-items">
@@ -280,7 +280,7 @@
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
-              icon="ban"
+              icon="people-group"
             />
             <span class="navbar-submenu-item__span">All</span>
           </router-link>
@@ -297,7 +297,7 @@
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
-              icon="user"
+              icon="user-check"
             />
             <span class="navbar-submenu-item__span">Active</span>
           </router-link>
@@ -364,6 +364,8 @@ import {
   faPlusCircle,
   faArrowsRotate,
   faUser,
+  faUserCheck,
+  faPeopleGroup,
 } from "@fortawesome/free-solid-svg-icons"
 
 // Add icon youtube, twitch, and bilibili from font-awesome-brands
@@ -387,7 +389,9 @@ library.add(
   faBan,
   faPlusCircle,
   faArrowsRotate,
-  faUser
+  faUser,
+  faUserCheck,
+  faPeopleGroup
 )
 
 import regionConfig from "@/region.json"
@@ -451,6 +455,9 @@ export default {
     },
     livePlatforms() {
       return useMemberStore().members.config.menu.live
+    },
+    inactiveCheck() {
+      return useMemberStore().members.config.menu.inactive
     },
   },
   methods: {
