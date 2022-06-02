@@ -195,7 +195,8 @@ export default {
         this.activeSubMenu = null
       })
     },
-    calculateFilters() {
+    async calculateFilters() {
+      await new Promise((resolve) => setTimeout(resolve, 60))
       const subMenus = document.querySelectorAll(".navbar-submenu-items")
 
       // count children inside each submenu and substract 75
