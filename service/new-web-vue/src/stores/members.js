@@ -18,6 +18,10 @@ export const useMemberStore = defineStore("members", () => {
         live: [],
         inactive: false,
       },
+      sortmenu: {
+        platform: [],
+        twitter: false,
+      },
       filter: {
         region: null,
         platform: null,
@@ -141,9 +145,6 @@ export const useMemberStore = defineStore("members", () => {
   }
 
   const filterMembers = () => {
-    members.value.query = ""
-    members.value.searchedData = []
-
     const { reg, plat, liveplat, inac } = parse(
       window.location.href,
       true
@@ -242,10 +243,32 @@ export const useMemberStore = defineStore("members", () => {
 
     console.log(`Total member after filtering: ${vtuber_data.length}`)
 
+    let newPlatform = []
+    let newTwitter = false
+
+    for (const vt of vtuber_data) {
+      if (!newPlatform.includes("youtube") && vt.Youtube)
+        newPlatform.push("youtube")
+      if (!newPlatform.includes("twitch") && vt.Twitch)
+        newPlatform.push("twitch")
+      if (!newPlatform.includes("bilibili") && vt.BiliBili)
+        newPlatform.push("bilibili")
+
+      if (vt.Twitter) newTwitter = true
+    }
+
+    members.value.config.sortmenu = {
+      platform: newPlatform,
+      twitter: newTwitter,
+    }
+
     members.value.filteredData = vtuber_data
   }
 
   const sortingMembers = () => {
+    members.value.query = ""
+    members.value.searchedData = []
+
     const { sort, live: liveLink } = parse(window.location.href, true).query
 
     // if link is not /vtubers
