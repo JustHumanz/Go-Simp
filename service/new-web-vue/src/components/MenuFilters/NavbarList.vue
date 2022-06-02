@@ -56,18 +56,8 @@ import { useMemberStore } from "@/stores/members.js"
 export default {
   async created() {
     this.$watch(
-      () => this.$route,
-      (a, b) => {
-        if (
-          a.query.reg !== b.query.reg ||
-          a.query.plat !== b.query.plat ||
-          a.query.inac !== b.query.inac ||
-          a.params.id !== b.params.id
-        ) {
-          this.$refs.search_input.value = ""
-          this.$emit("search", null)
-        }
-      }
+      () => this.$route.query,
+      () => (this.$refs.search_input.value = "")
     )
   },
   computed: {
@@ -126,11 +116,11 @@ export default {
 
 <style lang="scss">
 .list-nav {
-  @apply fixed top-16 z-10 flex w-screen select-none flex-wrap-reverse items-center justify-center bg-blue-400 py-2 px-5 dark:bg-slate-500 sm:justify-around;
+  @apply fixed top-16 z-10 flex w-screen select-none flex-col-reverse flex-wrap-reverse items-center justify-center bg-blue-400 py-2 px-5 dark:bg-slate-500 sm:flex-row sm:justify-around;
 }
 
 .navbar-filters {
-  @apply flex items-center space-x-1 first:mt-2 sm:space-x-2 xs:first:mt-0;
+  @apply flex items-center space-x-1 first:mt-2 sm:space-x-2 sm:first:mt-0;
 }
 
 .navbar-pending {
@@ -153,10 +143,10 @@ export default {
   }
 
   &__span {
-    @apply inline-block xs:hidden;
+    @apply inline-block;
 
-    @media (min-width: 640px) {
-      display: inline-block !important;
+    &-mobile {
+      @apply hidden xs:inline-block;
     }
   }
 
@@ -264,7 +254,7 @@ export default {
 }
 
 .nav-search {
-  @apply relative mx-1 ml-3 inline-block flex-auto hover:-translate-y-px sm:flex-none;
+  @apply relative mx-1 ml-3 inline-block w-full flex-auto hover:-translate-y-px sm:w-auto sm:flex-none;
 
   &:focus-within {
     transform: translate(0, -2px) !important;

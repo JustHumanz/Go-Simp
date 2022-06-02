@@ -22,10 +22,12 @@
       class="navbar-filter__img"
       v-else-if="current_group && $route.params.id && $route.params.id != 10"
     />
-    <span class="navbar-filter__span" v-if="!current_group || !$route.params.id"
+    <span
+      class="navbar-filter__span-mobile"
+      v-if="!current_group || !$route.params.id"
       >Groups</span
     >
-    <span class="navbar-filter__span" v-else>{{
+    <span class="navbar-filter__span-mobile" v-else>{{
       (
         current_group.GroupName.charAt(0).toUpperCase() +
         current_group.GroupName.slice(1)

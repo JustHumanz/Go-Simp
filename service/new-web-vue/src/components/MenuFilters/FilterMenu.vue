@@ -46,7 +46,16 @@
               :src="`/assets/flags/${region.flagCode}.svg`"
               :alt="region.name"
               class="navbar-submenu-item__img"
+              v-if="region.flagCode"
             />
+            <img
+              draggable="false"
+              src="/assets/flags/none.svg"
+              :alt="region.name"
+              class="navbar-submenu-item__img"
+              v-else
+            />
+
             <span class="navbar-submenu-item__span">{{ region.name }}</span>
           </router-link>
         </li>
@@ -440,7 +449,14 @@ export default {
       live = null,
       inactive = null,
     }) {
-      const { reg, plat, liveplat, inac, sort } = this.$route.query
+      const {
+        reg,
+        plat,
+        liveplat,
+        inac,
+        sort,
+        live: sortLive,
+      } = this.$route.query
 
       const params = new Object()
 
@@ -452,14 +468,16 @@ export default {
       if ((!inac && inactive) || (inac && inactive !== ""))
         params.inac = inactive || inac
       if (sort) params.sort = sort
+      if (sortLive) params.live = sortLive
 
       return params
     },
     removeAll() {
-      const { sort } = this.$route.query
+      const { sort, live } = this.$route.query
 
       const params = new Object()
       if (sort) params.sort = sort
+      if (live) params.live = live
 
       return params
     },
