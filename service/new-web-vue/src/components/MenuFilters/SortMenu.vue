@@ -158,263 +158,20 @@
         <span class="navbar-filter-item__span">Reverse Order</span>
       </router-link>
     </li>
-    <!--- <li class="navbar-filter-item" v-if="platforms.length">
+    <li class="navbar-filter-item" v-if="platforms.length">
       <router-link
         :to="{
           params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...liveplat, ...inac, sort: '-name' },
+          query: { ...reg, ...plat, ...inac },
         }"
         @click="setSort()"
-        class="navbar-filter-item__link sm:!w-64"
-        :class="{ active: sort.sort == '-name' }"
+        class="navbar-filter-item__link"
+        :class="{ active: !sort.sort }"
       >
-        <font-awesome-icon
-          class="fa-fw navbar-filter-item__svg"
-          icon="arrow-up-z-a"
-        />
-        <span class="navbar-filter-item__span">Name (Z - A)</span>
+        <font-awesome-icon class="fa-fw navbar-filter-item__svg" icon="ban" />
+        <span class="navbar-filter-item__span">Disable Live First</span>
       </router-link>
     </li>
-    <li
-      class="navbar-filter-item"
-      v-if="platforms.length && platforms.includes(`youtube`)"
-    >
-      <router-link
-        :to="{
-          params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...liveplat, ...inac, sort: 'yt' },
-        }"
-        @click="setSort()"
-        class="navbar-filter-item__link sm:!w-64"
-        :class="{ active: sort.sort == 'yt' }"
-      >
-        <font-awesome-icon
-          class="fa-fw navbar-filter-item__svg"
-          :icon="['fab', 'youtube']"
-        />
-        <span class="navbar-filter-item__span">YouTube Subs (Bigger)</span>
-      </router-link>
-    </li>
-    <li
-      class="navbar-filter-item"
-      v-if="platforms.length && platforms.includes(`youtube`)"
-    >
-      <router-link
-        :to="{
-          params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...liveplat, ...inac, sort: '-yt' },
-        }"
-        @click="setSort()"
-        class="navbar-filter-item__link sm:!w-64"
-        :class="{ active: sort.sort == '-yt' }"
-      >
-        <font-awesome-icon
-          class="fa-fw navbar-filter-item__svg"
-          :icon="['fab', 'youtube']"
-        />
-        <span class="navbar-filter-item__span">YouTube Subs (Smaller)</span>
-      </router-link>
-    </li>
-    <li
-      class="navbar-filter-item"
-      v-if="platforms.length && platforms.includes(`youtube`)"
-    >
-      <router-link
-        :to="{
-          params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...liveplat, ...inac, sort: 'ytv' },
-        }"
-        @click="setSort()"
-        class="navbar-filter-item__link sm:!w-64"
-        :class="{ active: sort.sort == 'ytv' }"
-      >
-        <font-awesome-icon
-          class="fa-fw navbar-filter-item__svg"
-          :icon="['fab', 'youtube']"
-        />
-        <span class="navbar-filter-item__span">YouTube Views (Bigger)</span>
-      </router-link>
-    </li>
-    <li
-      class="navbar-filter-item"
-      v-if="platforms.length && platforms.includes(`youtube`)"
-    >
-      <router-link
-        :to="{
-          params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...liveplat, ...inac, sort: '-ytv' },
-        }"
-        @click="setSort()"
-        class="navbar-filter-item__link sm:!w-64"
-        :class="{ active: sort.sort == '-ytv' }"
-      >
-        <font-awesome-icon
-          class="fa-fw navbar-filter-item__svg"
-          :icon="['fab', 'youtube']"
-        />
-        <span class="navbar-filter-item__span">YouTube Views (Smaller)</span>
-      </router-link>
-    </li>
-    <li
-      class="navbar-filter-item"
-      v-if="platforms.length && platforms.includes(`twitch`)"
-    >
-      <router-link
-        :to="{
-          params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...liveplat, ...inac, sort: 'tw' },
-        }"
-        @click="setSort()"
-        class="navbar-filter-item__link sm:!w-64"
-        :class="{ active: sort.sort == 'tw' }"
-      >
-        <font-awesome-icon
-          class="fa-fw navbar-filter-item__svg"
-          :icon="['fab', 'twitch']"
-        />
-        <span class="navbar-filter-item__span">Twitch Followers (Bigger)</span>
-      </router-link>
-    </li>
-    <li
-      class="navbar-filter-item"
-      v-if="platforms.length && platforms.includes(`twitch`)"
-    >
-      <router-link
-        :to="{
-          params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...liveplat, ...inac, sort: '-tw' },
-        }"
-        @click="setSort()"
-        class="navbar-filter-item__link sm:!w-64"
-        :class="{ active: sort.sort == '-tw' }"
-      >
-        <font-awesome-icon
-          class="fa-fw navbar-filter-item__svg"
-          :icon="['fab', 'twitch']"
-        />
-        <span class="navbar-filter-item__span">Twitch Followers (Smaller)</span>
-      </router-link>
-    </li>
-    <li
-      class="navbar-filter-item"
-      v-if="platforms.length && platforms.includes(`bilibili`)"
-    >
-      <router-link
-        :to="{
-          params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...liveplat, ...inac, sort: 'bl' },
-        }"
-        @click="setSort()"
-        class="navbar-filter-item__link sm:!w-64"
-        :class="{ active: sort.sort == 'bl' }"
-      >
-        <font-awesome-icon
-          class="fa-fw navbar-filter-item__svg"
-          :icon="['fab', 'bilibili']"
-        />
-        <span class="navbar-filter-item__span"
-          >BiliBili Followers (Bigger)</span
-        >
-      </router-link>
-    </li>
-    <li
-      class="navbar-filter-item"
-      v-if="platforms.length && platforms.includes(`bilibili`)"
-    >
-      <router-link
-        :to="{
-          params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...liveplat, ...inac, sort: '-bl' },
-        }"
-        @click="setSort()"
-        class="navbar-filter-item__link sm:!w-64"
-        :class="{ active: sort.sort == '-bl' }"
-      >
-        <font-awesome-icon
-          class="fa-fw navbar-filter-item__svg"
-          :icon="['fab', 'bilibili']"
-        />
-        <span class="navbar-filter-item__span"
-          >BiliBili Followers (Smaller)</span
-        >
-      </router-link>
-    </li>
-    <li
-      class="navbar-filter-item"
-      v-if="platforms.length && platforms.includes(`bilibili`)"
-    >
-      <router-link
-        :to="{
-          params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...liveplat, ...inac, sort: 'blv' },
-        }"
-        @click="setSort()"
-        class="navbar-filter-item__link sm:!w-64"
-        :class="{ active: sort.sort == 'blv' }"
-      >
-        <font-awesome-icon
-          class="fa-fw navbar-filter-item__svg"
-          :icon="['fab', 'bilibili']"
-        />
-        <span class="navbar-filter-item__span">BiliBili Views (Bigger)</span>
-      </router-link>
-    </li>
-    <li
-      class="navbar-filter-item"
-      v-if="platforms.length && platforms.includes(`bilibili`)"
-    >
-      <router-link
-        :to="{
-          params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...liveplat, ...inac, sort: '-blv' },
-        }"
-        @click="setSort()"
-        class="navbar-filter-item__link sm:!w-64"
-        :class="{ active: sort.sort == '-blv' }"
-      >
-        <font-awesome-icon
-          class="fa-fw navbar-filter-item__svg"
-          :icon="['fab', 'bilibili']"
-        />
-        <span class="navbar-filter-item__span">BiliBili Views (Smaller)</span>
-      </router-link>
-    </li>
-    <li class="navbar-filter-item">
-      <router-link
-        :to="{
-          params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...liveplat, ...inac, sort: 'twr' },
-        }"
-        @click="setSort()"
-        class="navbar-filter-item__link sm:!w-64"
-        :class="{ active: sort.sort == 'twr' }"
-      >
-        <font-awesome-icon
-          class="fa-fw navbar-filter-item__svg"
-          :icon="['fab', 'twitter']"
-        />
-        <span class="navbar-filter-item__span">Twitter Followers (Bigger)</span>
-      </router-link>
-    </li>
-    <li class="navbar-filter-item">
-      <router-link
-        :to="{
-          params: { id: $route.params.id },
-          query: { ...reg, ...plat, ...liveplat, ...inac, sort: '-twr' },
-        }"
-        @click="setSort()"
-        class="navbar-filter-item__link sm:!w-64"
-        :class="{ active: sort.sort == '-twr' }"
-      >
-        <font-awesome-icon
-          class="fa-fw navbar-filter-item__svg"
-          :icon="['fab', 'twitter']"
-        />
-        <span class="navbar-filter-item__span"
-          >Twitter Followers (Smaller)</span
-        >
-      </router-link>
-    </li> -->
   </ul>
 </template>
 
@@ -425,6 +182,7 @@ import {
   faArrowDownAZ,
   faArrowUpZA,
   faSort,
+  faBan,
 } from "@fortawesome/free-solid-svg-icons"
 // Add fa brand for youtube, twitch, bilibili, twitter
 import {
@@ -441,7 +199,8 @@ library.add(
   faTwitch,
   faBilibili,
   faTwitter,
-  faSort
+  faSort,
+  faBan
 )
 
 import { useMemberStore } from "@/stores/members.js"
