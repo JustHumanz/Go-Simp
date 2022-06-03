@@ -804,7 +804,7 @@
       "Twitch": {
         "Twitch_Username": "dahliathesiren"
       },
-      "Region": "UK",
+      "Region": "GB",
       "Fanbase": "",
       "Status": "Active"
     },
@@ -967,102 +967,102 @@
       "Status": "Active"
     },
     {
-			"Name": "Char",
-			"EN_Name": "Hoshino Charlotte",
-			"JP_Name": "星乃シャロ",
-			"Twitter": {
-				"Twitter_Fanart": "#charmy_art",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "hoshinochar"
-			},
-			"Youtube": {
-				"Yt_ID": "UCdCczCYPOeP5hTfbx6tzz_A"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "hoshinochar"
-			},
-			"Region": "US",
-			"Fanbase": "Charmy",
-			"Status": "Active"
-		},
-		{
-			"Name": "Kallin",
-			"EN_Name": "Yazaki Kallin",
-			"JP_Name": "夜咲カリン",
-			"Twitter": {
-				"Twitter_Fanart": "#kallart",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "kallinGBN"
-			},
-			"Youtube": {
-				"Yt_ID": "UCbTkauz77OIO9KE5YcAKPlg"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "kallin"
-			},
-			"Region": "US",
-			"Fanbase": "Nightblooms",
-			"Status": "Active"
-		},
-		{
-			"Name": "Meruru",
-			"EN_Name": "Matsuro Meru",
-			"JP_Name": "末路める",
-			"Twitter": {
-				"Twitter_Fanart": "#FanMeru",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "matsuromeru"
-			},
-			"Youtube": {
-				"Yt_ID": "UCIJ6TGsTcBlYGUj-zbL60EQ"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "matsuromeru"
-			},
-			"Region": "CA",
-			"Fanbase": "Postmates",
-			"Status": "Active"
-		},
-		{
-			"Name": "Miori",
-			"EN_Name": "Miori Celesta",
-			"JP_Name": "セレスタミオリ",
-			"Twitter": {
-				"Twitter_Fanart": "#miorillust",
-				"Twitter_Lewd": "#miolust",
-				"Twitter_Username": "mioricelesta"
-			},
-			"Youtube": {
-				"Yt_ID": "UCyKsg-57XC9pyHbP7v3kCPQ"
-			},
-			"BiliBili": null,
-			"Twitch": null,
-			"Region": "US",
-			"Fanbase": "Guildmates",
-			"Status": "Active"
-		},            
-		{
-			"Name": "Bread",
-			"EN_Name": "Nini Yuuna",
-			"JP_Name": "ににゆーな",
-			"Twitter": {
-				"Twitter_Fanart": "#niniatelier",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "niniyuuna"
-			},
-			"Youtube": {
-				"Yt_ID": "UC8CKGSvp9bRfmtWyfV5L9Jw"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "yuuna"
-			},
-			"Region": "US",
-			"Fanbase": "Guildmates",
-			"Status": "Active"
-		}    
+      "Name": "Char",
+      "EN_Name": "Hoshino Charlotte",
+      "JP_Name": "星乃シャロ",
+      "Twitter": {
+        "Twitter_Fanart": "#charmy_art",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "hoshinochar"
+      },
+      "Youtube": {
+        "Yt_ID": "UCdCczCYPOeP5hTfbx6tzz_A"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "hoshinochar"
+      },
+      "Region": "US",
+      "Fanbase": "Charmy",
+      "Status": "Active"
+    },
+    {
+      "Name": "Kallin",
+      "EN_Name": "Yazaki Kallin",
+      "JP_Name": "夜咲カリン",
+      "Twitter": {
+        "Twitter_Fanart": "#kallart",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "kallinGBN"
+      },
+      "Youtube": {
+        "Yt_ID": "UCbTkauz77OIO9KE5YcAKPlg"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "kallin"
+      },
+      "Region": "US",
+      "Fanbase": "Nightblooms",
+      "Status": "Active"
+    },
+    {
+      "Name": "Meruru",
+      "EN_Name": "Matsuro Meru",
+      "JP_Name": "末路める",
+      "Twitter": {
+        "Twitter_Fanart": "#FanMeru",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "matsuromeru"
+      },
+      "Youtube": {
+        "Yt_ID": "UCIJ6TGsTcBlYGUj-zbL60EQ"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "matsuromeru"
+      },
+      "Region": "CA",
+      "Fanbase": "Postmates",
+      "Status": "Active"
+    },
+    {
+      "Name": "Miori",
+      "EN_Name": "Miori Celesta",
+      "JP_Name": "セレスタミオリ",
+      "Twitter": {
+        "Twitter_Fanart": "#miorillust",
+        "Twitter_Lewd": "#miolust",
+        "Twitter_Username": "mioricelesta"
+      },
+      "Youtube": {
+        "Yt_ID": "UCyKsg-57XC9pyHbP7v3kCPQ"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "US",
+      "Fanbase": "Guildmates",
+      "Status": "Active"
+    },
+    {
+      "Name": "Bread",
+      "EN_Name": "Nini Yuuna",
+      "JP_Name": "ににゆーな",
+      "Twitter": {
+        "Twitter_Fanart": "#niniatelier",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "niniyuuna"
+      },
+      "Youtube": {
+        "Yt_ID": "UC8CKGSvp9bRfmtWyfV5L9Jw"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "yuuna"
+      },
+      "Region": "US",
+      "Fanbase": "Guildmates",
+      "Status": "Active"
+    }
   ]
 }
