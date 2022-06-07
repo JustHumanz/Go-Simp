@@ -40,13 +40,15 @@
             @click="changeFilter()"
             class="navbar-submenu-item__link"
             :class="{ active: reg == region.code }"
+            :alt="region.name"
           >
             <img
               draggable="false"
-              :src="`/assets/flags/${region.flagCode}.svg`"
+              :src="`/assets/flags/${region.code}.svg`"
               :alt="region.name"
               class="navbar-submenu-item__img"
-              v-if="region.flagCode"
+              onerror="this.src='/assets/flags/none.svg'"
+              v-if="region.code"
             />
             <img
               draggable="false"
@@ -389,7 +391,7 @@ library.add(
   faPeopleGroup
 )
 
-import regionConfig from "@/region.json"
+import regionConfig from "@/regions.json"
 import { useMemberStore } from "@/stores/members.js"
 
 export default {

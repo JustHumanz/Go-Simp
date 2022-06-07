@@ -203,6 +203,10 @@ export default {
       @apply w-6;
     }
 
+    // &__span {
+    //   @apply truncate md:max-w-[125px];
+    // }
+
     &__link {
       @apply flex w-screen items-center space-x-2 px-2 py-1 font-semibold text-white hover:bg-blue-500/60 dark:hover:bg-slate-900/40 sm:w-44;
 
@@ -249,6 +253,10 @@ export default {
 
     &__svg {
       @apply w-6;
+    }
+
+    &__span {
+      @apply truncate md:max-w-[124px];
     }
   }
 }

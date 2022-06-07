@@ -2,7 +2,7 @@ import { defineStore } from "pinia"
 import { ref, computed, compile, toRaw } from "vue"
 import axios from "axios"
 import Config from "../config.json"
-import regionConfig from "../region.json"
+import regionConfig from "../regions.json"
 import parse from "url-parse"
 
 export const useMemberStore = defineStore("members", () => {
