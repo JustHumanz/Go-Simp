@@ -74,13 +74,32 @@ export default {
 
       const newvtubers = [...document.querySelector(".vtubers").children]
 
+      await new Promise((resolve) => setTimeout(resolve, 60))
       newvtubers.forEach((vtuber, index) => {
-        const input = vtuber.querySelectorAll("input")
-        const oldInput = filteredvtubers[index].querySelectorAll("input")
+        const inputItem = vtuber.querySelectorAll(".vtuber__content-item")
+        const oldInputItem = filteredvtubers[index].querySelectorAll(
+          ".vtuber__content-item"
+        )
 
         vtuber.classList = filteredvtubers[index].classList
+        // move var --contentHeight
+        const oldCalcHeight =
+          filteredvtubers[index].lastElementChild.style.getPropertyValue(
+            "--contentHeight"
+          )
+        vtuber.lastElementChild.style.setProperty(
+          "--contentHeight",
+          oldCalcHeight
+        )
 
-        input.forEach((inp, i) => (inp.value = oldInput[i].value))
+        inputItem.forEach((inp, i) => {
+          // inp.value = oldInput[i].value
+          inp.classList = oldInputItem[i].classList
+          inp.querySelector(".error").innerHTML =
+            oldInputItem[i].querySelector(".error").innerHTML
+          inp.querySelector("input").value =
+            oldInputItem[i].querySelector("input").value
+        })
       })
 
       this.disabledDelBtn()

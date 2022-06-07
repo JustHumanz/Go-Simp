@@ -1,5 +1,5 @@
 <template>
-  <div class="platform-group show" ref="platform">
+  <div class="platform-group show" ref="platform" :data-id="id">
     <a
       class="platform-link"
       href="#"
@@ -108,7 +108,8 @@ export default {
   },
   emits: ["delete", "error"],
   async mounted() {
-    this.$refs.platform
+    const platformForm = this.$refs.platform
+    platformForm
       .querySelectorAll(".platform-group__content-item")
       .forEach((item) => {
         if (item.querySelector("select")) return
@@ -119,9 +120,7 @@ export default {
 
     await this.checkHeight()
 
-    const platform = this.$refs.platform
-
-    platform.addEventListener("input", async (e) => {
+    platformForm.addEventListener("input", async (e) => {
       e.target.parentElement.classList.toggle(
         "has-error",
         !(await this.checkFilled(e.target))
@@ -139,7 +138,7 @@ export default {
         activeElement &&
         e.target !== activeElement &&
         activeElement.tagName === "INPUT" &&
-        activeElement.closest(".platform-group__content")
+        activeElement?.closest(".platform-group__content") === platformForm
       ) {
         activeElement.parentElement.classList.toggle(
           "has-error",
@@ -154,23 +153,23 @@ export default {
       activeElement = e.target
     })
 
-    this.$watch(
-      () => this.id,
-      async () => {
-        const inputs = platform.querySelectorAll("input")
+    // this.$watch(
+    //   () => this.id,
+    //   async () => {
+    //     const inputs = platform.querySelectorAll("input")
 
-        inputs.forEach(async (input) =>
-          input.parentElement.classList.toggle(
-            "has-error",
-            !(await this.checkFilled(activeElement))
-          )
-        )
+    //     inputs.forEach(async (input) =>
+    //       input.parentElement.classList.toggle(
+    //         "has-error",
+    //         !(await this.checkFilled(activeElement))
+    //       )
+    //     )
 
-        await new Promise((resolve) => setTimeout(resolve, 60))
-        await this.checkAllFilled(null)
-        this.checkHeight()
-      }
-    )
+    //     await new Promise((resolve) => setTimeout(resolve, 60))
+    //     await this.checkAllFilled(null)
+    //     this.checkHeight()
+    //   }
+    // )
 
     document.body.addEventListener("click", (e) => {
       if (!e.target.closest(".delete-platform")) {

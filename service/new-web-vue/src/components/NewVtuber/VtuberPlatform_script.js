@@ -18,16 +18,15 @@ export default {
   },
   emits: ["error", "delete"],
   async mounted() {
-    this.$refs.form
-      .querySelectorAll(".vtuber__content-item")
-      .forEach((item) => {
-        item.querySelector("input").value = ""
-        item.classList.remove("has-error")
-        item.querySelector(".error").innerHTML = ""
-      })
+    const vtuberForm = this.$refs.form
+
+    vtuberForm.querySelectorAll(".vtuber__content-item").forEach((item) => {
+      item.querySelector("input").value = ""
+      item.classList.remove("has-error")
+      item.querySelector(".error").innerHTML = ""
+    })
 
     await this.checkHeight()
-    const vtuberForm = this.$refs.form
 
     vtuberForm.addEventListener("input", async (e) => {
       e.target.parentElement.classList.toggle(
@@ -46,7 +45,8 @@ export default {
       if (
         activeElement &&
         e.target !== activeElement &&
-        activeElement.tagName === "INPUT"
+        activeElement.tagName === "INPUT" &&
+        vtuberForm === activeElement?.closest(".vtuber-form")
       ) {
         activeElement.parentElement.classList.toggle(
           "has-error",
@@ -60,24 +60,6 @@ export default {
 
       activeElement = e.target
     })
-
-    this.$watch(
-      () => this.id,
-      async () => {
-        const inputs = vtuberForm.querySelectorAll("input")
-
-        inputs.forEach(async (input) =>
-          input.parentElement.classList.toggle(
-            "has-error",
-            !(await this.checkFilled(activeElement))
-          )
-        )
-
-        await new Promise((resolve) => setTimeout(resolve, 60))
-        await this.checkAllFilled(null)
-        this.checkHeight()
-      }
-    )
 
     document.body.addEventListener("click", (e) => {
       if (!e.target.closest(".delete-vtuber")) {
@@ -122,10 +104,10 @@ export default {
 
       const isFilled = this.CheckPlatform(platforms)
 
-      console.log(count, inputs.length, isFilled)
+      // console.log(count, inputs.length, isFilled)
 
       const error = count < inputs.length || !isFilled
-      console.log(error)
+      // console.log(error)
       this.$refs.form.classList.toggle("errors", error)
       this.$emit("error", { id: this.id, error })
     },
@@ -273,7 +255,6 @@ export default {
         errTextBili.innerText = "Please at least add one platform"
         errTextBiliLive.innerText = "Please at least add one platform"
         if (name !== null) {
-          console.log(name)
           parentYt.classList.add("has-error")
           parentTwitch.classList.add("has-error")
           parentBili.classList.add("has-error")

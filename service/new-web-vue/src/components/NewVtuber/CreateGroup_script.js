@@ -128,15 +128,37 @@ export default {
         this.platforms[index].set = select.value
       })
 
+      await new Promise((resolve) => setTimeout(resolve, 60))
       const newPlatforms = [...document.querySelector(".platforms").children]
 
       newPlatforms.forEach((platform, index) => {
-        const input = platform.querySelectorAll("input")
-        const oldInput = filteredPlatforms[index].querySelectorAll("input")
+        const inputItem = platform.querySelectorAll(
+          ".platform-group__content-item"
+        )
+        const oldInputItem = filteredPlatforms[index].querySelectorAll(
+          ".platform-group__content-item"
+        )
 
         platform.classList = filteredPlatforms[index].classList
 
-        input.forEach((inp, i) => (inp.value = oldInput[i].value))
+        const oldCalcHeight =
+          filteredPlatforms[index].lastElementChild.style.getPropertyValue(
+            "--contentHeight"
+          )
+        platform.lastElementChild.style.setProperty(
+          "--contentHeight",
+          oldCalcHeight
+        )
+
+        inputItem.forEach((inp, i) => {
+          if (!inp.querySelector("input")) return
+
+          inp.classList = oldInputItem[i].classList
+          inp.querySelector(".error").innerHTML =
+            oldInputItem[i].querySelector(".error").innerHTML
+          inp.querySelector("input").value =
+            oldInputItem[i].querySelector("input").value
+        })
       })
     },
 
