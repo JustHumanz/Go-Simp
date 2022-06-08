@@ -74,7 +74,6 @@ export default {
 
       const newvtubers = [...document.querySelector(".vtubers").children]
 
-      await new Promise((resolve) => setTimeout(resolve, 60))
       newvtubers.forEach((vtuber, index) => {
         const inputItem = vtuber.querySelectorAll(".vtuber__content-item")
         const oldInputItem = filteredvtubers[index].querySelectorAll(

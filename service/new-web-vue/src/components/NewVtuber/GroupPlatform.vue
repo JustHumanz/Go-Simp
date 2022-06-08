@@ -23,7 +23,7 @@
     <div class="platform-group__content" ref="content">
       <div class="platform-group__content-item">
         <label for="type-platform">Type Platform</label>
-        <select
+        <!-- <select
           id="type-platform"
           name="type-platform"
           @change="platform = $event.target.value"
@@ -31,7 +31,54 @@
         >
           <option value="youtube">YouTube</option>
           <option value="bilibili">BiliBili</option>
-        </select>
+        </select> -->
+        <div class="custom-select" style="--maxHeight: 80px; --minHeight: 40px">
+          <a
+            class="selected-item"
+            href="#"
+            onclick="return false"
+            v-if="platform == 'youtube'"
+          >
+            <font-awesome-icon :icon="['fab', 'youtube']" class="fa-fw" />
+            <span class="selected-item__span">YouTube</span>
+          </a>
+          <a
+            class="selected-item"
+            href="#"
+            onclick="return false"
+            v-if="platform == 'bilibili'"
+          >
+            <font-awesome-icon :icon="['fab', 'bilibili']" class="fa-fw" />
+            <span class="selected-item__span">BiliBili</span>
+          </a>
+          <div class="select-items">
+            <!-- YouTube -->
+            <input
+              type="radio"
+              class="item__radio"
+              name="type-platform"
+              id="youtube"
+              value="youtube"
+              checked
+            />
+            <label for="youtube" class="item__label">
+              <font-awesome-icon :icon="['fab', 'youtube']" class="fa-fw" />
+              <span class="item__label-span">YouTube</span>
+            </label>
+            <!-- BiliBili -->
+            <input
+              type="radio"
+              class="item__radio"
+              name="type-platform"
+              id="bilibili"
+              value="bilibili"
+            />
+            <label for="bilibili" class="item__label">
+              <font-awesome-icon :icon="['fab', 'bilibili']" class="fa-fw" />
+              <span class="item__label-span">BiliBili</span>
+            </label>
+          </div>
+        </div>
       </div>
 
       <div class="platform-group__content-item" v-if="platform === `youtube`">
@@ -86,8 +133,9 @@
 <script>
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faChevronDown, faTrashCan } from "@fortawesome/free-solid-svg-icons"
+import { faYoutube, faBilibili } from "@fortawesome/free-brands-svg-icons"
 
-library.add(faChevronDown, faTrashCan)
+library.add(faChevronDown, faTrashCan, faYoutube, faBilibili)
 
 import trim from "validator/lib/trim"
 
@@ -106,13 +154,13 @@ export default {
       type: String,
     },
   },
-  emits: ["delete", "error"],
+  emits: ["delete", "error", "set"],
   async mounted() {
     const platformForm = this.$refs.platform
     platformForm
       .querySelectorAll(".platform-group__content-item")
       .forEach((item) => {
-        if (item.querySelector("select")) return
+        if (item.querySelector(".custom-select")) return
         item.querySelector("input").value = ""
         item.classList.remove("has-error")
         item.querySelector(".error").innerHTML = ""
@@ -147,10 +195,29 @@ export default {
 
         await new Promise((resolve) => setTimeout(resolve, 60))
         await this.checkAllFilled(activeElement)
-        this.checkHeight()
       }
 
       activeElement = e.target
+      this.checkHeight()
+    })
+
+    platformForm.addEventListener("mousedown", async (e) => {
+      const labelSelected = e.target.closest(".item__label")
+
+      if (labelSelected) {
+        const platforms = [...platformForm.querySelectorAll(".item__radio")]
+        // check label connected to radio
+        platforms.forEach((item) => {
+          const selected = item.nextElementSibling === labelSelected
+          if (!selected) return
+
+          item.checked = true
+          this.platform = item.value
+          this.$emit("set", { id: this.id, set: item.value })
+        })
+      }
+
+      this.checkHeight()
     })
 
     // this.$watch(
@@ -181,7 +248,8 @@ export default {
 
     this.$watch(
       () => this.set,
-      () => (this.platform = this.set)
+      () => (this.platform = this.set),
+      { immediate: true }
     )
   },
   methods: {
@@ -271,8 +339,8 @@ export default {
       group.classList.toggle("show")
     },
     async checkHeight() {
-      if (!this.$refs.content) return
       await new Promise((resolve) => setTimeout(resolve, 60))
+      if (!this.$refs.content) return
       const calculatedHeight = [...this.$refs.content.children].reduce(
         (t, c) => {
           // get margin and padding
@@ -341,8 +409,31 @@ export default {
           @apply ml-1;
         }
 
-        select {
-          @apply my-1 -translate-y-0.5 rounded-lg bg-slate-100 p-2 shadow-md transition duration-200 ease-in-out hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none dark:bg-slate-600;
+        .custom-select {
+          @apply my-1 h-[var(--minHeight)] -translate-y-0.5 cursor-pointer overflow-hidden rounded-lg bg-slate-100 shadow-md transition duration-200 ease-in-out focus-within:h-[var(--maxHeight)] hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none dark:bg-slate-600;
+          .selected-item {
+            @apply inline-block w-full p-2 focus:hidden;
+
+            &__span {
+              @apply ml-2;
+            }
+          }
+
+          .select-items {
+            @apply flex flex-col;
+
+            input {
+              @apply hidden;
+            }
+
+            .item__label {
+              @apply m-0 cursor-pointer p-2 hover:bg-blue-400;
+
+              &-span {
+                @apply ml-2;
+              }
+            }
+          }
         }
 
         input {
