@@ -33,50 +33,52 @@
           <option value="bilibili">BiliBili</option>
         </select> -->
         <div class="custom-select" style="--maxHeight: 80px; --minHeight: 40px">
-          <a
-            class="selected-item"
-            href="#"
-            onclick="return false"
-            v-if="platform == 'youtube'"
-          >
-            <font-awesome-icon :icon="['fab', 'youtube']" class="fa-fw" />
-            <span class="selected-item__span">YouTube</span>
-          </a>
-          <a
-            class="selected-item"
-            href="#"
-            onclick="return false"
-            v-if="platform == 'bilibili'"
-          >
-            <font-awesome-icon :icon="['fab', 'bilibili']" class="fa-fw" />
-            <span class="selected-item__span">BiliBili</span>
-          </a>
-          <div class="select-items">
-            <!-- YouTube -->
-            <input
-              type="radio"
-              class="item__radio"
-              name="type-platform"
-              id="youtube"
-              value="youtube"
-              checked
-            />
-            <label for="youtube" class="item__label">
+          <div class="custom-select-area">
+            <a
+              class="selected-item"
+              href="#"
+              onclick="return false"
+              v-if="platform == 'youtube'"
+            >
               <font-awesome-icon :icon="['fab', 'youtube']" class="fa-fw" />
-              <span class="item__label-span">YouTube</span>
-            </label>
-            <!-- BiliBili -->
-            <input
-              type="radio"
-              class="item__radio"
-              name="type-platform"
-              id="bilibili"
-              value="bilibili"
-            />
-            <label for="bilibili" class="item__label">
+              <span class="selected-item__span">YouTube</span>
+            </a>
+            <a
+              class="selected-item"
+              href="#"
+              onclick="return false"
+              v-if="platform == 'bilibili'"
+            >
               <font-awesome-icon :icon="['fab', 'bilibili']" class="fa-fw" />
-              <span class="item__label-span">BiliBili</span>
-            </label>
+              <span class="selected-item__span">BiliBili</span>
+            </a>
+            <div class="select-items">
+              <!-- YouTube -->
+              <input
+                type="radio"
+                class="item__radio"
+                name="type-platform"
+                id="youtube"
+                value="youtube"
+                checked
+              />
+              <label for="youtube" class="item__label">
+                <font-awesome-icon :icon="['fab', 'youtube']" class="fa-fw" />
+                <span class="item__label-span">YouTube</span>
+              </label>
+              <!-- BiliBili -->
+              <input
+                type="radio"
+                class="item__radio"
+                name="type-platform"
+                id="bilibili"
+                value="bilibili"
+              />
+              <label for="bilibili" class="item__label">
+                <font-awesome-icon :icon="['fab', 'bilibili']" class="fa-fw" />
+                <span class="item__label-span">BiliBili</span>
+              </label>
+            </div>
           </div>
         </div>
       </div>
@@ -120,11 +122,49 @@
       </div>
 
       <div class="platform-group__content-item">
-        <label for="lang-code">Region/Language Code</label>
-        <input type="text" id="lang-code" name="lang-code" autocomplete="off" />
-        <small class="description"
-          >Minimum 2 characters (Example: <b>EN</b>)</small
-        >
+        <label for="lang-code">Region/Language</label>
+
+        <div class="region-area" v-if="toggleLang === id">
+          <div class="regions">
+            <div class="region" v-for="region in regions">
+              <input
+                type="radio"
+                name="region"
+                class="region__radio"
+                :id="region.code"
+                :value="region.code"
+              />
+              <label
+                :for="region.code"
+                class="region__label"
+                @mousedown="setReg"
+              >
+                <img
+                  :src="`/assets/flags/${region.code}.svg`"
+                  onerror="this.src='/assets/flags/none.svg'"
+                  class="region__label-flag"
+                />
+                <span class="region__label-span">{{ region.name }}</span>
+              </label>
+            </div>
+            <div class="region" v-if="!regions.length">
+              <label class="region__label disabled">
+                <span>No Regions Found</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <input
+          type="text"
+          id="lang-code"
+          name="lang-code"
+          autocomplete="off"
+          @click="openLang"
+          @blur="toggleLang = null"
+          @input="findReg"
+        />
+        <small class="description">Find Available Regions/Languages</small>
         <small class="error"></small>
       </div>
     </div>
@@ -137,12 +177,16 @@ import { faYoutube, faBilibili } from "@fortawesome/free-brands-svg-icons"
 
 library.add(faChevronDown, faTrashCan, faYoutube, faBilibili)
 
+import Regions from "@/regions.json"
+
 import trim from "validator/lib/trim"
 
 export default {
   data() {
     return {
       platform: "youtube",
+      toggleLang: null,
+      searchLang: "",
     }
   },
   props: {
@@ -171,7 +215,7 @@ export default {
     platformForm.addEventListener("input", async (e) => {
       e.target.parentElement.classList.toggle(
         "has-error",
-        !(await this.checkFilled(e.target))
+        !(await this.checkFilled(e.target, true))
       )
 
       await new Promise((resolve) => setTimeout(resolve, 60))
@@ -186,7 +230,7 @@ export default {
         activeElement &&
         e.target !== activeElement &&
         activeElement.tagName === "INPUT" &&
-        activeElement?.closest(".platform-group__content") === platformForm
+        activeElement?.closest(".platform-group") === platformForm
       ) {
         activeElement.parentElement.classList.toggle(
           "has-error",
@@ -252,12 +296,22 @@ export default {
       { immediate: true }
     )
   },
+
+  computed: {
+    regions() {
+      return Regions.filter(
+        (region) =>
+          region.code.toLowerCase().includes(this.searchLang.toLowerCase()) ||
+          region.name.toLowerCase().includes(this.searchLang.toLowerCase())
+      )
+    },
+  },
   methods: {
-    async checkFilled(element) {
+    async checkFilled(element, isInput = false) {
       const notInput = element.tagName !== "INPUT"
       // this.calculateHeight(element)
-      if (notInput) return true
-      return await this.checkValidate(element)
+      if (notInput || isInput) return true
+      return await this.checkValidate(element, isInput)
     },
     async checkAllFilled(e) {
       const platform = this.$refs.platform
@@ -266,7 +320,7 @@ export default {
       const inputs = platform.querySelectorAll("input")
       let count = 0
       for (const input of inputs) {
-        const validate = await this.checkValidate(input)
+        const validate = await this.checkValidate(input, true)
         if (!validate) break
         count++
       }
@@ -275,7 +329,7 @@ export default {
       platform.classList.toggle("errors", error)
       this.$emit("error", { id: this.id, error })
     },
-    async checkValidate(e) {
+    async checkValidate(e, isInput = false) {
       const youtubeId = e.name === "youtube-id"
       const biliSpaceId = e.name === "space-id"
       const biliLiveId = e.name === "live-id"
@@ -308,10 +362,10 @@ export default {
       }
 
       // check region/language code
-      const isRegionCode = value.match(/^[a-zA-Z]{2}$/)
+      const isRegion = Regions.find((region) => region.name === value)
 
-      if (langCode && !isRegionCode) {
-        errorText.innerText = "Please enter a valid region/language code"
+      if (langCode && !isRegion) {
+        if (!isInput) errorText.innerText = "Please enter a valid region"
         return false
       }
 
@@ -362,6 +416,34 @@ export default {
         `${calculatedHeight}px`
       )
     },
+
+    openLang(e) {
+      this.toggleLang = this.id
+      this.searchLang = ""
+      // select all inside input
+      const input = e.target
+      if (input.value) input.setSelectionRange(0, input.value.length)
+    },
+
+    setReg(e) {
+      // get value radio
+      const selectedRegion =
+        e.target.closest(".region__label")?.previousElementSibling.value
+
+      // set value to input
+      const legionInput = e.target
+        .closest(".platform-group__content-item")
+        .querySelector("input[name='lang-code']")
+      legionInput.value = Regions.find((r) => r.code === selectedRegion)?.name
+      this.checkAllFilled(e.target)
+    },
+    findReg(e) {
+      e.target.classList.toggle(
+        "region-selected",
+        !!this.regions.find((r) => r.name === e.target.value)
+      )
+      this.searchLang = e.target.value
+    },
   },
 }
 </script>
@@ -386,7 +468,7 @@ export default {
 
     &__content {
       transition-property: "transform, height";
-      @apply flex h-0 origin-top scale-y-0 flex-col duration-300 ease-in-out;
+      @apply /*overflow-hidden*/ flex h-0 origin-top scale-y-0 flex-col duration-300 ease-in-out;
 
       &-item {
         @apply mx-2 my-1 flex flex-col first:mt-2;
@@ -410,27 +492,32 @@ export default {
         }
 
         .custom-select {
-          @apply my-1 h-[var(--minHeight)] -translate-y-0.5 cursor-pointer overflow-hidden rounded-lg bg-slate-100 shadow-md transition duration-200 ease-in-out focus-within:h-[var(--maxHeight)] hover:translate-y-0 hover:shadow-sm focus:translate-y-0.5 focus:shadow-none dark:bg-slate-600;
-          .selected-item {
-            @apply inline-block w-full p-2 focus:hidden;
+          @apply relative h-[40px];
 
-            &__span {
-              @apply ml-2;
-            }
-          }
+          &-area {
+            transition-property: height transform shadow;
+            @apply z-[4] my-1 h-[40px] w-full -translate-y-0.5 cursor-pointer overflow-hidden rounded-lg bg-slate-100 shadow-md duration-200 ease-in-out focus-within:absolute focus-within:h-[80px] focus-within:translate-y-0.5 hover:translate-y-0 hover:shadow-sm focus-within:hover:translate-y-0.5  focus-within:hover:shadow-md dark:bg-slate-600;
+            .selected-item {
+              @apply inline-block w-full p-2 focus:hidden;
 
-          .select-items {
-            @apply flex flex-col;
-
-            input {
-              @apply hidden;
-            }
-
-            .item__label {
-              @apply m-0 cursor-pointer p-2 hover:bg-blue-400;
-
-              &-span {
+              &__span {
                 @apply ml-2;
+              }
+            }
+
+            .select-items {
+              @apply flex flex-col;
+
+              input {
+                @apply hidden;
+              }
+
+              .item__label {
+                @apply m-0 cursor-pointer p-2 hover:bg-slate-300 dark:hover:bg-slate-700;
+
+                &-span {
+                  @apply ml-2;
+                }
               }
             }
           }
@@ -474,5 +561,37 @@ export default {
   &.confirm {
     @apply bg-red-500 text-white;
   }
+}
+
+.regions {
+  @apply absolute bottom-0 mb-1 flex max-h-48 w-full flex-col overflow-hidden overflow-y-scroll rounded-md bg-slate-100 shadow-md dark:bg-slate-600;
+
+  .region {
+    @apply flex;
+
+    &__radio {
+      @apply hidden;
+    }
+
+    &__label {
+      @apply m-0 flex h-full w-full cursor-pointer p-2 hover:bg-slate-300 dark:hover:bg-slate-700;
+
+      &.disabled {
+        @apply cursor-not-allowed hover:bg-transparent dark:hover:bg-transparent;
+      }
+
+      &-flag {
+        @apply h-6 w-6 rounded-md object-contain drop-shadow-md;
+      }
+
+      &-span {
+        @apply ml-2 text-center;
+      }
+    }
+  }
+}
+
+.region-area {
+  @apply relative w-full;
 }
 </style>

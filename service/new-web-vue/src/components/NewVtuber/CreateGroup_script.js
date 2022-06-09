@@ -1,6 +1,8 @@
 import trim from "validator/lib/trim"
 import isUrl from "validator/lib/isURL"
 
+import Regions from "@/regions.json"
+
 export default {
   data() {
     return {
@@ -68,13 +70,17 @@ export default {
         if (this.platforms[i].set === "youtube")
           GroupChannel.youtube.push({
             ChannelID: trim(input[0].value),
-            Region: trim(input[1].value),
+            Region: Regions.find(
+              (region) => region.name === trim(input[1].value)
+            ).code,
           })
         else if (this.platforms[i].set === "bilibili")
           GroupChannel.bilibili.push({
             BiliBili_ID: trim(input[0].value),
             BiliRoom_ID: trim(input[1].value),
-            Region: trim(input[2].value),
+            Region: Regions.find(
+              (region) => region.name === trim(input[2].value)
+            ).code,
           })
       })
 
@@ -291,6 +297,11 @@ export default {
         await new Promise((resolve) => setTimeout(resolve, 60))
         const platformInputs = platform.querySelectorAll("input")
 
+        const regionCode =
+          this.platforms[i].set === "youtube"
+            ? youtubeChannels[indexyt].Region
+            : bilibiliChannels[indexbili].Region
+
         platformInputs[2].value =
           this.platforms[i].set === "youtube"
             ? youtubeChannels[indexyt].ChannelID
@@ -298,11 +309,13 @@ export default {
 
         platformInputs[3].value =
           this.platforms[i].set === "youtube"
-            ? youtubeChannels[indexyt].Region
+            ? Regions.find((region) => region.code === regionCode).name
             : bilibiliChannels[indexbili].BiliRoom_ID
 
         if (this.platforms[i].set === "bilibili")
-          platformInputs[4].value = bilibiliChannels[indexbili].Region
+          platformInputs[4].value = Regions.find(
+            (region) => region.code === regionCode
+          ).name
 
         if (this.platforms[i].set === "youtube") indexyt++
         else indexbili++
