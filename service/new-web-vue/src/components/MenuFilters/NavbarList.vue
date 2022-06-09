@@ -69,7 +69,7 @@ export default {
     },
 
     enabledFilters() {
-      const filtersMenu = useMemberStore().members.config.menu
+      const filtersMenu = useMemberStore().menuFilter
 
       return (
         useMemberStore().members.data.length > 0 &&

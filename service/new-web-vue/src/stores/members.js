@@ -10,46 +10,39 @@ export const useMemberStore = defineStore("members", () => {
     error: false,
     query: "",
     status: null,
-    config: {
-      group: -1,
-      menu: {
-        region: [],
-        platform: [],
-        live: [],
-        inactive: false,
-      },
-      sortmenu: {
-        platform: [],
-        twitter: false,
-      },
-      filter: {
-        region: null,
-        platform: null,
-        live: null,
-        inactive: null,
-      },
-      sort: {
-        type: "name",
-        order: "asc",
-        live: true,
-      },
-    },
+    group: -1,
     data: [],
     filteredData: [],
     searchedData: [],
   })
+
+  const menuFilter = ref({
+    region: [],
+    platform: [],
+    live: [],
+    inactive: false,
+  })
+  const sortMenu = ref({ platform: [], twitter: false })
+
+  const filter = ref({
+    region: null,
+    platform: null,
+    live: null,
+    inactive: null,
+  })
+  const sorting = ref({ type: "name", order: "asc", live: true })
 
   const fetchMembers = async (id = null) => {
     let err = false
     members.value.status = null
     members.value.error = false
 
-    if (members.value.config.group === id) return
+    if (members.value.group === id) return
 
     members.value.data = []
     members.value.filteredData = []
 
-    members.value.config.group = id
+    members.value.group = id
 
     const params = id ? { groupid: id } : {}
 
@@ -87,8 +80,6 @@ export const useMemberStore = defineStore("members", () => {
     let newLive = []
     let newInac = false
 
-    members.value.config.menu.inactive = false
-
     for (const vt of vtuber_data) {
       if (!newRegion.includes(vt.Region)) newRegion.push(vt.Region)
 
@@ -109,7 +100,7 @@ export const useMemberStore = defineStore("members", () => {
       if (vt.Status === "Inactive") newInac = true
     }
 
-    members.value.config.menu = {
+    menuFilter.value = {
       region: newRegion,
       platform: newPlatform,
       live: newLive,
@@ -152,15 +143,13 @@ export const useMemberStore = defineStore("members", () => {
 
     const regions = reg?.toLowerCase().split(",") || null
 
-    members.value.config.filter.region = regions
-    members.value.config.filter.platform = plat ? plat : null
-    members.value.config.filter.live = liveplat ? liveplat : null
-    members.value.config.filter.inactive = inac
-      ? inac.toLowerCase() === "true"
-      : null
+    filter.value.region = regions
+    filter.value.platform = plat ? plat : null
+    filter.value.live = liveplat ? liveplat : null
+    filter.value.inactive = inac ? inac.toLowerCase() === "true" : null
 
-    let { region, platform, live, inactive } = members.value.config.filter
-    const regMenu = members.value.config.menu.region.map((r) => r.toLowerCase())
+    let { region, platform, live, inactive } = filter.value
+    const regMenu = menuFilter.value.region.map((r) => r.toLowerCase())
 
     let vtuber_data = [...toRaw(members.value.data)]
 
@@ -257,7 +246,7 @@ export const useMemberStore = defineStore("members", () => {
       if (vt.Twitter) newTwitter = true
     }
 
-    members.value.config.sortmenu = {
+    sortMenu.value = {
       platform: newPlatform,
       twitter: newTwitter,
     }
@@ -274,11 +263,11 @@ export const useMemberStore = defineStore("members", () => {
     // if link is not /vtubers
     if (!window.location.pathname.match(/\/vtubers/g)) return
 
-    members.value.config.sort.type = sort ? sort?.replace("-", "") : "name"
-    members.value.config.sort.order = sort?.includes("-") ? "desc" : "asc"
-    members.value.config.sort.live = liveLink === "false" ? false : true
+    sorting.value.type = sort ? sort?.replace("-", "") : "name"
+    sorting.value.order = sort?.includes("-") ? "desc" : "asc"
+    sorting.value.live = liveLink === "false" ? false : true
 
-    let { type, order, live } = members.value.config.sort
+    let { type, order, live } = sorting.value
 
     const vtuber_data = [...toRaw(members.value.filteredData)]
 
@@ -357,13 +346,24 @@ export const useMemberStore = defineStore("members", () => {
 
     if (live) {
       console.log("Sort by live status")
+
+      // vtuber_data.sort((a, b) => {
+      //         if (!a.IsLive.Youtube && b.IsLive.Youtube) return 1
+      //         if (a.IsLive.Youtube && !b.IsLive.Youtube) return -1
+      //         if (!a.IsLive.Twitch && b.IsLive.Twitch) return 1
+      //         if (a.IsLive.Twitch && !b.IsLive.Twitch) return -1
+      //         if (!a.IsLive.BiliBili && b.IsLive.BiliBili) return 1
+      //         if (a.IsLive.BiliBili && !b.IsLive.BiliBili) return -1
+      //         return 0
+      //       })
+
       vtuber_data.sort(({ IsLive: liveA }, { IsLive: liveB }) => {
-        if (liveA.Youtube) return -1
-        if (liveB.Youtube) return 1
-        if (liveA.Twitch) return -1
-        if (liveB.Twitch) return 1
-        if (liveA.BiliBili) return -1
-        if (liveB.BiliBili) return 1
+        if (!liveA.Youtube && liveB.Youtube) return 1
+        if (liveA.Youtube && !liveB.Youtube) return -1
+        if (!liveA.Twitch && liveB.Twitch) return 1
+        if (liveA.Twitch && !liveB.Twitch) return -1
+        if (!liveA.BiliBili && liveB.BiliBili) return 1
+        if (liveA.BiliBili && !liveB.BiliBili) return -1
         return 0
       })
     }
@@ -373,6 +373,8 @@ export const useMemberStore = defineStore("members", () => {
 
   return {
     members,
+    menuFilter,
+    sortMenu,
     fetchMembers,
     filterMembers,
     sortingMembers,

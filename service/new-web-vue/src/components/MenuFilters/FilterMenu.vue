@@ -412,7 +412,7 @@ export default {
     getRegions() {
       const store = useMemberStore()
 
-      const regions = store.members.config.menu.region.map(
+      const regions = store.menuFilter.region.map(
         (region) =>
           regionConfig.find(
             (r) => r.code.toLowerCase() == region.toLowerCase()
@@ -428,13 +428,13 @@ export default {
     },
 
     platforms() {
-      return useMemberStore().members.config.menu.platform
+      return useMemberStore().menuFilter.platform
     },
     livePlatforms() {
-      return useMemberStore().members.config.menu.live
+      return useMemberStore().menuFilter.live
     },
     inactiveCheck() {
-      return useMemberStore().members.config.menu.inactive
+      return useMemberStore().menuFilter.inactive
     },
   },
   methods: {

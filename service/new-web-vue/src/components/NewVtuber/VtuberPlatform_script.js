@@ -332,11 +332,13 @@ export default {
     },
 
     openLang(e) {
+      const input = e.target
+
+      if (input.value && this.searchLang !== "")
+        input.setSelectionRange(0, input.value.length)
+
       this.toggleLang = this.id
       this.searchLang = ""
-      // select all inside input
-      const input = e.target
-      if (input.value) input.setSelectionRange(0, input.value.length)
     },
 
     setReg(e) {
@@ -349,6 +351,7 @@ export default {
         .closest(".vtuber__content-item")
         .querySelector("input[name='lang-code']")
       legionInput.value = Regions.find((r) => r.code === selectedRegion)?.name
+      this.searchLang = Regions.find((r) => r.code === selectedRegion)?.name
       this.checkAllFilled(e.target)
     },
     findReg(e) {

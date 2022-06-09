@@ -264,24 +264,6 @@ export default {
       this.checkHeight()
     })
 
-    // this.$watch(
-    //   () => this.id,
-    //   async () => {
-    //     const inputs = platform.querySelectorAll("input")
-
-    //     inputs.forEach(async (input) =>
-    //       input.parentElement.classList.toggle(
-    //         "has-error",
-    //         !(await this.checkFilled(activeElement))
-    //       )
-    //     )
-
-    //     await new Promise((resolve) => setTimeout(resolve, 60))
-    //     await this.checkAllFilled(null)
-    //     this.checkHeight()
-    //   }
-    // )
-
     document.body.addEventListener("click", (e) => {
       if (!e.target.closest(".delete-platform")) {
         document.querySelectorAll(".delete-platform").forEach((platform) => {
@@ -418,11 +400,13 @@ export default {
     },
 
     openLang(e) {
+      const input = e.target
+
+      if (input.value && this.searchLang !== "")
+        input.setSelectionRange(0, input.value.length)
+
       this.toggleLang = this.id
       this.searchLang = ""
-      // select all inside input
-      const input = e.target
-      if (input.value) input.setSelectionRange(0, input.value.length)
     },
 
     setReg(e) {
@@ -435,6 +419,7 @@ export default {
         .closest(".platform-group__content-item")
         .querySelector("input[name='lang-code']")
       legionInput.value = Regions.find((r) => r.code === selectedRegion)?.name
+      this.searchLang = Regions.find((r) => r.code === selectedRegion)?.name
       this.checkAllFilled(e.target)
     },
     findReg(e) {
