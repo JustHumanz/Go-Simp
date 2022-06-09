@@ -248,7 +248,11 @@ export default {
     },
 
     async assignNewGroup(group) {
-      console.log(group)
+      const nameInput = document.querySelector("[name=group-name]")
+      const iconInput = document.querySelector("[name=group-icon]")
+
+      nameInput.value = "" ?? group.GroupName
+      iconInput.value = "" ?? group.GroupIcon
 
       if (!group) return
 
@@ -283,12 +287,6 @@ export default {
       })
 
       // fill all inputs
-
-      const nameInput = document.querySelector("[name=group-name]")
-      const iconInput = document.querySelector("[name=group-icon]")
-
-      nameInput.value = group.GroupName
-      iconInput.value = "" ?? group.GroupIcon
 
       let indexyt = 0
       let indexbili = 0

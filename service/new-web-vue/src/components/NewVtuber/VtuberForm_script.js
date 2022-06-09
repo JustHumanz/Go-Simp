@@ -1,3 +1,6 @@
+import Regions from "@/regions.json"
+import trim from "validator/lib/trim"
+
 export default {
   data() {
     return {
@@ -110,30 +113,37 @@ export default {
       vtubers.forEach((vtuber) => {
         let vtuberData = {}
 
-        vtuberData.nickname = vtuber.querySelector("[name=name]").value
-        vtuberData.name_en = vtuber.querySelector("[name=en-name]").value
-        vtuberData.name_jp = vtuber.querySelector("[name=jp-name]").value
-        vtuberData.fanbase = vtuber.querySelector("[name=fanbase]").value
-        vtuberData.region = vtuber.querySelector("[name=lang-code]").value
+        vtuberData.nickname = trim(vtuber.querySelector("[name=name]").value)
+        vtuberData.name_en = trim(vtuber.querySelector("[name=en-name]").value)
+        vtuberData.name_jp = trim(vtuber.querySelector("[name=jp-name]").value)
+        vtuberData.fanbase = trim(vtuber.querySelector("[name=fanbase]").value)
+        vtuberData.region = Regions.find(
+          (region) =>
+            region.name === trim(vtuber.querySelector("[name=lang-code]").value)
+        ).code
 
         vtuberData.platform = {
           youtube: {
-            channel_id: vtuber.querySelector("[name=youtube-id]").value,
+            channel_id: trim(vtuber.querySelector("[name=youtube-id]").value),
           },
           twitch: {
-            username: vtuber.querySelector("[name=nickname-twitch]").value,
+            username: trim(
+              vtuber.querySelector("[name=nickname-twitch]").value
+            ),
           },
           bilibili: {
-            space_id: vtuber.querySelector("[name=space-id]").value,
-            live_id: vtuber.querySelector("[name=live-id]").value,
-            bili_fanart: vtuber.querySelector("[name=bili-art]").value,
+            space_id: trim(vtuber.querySelector("[name=space-id]").value),
+            live_id: trim(vtuber.querySelector("[name=live-id]").value),
+            bili_fanart: trim(vtuber.querySelector("[name=bili-art]").value),
           },
         }
 
         vtuberData.twitter = {
-          username: vtuber.querySelector("[name=twitter-username]").value,
-          fanart_hashtag: vtuber.querySelector("[name=fanart-hashtag]").value,
-          lewd_hashtag: vtuber.querySelector("[name=lewd-hashtag]").value,
+          username: trim(vtuber.querySelector("[name=twitter-username]").value),
+          fanart_hashtag: trim(
+            vtuber.querySelector("[name=fanart-hashtag]").value
+          ),
+          lewd_hashtag: trim(vtuber.querySelector("[name=lewd-hashtag]").value),
         }
 
         result.push(vtuberData)
@@ -177,7 +187,9 @@ export default {
         Inputs[1].value = vtubers[index].name_en
         Inputs[2].value = vtubers[index].name_jp
         Inputs[3].value = vtubers[index].fanbase
-        Inputs[4].value = vtubers[index].region
+        Inputs[4].value = Regions.find(
+          (region) => region.code === vtubers[index].region
+        ).name
         Inputs[5].value = vtubers[index].platform.youtube?.channel_id
         Inputs[6].value = vtubers[index].platform.twitch?.username
         Inputs[7].value = vtubers[index].platform.bilibili?.space_id

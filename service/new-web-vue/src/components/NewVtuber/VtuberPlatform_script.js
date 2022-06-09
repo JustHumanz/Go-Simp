@@ -1,9 +1,12 @@
 import trim from "validator/lib/trim"
+import Regions from "@/regions.json"
 
 export default {
   data() {
     return {
       vtuberName: "",
+      toggleLang: null,
+      searchLang: "",
     }
   },
   props: {
@@ -31,7 +34,7 @@ export default {
     vtuberForm.addEventListener("input", async (e) => {
       e.target.parentElement.classList.toggle(
         "has-error",
-        !(await this.checkFilled(e.target))
+        !(await this.checkFilled(e.target, true))
       )
 
       await new Promise((resolve) => setTimeout(resolve, 60))
@@ -73,14 +76,22 @@ export default {
     getVtuberName() {
       return this.vtuberName ? this.vtuberName : "New Vtuber"
     },
+
+    regions() {
+      return Regions.filter(
+        (region) =>
+          region.code.toLowerCase().includes(this.searchLang.toLowerCase()) ||
+          region.name.toLowerCase().includes(this.searchLang.toLowerCase())
+      )
+    },
   },
 
   methods: {
-    async checkFilled(element) {
+    async checkFilled(element, isInput = false) {
       const notInput = element.tagName !== "INPUT"
       // this.calculateHeight(element)
-      if (notInput) return true
-      return await this.checkValidate(element)
+      if (notInput || isInput) return true
+      return await this.checkValidate(element, isInput)
     },
     async checkAllFilled(e) {
       const form = this.$refs.form
@@ -89,7 +100,7 @@ export default {
       const inputs = form.querySelectorAll("input")
       let count = 0
       for (const input of inputs) {
-        const validate = await this.checkValidate(input)
+        const validate = await this.checkValidate(input, true)
         if (!validate) break
         count++
       }
@@ -111,7 +122,7 @@ export default {
       this.$refs.form.classList.toggle("errors", error)
       this.$emit("error", { id: this.id, error })
     },
-    async checkValidate(e) {
+    async checkValidate(e, isInput = false) {
       const name = e.name === "name"
       const ENname = e.name === "en-name"
       const JPname = e.name === "jp-name"
@@ -173,9 +184,10 @@ export default {
       }
 
       //check is region code
-      const isRegionCode = value.match(/^[a-zA-Z]{2}$/)
-      if (region && !isRegionCode) {
-        errorText.innerText = "Please enter a valid region/language code"
+      const isRegion = Regions.find((region) => region.name === value)
+
+      if (region && !isRegion) {
+        if (!isInput) errorText.innerText = "Please enter a valid region"
         return false
       }
 
@@ -317,6 +329,34 @@ export default {
       groups.forEach((c) => c.classList.remove("show"))
 
       group.classList.toggle("show")
+    },
+
+    openLang(e) {
+      this.toggleLang = this.id
+      this.searchLang = ""
+      // select all inside input
+      const input = e.target
+      if (input.value) input.setSelectionRange(0, input.value.length)
+    },
+
+    setReg(e) {
+      // get value radio
+      const selectedRegion =
+        e.target.closest(".region__label")?.previousElementSibling.value
+
+      // set value to input
+      const legionInput = e.target
+        .closest(".vtuber__content-item")
+        .querySelector("input[name='lang-code']")
+      legionInput.value = Regions.find((r) => r.code === selectedRegion)?.name
+      this.checkAllFilled(e.target)
+    },
+    findReg(e) {
+      e.target.classList.toggle(
+        "region-selected",
+        !!this.regions.find((r) => r.name === e.target.value)
+      )
+      this.searchLang = e.target.value
     },
   },
 }

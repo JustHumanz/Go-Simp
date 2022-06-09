@@ -58,11 +58,49 @@
       </div>
 
       <div class="vtuber__content-item">
-        <label for="lang-code">Region/Language Code</label>
-        <input type="text" id="lang-code" name="lang-code" autocomplete="off" />
-        <small class="description"
-          >Minimum 2 characters (Example: <b>EN</b>)</small
-        >
+        <label for="lang-code">Region/Language</label>
+        <input
+          type="text"
+          id="lang-code"
+          name="lang-code"
+          autocomplete="off"
+          @click="openLang"
+          @blur="toggleLang = null"
+          @input="findReg"
+        />
+
+        <div class="region-area" v-if="toggleLang === id">
+          <div class="regions">
+            <div class="region" v-for="region in regions">
+              <input
+                type="radio"
+                name="region"
+                class="region__radio"
+                :id="region.code"
+                :value="region.code"
+              />
+              <label
+                :for="region.code"
+                class="region__label"
+                @mousedown="setReg"
+              >
+                <img
+                  :src="`/assets/flags/${region.code}.svg`"
+                  onerror="this.src='/assets/flags/none.svg'"
+                  class="region__label-flag"
+                />
+                <span class="region__label-span">{{ region.name }}</span>
+              </label>
+            </div>
+            <div class="region" v-if="!regions.length">
+              <label class="region__label disabled">
+                <span>No Regions Found</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <small class="description">Find Available Regions/Languages</small>
         <small class="error"></small>
       </div>
 
@@ -294,5 +332,37 @@ export default { ...VtuberPlatform }
   &.confirm {
     @apply bg-red-500 text-white;
   }
+}
+
+.regions {
+  @apply absolute z-[2] mb-1 flex max-h-48 w-full flex-col overflow-hidden overflow-y-scroll rounded-md bg-slate-100 shadow-md dark:bg-slate-600;
+
+  .region {
+    @apply flex;
+
+    &__radio {
+      @apply hidden;
+    }
+
+    &__label {
+      @apply m-0 flex h-full w-full cursor-pointer p-2 hover:bg-slate-300 dark:hover:bg-slate-700;
+
+      &.disabled {
+        @apply cursor-not-allowed hover:bg-transparent dark:hover:bg-transparent;
+      }
+
+      &-flag {
+        @apply h-6 w-6 rounded-md object-contain drop-shadow-md;
+      }
+
+      &-span {
+        @apply ml-2 text-center;
+      }
+    }
+  }
+}
+
+.region-area {
+  @apply relative w-full;
 }
 </style>
