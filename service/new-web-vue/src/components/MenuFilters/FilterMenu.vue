@@ -22,7 +22,7 @@
             }"
             @click="changeFilter()"
             class="navbar-submenu-item__link"
-            :class="{ active: !reg }"
+            :class="{ active: !activeFilter }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
@@ -39,7 +39,9 @@
             }"
             @click="changeFilter()"
             class="navbar-submenu-item__link"
-            :class="{ active: reg == region.code }"
+            :class="{
+              active: activeFilter?.includes(region.code.toLowerCase()),
+            }"
             :alt="region.name"
           >
             <img
@@ -435,6 +437,9 @@ export default {
     },
     inactiveCheck() {
       return useMemberStore().menuFilter.inactive
+    },
+    activeFilter() {
+      return useMemberStore().filter?.region
     },
   },
   methods: {

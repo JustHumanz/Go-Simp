@@ -375,6 +375,7 @@ export const useMemberStore = defineStore("members", () => {
     members,
     menuFilter,
     sortMenu,
+    filter,
     fetchMembers,
     filterMembers,
     sortingMembers,

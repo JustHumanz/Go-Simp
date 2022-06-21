@@ -162,7 +162,7 @@
             }"
             @click="setSort()"
             class="navbar-filter-item__link"
-            :class="{ active: !live }"
+            :class="{ active: live }"
           >
             <font-awesome-icon
               class="fa-fw navbar-filter-item__svg"
