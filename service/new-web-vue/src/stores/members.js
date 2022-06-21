@@ -28,6 +28,7 @@ export const useMemberStore = defineStore("members", () => {
     region: null,
     platform: null,
     live: null,
+    live_only: false,
     inactive: null,
   })
   const sorting = ref({ type: "name", order: "asc", live: true })
@@ -136,7 +137,7 @@ export const useMemberStore = defineStore("members", () => {
   }
 
   const filterMembers = () => {
-    const { reg, plat, liveplat, inac } = parse(
+    const { reg, plat, liveplat, nolive, inac } = parse(
       window.location.href,
       true
     ).query
@@ -146,14 +147,21 @@ export const useMemberStore = defineStore("members", () => {
     filter.value.region = regions
     filter.value.platform = plat ? plat : null
     filter.value.live = liveplat ? liveplat : null
+    filter.value.live_only = nolive?.toLowerCase() == "false" ? true : false
     filter.value.inactive = inac ? inac.toLowerCase() === "true" : null
 
-    let { region, platform, live, inactive } = filter.value
+    let { region, platform, live, live_only, inactive } = filter.value
     const regMenu = menuFilter.value.region.map((r) => r.toLowerCase())
 
     let vtuber_data = [...toRaw(members.value.data)]
 
-    if (region || platform || live || inactive !== null) {
+    if (
+      region ||
+      platform ||
+      live ||
+      inactive !== null ||
+      live_only !== false
+    ) {
       // filter by region
       if (region) {
         vtuber_data = vtuber_data.filter((vtuber) => {
@@ -192,42 +200,39 @@ export const useMemberStore = defineStore("members", () => {
       }
 
       // filter by live
-      if (live) {
-        switch (live) {
-          case "yt":
-            vtuber_data = vtuber_data.filter(({ IsLive }) => IsLive.Youtube)
-            break
-          case "tw":
-            vtuber_data = vtuber_data.filter(({ IsLive }) => IsLive.Twitch)
-            break
-          case "bl":
-            vtuber_data = vtuber_data.filter(({ IsLive }) => IsLive.BiliBili)
-            break
-          default:
-            vtuber_data = vtuber_data.filter(({ IsLive }) => {
-              if (live === "-yt")
-                return IsLive.Youtube && !IsLive.Twitch && !IsLive.BiliBili
-              else if (live === "-tw")
-                return IsLive.Twitch && !IsLive.Youtube && !IsLive.BiliBili
-              else if (live === "-bl")
-                return IsLive.BiliBili && !IsLive.Twitch && !IsLive.Youtube
-              else if (live === "-yt,tw,bl")
-                return IsLive.Youtube || IsLive.Twitch || IsLive.BiliBili
-              else if (live.match(/^-(yt,tw|tw,yt)/g)) return !IsLive.BiliBili
-              else if (live.match(/^-(tw,bl|bl,tw)/g)) return !IsLive.Youtube
-              else if (live.match(/^-(yt,bl|bl,yt)/g)) return !IsLive.Twitch
-              else return false
-            })
-            break
-        }
-      }
-    }
+      vtuber_data = vtuber_data.filter(({ IsLive }) => {
+        const { Youtube, Twitch, BiliBili } = IsLive
+        let live_filter = Youtube || Twitch || BiliBili
 
-    if (inactive !== null) {
-      vtuber_data = vtuber_data.filter(({ Status }) => {
-        if (inactive) return Status === "Inactive"
-        return Status === "Active"
+        if (live) {
+          switch (live) {
+            case "yt":
+              live_filter = Youtube
+              break
+            case "tw":
+              live_filter = Twitch
+              break
+            case "bl":
+              live_filter = BiliBili
+              break
+          }
+
+          if (live.match(/(yt,tw|tw,yt)/g)) live_filter = !BiliBili
+          else if (live.match(/(tw,bl|bl,tw)/g)) live_filter = !Youtube
+          else if (live.match(/(yt,bl|bl,yt)/g)) live_filter = !Twitch
+        }
+
+        const noLive = !BiliBili && !Youtube && !Twitch
+
+        return live_only !== true ? live_filter || noLive : live_filter
       })
+
+      if (inactive !== null) {
+        vtuber_data = vtuber_data.filter(({ Status }) => {
+          if (inactive) return Status === "Inactive"
+          return Status === "Active"
+        })
+      }
     }
 
     console.log(`Total member after filtering: ${vtuber_data.length}`)

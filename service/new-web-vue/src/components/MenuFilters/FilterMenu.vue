@@ -173,29 +173,9 @@
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
-              icon="users"
-            />
-            <span class="navbar-submenu-item__span">Show All</span>
-          </router-link>
-        </li>
-        <li
-          class="navbar-submenu-item"
-          v-if="livePlatforms.includes(`youtube`)"
-        >
-          <router-link
-            :to="{
-              params: { id: $route.params.id },
-              query: urlParams({ live: '-yt,tw,bl' }),
-            }"
-            @click="changeFilter()"
-            class="navbar-submenu-item__link"
-            :class="{ active: liveplat == '-yt,tw,bl' }"
-          >
-            <font-awesome-icon
-              class="fa-fw navbar-submenu-item__svg"
               icon="video"
             />
-            <span class="navbar-submenu-item__span">Show Live Only</span>
+            <span class="navbar-submenu-item__span">All Lives</span>
           </router-link>
         </li>
         <li
@@ -253,6 +233,24 @@
               :icon="['fab', 'bilibili']"
             />
             <span class="navbar-submenu-item__span">Bilibili</span>
+          </router-link>
+        </li>
+
+        <li class="navbar-submenu-item">
+          <router-link
+            :to="{
+              params: { id: $route.params.id },
+              query: urlParams({ noLive: 'toggle' }),
+            }"
+            @click="changeFilter()"
+            class="navbar-submenu-item__link"
+            :class="{ active: nolive !== 'false' }"
+          >
+            <font-awesome-icon
+              class="fa-fw navbar-submenu-item__svg"
+              icon="users"
+            />
+            <span class="navbar-submenu-item__span">Show No Live</span>
           </router-link>
         </li>
       </ul>
@@ -405,6 +403,7 @@ export default {
         this.reg = this.$route.query.reg
         this.plat = this.$route.query.plat
         this.liveplat = this.$route.query.liveplat
+        this.nolive = this.$route.query.nolive
         this.inac = this.$route.query.inac
       },
       { immediate: true }
@@ -454,12 +453,14 @@ export default {
       region = null,
       platform = null,
       live = null,
+      noLive = null,
       inactive = null,
     }) {
       const {
         reg,
         plat,
         liveplat,
+        nolive,
         inac,
         sort,
         live: sortLive,
@@ -468,12 +469,27 @@ export default {
       const params = new Object()
 
       if ((!reg && region) || (reg && region !== "")) params.reg = region || reg
+
       if ((!plat && platform) || (plat && platform !== ""))
         params.plat = platform || plat
+
       if ((!liveplat && live) || (liveplat && live !== ""))
         params.liveplat = live || liveplat
+
+      if (noLive) {
+        switch (nolive) {
+          case "false":
+            break
+          default:
+            params.nolive = "false"
+        }
+      } else {
+        params.nolive = nolive
+      }
+
       if ((!inac && inactive) || (inac && inactive !== ""))
         params.inac = inactive || inac
+
       if (sort) params.sort = sort
       if (sortLive) params.live = sortLive
 
