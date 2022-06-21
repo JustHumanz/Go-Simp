@@ -29,9 +29,14 @@ export const useMemberStore = defineStore("members", () => {
     platform: null,
     live: null,
     live_only: false,
-    inactive: null,
+    inactive: false,
   })
-  const sorting = ref({ type: "name", order: "asc", live: true })
+  const sorting = ref({
+    type: "name",
+    order: "asc",
+    live: true,
+    inactive: true,
+  })
 
   const fetchMembers = async (id = null) => {
     let err = false
@@ -148,7 +153,7 @@ export const useMemberStore = defineStore("members", () => {
     filter.value.platform = plat ? plat : null
     filter.value.live = liveplat ? liveplat : null
     filter.value.live_only = nolive?.toLowerCase() == "false" ? true : false
-    filter.value.inactive = inac ? inac.toLowerCase() === "true" : null
+    filter.value.inactive = inac ? inac.toLowerCase() === "true" : false
 
     let { region, platform, live, live_only, inactive } = filter.value
     const regMenu = menuFilter.value.region.map((r) => r.toLowerCase())
@@ -159,8 +164,8 @@ export const useMemberStore = defineStore("members", () => {
       region ||
       platform ||
       live ||
-      inactive !== null ||
-      live_only !== false
+      live_only !== false ||
+      inactive !== false
     ) {
       // filter by region
       if (region) {
@@ -227,12 +232,9 @@ export const useMemberStore = defineStore("members", () => {
         return live_only !== true ? live_filter || noLive : live_filter
       })
 
-      if (inactive !== null) {
-        vtuber_data = vtuber_data.filter(({ Status }) => {
-          if (inactive) return Status === "Inactive"
-          return Status === "Active"
-        })
-      }
+      vtuber_data = vtuber_data.filter(({ Status }) => {
+        if (inactive) return Status === "Inactive"
+      })
     }
 
     console.log(`Total member after filtering: ${vtuber_data.length}`)
@@ -263,7 +265,11 @@ export const useMemberStore = defineStore("members", () => {
     members.value.query = ""
     members.value.searchedData = []
 
-    const { sort, live: liveLink } = parse(window.location.href, true).query
+    const {
+      sort,
+      live: liveLink,
+      inaclast,
+    } = parse(window.location.href, true).query
 
     // if link is not /vtubers
     if (!window.location.pathname.match(/\/vtubers/g)) return
@@ -271,8 +277,9 @@ export const useMemberStore = defineStore("members", () => {
     sorting.value.type = sort ? sort?.replace("-", "") : "name"
     sorting.value.order = sort?.includes("-") ? "desc" : "asc"
     sorting.value.live = liveLink === "false" ? false : true
+    sorting.value.inactive = inaclast === "false" ? false : true
 
-    let { type, order, live } = sorting.value
+    let { type, order, live, inactive } = sorting.value
 
     const vtuber_data = [...toRaw(members.value.filteredData)]
 
@@ -352,16 +359,6 @@ export const useMemberStore = defineStore("members", () => {
     if (live) {
       console.log("Sort by live status")
 
-      // vtuber_data.sort((a, b) => {
-      //         if (!a.IsLive.Youtube && b.IsLive.Youtube) return 1
-      //         if (a.IsLive.Youtube && !b.IsLive.Youtube) return -1
-      //         if (!a.IsLive.Twitch && b.IsLive.Twitch) return 1
-      //         if (a.IsLive.Twitch && !b.IsLive.Twitch) return -1
-      //         if (!a.IsLive.BiliBili && b.IsLive.BiliBili) return 1
-      //         if (a.IsLive.BiliBili && !b.IsLive.BiliBili) return -1
-      //         return 0
-      //       })
-
       vtuber_data.sort(({ IsLive: liveA }, { IsLive: liveB }) => {
         if (!liveA.Youtube && liveB.Youtube) return 1
         if (liveA.Youtube && !liveB.Youtube) return -1
@@ -369,6 +366,14 @@ export const useMemberStore = defineStore("members", () => {
         if (liveA.Twitch && !liveB.Twitch) return -1
         if (!liveA.BiliBili && liveB.BiliBili) return 1
         if (liveA.BiliBili && !liveB.BiliBili) return -1
+        return 0
+      })
+    }
+
+    if (inactive) {
+      vtuber_data.sort(({ Status: statA }, { Status: statB }) => {
+        if (statA === "Inactive" && statB !== "Inactive") return 1
+        if (statA !== "Inactive" && statB === "Inactive") return -1
         return 0
       })
     }

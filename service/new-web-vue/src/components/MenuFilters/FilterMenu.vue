@@ -257,69 +257,20 @@
     </li>
 
     <li class="navbar-filter-item" v-if="inactiveCheck">
-      <a
-        href="#"
-        class="navbar-filter-item__link sub-menu"
-        onclick="return false"
+      <router-link
+        :to="{
+          params: { id: $route.params.id },
+          query: urlParams({ inactive: 'toggle' }),
+        }"
+        @click="changeFilter()"
+        class="navbar-filter-item__link"
+        :class="{ active: inac == 'true' }"
       >
-        <font-awesome-icon class="fa-fw navbar-filter-item__svg" icon="user" />
-        <span class="navbar-filter-item__span">Activity Status</span>
-      </a>
-
-      <ul class="navbar-submenu-items">
-        <li class="navbar-submenu-item">
-          <router-link
-            :to="{
-              params: { id: $route.params.id },
-              query: urlParams({ inactive: '' }),
-            }"
-            @click="changeFilter()"
-            class="navbar-submenu-item__link"
-            :class="{ active: !inac }"
-          >
-            <font-awesome-icon
-              class="fa-fw navbar-submenu-item__svg"
-              icon="people-group"
-            />
-            <span class="navbar-submenu-item__span">All</span>
-          </router-link>
-        </li>
-        <li class="navbar-submenu-item">
-          <router-link
-            :to="{
-              params: { id: $route.params.id },
-              query: urlParams({ inactive: 'false' }),
-            }"
-            @click="changeFilter()"
-            class="navbar-submenu-item__link"
-            :class="{ active: inac == 'false' }"
-          >
-            <font-awesome-icon
-              class="fa-fw navbar-submenu-item__svg"
-              icon="user-check"
-            />
-            <span class="navbar-submenu-item__span">Active</span>
-          </router-link>
-        </li>
-        <li class="navbar-submenu-item">
-          <router-link
-            :to="{
-              params: { id: $route.params.id },
-              query: urlParams({ inactive: 'true' }),
-            }"
-            @click="changeFilter()"
-            class="navbar-submenu-item__link"
-            :class="{ active: inac == 'true' }"
-          >
-            <font-awesome-icon
-              class="fa-fw navbar-submenu-item__svg"
-              icon="skull"
-            />
-            <span class="navbar-submenu-item__span">Inactive</span>
-          </router-link>
-        </li>
-      </ul>
+        <font-awesome-icon class="fa-fw navbar-filter-item__svg" icon="skull" />
+        <span class="navbar-filter-item__span">Inactive Only</span>
+      </router-link>
     </li>
+
     <li class="navbar-filter-item">
       <a href="#" class="navbar-filter-item__link" onclick="return false">
         <font-awesome-icon
@@ -487,8 +438,18 @@ export default {
         params.nolive = nolive
       }
 
-      if ((!inac && inactive) || (inac && inactive !== ""))
-        params.inac = inactive || inac
+      // if ((!inac && inactive) || (inac && inactive !== ""))
+      //   params.inac = inactive || inac
+      if (inactive) {
+        switch (inac) {
+          case "true":
+            break
+          default:
+            params.inac = "true"
+        }
+      } else {
+        params.inac = inac
+      }
 
       if (sort) params.sort = sort
       if (sortLive) params.live = sortLive
