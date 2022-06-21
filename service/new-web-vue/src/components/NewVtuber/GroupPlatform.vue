@@ -453,7 +453,7 @@ export default {
 
     &__content {
       transition-property: "transform, height";
-      @apply /*overflow-hidden*/ flex h-0 origin-top scale-y-0 flex-col duration-300 ease-in-out;
+      @apply flex h-0 origin-top scale-y-0 flex-col overflow-hidden duration-300 ease-in-out;
 
       &-item {
         @apply mx-2 my-1 flex flex-col first:mt-2;
