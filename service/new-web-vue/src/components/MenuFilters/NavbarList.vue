@@ -116,7 +116,7 @@ export default {
 
 <style lang="scss">
 .list-nav {
-  @apply fixed top-16 z-10 flex w-screen select-none flex-col-reverse flex-wrap-reverse items-center justify-center bg-blue-400 py-2 px-5 dark:bg-slate-500 sm:flex-row sm:justify-around;
+  @apply sticky top-16 z-10 mb-3 flex w-screen select-none flex-col-reverse flex-wrap-reverse items-center justify-center bg-blue-400 py-2 px-5 dark:bg-slate-500 sm:flex-row sm:justify-around;
 }
 
 .navbar-filters {

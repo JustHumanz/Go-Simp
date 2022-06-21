@@ -163,7 +163,7 @@ onMounted(() => {
     </div>
   </nav>
 
-  <main class="mt-[4rem] min-h-[85vh]">
+  <main>
     <RouterView />
   </main>
   <footer class="footer relative z-[1]">
@@ -345,7 +345,7 @@ export default {
 <style lang="scss" scoped>
 .nav {
   font-family: "Nunito", sans-serif;
-  @apply fixed top-0 left-0 z-[11] flex h-16 w-screen select-none justify-center bg-cyan-500 shadow-md shadow-cyan-500/50 dark:bg-slate-700 dark:shadow-slate-700/50;
+  @apply sticky top-0 left-0 z-[11] flex h-16 w-screen select-none justify-center bg-cyan-500 shadow-md shadow-cyan-500/50 dark:bg-slate-700 dark:shadow-slate-700/50;
   .navbar {
     @apply mx-4 flex h-full w-full items-center justify-between md:w-[90%] md:justify-around lg:w-[85%];
 
