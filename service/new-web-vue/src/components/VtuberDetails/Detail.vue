@@ -145,11 +145,19 @@ import PixivLogo from "../icons/PixivLogo.vue"
           class="detail-info-item__value"
         >
           <img
-            :src="`/assets/flags/${vtuber.Regions.flagCode}.svg`"
+            :src="`/assets/flags/${vtuber.Regions.code.toLowerCase()}.svg`"
             :alt="vtuber.Regions.name"
             class="detail-info-item__icon"
+            v-if="vtuber.Regions"
           />
-          {{ vtuber.Regions.name }}
+          <img
+            src="/assets/flags/none.svg"
+            :alt="vtuber.Regions.name"
+            class="detail-info-item__icon"
+            v-else
+          />
+
+          {{ vtuber.Regions?.name || vtuber.Region + " Region" }}
         </router-link>
       </div>
 

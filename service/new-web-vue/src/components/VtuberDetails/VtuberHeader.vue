@@ -87,7 +87,13 @@
               v-if="vtuber.Group.ID !== 10"
             />
             <img
-              :src="`/assets/flags/${vtuber.Regions.flagCode}.svg`"
+              :src="`/assets/flags/${vtuber.Regions.code.toLowerCase()}.svg`"
+              :alt="vtuber.Group.GroupName"
+              class="header-vtuber-name__group-icon"
+              v-else-if="vtuber.Group.ID === 10 && vtuber.Regions"
+            />
+            <img
+              src="/assets/flags/none.svg"
               :alt="vtuber.Group.GroupName"
               class="header-vtuber-name__group-icon"
               v-else
@@ -97,7 +103,7 @@
                 ? "Vtuber"
                 : vtuber.Group.GroupName.replace("_", " ")
             }}
-            {{ vtuber.Regions.name }} </router-link
+            {{ vtuber.Regions?.name || vtuber.Region }} </router-link
           ><router-link to="/vtubers?inac=true">
             {{ vtuber.Status === "Inactive" ? " (Inactive)" : "" }}
           </router-link>
