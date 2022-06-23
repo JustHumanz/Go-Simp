@@ -14,8 +14,6 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
     <font-awesome-icon icon="caret-up" class="fa-fw" />
   </a>
 
-  <div class="pt-24 sm:pt-14" />
-
   <section v-if="$route.params?.id && group" class="group-detail">
     <img
       v-if="group.ID != 10"
@@ -71,7 +69,7 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
 <script>
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faCaretUp } from "@fortawesome/free-solid-svg-icons"
-import regionConfig from "../region.json"
+import regionConfig from "../regions.json"
 
 library.add(faCaretUp)
 

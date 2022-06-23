@@ -69,7 +69,7 @@ export default {
     },
 
     enabledFilters() {
-      const filtersMenu = useMemberStore().members.config.menu
+      const filtersMenu = useMemberStore().menuFilter
 
       return (
         useMemberStore().members.data.length > 0 &&
@@ -116,7 +116,7 @@ export default {
 
 <style lang="scss">
 .list-nav {
-  @apply fixed top-16 z-10 flex w-screen select-none flex-col-reverse flex-wrap-reverse items-center justify-center bg-blue-400 py-2 px-5 dark:bg-slate-500 sm:flex-row sm:justify-around;
+  @apply sticky top-16 z-10 mb-3 flex w-screen select-none flex-col-reverse flex-wrap-reverse items-center justify-center bg-blue-400 py-2 px-5 dark:bg-slate-500 sm:flex-row sm:justify-around;
 }
 
 .navbar-filters {
@@ -203,6 +203,10 @@ export default {
       @apply w-6;
     }
 
+    // &__span {
+    //   @apply truncate md:max-w-[125px];
+    // }
+
     &__link {
       @apply flex w-screen items-center space-x-2 px-2 py-1 font-semibold text-white hover:bg-blue-500/60 dark:hover:bg-slate-900/40 sm:w-44;
 
@@ -249,6 +253,10 @@ export default {
 
     &__svg {
       @apply w-6;
+    }
+
+    &__span {
+      @apply truncate md:max-w-[124px];
     }
   }
 }

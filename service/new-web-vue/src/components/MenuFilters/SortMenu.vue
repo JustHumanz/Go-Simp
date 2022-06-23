@@ -141,6 +141,38 @@
         </li>
       </ul>
     </li>
+    <li class="navbar-filter-item" v-if="platforms.length || twitter">
+      <a
+        href="#"
+        class="navbar-filter-item__link sub-menu"
+        onclick="return false"
+      >
+        <font-awesome-icon
+          class="fa-fw navbar-filter-item__svg"
+          icon="people-group"
+        />
+        <span class="navbar-filter-item__span">Group</span>
+      </a>
+      <ul class="navbar-submenu-items">
+        <li class="navbar-submenu-item">
+          <router-link
+            :to="{
+              params: { id: $route.params.id },
+              query: toggleDisableLiveFirst(),
+            }"
+            @click="setSort()"
+            class="navbar-filter-item__link"
+            :class="{ active: live }"
+          >
+            <font-awesome-icon
+              class="fa-fw navbar-filter-item__svg"
+              icon="ban"
+            />
+            <span class="navbar-filter-item__span">Live First</span>
+          </router-link>
+        </li>
+      </ul>
+    </li>
     <li class="navbar-filter-item">
       <router-link
         :to="{
@@ -158,20 +190,6 @@
         <span class="navbar-filter-item__span">Reverse Order</span>
       </router-link>
     </li>
-    <li class="navbar-filter-item">
-      <router-link
-        :to="{
-          params: { id: $route.params.id },
-          query: toggleDisableLiveFirst(),
-        }"
-        @click="setSort()"
-        class="navbar-filter-item__link"
-        :class="{ active: !live }"
-      >
-        <font-awesome-icon class="fa-fw navbar-filter-item__svg" icon="ban" />
-        <span class="navbar-filter-item__span">Disable Live First</span>
-      </router-link>
-    </li>
   </ul>
 </template>
 
@@ -184,6 +202,7 @@ import {
   faArrowUp91,
   faSort,
   faBan,
+  faPeopleGroup,
 } from "@fortawesome/free-solid-svg-icons"
 // Add fa brand for youtube, twitch, bilibili, twitter
 import {
@@ -202,7 +221,8 @@ library.add(
   faBilibili,
   faTwitter,
   faSort,
-  faBan
+  faBan,
+  faPeopleGroup
 )
 
 import { useMemberStore } from "@/stores/members.js"
@@ -221,10 +241,10 @@ export default {
   },
   computed: {
     platforms() {
-      return useMemberStore().members.config.sortmenu.platform
+      return useMemberStore().sortMenu.platform
     },
     twitter() {
-      return useMemberStore().members.config.sortmenu.twitter
+      return useMemberStore().sortMenu.twitter
     },
   },
   methods: {

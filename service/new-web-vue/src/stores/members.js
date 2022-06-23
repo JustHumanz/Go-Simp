@@ -2,7 +2,7 @@ import { defineStore } from "pinia"
 import { ref, computed, compile, toRaw } from "vue"
 import axios from "axios"
 import Config from "../config.json"
-import regionConfig from "../region.json"
+import regionConfig from "../regions.json"
 import parse from "url-parse"
 
 export const useMemberStore = defineStore("members", () => {
@@ -10,33 +10,32 @@ export const useMemberStore = defineStore("members", () => {
     error: false,
     query: "",
     status: null,
-    config: {
-      group: -1,
-      menu: {
-        region: [],
-        platform: [],
-        live: [],
-        inactive: false,
-      },
-      sortmenu: {
-        platform: [],
-        twitter: false,
-      },
-      filter: {
-        region: null,
-        platform: null,
-        live: null,
-        inactive: null,
-      },
-      sort: {
-        type: "name",
-        order: "asc",
-        live: true,
-      },
-    },
+    group: -1,
     data: [],
     filteredData: [],
     searchedData: [],
+  })
+
+  const menuFilter = ref({
+    region: [],
+    platform: [],
+    live: [],
+    inactive: false,
+  })
+  const sortMenu = ref({ platform: [], twitter: false })
+
+  const filter = ref({
+    region: null,
+    platform: null,
+    live: null,
+    live_only: false,
+    inactive: false,
+  })
+  const sorting = ref({
+    type: "name",
+    order: "asc",
+    live: true,
+    inactive: true,
   })
 
   const fetchMembers = async (id = null) => {
@@ -44,12 +43,10 @@ export const useMemberStore = defineStore("members", () => {
     members.value.status = null
     members.value.error = false
 
-    if (members.value.config.group === id) return
-
     members.value.data = []
     members.value.filteredData = []
 
-    members.value.config.group = id
+    members.value.group = id
 
     const params = id ? { groupid: id } : {}
 
@@ -87,8 +84,6 @@ export const useMemberStore = defineStore("members", () => {
     let newLive = []
     let newInac = false
 
-    members.value.config.menu.inactive = false
-
     for (const vt of vtuber_data) {
       if (!newRegion.includes(vt.Region)) newRegion.push(vt.Region)
 
@@ -109,7 +104,7 @@ export const useMemberStore = defineStore("members", () => {
       if (vt.Status === "Inactive") newInac = true
     }
 
-    members.value.config.menu = {
+    menuFilter.value = {
       region: newRegion,
       platform: newPlatform,
       live: newLive,
@@ -145,26 +140,31 @@ export const useMemberStore = defineStore("members", () => {
   }
 
   const filterMembers = () => {
-    const { reg, plat, liveplat, inac } = parse(
+    const { reg, plat, liveplat, nolive, inac } = parse(
       window.location.href,
       true
     ).query
 
     const regions = reg?.toLowerCase().split(",") || null
 
-    members.value.config.filter.region = regions
-    members.value.config.filter.platform = plat ? plat : null
-    members.value.config.filter.live = liveplat ? liveplat : null
-    members.value.config.filter.inactive = inac
-      ? inac.toLowerCase() === "true"
-      : null
+    filter.value.region = regions
+    filter.value.platform = plat ? plat : null
+    filter.value.live = liveplat ? liveplat : null
+    filter.value.live_only = nolive?.toLowerCase() == "false" ? true : false
+    filter.value.inactive = inac ? inac.toLowerCase() === "true" : false
 
-    let { region, platform, live, inactive } = members.value.config.filter
-    const regMenu = members.value.config.menu.region.map((r) => r.toLowerCase())
+    let { region, platform, live, live_only, inactive } = filter.value
+    const regMenu = menuFilter.value.region.map((r) => r.toLowerCase())
 
     let vtuber_data = [...toRaw(members.value.data)]
 
-    if (region || platform || live || inactive !== null) {
+    if (
+      region ||
+      platform ||
+      live ||
+      live_only !== false ||
+      inactive !== false
+    ) {
       // filter by region
       if (region) {
         vtuber_data = vtuber_data.filter((vtuber) => {
@@ -203,41 +203,36 @@ export const useMemberStore = defineStore("members", () => {
       }
 
       // filter by live
-      if (live) {
-        switch (live) {
-          case "yt":
-            vtuber_data = vtuber_data.filter(({ IsLive }) => IsLive.Youtube)
-            break
-          case "tw":
-            vtuber_data = vtuber_data.filter(({ IsLive }) => IsLive.Twitch)
-            break
-          case "bl":
-            vtuber_data = vtuber_data.filter(({ IsLive }) => IsLive.BiliBili)
-            break
-          default:
-            vtuber_data = vtuber_data.filter(({ IsLive }) => {
-              if (live === "-yt")
-                return IsLive.Youtube && !IsLive.Twitch && !IsLive.BiliBili
-              else if (live === "-tw")
-                return IsLive.Twitch && !IsLive.Youtube && !IsLive.BiliBili
-              else if (live === "-bl")
-                return IsLive.BiliBili && !IsLive.Twitch && !IsLive.Youtube
-              else if (live === "-yt,tw,bl")
-                return IsLive.Youtube || IsLive.Twitch || IsLive.BiliBili
-              else if (live.match(/^-(yt,tw|tw,yt)/g)) return !IsLive.BiliBili
-              else if (live.match(/^-(tw,bl|bl,tw)/g)) return !IsLive.Youtube
-              else if (live.match(/^-(yt,bl|bl,yt)/g)) return !IsLive.Twitch
-              else return false
-            })
-            break
-        }
-      }
-    }
+      vtuber_data = vtuber_data.filter(({ IsLive }) => {
+        const { Youtube, Twitch, BiliBili } = IsLive
+        let live_filter = Youtube || Twitch || BiliBili
 
-    if (inactive !== null) {
+        if (live) {
+          switch (live) {
+            case "yt":
+              live_filter = Youtube
+              break
+            case "tw":
+              live_filter = Twitch
+              break
+            case "bl":
+              live_filter = BiliBili
+              break
+          }
+
+          if (live.match(/(yt,tw|tw,yt)/g)) live_filter = !BiliBili
+          else if (live.match(/(tw,bl|bl,tw)/g)) live_filter = !Youtube
+          else if (live.match(/(yt,bl|bl,yt)/g)) live_filter = !Twitch
+        }
+
+        const noLive = !BiliBili && !Youtube && !Twitch
+
+        return live_only !== true ? live_filter || noLive : live_filter
+      })
+
       vtuber_data = vtuber_data.filter(({ Status }) => {
         if (inactive) return Status === "Inactive"
-        return Status === "Active"
+        else return true
       })
     }
 
@@ -257,7 +252,7 @@ export const useMemberStore = defineStore("members", () => {
       if (vt.Twitter) newTwitter = true
     }
 
-    members.value.config.sortmenu = {
+    sortMenu.value = {
       platform: newPlatform,
       twitter: newTwitter,
     }
@@ -269,16 +264,21 @@ export const useMemberStore = defineStore("members", () => {
     members.value.query = ""
     members.value.searchedData = []
 
-    const { sort, live: liveLink } = parse(window.location.href, true).query
+    const {
+      sort,
+      live: liveLink,
+      inaclast,
+    } = parse(window.location.href, true).query
 
     // if link is not /vtubers
     if (!window.location.pathname.match(/\/vtubers/g)) return
 
-    members.value.config.sort.type = sort ? sort?.replace("-", "") : "name"
-    members.value.config.sort.order = sort?.includes("-") ? "desc" : "asc"
-    members.value.config.sort.live = liveLink === "false" ? false : true
+    sorting.value.type = sort ? sort?.replace("-", "") : "name"
+    sorting.value.order = sort?.includes("-") ? "desc" : "asc"
+    sorting.value.live = liveLink === "false" ? false : true
+    sorting.value.inactive = inaclast === "false" ? false : true
 
-    let { type, order, live } = members.value.config.sort
+    let { type, order, live, inactive } = sorting.value
 
     const vtuber_data = [...toRaw(members.value.filteredData)]
 
@@ -357,13 +357,22 @@ export const useMemberStore = defineStore("members", () => {
 
     if (live) {
       console.log("Sort by live status")
+
       vtuber_data.sort(({ IsLive: liveA }, { IsLive: liveB }) => {
-        if (liveA.Youtube) return -1
-        if (liveB.Youtube) return 1
-        if (liveA.Twitch) return -1
-        if (liveB.Twitch) return 1
-        if (liveA.BiliBili) return -1
-        if (liveB.BiliBili) return 1
+        if (!liveA.Youtube && liveB.Youtube) return 1
+        if (liveA.Youtube && !liveB.Youtube) return -1
+        if (!liveA.Twitch && liveB.Twitch) return 1
+        if (liveA.Twitch && !liveB.Twitch) return -1
+        if (!liveA.BiliBili && liveB.BiliBili) return 1
+        if (liveA.BiliBili && !liveB.BiliBili) return -1
+        return 0
+      })
+    }
+
+    if (inactive) {
+      vtuber_data.sort(({ Status: statA }, { Status: statB }) => {
+        if (statA === "Inactive" && statB !== "Inactive") return 1
+        if (statA !== "Inactive" && statB === "Inactive") return -1
         return 0
       })
     }
@@ -373,6 +382,9 @@ export const useMemberStore = defineStore("members", () => {
 
   return {
     members,
+    menuFilter,
+    sortMenu,
+    filter,
     fetchMembers,
     filterMembers,
     sortingMembers,

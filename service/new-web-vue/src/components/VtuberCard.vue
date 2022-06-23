@@ -13,8 +13,9 @@
           <img
             draggable="false"
             class="tag-vtuber-agency__flag"
-            :src="`/assets/flags/${vtuber.Regions.flagCode}.svg`"
+            :src="`/assets/flags/${vtuber.Regions?.code.toLowerCase()}.svg`"
             :alt="vtuber.Regions.name"
+            onerror="this.src='/assets/flags/none.svg'"
             v-if="vtuber.Regions"
           />
           <img
@@ -32,7 +33,7 @@
           />
           <span class="tag-vtuber-agency__hover">{{
             `${vtuber.Group.ID === 10 ? `Vtuber` : GroupName} ${
-              vtuber.Regions.name || vtuber.Region
+              vtuber.Regions?.name || vtuber.Region
             } ${vtuber.Status === "Inactive" ? ` (Inactive)` : ""}`
           }}</span>
         </div>

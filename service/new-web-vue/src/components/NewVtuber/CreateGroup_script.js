@@ -1,5 +1,8 @@
 import trim from "validator/lib/trim"
 import isUrl from "validator/lib/isURL"
+
+import Regions from "@/regions.json"
+
 export default {
   data() {
     return {
@@ -60,20 +63,24 @@ export default {
       NewGroup.GroupName = trim(form[0].value)
       NewGroup.IconUrl = trim(form[1].value)
 
-      platforms.forEach((platform) => {
-        const select = platform.querySelector("select")
-        const input = platform.querySelectorAll("input")
+      platforms.forEach((platform, i) => {
+        // shift first 2 elements
+        const input = [...platform.querySelectorAll("input")].slice(2)
 
-        if (select.value === "youtube")
+        if (this.platforms[i].set === "youtube")
           GroupChannel.youtube.push({
             ChannelID: trim(input[0].value),
-            Region: trim(input[1].value),
+            Region: Regions.find(
+              (region) => region.name === trim(input[1].value)
+            ).code,
           })
-        else if (select.value === "bilibili")
+        else if (this.platforms[i].set === "bilibili")
           GroupChannel.bilibili.push({
             BiliBili_ID: trim(input[0].value),
             BiliRoom_ID: trim(input[1].value),
-            Region: trim(input[2].value),
+            Region: Regions.find(
+              (region) => region.name === trim(input[2].value)
+            ).code,
           })
       })
 
@@ -108,11 +115,14 @@ export default {
       platforms.forEach((platform) => {
         platform.querySelector(".delete-platform").classList.remove("confirm")
       })
+      const oldData = [...this.platforms]
+      console.log(oldData)
 
       const filteredPlatforms = platforms.filter((platform, index) => {
         return index !== id
       })
       this.platforms.splice(id, 1)
+      console.log(this.platforms)
 
       await new Promise((resolve) => setTimeout(resolve, 90))
       this.checkAllFilled()
@@ -124,20 +134,56 @@ export default {
       })
 
       filteredPlatforms.forEach((platform, index) => {
-        const select = platform.querySelector("select")
-        this.platforms[index].set = select.value
+        const selectPlatforms = [...platform.querySelectorAll(".item__radio")]
+        const selectPlatform = this.platforms[index].set
+
+        for (const select of selectPlatforms) {
+          if (select.value === selectPlatform) {
+            select.checked = true
+            break
+          }
+        }
       })
 
+      await new Promise((resolve) => setTimeout(resolve, 60))
       const newPlatforms = [...document.querySelector(".platforms").children]
 
       newPlatforms.forEach((platform, index) => {
-        const input = platform.querySelectorAll("input")
-        const oldInput = filteredPlatforms[index].querySelectorAll("input")
+        const inputItem = platform.querySelectorAll(
+          ".platform-group__content-item"
+        )
+        const oldInputItem = filteredPlatforms[index].querySelectorAll(
+          ".platform-group__content-item"
+        )
 
         platform.classList = filteredPlatforms[index].classList
 
-        input.forEach((inp, i) => (inp.value = oldInput[i].value))
+        const oldCalcHeight =
+          filteredPlatforms[index].lastElementChild.style.getPropertyValue(
+            "--contentHeight"
+          )
+        platform.lastElementChild.style.setProperty(
+          "--contentHeight",
+          oldCalcHeight
+        )
+
+        inputItem.forEach((inp, i) => {
+          if (inp.querySelector(".custom-select")) return
+
+          inp.classList = oldInputItem[i].classList
+          inp.querySelector(".error").innerHTML =
+            oldInputItem[i].querySelector(".error").innerHTML
+          inp.querySelector("input").value =
+            oldInputItem[i].querySelector("input").value
+        })
       })
+    },
+
+    changeSet(data) {
+      this.platforms.map(
+        (oldData) =>
+          (oldData.set = oldData.id === data.id ? data.set : oldData.set)
+      )
     },
 
     checkFilled(element) {
@@ -147,7 +193,7 @@ export default {
       return this.checkValidate(element)
     },
 
-    checkAllFilled() {
+    async checkAllFilled() {
       const inputs = document.querySelectorAll("input")
       let count = 0
 
@@ -159,6 +205,8 @@ export default {
       const platformError = this.platforms.find(
         (platform) => platform.error === true
       )
+
+      await new Promise((r) => setTimeout(r, 60))
 
       // get submit button
       const submitBtn = document.querySelector("[type=submit]")
@@ -200,7 +248,11 @@ export default {
     },
 
     async assignNewGroup(group) {
-      console.log(group)
+      const nameInput = document.querySelector("[name=group-name]")
+      const iconInput = document.querySelector("[name=group-icon]")
+
+      nameInput.value = "" ?? group.GroupName
+      iconInput.value = "" ?? group.GroupIcon
 
       if (!group) return
 
@@ -236,33 +288,34 @@ export default {
 
       // fill all inputs
 
-      const nameInput = document.querySelector("[name=group-name]")
-      const iconInput = document.querySelector("[name=group-icon]")
-
-      nameInput.value = group.GroupName
-      iconInput.value = "" ?? group.GroupIcon
-
       let indexyt = 0
       let indexbili = 0
 
-      platformGroup.forEach((platform) => {
-        const platformSelect = platform.querySelector("select")
+      platformGroup.forEach(async (platform, i) => {
+        await new Promise((resolve) => setTimeout(resolve, 60))
         const platformInputs = platform.querySelectorAll("input")
 
-        platformInputs[0].value =
-          platformSelect.value === "youtube"
+        const regionCode =
+          this.platforms[i].set === "youtube"
+            ? youtubeChannels[indexyt].Region
+            : bilibiliChannels[indexbili].Region
+
+        platformInputs[2].value =
+          this.platforms[i].set === "youtube"
             ? youtubeChannels[indexyt].ChannelID
             : bilibiliChannels[indexbili].BiliBili_ID
 
-        platformInputs[1].value =
-          platformSelect.value === "youtube"
-            ? youtubeChannels[indexyt].Region
+        platformInputs[3].value =
+          this.platforms[i].set === "youtube"
+            ? Regions.find((region) => region.code === regionCode).name
             : bilibiliChannels[indexbili].BiliRoom_ID
 
-        if (platformSelect.value === "bilibili")
-          platformInputs[2] = bilibiliChannels[indexbili].Region
+        if (this.platforms[i].set === "bilibili")
+          platformInputs[4].value = Regions.find(
+            (region) => region.code === regionCode
+          ).name
 
-        if (platformSelect.value === "youtube") indexyt++
+        if (this.platforms[i].set === "youtube") indexyt++
         else indexbili++
       })
 
@@ -275,6 +328,8 @@ export default {
         this.platforms.map((platform) => {
           if (platform.id == data.id) platform.error = data.error
         })
+
+        this.checkAllFilled()
       }
     },
   },

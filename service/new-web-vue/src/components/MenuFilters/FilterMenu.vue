@@ -22,7 +22,7 @@
             }"
             @click="changeFilter()"
             class="navbar-submenu-item__link"
-            :class="{ active: !reg }"
+            :class="{ active: !activeFilter }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
@@ -39,14 +39,18 @@
             }"
             @click="changeFilter()"
             class="navbar-submenu-item__link"
-            :class="{ active: reg == region.code }"
+            :class="{
+              active: activeFilter?.includes(region.code.toLowerCase()),
+            }"
+            :alt="region.name"
           >
             <img
               draggable="false"
-              :src="`/assets/flags/${region.flagCode}.svg`"
+              :src="`/assets/flags/${region.code}.svg`"
               :alt="region.name"
               class="navbar-submenu-item__img"
-              v-if="region.flagCode"
+              onerror="this.src='/assets/flags/none.svg'"
+              v-if="region.code"
             />
             <img
               draggable="false"
@@ -169,29 +173,9 @@
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
-              icon="users"
-            />
-            <span class="navbar-submenu-item__span">Show All</span>
-          </router-link>
-        </li>
-        <li
-          class="navbar-submenu-item"
-          v-if="livePlatforms.includes(`youtube`)"
-        >
-          <router-link
-            :to="{
-              params: { id: $route.params.id },
-              query: urlParams({ live: '-yt,tw,bl' }),
-            }"
-            @click="changeFilter()"
-            class="navbar-submenu-item__link"
-            :class="{ active: liveplat == '-yt,tw,bl' }"
-          >
-            <font-awesome-icon
-              class="fa-fw navbar-submenu-item__svg"
               icon="video"
             />
-            <span class="navbar-submenu-item__span">Show Live Only</span>
+            <span class="navbar-submenu-item__span">All Lives</span>
           </router-link>
         </li>
         <li
@@ -251,73 +235,42 @@
             <span class="navbar-submenu-item__span">Bilibili</span>
           </router-link>
         </li>
+
+        <li class="navbar-submenu-item">
+          <router-link
+            :to="{
+              params: { id: $route.params.id },
+              query: urlParams({ noLive: 'toggle' }),
+            }"
+            @click="changeFilter()"
+            class="navbar-submenu-item__link"
+            :class="{ active: nolive !== 'false' }"
+          >
+            <font-awesome-icon
+              class="fa-fw navbar-submenu-item__svg"
+              icon="users"
+            />
+            <span class="navbar-submenu-item__span">Show No Live</span>
+          </router-link>
+        </li>
       </ul>
     </li>
 
     <li class="navbar-filter-item" v-if="inactiveCheck">
-      <a
-        href="#"
-        class="navbar-filter-item__link sub-menu"
-        onclick="return false"
+      <router-link
+        :to="{
+          params: { id: $route.params.id },
+          query: urlParams({ inactive: 'toggle' }),
+        }"
+        @click="changeFilter()"
+        class="navbar-filter-item__link"
+        :class="{ active: inac == 'true' }"
       >
-        <font-awesome-icon class="fa-fw navbar-filter-item__svg" icon="user" />
-        <span class="navbar-filter-item__span">Activity Status</span>
-      </a>
-
-      <ul class="navbar-submenu-items">
-        <li class="navbar-submenu-item">
-          <router-link
-            :to="{
-              params: { id: $route.params.id },
-              query: urlParams({ inactive: '' }),
-            }"
-            @click="changeFilter()"
-            class="navbar-submenu-item__link"
-            :class="{ active: !inac }"
-          >
-            <font-awesome-icon
-              class="fa-fw navbar-submenu-item__svg"
-              icon="people-group"
-            />
-            <span class="navbar-submenu-item__span">All</span>
-          </router-link>
-        </li>
-        <li class="navbar-submenu-item">
-          <router-link
-            :to="{
-              params: { id: $route.params.id },
-              query: urlParams({ inactive: 'false' }),
-            }"
-            @click="changeFilter()"
-            class="navbar-submenu-item__link"
-            :class="{ active: inac == 'false' }"
-          >
-            <font-awesome-icon
-              class="fa-fw navbar-submenu-item__svg"
-              icon="user-check"
-            />
-            <span class="navbar-submenu-item__span">Active</span>
-          </router-link>
-        </li>
-        <li class="navbar-submenu-item">
-          <router-link
-            :to="{
-              params: { id: $route.params.id },
-              query: urlParams({ inactive: 'true' }),
-            }"
-            @click="changeFilter()"
-            class="navbar-submenu-item__link"
-            :class="{ active: inac == 'true' }"
-          >
-            <font-awesome-icon
-              class="fa-fw navbar-submenu-item__svg"
-              icon="skull"
-            />
-            <span class="navbar-submenu-item__span">Inactive</span>
-          </router-link>
-        </li>
-      </ul>
+        <font-awesome-icon class="fa-fw navbar-filter-item__svg" icon="skull" />
+        <span class="navbar-filter-item__span">Inactive Only</span>
+      </router-link>
     </li>
+
     <li class="navbar-filter-item">
       <a href="#" class="navbar-filter-item__link" onclick="return false">
         <font-awesome-icon
@@ -389,7 +342,7 @@ library.add(
   faPeopleGroup
 )
 
-import regionConfig from "@/region.json"
+import regionConfig from "@/regions.json"
 import { useMemberStore } from "@/stores/members.js"
 
 export default {
@@ -401,6 +354,7 @@ export default {
         this.reg = this.$route.query.reg
         this.plat = this.$route.query.plat
         this.liveplat = this.$route.query.liveplat
+        this.nolive = this.$route.query.nolive
         this.inac = this.$route.query.inac
       },
       { immediate: true }
@@ -410,7 +364,7 @@ export default {
     getRegions() {
       const store = useMemberStore()
 
-      const regions = store.members.config.menu.region.map(
+      const regions = store.menuFilter.region.map(
         (region) =>
           regionConfig.find(
             (r) => r.code.toLowerCase() == region.toLowerCase()
@@ -426,13 +380,16 @@ export default {
     },
 
     platforms() {
-      return useMemberStore().members.config.menu.platform
+      return useMemberStore().menuFilter.platform
     },
     livePlatforms() {
-      return useMemberStore().members.config.menu.live
+      return useMemberStore().menuFilter.live
     },
     inactiveCheck() {
-      return useMemberStore().members.config.menu.inactive
+      return useMemberStore().menuFilter.inactive
+    },
+    activeFilter() {
+      return useMemberStore().filter?.region
     },
   },
   methods: {
@@ -447,12 +404,14 @@ export default {
       region = null,
       platform = null,
       live = null,
+      noLive = null,
       inactive = null,
     }) {
       const {
         reg,
         plat,
         liveplat,
+        nolive,
         inac,
         sort,
         live: sortLive,
@@ -461,12 +420,37 @@ export default {
       const params = new Object()
 
       if ((!reg && region) || (reg && region !== "")) params.reg = region || reg
+
       if ((!plat && platform) || (plat && platform !== ""))
         params.plat = platform || plat
+
       if ((!liveplat && live) || (liveplat && live !== ""))
         params.liveplat = live || liveplat
-      if ((!inac && inactive) || (inac && inactive !== ""))
-        params.inac = inactive || inac
+
+      if (noLive) {
+        switch (nolive) {
+          case "false":
+            break
+          default:
+            params.nolive = "false"
+        }
+      } else {
+        params.nolive = nolive
+      }
+
+      // if ((!inac && inactive) || (inac && inactive !== ""))
+      //   params.inac = inactive || inac
+      if (inactive) {
+        switch (inac) {
+          case "true":
+            break
+          default:
+            params.inac = "true"
+        }
+      } else {
+        params.inac = inac
+      }
+
       if (sort) params.sort = sort
       if (sortLive) params.live = sortLive
 

@@ -81,10 +81,18 @@ export default {
   },
   methods: {
     async getVtuberData() {
-      await useMemberStore().fetchMembers(this.$route.params?.id || null)
+      const router_before = window.history.state.back
+
+      if (
+        !router_before.includes("/vtuber") ||
+        useMemberStore().members.group !== this.$route.params?.id
+      )
+        await useMemberStore().fetchMembers(this.$route.params?.id || null)
       useMemberStore().filterMembers()
       useMemberStore().sortingMembers()
     },
+
+    async refreshNewData() {},
 
     menuHandler() {
       // ON MOUSE DOWN

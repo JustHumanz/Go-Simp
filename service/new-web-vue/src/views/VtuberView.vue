@@ -39,7 +39,7 @@ import TwitterCount from "../components/VtuberDetails/TwitterCount.vue"
 
 <style lang="scss" scoped>
 .title {
-  @apply fixed top-16 z-[9] flex w-full select-none flex-wrap bg-blue-400 py-2 text-2xl font-semibold uppercase dark:bg-slate-500;
+  @apply sticky top-16 z-[9] flex w-full select-none flex-wrap bg-blue-400 py-2 text-2xl font-semibold uppercase dark:bg-slate-500;
 
   &__span {
     @apply mx-auto w-[95%] text-white md:w-[75%] lg:w-[70%];
@@ -54,7 +54,7 @@ import TwitterCount from "../components/VtuberDetails/TwitterCount.vue"
 }
 
 .vtuber-details {
-  @apply mx-auto mt-28 w-full pb-4 sm:w-[90%] md:w-[80%] lg:w-[75%];
+  @apply mx-auto w-full pb-4 sm:w-[90%] md:w-[80%] lg:w-[75%];
 }
 </style>
 

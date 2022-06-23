@@ -45,6 +45,7 @@ import GroupPlatform from "./GroupPlatform.vue"
         :set="platform.set"
         @delete="deletePlatform"
         @error="checkError"
+        @set="changeSet"
       />
     </div>
     <!-- Submit and back btn -->
