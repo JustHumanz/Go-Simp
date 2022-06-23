@@ -69,7 +69,7 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
 <script>
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faCaretUp } from "@fortawesome/free-solid-svg-icons"
-import regionConfig from "../region.json"
+import regionConfig from "../regions.json"
 
 library.add(faCaretUp)
 
