@@ -43,8 +43,6 @@ export const useMemberStore = defineStore("members", () => {
     members.value.status = null
     members.value.error = false
 
-    if (members.value.group === id) return
-
     members.value.data = []
     members.value.filteredData = []
 
@@ -234,6 +232,7 @@ export const useMemberStore = defineStore("members", () => {
 
       vtuber_data = vtuber_data.filter(({ Status }) => {
         if (inactive) return Status === "Inactive"
+        else return true
       })
     }
 
