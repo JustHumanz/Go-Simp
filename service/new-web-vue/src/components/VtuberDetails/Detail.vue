@@ -152,7 +152,7 @@ import PixivLogo from "../icons/PixivLogo.vue"
           />
           <img
             src="/assets/flags/none.svg"
-            :alt="vtuber.Regions.name"
+            :alt="vtuber.Region + ` Region`"
             class="detail-info-item__icon"
             v-else
           />
