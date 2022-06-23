@@ -61,7 +61,7 @@ import TwitterCount from "../components/VtuberDetails/TwitterCount.vue"
 <script>
 import axios from "axios"
 import Config from "../config.json"
-import regionConfig from "../region.json"
+import regionConfig from "../regions.json"
 import { CountTo } from "vue3-count-to"
 import { library } from "@fortawesome/fontawesome-svg-core"
 
