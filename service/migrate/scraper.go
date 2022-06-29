@@ -295,7 +295,7 @@ func CheckYoutube() {
 			go func(Name database.Member) {
 				if Name.YoutubeID != "" {
 					log.WithFields(log.Fields{
-						"Vtube":        Name.EnName,
+						"Vtube":        Name.Name,
 						"Youtube ID":   Name.YoutubeID,
 						"Vtube Region": Name.Region,
 					}).Info("Checking yt")
@@ -328,7 +328,7 @@ func CheckLiveBiliBili() {
 			if Member.BiliBiliID != 0 {
 				log.WithFields(log.Fields{
 					"Group":   Group.GroupName,
-					"SpaceID": Member.EnName,
+					"SpaceID": Member.BiliBiliID,
 				}).Info("Check Room")
 				var (
 					ScheduledStart time.Time
@@ -519,7 +519,7 @@ func CheckSpaceBiliBili() {
 			if Name[k].BiliBiliID != 0 {
 				log.WithFields(log.Fields{
 					"Group":   Group[z].GroupName,
-					"SpaceID": Name[k].EnName,
+					"SpaceID": Name[k].BiliBiliID,
 				}).Info("Check Space")
 				var (
 					PushVideo SpaceVideo

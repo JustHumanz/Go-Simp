@@ -499,11 +499,11 @@ func (k *checkPxJob) Run() {
 			}
 		} else {
 			log.WithFields(log.Fields{
-				"Vtuber": Member.EnName,
+				"Vtuber": Member.Name,
 				"Agency": Group.GroupName,
 				"Lewd":   l,
 			}).Info("Start curl pixiv")
-			URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
+			URLEN := GetPixivURL(engine.UnderScoreName(Member.Name))
 			err := Pixiv(URLEN, FixFanArt, l)
 			if err != nil {
 				log.Error(err)

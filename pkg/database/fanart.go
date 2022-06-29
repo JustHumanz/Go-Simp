@@ -237,7 +237,7 @@ func (FanArt DataFanart) CheckTweetFanArt(Update bool) (bool, error) {
 			err := DB.QueryRow(`SELECT id FROM Twitter WHERE TweetID=?`, FanArt.TweetID).Scan(&id)
 			if err == sql.ErrNoRows {
 				log.WithFields(log.Fields{
-					"Name":    FanArt.Member.EnName,
+					"Name":    FanArt.Member.Name,
 					"Hashtag": FanArt.Member.TwitterHashtag,
 					"Lewd":    FanArt.Lewd,
 					"URL":     FanArt.PermanentURL,
@@ -268,7 +268,7 @@ func (FanArt DataFanart) CheckTweetFanArt(Update bool) (bool, error) {
 	} else if Update {
 		//update like
 		log.WithFields(log.Fields{
-			"Name":    FanArt.Member.EnName,
+			"Name":    FanArt.Member.Name,
 			"Hashtag": FanArt.Member.TwitterHashtag,
 			"Likes":   FanArt.Likes,
 		}).Info("Update like")
@@ -290,7 +290,7 @@ func (FanArt DataFanart) CheckTBiliBiliFanArt() (bool, error) {
 		err := row.Scan(&tmp)
 		if err == sql.ErrNoRows {
 			log.WithFields(log.Fields{
-				"Vtuber": FanArt.Member.EnName,
+				"Vtuber": FanArt.Member.Name,
 				"Img":    FanArt.Photos,
 			}).Info("New Fanart")
 			stmt, err := DB.Prepare(`INSERT INTO TBiliBili (PermanentURL,Author,Likes,Photos,Videos,Text,Dynamic_id,VtuberMember_id) values(?,?,?,?,?,?,?,?)`)
@@ -375,7 +375,7 @@ func (FanArt DataFanart) CheckPixivFanArt() (bool, error) {
 			err := row.Scan(&tmp)
 			if err == sql.ErrNoRows {
 				log.WithFields(log.Fields{
-					"Vtuber": FanArt.Member.EnName,
+					"Vtuber": FanArt.Member.Name,
 					"Img":    FanArt.Photos,
 					"URL":    FanArt.PermanentURL,
 				}).Info("New Fanart")
