@@ -257,13 +257,6 @@ func CheckBiliBili() {
 										})
 									}
 
-									err = Member.RemoveSubsCache()
-									if err != nil {
-										log.WithFields(log.Fields{
-											"Agency": Group.GroupName,
-											"Vtuber": Member.Name,
-										})
-									}
 									Graph := "[View as Graph](" + os.Getenv("PrometheusURL") + "/graph?g0.expr=get_subscriber%7Bstate%3D%22BiliBili%22%2C%20vtuber%3D%22" + Member.Name + "%22%7D&g0.tab=0&g0.stacked=0&g0.range_input=4w)"
 									engine.SubsSendEmbed(engine.NewEmbed().
 										SetAuthor(Group.GroupName, Group.IconURL, "https://space.bilibili.com/"+strconv.Itoa(Member.BiliBiliID)).

@@ -150,13 +150,6 @@ func CheckTwitch() {
 				}
 
 				SendNotif := func(SubsCount, Viwers string) {
-					err = Member.RemoveSubsCache()
-					if err != nil {
-						log.WithFields(log.Fields{
-							"Agency": Group.GroupName,
-							"Vtuber": Member.Name,
-						}).Error(err)
-					}
 
 					Color, err := engine.GetColor(config.TmpDir, Member.TwitchAvatar)
 					if err != nil {

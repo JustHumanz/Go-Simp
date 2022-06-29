@@ -169,48 +169,21 @@ func GetMembers(GroupID int64) ([]Member, error) {
 func (Member Member) GetSubsCount() (*MemberSubs, error) {
 	var (
 		Data MemberSubs
-		Key  = strconv.Itoa(int(Member.ID)) + Member.Name
 	)
-
-	val, err := GeneralCache.Get(context.Background(), Key).Result()
-	if val == "" || err == redis.Nil {
-		rows, err := DB.Query(`SELECT * FROM Subscriber WHERE VtuberMember_id=?`, Member.ID)
-		if err != nil {
-			return nil, err
-		}
-		defer rows.Close()
-
-		for rows.Next() {
-			err = rows.Scan(&Data.ID, &Data.YtSubs, &Data.YtVideos, &Data.YtViews, &Data.BiliFollow, &Data.BiliVideos, &Data.BiliViews, &Data.TwFollow, &Data.TwitchFollow, &Data.TwitchViews, &Data.Member.ID)
-			if err != nil {
-				return nil, err
-			}
-		}
-		err = GeneralCache.Set(context.Background(), Key, Data, config.GetSubsCountTTL).Err()
-		if err != nil {
-			return nil, err
-		}
-
-	} else {
-		err := json.Unmarshal([]byte(val), &Data)
-		if err != nil {
-			return nil, err
-		}
-	}
-	return &Data, nil
-}
-
-//RemoveSubsCache
-func (Member Member) RemoveSubsCache() error {
-	var (
-		Key = strconv.Itoa(int(Member.ID)) + Member.Name
-	)
-
-	err := GeneralCache.Del(context.Background(), Key).Err()
+	rows, err := DB.Query(`SELECT * FROM Subscriber WHERE VtuberMember_id=?`, Member.ID)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	defer rows.Close()
+
+	for rows.Next() {
+		err = rows.Scan(&Data.ID, &Data.YtSubs, &Data.YtVideos, &Data.YtViews, &Data.BiliFollow, &Data.BiliVideos, &Data.BiliViews, &Data.TwFollow, &Data.TwitchFollow, &Data.TwitchViews, &Data.Member.ID)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &Data, nil
 }
 
 //UpdateBiliBiliFollowers update bilibili state

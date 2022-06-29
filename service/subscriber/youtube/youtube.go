@@ -150,14 +150,6 @@ func CheckYoutube() {
 						}
 
 						SendNotif := func(SubsCount string) {
-							err = Member.RemoveSubsCache()
-							if err != nil {
-								log.WithFields(log.Fields{
-									"Agency": Group.GroupName,
-									"Vtuber": Member.Name,
-								}).Error(err)
-							}
-
 							log.WithFields(log.Fields{
 								"Vtuber": Member.Name,
 								"Group":  Group.GroupName,
