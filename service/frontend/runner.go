@@ -169,19 +169,21 @@ func main() {
 			return
 		}
 
-		for _, v := range guildID {
-			if v == g.ID {
-				return
+		day := time.Now().Add(-time.Hour * 24)
+		if g.JoinedAt.After(day) {
+			for _, v := range guildID {
+				if v == g.ID {
+					return
+				}
 			}
+
+			log.WithFields(log.Fields{
+				"GuildName": g.Name,
+				"OwnerID":   g.OwnerID,
+				"JoinDate":  g.JoinedAt.Format(time.RFC822),
+			}).Info("New invite")
+			engine.InitSlash(Bot, GroupsPayload, g.Guild)
 		}
-
-		log.WithFields(log.Fields{
-			"GuildName": g.Name,
-			"OwnerID":   g.OwnerID,
-			"JoinDate":  g.JoinedAt.Format(time.RFC822),
-		}).Info("New invite")
-		engine.InitSlash(Bot, GroupsPayload, g.Guild)
-
 	})
 
 	Bot.AddHandler(func(s *discordgo.Session, g *discordgo.GuildDelete) {
