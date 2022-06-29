@@ -46,7 +46,7 @@
           >
             <img
               draggable="false"
-              :src="`/assets/flags/${region.code}.svg`"
+              :src="`/assets/flags/${region.code.toLowerCase()}.svg`"
               :alt="region.name"
               class="navbar-submenu-item__img"
               onerror="this.src='/assets/flags/none.svg'"

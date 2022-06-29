@@ -164,7 +164,7 @@ export default {
 
 <style lang="scss" scoped>
 .title {
-  @apply fixed top-16 z-[9] flex w-full select-none flex-wrap bg-blue-400 py-2 text-2xl font-semibold uppercase dark:bg-slate-500;
+  @apply sticky top-16 z-[9] flex w-full select-none flex-wrap bg-blue-400 py-2 text-2xl font-semibold uppercase dark:bg-slate-500;
 
   &__span {
     @apply mx-auto w-[95%] text-white md:w-[75%] lg:w-[70%];
@@ -175,7 +175,7 @@ export default {
 }
 
 .form {
-  @apply mx-auto mt-28 w-[95%] overflow-x-hidden sm:w-[90%] md:w-[80%] lg:w-[75%];
+  @apply mx-auto w-[95%] overflow-x-hidden pt-4 pb-8 sm:w-[90%] md:w-[80%] lg:w-[75%];
 }
 
 .close {

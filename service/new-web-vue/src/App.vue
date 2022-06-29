@@ -163,7 +163,7 @@ onMounted(() => {
     </div>
   </nav>
 
-  <main>
+  <main id="main">
     <RouterView />
   </main>
   <footer class="footer relative z-[1]">
@@ -256,8 +256,12 @@ export default {
       theme: null,
     }
   },
-  async created() {
+  async mounted() {
     this.getClickMenu()
+    this.changeView()
+
+    // get viewport height
+    window.addEventListener("resize", () => this.changeView())
 
     this.theme = localStorage.getItem("theme")
 
@@ -300,6 +304,15 @@ export default {
           e.target.closest(".navbar-link").blur()
         }
       })
+    },
+
+    changeView() {
+      // get viewport height
+      const main_height = window.innerHeight - 204
+      const mainEl = document.getElementById("main")
+
+      // set min-height for main element
+      if (mainEl) mainEl.style.minHeight = `${main_height}px`
     },
 
     darkMode() {

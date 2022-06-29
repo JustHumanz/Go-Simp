@@ -85,7 +85,7 @@
                 @mousedown="setReg"
               >
                 <img
-                  :src="`/assets/flags/${region.code}.svg`"
+                  :src="`/assets/flags/${region.code.toLowerCase()}.svg`"
                   onerror="this.src='/assets/flags/none.svg'"
                   class="region__label-flag"
                 />
