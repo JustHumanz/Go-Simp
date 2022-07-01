@@ -114,7 +114,7 @@ func init() {
 
 				log.WithFields(log.Fields{
 					"Group":  Agency.GroupName,
-					"Vtuber": Member.EnName,
+					"Vtuber": Member.Name,
 					"isYtLive": func() bool {
 						if isYtLive != nil {
 							return true

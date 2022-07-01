@@ -398,7 +398,7 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Message, error)
 		}
 
 		log.WithFields(log.Fields{
-			"Vtuber": FanArt.Member.EnName,
+			"Vtuber": FanArt.Member.Name,
 			"State":  in.State,
 		}).Info("Update Fanart metric")
 
@@ -416,7 +416,7 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Message, error)
 			log.Error(err)
 		}
 		log.WithFields(log.Fields{
-			"Vtuber": Subs.Member.EnName,
+			"Vtuber": Subs.Member.Name,
 			"State":  Subs.State,
 		}).Info("Update Subs")
 		if Subs.State == config.BiliLive && !Subs.Member.IsBiliNill() {
@@ -470,7 +470,7 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Message, error)
 		}
 
 		log.WithFields(log.Fields{
-			"Vtuber": LiveData.Member.EnName,
+			"Vtuber": LiveData.Member.Name,
 			"State":  in.State,
 		}).Info("Update Livestream metric")
 
@@ -509,7 +509,7 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Message, error)
 		Time := LiveData.End.Sub(LiveData.Schedul).Minutes()
 
 		log.WithFields(log.Fields{
-			"Vtuber":  LiveData.Member.EnName,
+			"Vtuber":  LiveData.Member.Name,
 			"State":   in.State,
 			"Time":    int(Time),
 			"VideoID": LiveData.VideoID,

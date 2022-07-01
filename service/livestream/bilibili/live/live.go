@@ -172,7 +172,7 @@ func (i *checkBlLiveeJob) Run() {
 
 								log.WithFields(log.Fields{
 									"Group":  Agency.GroupName,
-									"Vtuber": Member.EnName,
+									"Vtuber": Member.Name,
 									"Start":  ScheduledStart,
 								}).Info("Start live right now")
 
@@ -242,7 +242,7 @@ func (i *checkBlLiveeJob) Run() {
 							} else if !Status.CheckScheduleLive() && Bili.Status == config.LiveStatus {
 								log.WithFields(log.Fields{
 									"Group":  Agency.GroupName,
-									"Vtuber": Member.EnName,
+									"Vtuber": Member.Name,
 									"Start":  Bili.Schedul,
 								}).Info("Past live stream")
 								engine.RemoveEmbed(strconv.Itoa(Bili.Member.BiliBiliRoomID), Bot)

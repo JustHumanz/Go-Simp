@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"math/rand"
@@ -139,30 +140,50 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 		return err
 	}
 
+	AgencyName := strings.ToLower(FixFanArt.Group.GroupName)
+	if FixFanArt.Group.GroupName == config.Indie {
+		AgencyName = "vtuber"
+	}
+
+	HashTag := ""
+	re := fmt.Sprintf("(?m)vt|uber|%s", AgencyName)
+	if FixFanArt.Member.TwitterHashtag != "" {
+		HashTag = FixFanArt.Member.TwitterHashtag[1:]
+	} else if FixFanArt.Member.BiliBiliHashtag != "" {
+		HashTag = FixFanArt.Member.BiliBiliHashtag[1 : len(FixFanArt.Member.BiliBiliHashtag)-1]
+	}
+
+	EnName := strings.ToLower(FixFanArt.Member.EnName)
+	JpName := strings.ToLower(FixFanArt.Member.JpName)
+	IsVtuber := false
+
+	//Check if search result have `vtuber` word in Relatedtags slice
+	searchOk := false
+	rex, _ := regexp.Compile(re)
+	for _, v := range Art.Body.Relatedtags {
+		if rex.FindString(v.(string)) != "" {
+			searchOk = true
+			break
+		}
+	}
+
+	if !searchOk || HashTag == "" {
+		return errors.New("pixiv search was invalid")
+	}
+
 	if Art.Body.Illustmanga.Data != nil {
 		for i, v := range Art.Body.Illustmanga.Data {
 			v2 := v.(map[string]interface{})
-			IsVtuber := false
 			IsNotLoli := true
 
+			tags := []string{}
 			for _, tag := range v2["tags"].([]interface{}) {
-				Tag := strings.ToLower(tag.(string))
-				GrpName := strings.ToLower(FixFanArt.Group.GroupName)
-				HashTag := FixFanArt.Member.EnName
-				if FixFanArt.Member.TwitterHashtag != "" {
-					HashTag = FixFanArt.Member.TwitterHashtag[1:]
-				} else if FixFanArt.Member.BiliBiliHashtag != "" {
-					HashTag = FixFanArt.Member.BiliBiliHashtag[1 : len(FixFanArt.Member.BiliBiliHashtag)-1]
-				}
-
-				match, _ := regexp.MatchString("("+strings.ToLower(HashTag)+"|"+GrpName+")", Tag)
-				if match {
-					IsVtuber = true
-				}
+				tag := tag.(string)
+				tags = append(tags, tag)
 
 				if l {
 					for _, black := range config.BlackList {
-						if strings.ToLower(black) == Tag {
+						if strings.EqualFold(black, tag) {
 							log.WithFields(log.Fields{
 								"URL": BaseURL + v2["id"].(string),
 							}).Info("Lol,it's loli")
@@ -170,6 +191,19 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 						}
 					}
 				}
+
+				if EnName != "" && strings.EqualFold(tag, EnName) {
+					IsVtuber = true
+				} else if JpName != "" && strings.EqualFold(tag, JpName) {
+					IsVtuber = true
+				}
+			}
+
+			//Make sure if tag slice have `vtuber` or agency string
+			if rex.FindString(strings.Join(tags, ",")) != "" {
+				IsVtuber = true
+			} else {
+				IsVtuber = false
 			}
 
 			var (
@@ -221,8 +255,9 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 					new, err := FixFanArt.CheckPixivFanArt()
 					if err != nil {
 						log.WithFields(log.Fields{
-							"Agency": FixFanArt.Group.GroupName,
-							"Vtuber": FixFanArt.Member.Name,
+							"PixivID": v2["id"].(string),
+							"Agency":  FixFanArt.Group.GroupName,
+							"Vtuber":  FixFanArt.Member.Name,
 						}).Warn(err)
 					}
 
@@ -288,9 +323,10 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 					new, err := FixFanArt.CheckPixivFanArt()
 					if err != nil {
 						log.WithFields(log.Fields{
-							"Agency": FixFanArt.Group.GroupName,
-							"Vtuber": FixFanArt.Member.Name,
-						}).Error(err)
+							"PixivID": v2["id"].(string),
+							"Agency":  FixFanArt.Group.GroupName,
+							"Vtuber":  FixFanArt.Member.Name,
+						}).Warn(err)
 					}
 
 					if new {
@@ -465,54 +501,40 @@ func (k *checkPxJob) Run() {
 			Lewd:   l,
 		}
 
-		if Member.JpName != "" && Member.Region == "JP" {
+		for _, v := range []string{Member.Name, Member.EnName, Member.JpName} {
+			if v == "" {
+				continue
+			}
+
 			log.WithFields(log.Fields{
-				"Vtuber": Member.JpName,
+				"Vtuber": Member.Name,
 				"Agency": Group.GroupName,
 				"Lewd":   l,
 			}).Info("Start curl pixiv")
-			URLJP := GetPixivURL(url.QueryEscape(Member.JpName))
-			err := Pixiv(URLJP, FixFanArt, l)
+			URL := GetPixivURL(url.QueryEscape(v))
+			err := Pixiv(URL, FixFanArt, l)
 			if err != nil {
-				log.Error(err)
-				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-					Message:     err.Error(),
-					Service:     ServiceName,
-					ServiceUUID: ServiceUUID,
-				})
+				if err.Error() == "pixiv search was invalid" {
+					log.WithFields(log.Fields{
+						"Vtuber": v,
+						"Agency": Group.GroupName,
+						"Lewd":   l,
+					}).Warn(err)
+
+					continue
+
+				} else {
+					log.Error(err)
+					gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
+						Message:     err.Error(),
+						Service:     ServiceName,
+						ServiceUUID: ServiceUUID,
+					})
+				}
+
 			}
-		} else if Member.EnName != "" && Member.Region != "JP" {
-			log.WithFields(log.Fields{
-				"Vtuber": Member.EnName,
-				"Agency": Group.GroupName,
-				"Lewd":   l,
-			}).Info("Start curl pixiv")
-			URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
-			err := Pixiv(URLEN, FixFanArt, l)
-			if err != nil {
-				log.Error(err)
-				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-					Message:     err.Error(),
-					Service:     ServiceName,
-					ServiceUUID: ServiceUUID,
-				})
-			}
-		} else {
-			log.WithFields(log.Fields{
-				"Vtuber": Member.EnName,
-				"Agency": Group.GroupName,
-				"Lewd":   l,
-			}).Info("Start curl pixiv")
-			URLEN := GetPixivURL(engine.UnderScoreName(Member.EnName))
-			err := Pixiv(URLEN, FixFanArt, l)
-			if err != nil {
-				log.Error(err)
-				gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
-					Message:     err.Error(),
-					Service:     ServiceName,
-					ServiceUUID: ServiceUUID,
-				})
-			}
+
+			break
 		}
 	}
 
