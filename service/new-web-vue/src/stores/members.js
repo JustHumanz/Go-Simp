@@ -46,6 +46,8 @@ export const useMemberStore = defineStore("members", () => {
     members.value.status = null
     members.value.error = false
 
+    if (members.value.data.length) console.log("[MEMBERS] Cleanup members data")
+
     members.value.data = []
     members.value.filteredData = []
 
@@ -74,7 +76,7 @@ export const useMemberStore = defineStore("members", () => {
       })
     })
 
-    console.log(`Total member: ${vtuber_data.length}`)
+    console.log(`[MEMBERS] Total member: ${vtuber_data.length}`)
 
     vtuber_data.sort(
       // sort by name
@@ -138,7 +140,7 @@ export const useMemberStore = defineStore("members", () => {
     )
 
     console.log(
-      `Search result from keyword "${keyword}": ${members.value.searchedData.length}`
+      `[MEMBERS] Search result from keyword "${keyword}": ${members.value.searchedData.length}`
     )
   }
 
@@ -239,7 +241,7 @@ export const useMemberStore = defineStore("members", () => {
       })
     }
 
-    console.log(`Total member after filtering: ${vtuber_data.length}`)
+    console.log(`[MEMBERS] Total member after filtering: ${vtuber_data.length}`)
 
     let newPlatform = []
     let newTwitter = false
@@ -296,10 +298,10 @@ export const useMemberStore = defineStore("members", () => {
         nameA.toLowerCase() < nameB.toLowerCase() ? -1 : 1
     )
 
-    if (type.toLowerCase() === "name") console.log("Sorting by name")
+    if (type.toLowerCase() === "name") console.log("[MEMBERS] Sorting by name")
 
     if (type.toLowerCase() === "youtube") {
-      console.log("Sort by youtube subscribers")
+      console.log("[MEMBERS] Sort by youtube subscribers")
       vtuber_data.sort(({ Youtube: ytA }, { Youtube: ytB }) => {
         const subsA = ytA ? ytA.Subscriber : 0
         const subsB = ytB ? ytB.Subscriber : 0
@@ -309,7 +311,7 @@ export const useMemberStore = defineStore("members", () => {
     }
 
     if (type.toLowerCase() === "bilibili") {
-      console.log("Sort by bilibili followers")
+      console.log("[MEMBERS] Sort by bilibili followers")
       vtuber_data.sort(({ BiliBili: blA }, { BiliBili: blB }) => {
         const subsA = blA ? blA.Followers : 0
         const subsB = blB ? blB.Followers : 0
@@ -319,7 +321,7 @@ export const useMemberStore = defineStore("members", () => {
     }
 
     if (type.toLowerCase() === "twitch") {
-      console.log("Sort by Twitch followers")
+      console.log("[MEMBERS] Sort by Twitch followers")
       vtuber_data.sort(({ Twitch: twA }, { Twitch: twB }) => {
         const subsA = twA ? twA.Followers : 0
         const subsB = twB ? twB.Followers : 0
@@ -329,7 +331,7 @@ export const useMemberStore = defineStore("members", () => {
     }
 
     if (type.toLowerCase() === "twitter") {
-      console.log("Sort by Twitter followers")
+      console.log("[MEMBERS] Sort by Twitter followers")
       vtuber_data.sort(({ Twitter: twA }, { Twitter: twB }) => {
         const subsA = twA ? twA.Followers : 0
         const subsB = twB ? twB.Followers : 0
@@ -339,7 +341,7 @@ export const useMemberStore = defineStore("members", () => {
     }
 
     if (type.toLowerCase() === "youtube_views") {
-      console.log("Sort by Youtube views")
+      console.log("[MEMBERS] Sort by Youtube views")
       vtuber_data.sort(({ Youtube: ytA }, { Youtube: ytB }) => {
         const viewsA = ytA ? ytA.ViwersCount : 0
         const viewsB = ytB ? ytB.ViwersCount : 0
@@ -349,7 +351,7 @@ export const useMemberStore = defineStore("members", () => {
     }
 
     if (type.toLowerCase() === "bilibili_views") {
-      console.log("Sort by bilibili views")
+      console.log("[MEMBERS] Sort by bilibili views")
       vtuber_data.sort(({ BiliBili: blA }, { BiliBili: blB }) => {
         const viewsA = blA ? blA.ViwersCount : 0
         const viewsB = blB ? blB.ViwersCount : 0
@@ -359,12 +361,12 @@ export const useMemberStore = defineStore("members", () => {
     }
 
     if (order === "desc") {
-      console.log("Sort descending")
+      console.log("[MEMBERS] Sort descending")
       vtuber_data.reverse()
     }
 
     if (live) {
-      console.log("Sort live first")
+      console.log("[MEMBERS] Sort live first")
 
       vtuber_data.sort(({ IsLive: liveA }, { IsLive: liveB }) => {
         if (!liveA.Youtube && liveB.Youtube) return 1
@@ -378,7 +380,7 @@ export const useMemberStore = defineStore("members", () => {
     }
 
     if (inactive) {
-      console.log("Sort inactive last")
+      console.log("[MEMBERS] Sort inactive last")
 
       vtuber_data.sort(({ Status: statA }, { Status: statB }) => {
         if (statA === "Inactive" && statB !== "Inactive") return 1

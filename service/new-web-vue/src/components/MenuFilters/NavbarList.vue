@@ -15,7 +15,7 @@ import SortMenu from "./SortMenu.vue"
       >
         <GroupsMenu />
       </li>
-      <li class="navbar-filter click" :class="{ disabled: checkMembers }">
+      <li class="navbar-filter click" :class="{ disabled: !checkMembers }">
         <a
           href="#"
           class="navbar-filter__link"
