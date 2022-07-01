@@ -25,8 +25,8 @@ services:
       - URL=https://web-admin.humanz.moe
       - BOT=${BOT}
       - DB_PASS=${DB_PASS}
-      - DB_USER=root
-      - DB_HOST=mysql
+      - DB_USER=${DB_USER}
+      - DB_HOST=${DB_HOST}
     networks:
       - go-simp-net
 
