@@ -15,133 +15,114 @@
       </a>
       <ul class="navbar-submenu-items">
         <li class="navbar-submenu-item">
-          <router-link
-            :to="{
-              params: { id: $route.params.id },
-              query: urlSort(),
-            }"
-            @click="setSort()"
+          <a
+            href="#"
+            @click="setSort('name')"
             class="navbar-submenu-item__link"
-            :class="{ active: !sort || sort === 'name' }"
+            :class="{
+              active: sorting.type === 'name',
+            }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
               icon="arrow-down-a-z"
             />
             <span class="navbar-submenu-item__span">Name</span>
-          </router-link>
+          </a>
         </li>
 
         <li class="navbar-submenu-item" v-if="platforms.includes('youtube')">
-          <router-link
-            :to="{
-              params: { id: $route.params.id },
-              query: urlSort(`yt`),
-            }"
-            @click="setSort()"
+          <a
+            href="#"
+            @click="setSort('youtube')"
             class="navbar-submenu-item__link"
-            :class="{ active: sort === 'yt' }"
+            :class="{ active: sorting.type === 'youtube' }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
               :icon="[`fab`, `youtube`]"
             />
             <span class="navbar-submenu-item__span">Youtube</span>
-          </router-link>
+          </a>
         </li>
 
         <li class="navbar-submenu-item" v-if="platforms.includes('youtube')">
-          <router-link
-            :to="{
-              params: { id: $route.params.id },
-              query: urlSort(`ytv`),
-            }"
-            @click="setSort()"
+          <a
+            href="#"
+            @click="setSort(`youtube-views`)"
             class="navbar-submenu-item__link"
-            :class="{ active: sort === 'ytv' }"
+            :class="{ active: sorting.type === 'youtube_views' }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
               :icon="[`fab`, `youtube`]"
             />
             <span class="navbar-submenu-item__span">Youtube (Views)</span>
-          </router-link>
+          </a>
         </li>
 
         <li class="navbar-submenu-item" v-if="platforms.includes('twitch')">
-          <router-link
-            :to="{
-              params: { id: $route.params.id },
-              query: urlSort(`tw`),
-            }"
-            @click="setSort()"
+          <a
+            href="#"
+            @click="setSort('twitch')"
             class="navbar-submenu-item__link"
-            :class="{ active: sort === 'tw' }"
+            :class="{ active: sorting.type === 'twitch' }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
               :icon="[`fab`, `twitch`]"
             />
             <span class="navbar-submenu-item__span">Twitch</span>
-          </router-link>
+          </a>
         </li>
 
         <li class="navbar-submenu-item" v-if="platforms.includes('bilibili')">
-          <router-link
-            :to="{
-              params: { id: $route.params.id },
-              query: urlSort(`bl`),
-            }"
-            @click="setSort()"
+          <a
+            href="#"
+            @click="setSort('bilibili')"
             class="navbar-submenu-item__link"
-            :class="{ active: sort === 'bl' }"
+            :class="{ active: sorting.type === 'bilibili' }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
               :icon="[`fab`, `bilibili`]"
             />
             <span class="navbar-submenu-item__span">BiliBili</span>
-          </router-link>
+          </a>
         </li>
 
         <li class="navbar-submenu-item" v-if="platforms.includes('bilibili')">
-          <router-link
-            :to="{
-              params: { id: $route.params.id },
-              query: urlSort(`blv`),
-            }"
-            @click="setSort()"
+          <a
+            href="#"
+            @click="setSort('bilibili_views')"
             class="navbar-submenu-item__link"
-            :class="{ active: sort === 'blv' }"
+            :class="{ active: sorting.type === 'bilibili_views' }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
               :icon="[`fab`, `bilibili`]"
             />
             <span class="navbar-submenu-item__span">BiliBili (Views)</span>
-          </router-link>
+          </a>
         </li>
 
         <li class="navbar-submenu-item" v-if="twitter">
-          <router-link
-            :to="{
-              params: { id: $route.params.id },
-              query: urlSort(`twr`),
-            }"
-            @click="setSort()"
+          <a
+            href="#"
+            @click="setSort('twitter')"
             class="navbar-submenu-item__link"
-            :class="{ active: sort === 'twr' }"
+            :class="{ active: sorting.type === 'twitter' }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
               :icon="[`fab`, `twitter`]"
             />
             <span class="navbar-submenu-item__span">Twitter</span>
-          </router-link>
+          </a>
         </li>
       </ul>
     </li>
-    <li class="navbar-filter-item" v-if="platforms.length || twitter">
+    <li class="navbar-filter-item">
       <a
         href="#"
         class="navbar-filter-item__link sub-menu"
@@ -155,40 +136,49 @@
       </a>
       <ul class="navbar-submenu-items">
         <li class="navbar-submenu-item">
-          <router-link
-            :to="{
-              params: { id: $route.params.id },
-              query: toggleDisableLiveFirst(),
-            }"
-            @click="setSort()"
+          <a
+            href="#"
+            @click="setSort('^live')"
             class="navbar-filter-item__link"
-            :class="{ active: live }"
+            :class="{ active: sorting.live }"
           >
             <font-awesome-icon
               class="fa-fw navbar-filter-item__svg"
-              icon="ban"
+              icon="circle"
             />
             <span class="navbar-filter-item__span">Live First</span>
-          </router-link>
+          </a>
+        </li>
+
+        <li class="navbar-submenu-item">
+          <a
+            href="#"
+            @click="setSort('^inactive')"
+            class="navbar-filter-item__link"
+            :class="{ active: sorting.inactive }"
+          >
+            <font-awesome-icon
+              class="fa-fw navbar-filter-item__svg"
+              icon="skull"
+            />
+            <span class="navbar-filter-item__span">Inactive Last</span>
+          </a>
         </li>
       </ul>
     </li>
     <li class="navbar-filter-item">
-      <router-link
-        :to="{
-          params: { id: $route.params.id },
-          query: reverseSorting(),
-        }"
-        @click="setSort()"
+      <a
+        href="#"
+        @click="setSort('toggle')"
         class="navbar-filter-item__link"
-        :class="{ active: reverse }"
+        :class="{ active: sorting.order === 'desc' }"
       >
         <font-awesome-icon
           class="fa-fw navbar-filter-item__svg"
           icon="arrow-down-1-9"
         />
         <span class="navbar-filter-item__span">Reverse Order</span>
-      </router-link>
+      </a>
     </li>
   </ul>
 </template>
@@ -229,15 +219,7 @@ import { useMemberStore } from "@/stores/members.js"
 
 export default {
   created() {
-    this.$watch(
-      () => this.$route.query,
-      () => {
-        this.sort = this.$route.query.sort?.replace("-", " ") || null
-        this.reverse = this.$route.query.sort?.includes("-") ?? false
-        this.live = this.$route.query.live === undefined
-      },
-      { immediate: true }
-    )
+    this.sorting = useMemberStore().sorting
   },
   computed: {
     platforms() {
@@ -248,60 +230,24 @@ export default {
     },
   },
   methods: {
-    async setSort() {
+    async setSort(query) {
+      if (
+        query !== "toggle" &&
+        this.sorting.order === "desc" &&
+        !query.includes("^")
+      )
+        query = `-${query}`
+
+      if (this.sorting.order === "desc" && query === "toggle")
+        query = this.sorting.type
+
+      if (this.sorting.order === "asc" && query === "toggle")
+        query = `-${this.sorting.type}`
+
+      useMemberStore().changeSort(query)
+
       await new Promise((r) => setTimeout(r, 0))
       useMemberStore().sortingMembers()
-    },
-    urlSort(sorting = "") {
-      const { reg, plat, liveplat, inac, sort, live } = this.$route.query
-
-      // check when sort have "-" in first position
-      sorting = sort?.match(/^-/) ? `-${sorting}` : sorting
-      // if sorting = "-"
-      sorting = sorting === "-undefined" ? "-name" : sorting
-
-      const params = new Object()
-      if (reg) params.reg = reg
-      if (plat) params.plat = plat
-      if (liveplat) params.liveplat = liveplat
-      if (inac) params.inac = inac
-      if ((!sort && sorting) || (sort && sorting !== "")) params.sort = sorting
-      if (live) params.live = live
-
-      return params
-    },
-    reverseSorting() {
-      const { reg, plat, liveplat, inac, sort, live } = this.$route.query
-
-      // check when sort have "-" in first position
-      let sorting = sort?.match(/^-/) ? sort.replace("-", "") : `-${sort}`
-      // if sorting = "-"
-      sorting = sorting === "-undefined" ? "-name" : sorting
-      // if sorting = "name"
-      sorting = sorting === "name" ? "" : sorting
-
-      const params = new Object()
-      if (reg) params.reg = reg
-      if (plat) params.plat = plat
-      if (liveplat) params.liveplat = liveplat
-      if (inac) params.inac = inac
-      if ((!sort && sorting) || (sort && sorting !== "")) params.sort = sorting
-      if (live) params.live = live
-
-      return params
-    },
-    toggleDisableLiveFirst() {
-      const { reg, plat, liveplat, inac, sort, live } = this.$route.query
-
-      const params = new Object()
-      if (reg) params.reg = reg
-      if (plat) params.plat = plat
-      if (liveplat) params.liveplat = liveplat
-      if (inac) params.inac = inac
-      if (sort) params.sort = sort
-      if (!live) params.live = "false"
-
-      return params
     },
   },
 }
