@@ -15,6 +15,17 @@ import SortMenu from "./SortMenu.vue"
       >
         <GroupsMenu />
       </li>
+      <li class="navbar-filter click" :class="{ disabled: checkMembers }">
+        <a
+          href="#"
+          class="navbar-filter__link"
+          onclick="return false"
+          @click="refresh"
+        >
+          <font-awesome-icon class="fa-fw" icon="arrow-rotate-right" />
+          <span class="navbar-filter__span-mobile"> Refresh</span>
+        </a>
+      </li>
       <li
         class="navbar-filter"
         :class="{
@@ -46,9 +57,12 @@ import SortMenu from "./SortMenu.vue"
 
 <script>
 import { library } from "@fortawesome/fontawesome-svg-core"
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
+import {
+  faMagnifyingGlass,
+  faArrowRotateRight,
+} from "@fortawesome/free-solid-svg-icons"
 
-library.add(faMagnifyingGlass)
+library.add(faMagnifyingGlass, faArrowRotateRight)
 
 import { useGroupStore } from "@/stores/groups"
 import { useMemberStore } from "@/stores/members.js"
@@ -82,6 +96,9 @@ export default {
     checkFilteredData() {
       return useMemberStore().members.filteredData.length > 0
     },
+    checkMembers() {
+      return useMemberStore().members.data.length > 0
+    },
     placeholderSearch() {
       const store = useMemberStore()
 
@@ -109,6 +126,11 @@ export default {
     async searchData() {
       await new Promise((resolve) => setTimeout(resolve, 60))
       useMemberStore().searchMembers(this.$refs.search_input.value)
+    },
+    async refresh() {
+      await useMemberStore().fetchMembers(this.$route.params?.id || null)
+      useMemberStore().filterMembers()
+      useMemberStore().sortingMembers()
     },
   },
 }
