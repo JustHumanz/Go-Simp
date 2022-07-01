@@ -78,10 +78,10 @@ func SendFanArtNude(Art database.DataFanart, Bot *discordgo.Session) {
 							return
 						} else {
 							log.WithFields(log.Fields{
-								"channelId": Channel.ChannelID,
-								"vtuber":    Member.Name,
-								"artURL":    Art.PermanentURL,
-								"isLewd":    Art.Lewd,
+								"ChannelId": Channel.ChannelID,
+								"Vtuber":    Member.Name,
+								"ArtURL":    Art.PermanentURL,
+								"IsLewd":    Art.Lewd,
 							}).Info("Send pic")
 							tmp, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
 								SetAuthor(strings.Title(Art.Group.GroupName), Art.Group.IconURL).
