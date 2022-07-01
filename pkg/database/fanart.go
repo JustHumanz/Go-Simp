@@ -403,7 +403,7 @@ func (FanArt DataFanart) CheckPixivFanArt() (bool, error) {
 			}
 		}
 	}
-	return false, errors.New(FanArt.Member.Name + " Still same")
+	return false, errors.New(FanArt.Member.Name + " already in db")
 }
 
 //DataFanart fanart struct
