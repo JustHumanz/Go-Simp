@@ -235,8 +235,26 @@
             <span class="navbar-submenu-item__span">Bilibili</span>
           </router-link>
         </li>
+      </ul>
+    </li>
 
-        <li class="navbar-submenu-item">
+    <li
+      class="navbar-filter-item"
+      v-if="livePlatforms.length > 0 || inactiveCheck"
+    >
+      <a
+        href="#"
+        class="navbar-filter-item__link sub-menu"
+        onclick="return false"
+      >
+        <font-awesome-icon
+          class="fa-fw navbar-filter-item__svg"
+          icon="people-group"
+        />
+        <span class="navbar-filter-item__span">Groups</span>
+      </a>
+      <ul class="navbar-submenu-items">
+        <li class="navbar-submenu-item" v-if="livePlatforms.length > 0">
           <router-link
             :to="{
               params: { id: $route.params.id },
@@ -244,31 +262,34 @@
             }"
             @click="changeFilter()"
             class="navbar-submenu-item__link"
-            :class="{ active: nolive !== 'false' }"
+            :class="{ active: nolive === 'false' }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
               icon="users"
             />
-            <span class="navbar-submenu-item__span">Show No Live</span>
+            <span class="navbar-submenu-item__span">Live Only</span>
+          </router-link>
+        </li>
+
+        <li class="navbar-submenu-item" v-if="inactiveCheck">
+          <router-link
+            :to="{
+              params: { id: $route.params.id },
+              query: urlParams({ inactive: 'toggle' }),
+            }"
+            @click="changeFilter()"
+            class="navbar-submenu-item__link"
+            :class="{ active: inac == 'true' }"
+          >
+            <font-awesome-icon
+              class="fa-fw navbar-submenu-item__svg"
+              icon="skull"
+            />
+            <span class="navbar-submenu-item__span">Inactive Only</span>
           </router-link>
         </li>
       </ul>
-    </li>
-
-    <li class="navbar-filter-item" v-if="inactiveCheck">
-      <router-link
-        :to="{
-          params: { id: $route.params.id },
-          query: urlParams({ inactive: 'toggle' }),
-        }"
-        @click="changeFilter()"
-        class="navbar-filter-item__link"
-        :class="{ active: inac == 'true' }"
-      >
-        <font-awesome-icon class="fa-fw navbar-filter-item__svg" icon="skull" />
-        <span class="navbar-filter-item__span">Inactive Only</span>
-      </router-link>
     </li>
 
     <li class="navbar-filter-item">

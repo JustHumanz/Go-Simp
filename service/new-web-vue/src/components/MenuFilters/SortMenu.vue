@@ -132,21 +132,21 @@
           class="fa-fw navbar-filter-item__svg"
           icon="people-group"
         />
-        <span class="navbar-filter-item__span">Group</span>
+        <span class="navbar-filter-item__span">Groups</span>
       </a>
       <ul class="navbar-submenu-items">
         <li class="navbar-submenu-item">
           <a
             href="#"
             @click="setSort('^live')"
-            class="navbar-filter-item__link"
+            class="navbar-submenu-item__link"
             :class="{ active: sorting.live }"
           >
             <font-awesome-icon
-              class="fa-fw navbar-filter-item__svg"
+              class="fa-fw navbar-submenu-item__svg"
               icon="circle"
             />
-            <span class="navbar-filter-item__span">Live First</span>
+            <span class="navbar-submenu-item__span">Live First</span>
           </a>
         </li>
 
@@ -154,14 +154,14 @@
           <a
             href="#"
             @click="setSort('^inactive')"
-            class="navbar-filter-item__link"
+            class="navbar-submenu-item__link"
             :class="{ active: sorting.inactive }"
           >
             <font-awesome-icon
-              class="fa-fw navbar-filter-item__svg"
+              class="fa-fw navbar-submenu-item__svg"
               icon="skull"
             />
-            <span class="navbar-filter-item__span">Inactive Last</span>
+            <span class="navbar-submenu-item__span">Inactive Last</span>
           </a>
         </li>
       </ul>
