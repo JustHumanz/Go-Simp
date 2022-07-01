@@ -4,6 +4,7 @@ import axios from "axios"
 import Config from "../config.json"
 import regionConfig from "../regions.json"
 import parse from "url-parse"
+import { useLocalStorage } from "@vueuse/core"
 
 export const useMemberStore = defineStore("members", () => {
   const members = ref({
@@ -31,17 +32,21 @@ export const useMemberStore = defineStore("members", () => {
     live_only: false,
     inactive: false,
   })
-  const sorting = ref({
-    type: "name",
-    order: "asc",
-    live: true,
-    inactive: true,
-  })
+  const sorting = ref(
+    useLocalStorage("sortVtuber", {
+      type: "name",
+      order: "asc",
+      live: true,
+      inactive: true,
+    })
+  )
 
   const fetchMembers = async (id = null) => {
     let err = false
     members.value.status = null
     members.value.error = false
+
+    if (members.value.data.length) console.log("[MEMBERS] Cleanup members data")
 
     members.value.data = []
     members.value.filteredData = []
@@ -71,7 +76,7 @@ export const useMemberStore = defineStore("members", () => {
       })
     })
 
-    console.log(`Total member: ${vtuber_data.length}`)
+    console.log(`[MEMBERS] Total member: ${vtuber_data.length}`)
 
     vtuber_data.sort(
       // sort by name
@@ -135,7 +140,7 @@ export const useMemberStore = defineStore("members", () => {
     )
 
     console.log(
-      `Search result from keyword "${keyword}": ${members.value.searchedData.length}`
+      `[MEMBERS] Search result from keyword "${keyword}": ${members.value.searchedData.length}`
     )
   }
 
@@ -236,7 +241,7 @@ export const useMemberStore = defineStore("members", () => {
       })
     }
 
-    console.log(`Total member after filtering: ${vtuber_data.length}`)
+    console.log(`[MEMBERS] Total member after filtering: ${vtuber_data.length}`)
 
     let newPlatform = []
     let newTwitter = false
@@ -260,23 +265,28 @@ export const useMemberStore = defineStore("members", () => {
     members.value.filteredData = vtuber_data
   }
 
+  const changeSort = (query) => {
+    if (!query.includes("-") && !query.includes("^"))
+      sorting.value.order = "asc"
+
+    if (query.includes("-")) sorting.value.order = "desc"
+
+    if (!query.includes("^")) sorting.value.type = query.replace("-", "")
+    else {
+      switch (query.replace("^", "")) {
+        case "live":
+          sorting.value.live = !sorting.value.live
+          break
+        case "inactive":
+          sorting.value.inactive = !sorting.value.inactive
+          break
+      }
+    }
+  }
+
   const sortingMembers = () => {
     members.value.query = ""
     members.value.searchedData = []
-
-    const {
-      sort,
-      live: liveLink,
-      inaclast,
-    } = parse(window.location.href, true).query
-
-    // if link is not /vtubers
-    if (!window.location.pathname.match(/\/vtubers/g)) return
-
-    sorting.value.type = sort ? sort?.replace("-", "") : "name"
-    sorting.value.order = sort?.includes("-") ? "desc" : "asc"
-    sorting.value.live = liveLink === "false" ? false : true
-    sorting.value.inactive = inaclast === "false" ? false : true
 
     let { type, order, live, inactive } = sorting.value
 
@@ -288,75 +298,75 @@ export const useMemberStore = defineStore("members", () => {
         nameA.toLowerCase() < nameB.toLowerCase() ? -1 : 1
     )
 
-    if (sort) {
-      if (type === "yt") {
-        console.log("Sort by youtube subscribers")
-        vtuber_data.sort(({ Youtube: ytA }, { Youtube: ytB }) => {
-          const subsA = ytA ? ytA.Subscriber : 0
-          const subsB = ytB ? ytB.Subscriber : 0
+    if (type.toLowerCase() === "name") console.log("[MEMBERS] Sorting by name")
 
-          return subsB - subsA
-        })
-      }
+    if (type.toLowerCase() === "youtube") {
+      console.log("[MEMBERS] Sort by youtube subscribers")
+      vtuber_data.sort(({ Youtube: ytA }, { Youtube: ytB }) => {
+        const subsA = ytA ? ytA.Subscriber : 0
+        const subsB = ytB ? ytB.Subscriber : 0
 
-      if (type === "bl") {
-        console.log("Sort by bilibili followers")
-        vtuber_data.sort(({ BiliBili: blA }, { BiliBili: blB }) => {
-          const subsA = blA ? blA.Followers : 0
-          const subsB = blB ? blB.Followers : 0
+        return subsB - subsA
+      })
+    }
 
-          return subsB - subsA
-        })
-      }
+    if (type.toLowerCase() === "bilibili") {
+      console.log("[MEMBERS] Sort by bilibili followers")
+      vtuber_data.sort(({ BiliBili: blA }, { BiliBili: blB }) => {
+        const subsA = blA ? blA.Followers : 0
+        const subsB = blB ? blB.Followers : 0
 
-      if (type === "tw") {
-        console.log("Sort by Twitch followers")
-        vtuber_data.sort(({ Twitch: twA }, { Twitch: twB }) => {
-          const subsA = twA ? twA.Followers : 0
-          const subsB = twB ? twB.Followers : 0
+        return subsB - subsA
+      })
+    }
 
-          return subsB - subsA
-        })
-      }
+    if (type.toLowerCase() === "twitch") {
+      console.log("[MEMBERS] Sort by Twitch followers")
+      vtuber_data.sort(({ Twitch: twA }, { Twitch: twB }) => {
+        const subsA = twA ? twA.Followers : 0
+        const subsB = twB ? twB.Followers : 0
 
-      if (type === "twr") {
-        console.log("Sort by Twitter followers")
-        vtuber_data.sort(({ Twitter: twA }, { Twitter: twB }) => {
-          const subsA = twA ? twA.Followers : 0
-          const subsB = twB ? twB.Followers : 0
+        return subsB - subsA
+      })
+    }
 
-          return subsB - subsA
-        })
-      }
+    if (type.toLowerCase() === "twitter") {
+      console.log("[MEMBERS] Sort by Twitter followers")
+      vtuber_data.sort(({ Twitter: twA }, { Twitter: twB }) => {
+        const subsA = twA ? twA.Followers : 0
+        const subsB = twB ? twB.Followers : 0
 
-      if (type === "ytv") {
-        console.log("Sort by Youtube views")
-        vtuber_data.sort(({ Youtube: ytA }, { Youtube: ytB }) => {
-          const viewsA = ytA ? ytA.ViwersCount : 0
-          const viewsB = ytB ? ytB.ViwersCount : 0
+        return subsB - subsA
+      })
+    }
 
-          return viewsB - viewsA
-        })
-      }
+    if (type.toLowerCase() === "youtube_views") {
+      console.log("[MEMBERS] Sort by Youtube views")
+      vtuber_data.sort(({ Youtube: ytA }, { Youtube: ytB }) => {
+        const viewsA = ytA ? ytA.ViwersCount : 0
+        const viewsB = ytB ? ytB.ViwersCount : 0
 
-      if (type === "blv") {
-        console.log("Sort by bilibili views")
-        vtuber_data.sort(({ BiliBili: blA }, { BiliBili: blB }) => {
-          const viewsA = blA ? blA.ViwersCount : 0
-          const viewsB = blB ? blB.ViwersCount : 0
+        return viewsB - viewsA
+      })
+    }
 
-          return viewsB - viewsA
-        })
-      }
+    if (type.toLowerCase() === "bilibili_views") {
+      console.log("[MEMBERS] Sort by bilibili views")
+      vtuber_data.sort(({ BiliBili: blA }, { BiliBili: blB }) => {
+        const viewsA = blA ? blA.ViwersCount : 0
+        const viewsB = blB ? blB.ViwersCount : 0
 
-      if (order === "desc") {
-        console.log("Sort descending")
-        vtuber_data.reverse()
-      }
+        return viewsB - viewsA
+      })
+    }
+
+    if (order === "desc") {
+      console.log("[MEMBERS] Sort descending")
+      vtuber_data.reverse()
     }
 
     if (live) {
-      console.log("Sort by live status")
+      console.log("[MEMBERS] Sort live first")
 
       vtuber_data.sort(({ IsLive: liveA }, { IsLive: liveB }) => {
         if (!liveA.Youtube && liveB.Youtube) return 1
@@ -370,6 +380,8 @@ export const useMemberStore = defineStore("members", () => {
     }
 
     if (inactive) {
+      console.log("[MEMBERS] Sort inactive last")
+
       vtuber_data.sort(({ Status: statA }, { Status: statB }) => {
         if (statA === "Inactive" && statB !== "Inactive") return 1
         if (statA !== "Inactive" && statB === "Inactive") return -1
@@ -385,8 +397,10 @@ export const useMemberStore = defineStore("members", () => {
     menuFilter,
     sortMenu,
     filter,
+    sorting,
     fetchMembers,
     filterMembers,
+    changeSort,
     sortingMembers,
     searchMembers,
   }

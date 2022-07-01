@@ -121,7 +121,10 @@ export default {
 
           const liNavbarFilter = navbarFilter.parentElement
 
-          if (liNavbarFilter.classList.contains("disabled")) {
+          if (
+            liNavbarFilter.classList.contains("disabled") ||
+            liNavbarFilter.classList.contains("click")
+          ) {
             this.activeListMenu = null
             this.activeSubMenu = null
             this.clickedSubMenu = false
