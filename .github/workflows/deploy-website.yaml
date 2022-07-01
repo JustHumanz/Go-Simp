@@ -97,6 +97,8 @@ jobs:
             export BOT_CLIENTID=${{ secrets.CLIENTID }}
             export BOT=${{ secrets.BOT }}
             export DB_PASS=${{ secrets.DB_PASS }}
+            export DB_USER=${{ secrets.DB_USER }}
+            export DB_HOST=${{ secrets.DB_HOST }}
             cd Go-Simp/swarm
             sudo git pull
             docker stack deploy -c web.yaml web --with-registry-auth
