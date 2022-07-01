@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     async getVtuberData() {
-      const router_before = window.history.state.back
+      const router_before = window.history.state.back || ""
 
       if (
         !router_before.includes("/vtuber") ||
@@ -91,8 +91,6 @@ export default {
       useMemberStore().filterMembers()
       useMemberStore().sortingMembers()
     },
-
-    async refreshNewData() {},
 
     menuHandler() {
       // ON MOUSE DOWN
