@@ -143,37 +143,32 @@ var (
 					"Vtuber":      Member.Name,
 				}).Info("livestream")
 
-				if len(e) > 10 {
+				err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Content: "On progress~",
+					},
+				})
+				if err != nil {
+					log.Error(err)
+				}
+
+				if len(e) == 0 {
+					_, err := s.ChannelMessageSendEmbed(i.ChannelID, engine.NewEmbed().
+						SetAuthor(Nick, Avatar).
+						SetDescription("It looks like doesn't have a livestream schedule for now").
+						SetImage(engine.NotFoundIMG()).MessageEmbed)
+					if err != nil {
+						log.Error(err)
+					}
+
+				} else {
 					for _, v := range e {
 						_, err := s.ChannelMessageSendEmbed(i.ChannelID, v)
 						if err != nil {
 							log.Error(err)
 						}
 						time.Sleep(1 * time.Second)
-					}
-				} else if len(e) == 0 {
-					err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-						Type: discordgo.InteractionResponseChannelMessageWithSource,
-						Data: &discordgo.InteractionResponseData{
-							Embeds: []*discordgo.MessageEmbed{engine.NewEmbed().
-								SetAuthor(Nick, Avatar).
-								SetDescription("It looks like doesn't have a livestream schedule for now").
-								SetImage(engine.NotFoundIMG()).MessageEmbed},
-						},
-					})
-					if err != nil {
-						log.Error(err)
-					}
-
-				} else {
-					err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-						Type: discordgo.InteractionResponseChannelMessageWithSource,
-						Data: &discordgo.InteractionResponseData{
-							Embeds: e,
-						},
-					})
-					if err != nil {
-						log.Error(err)
 					}
 				}
 			}
@@ -220,10 +215,6 @@ var (
 					YoutubeData, err := Member.GetYtLiveStream(status)
 					if err != nil {
 						log.Error(err)
-					}
-
-					if len(YoutubeData) > 10 {
-						SendSimpleMsg(s, i, "On progress~")
 					}
 
 					FixName := engine.FixName(Member.EnName, Member.JpName)
