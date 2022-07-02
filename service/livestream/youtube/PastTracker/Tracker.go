@@ -197,7 +197,6 @@ func StartCheckYT(Group database.Group) {
 					Items := Data.Items[0]
 
 					YoutubeData.UpdateEnd(Items.LiveDetails.EndTime).
-						UpdateViewers(Items.Statistics.ViewCount).
 						UpdateLength(durafmt.Parse(engine.ParseDuration(Items.ContentDetails.Duration)).String()).
 						SetState(config.YoutubeLive).
 						AddGroup(Group)
@@ -216,7 +215,7 @@ func StartCheckYT(Group database.Group) {
 							"Viwers now":   Items.Statistics.ViewCount,
 							"Status":       config.PastStatus,
 						}).Info("Update Viwers")
-						YoutubeData.UpdateGroupYt(config.PastStatus)
+						YoutubeData.UpdateViewers(Items.Statistics.ViewCount).UpdateGroupYt(config.PastStatus)
 					}
 				}
 			}
@@ -274,8 +273,6 @@ func StartCheckYT(Group database.Group) {
 						Items := Data.Items[0]
 
 						YoutubeData.UpdateEnd(Items.LiveDetails.EndTime).
-							UpdateViewers(Items.Statistics.ViewCount).
-							UpdateLength(durafmt.Parse(engine.ParseDuration(Items.ContentDetails.Duration)).String()).
 							SetState(config.YoutubeLive).
 							AddMember(Member).
 							AddGroup(Group)
@@ -294,7 +291,9 @@ func StartCheckYT(Group database.Group) {
 								"Viwers now":   Items.Statistics.ViewCount,
 								"Status":       config.PastStatus,
 							}).Info("Update Viwers")
-							YoutubeData.UpdateGroupYt(config.PastStatus)
+							Dur := durafmt.Parse(engine.ParseDuration(Items.ContentDetails.Duration)).String()
+
+							YoutubeData.UpdateLength(Dur).UpdateViewers(Items.Statistics.ViewCount).UpdateGroupYt(config.PastStatus)
 						}
 					}
 				}
