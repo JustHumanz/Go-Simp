@@ -97,23 +97,6 @@ func Start() {
 		if err != nil {
 			log.Error(err)
 		}
-
-		/*
-			for _, v := range GroupData {
-				v.Members, err = database.GetMembers(v.ID)
-				if err != nil {
-					log.Error(err)
-				}
-				VtubersAgency = append(VtubersAgency, v)
-			}
-
-
-				tmp, err := json.Marshal(Grp)
-				VtubersByte = &tmp
-				if err != nil {
-					log.Error(err)
-				}
-		*/
 	}
 	GetGroups()
 

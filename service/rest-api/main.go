@@ -23,8 +23,8 @@ import (
 )
 
 var (
-	VtuberMembers []MembersPayload
-	VtuberAgency  []GroupPayload
+	VtuberMembers *[]MembersPayload
+	VtuberAgency  *[]GroupPayload
 	Payload       []*database.Group
 	ServiceUUID   = uuid.New().String()
 )
@@ -134,12 +134,6 @@ func init() {
 					Region:   Member.Region,
 					Status:   Member.Status,
 					Fanbase:  Member.Fanbase,
-					//Group: database.Group{
-					//	ID:              Agency.ID,
-					//	IconURL:         Agency.IconURL,
-					//	GroupName:       Agency.GroupName,
-					//	YoutubeChannels: Agency.YoutubeChannels,
-					//},
 					Group: map[string]interface{}{
 						"ID":        Agency.ID,
 						"IconURL":   Agency.IconURL,
@@ -250,8 +244,8 @@ func init() {
 			}
 		}
 
-		VtuberAgency = VtuberAgencyTMP
-		VtuberMembers = VtuberMembersTMP
+		VtuberAgency = &VtuberAgencyTMP
+		VtuberMembers = &VtuberMembersTMP
 	}
 
 	RequestPayload()
@@ -323,178 +317,12 @@ func invalidPath(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusBadRequest)
 }
 
-//Need rework
-/*
-func getPrediction(w http.ResponseWriter, r *http.Request) {
-	idstr := mux.Vars(r)["memberID"]
-	days := r.FormValue("days")
-	target := r.FormValue("target")
-	state := r.FormValue("state")
-	var daysint = 7
-	var targetint int
-	if days != "" {
-		var err error
-		daysint, err = strconv.Atoi(days)
-		if err != nil {
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(MessageError{
-				Message: err.Error(),
-				Date:    time.Now(),
-			})
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-	}
-
-	if target != "" {
-		var err error
-		targetint, err = strconv.Atoi(target)
-		if err != nil {
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(MessageError{
-				Message: err.Error(),
-				Date:    time.Now(),
-			})
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-	}
-
-	if days != "" && target != "" {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(MessageError{
-			Message: "Not support multiple prediction",
-			Date:    time.Now(),
-		})
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	if state == "" {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(MessageError{
-			Message: "Nill state",
-			Date:    time.Now(),
-		})
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	if daysint > 10 || daysint < 0 {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(MessageError{
-			Message: "Can't predic more than 10 days",
-			Date:    time.Now(),
-		})
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	if idstr != "" {
-		idint, err := strconv.Atoi(idstr)
-		if err != nil {
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(MessageError{
-				Message: err.Error(),
-				Date:    time.Now(),
-			})
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-		for _, Member := range VtuberMembers {
-			if Member.ID == int64(idint) {
-				FinalData := make(map[string]interface{})
-				isError := false
-				var Fetch = func(wg *sync.WaitGroup, State string, Days bool) {
-					defer wg.Done()
-					var DataPredic int
-					var err error
-					if Days {
-						DataPredic, err = engine.Prediction(database.Member{Name: Member.NickName}, State, daysint)
-						if err != nil {
-							log.Error(err)
-							isError = true
-						}
-					}
-					if err != nil {
-						log.Error(err)
-						isError = true
-					}
-
-					Data := map[string]interface{}{}
-					if State == "Twitter" {
-						Data["Current_followes/subscriber"] = Member.Twitter["Followers"]
-					} else if State == "Youtube" {
-						Yt := Member["Youtube"].(map[string]interface{})
-						Data["Current_followes/subscriber"] = Yt["Subscriber"]
-					} else if State == "BiliBili" {
-						Bl := Member["BiliBili"].(map[string]interface{})
-						Data["Current_followes/subscriber"] = Bl["Followers"]
-					}
-					if Days {
-						Data["Prediction"] = DataPredic
-					} else {
-						if Data["Current_followes/subscriber"].(int) < targetint {
-							Data["Prediction"] = targetint
-						} else {
-							isError = true
-						}
-					}
-
-					if targetint == 0 {
-						FinalData["Prediction_Days"] = time.Now().AddDate(0, 0, daysint)
-					}
-
-					FinalData[State] = Data
-				}
-
-				var wg sync.WaitGroup
-
-				for _, st := range strings.Split(state, ",") {
-					if st == "bilibili" {
-						st = "BiliBili"
-					}
-					if Member[strings.Title(st)] != nil {
-						wg.Add(1)
-						if targetint == 0 {
-							go Fetch(&wg, strings.Title(st), true)
-						} else {
-							go Fetch(&wg, strings.Title(st), false)
-							break
-						}
-					} else {
-						FinalData[strings.Title(st)] = nil
-					}
-				}
-
-				wg.Wait()
-
-				if !isError {
-					w.Header().Set("Access-Control-Allow-Origin", "*")
-					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(FinalData)
-					w.WriteHeader(http.StatusOK)
-				} else {
-					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(MessageError{
-						Message: "oops,something goes wrong",
-						Date:    time.Now(),
-					})
-					w.WriteHeader(http.StatusBadRequest)
-				}
-				return
-			}
-		}
-	}
-}
-*/
-
 func getGroup(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)["groupID"]
 	if vars != "" {
 		key := strings.Split(vars, ",")
 		var GroupsTMP []GroupPayload
-		for _, Group := range VtuberAgency {
+		for _, Group := range *VtuberAgency {
 			for _, GroupIDstr := range key {
 				GroupIDint, err := strconv.Atoi(GroupIDstr)
 				if err != nil {
@@ -614,7 +442,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 	if idstr != "" {
 		var Members []MembersPayload
 		key := strings.Split(idstr, ",")
-		for _, Member := range VtuberMembers {
+		for _, Member := range *VtuberMembers {
 			for _, MemberStr := range key {
 				MemberInt, err := strconv.Atoi(MemberStr)
 				if err != nil {
@@ -701,7 +529,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		for _, Member := range VtuberMembers {
+		for _, Member := range *VtuberMembers {
 			memberAgencyID := Member.Group.(map[string]interface{})
 
 			if region != "" {
@@ -744,7 +572,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 
 	} else if region != "" {
 		var Members []MembersPayload
-		for _, v := range VtuberMembers {
+		for _, v := range *VtuberMembers {
 			if strings.EqualFold(region, v.Region) {
 				Members = append(Members, v)
 			}
@@ -779,7 +607,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 
 	} else {
 		var Members []simpleMember
-		for _, Member := range VtuberMembers {
+		for _, Member := range *VtuberMembers {
 			Members = append(Members, FixMember(Member))
 		}
 		if Members != nil {
