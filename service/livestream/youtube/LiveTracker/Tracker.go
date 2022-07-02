@@ -195,18 +195,17 @@ func StartCheckYT(Group database.Group) {
 
 					Items := Data.Items[0]
 
-					YoutubeData.UpdateEnd(Items.LiveDetails.EndTime).
-						UpdateViewers(Items.Statistics.ViewCount).
-						UpdateLength(durafmt.Parse(engine.ParseDuration(Items.ContentDetails.Duration)).String()).
-						SetState(config.YoutubeLive).
-						AddGroup(Group)
+					YoutubeData.SetState(config.YoutubeLive).AddGroup(Group)
 
 					if Items.Snippet.VideoStatus == "none" && YoutubeData.Status == config.LiveStatus {
 						log.WithFields(log.Fields{
 							"VideoData ID": YoutubeCache.VideoID,
 							"Status":       config.PastStatus,
 						}).Info("Update video status from " + YoutubeData.Status + " to past")
-						YoutubeData.UpdateGroupYt(config.PastStatus)
+						YoutubeData.UpdateEnd(Items.LiveDetails.EndTime).
+							UpdateViewers(Items.Statistics.ViewCount).
+							UpdateLength(durafmt.Parse(engine.ParseDuration(Items.ContentDetails.Duration)).String()).
+							UpdateGroupYt(config.PastStatus)
 
 						engine.RemoveEmbed(YoutubeCache.VideoID, Bot)
 
@@ -240,7 +239,7 @@ func StartCheckYT(Group database.Group) {
 							"Viwers now":   Items.Statistics.ViewCount,
 							"Status":       config.PastStatus,
 						}).Info("Update Viwers")
-						YoutubeData.UpdateGroupYt(config.PastStatus)
+						YoutubeData.UpdateViewers(Items.Statistics.ViewCount).UpdateGroupYt(config.PastStatus)
 
 					} else if Items.Snippet.VideoStatus == config.LiveStatus && YoutubeData.Viewers != Items.Statistics.ViewCount {
 						log.WithFields(log.Fields{
@@ -249,7 +248,7 @@ func StartCheckYT(Group database.Group) {
 							"Viwers now":   Items.Statistics.ViewCount,
 							"Status":       config.LiveStatus,
 						}).Info("Update Viwers")
-						YoutubeData.UpdateGroupYt(config.LiveStatus)
+						YoutubeData.UpdateViewers(Items.Statistics.ViewCount).UpdateGroupYt(config.LiveStatus)
 
 					} else if Items.Snippet.VideoStatus == config.UpcomingStatus {
 						if Items.LiveDetails.StartTime != YoutubeData.Schedul {
@@ -319,19 +318,16 @@ func StartCheckYT(Group database.Group) {
 
 						Items := Data.Items[0]
 
-						YoutubeData.UpdateEnd(Items.LiveDetails.EndTime).
-							UpdateViewers(Items.Statistics.ViewCount).
-							UpdateLength(durafmt.Parse(engine.ParseDuration(Items.ContentDetails.Duration)).String()).
-							SetState(config.YoutubeLive).
-							AddMember(Member).
-							AddGroup(Group)
+						YoutubeData.AddMember(Member).AddGroup(Group).SetState(config.YoutubeLive)
 
 						if Items.Snippet.VideoStatus == "none" && YoutubeData.Status == config.LiveStatus {
 							log.WithFields(log.Fields{
 								"VideoData ID": YoutubeCache.VideoID,
 								"Status":       config.PastStatus,
 							}).Info("Update video status from " + YoutubeData.Status + " to past")
-							YoutubeData.UpdateYt(config.PastStatus)
+							YoutubeData.UpdateEnd(Items.LiveDetails.EndTime).
+								UpdateViewers(Items.Statistics.ViewCount).
+								UpdateLength(durafmt.Parse(engine.ParseDuration(Items.ContentDetails.Duration)).String()).UpdateYt(config.PastStatus)
 
 							engine.RemoveEmbed(YoutubeCache.VideoID, Bot)
 
@@ -361,7 +357,7 @@ func StartCheckYT(Group database.Group) {
 								YoutubeData.UpdateSchdule(Items.LiveDetails.ActualStartTime)
 							}
 
-							YoutubeData.UpdateYt(YoutubeData.Status)
+							YoutubeData.UpdateViewers(Items.Statistics.ViewCount).UpdateYt(YoutubeData.Status)
 							engine.SendLiveNotif(YoutubeData, Bot)
 
 						} else if Items.Snippet.VideoStatus == "none" && YoutubeData.Viewers != Items.Statistics.ViewCount {
@@ -371,7 +367,7 @@ func StartCheckYT(Group database.Group) {
 								"Viwers now":   Items.Statistics.ViewCount,
 								"Status":       config.PastStatus,
 							}).Info("Update Viwers")
-							YoutubeData.UpdateYt(config.PastStatus)
+							YoutubeData.UpdateViewers(Items.Statistics.ViewCount).UpdateYt(config.PastStatus)
 
 						} else if Items.Snippet.VideoStatus == config.LiveStatus && YoutubeData.Viewers != Items.Statistics.ViewCount {
 							log.WithFields(log.Fields{
@@ -380,7 +376,7 @@ func StartCheckYT(Group database.Group) {
 								"Viwers now":   Items.Statistics.ViewCount,
 								"Status":       config.LiveStatus,
 							}).Info("Update Viwers")
-							YoutubeData.UpdateYt(config.LiveStatus)
+							YoutubeData.UpdateViewers(Items.Statistics.ViewCount).UpdateYt(config.LiveStatus)
 
 						} else if Items.Snippet.VideoStatus == config.UpcomingStatus {
 							if Items.LiveDetails.StartTime != YoutubeData.Schedul {
