@@ -151,19 +151,24 @@ const (
 
 //ConfigFile config file struct for config.toml
 type ConfigFile struct {
-	Discord        string `toml:"Discord"`
-	BiliSess       string `toml:"BiliSess"`
-	PixivSession   string `toml:"PixivSess"`
-	SauceAPI       string `toml:"SauceAPI"`
-	InviteLog      string `toml:"InviteLog"`
-	PilotReporting string `toml:"PilotReporting"`
-	MultiTOR       string `toml:"Multitor"`
-	DonationLink   string `toml:"DonationLink"`
-	TopGG          string `toml:"TOPGG"`
-	Domain         string `toml:"Domain"`
-	PrometheusURL  string `toml:"PrometheusURL"`
-	Metric         bool   `toml:"Metric"`
-	Twitch         struct {
+	Discord           string `toml:"Discord"`
+	BiliSess          string `toml:"BiliSess"`
+	PixivSession      string `toml:"PixivSess"`
+	SauceAPI          string `toml:"SauceAPI"`
+	InviteLog         string `toml:"InviteLog"`
+	PilotReporting    string `toml:"PilotReporting"`
+	MultiTOR          string `toml:"Multitor"`
+	DonationLink      string `toml:"DonationLink"`
+	TopGG             string `toml:"TOPGG"`
+	Domain            string `toml:"Domain"`
+	PrometheusURL     string `toml:"PrometheusURL"`
+	Metric            bool   `toml:"Metric"`
+	BannFanartAccount struct {
+		Twitter  []string `toml:"Twitter"`
+		BiliBili []string `toml:"BiliBili"`
+		Pixiv    []string `toml:"Pixiv"`
+	} `toml:"BannFanartAccount"`
+	Twitch struct {
 		ClientID     string `toml:"ClientID"`
 		ClientSecret string `toml:"ClientSecret"`
 	} `toml:"Twitch"`
