@@ -555,6 +555,12 @@ func (Member Member) ScrapTwitterFanart(Scraper *twitterscraper.Scraper, Lewd bo
 			continue
 		}
 
+		for _, Ban := range config.GoSimpConf.BannFanartAccount.Twitter {
+			if strings.EqualFold(Ban, tweet.Username) {
+				continue
+			}
+		}
+
 		for _, TweetHashtag := range tweet.Hashtags {
 			if (strings.EqualFold("#"+TweetHashtag, Member.TwitterHashtag) || strings.EqualFold("#"+TweetHashtag, Member.TwitterLewd)) && !tweet.IsQuoted && !tweet.IsReply && len(tweet.Photos) > 0 {
 				TweetArt := DataFanart{
@@ -590,6 +596,8 @@ func (Member Member) ScrapTwitterFanart(Scraper *twitterscraper.Scraper, Lewd bo
 				if New {
 					FanartList = append(FanartList, TweetArt)
 				}
+
+				break
 			}
 		}
 	}

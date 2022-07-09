@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"net/url"
+	"strings"
 	"sync"
 	"time"
 
@@ -216,6 +217,13 @@ func (k *checkBlJob) Run() {
 								"Vtuber": Member.Name,
 							}).Error(err)
 						}
+
+						for _, Ban := range config.GoSimpConf.BannFanartAccount.BiliBili {
+							if strings.EqualFold(Ban, v.Desc.UserProfile.Info.Uname) {
+								continue
+							}
+						}
+
 						if STB.Item.Pictures != nil && v.Desc.Type == 2 { //type 2 is picture post (prob,heheheh)
 							for _, pic := range STB.Item.Pictures {
 								img = append(img, pic.ImgSrc)

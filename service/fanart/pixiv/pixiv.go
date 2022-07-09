@@ -212,6 +212,12 @@ func Pixiv(p string, FixFanArt *database.DataFanart, l bool) error {
 				TextFix string
 			)
 
+			for _, Ban := range config.GoSimpConf.BannFanartAccount.Pixiv {
+				if strings.EqualFold(Ban, v2["userName"].(string)) {
+					continue
+				}
+			}
+
 			if IsVtuber {
 				if v2["xRestrict"].(float64) == 0 && !l {
 					illusbyte, err := network.Curl(config.PixivIllustsEnd+v2["id"].(string), nil)
