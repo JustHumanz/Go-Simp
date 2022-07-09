@@ -561,43 +561,45 @@ func (Member Member) ScrapTwitterFanart(Scraper *twitterscraper.Scraper, Lewd bo
 			}
 		}
 
-		for _, TweetHashtag := range tweet.Hashtags {
-			if (strings.EqualFold("#"+TweetHashtag, Member.TwitterHashtag) || strings.EqualFold("#"+TweetHashtag, Member.TwitterLewd)) && !tweet.IsQuoted && !tweet.IsReply && len(tweet.Photos) > 0 {
-				TweetArt := DataFanart{
-					PermanentURL: tweet.PermanentURL,
-					Author:       tweet.Username,
-					AuthorAvatar: func() string {
-						profile, err := Scraper.GetProfile(tweet.Username)
-						if err != nil {
-							log.Error(err)
-						}
-						return strings.Replace(profile.Avatar, "normal.jpg", "400x400.jpg", -1)
-					}(),
-					TweetID: tweet.ID,
-					Text: func() string {
-						return regexp.MustCompile(`(?m)^(.*?)https:\/\/t.co\/.+`).ReplaceAllString(tweet.Text, "${1}$2")
-					}(),
-					Photos: tweet.Photos,
-					Likes:  tweet.Likes,
-					Member: Member,
-					State:  config.TwitterArt,
-					Lewd:   Lewd,
-					Group:  Member.Group,
-				}
-				if tweet.Videos != nil {
-					TweetArt.Videos = tweet.Videos[0].Preview
-				}
+		if !tweet.IsQuoted && !tweet.IsReply && len(tweet.Photos) > 0 {
+			for _, TweetHashtag := range tweet.Hashtags {
+				if strings.EqualFold("#"+TweetHashtag, Member.TwitterHashtag) || strings.EqualFold("#"+TweetHashtag, Member.TwitterLewd) {
+					TweetArt := DataFanart{
+						PermanentURL: tweet.PermanentURL,
+						Author:       tweet.Username,
+						AuthorAvatar: func() string {
+							profile, err := Scraper.GetProfile(tweet.Username)
+							if err != nil {
+								log.Error(err)
+							}
+							return strings.Replace(profile.Avatar, "normal.jpg", "400x400.jpg", -1)
+						}(),
+						TweetID: tweet.ID,
+						Text: func() string {
+							return regexp.MustCompile(`(?m)^(.*?)https:\/\/t.co\/.+`).ReplaceAllString(tweet.Text, "${1}$2")
+						}(),
+						Photos: tweet.Photos,
+						Likes:  tweet.Likes,
+						Member: Member,
+						State:  config.TwitterArt,
+						Lewd:   Lewd,
+						Group:  Member.Group,
+					}
+					if tweet.Videos != nil {
+						TweetArt.Videos = tweet.Videos[0].Preview
+					}
 
-				New, err := TweetArt.CheckTweetFanArt(update)
-				if err != nil {
-					return nil, err
-				}
+					New, err := TweetArt.CheckTweetFanArt(update)
+					if err != nil {
+						return nil, err
+					}
 
-				if New {
-					FanartList = append(FanartList, TweetArt)
-				}
+					if New {
+						FanartList = append(FanartList, TweetArt)
+					}
 
-				break
+					break
+				}
 			}
 		}
 	}
