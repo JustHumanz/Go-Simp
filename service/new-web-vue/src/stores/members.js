@@ -84,6 +84,8 @@ export const useMemberStore = defineStore("members", () => {
         nameA.toLowerCase() < nameB.toLowerCase() ? -1 : 1
     )
 
+    console.log(vtuber_data)
+
     let newRegion = []
     let newPlatform = []
     let newLive = []
@@ -294,11 +296,23 @@ export const useMemberStore = defineStore("members", () => {
 
     vtuber_data.sort(
       // sort by name
-      ({ EnName: nameA }, { EnName: nameB }) =>
-        nameA.toLowerCase() < nameB.toLowerCase() ? -1 : 1
+      ({ EnName: nameA }, { EnName: nameB }) => nameA.localeCompare(nameB)
     )
 
     if (type.toLowerCase() === "name") console.log("[MEMBERS] Sorting by name")
+
+    // sort jp name
+    if (type.toLowerCase() === "jpname") {
+      console.log("[MEMBERS] Sorting by Japanese name")
+      vtuber_data.sort(({ JpName: nameA }, { JpName: nameB }) =>
+        nameA.localeCompare(nameB)
+      )
+      vtuber_data.sort(({ JpName: nameA }, { JpName: nameB }) => {
+        if (!nameA.charAt(0) && nameB.charAt(0)) return 1
+        if (nameA.charAt(0) && !nameB.charAt(0)) return -1
+        return 0
+      })
+    }
 
     if (type.toLowerCase() === "youtube") {
       console.log("[MEMBERS] Sort by youtube subscribers")
