@@ -8,7 +8,7 @@
             class="tag-vtuber-agency__icon"
             :src="vtuber.Group.IconURL"
             :alt="vtuber.Group.GroupName"
-            v-if="vtuber.Group.ID !== 10"
+            v-if="$route.params.id != vtuber.Group.ID && vtuber.Group.ID !== 10"
           />
           <img
             draggable="false"
@@ -16,7 +16,7 @@
             :src="`/assets/flags/${vtuber.Regions?.code.toLowerCase()}.svg`"
             :alt="vtuber.Regions.name"
             onerror="this.src='/assets/flags/none.svg'"
-            v-if="vtuber.Regions"
+            v-else-if="vtuber.Regions"
           />
           <img
             draggable="false"
@@ -37,7 +37,7 @@
             } ${vtuber.Status === "Inactive" ? ` (Inactive)` : ""}`
           }}</span>
         </div>
-        <a
+        <!-- <a
           class="tag-vtuber-live"
           v-if="
             vtuber.IsLive.Youtube ||
@@ -63,7 +63,44 @@
             v-if="vtuber.IsLive.BiliBili"
           />
           <span>LIVE</span>
-        </a>
+        </a> -->
+        <div class="tag-vtuber-link">
+          <a
+            class="tag-vtuber-link__item"
+            :class="{ live: vtuber.IsLive.Youtube }"
+            :href="ytLink"
+            target="_blank"
+            v-if="vtuber.Youtube"
+          >
+            <font-awesome-icon class="fa-fw" :icon="['fab', 'youtube']" />
+          </a>
+          <a
+            class="tag-vtuber-link__item"
+            :class="{ live: vtuber.IsLive.Twitch }"
+            :href="`https://twitch.tv/${vtuber.Twitch.Username}`"
+            target="_blank"
+            v-if="vtuber.Twitch"
+          >
+            <font-awesome-icon class="fa-fw" :icon="['fab', 'twitch']" />
+          </a>
+          <a
+            class="tag-vtuber-link__item"
+            :class="{ live: vtuber.IsLive.BiliBili }"
+            :href="blLink"
+            target="_blank"
+            v-if="vtuber.BiliBili"
+          >
+            <font-awesome-icon class="fa-fw" :icon="['fab', 'bilibili']" />
+          </a>
+          <a
+            class="tag-vtuber-link__item"
+            :href="`https://twitter.com/${vtuber.Twitter.Username}`"
+            target="_blank"
+            v-if="vtuber.Twitter"
+          >
+            <font-awesome-icon class="fa-fw" :icon="['fab', 'twitter']" />
+          </a>
+        </div>
       </div>
       <router-link :to="`/vtuber/${vtuber.ID}`" class="card-vtuber-image__link">
         <img
@@ -101,66 +138,12 @@
           alt="Card image cap"
         />
       </router-link>
-      <div class="vtuber-link">
-        <a
-          :href="`https://youtube.com/channel/${vtuber.Youtube.YoutubeID}`"
-          target="_blank"
-          class="vtuber-link__link hover:!text-youtube"
-          rel="noopener noreferrer"
-          v-if="vtuber.Youtube"
-        >
-          <font-awesome-icon
-            :icon="['fab', 'youtube']"
-            class="fa-fw"
-            rel="noopener noreferrer"
-            v-if="vtuber.Youtube"
-          />
-        </a>
-        <a
-          :href="`https://twitch.tv/${vtuber.Twitch.Username}`"
-          target="_blank"
-          class="vtuber-link__link hover:!text-twitch"
-          rel="noopener noreferrer"
-          v-if="vtuber.Twitch"
-        >
-          <font-awesome-icon
-            :icon="['fab', 'twitch']"
-            class="fa-fw"
-            v-if="vtuber.Twitch"
-          />
-        </a>
-        <a
-          :href="`https://space.bilibili.com/${vtuber.BiliBili.SpaceID}`"
-          target="_blank"
-          class="vtuber-link__link hover:!text-bilibili"
-          rel="noopener noreferrer"
-          v-if="vtuber.BiliBili"
-        >
-          <font-awesome-icon
-            :icon="['fab', 'bilibili']"
-            class="fa-fw"
-            v-if="vtuber.BiliBili"
-          />
-        </a>
-        <a
-          :href="`https://twitter.com/${vtuber.Twitter.Username}`"
-          target="_blank"
-          class="vtuber-link__link hover:!text-twitter"
-          rel="noopener noreferrer"
-          v-if="vtuber.Twitter"
-        >
-          <font-awesome-icon
-            :icon="['fab', 'twitter']"
-            class="fa-fw"
-            v-if="vtuber.Twitter"
-          />
-        </a>
-      </div>
+      <div class="vtuber-link"></div>
     </div>
     <div class="card-vtuber-name">
       <router-link :to="`/vtuber/${vtuber.ID}`" class="card-vtuber-name__link">
         <h4 class="card-vtuber-name__title">
-          {{ vtuber.EnName }}
+          {{ titleName }}
         </h4>
         <span class="card-vtuber-name__nickname">
           {{ vtuber.NickName.toLowerCase() }}
@@ -183,25 +166,73 @@ import {
 
 library.add(faYoutube, faTwitch, faBilibili, faTwitter, faSkull)
 
+import { useMemberStore } from "@/stores/members.js"
+
 export default {
   props: {
     vtuber: {
       type: Object,
     },
   },
-  async created() {},
   computed: {
-    liveLink() {
-      if (this.vtuber.IsLive.Youtube) return this.vtuber.IsLive.Youtube.URL
-      else if (this.vtuber.IsLive.Twitch) return this.vtuber.IsLive.Twitch.URL
-      else return this.vtuber.IsLive.BiliBili.URL
-    },
     randomAvatar() {},
     GroupName() {
       return (
         this.vtuber.Group.GroupName.charAt(0).toUpperCase() +
         this.vtuber.Group.GroupName.slice(1).replace("_", " ")
       )
+    },
+    ytLink() {
+      if (this.vtuber.IsLive?.Youtube) return this.vtuber.IsLive.Youtube.URL
+      else if (this.vtuber.Youtube)
+        return `https://youtube.com/channel/${this.vtuber.Youtube.YoutubeID}`
+      else return null
+    },
+    blLink() {
+      if (this.vtuber.IsLive.BiliBili) return this.vtuber.IsLive.BiliBili.URL
+      else if (this.vtuber.BiliBili)
+        return `https://space.bilibili.com/${this.vtuber.BiliBili.SpaceID}`
+      else return null
+    },
+    titleName() {
+      if (useMemberStore().sorting.type === "jpname")
+        return this.vtuber.JpName ? this.vtuber.JpName : this.vtuber.EnName
+      else return this.vtuber.EnName
+    },
+    countSort() {
+      const type = useMemberStore().sorting.type
+
+      if (type === "youtube")
+        return this.vtuber.Youtube
+          ? this.FormatNumber(this.vtuber.Youtube.Subscriber)
+          : 0
+      else if (type === "bilibili")
+        return this.vtuber.BiliBili
+          ? this.FormatNumber(this.vtuber.BiliBili.Followers)
+          : 0
+      else if (type === "twitch")
+        return this.vtuber.Twitch
+          ? this.FormatNumber(this.vtuber.Twitch.Followers)
+          : 0
+      else if (type === "twitter")
+        return this.vtuber.Twitter
+          ? this.FormatNumber(this.vtuber.Twitter.Followers)
+          : 0
+      else if (type === "youtube_views")
+        return this.vtuber.Youtube
+          ? this.FormatNumber(this.vtuber.Youtube.ViwersCount)
+          : 0
+      else return 0
+    },
+  },
+  methods: {
+    FormatNumber(num) {
+      // Ensure number has max 3 significant digits (no rounding up can happen)
+
+      if (num >= 1000000000) return (num / 1000000000).toFixed(2) + "B"
+      else if (num >= 1000000) return (num / 1000000).toFixed(2) + "M"
+      else if (num >= 1000) return (num / 1000).toFixed(2) + "K"
+      else return num
     },
   },
 }
@@ -231,10 +262,10 @@ export default {
 }
 
 .tag-vtuber {
-  @apply absolute flex select-none items-center rounded-br-md bg-slate-100/80 text-xs dark:bg-slate-500/80;
+  @apply absolute flex w-full select-none items-center justify-between text-sm;
 
   &-agency {
-    @apply flex h-6 cursor-pointer items-center justify-center space-x-2 px-[0.325rem];
+    @apply flex h-6 cursor-pointer items-center justify-center space-x-2 rounded-br-md bg-slate-100/75 px-[0.325rem] dark:bg-slate-500/80;
 
     &__icon {
       @apply w-5 rounded-md object-contain drop-shadow-md;
@@ -259,8 +290,24 @@ export default {
     @apply hidden;
   }
 
-  &-live {
-    @apply flex h-6 items-center space-x-1 rounded-br-md bg-red-500 px-[0.325rem] font-semibold text-white;
+  // &-live {
+  //   @apply flex h-6 items-center space-x-1 rounded-br-md bg-red-500 px-[0.325rem] font-semibold text-white;
+  // }
+  &-link {
+    @apply flex h-6 items-center overflow-hidden rounded-bl-md bg-slate-100/75 font-semibold text-white dark:bg-slate-500/80;
+
+    // check when no child
+    &:empty {
+      @apply px-0;
+    }
+
+    &__item {
+      @apply h-full px-1 py-[3px] first:pl-[6px] last:pr-[6px];
+
+      &.live {
+        @apply bg-red-600;
+      }
+    }
   }
 }
 
