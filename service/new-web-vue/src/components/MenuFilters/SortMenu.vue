@@ -44,7 +44,7 @@
               class="fa-fw navbar-submenu-item__svg"
               icon="arrow-down-a-z"
             />
-            <span class="navbar-submenu-item__span">JP Name (BETA)</span>
+            <span class="navbar-submenu-item__span">Japanese Name</span>
           </a>
         </li>
 
