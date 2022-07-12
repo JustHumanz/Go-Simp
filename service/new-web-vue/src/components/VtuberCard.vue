@@ -37,33 +37,6 @@
             } ${vtuber.Status === "Inactive" ? ` (Inactive)` : ""}`
           }}</span>
         </div>
-        <!-- <a
-          class="tag-vtuber-live"
-          v-if="
-            vtuber.IsLive.Youtube ||
-            vtuber.IsLive.Twitch ||
-            vtuber.IsLive.BiliBili
-          "
-          :href="liveLink"
-          target="_blank"
-        >
-          <font-awesome-icon
-            :icon="['fab', 'youtube']"
-            class="fa-fw"
-            v-if="vtuber.IsLive.Youtube"
-          />
-          <font-awesome-icon
-            :icon="['fab', 'twitch']"
-            class="fa-fw"
-            v-if="vtuber.IsLive.Twitch"
-          />
-          <font-awesome-icon
-            :icon="['fab', 'bilibili']"
-            class="fa-fw"
-            v-if="vtuber.IsLive.BiliBili"
-          />
-          <span>LIVE</span>
-        </a> -->
         <div class="tag-vtuber-link">
           <a
             class="tag-vtuber-link__item"
@@ -138,7 +111,29 @@
           alt="Card image cap"
         />
       </router-link>
-      <div class="vtuber-link"></div>
+      <div class="vtuber-link" v-if="type !== 'name' && type !== 'jpname'">
+        <font-awesome-icon
+          class="fa-fw"
+          :icon="['fab', 'youtube']"
+          v-if="type.includes('youtube')"
+        />
+        <font-awesome-icon
+          class="fa-fw"
+          :icon="['fab', 'twitch']"
+          v-if="type.includes('twitch')"
+        />
+        <font-awesome-icon
+          class="fa-fw"
+          :icon="['fab', 'bilibili']"
+          v-if="type.includes('bilibili')"
+        />
+        <font-awesome-icon
+          class="fa-fw"
+          :icon="['fab', 'twitter']"
+          v-if="type.includes('twitter')"
+        />
+        <span>{{ `${countSort} ${textCount}` }}</span>
+      </div>
     </div>
     <div class="card-vtuber-name">
       <router-link :to="`/vtuber/${vtuber.ID}`" class="card-vtuber-name__link">
@@ -194,6 +189,9 @@ export default {
         return `https://space.bilibili.com/${this.vtuber.BiliBili.SpaceID}`
       else return null
     },
+    type() {
+      return useMemberStore().sorting.type
+    },
     titleName() {
       if (useMemberStore().sorting.type === "jpname")
         return this.vtuber.JpName ? this.vtuber.JpName : this.vtuber.EnName
@@ -222,7 +220,18 @@ export default {
         return this.vtuber.Youtube
           ? this.FormatNumber(this.vtuber.Youtube.ViwersCount)
           : 0
+      else if (type === "bilibili_views")
+        return this.vtuber.BiliBili
+          ? this.FormatNumber(this.vtuber.BiliBili.ViwersCount)
+          : 0
       else return 0
+    },
+    textCount() {
+      const type = useMemberStore().sorting.type
+
+      if (type === "youtube") return "Subscribers"
+      else if (type.includes("views")) return "Views"
+      else return "Followers"
     },
   },
   methods: {
@@ -312,11 +321,7 @@ export default {
 }
 
 .vtuber-link {
-  @apply absolute bottom-0 right-0 space-x-1  rounded-tl-md bg-slate-100/80 px-[0.325rem] dark:bg-slate-500/80;
-
-  &__link {
-    @apply inline-block py-[0.125rem] px-1 text-stone-700 transition-colors duration-200 ease-in-out dark:text-slate-50;
-  }
+  @apply absolute bottom-0 right-0 space-x-1 rounded-tl-md bg-slate-100/80 px-[0.325rem] text-sm dark:bg-slate-500/80;
 }
 
 .inactive {

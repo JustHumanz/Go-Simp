@@ -293,7 +293,11 @@
     </li>
 
     <li class="navbar-filter-item">
-      <a href="#" class="navbar-filter-item__link" onclick="return false">
+      <a
+        href="#extend-filter"
+        class="navbar-filter-item__link"
+        onclick="return false"
+      >
         <font-awesome-icon
           class="fa-fw navbar-filter-item__svg"
           icon="plus-circle"

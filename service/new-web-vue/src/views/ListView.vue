@@ -3,9 +3,11 @@ import NavbarList from "../components/MenuFilters/NavbarList.vue"
 import AmeLoading from "../components/AmeComp/AmeLoading.vue"
 import VtuberList from "../components/VtuberList.vue"
 import AmeError from "../components/AmeComp/AmeError.vue"
+import ExtendFilter from "../components/ExtendFilter.vue"
 </script>
 
 <template>
+  <!-- <ExtendFilter /> -->
   <NavbarList />
   <AmeLoading v-if="vtubersCount < 1 && !error_status" class="!h-screen" />
   <AmeError
@@ -84,8 +86,9 @@ export default {
       const router_before = window.history.state.back || ""
 
       if (
-        !router_before.includes("/vtuber") ||
-        useMemberStore().members.group !== this.$route.params?.id
+        (!router_before.includes("/vtuber") &&
+          useMemberStore().members.group !== this.$route.params?.id) ||
+        useMemberStore().members.group === -1
       )
         await useMemberStore().fetchMembers(this.$route.params?.id || null)
       useMemberStore().filterMembers()

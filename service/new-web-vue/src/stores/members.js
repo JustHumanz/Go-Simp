@@ -5,6 +5,7 @@ import Config from "../config.json"
 import regionConfig from "../regions.json"
 import parse from "url-parse"
 import { useLocalStorage } from "@vueuse/core"
+import { toRomaji } from "wanakana"
 
 export const useMemberStore = defineStore("members", () => {
   const members = ref({
@@ -304,9 +305,12 @@ export const useMemberStore = defineStore("members", () => {
     // sort jp name
     if (type.toLowerCase() === "jpname") {
       console.log("[MEMBERS] Sorting by Japanese name")
-      vtuber_data.sort(({ JpName: nameA }, { JpName: nameB }) =>
-        nameA.localeCompare(nameB)
-      )
+      vtuber_data.sort(({ JpName: nameA }, { JpName: nameB }) => {
+        const latinA = toRomaji(nameA).toLowerCase().replace("/", " ")
+        const latinB = toRomaji(nameB).toLowerCase().replace("/", " ")
+
+        return latinA.localeCompare(latinB)
+      })
       vtuber_data.sort(({ JpName: nameA }, { JpName: nameB }) => {
         if (!nameA.charAt(0) && nameB.charAt(0)) return 1
         if (nameA.charAt(0) && !nameB.charAt(0)) return -1
