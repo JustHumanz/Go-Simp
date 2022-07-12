@@ -3,6 +3,7 @@ import { ref, computed, compile, toRaw } from "vue"
 import axios from "axios"
 import Config from "../config.json"
 import regionConfig from "../regions.json"
+import agencysConfig from "../agency.json"
 import parse from "url-parse"
 import { useLocalStorage } from "@vueuse/core"
 import { toRomaji } from "wanakana"
@@ -70,11 +71,25 @@ export const useMemberStore = defineStore("members", () => {
     if (err) return false
 
     vtuber_data.forEach((vtuber) => {
-      regionConfig.forEach((region) => {
+      for (const region of regionConfig) {
         if (region.code === vtuber.Region) {
           vtuber.Regions = region
+          break
         }
-      })
+      }
+
+      // split object into array
+      const arrAgencys = Object.entries(agencysConfig)
+
+      // loop through array
+      for (const [key, value] of arrAgencys) {
+        const bindingKey = `${vtuber.Group.ID}:${vtuber.Region.toLowerCase()}`
+
+        if (key === bindingKey) {
+          vtuber.Agency = value
+          break
+        }
+      }
     })
 
     console.log(`[MEMBERS] Total member: ${vtuber_data.length}`)

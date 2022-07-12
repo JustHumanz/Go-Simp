@@ -59,6 +59,17 @@ export default {
 
     // add abilty menu
     this.menuHandler()
+
+    this.$watch(
+      () => this.$route.params,
+      async (af, bf) => {
+        if (!af?.id && bf?.id) {
+          await useMemberStore().fetchMembers(null)
+          useMemberStore().filterMembers()
+          useMemberStore().sortingMembers()
+        }
+      }
+    )
   },
   computed: {
     link_request() {

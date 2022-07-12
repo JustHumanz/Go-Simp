@@ -32,9 +32,7 @@
             v-if="vtuber.Status == 'Inactive'"
           />
           <span class="tag-vtuber-agency__hover">{{
-            `${vtuber.Group.ID === 10 ? `Vtuber` : GroupName} ${
-              vtuber.Regions?.name || vtuber.Region
-            } ${vtuber.Status === "Inactive" ? ` (Inactive)` : ""}`
+            `${agencyName} ${vtuber.Status === "Inactive" ? ` (Inactive)` : ""}`
           }}</span>
         </div>
         <div class="tag-vtuber-link">
@@ -196,6 +194,17 @@ export default {
       if (useMemberStore().sorting.type === "jpname")
         return this.vtuber.JpName ? this.vtuber.JpName : this.vtuber.EnName
       else return this.vtuber.EnName
+    },
+    agencyName() {
+      if (this.vtuber.Agency) {
+        if (this.vtuber.Agency.match(/^\$/g))
+          return this.vtuber.Agency.replace(/^\$/, "")
+        else
+          return `${this.vtuber.Agency} (${this.vtuber.Group.GroupName} ${this.vtuber.Region})`
+      } else
+        return `${
+          this.vtuber.Group.ID === 10 ? `Vtuber` : this.vtuber.Group.GroupName
+        } ${this.vtuber.Regions?.name || this.vtuber.Region}`
     },
     countSort() {
       const type = useMemberStore().sorting.type

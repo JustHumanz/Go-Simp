@@ -31,7 +31,7 @@
         <input
           type="checkbox"
           id="yt_plat"
-          name="platform-check"
+          name="live-check"
           value="youtube"
           class="extend-filter__item-input"
         />
@@ -90,7 +90,60 @@
             icon="circle-check"
             class="extend-filter__item-icon"
           />
-          <span class="extend-filter__item-text">Select Except</span>
+          <span class="extend-filter__item-text">Select Only</span>
+        </label>
+      </div>
+    </div>
+    <h3 class="extend-filter__title">Live Platform</h3>
+    <div class="extend-filter_items">
+      <div class="extend-filter__item" v-if="platforms.includes('youtube')">
+        <input
+          type="checkbox"
+          id="yt_live"
+          name="platform-check"
+          value="youtube"
+          class="extend-filter__item-input"
+        />
+        <label for="yt_live" class="extend-filter__item-label">
+          <font-awesome-icon
+            :icon="['fab', 'youtube']"
+            class="extend-filter__item-icon"
+          />
+          <span class="extend-filter__item-text">Youtube</span>
+        </label>
+      </div>
+
+      <div class="extend-filter__item" v-if="platforms.includes('twitch')">
+        <input
+          type="checkbox"
+          id="tw_live"
+          name="live-check"
+          value="twitch"
+          class="extend-filter__item-input"
+        />
+        <label for="tw_live" class="extend-filter__item-label">
+          <font-awesome-icon
+            :icon="['fab', 'twitch']"
+            class="extend-filter__item-icon"
+          />
+          <span class="extend-filter__item-text">Twitch</span>
+        </label>
+      </div>
+
+      <div class="extend-filter__item" v-if="platforms.includes('bilibili')">
+        <input
+          type="checkbox"
+          id="bili_live"
+          name="live-check"
+          value="bilibili"
+          class="extend-filter__item-input"
+        />
+        <label for="bili_live" class="extend-filter__item-label">
+          <font-awesome-icon
+            :icon="['fab', 'bilibili']"
+            class="extend-filter__item-icon"
+          />
+          <span class="extend-filter__item-text">Bilibili</span>
         </label>
       </div>
     </div>
@@ -131,7 +184,11 @@ export default {
   @apply fixed top-16 z-[15] mb-3 w-screen select-none bg-slate-100 py-2 px-5 shadow-md dark:bg-slate-400;
 
   &__title {
-    @apply text-lg font-semibold text-white;
+    @apply text-lg font-semibold dark:text-white;
+
+    &:not(:first-child) {
+      @apply mt-2;
+    }
   }
 
   &__items {
@@ -145,12 +202,12 @@ export default {
       @apply hidden;
 
       &:checked ~ .extend-filter__item-label {
-        @apply bg-white text-slate-700;
+        @apply bg-slate-500 text-white dark:bg-white dark:text-slate-700;
       }
     }
 
     &-label {
-      @apply flex cursor-pointer items-center space-x-1 rounded-full border-2 border-white px-3 py-1 text-sm text-white transition-all duration-200 ease-in-out;
+      @apply flex cursor-pointer items-center space-x-1 rounded-full border-2 border-slate-500 px-3 py-1 text-sm transition-all duration-200 ease-in-out dark:border-white dark:text-white;
     }
 
     &-flag {
