@@ -39,7 +39,7 @@
         </div>
         <div class="tag-vtuber-link">
           <a
-            class="tag-vtuber-link__item"
+            class="tag-vtuber-link__item hover:!text-youtube"
             :class="{ live: vtuber.IsLive.Youtube }"
             :href="ytLink"
             target="_blank"
@@ -48,7 +48,7 @@
             <font-awesome-icon class="fa-fw" :icon="['fab', 'youtube']" />
           </a>
           <a
-            class="tag-vtuber-link__item"
+            class="tag-vtuber-link__item hover:!text-twitch"
             :class="{ live: vtuber.IsLive.Twitch }"
             :href="`https://twitch.tv/${vtuber.Twitch.Username}`"
             target="_blank"
@@ -57,7 +57,7 @@
             <font-awesome-icon class="fa-fw" :icon="['fab', 'twitch']" />
           </a>
           <a
-            class="tag-vtuber-link__item"
+            class="tag-vtuber-link__item hover:!text-bilibili"
             :class="{ live: vtuber.IsLive.BiliBili }"
             :href="blLink"
             target="_blank"
@@ -66,7 +66,7 @@
             <font-awesome-icon class="fa-fw" :icon="['fab', 'bilibili']" />
           </a>
           <a
-            class="tag-vtuber-link__item"
+            class="tag-vtuber-link__item hover:!text-twitter"
             :href="`https://twitter.com/${vtuber.Twitter.Username}`"
             target="_blank"
             v-if="vtuber.Twitter"
@@ -299,9 +299,6 @@ export default {
     @apply hidden;
   }
 
-  // &-live {
-  //   @apply flex h-6 items-center space-x-1 rounded-br-md bg-red-500 px-[0.325rem] font-semibold text-white;
-  // }
   &-link {
     @apply flex h-6 items-center overflow-hidden rounded-bl-md bg-slate-100/75 font-semibold text-white dark:bg-slate-500/80;
 
@@ -311,10 +308,10 @@ export default {
     }
 
     &__item {
-      @apply h-full px-1 py-[3px] first:pl-[6px] last:pr-[6px];
+      @apply h-full px-1 py-[3px] transition-colors duration-200 ease-in-out first:pl-[6px] last:pr-[6px] hover:bg-white/20;
 
       &.live {
-        @apply bg-red-600;
+        @apply bg-red-600 hover:bg-red-300;
       }
     }
   }
