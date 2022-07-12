@@ -300,7 +300,7 @@ export default {
   }
 
   &-link {
-    @apply flex h-6 items-center overflow-hidden rounded-bl-md bg-slate-100/75 font-semibold text-white dark:bg-slate-500/80;
+    @apply flex h-6 items-center overflow-hidden rounded-bl-md bg-slate-100/75 font-semibold text-slate-600 dark:bg-slate-500/80 dark:text-white;
 
     // check when no child
     &:empty {
@@ -308,10 +308,10 @@ export default {
     }
 
     &__item {
-      @apply h-full px-1 py-[3px] transition-colors duration-200 ease-in-out first:pl-[6px] last:pr-[6px] hover:bg-white/20;
+      @apply h-full px-1 py-[3px] transition-colors duration-200 ease-in-out first:pl-[6px] last:pr-[6px] hover:bg-slate-600/20 dark:hover:bg-white/20;
 
       &.live {
-        @apply bg-red-600 hover:bg-red-300;
+        @apply bg-red-600 text-white hover:bg-red-300;
       }
     }
   }
