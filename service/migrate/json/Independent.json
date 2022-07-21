@@ -1063,6 +1063,42 @@
       "Region": "US",
       "Fanbase": "Guildmates",
       "Status": "Active"
+    },
+    {
+      "Name": "Unou",
+      "EN_Name": "Watagashi Unou",
+      "JP_Name": "わたがし うのう",
+      "Twitter": {
+        "Twitter_Fanart": "#うのう絵",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "yu_ka_misumi"
+      },
+      "Youtube": {
+        "Yt_ID": "UC9VqnG2Yx--wWitfHvJRe9A"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "US",
+      "Fanbase": "Guildmates",
+      "Status": "Active"
+    },
+    {
+      "Name": "Kurea",
+      "EN_Name": "Kamishiro Kurea",
+      "JP_Name": "神城くれあ",
+      "Twitter": {
+        "Twitter_Fanart": "#くれあーと",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "kamishiro_kurea"
+      },
+      "Youtube": {
+        "Yt_ID": "UCBQd84IW8OvM8H5jftHdvmw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "US",
+      "Fanbase": "Guildmates",
+      "Status": "Active"
     }
   ]
 }
