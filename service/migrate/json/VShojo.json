@@ -165,6 +165,46 @@
       "Region": "GB",
       "Fanbase": "",
       "Status": "Active"
+    },
+    {
+      "Name": "Aneki",
+      "EN_Name": "Kson",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#ksonART",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "ksononair"
+      },
+      "Youtube": {
+        "Yt_ID": "UC9ruVYPv7yJmV0Rh0NKA-Lw"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "ksonsouchou"
+      },
+      "Region": "JP",
+      "Fanbase": "Kson-Gumi Kanbukai",
+      "Status": "Active"
+    },
+    {
+      "Name": "Nazu-tan",
+      "EN_Name": "Amemiya Nazuna",
+      "JP_Name": "飴宮なずな",
+      "Twitter": {
+        "Twitter_Fanart": "#NananArt",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "AmemiyaNazuna"
+      },
+      "Youtube": {
+        "Yt_ID": "UC5gs8EbpwbfQvrhizJx60TA"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "AmemiyaNazuna"
+      },
+      "Region": "JP",
+      "Fanbase": "Kson-Gumi Kanbukai",
+      "Status": "Active"
     }
   ]
 }
