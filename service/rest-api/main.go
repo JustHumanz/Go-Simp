@@ -334,7 +334,17 @@ func addVtuber(w http.ResponseWriter, r *http.Request) {
 		log.Error(err)
 	}
 
-	var newVtuber Member
+	var newVtuber struct {
+		Name     string   `json:"Name"`
+		EnName   string   `json:"EN_Name"`
+		JpName   string   `json:"JP_Name"`
+		Twitter  Twitter  `json:"Twitter"`
+		Youtube  Youtube  `json:"Youtube"`
+		BiliBili BiliBili `json:"BiliBili"`
+		Twitch   Twitch   `json:"Twitch"`
+		Region   string   `json:"Region"`
+		Fanbase  string   `json:"Fanbase"`
+	}
 	err = json.Unmarshal(reqbdy, &newVtuber)
 	if err != nil {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -366,8 +376,30 @@ func patchVtuber(w http.ResponseWriter, r *http.Request) {
 
 	type patch struct {
 		ID  int
-		Old Member
-		New Member
+		Old struct {
+			Name     string   `json:"Name"`
+			EnName   string   `json:"EN_Name"`
+			JpName   string   `json:"JP_Name"`
+			Twitter  Twitter  `json:"Twitter"`
+			Youtube  Youtube  `json:"Youtube"`
+			BiliBili BiliBili `json:"BiliBili"`
+			Twitch   Twitch   `json:"Twitch"`
+			Region   string   `json:"Region"`
+			Fanbase  string   `json:"Fanbase"`
+			Status   string   `json:"Status"`
+		}
+		New struct {
+			Name     string   `json:"Name"`
+			EnName   string   `json:"EN_Name"`
+			JpName   string   `json:"JP_Name"`
+			Twitter  Twitter  `json:"Twitter"`
+			Youtube  Youtube  `json:"Youtube"`
+			BiliBili BiliBili `json:"BiliBili"`
+			Twitch   Twitch   `json:"Twitch"`
+			Region   string   `json:"Region"`
+			Fanbase  string   `json:"Fanbase"`
+			Status   string   `json:"Status"`
+		}
 	}
 
 	var PatchVtuber patch
