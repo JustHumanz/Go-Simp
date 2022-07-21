@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 	"strings"
@@ -27,6 +28,7 @@ var (
 	VtuberAgency  *[]GroupPayload
 	Payload       []*database.Group
 	ServiceUUID   = uuid.New().String()
+	WebHookURL    string
 )
 
 func init() {
@@ -52,6 +54,11 @@ func init() {
 		log.Panic(err)
 	}
 
+	if configfile.WebhookRequest == "" {
+		log.Fatalf("WebhookRequest not found")
+	}
+
+	WebHookURL = configfile.WebhookRequest
 	hostname := engine.GetHostname()
 
 	RequestPayload := func() {
@@ -268,6 +275,10 @@ func main() {
 	router.HandleFunc("/members/", getMembers).Methods("GET")
 	router.HandleFunc("/members/{memberID}", getMembers).Methods("GET")
 
+	//Yes,you can make a request without any authentication so pls don't abuse the api
+	router.HandleFunc("/member/add", addVtuber).Methods("POST")
+	router.HandleFunc("/member/edit", patchVtuber).Methods("PATCH")
+
 	FanArt := router.PathPrefix("/fanart").Subrouter()
 	FanArt.HandleFunc("/", invalidPath).Methods("GET")
 
@@ -315,6 +326,72 @@ func invalidPath(w http.ResponseWriter, r *http.Request) {
 		Date:    time.Now(),
 	})
 	w.WriteHeader(http.StatusBadRequest)
+}
+
+func addVtuber(w http.ResponseWriter, r *http.Request) {
+	reqbdy, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Error(err)
+	}
+
+	var newVtuber Member
+	err = json.Unmarshal(reqbdy, &newVtuber)
+	if err != nil {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(MessageError{
+			Message: "Invalid request.check your request and payload",
+			Date:    time.Now(),
+		})
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	pldstr, err := json.MarshalIndent(newVtuber, "", "    ")
+	if err != nil {
+		log.Error(err)
+	}
+
+	SendPayload(map[string]string{
+		"payload": string(pldstr),
+		"msg":     "New vtuber request",
+	})
+}
+
+func patchVtuber(w http.ResponseWriter, r *http.Request) {
+	reqbdy, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Error(err)
+	}
+
+	type patch struct {
+		ID  int
+		Old Member
+		New Member
+	}
+
+	var PatchVtuber patch
+	err = json.Unmarshal(reqbdy, &PatchVtuber)
+	if err != nil {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(MessageError{
+			Message: "Invalid request.check your request and payload",
+			Date:    time.Now(),
+		})
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	pldstr, err := json.MarshalIndent(PatchVtuber, "", "    ")
+	if err != nil {
+		log.Error(err)
+	}
+
+	SendPayload(map[string]string{
+		"payload": string(pldstr),
+		"msg":     "Update vtuber",
+	})
 }
 
 func getGroup(w http.ResponseWriter, r *http.Request) {
@@ -642,4 +719,35 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 type MessageError struct {
 	Message string
 	Date    time.Time
+}
+
+func SendPayload(data map[string]string) {
+	//Send message
+	PayloadBytes, err := json.Marshal(map[string]interface{}{
+		"content":     data["msg"],
+		"embeds":      nil,
+		"attachments": nil,
+	})
+	if err != nil {
+		log.Error(err)
+	}
+	err = network.CurlPost(WebHookURL, PayloadBytes)
+	if err != nil {
+		log.Error(err)
+	}
+
+	//Send payload
+	msg := "```json\n" + data["payload"] + "```"
+	PayloadBytes, err = json.Marshal(map[string]interface{}{
+		"content":     msg,
+		"embeds":      nil,
+		"attachments": nil,
+	})
+	if err != nil {
+		log.Error(err)
+	}
+	err = network.CurlPost(WebHookURL, PayloadBytes)
+	if err != nil {
+		log.Error(err)
+	}
 }
