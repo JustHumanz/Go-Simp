@@ -401,10 +401,11 @@ export default {
       if (this.live_only) query.liveonly = "true"
       if (this.inactive) query.inac = "true"
 
+      const id = this.$route.params?.id
+
       // route push
       this.$router.push({
-        path: "/vtubers",
-        params: { id: this.$route.params.id },
+        path: `/vtubers${id ? `/${id}` : ""}`,
         query,
       })
 

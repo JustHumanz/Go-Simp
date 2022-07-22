@@ -75,8 +75,6 @@ export default {
         }
       }
     )
-    console.log(this.totalVtubersData)
-    console.log(this.vtubersCount)
   },
   computed: {
     link_request() {

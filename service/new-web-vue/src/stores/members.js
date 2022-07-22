@@ -107,8 +107,6 @@ export const useMemberStore = defineStore("members", () => {
         nameA.toLowerCase() < nameB.toLowerCase() ? -1 : 1
     )
 
-    console.log(vtuber_data)
-
     let newRegion = []
     let newPlatform = []
     let newLive = []
