@@ -404,7 +404,7 @@ export default {
       // route push
       this.$router.push({
         path: "/vtubers",
-        params: { id: this.$route.query.id },
+        params: { id: this.$route.params.id },
         query,
       })
 
