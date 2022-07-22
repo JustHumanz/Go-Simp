@@ -22,3 +22,20 @@ type GroupPayload struct {
 	GroupIcon string
 	Youtube   interface{}
 }
+
+type Twitter struct {
+	TwitterFanart   string `json:"Twitter_Fanart"`
+	TwitterLewd     string `json:"Twitter_Lewd"`
+	TwitterUsername string `json:"Twitter_Username"`
+}
+type Youtube struct {
+	YtID string `json:"Youtube_ID"`
+}
+type BiliBili struct {
+	BiliBiliFanart string `json:"BiliBili_Fanart"`
+	BiliBiliID     int    `json:"BiliBili_ID"`
+	BiliRoomID     int    `json:"BiliRoom_ID"`
+}
+type Twitch struct {
+	TwitchUsername string `json:"Twitch_Username"`
+}

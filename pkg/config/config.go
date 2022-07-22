@@ -155,7 +155,7 @@ type ConfigFile struct {
 	BiliSess          string `toml:"BiliSess"`
 	PixivSession      string `toml:"PixivSess"`
 	SauceAPI          string `toml:"SauceAPI"`
-	InviteLog         string `toml:"InviteLog"`
+	WebhookRequest    string `toml:"WebhookRequest"`
 	PilotReporting    string `toml:"PilotReporting"`
 	MultiTOR          string `toml:"Multitor"`
 	DonationLink      string `toml:"DonationLink"`
