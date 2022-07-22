@@ -85,18 +85,24 @@ library.add(faUsers, faUser)
 
 import { useGroupStore } from "@/stores/groups"
 import { useMemberStore } from "@/stores/members.js"
-import { onBeforeRouteLeave } from "vue-router"
 
 // read props groupid
 export default {
-  setup() {
-    onBeforeRouteLeave((to, from) => {
-      if (to.params?.id !== from.params?.id && group)
-        console.log(`Get Group: ${group.GroupName}`)
-    })
-  },
-  async created() {
+  async mounted() {
     document.title = "List Vtubers - Vtbot"
+
+    this.$watch(
+      () => this.$route,
+      (to, from) => {
+        const group =
+          useGroupStore().groups.data.find(
+            (group) => group.ID == this.$route.params?.id
+          ) || null
+
+        if (group && to.params?.id !== from.params?.id)
+          console.log(`Get Group: ${group.GroupName}`)
+      }
+    )
   },
   computed: {
     groups() {
@@ -106,11 +112,10 @@ export default {
       ]
     },
     current_group() {
-      const store = useGroupStore()
-
       const group =
-        store.groups.data.find((group) => group.ID == this.$route.params?.id) ||
-        null
+        useGroupStore().groups.data.find(
+          (group) => group.ID == this.$route.params?.id
+        ) || null
 
       document.title = group
         ? this.convertToNormalText(group.GroupName) + " - List Vtubers"
