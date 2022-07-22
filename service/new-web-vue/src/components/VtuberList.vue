@@ -86,7 +86,7 @@ export default {
       regions: regionConfig,
     }
   },
-  created() {
+  mounted() {
     const store = useMemberStore()
 
     this.$watch(
@@ -98,6 +98,7 @@ export default {
     )
 
     this.ScrollFuncions()
+    this.rightClick()
   },
   computed: {
     group() {
@@ -144,6 +145,17 @@ export default {
         top: 0,
         behavior: "smooth",
       })
+    },
+    rightClick() {
+      document.body.addEventListener("contextmenu", (e) => {
+        if (e.target.closest(".card-vtuber")) {
+          e.preventDefault()
+          this.vtuberCardMenu(e.target.closest(".card-vtuber").dataset.id)
+        }
+      })
+    },
+    vtuberCardMenu(id) {
+      console.log(id)
     },
   },
 }

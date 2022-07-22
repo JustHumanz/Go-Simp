@@ -362,11 +362,11 @@ export default {
 
       if (e.target.id === liveOnly_el.id) {
         this.live_only = e.target.checked || false
-        inactive_el.checked = false
+        if (inactive_el) inactive_el.checked = false
         this.inactive = false
       } else if (e.target.id === inactive_el.id) {
         this.inactive = e.target.checked || false
-        liveOnly_el.checked = false
+        if (liveOnly_el) liveOnly_el.checked = false
         this.live_only = false
       }
     },
