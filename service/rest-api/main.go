@@ -276,8 +276,8 @@ func main() {
 	router.HandleFunc("/members/{memberID}", getMembers).Methods("GET")
 
 	//Yes,you can make a request without any authentication so pls don't abuse the api
-	router.HandleFunc("/member/add", addVtuber).Methods("POST")
-	router.HandleFunc("/member/edit", patchVtuber).Methods("PATCH")
+	router.HandleFunc("/member/request/add", addVtuber).Methods("POST")
+	router.HandleFunc("/member/request/edit", patchVtuber).Methods("PATCH")
 
 	FanArt := router.PathPrefix("/fanart").Subrouter()
 	FanArt.HandleFunc("/", invalidPath).Methods("GET")
@@ -346,7 +346,7 @@ func addVtuber(w http.ResponseWriter, r *http.Request) {
 		Fanbase  string   `json:"Fanbase"`
 	}
 	err = json.Unmarshal(reqbdy, &newVtuber)
-	if err != nil {
+	if err != nil || newVtuber.Name == "" {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(MessageError{
@@ -366,6 +366,14 @@ func addVtuber(w http.ResponseWriter, r *http.Request) {
 		"payload": string(pldstr),
 		"msg":     "New vtuber request",
 	})
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"error": nil,
+		"msg":   "success",
+	})
+	w.WriteHeader(http.StatusOK)
 }
 
 func patchVtuber(w http.ResponseWriter, r *http.Request) {
@@ -404,7 +412,7 @@ func patchVtuber(w http.ResponseWriter, r *http.Request) {
 
 	var PatchVtuber patch
 	err = json.Unmarshal(reqbdy, &PatchVtuber)
-	if err != nil {
+	if err != nil || PatchVtuber.ID == 0 {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(MessageError{
@@ -424,6 +432,14 @@ func patchVtuber(w http.ResponseWriter, r *http.Request) {
 		"payload": string(pldstr),
 		"msg":     "Update vtuber",
 	})
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"error": nil,
+		"msg":   "success",
+	})
+	w.WriteHeader(http.StatusOK)
 }
 
 func getGroup(w http.ResponseWriter, r *http.Request) {
