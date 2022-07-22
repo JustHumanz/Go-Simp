@@ -127,6 +127,10 @@ func (Data *Group) GetYtLiveStream(status string, reg string) ([]LiveStream, err
 }
 
 func (Data *Member) GetYtLiveStream(status string) ([]LiveStream, error) {
+	if Data.YoutubeID == "" {
+		return nil, nil
+	}
+
 	var (
 		Query          string
 		LiveStreamData []LiveStream
@@ -149,6 +153,7 @@ func (Data *Member) GetYtLiveStream(status string) ([]LiveStream, error) {
 			log.WithFields(log.Fields{
 				"Vtuber": Data.Name,
 				"Status": status,
+				"Key":    Key,
 			}).Warn("Cache not found,fetch to db")
 
 			rows, err := DB.Query(Query, Data.ID, status)
@@ -164,18 +169,17 @@ func (Data *Member) GetYtLiveStream(status string) ([]LiveStream, error) {
 				}
 
 				Live.Member = *Data
-
-				DataByte, err := Live.MarshalBinary()
-				if err != nil {
-					return nil, err
-				}
-
-				err = LiveCache.Set(ctx, Key, DataByte, config.YtGetStatusTTL).Err()
-				if err != nil {
-					return nil, err
-				}
-
 				LiveStreamData = append(LiveStreamData, Live)
+			}
+
+			DataByte, err := Live.MarshalBinary()
+			if err != nil {
+				return nil, err
+			}
+
+			err = LiveCache.Set(ctx, Key, DataByte, config.YtGetStatusTTL).Err()
+			if err != nil {
+				return nil, err
 			}
 
 		} else if err != nil {
@@ -186,7 +190,10 @@ func (Data *Member) GetYtLiveStream(status string) ([]LiveStream, error) {
 				return nil, err
 			}
 
-			LiveStreamData = append(LiveStreamData, Live)
+			if Live.ID != 0 {
+				LiveStreamData = append(LiveStreamData, Live)
+			}
+
 			return LiveStreamData, nil
 		}
 	} else {

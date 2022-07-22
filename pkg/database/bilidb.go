@@ -38,6 +38,10 @@ func (Data *LiveStream) SetBiliLive(new bool) *LiveStream {
 }
 
 func (Data *Member) GetBlLiveStream(status string) (LiveStream, error) {
+	if Data.BiliBiliID == 0 {
+		return LiveStream{}, nil
+	}
+
 	var (
 		Query string
 		ctx   = context.Background()
