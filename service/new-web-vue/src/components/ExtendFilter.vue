@@ -422,7 +422,7 @@ export default {
 }
 
 .extend-filter {
-  @apply fixed top-16 mb-3 w-screen select-none overflow-y-auto overflow-x-hidden bg-slate-100 py-2 px-5 shadow-md dark:bg-slate-400;
+  @apply fixed top-16 mb-3 w-screen select-none overflow-y-auto overflow-x-hidden bg-slate-100 py-2 px-5 shadow-md dark:bg-slate-500;
   max-height: calc(100vh - 64px);
 
   &__title {
