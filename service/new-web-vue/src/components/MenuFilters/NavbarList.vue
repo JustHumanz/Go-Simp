@@ -104,20 +104,18 @@ export default {
 
       if (!this.checkFilteredData) return "Search Vtubers..."
 
-      // get all EnName and JpName from filteredData
-      const EnNames = store.members.filteredData.map((member) => {
-        return member.EnName
+      let names = store.members.filteredData.filter((member) => {
+        return member.Status === "Active"
       })
 
-      const JpNames = store.members.filteredData.map((member) => {
-        return member.JpName ? member.JpName : false
-      })
-
-      // join all EnName and JpName to one array
-      const allNames = EnNames.concat(JpNames)
+      if (store.sorting.type === "jpname") {
+        names = names
+          .map((member) => member.JpName)
+          .filter((name) => name !== "")
+      } else names = names.map((member) => member.EnName)
 
       // random one name from allNames
-      const randomName = allNames[Math.floor(Math.random() * allNames.length)]
+      const randomName = names[Math.floor(Math.random() * names.length)]
 
       return randomName || "Search Vtubers..."
     },

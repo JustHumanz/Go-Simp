@@ -7,38 +7,43 @@ import ExtendFilter from "../components/ExtendFilter.vue"
 </script>
 
 <template>
-  <!-- <ExtendFilter /> -->
+  <div v-if="advanced_open">
+    <ExtendFilter />
+  </div>
   <NavbarList />
-  <AmeLoading v-if="vtubersCount < 1 && !error_status" class="!h-screen" />
+  <VtuberList v-if="vtubersCount > 0 && !error_status" />
+  <AmeLoading
+    v-else-if="!query && totalVtubersData < 1 && !error_status"
+    class="!h-screen"
+  />
   <AmeError
-    v-if="vtubersCount > 0 && filteredCount < 1"
+    v-else-if="vtubersCount < 1 && totalVtubersData > 0 && !error_status"
     type="error"
     img="laptop"
     title="Your filter is incorrect"
     :description="`Check your filter. Or when your vtuber is not available, request ${link_request}`"
   />
   <AmeError
-    v-if="vtubersCount > 0 && query && searchedCount < 1"
+    v-else-if="query && vtubersCount < 1"
     type="warning"
     img="bugs"
     title="You find worng keyword"
     :description="`When your vtuber/member is not here, your can request ${link_request}, or try another keyword`"
   />
   <AmeError
-    v-if="vtubersCount < 1 && error_status && error_status === 404"
+    v-else-if="totalVtubersData < 1 && error_status && error_status === 404"
     type="error"
     img="laptop"
     title="Your group is not available"
     :description="`Check another available group, or you can request a group ${link_request}`"
   />
   <AmeError
-    v-if="vtubersCount < 1 && error_status && error_status !== 404"
+    v-else-if="totalVtubersData < 1 && error_status && error_status !== 404"
     type="error"
     img="lazer"
     title="Something wrong when get request"
     :description="`Waiting for server response, restart your WiFi, or try again later`"
   />
-  <VtuberList v-if="vtubersCount > 0" />
 </template>
 
 <script>
@@ -70,26 +75,30 @@ export default {
         }
       }
     )
+    console.log(this.totalVtubersData)
+    console.log(this.vtubersCount)
   },
   computed: {
     link_request() {
       return `<a href="/new-vtuber" id="router-link" class="ame-error-text__link">here</a>`
     },
-    filteredCount() {
+    totalVtubersData() {
       this.calculateFilters()
-      return useMemberStore().members.filteredData.length
+      return useMemberStore().members.data.length
     },
     query() {
       return useMemberStore().members.query
     },
-    searchedCount() {
-      return useMemberStore().members.searchedData.length
-    },
     vtubersCount() {
-      return useMemberStore().members.data.length
+      this.calculateFilters()
+      if (this.query) return useMemberStore().members.searchedData.length
+      else return useMemberStore().members.filteredData.length
     },
     error_status() {
       return useMemberStore().members.status
+    },
+    advanced_open() {
+      return useMemberStore().menuFilter.open_advanced
     },
   },
   methods: {

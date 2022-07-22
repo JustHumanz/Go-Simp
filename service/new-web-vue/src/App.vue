@@ -248,6 +248,8 @@ library.add(
   faRightToBracket
 )
 
+import { useMemberStore } from "@/stores/members.js"
+
 export default {
   data() {
     return {
@@ -270,6 +272,12 @@ export default {
       async () => {
         this.isActiveVtuber = this.$route.path.includes("/vtuber")
         this.isActiveDocs = this.$route.path.includes("/docs")
+
+        if (
+          !this.$route.path.includes("/vtubers") &&
+          useMemberStore().menuFilter.open_advanced
+        )
+          useMemberStore().toggleadvanced()
       },
 
       { immediate: true }

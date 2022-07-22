@@ -1,30 +1,41 @@
 <template>
-  <div class="card-vtuber" :class="{ inactive: vtuber.Status == 'Inactive' }">
+  <div
+    class="card-vtuber"
+    :class="{ inactive: vtuber.Status == 'Inactive' }"
+    :data-id="vtuber.ID"
+  >
     <div class="card-vtuber-image">
       <div class="tag-vtuber">
         <div class="tag-vtuber-agency">
-          <img
-            draggable="false"
-            class="tag-vtuber-agency__icon"
-            :src="vtuber.Group.IconURL"
-            :alt="vtuber.Group.GroupName"
-            v-if="$route.params.id != vtuber.Group.ID && vtuber.Group.ID !== 10"
-          />
-          <img
-            draggable="false"
-            class="tag-vtuber-agency__flag"
-            :src="`/assets/flags/${vtuber.Regions?.code.toLowerCase()}.svg`"
-            :alt="vtuber.Regions.name"
-            onerror="this.src='/assets/flags/none.svg'"
-            v-else-if="vtuber.Regions"
-          />
-          <img
-            draggable="false"
-            class="tag-vtuber-agency__flag"
-            src="/assets/flags/none.svg"
-            :alt="vtuber.Region"
-            v-else
-          />
+          <router-link
+            :to="`/vtubers/` + vtuber.Group.ID"
+            @click="getVtuberData(vtuber.Group.ID)"
+          >
+            <img
+              draggable="false"
+              class="tag-vtuber-agency__icon"
+              :src="vtuber.Group.IconURL"
+              :alt="vtuber.Group.GroupName"
+              v-if="
+                $route.params.id != vtuber.Group.ID && vtuber.Group.ID !== 10
+              "
+            />
+            <img
+              draggable="false"
+              class="tag-vtuber-agency__flag"
+              :src="`/assets/flags/${vtuber.Regions?.code.toLowerCase()}.svg`"
+              :alt="vtuber.Regions.name"
+              onerror="this.src='/assets/flags/none.svg'"
+              v-else-if="vtuber.Regions"
+            />
+            <img
+              draggable="false"
+              class="tag-vtuber-agency__flag"
+              src="/assets/flags/none.svg"
+              :alt="vtuber.Region"
+              v-else
+            />
+          </router-link>
 
           <font-awesome-icon
             class="fa-fw"
@@ -77,36 +88,10 @@
         <img
           draggable="false"
           class="card-vtuber-image__img"
-          v-if="vtuber.Youtube"
-          v-bind:src="vtuber.Youtube.Avatar.replace('s800', 's360')"
+          :src="avatar"
           referrerpolicy="no-referrer"
           onerror="this.src='/assets/smolame.jpg'"
-          alt="Card image cap"
-        />
-        <img
-          draggable="false"
-          class="card-vtuber-image__img"
-          v-else-if="vtuber.BiliBili"
-          v-bind:src="`${vtuber.BiliBili.Avatar}@360w_360h_1c_1s.jpg`"
-          referrerpolicy="no-referrer"
-          onerror="this.src='/assets/smolame.jpg'"
-          alt="Card image cap"
-        />
-        <img
-          draggable="false"
-          class="card-vtuber-image__img"
-          v-else-if="vtuber.Twitch"
-          v-bind:src="vtuber.Twitch.Avatar"
-          referrerpolicy="no-referrer"
-          onerror="this.src='/assets/smolame.jpg'"
-          alt="Card image cap"
-        />
-        <img
-          draggable="false"
-          class="card-vtuber-image__img"
-          v-else
-          src="/assets/smolame.jpg"
-          alt="Card image cap"
+          :alt="vtuber.EnName"
         />
       </router-link>
       <div class="vtuber-link" v-if="type !== 'name' && type !== 'jpname'">
@@ -168,7 +153,17 @@ export default {
     },
   },
   computed: {
-    randomAvatar() {},
+    avatar() {
+      return this.vtuber.Youtube
+        ? this.vtuber.Youtube.Avatar.replace("s800", "s360")
+        : this.vtuber.BiliBili
+        ? `${this.vtuber.BiliBili.Avatar}@360w_360h_1c_1s.jpg`
+        : this.vtuber.Twitch
+        ? this.vtuber.Twitch.Avatar
+        : this.vtuber.Twitter
+        ? this.vtuber.Twitter.Avatar
+        : "/assets/smolame.jpg"
+    },
     GroupName() {
       return (
         this.vtuber.Group.GroupName.charAt(0).toUpperCase() +
@@ -251,6 +246,11 @@ export default {
       else if (num >= 1000000) return (num / 1000000).toFixed(2) + "M"
       else if (num >= 1000) return (num / 1000).toFixed(2) + "K"
       else return num
+    },
+    async getVtuberData(id) {
+      await useMemberStore().fetchMembers(id || null)
+      useMemberStore().filterMembers()
+      useMemberStore().sortingMembers()
     },
   },
 }

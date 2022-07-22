@@ -7,6 +7,7 @@ import agencysConfig from "../agency.json"
 import parse from "url-parse"
 import { useLocalStorage } from "@vueuse/core"
 import { toRomaji } from "wanakana"
+import dummy from "../dummy.json"
 
 export const useMemberStore = defineStore("members", () => {
   const members = ref({
@@ -24,6 +25,7 @@ export const useMemberStore = defineStore("members", () => {
     platform: [],
     live: [],
     inactive: false,
+    open_advanced: false,
   })
   const sortMenu = ref({ platform: [], twitter: false })
 
@@ -42,6 +44,9 @@ export const useMemberStore = defineStore("members", () => {
       inactive: true,
     })
   )
+
+  const toggleadvanced = () =>
+    (menuFilter.value.open_advanced = !menuFilter.value.open_advanced)
 
   const fetchMembers = async (id = null) => {
     let err = false
@@ -70,6 +75,8 @@ export const useMemberStore = defineStore("members", () => {
 
     if (err) return false
 
+    // vtuber_data.push(dummy)
+
     vtuber_data.forEach((vtuber) => {
       for (const region of regionConfig) {
         if (region.code === vtuber.Region) {
@@ -78,18 +85,18 @@ export const useMemberStore = defineStore("members", () => {
         }
       }
 
-      // split object into array
-      const arrAgencys = Object.entries(agencysConfig)
+      // // split object into array
+      // const arrAgencys = Object.entries(agencysConfig)
 
-      // loop through array
-      for (const [key, value] of arrAgencys) {
-        const bindingKey = `${vtuber.Group.ID}:${vtuber.Region.toLowerCase()}`
+      // // loop through array
+      // for (const [key, value] of arrAgencys) {
+      //   const bindingKey = `${vtuber.Group.ID}:${vtuber.Region.toLowerCase()}`
 
-        if (key === bindingKey) {
-          vtuber.Agency = value
-          break
-        }
-      }
+      //   if (key === bindingKey) {
+      //     vtuber.Agency = value
+      //     break
+      //   }
+      // }
     })
 
     console.log(`[MEMBERS] Total member: ${vtuber_data.length}`)
@@ -163,7 +170,7 @@ export const useMemberStore = defineStore("members", () => {
   }
 
   const filterMembers = () => {
-    const { reg, plat, liveplat, nolive, inac } = parse(
+    const { reg, plat, liveplat, liveonly, inac } = parse(
       window.location.href,
       true
     ).query
@@ -173,7 +180,9 @@ export const useMemberStore = defineStore("members", () => {
     filter.value.region = regions
     filter.value.platform = plat ? plat : null
     filter.value.live = liveplat ? liveplat : null
-    filter.value.live_only = nolive?.toLowerCase() == "false" ? true : false
+    filter.value.live_only = liveonly
+      ? liveonly.toLowerCase() === "true"
+      : false
     filter.value.inactive = inac ? inac.toLowerCase() === "true" : false
 
     let { region, platform, live, live_only, inactive } = filter.value
@@ -431,6 +440,7 @@ export const useMemberStore = defineStore("members", () => {
     sortMenu,
     filter,
     sorting,
+    toggleadvanced,
     fetchMembers,
     filterMembers,
     changeSort,
