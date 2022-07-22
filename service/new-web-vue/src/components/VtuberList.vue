@@ -83,11 +83,10 @@ export default {
       limitedVtubers: [],
       nullData: false,
       hide_scroll_up: true,
-      regions: null,
+      regions: regionConfig,
     }
   },
   created() {
-    this.regions = regionConfig
     const store = useMemberStore()
 
     this.$watch(
@@ -114,9 +113,6 @@ export default {
       return store.members.searchedData.length > 0
         ? store.members.searchedData
         : store.members.filteredData
-    },
-    test() {
-      return this.vtubers.length
     },
   },
   methods: {

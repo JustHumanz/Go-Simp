@@ -248,6 +248,8 @@ library.add(
   faRightToBracket
 )
 
+import { useMemberStore } from "@/stores/members.js"
+
 export default {
   data() {
     return {
@@ -270,6 +272,12 @@ export default {
       async () => {
         this.isActiveVtuber = this.$route.path.includes("/vtuber")
         this.isActiveDocs = this.$route.path.includes("/docs")
+
+        if (
+          !this.$route.path.includes("/vtubers") &&
+          useMemberStore().menuFilter.open_advanced
+        )
+          useMemberStore().toggleadvanced()
       },
 
       { immediate: true }
@@ -358,7 +366,7 @@ export default {
 <style lang="scss" scoped>
 .nav {
   font-family: "Nunito", sans-serif;
-  @apply sticky top-0 left-0 z-[11] flex h-16 w-screen select-none justify-center bg-cyan-500 shadow-md shadow-cyan-500/50 dark:bg-slate-700 dark:shadow-slate-700/50;
+  @apply sticky top-0 left-0 z-[20] flex h-16 w-screen select-none justify-center bg-cyan-500 shadow-md shadow-cyan-500/50 dark:bg-slate-700 dark:shadow-slate-700/50;
   .navbar {
     @apply mx-4 flex h-full w-full items-center justify-between md:w-[90%] md:justify-around lg:w-[85%];
 

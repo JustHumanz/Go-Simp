@@ -31,6 +31,23 @@
           </a>
         </li>
 
+        <li class="navbar-submenu-item">
+          <a
+            href="#"
+            @click="setSort('jpname')"
+            class="navbar-submenu-item__link"
+            :class="{
+              active: sorting.type === 'jpname',
+            }"
+          >
+            <font-awesome-icon
+              class="fa-fw navbar-submenu-item__svg"
+              icon="arrow-down-a-z"
+            />
+            <span class="navbar-submenu-item__span">Japanese Name</span>
+          </a>
+        </li>
+
         <li class="navbar-submenu-item" v-if="platforms.includes('youtube')">
           <a
             href="#"
@@ -49,7 +66,7 @@
         <li class="navbar-submenu-item" v-if="platforms.includes('youtube')">
           <a
             href="#"
-            @click="setSort(`youtube-views`)"
+            @click="setSort(`youtube_views`)"
             class="navbar-submenu-item__link"
             :class="{ active: sorting.type === 'youtube_views' }"
           >

@@ -258,11 +258,11 @@
           <router-link
             :to="{
               params: { id: $route.params.id },
-              query: urlParams({ noLive: 'toggle' }),
+              query: urlParams({ liveOnly: 'toggle' }),
             }"
             @click="changeFilter()"
             class="navbar-submenu-item__link"
-            :class="{ active: nolive === 'false' }"
+            :class="{ active: liveonly === 'true' }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
@@ -292,8 +292,20 @@
       </ul>
     </li>
 
-    <li class="navbar-filter-item">
-      <a href="#" class="navbar-filter-item__link" onclick="return false">
+    <li
+      class="navbar-filter-item"
+      v-if="
+        getRegions.length > 1 ||
+        platforms.length > 1 ||
+        livePlatforms.length > 1
+      "
+    >
+      <a
+        href="#"
+        class="navbar-filter-item__link"
+        onclick="return false"
+        @click="open_advanced_filter()"
+      >
         <font-awesome-icon
           class="fa-fw navbar-filter-item__svg"
           icon="plus-circle"
@@ -375,7 +387,7 @@ export default {
         this.reg = this.$route.query.reg
         this.plat = this.$route.query.plat
         this.liveplat = this.$route.query.liveplat
-        this.nolive = this.$route.query.nolive
+        this.liveonly = this.$route.query.liveonly
         this.inac = this.$route.query.inac
       },
       { immediate: true }
@@ -425,18 +437,10 @@ export default {
       region = null,
       platform = null,
       live = null,
-      noLive = null,
+      liveOnly = null,
       inactive = null,
     }) {
-      const {
-        reg,
-        plat,
-        liveplat,
-        nolive,
-        inac,
-        sort,
-        live: sortLive,
-      } = this.$route.query
+      const { reg, plat, liveplat, liveonly, inac } = this.$route.query
 
       const params = new Object()
 
@@ -448,19 +452,17 @@ export default {
       if ((!liveplat && live) || (liveplat && live !== ""))
         params.liveplat = live || liveplat
 
-      if (noLive) {
-        switch (nolive) {
-          case "false":
+      if (liveOnly) {
+        switch (liveonly) {
+          case "true":
             break
           default:
-            params.nolive = "false"
+            params.liveonly = "true"
         }
-      } else {
-        params.nolive = nolive
+      } else if (!inactive) {
+        params.liveonly = liveonly
       }
 
-      // if ((!inac && inactive) || (inac && inactive !== ""))
-      //   params.inac = inactive || inac
       if (inactive) {
         switch (inac) {
           case "true":
@@ -468,23 +470,19 @@ export default {
           default:
             params.inac = "true"
         }
-      } else {
+      } else if (!liveOnly) {
         params.inac = inac
       }
-
-      if (sort) params.sort = sort
-      if (sortLive) params.live = sortLive
 
       return params
     },
     removeAll() {
-      const { sort, live } = this.$route.query
-
       const params = new Object()
-      if (sort) params.sort = sort
-      if (live) params.live = live
 
       return params
+    },
+    open_advanced_filter() {
+      useMemberStore().toggleadvanced()
     },
   },
 }
