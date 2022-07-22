@@ -1,11 +1,9 @@
 name: build & deploy go-simp modules
 
 on:
-  create:
-    branches:
-      - 'master'
+  push:
     tags:
-      - 'v*.*.*'
+      - '*'
 
 jobs:
   build:
