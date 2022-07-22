@@ -91,7 +91,7 @@ import { onBeforeRouteLeave } from "vue-router"
 export default {
   setup() {
     onBeforeRouteLeave((to, from) => {
-      if (to.params?.id !== from.params?.id)
+      if (to.params?.id !== from.params?.id && group)
         console.log(`Get Group: ${group.GroupName}`)
     })
   },
