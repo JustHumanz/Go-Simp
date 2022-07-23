@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/database"
+	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/JustHumanz/Go-Simp/pkg/metric"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
@@ -20,7 +21,63 @@ var (
 	confByte      []byte
 	WeebHookURL   string
 	VtubersAgency []database.Group
-	//Payload       = make(map[string]interface{})
+
+	S = Server{
+		Service: []*Service{
+			//Fanart
+			{
+				Name: config.TBiliBiliService,
+				//Counter: 1,
+				CronJob: 7, //every 7 minutes
+			},
+			{
+				Name: config.TwitterService,
+				//Counter: 1,
+				CronJob: 10, //every 10 minutes
+			},
+			{
+				Name: config.PixivService,
+				//Counter: 1,
+				CronJob: 7, //every 7 minutes
+			},
+
+			//Live
+			{
+				Name: config.SpaceBiliBiliService,
+				//Counter: 1,
+				CronJob: 12, //every 12 minutes
+			},
+			{
+				Name: config.LiveBiliBiliService,
+				//Counter: 1,
+				CronJob: 7, //every 7 minutes
+			},
+			{
+				Name: config.TwitchService,
+				//Counter: 1,
+				CronJob: 10, //every 10 minutes
+			},
+			{
+				Name: config.YoutubeCheckerService,
+				//Counter: 1,
+				CronJob: 5, //every 5 minutes
+			},
+			{
+				Name: config.YoutubeCounterService,
+				//Counter: 1,
+				CronJob: 1, //every 1 minutes
+			},
+			{
+				Name: config.YoutubeLiveTrackerService,
+				//Counter: 1,
+				CronJob: 15, //every 15 minutes
+			}, {
+				Name: config.YoutubePastTrackerService,
+				//Counter: 1,
+				CronJob: 60, //every 1h
+			},
+		},
+	}
 )
 
 func Start() {
@@ -40,23 +97,6 @@ func Start() {
 		if err != nil {
 			log.Error(err)
 		}
-
-		/*
-			for _, v := range GroupData {
-				v.Members, err = database.GetMembers(v.ID)
-				if err != nil {
-					log.Error(err)
-				}
-				VtubersAgency = append(VtubersAgency, v)
-			}
-
-
-				tmp, err := json.Marshal(Grp)
-				VtubersByte = &tmp
-				if err != nil {
-					log.Error(err)
-				}
-		*/
 	}
 	GetGroups()
 
@@ -78,9 +118,18 @@ type Service struct {
 }
 
 type UnitService struct {
-	UUID    string
-	Counter int
-	Payload []database.Group
+	UUID     string
+	Counter  int
+	Payload  []database.Group
+	Metadata UnitMetadata
+}
+
+type UnitMetadata struct {
+	UUID       string
+	Hostname   string
+	Length     int
+	AgencyList []string
+	LastUpdate time.Time
 }
 
 type Server struct {
@@ -138,6 +187,11 @@ func (s *Server) IsYtCheckerRunning() bool {
 	return false
 }
 
+func (u *UnitService) UpdateLastReport(toki int64) {
+	TimeUnit := time.Unix(toki, 0)
+	u.Metadata.LastUpdate = TimeUnit
+}
+
 //var ModuleWatcher = make(map[string]int)
 
 func (s *Server) CheckUUID(UUID string) bool {
@@ -167,9 +221,11 @@ func (s *Service) RemapPayload() {
 		AgencyCount := 0
 		for _, v := range s.Unit {
 			AgencyCount += len(v.Payload)
+			v.Metadata.Length = len(v.Payload)
+			v.Metadata.AgencyList = v.GetAgencyList()
 		}
 
-		if AgencyCount < 29 {
+		if AgencyCount < 29 && AgencyCount != 0 {
 			log.Fatal("Agency payload less than 29, len ", AgencyCount)
 		}
 	}
@@ -198,7 +254,7 @@ func (k *UnitService) GetAgencyList() []string {
 	return AgencyName
 }
 
-func (s *Service) RemoveUnitFromDeadSvc(UUID string) {
+func (s *Service) RemoveUnitFromDeadNode(UUID string) {
 	for k, v := range s.Unit {
 		if v.UUID == UUID {
 			s.Unit = append(s.Unit[0:k], s.Unit[k+1:]...)
@@ -223,6 +279,11 @@ func (s *Server) RequestRunJobsOfService(ctx context.Context, in *ServiceMessage
 					in.ServiceUUID,
 					1,
 					nil,
+					UnitMetadata{
+						Hostname:   in.Hostname,
+						UUID:       in.ServiceUUID,
+						LastUpdate: time.Now(),
+					},
 				})
 
 				v.RemapPayload()
@@ -304,12 +365,14 @@ func (s *Server) RequestRunJobsOfService(ctx context.Context, in *ServiceMessage
 	return &RunJob{}, nil
 }
 
-func (s *Server) ReportError(ctx context.Context, in *ServiceMessage) (*Empty, error) {
+func (s *Server) ReportError(ctx context.Context, in *ServiceMessage) (*Message, error) {
 	ReportDeadService(in.Message, in.Service)
-	return &Empty{}, nil
+	return &Message{
+		Message: "Sending error report done",
+	}, nil
 }
 
-func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
+func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Message, error) {
 	if in.State == config.FanartState {
 		var FanArt database.DataFanart
 		err := json.Unmarshal(in.MetricData, &FanArt)
@@ -318,7 +381,7 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 		}
 
 		log.WithFields(log.Fields{
-			"Vtuber": FanArt.Member.EnName,
+			"Vtuber": FanArt.Member.Name,
 			"State":  in.State,
 		}).Info("Update Fanart metric")
 
@@ -336,7 +399,7 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 			log.Error(err)
 		}
 		log.WithFields(log.Fields{
-			"Vtuber": Subs.Member.EnName,
+			"Vtuber": Subs.Member.Name,
 			"State":  Subs.State,
 		}).Info("Update Subs")
 		if Subs.State == config.BiliLive && !Subs.Member.IsBiliNill() {
@@ -383,36 +446,36 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 			).Set(float64(Subs.TwFollow))
 		}
 	} else if in.State == config.LiveStatus {
-		var LiveData database.LiveStream
-		err := json.Unmarshal(in.MetricData, &LiveData)
-		if err != nil {
-			log.Error(err)
-		}
-
-		log.WithFields(log.Fields{
-			"Vtuber": LiveData.Member.EnName,
-			"State":  in.State,
-		}).Info("Update Livestream metric")
-
-		if LiveData.State == config.YoutubeLive && !LiveData.Member.IsYtNill() {
-			metric.GetLive.WithLabelValues(
-				LiveData.Member.Name,
-				LiveData.Group.GroupName,
-				"Youtube",
-			).Inc()
-		} else if LiveData.State == config.BiliLive && !LiveData.Member.IsBiliNill() {
-			metric.GetLive.WithLabelValues(
-				LiveData.Member.Name,
-				LiveData.Group.GroupName,
-				"BiliBili",
-			).Inc()
-		} else if LiveData.State == config.TwitchLive {
-			metric.GetLive.WithLabelValues(
-				LiveData.Member.Name,
-				LiveData.Group.GroupName,
-				"Twitch",
-			).Inc()
-		}
+		//		var LiveData database.LiveStream
+		//		err := json.Unmarshal(in.MetricData, &LiveData)
+		//		if err != nil {
+		//			log.Error(err)
+		//		}
+		//
+		//		log.WithFields(log.Fields{
+		//			"Vtuber": LiveData.Member.Name,
+		//			"State":  in.State,
+		//		}).Info("Update Livestream metric")
+		//
+		//		if LiveData.State == config.YoutubeLive && !LiveData.Member.IsYtNill() {
+		//			metric.GetLive.WithLabelValues(
+		//				LiveData.Member.Name,
+		//				LiveData.Group.GroupName,
+		//				"Youtube",
+		//			).Inc()
+		//		} else if LiveData.State == config.BiliLive && !LiveData.Member.IsBiliNill() {
+		//			metric.GetLive.WithLabelValues(
+		//				LiveData.Member.Name,
+		//				LiveData.Group.GroupName,
+		//				"BiliBili",
+		//			).Inc()
+		//		} else if LiveData.State == config.TwitchLive {
+		//			metric.GetLive.WithLabelValues(
+		//				LiveData.Member.Name,
+		//				LiveData.Group.GroupName,
+		//				"Twitch",
+		//			).Inc()
+		//		}
 	} else if in.State == config.PastStatus {
 		var LiveData database.LiveStream
 		err := json.Unmarshal(in.MetricData, &LiveData)
@@ -421,83 +484,74 @@ func (s *Server) MetricReport(ctx context.Context, in *Metric) (*Empty, error) {
 		}
 
 		if LiveData.End.IsZero() {
-			return &Empty{}, nil
+			return &Message{
+				Message: "Invalid end time",
+			}, nil
 		}
 
 		Time := LiveData.End.Sub(LiveData.Schedul).Minutes()
 
 		log.WithFields(log.Fields{
-			"Vtuber":  LiveData.Member.EnName,
+			"Vtuber":  LiveData.Member.Name,
 			"State":   in.State,
 			"Time":    int(Time),
 			"VideoID": LiveData.VideoID,
 		}).Info("Update past Livestream metric")
 
-		if LiveData.State == config.YoutubeLive && !LiveData.Member.IsYtNill() {
-			metric.GetLiveDuration.WithLabelValues(
-				LiveData.Member.Name,
-				LiveData.Group.GroupName,
-				"Youtube",
-			).Add(Time)
-		} else if LiveData.State == config.BiliLive && !LiveData.Member.IsBiliNill() {
-			metric.GetLiveDuration.WithLabelValues(
-				LiveData.Member.Name,
-				LiveData.Group.GroupName,
-				"BiliBili",
-			).Add(Time)
-		} else if LiveData.State == config.TwitchLive {
-			metric.GetLiveDuration.WithLabelValues(
-				LiveData.Member.Name,
-				LiveData.Group.GroupName,
-				"Twitch",
-			).Add(Time)
-		}
+		//if LiveData.State == config.YoutubeLive && !LiveData.Member.IsYtNill() {
+		//	metric.GetLiveDuration.WithLabelValues(
+		//		LiveData.Member.Name,
+		//		LiveData.Group.GroupName,
+		//		"Youtube",
+		//	).Add(Time)
+		//} else if LiveData.State == config.BiliLive && !LiveData.Member.IsBiliNill() {
+		//	metric.GetLiveDuration.WithLabelValues(
+		//		LiveData.Member.Name,
+		//		LiveData.Group.GroupName,
+		//		"BiliBili",
+		//	).Add(Time)
+		//} else if LiveData.State == config.TwitchLive {
+		//	metric.GetLiveDuration.WithLabelValues(
+		//		LiveData.Member.Name,
+		//		LiveData.Group.GroupName,
+		//		"Twitch",
+		//	).Add(Time)
+		//}
 	}
 
-	return &Empty{}, nil
+	return &Message{
+		Message: "Metric updated",
+	}, nil
 }
 
-func (s *Server) HeartBeat(in *ServiceMessage, stream PilotService_HeartBeatServer) error {
-	for {
-		for _, v := range s.Service {
-			if v.Name == in.Service {
-				for _, v2 := range v.Unit {
-					if v2.UUID == in.ServiceUUID {
-						log.WithFields(log.Fields{
-							"Service":  in.Service,
-							"Messsage": in.Message,
-							"UUID":     in.ServiceUUID,
-							"Status":   "Running",
-						}).Debug("HeartBeat")
-
-						err := stream.Send(&Empty{})
-						if err != nil {
-							log.WithFields(log.Fields{
-								"Service":  in.Service,
-								"Messsage": in.Message,
-								"UUID":     in.ServiceUUID,
-							}).Error(fmt.Sprintf("%s Removing unit if exist", err))
-							v.RemoveUnitFromDeadSvc(in.ServiceUUID)
-							ReportDeadService(err.Error(), in.Service)
-							return err
-						}
-						time.Sleep(5 * time.Second)
-					}
-				}
-			}
-		}
+func (s *Server) HeartBeat(ctx context.Context, in *ServiceMessage) (*Message, error) {
+	Svc, Unit := GetServiceUnitFromUUID(&S, in.ServiceUUID)
+	if Svc != nil {
+		Unit.UpdateLastReport(in.Timestamp)
 	}
+
+	return &Message{
+		Message: "Cek",
+	}, nil
+
 }
 
 func RunHeartBeat(client PilotServiceClient, Service string, UUID string) {
-	_, err := client.HeartBeat(context.Background(), &ServiceMessage{
-		Service:     Service,
-		Message:     "Bep Bob",
-		ServiceUUID: UUID,
-	})
-	if err != nil {
-		ReportDeadService("Pilot down", Service)
-		log.Fatal(err)
+
+	for {
+		_, err := client.HeartBeat(context.Background(), &ServiceMessage{
+			Service:     Service,
+			Message:     "Bep Bob",
+			ServiceUUID: UUID,
+			Timestamp:   time.Now().Unix(),
+			Hostname:    engine.GetHostname(),
+		})
+		if err != nil {
+			ReportDeadService("Pilot down", Service)
+			log.Fatal(err)
+		}
+
+		time.Sleep(1 * time.Second)
 	}
 }
 
@@ -540,4 +594,15 @@ func BoolString(a bool) string {
 		return "true"
 	}
 	return "false"
+}
+
+func GetServiceUnitFromUUID(s *Server, UUID string) (*Service, *UnitService) {
+	for _, v := range s.Service {
+		for _, v2 := range v.Unit {
+			if v2.UUID == UUID {
+				return v, v2
+			}
+		}
+	}
+	return nil, nil
 }

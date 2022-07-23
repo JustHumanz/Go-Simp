@@ -31,21 +31,21 @@ var (
 		[]string{"vtuber", "group", "state"},
 	)
 
-	GetLive = prometheus.NewCounterVec(
-		prometheus.CounterOpts{
-			Name: config.Get_Live,
-			Help: "Get vtuber live count",
-		},
-		[]string{"vtuber", "group", "state"},
-	)
-
-	GetLiveDuration = prometheus.NewCounterVec(
-		prometheus.CounterOpts{
-			Name: config.Get_Live_Duration,
-			Help: "Get vtuber flying hours",
-		},
-		[]string{"vtuber", "group", "state"},
-	)
+//	GetLive = prometheus.NewCounterVec(
+//		prometheus.CounterOpts{
+//			Name: config.Get_Live,
+//			Help: "Get vtuber live count",
+//		},
+//		[]string{"vtuber", "group", "state"},
+//	)
+//
+//	GetLiveDuration = prometheus.NewCounterVec(
+//		prometheus.CounterOpts{
+//			Name: config.Get_Live_Duration,
+//			Help: "Get vtuber flying hours",
+//		},
+//		[]string{"vtuber", "group", "state"},
+//	)
 )
 
 // Init will register a Prometheus metrics with the specified variables
@@ -54,7 +54,7 @@ func Init() {
 		GetFanArt,
 		GetSubs,
 		GetViews,
-		GetLive,
-		GetLiveDuration,
+		//GetLive,
+		//GetLiveDuration,
 	)
 }

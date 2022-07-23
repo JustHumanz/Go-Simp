@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strconv"
 	"sync"
 	"time"
@@ -74,6 +75,7 @@ type checkBlLiveeJob struct {
 
 func ReqRunningJob(client pilot.PilotServiceClient) {
 	Bili := &checkBlLiveeJob{}
+	hostname := engine.GetHostname()
 
 	for {
 
@@ -81,6 +83,7 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 			Service:     ServiceName,
 			Message:     "Request",
 			ServiceUUID: ServiceUUID,
+			Hostname:    hostname,
 		})
 		if err != nil {
 			log.Error(err)
@@ -137,7 +140,7 @@ func (i *checkBlLiveeJob) Run() {
 			if len(LiveBili) > 0 {
 				for _, Bili := range LiveBili {
 					for _, Member := range Agency.Members {
-						if Bili.Member.ID == Member.ID {
+						if Bili.Member.ID == Member.ID && Member.Active() {
 							log.WithFields(log.Fields{
 								"Agency": Agency.GroupName,
 								"Vtuber": Member.Name,
@@ -169,11 +172,12 @@ func (i *checkBlLiveeJob) Run() {
 
 								log.WithFields(log.Fields{
 									"Group":  Agency.GroupName,
-									"Vtuber": Member.EnName,
+									"Vtuber": Member.Name,
 									"Start":  ScheduledStart,
 								}).Info("Start live right now")
 
 								Bili.UpdateStatus(config.LiveStatus).
+									SetState(config.BiliLive).
 									UpdateSchdule(ScheduledStart).
 									UpdateViewers(strconv.Itoa(Status.Data.RoomInfo.Online)).
 									UpdateThumbnail(Status.Data.RoomInfo.Cover).
@@ -186,7 +190,16 @@ func (i *checkBlLiveeJob) Run() {
 										}
 									}())
 
-								err := Bili.UpdateLiveBili()
+									//Remove cache before update the status
+								err := Bili.RemoveCache(fmt.Sprintf("%d-%s-%s-%d", Member.ID, Member.Name, config.PastStatus, Member.BiliBiliID))
+								if err != nil {
+									log.WithFields(log.Fields{
+										"Agency": Agency.GroupName,
+										"Vtuber": Member.Name,
+									}).Error(err)
+								}
+
+								err = Bili.UpdateLiveBili()
 								if err != nil {
 									log.WithFields(log.Fields{
 										"Agency": Agency.GroupName,
@@ -208,17 +221,42 @@ func (i *checkBlLiveeJob) Run() {
 									})
 								}
 
+								//Add checker to check if vtuber was already live in yt or not
+								YoutubeLive := Member.IsYoutubeLive()
+								TwitchLive := Member.IsTwitchLive()
+								if YoutubeLive || TwitchLive {
+									log.WithFields(log.Fields{
+										"Agency":  Agency.GroupName,
+										"Vtuber":  Member.Name,
+										"Youtube": YoutubeLive,
+										"Twitch":  TwitchLive,
+									}).Info("vtuber already have live in other platform,skiping send notif")
+
+									continue
+								}
+
+								//shall i check it from api too?,let see later
+
 								engine.SendLiveNotif(&Bili, Bot)
 
 							} else if !Status.CheckScheduleLive() && Bili.Status == config.LiveStatus {
 								log.WithFields(log.Fields{
 									"Group":  Agency.GroupName,
-									"Vtuber": Member.EnName,
+									"Vtuber": Member.Name,
 									"Start":  Bili.Schedul,
 								}).Info("Past live stream")
 								engine.RemoveEmbed(strconv.Itoa(Bili.Member.BiliBiliRoomID), Bot)
 								Bili.UpdateEnd(time.Now()).
 									UpdateStatus(config.PastStatus)
+
+									//Remove cache before update the status
+								err := Bili.RemoveCache(fmt.Sprintf("%d-%s-%s-%d", Member.ID, Member.Name, config.LiveStatus, Member.BiliBiliID))
+								if err != nil {
+									log.WithFields(log.Fields{
+										"Agency": Agency.GroupName,
+										"Vtuber": Member.Name,
+									}).Error(err)
+								}
 
 								err = Bili.UpdateLiveBili()
 								if err != nil {

@@ -2,6 +2,13 @@
 import { RouterLink, RouterView } from "vue-router"
 import IconHome from "@/components/icons/IconHome.vue"
 import "./index.css"
+
+import { useGroupStore } from "@/stores/groups"
+import { onMounted } from "vue"
+
+onMounted(() => {
+  useGroupStore().fetchGroups()
+})
 </script>
 
 <template>
@@ -156,7 +163,7 @@ import "./index.css"
     </div>
   </nav>
 
-  <main class="mt-[4rem] min-h-[85vh]">
+  <main id="main">
     <RouterView />
   </main>
   <footer class="footer relative z-[1]">
@@ -241,33 +248,22 @@ library.add(
   faRightToBracket
 )
 
+import { useMemberStore } from "@/stores/members.js"
+
 export default {
   data() {
     return {
-      activeListMenu: null,
-      activeSubMenu: null,
-      menuDocs: false,
       isActiveVtuber: false,
       isActiveDocs: false,
       theme: null,
     }
   },
-  async created() {
+  async mounted() {
     this.getClickMenu()
-    this.unfocusMenu()
+    this.changeView()
 
-    // window.addEventListener("mousedown", (e) => {
-    //   const target = e.target.closest(".navbar-filter-item__link.sub-menu")
-
-    //   if (!target) return
-
-    //   if (this.activeSubMenu === target) {
-    //     target.parentElement.parentElement.parentElement.firstElementChild.focus()
-    //     this.activeSubMenu = null
-    //   } else {
-    //     this.activeSubMenu = target
-    //   }
-    // })
+    // get viewport height
+    window.addEventListener("resize", () => this.changeView())
 
     this.theme = localStorage.getItem("theme")
 
@@ -276,6 +272,12 @@ export default {
       async () => {
         this.isActiveVtuber = this.$route.path.includes("/vtuber")
         this.isActiveDocs = this.$route.path.includes("/docs")
+
+        if (
+          !this.$route.path.includes("/vtubers") &&
+          useMemberStore().menuFilter.open_advanced
+        )
+          useMemberStore().toggleadvanced()
       },
 
       { immediate: true }
@@ -301,95 +303,24 @@ export default {
   methods: {
     getClickMenu() {
       document.body.addEventListener("click", (e) => {
+        if (e.target.id === "router-link") {
+          e.preventDefault()
+          this.$router.push(e.target.getAttribute("href"))
+        }
+
         if (e.target.closest(".navbar-link")) {
           e.target.closest(".navbar-link").blur()
         }
-
-        if (this.$route.path.includes("/docs")) {
-          if (e.target.closest(".docs-menu")) {
-            const docsMenu = e.target.closest(".docs-menu")
-
-            this.menuDocs = !this.menuDocs
-            if (!this.menuDocs && document.activeElement === docsMenu) {
-              docsMenu.blur()
-            }
-          } else if (e.target.closest(".tab-list__link")) {
-            document.activeElement.blur()
-            this.menuDocs = false
-          } else this.menuDocs = false
-        }
-
-        if (!this.$route.path.includes("/vtubers")) {
-          this.activeListMenu = null
-          return
-        }
-
-        if (e.target.closest(".navbar-filter__link")) {
-          const navbarFilter = e.target.closest(".navbar-filter__link")
-
-          const liNavbarFilter = navbarFilter.parentElement
-
-          if (liNavbarFilter.classList.contains("disabled")) {
-            navbarFilter.blur()
-            return
-          }
-
-          switch (this.activeListMenu) {
-            case navbarFilter:
-              this.activeListMenu.blur()
-              this.activeListMenu = null
-              break
-            case null:
-              this.activeListMenu = navbarFilter
-              break
-            default:
-              this.activeListMenu = navbarFilter
-              break
-          }
-        } else if (e.target.closest(".navbar-filter-item__link")) {
-          const navbarFilterItem = e.target.closest(".navbar-filter-item__link")
-
-          if (!navbarFilterItem.classList.contains("sub-menu")) {
-            this.activeListMenu = null
-            navbarFilterItem.blur()
-          }
-        } else if (e.target.closest(".navbar-submenu-item__link")) {
-          const navbarSubItem = e.target.closest(".navbar-submenu-item__link")
-
-          this.activeListMenu = null
-          navbarSubItem.blur()
-        } else if (e.target.closest(".nav-search")) {
-          if (this.activeListMenu !== null) {
-            console.log("closing menu")
-            this.activeListMenu = null
-          }
-
-          const navbarSearchItem = e.target.closest(".nav-search")
-
-          navbarSearchItem.children[1].focus()
-        } else {
-          if (this.activeListMenu === null) return
-          console.log("closing menu")
-          this.activeListMenu = null
-        }
       })
     },
-    unfocusMenu() {
-      // when document unfocus
-      document.onblur = (e) => {
-        if (
-          this.activeListMenu &&
-          this.activeListMenu === document.activeElement
-        )
-          this.activeListMenu.blur()
-        else if (
-          !document.activeElement.classList.contains("nav-search__input")
-        )
-          document.activeElement.blur()
 
-        this.menuDocs = false
-        this.activeListMenu = null
-      }
+    changeView() {
+      // get viewport height
+      const main_height = window.innerHeight - 204
+      const mainEl = document.getElementById("main")
+
+      // set min-height for main element
+      if (mainEl) mainEl.style.minHeight = `${main_height}px`
     },
 
     darkMode() {
@@ -435,7 +366,7 @@ export default {
 <style lang="scss" scoped>
 .nav {
   font-family: "Nunito", sans-serif;
-  @apply fixed top-0 left-0 z-[11] flex h-16 w-screen select-none justify-center bg-cyan-500 shadow-md shadow-cyan-500/50 dark:bg-slate-700 dark:shadow-slate-700/50;
+  @apply sticky top-0 left-0 z-[20] flex h-16 w-screen select-none justify-center bg-cyan-500 shadow-md shadow-cyan-500/50 dark:bg-slate-700 dark:shadow-slate-700/50;
   .navbar {
     @apply mx-4 flex h-full w-full items-center justify-between md:w-[90%] md:justify-around lg:w-[85%];
 

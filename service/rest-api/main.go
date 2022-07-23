@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 	"strings"
@@ -11,6 +12,7 @@ import (
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
 	"github.com/JustHumanz/Go-Simp/pkg/database"
+	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
 	"github.com/google/uuid"
@@ -22,10 +24,11 @@ import (
 )
 
 var (
-	VtuberMembers []MembersPayload
-	VtuberAgency  []GroupPayload
+	VtuberMembers *[]MembersPayload
+	VtuberAgency  *[]GroupPayload
 	Payload       []*database.Group
 	ServiceUUID   = uuid.New().String()
+	WebHookURL    string
 )
 
 func init() {
@@ -51,6 +54,13 @@ func init() {
 		log.Panic(err)
 	}
 
+	if configfile.WebhookRequest == "" {
+		log.Fatalf("WebhookRequest not found")
+	}
+
+	WebHookURL = configfile.WebhookRequest
+	hostname := engine.GetHostname()
+
 	RequestPayload := func() {
 		var (
 			VtuberMembersTMP []MembersPayload
@@ -60,6 +70,7 @@ func init() {
 			Service:     config.ResetApiService,
 			Message:     "Request",
 			ServiceUUID: ServiceUUID,
+			Hostname:    hostname,
 		})
 		if err != nil {
 			log.Fatalf("Error when request payload: %s", err)
@@ -110,7 +121,7 @@ func init() {
 
 				log.WithFields(log.Fields{
 					"Group":  Agency.GroupName,
-					"Vtuber": Member.EnName,
+					"Vtuber": Member.Name,
 					"isYtLive": func() bool {
 						if isYtLive != nil {
 							return true
@@ -130,12 +141,6 @@ func init() {
 					Region:   Member.Region,
 					Status:   Member.Status,
 					Fanbase:  Member.Fanbase,
-					//Group: database.Group{
-					//	ID:              Agency.ID,
-					//	IconURL:         Agency.IconURL,
-					//	GroupName:       Agency.GroupName,
-					//	YoutubeChannels: Agency.YoutubeChannels,
-					//},
 					Group: map[string]interface{}{
 						"ID":        Agency.ID,
 						"IconURL":   Agency.IconURL,
@@ -246,8 +251,8 @@ func init() {
 			}
 		}
 
-		VtuberAgency = VtuberAgencyTMP
-		VtuberMembers = VtuberMembersTMP
+		VtuberAgency = &VtuberAgencyTMP
+		VtuberMembers = &VtuberMembersTMP
 	}
 
 	RequestPayload()
@@ -269,6 +274,10 @@ func main() {
 
 	router.HandleFunc("/members/", getMembers).Methods("GET")
 	router.HandleFunc("/members/{memberID}", getMembers).Methods("GET")
+
+	//Yes,you can make a request without any authentication so pls don't abuse the api
+	router.HandleFunc("/member/request/add", addVtuber).Methods("POST")
+	router.HandleFunc("/member/request/edit", patchVtuber).Methods("PATCH")
 
 	FanArt := router.PathPrefix("/fanart").Subrouter()
 	FanArt.HandleFunc("/", invalidPath).Methods("GET")
@@ -306,7 +315,7 @@ func main() {
 	LiveBili.HandleFunc("/group/{groupID}/{status}", getBilibili).Methods("GET")
 	LiveBili.HandleFunc("/member/{memberID}/{status}", getBilibili).Methods("GET")
 	router.Use(muxlogrus.NewLogger().Middleware)
-	http.ListenAndServe(":2525", LowerCaseURI(router))
+	http.ListenAndServe(":2525", engine.LowerCaseURI(router))
 }
 
 func invalidPath(w http.ResponseWriter, r *http.Request) {
@@ -319,178 +328,126 @@ func invalidPath(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusBadRequest)
 }
 
-//Need rework
-/*
-func getPrediction(w http.ResponseWriter, r *http.Request) {
-	idstr := mux.Vars(r)["memberID"]
-	days := r.FormValue("days")
-	target := r.FormValue("target")
-	state := r.FormValue("state")
-	var daysint = 7
-	var targetint int
-	if days != "" {
-		var err error
-		daysint, err = strconv.Atoi(days)
-		if err != nil {
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(MessageError{
-				Message: err.Error(),
-				Date:    time.Now(),
-			})
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
+func addVtuber(w http.ResponseWriter, r *http.Request) {
+	reqbdy, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Error(err)
 	}
 
-	if target != "" {
-		var err error
-		targetint, err = strconv.Atoi(target)
-		if err != nil {
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(MessageError{
-				Message: err.Error(),
-				Date:    time.Now(),
-			})
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
+	var newVtuber struct {
+		Name     string   `json:"Name"`
+		EnName   string   `json:"EN_Name"`
+		JpName   string   `json:"JP_Name"`
+		Twitter  Twitter  `json:"Twitter"`
+		Youtube  Youtube  `json:"Youtube"`
+		BiliBili BiliBili `json:"BiliBili"`
+		Twitch   Twitch   `json:"Twitch"`
+		Region   string   `json:"Region"`
+		Fanbase  string   `json:"Fanbase"`
 	}
-
-	if days != "" && target != "" {
+	err = json.Unmarshal(reqbdy, &newVtuber)
+	if err != nil || newVtuber.Name == "" {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(MessageError{
-			Message: "Not support multiple prediction",
+			Message: "Invalid request.check your request and payload",
 			Date:    time.Now(),
 		})
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	if state == "" {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(MessageError{
-			Message: "Nill state",
-			Date:    time.Now(),
-		})
-		w.WriteHeader(http.StatusBadRequest)
-		return
+	pldstr, err := json.MarshalIndent(newVtuber, "", "    ")
+	if err != nil {
+		log.Error(err)
 	}
 
-	if daysint > 10 || daysint < 0 {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(MessageError{
-			Message: "Can't predic more than 10 days",
-			Date:    time.Now(),
-		})
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	SendPayload(map[string]string{
+		"payload": string(pldstr),
+		"msg":     "New vtuber request",
+	})
 
-	if idstr != "" {
-		idint, err := strconv.Atoi(idstr)
-		if err != nil {
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(MessageError{
-				Message: err.Error(),
-				Date:    time.Now(),
-			})
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-		for _, Member := range VtuberMembers {
-			if Member.ID == int64(idint) {
-				FinalData := make(map[string]interface{})
-				isError := false
-				var Fetch = func(wg *sync.WaitGroup, State string, Days bool) {
-					defer wg.Done()
-					var DataPredic int
-					var err error
-					if Days {
-						DataPredic, err = engine.Prediction(database.Member{Name: Member.NickName}, State, daysint)
-						if err != nil {
-							log.Error(err)
-							isError = true
-						}
-					}
-					if err != nil {
-						log.Error(err)
-						isError = true
-					}
-
-					Data := map[string]interface{}{}
-					if State == "Twitter" {
-						Data["Current_followes/subscriber"] = Member.Twitter["Followers"]
-					} else if State == "Youtube" {
-						Yt := Member["Youtube"].(map[string]interface{})
-						Data["Current_followes/subscriber"] = Yt["Subscriber"]
-					} else if State == "BiliBili" {
-						Bl := Member["BiliBili"].(map[string]interface{})
-						Data["Current_followes/subscriber"] = Bl["Followers"]
-					}
-					if Days {
-						Data["Prediction"] = DataPredic
-					} else {
-						if Data["Current_followes/subscriber"].(int) < targetint {
-							Data["Prediction"] = targetint
-						} else {
-							isError = true
-						}
-					}
-
-					if targetint == 0 {
-						FinalData["Prediction_Days"] = time.Now().AddDate(0, 0, daysint)
-					}
-
-					FinalData[State] = Data
-				}
-
-				var wg sync.WaitGroup
-
-				for _, st := range strings.Split(state, ",") {
-					if st == "bilibili" {
-						st = "BiliBili"
-					}
-					if Member[strings.Title(st)] != nil {
-						wg.Add(1)
-						if targetint == 0 {
-							go Fetch(&wg, strings.Title(st), true)
-						} else {
-							go Fetch(&wg, strings.Title(st), false)
-							break
-						}
-					} else {
-						FinalData[strings.Title(st)] = nil
-					}
-				}
-
-				wg.Wait()
-
-				if !isError {
-					w.Header().Set("Access-Control-Allow-Origin", "*")
-					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(FinalData)
-					w.WriteHeader(http.StatusOK)
-				} else {
-					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(MessageError{
-						Message: "oops,something goes wrong",
-						Date:    time.Now(),
-					})
-					w.WriteHeader(http.StatusBadRequest)
-				}
-				return
-			}
-		}
-	}
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"error": nil,
+		"msg":   "success",
+	})
+	w.WriteHeader(http.StatusOK)
 }
-*/
+
+func patchVtuber(w http.ResponseWriter, r *http.Request) {
+	reqbdy, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Error(err)
+	}
+
+	type patch struct {
+		ID  int
+		Old struct {
+			Name     string   `json:"Name"`
+			EnName   string   `json:"EN_Name"`
+			JpName   string   `json:"JP_Name"`
+			Twitter  Twitter  `json:"Twitter"`
+			Youtube  Youtube  `json:"Youtube"`
+			BiliBili BiliBili `json:"BiliBili"`
+			Twitch   Twitch   `json:"Twitch"`
+			Region   string   `json:"Region"`
+			Fanbase  string   `json:"Fanbase"`
+			Status   string   `json:"Status"`
+		}
+		New struct {
+			Name     string   `json:"Name"`
+			EnName   string   `json:"EN_Name"`
+			JpName   string   `json:"JP_Name"`
+			Twitter  Twitter  `json:"Twitter"`
+			Youtube  Youtube  `json:"Youtube"`
+			BiliBili BiliBili `json:"BiliBili"`
+			Twitch   Twitch   `json:"Twitch"`
+			Region   string   `json:"Region"`
+			Fanbase  string   `json:"Fanbase"`
+			Status   string   `json:"Status"`
+		}
+	}
+
+	var PatchVtuber patch
+	err = json.Unmarshal(reqbdy, &PatchVtuber)
+	if err != nil || PatchVtuber.ID == 0 {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(MessageError{
+			Message: "Invalid request.check your request and payload",
+			Date:    time.Now(),
+		})
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	pldstr, err := json.MarshalIndent(PatchVtuber, "", "    ")
+	if err != nil {
+		log.Error(err)
+	}
+
+	SendPayload(map[string]string{
+		"payload": string(pldstr),
+		"msg":     "Update vtuber",
+	})
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"error": nil,
+		"msg":   "success",
+	})
+	w.WriteHeader(http.StatusOK)
+}
 
 func getGroup(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)["groupID"]
 	if vars != "" {
 		key := strings.Split(vars, ",")
 		var GroupsTMP []GroupPayload
-		for _, Group := range VtuberAgency {
+		for _, Group := range *VtuberAgency {
 			for _, GroupIDstr := range key {
 				GroupIDint, err := strconv.Atoi(GroupIDstr)
 				if err != nil {
@@ -610,7 +567,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 	if idstr != "" {
 		var Members []MembersPayload
 		key := strings.Split(idstr, ",")
-		for _, Member := range VtuberMembers {
+		for _, Member := range *VtuberMembers {
 			for _, MemberStr := range key {
 				MemberInt, err := strconv.Atoi(MemberStr)
 				if err != nil {
@@ -697,7 +654,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		for _, Member := range VtuberMembers {
+		for _, Member := range *VtuberMembers {
 			memberAgencyID := Member.Group.(map[string]interface{})
 
 			if region != "" {
@@ -740,7 +697,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 
 	} else if region != "" {
 		var Members []MembersPayload
-		for _, v := range VtuberMembers {
+		for _, v := range *VtuberMembers {
 			if strings.EqualFold(region, v.Region) {
 				Members = append(Members, v)
 			}
@@ -775,7 +732,7 @@ func getMembers(w http.ResponseWriter, r *http.Request) {
 
 	} else {
 		var Members []simpleMember
-		for _, Member := range VtuberMembers {
+		for _, Member := range *VtuberMembers {
 			Members = append(Members, FixMember(Member))
 		}
 		if Members != nil {
@@ -812,11 +769,33 @@ type MessageError struct {
 	Date    time.Time
 }
 
-func LowerCaseURI(h http.Handler) http.Handler {
-	fn := func(w http.ResponseWriter, r *http.Request) {
-		r.URL.Path = strings.ToLower(r.URL.Path)
-		h.ServeHTTP(w, r)
+func SendPayload(data map[string]string) {
+	//Send message
+	PayloadBytes, err := json.Marshal(map[string]interface{}{
+		"content":     data["msg"],
+		"embeds":      nil,
+		"attachments": nil,
+	})
+	if err != nil {
+		log.Error(err)
+	}
+	err = network.CurlPost(WebHookURL, PayloadBytes)
+	if err != nil {
+		log.Error(err)
 	}
 
-	return http.HandlerFunc(fn)
+	//Send payload
+	msg := "```json\n" + data["payload"] + "```"
+	PayloadBytes, err = json.Marshal(map[string]interface{}{
+		"content":     msg,
+		"embeds":      nil,
+		"attachments": nil,
+	})
+	if err != nil {
+		log.Error(err)
+	}
+	err = network.CurlPost(WebHookURL, PayloadBytes)
+	if err != nil {
+		log.Error(err)
+	}
 }

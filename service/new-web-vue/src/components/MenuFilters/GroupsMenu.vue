@@ -22,10 +22,12 @@
       class="navbar-filter__img"
       v-else-if="current_group && $route.params.id && $route.params.id != 10"
     />
-    <span class="navbar-filter__span" v-if="!current_group || !$route.params.id"
+    <span
+      class="navbar-filter__span-mobile"
+      v-if="!current_group || !$route.params.id"
       >Groups</span
     >
-    <span class="navbar-filter__span" v-else>{{
+    <span class="navbar-filter__span-mobile" v-else>{{
       (
         current_group.GroupName.charAt(0).toUpperCase() +
         current_group.GroupName.slice(1)
@@ -43,6 +45,7 @@
     <li class="navbar-filter-item" v-for="group in groups" :key="group.ID">
       <router-link
         :to="`/vtubers/${group.ID || ''}`"
+        @click="getVtuberData(group.ID)"
         class="navbar-filter-item__link"
       >
         <font-awesome-icon
@@ -75,74 +78,61 @@
 </template>
 
 <script>
-import axios from "axios"
-import Config from "../../config.json"
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faUsers, faUser } from "@fortawesome/free-solid-svg-icons"
 
 library.add(faUsers, faUser)
 
+import { useGroupStore } from "@/stores/groups"
+import { useMemberStore } from "@/stores/members.js"
+
 // read props groupid
 export default {
-  data() {
-    return {
-      current_group: null,
-      group_id: null,
-    }
-  },
-  props: {
-    groups: {
-      type: Array,
-      default: [],
-    },
-  },
-  async created() {
+  async mounted() {
     document.title = "List Vtubers - Vtbot"
 
-    // make new promise when this.groups is not empty
-    await new Promise((resolve) => {
-      this.$watch(
-        () => this.groups,
-        () => {
-          if (this.groups.length > 0) {
-            resolve()
-          }
-        },
-        { immediate: true }
-      )
-    })
-
     this.$watch(
-      () => this.$route.params,
-      () => (this.group_id = this.$route.params?.id || null),
-      { immediate: true }
-    )
+      () => this.$route,
+      (to, from) => {
+        const group =
+          useGroupStore().groups.data.find(
+            (group) => group.ID == this.$route.params?.id
+          ) || null
 
-    this.$watch(
-      () => this.group_id,
-      async () => {
-        this.current_group = await this.groups.find(
-          (group) => group.ID == this.$route.params.id
-        )
-
-        if (this.current_group) {
-          document.title = `${
-            this.current_group?.GroupName.charAt(0).toUpperCase() +
-            this.current_group?.GroupName.slice(1).replace("_", " ")
-          } - List Vtubers`
-        } else {
-          document.title = "List Vtubers - Vtbot"
-        }
-
-        if (this.$route.path.includes("/vtubers")) {
-          if (this.current_group)
-            console.log(`Get Group: ${this.current_group.GroupName}`)
-          else console.log(`Cannot get group`)
-        }
-      },
-      { immediate: true }
+        if (group && to.params?.id !== from.params?.id)
+          console.log(`Get Group: ${group.GroupName}`)
+      }
     )
   },
-  methods: {},
+  computed: {
+    groups() {
+      return [
+        { GroupName: "All Vtubers", GroupIcon: "" },
+        ...useGroupStore().groups.data,
+      ]
+    },
+    current_group() {
+      const group =
+        useGroupStore().groups.data.find(
+          (group) => group.ID == this.$route.params?.id
+        ) || null
+
+      document.title = group
+        ? this.convertToNormalText(group.GroupName) + " - List Vtubers"
+        : "List Vtubers - Vtbot"
+
+      return group
+    },
+  },
+  methods: {
+    convertToNormalText(name) {
+      return name.charAt(0).toUpperCase() + name.slice(1).replace("_", " ")
+    },
+    async getVtuberData(id) {
+      await useMemberStore().fetchMembers(id || null)
+      useMemberStore().filterMembers()
+      useMemberStore().sortingMembers()
+    },
+  },
 }
 </script>

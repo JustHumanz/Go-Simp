@@ -1,5 +1,6 @@
 <script setup>
 import AmeLoading from "../components/AmeComp/AmeLoading.vue"
+import AmeError from "../components/AmeComp/AmeError.vue"
 import VtuberHeader from "../components/VtuberDetails/VtuberHeader.vue"
 import Detail from "../components/VtuberDetails/Detail.vue"
 import YoutubeCount from "../components/VtuberDetails/YoutubeCount.vue"
@@ -19,6 +20,13 @@ import TwitterCount from "../components/VtuberDetails/TwitterCount.vue"
     </span>
   </div>
   <AmeLoading v-if="!vtuber && !error_status" class="!h-screen" />
+  <AmeError
+    v-if="!vtuber && error_status && error_status === 404"
+    type="error"
+    img="laptop"
+    title="Your vtuber is not available"
+    :description="`Check another available vtuber, or you can request a member vtuber ${link_request}`"
+  />
   <section class="vtuber-details" v-if="vtuber">
     <VtuberHeader :vtuber="vtuber" />
     <Detail :vtuber="vtuber" />
@@ -31,7 +39,7 @@ import TwitterCount from "../components/VtuberDetails/TwitterCount.vue"
 
 <style lang="scss" scoped>
 .title {
-  @apply fixed top-16 z-[9] flex w-full select-none flex-wrap bg-blue-400 py-2 text-2xl font-semibold uppercase dark:bg-slate-500;
+  @apply sticky top-16 z-[9] flex w-full select-none flex-wrap bg-blue-400 py-2 text-2xl font-semibold uppercase dark:bg-slate-500;
 
   &__span {
     @apply mx-auto w-[95%] text-white md:w-[75%] lg:w-[70%];
@@ -46,14 +54,14 @@ import TwitterCount from "../components/VtuberDetails/TwitterCount.vue"
 }
 
 .vtuber-details {
-  @apply mx-auto mt-28 w-full pb-4 sm:w-[90%] md:w-[80%] lg:w-[75%];
+  @apply mx-auto w-full pb-4 sm:w-[90%] md:w-[80%] lg:w-[75%];
 }
 </style>
 
 <script>
 import axios from "axios"
 import Config from "../config.json"
-import regionConfig from "../region.json"
+import regionConfig from "../regions.json"
 import { CountTo } from "vue3-count-to"
 import { library } from "@fortawesome/fontawesome-svg-core"
 
@@ -97,6 +105,11 @@ export default {
     console.log(this.vtuber)
 
     document.title = this.vtuber.EnName + " - Vtuber Details"
+  },
+  computed: {
+    link_request() {
+      return `<a href="/new-vtuber" id="router-link" class="ame-error-text__link">here</a>`
+    },
   },
 }
 </script>

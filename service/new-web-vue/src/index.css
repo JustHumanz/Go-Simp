@@ -9,7 +9,7 @@
 }
 
 body {
-  @apply transition-colors duration-100 ease-in-out dark:bg-gray-600 dark:text-white;
+  @apply transition-colors duration-100 ease-in-out overflow-x-hidden dark:bg-gray-600 dark:text-white;
 }
 
 @media (max-width: 767px) {

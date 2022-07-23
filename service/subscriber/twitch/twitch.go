@@ -2,13 +2,102 @@ package main
 
 import (
 	"context"
+	"encoding/json"
+	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
+	"github.com/JustHumanz/Go-Simp/pkg/database"
 	engine "github.com/JustHumanz/Go-Simp/pkg/engine"
+	"github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
+	"github.com/JustHumanz/Go-Simp/service/utility/runfunc"
+	"github.com/bwmarrin/discordgo"
+	"github.com/google/uuid"
 	"github.com/nicklaw5/helix"
+	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 )
+
+var (
+	Bot          *discordgo.Session
+	configfile   config.ConfigFile
+	gRCPconn     pilot.PilotServiceClient
+	TwitchClient *helix.Client
+	ServiceUUID  = uuid.New().String()
+	Agency       []database.Group
+)
+
+const (
+	ServiceName = config.SubscriberService + "Twitch"
+)
+
+//Init service
+func init() {
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true, DisableColors: true})
+	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
+
+}
+
+func main() {
+	//Get config file from pilot
+	res, err := gRCPconn.GetBotPayload(context.Background(), &pilot.ServiceMessage{
+		Message:     "Init " + ServiceName + " service",
+		Service:     ServiceName,
+		ServiceUUID: ServiceUUID,
+	})
+	if err != nil {
+		if configfile.Discord != "" {
+			pilot.ReportDeadService(err.Error(), ServiceName)
+		}
+		log.Error("Error when request payload: %s", err)
+	}
+	err = json.Unmarshal(res.ConfigFile, &configfile)
+	if err != nil {
+		log.Error(err)
+	}
+
+	configfile.InitConf()
+	Bot = engine.StartBot(false)
+	TwitchClient = engine.GetTwitchTkn()
+
+	database.Start(configfile)
+
+	resp, err := TwitchClient.RequestAppAccessToken([]string{"user:read:email"})
+	if err != nil {
+		log.Panic(err)
+	}
+
+	TwitchClient.SetAppAccessToken(resp.Data.AccessToken)
+
+	c := cron.New()
+	c.Start()
+	c.AddFunc(config.TwitchFollowers, CheckTwitch)
+	log.Info("Add twitch followers to cronjob")
+
+	go pilot.RunHeartBeat(gRCPconn, ServiceName, ServiceUUID)
+
+	hostname := engine.GetHostname()
+
+	go func() {
+		tmp, err := gRCPconn.GetAgencyPayload(context.Background(), &pilot.ServiceMessage{
+			Service:     ServiceName,
+			Message:     "Refresh payload",
+			ServiceUUID: ServiceUUID,
+			Hostname:    hostname,
+		})
+		if err != nil {
+			log.Error(err)
+		}
+
+		err = json.Unmarshal(tmp.AgencyVtubers, &Agency)
+		if err != nil {
+			log.Error(err)
+		}
+
+		time.Sleep(1 * time.Hour)
+	}()
+	runfunc.Run(Bot)
+}
 
 func CheckTwitch() {
 	for _, Group := range Agency {
@@ -61,13 +150,6 @@ func CheckTwitch() {
 				}
 
 				SendNotif := func(SubsCount, Viwers string) {
-					err = Member.RemoveSubsCache()
-					if err != nil {
-						log.WithFields(log.Fields{
-							"Agency": Group.GroupName,
-							"Vtuber": Member.Name,
-						}).Error(err)
-					}
 
 					Color, err := engine.GetColor(config.TmpDir, Member.TwitchAvatar)
 					if err != nil {
@@ -77,7 +159,7 @@ func CheckTwitch() {
 						}).Error(err)
 					}
 
-					SendNude(engine.NewEmbed().
+					engine.SubsSendEmbed(engine.NewEmbed().
 						SetAuthor(Group.GroupName, Group.IconURL, "https://twitch.tv/"+Member.TwitchName).
 						SetTitle(engine.FixName(Member.EnName, Member.JpName)).
 						SetThumbnail(config.TwitchIMG).
@@ -86,7 +168,7 @@ func CheckTwitch() {
 						AddField("Twitch viwers count", Viwers).
 						InlineAllFields().
 						SetURL("https://twitch.tv/"+Member.TwitchName).
-						SetColor(Color).MessageEmbed, Group, Member)
+						SetColor(Color).MessageEmbed, Group, Member, Bot)
 
 				}
 				if TotalFollowers != TwitchFollowDB.TwitchFollow {

@@ -2484,6 +2484,24 @@
       "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
+    },
+    {
+      "Name": "Salome",
+      "EN_Name": "Hyakumantenbara Salome",
+      "JP_Name": "壱百満天原サロメ",
+      "Twitter": {
+        "Twitter_Fanart": "#サロメ百万展",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "1000000lome"
+      },
+      "Youtube": {
+        "Yt_ID": "UCgIfLpQvelloDi8I0Ycbwpg"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "Salomate",
+      "Status": "Active"
     }
   ]
 }

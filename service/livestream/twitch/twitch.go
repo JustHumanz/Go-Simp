@@ -88,12 +88,14 @@ type checkTwcJob struct {
 
 func ReqRunningJob(client pilot.PilotServiceClient) {
 	Twitch := &checkTwcJob{}
+	hostname := engine.GetHostname()
 
 	for {
 		res, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
 			Service:     ServiceName,
 			Message:     "Request",
 			ServiceUUID: ServiceUUID,
+			Hostname:    hostname,
 		})
 		if err != nil {
 			log.Error(err)
@@ -225,6 +227,20 @@ func (i *checkTwcJob) Run() {
 										MetricData: bit,
 										State:      config.LiveStatus,
 									})
+								}
+
+								//Add checker to check if vtuber was already live in yt or not
+								YoutubeLive := Member.IsYoutubeLive()
+								BiliBiliLive := Member.IsBiliBiliLive()
+								if YoutubeLive || BiliBiliLive {
+									log.WithFields(log.Fields{
+										"Agency":   Group.GroupName,
+										"Vtuber":   Member.Name,
+										"Youtube":  YoutubeLive,
+										"BiliBili": BiliBiliLive,
+									}).Info("vtuber already have live in other platform,skiping send notif")
+
+									continue
 								}
 
 								engine.SendLiveNotif(ResultDB, Bot)

@@ -1,7 +1,10 @@
 <template>
-  <a href="#" class="navbar-filter__link" onclick="return false"> Filters </a>
+  <a href="#" class="navbar-filter__link" onclick="return false">
+    <font-awesome-icon class="fa-fw" icon="filter" />
+    <span class="navbar-filter__span"> Filters</span>
+  </a>
   <ul class="navbar-filter-items">
-    <li class="navbar-filter-item" v-if="filters && filters.region.length > 1">
+    <li class="navbar-filter-item" v-if="getRegions.length > 1">
       <a
         href="#"
         class="navbar-filter-item__link sub-menu"
@@ -15,10 +18,11 @@
           <router-link
             :to="{
               params: { id: $route.params.id },
-              query: { ...plat, ...inac, ...sort },
+              query: urlParams({ region: '' }),
             }"
+            @click="changeFilter()"
             class="navbar-submenu-item__link"
-            :class="{ active: !reg.reg }"
+            :class="{ active: !activeFilter }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
@@ -27,31 +31,41 @@
             <span class="navbar-submenu-item__span">All Regions</span>
           </router-link>
         </li>
-        <li
-          class="navbar-submenu-item"
-          v-for="region in filters.region"
-          :key="region"
-        >
+        <li class="navbar-submenu-item" v-for="region in getRegions">
           <router-link
             :to="{
               params: { id: $route.params.id },
-              query: { reg: region.code, ...plat, ...inac, ...sort },
+              query: urlParams({ region: region.code }),
             }"
+            @click="changeFilter()"
             class="navbar-submenu-item__link"
-            :class="{ active: reg.reg == region.code }"
+            :class="{
+              active: activeFilter?.includes(region.code.toLowerCase()),
+            }"
+            :alt="region.name"
           >
             <img
               draggable="false"
-              :src="`/assets/flags/${region.flagCode}.svg`"
+              :src="`/assets/flags/${region.code.toLowerCase()}.svg`"
               :alt="region.name"
               class="navbar-submenu-item__img"
+              onerror="this.src='/assets/flags/none.svg'"
+              v-if="region.code"
             />
+            <img
+              draggable="false"
+              src="/assets/flags/none.svg"
+              :alt="region.name"
+              class="navbar-submenu-item__img"
+              v-else
+            />
+
             <span class="navbar-submenu-item__span">{{ region.name }}</span>
           </router-link>
         </li>
       </ul>
     </li>
-    <li class="navbar-filter-item" v-if="filters && platform.length > 1">
+    <li class="navbar-filter-item" v-if="platforms.length > 1">
       <a
         href="#"
         class="navbar-filter-item__link sub-menu"
@@ -66,10 +80,11 @@
           <router-link
             :to="{
               params: { id: $route.params.id },
-              query: { ...reg, ...inac, ...sort },
+              query: urlParams({ platform: '' }),
             }"
+            @click="changeFilter()"
             class="navbar-submenu-item__link"
-            :class="{ active: !plat.plat }"
+            :class="{ active: !plat }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
@@ -78,14 +93,15 @@
             <span class="navbar-submenu-item__span">All Platform</span>
           </router-link>
         </li>
-        <li class="navbar-submenu-item" v-if="filters.youtube">
+        <li class="navbar-submenu-item" v-if="platforms.includes(`youtube`)">
           <router-link
             :to="{
               params: { id: $route.params.id },
-              query: { ...reg, plat: 'yt', ...inac, ...sort },
+              query: urlParams({ platform: 'yt' }),
             }"
+            @click="changeFilter()"
             class="navbar-submenu-item__link"
-            :class="{ active: plat.plat == 'yt' }"
+            :class="{ active: plat == 'yt' }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
@@ -94,14 +110,15 @@
             <span class="navbar-submenu-item__span">YouTube</span>
           </router-link>
         </li>
-        <li class="navbar-submenu-item" v-if="filters.twitch">
+        <li class="navbar-submenu-item" v-if="platforms.includes(`twitch`)">
           <router-link
             :to="{
               params: { id: $route.params.id },
-              query: { ...reg, plat: 'tw', ...inac, ...sort },
+              query: urlParams({ platform: 'tw' }),
             }"
+            @click="changeFilter()"
             class="navbar-submenu-item__link"
-            :class="{ active: plat.plat == 'tw' }"
+            :class="{ active: plat == 'tw' }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
@@ -110,14 +127,15 @@
             <span class="navbar-submenu-item__span">Twitch</span>
           </router-link>
         </li>
-        <li class="navbar-submenu-item" v-if="filters.bilibili">
+        <li class="navbar-submenu-item" v-if="platforms.includes(`bilibili`)">
           <router-link
             :to="{
               params: { id: $route.params.id },
-              query: { ...reg, plat: 'bl', ...inac, ...sort },
+              query: urlParams({ platform: 'bl' }),
             }"
+            @click="changeFilter()"
             class="navbar-submenu-item__link"
-            :class="{ active: plat.plat == 'bl' }"
+            :class="{ active: plat == 'bl' }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
@@ -128,7 +146,8 @@
         </li>
       </ul>
     </li>
-    <li class="navbar-filter-item" v-if="filters && filters.inactive">
+
+    <li class="navbar-filter-item" v-if="livePlatforms.length > 0">
       <a
         href="#"
         class="navbar-filter-item__link sub-menu"
@@ -136,9 +155,9 @@
       >
         <font-awesome-icon
           class="fa-fw navbar-filter-item__svg"
-          icon="filter"
+          icon="circle"
         />
-        <span class="navbar-filter-item__span">Other</span>
+        <span class="navbar-filter-item__span">Live Platform</span>
       </a>
 
       <ul class="navbar-submenu-items">
@@ -146,35 +165,170 @@
           <router-link
             :to="{
               params: { id: $route.params.id },
-              query: { ...reg, ...plat, ...sort },
+              query: urlParams({ live: '' }),
             }"
+            @click="changeFilter()"
             class="navbar-submenu-item__link"
-            :class="{ active: !inac.inac }"
+            :class="{ active: !liveplat }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
-              icon="ban"
+              icon="video"
             />
-            <span class="navbar-submenu-item__span">All</span>
+            <span class="navbar-submenu-item__span">All Lives</span>
           </router-link>
         </li>
-        <li class="navbar-submenu-item">
+        <li
+          class="navbar-submenu-item"
+          v-if="livePlatforms.includes(`youtube`)"
+        >
           <router-link
             :to="{
               params: { id: $route.params.id },
-              query: { ...reg, ...plat, inac: 'true', ...sort },
+              query: urlParams({ live: 'yt' }),
             }"
+            @click="changeFilter()"
             class="navbar-submenu-item__link"
-            :class="{ active: inac.inac == 'true' }"
+            :class="{ active: liveplat == 'yt' }"
+          >
+            <font-awesome-icon
+              class="fa-fw navbar-submenu-item__svg"
+              :icon="['fab', 'youtube']"
+            />
+            <span class="navbar-submenu-item__span">YouTube</span>
+          </router-link>
+        </li>
+        <li class="navbar-submenu-item" v-if="livePlatforms.includes(`twitch`)">
+          <router-link
+            :to="{
+              params: { id: $route.params.id },
+              query: urlParams({ live: 'tw' }),
+            }"
+            @click="changeFilter()"
+            class="navbar-submenu-item__link"
+            :class="{ active: liveplat == 'tw' }"
+          >
+            <font-awesome-icon
+              class="fa-fw navbar-submenu-item__svg"
+              :icon="['fab', 'twitch']"
+            />
+            <span class="navbar-submenu-item__span">Twitch</span>
+          </router-link>
+        </li>
+        <li
+          class="navbar-submenu-item"
+          v-if="livePlatforms.includes(`bilibili`)"
+        >
+          <router-link
+            :to="{
+              params: { id: $route.params.id },
+              query: urlParams({ live: 'bl' }),
+            }"
+            @click="changeFilter()"
+            class="navbar-submenu-item__link"
+            :class="{ active: liveplat == 'bl' }"
+          >
+            <font-awesome-icon
+              class="fa-fw navbar-submenu-item__svg"
+              :icon="['fab', 'bilibili']"
+            />
+            <span class="navbar-submenu-item__span">Bilibili</span>
+          </router-link>
+        </li>
+      </ul>
+    </li>
+
+    <li
+      class="navbar-filter-item"
+      v-if="livePlatforms.length > 0 || inactiveCheck"
+    >
+      <a
+        href="#"
+        class="navbar-filter-item__link sub-menu"
+        onclick="return false"
+      >
+        <font-awesome-icon
+          class="fa-fw navbar-filter-item__svg"
+          icon="people-group"
+        />
+        <span class="navbar-filter-item__span">Groups</span>
+      </a>
+      <ul class="navbar-submenu-items">
+        <li class="navbar-submenu-item" v-if="livePlatforms.length > 0">
+          <router-link
+            :to="{
+              params: { id: $route.params.id },
+              query: urlParams({ liveOnly: 'toggle' }),
+            }"
+            @click="changeFilter()"
+            class="navbar-submenu-item__link"
+            :class="{ active: liveonly === 'true' }"
+          >
+            <font-awesome-icon
+              class="fa-fw navbar-submenu-item__svg"
+              icon="users"
+            />
+            <span class="navbar-submenu-item__span">Live Only</span>
+          </router-link>
+        </li>
+
+        <li class="navbar-submenu-item" v-if="inactiveCheck">
+          <router-link
+            :to="{
+              params: { id: $route.params.id },
+              query: urlParams({ inactive: 'toggle' }),
+            }"
+            @click="changeFilter()"
+            class="navbar-submenu-item__link"
+            :class="{ active: inac == 'true' }"
           >
             <font-awesome-icon
               class="fa-fw navbar-submenu-item__svg"
               icon="skull"
             />
-            <span class="navbar-submenu-item__span">Inactive</span>
+            <span class="navbar-submenu-item__span">Inactive Only</span>
           </router-link>
         </li>
       </ul>
+    </li>
+
+    <li
+      class="navbar-filter-item"
+      v-if="
+        getRegions.length > 1 ||
+        platforms.length > 1 ||
+        livePlatforms.length > 1
+      "
+    >
+      <a
+        href="#"
+        class="navbar-filter-item__link"
+        onclick="return false"
+        @click="open_advanced_filter()"
+      >
+        <font-awesome-icon
+          class="fa-fw navbar-filter-item__svg"
+          icon="plus-circle"
+        />
+        <span class="navbar-filter-item__span">Advanced</span>
+      </a>
+    </li>
+    <li class="navbar-filter-item">
+      <router-link
+        router-link
+        :to="{
+          params: { id: $route.params.id },
+          query: removeAll(),
+        }"
+        @click="changeFilter()"
+        class="navbar-filter-item__link"
+      >
+        <font-awesome-icon
+          class="fa-fw navbar-filter-item__svg"
+          icon="arrows-rotate"
+        />
+        <span class="navbar-filter-item__span">Reset All Filters</span>
+      </router-link>
     </li>
   </ul>
 </template>
@@ -189,7 +343,11 @@ import {
   faSkull,
   faEarthAmericas,
   faCirclePlay,
-  faBan,
+  faPlusCircle,
+  faArrowsRotate,
+  faUser,
+  faUserCheck,
+  faPeopleGroup,
 } from "@fortawesome/free-solid-svg-icons"
 
 // Add icon youtube, twitch, and bilibili from font-awesome-brands
@@ -210,57 +368,122 @@ library.add(
   faBilibili,
   faEarthAmericas,
   faCirclePlay,
-  faBan
+  faPlusCircle,
+  faArrowsRotate,
+  faUser,
+  faUserCheck,
+  faPeopleGroup
 )
 
+import regionConfig from "@/regions.json"
+import { useMemberStore } from "@/stores/members.js"
+
 export default {
-  props: {
-    filters: {
-      type: Object,
-      default: null,
-    },
-  },
-  data() {
-    return {
-      platform: [],
-      reg: {},
-      plat: {},
-      inac: {},
-      sort: {},
-    }
-  },
   created() {
-    this.$watch(
-      () => this.filters,
-      () => {
-        this.platform = []
-
-        if (this.filters) {
-          if (this.filters.youtube) this.platform.push("youtube")
-          if (this.filters.twitch) this.platform.push("twitch")
-          if (this.filters.bilibili) this.platform.push("bilibili")
-        }
-      },
-      { immediate: true }
-    )
-
     this.$watch(
       () => this.$route.query,
       () => {
-        this.reg = this.$route.query.reg ? { reg: this.$route.query.reg } : {}
+        // set all data this.$route.query to this
+        this.reg = this.$route.query.reg
         this.plat = this.$route.query.plat
-          ? { plat: this.$route.query.plat }
-          : {}
+        this.liveplat = this.$route.query.liveplat
+        this.liveonly = this.$route.query.liveonly
         this.inac = this.$route.query.inac
-          ? { inac: this.$route.query.inac }
-          : {}
-        this.sort = this.$route.query.sort
-          ? { sort: this.$route.query.sort }
-          : {}
       },
       { immediate: true }
     )
   },
-  methods: {},
+  computed: {
+    getRegions() {
+      const store = useMemberStore()
+
+      const regions = store.menuFilter.region.map(
+        (region) =>
+          regionConfig.find(
+            (r) => r.code.toLowerCase() == region.toLowerCase()
+          ) || {
+            code: region,
+            name: `${region} Region`,
+          }
+      )
+
+      regions.sort((a, b) => (a.name < b.name ? -1 : 1))
+
+      return regions
+    },
+
+    platforms() {
+      return useMemberStore().menuFilter.platform
+    },
+    livePlatforms() {
+      return useMemberStore().menuFilter.live
+    },
+    inactiveCheck() {
+      return useMemberStore().menuFilter.inactive
+    },
+    activeFilter() {
+      return useMemberStore().filter?.region
+    },
+  },
+  methods: {
+    async changeFilter() {
+      const store = useMemberStore()
+
+      await new Promise((resolve) => setTimeout(resolve, 0))
+      store.filterMembers()
+      store.sortingMembers()
+    },
+    urlParams({
+      region = null,
+      platform = null,
+      live = null,
+      liveOnly = null,
+      inactive = null,
+    }) {
+      const { reg, plat, liveplat, liveonly, inac } = this.$route.query
+
+      const params = new Object()
+
+      if ((!reg && region) || (reg && region !== "")) params.reg = region || reg
+
+      if ((!plat && platform) || (plat && platform !== ""))
+        params.plat = platform || plat
+
+      if ((!liveplat && live) || (liveplat && live !== ""))
+        params.liveplat = live || liveplat
+
+      if (liveOnly) {
+        switch (liveonly) {
+          case "true":
+            break
+          default:
+            params.liveonly = "true"
+        }
+      } else if (!inactive) {
+        params.liveonly = liveonly
+      }
+
+      if (inactive) {
+        switch (inac) {
+          case "true":
+            break
+          default:
+            params.inac = "true"
+        }
+      } else if (!liveOnly) {
+        params.inac = inac
+      }
+
+      return params
+    },
+    removeAll() {
+      const params = new Object()
+
+      return params
+    },
+    open_advanced_filter() {
+      useMemberStore().toggleadvanced()
+    },
+  },
 }
 </script>

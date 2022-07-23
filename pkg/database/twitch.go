@@ -29,6 +29,10 @@ func (Data *LiveStream) UpdateTwitch() error {
 }
 
 func (Data *Member) GetTwitchLiveStream(status string) (LiveStream, error) {
+	if Data.TwitchName == "" {
+		return LiveStream{}, nil
+	}
+
 	var (
 		Query string
 		ctx   = context.Background()

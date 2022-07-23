@@ -10,136 +10,10 @@ import (
 	"time"
 
 	config "github.com/JustHumanz/Go-Simp/pkg/config"
+	"github.com/go-redis/redis/v8"
 	log "github.com/sirupsen/logrus"
 )
 
-/*
-//YtGetStatusMap Get Youtube data from status
-func YtGetStatus(Payload map[string]interface{}) ([]LiveStream, string, error) {
-	var (
-		Data          []LiveStream
-		list          LiveStream
-		Key           []string //= strconv.Itoa(int(Member)) + Status + Region + Uniq
-		rows          *sql.Rows
-		err           error
-		ctx           = context.Background()
-		Group, Member int64
-		Status        = Payload["Status"].(string)
-		Region        string
-	)
-
-	if Payload["GroupID"] != nil {
-		Group = Payload["GroupID"].(int64)
-		Key = append(Key, strconv.Itoa(int(Group)), Payload["GroupName"].(string))
-		if Payload["Region"] != nil {
-			Region = Payload["Region"].(string)
-			if Region != "" {
-				Key = append(Key, Region)
-			}
-		}
-	} else {
-		Member = Payload["MemberID"].(int64)
-		Key = append(Key, strconv.Itoa(int(Member)), Payload["MemberName"].(string))
-	}
-
-	Key2 := strings.Join(append(Key, Status, Payload["State"].(string)), "-")
-
-	val, err := LiveCache.LRange(ctx, Key2, 0, -1).Result()
-	if err != nil {
-		return nil, Key2, err
-	}
-	if len(val) == 0 {
-		limit := func() int {
-			if Payload["State"].(string) == config.Sys {
-				return 40
-			} else {
-				if (Group != 0 && Status != "live") || (Member != 0 && Status == "past") {
-					return 3
-				} else {
-					return 2525
-				}
-			}
-
-		}()
-		Query := ""
-		if Status == config.PastStatus {
-			Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Youtube.Status=? Order by EndStream DESC Limit ?"
-		} else if Status == config.UpcomingStatus {
-			Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Youtube.Status=? Order by PublishedAt DESC Limit ?"
-		} else {
-			Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where (VtuberGroup.id=? or VtuberMember.id=?) AND Youtube.Status=? Order by ScheduledStart DESC Limit ?"
-		}
-
-		if Region != "" {
-			rows, err = DB.Query(`SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id Inner join Vtuber.VtuberGroup on VtuberGroup.id = VtuberGroup_id Where VtuberGroup.id=? AND Youtube.Status=? AND Region=? Order by ScheduledStart DESC Limit ?`, Group, Status, Region, limit)
-			if err != nil {
-				return nil, Key2, err
-			}
-			defer rows.Close()
-
-		} else {
-			rows, err = DB.Query(Query, Group, Member, Status, limit)
-			if err != nil {
-				return nil, Key2, err
-			}
-			defer rows.Close()
-		}
-
-		for rows.Next() {
-			err = rows.Scan(&list.ID, &list.VideoID, &list.Type, &list.Status, &list.Title, &list.Thumb, &list.Desc, &list.Published, &list.Schedul, &list.End, &list.Viewers, &list.Length, &list.Member.ID)
-			if err != nil {
-				return nil, Key2, err
-			}
-			UpcominginHours := int(time.Until(list.Schedul).Hours())
-			if UpcominginHours > 730 && Status != config.PastStatus || Status == config.Live && UpcominginHours > 168 {
-				continue
-			}
-
-			Data = append(Data, list)
-			err = LiveCache.LPush(ctx, Key2, list).Err()
-			if err != nil {
-				return nil, Key2, err
-			}
-		}
-
-		if len(Data) > 0 {
-			log.WithFields(log.Fields{
-				"State": Payload["State"],
-				"Key":   Key2,
-			}).Info("Append new cache")
-			if Payload["State"].(string) == config.Sys {
-				err = LiveCache.Expire(ctx, Key2, config.YtGetStatusTTL).Err()
-				if err != nil {
-					return nil, Key2, err
-				}
-			} else {
-				err = LiveCache.Expire(ctx, Key2, 5*time.Minute).Err()
-				if err != nil {
-					return nil, Key2, err
-				}
-			}
-		}
-
-	} else {
-		for _, result := range unique(val) {
-			err := json.Unmarshal([]byte(result), &list)
-			if err != nil {
-				return nil, Key2, err
-			}
-
-			//Skip empty data
-			if list.YtIsEmpty() {
-				continue
-			}
-
-			Data = append(Data, list)
-		}
-	}
-
-	return Data, Key2, nil
-
-}
-*/
 func (Data *Group) GetYtLiveStream(status string, reg string) ([]LiveStream, error) {
 	var (
 		Query          string
@@ -162,21 +36,21 @@ func (Data *Group) GetYtLiveStream(status string, reg string) ([]LiveStream, err
 		return nil, err
 	}
 
-	if len(val) > 0 {
-		for _, result := range val {
-			err := json.Unmarshal([]byte(result), &Live)
-			if err != nil {
-				return nil, err
-			}
-
-			//Skip empty data
-			if Live.YtIsEmpty() {
-				continue
-			}
-
-			LiveStreamData = append(LiveStreamData, Live)
+	for _, result := range val {
+		err := json.Unmarshal([]byte(result), &Live)
+		if err != nil {
+			return nil, err
 		}
-	} else {
+
+		//Skip empty data
+		if Live.YtIsEmpty() {
+			continue
+		}
+
+		LiveStreamData = append(LiveStreamData, Live)
+	}
+
+	if LiveStreamData == nil {
 		limit := func() int {
 			if status == config.PastStatus {
 				return 3
@@ -253,6 +127,10 @@ func (Data *Group) GetYtLiveStream(status string, reg string) ([]LiveStream, err
 }
 
 func (Data *Member) GetYtLiveStream(status string) ([]LiveStream, error) {
+	if Data.YoutubeID == "" {
+		return nil, nil
+	}
+
 	var (
 		Query          string
 		LiveStreamData []LiveStream
@@ -261,12 +139,69 @@ func (Data *Member) GetYtLiveStream(status string) ([]LiveStream, error) {
 		Key            = fmt.Sprintf("%d-%s-%s", Data.ID, Data.Name, status)
 	)
 
-	val, err := LiveCache.LRange(ctx, Key, 0, -1).Result()
-	if err != nil {
-		return nil, err
+	if status == config.PastStatus {
+		Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id where VtuberMember.id=?  AND Youtube.Status=? Order by EndStream DESC Limit 3"
+	} else if status == config.UpcomingStatus {
+		Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id where VtuberMember.id=? AND Youtube.Status=? Order by PublishedAt DESC Limit 10"
+	} else {
+		Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id where VtuberMember.id=?  AND Youtube.Status=? Order by ScheduledStart DESC Limit 1"
 	}
 
-	if len(val) > 0 {
+	if status == config.LiveStatus {
+		val2, err := LiveCache.Get(ctx, Key).Result()
+		if err == redis.Nil {
+			log.WithFields(log.Fields{
+				"Vtuber": Data.Name,
+				"Status": status,
+				"Key":    Key,
+			}).Warn("Cache not found,fetch to db")
+
+			rows, err := DB.Query(Query, Data.ID, status)
+			if err != nil {
+				return nil, err
+			}
+			defer rows.Close()
+
+			for rows.Next() {
+				err = rows.Scan(&Live.ID, &Live.VideoID, &Live.Type, &Live.Status, &Live.Title, &Live.Thumb, &Live.Desc, &Live.Published, &Live.Schedul, &Live.End, &Live.Viewers, &Live.Length, &Live.Member.ID)
+				if err != nil {
+					return nil, err
+				}
+
+				Live.Member = *Data
+				LiveStreamData = append(LiveStreamData, Live)
+			}
+
+			DataByte, err := Live.MarshalBinary()
+			if err != nil {
+				return nil, err
+			}
+
+			err = LiveCache.Set(ctx, Key, DataByte, config.YtGetStatusTTL).Err()
+			if err != nil {
+				return nil, err
+			}
+
+		} else if err != nil {
+			return nil, err
+		} else {
+			err := json.Unmarshal([]byte(val2), &Live)
+			if err != nil {
+				return nil, err
+			}
+
+			if Live.ID != 0 {
+				LiveStreamData = append(LiveStreamData, Live)
+			}
+
+			return LiveStreamData, nil
+		}
+	} else {
+		val, err := LiveCache.LRange(ctx, Key, 0, -1).Result()
+		if err != nil {
+			return nil, err
+		}
+
 		for _, result := range val {
 			err := json.Unmarshal([]byte(result), &Live)
 			if err != nil {
@@ -280,53 +215,47 @@ func (Data *Member) GetYtLiveStream(status string) ([]LiveStream, error) {
 
 			LiveStreamData = append(LiveStreamData, Live)
 		}
-	} else {
-		if status == config.PastStatus {
-			Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id where VtuberMember.id=?  AND Youtube.Status=? Order by EndStream DESC Limit ?"
-		} else if status == config.UpcomingStatus {
-			Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id where VtuberMember.id=? AND Youtube.Status=? Order by PublishedAt DESC Limit ?"
-		} else {
-			Query = "SELECT Youtube.* FROM Vtuber.Youtube Inner join Vtuber.VtuberMember on VtuberMember.id=VtuberMember_id where VtuberMember.id=?  AND Youtube.Status=? Order by ScheduledStart DESC Limit ?"
-		}
 
-		rows, err := DB.Query(Query, Data.ID, status, 5)
-		if err != nil {
-			return nil, err
-		}
-		defer rows.Close()
-
-		for rows.Next() {
-			err = rows.Scan(&Live.ID, &Live.VideoID, &Live.Type, &Live.Status, &Live.Title, &Live.Thumb, &Live.Desc, &Live.Published, &Live.Schedul, &Live.End, &Live.Viewers, &Live.Length, &Live.Member.ID)
+		if LiveStreamData == nil {
+			rows, err := DB.Query(Query, Data.ID, status)
 			if err != nil {
 				return nil, err
 			}
-			UpcominginHours := int(time.Until(Live.Schedul).Hours())
-			if UpcominginHours > 730 && status != config.PastStatus || status == config.Live && UpcominginHours > 168 {
-				continue
+			defer rows.Close()
+
+			for rows.Next() {
+				err = rows.Scan(&Live.ID, &Live.VideoID, &Live.Type, &Live.Status, &Live.Title, &Live.Thumb, &Live.Desc, &Live.Published, &Live.Schedul, &Live.End, &Live.Viewers, &Live.Length, &Live.Member.ID)
+				if err != nil {
+					return nil, err
+				}
+				UpcominginHours := int(time.Until(Live.Schedul).Hours())
+				if UpcominginHours > 730 && status != config.PastStatus || status == config.Live && UpcominginHours > 168 {
+					continue
+				}
+
+				Live.Member = *Data
+
+				LiveStreamData = append(LiveStreamData, Live)
+
+				err = LiveCache.LPush(ctx, Key, Live).Err()
+				if err != nil {
+					return nil, err
+				}
 			}
 
-			Live.Member = *Data
-
-			LiveStreamData = append(LiveStreamData, Live)
-
-			err = LiveCache.LPush(ctx, Key, Live).Err()
+			err = LiveCache.Expire(ctx, Key, config.YtGetStatusTTL).Err()
 			if err != nil {
 				return nil, err
 			}
-		}
 
-		err = LiveCache.Expire(ctx, Key, config.YtGetStatusTTL).Err()
-		if err != nil {
-			return nil, err
 		}
 
 	}
 
 	return LiveStreamData, nil
-
 }
 
-func (Data *LiveStream) SendToCache(isAgency bool) error {
+func (Data *LiveStream) SendToUpcomingCache(isAgency bool) error {
 	key := []string{}
 	if isAgency {
 		key = append(key, Data.Group.GroupName, Data.VideoID)
@@ -415,23 +344,38 @@ func (Data *LiveStream) InputYt() (int64, error) {
 //Check new video or not
 func (Member Member) CheckYoutubeVideo(VideoID string) (*LiveStream, error) {
 	var Data LiveStream
-	rows, err := DB.Query(`SELECT * FROM Vtuber.Youtube Where VideoID=? AND VtuberMember_id=?`, VideoID, Member.ID)
+	rows, err := DB.Query(`SELECT id FROM Vtuber.Youtube Where VideoID=? AND VtuberMember_id=?`, VideoID, Member.ID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&Data.ID, &Data.VideoID, &Data.Type, &Data.Status, &Data.Title, &Data.Thumb, &Data.Desc, &Data.Published, &Data.Schedul, &Data.End, &Data.Viewers, &Data.Length, &Data.Member.ID)
+		err = rows.Scan(&Data.ID)
 		if err != nil {
 			return nil, err
 		}
 	}
-	if Data.VideoID == "" {
+	if Data.ID == 0 {
 		return nil, errors.New("VideoID not found in database")
 	} else {
 		Data.AddMember(Member)
 		return &Data, nil
+	}
+}
+
+func (Data *LiveStream) GetYtVideoDetail() {
+	rows, err := DB.Query(`SELECT * FROM Vtuber.Youtube Where id=?`, Data.ID)
+	if err != nil {
+		log.Error(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err = rows.Scan(&Data.ID, &Data.VideoID, &Data.Type, &Data.Status, &Data.Title, &Data.Thumb, &Data.Desc, &Data.Published, &Data.Schedul, &Data.End, &Data.Viewers, &Data.Length, &Data.Member.ID)
+		if err != nil {
+			log.Error(err)
+		}
 	}
 }
 
@@ -440,14 +384,14 @@ func (Data LiveStream) AddYoutubeToCache(id int64) {
 	key := fmt.Sprintf("cache-layer-%s", Data.VideoID)
 	log.WithFields(log.Fields{
 		"Key": key,
-	}).Info("Add fanart into cache")
+	}).Info("Add youtube video into cache")
 
 	Data.ID = id
 	bytelive, err := json.Marshal(Data)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = LiveCache.Set(context.Background(), key, bytelive, 10*time.Minute).Err()
+	err = LiveCache.Set(context.Background(), key, bytelive, 1*time.Hour).Err()
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -33,7 +33,7 @@
       </div>
       <div class="platform-card">
         <span class="card-count">
-          <CountTo :endVal="youtube.VideoCount" />
+          <CountTo :endVal="youtube.TotalVideos" />
         </span>
         <span class="card-title">Videos/Archives</span>
       </div>

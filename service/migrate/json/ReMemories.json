@@ -64,6 +64,42 @@
       "Region": "ID",
       "Fanbase": "",
       "Status": "Active"
+    },
+    {
+      "Name": "Elaine",
+      "EN_Name": "Elaine Celestia",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#ElainArt",
+        "Twitter_Lewd": "#Ecchilaine",
+        "Twitter_Username": "ElaineCelestia"
+      },
+      "Youtube": {
+        "Yt_ID": "UCyapmNSsYj2KkoQEhZEhxrw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Cecilia",
+      "EN_Name": "Cecilia Lieberia",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#CileArt",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "CeciliaLieberia"
+      },
+      "Youtube": {
+        "Yt_ID": "UC4pEixMozb6UnOtwg5Uew-Q"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
     }
   ]
 }

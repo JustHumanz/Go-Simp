@@ -50,17 +50,19 @@ const (
 	Indie             = "independent"
 	Fe                = "frontend"
 
-	PixivService          = "PixivFanart"
-	TwitterService        = "TwitterFanart"
-	TBiliBiliService      = "BiliBiliFanart"
-	LiveBiliBiliService   = "LiveBiliBili"
-	SpaceBiliBiliService  = "SpaceBiliBili"
-	TwitchService         = "Twitch"
-	YoutubeCheckerService = "Youtube_Checker"
-	YoutubeCounterService = "Youtube_Counter"
-	SubscriberService     = "Subscriber"
-	FrontendService       = "Frontend"
-	ResetApiService       = "ApiService"
+	PixivService              = "PixivFanart"
+	TwitterService            = "TwitterFanart"
+	TBiliBiliService          = "BiliBiliFanart"
+	LiveBiliBiliService       = "LiveBiliBili"
+	SpaceBiliBiliService      = "SpaceBiliBili"
+	TwitchService             = "Twitch"
+	YoutubeCheckerService     = "YoutubeChecker"
+	YoutubeLiveTrackerService = "YoutubeLiveTracker"
+	YoutubePastTrackerService = "YoutubePastTracker"
+	YoutubeCounterService     = "YoutubeCounter"
+	SubscriberService         = "Subscriber"
+	FrontendService           = "Frontend"
+	ResetApiService           = "ApiService"
 
 	//Crontab
 	BiliBiliLive               = "@every 0h7m0s"
@@ -149,19 +151,24 @@ const (
 
 //ConfigFile config file struct for config.toml
 type ConfigFile struct {
-	Discord        string `toml:"Discord"`
-	BiliSess       string `toml:"BiliSess"`
-	PixivSession   string `toml:"PixivSess"`
-	SauceAPI       string `toml:"SauceAPI"`
-	InviteLog      string `toml:"InviteLog"`
-	PilotReporting string `toml:"PilotReporting"`
-	MultiTOR       string `toml:"Multitor"`
-	DonationLink   string `toml:"DonationLink"`
-	TopGG          string `toml:"TOPGG"`
-	Domain         string `toml:"Domain"`
-	PrometheusURL  string `toml:"PrometheusURL"`
-	Metric         bool   `toml:"Metric"`
-	Twitch         struct {
+	Discord           string `toml:"Discord"`
+	BiliSess          string `toml:"BiliSess"`
+	PixivSession      string `toml:"PixivSess"`
+	SauceAPI          string `toml:"SauceAPI"`
+	WebhookRequest    string `toml:"WebhookRequest"`
+	PilotReporting    string `toml:"PilotReporting"`
+	MultiTOR          string `toml:"Multitor"`
+	DonationLink      string `toml:"DonationLink"`
+	TopGG             string `toml:"TOPGG"`
+	Domain            string `toml:"Domain"`
+	PrometheusURL     string `toml:"PrometheusURL"`
+	Metric            bool   `toml:"Metric"`
+	BannFanartAccount struct {
+		Twitter  []string `toml:"Twitter"`
+		BiliBili []string `toml:"BiliBili"`
+		Pixiv    []string `toml:"Pixiv"`
+	} `toml:"BannFanartAccount"`
+	Twitch struct {
 		ClientID     string `toml:"ClientID"`
 		ClientSecret string `toml:"ClientSecret"`
 	} `toml:"Twitch"`

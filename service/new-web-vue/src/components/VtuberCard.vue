@@ -1,156 +1,127 @@
 <template>
-  <div class="card-vtuber" :class="{ inactive: vtuber.Status == 'Inactive' }">
+  <div
+    class="card-vtuber"
+    :class="{ inactive: vtuber.Status == 'Inactive' }"
+    :data-id="vtuber.ID"
+  >
     <div class="card-vtuber-image">
       <div class="tag-vtuber">
         <div class="tag-vtuber-agency">
-          <img
-            draggable="false"
-            class="tag-vtuber-agency__icon"
-            :src="vtuber.Group.IconURL"
-            :alt="vtuber.Group.GroupName"
-            v-if="vtuber.Group.ID !== 10"
-          />
-          <img
-            draggable="false"
-            class="tag-vtuber-agency__flag"
-            :src="`/assets/flags/${vtuber.Regions.flagCode}.svg`"
-            :alt="vtuber.Regions.name"
-          />
+          <router-link
+            :to="`/vtubers/` + vtuber.Group.ID"
+            @click="getVtuberData(vtuber.Group.ID)"
+          >
+            <img
+              draggable="false"
+              class="tag-vtuber-agency__icon"
+              :src="vtuber.Group.IconURL"
+              :alt="vtuber.Group.GroupName"
+              v-if="
+                $route.params.id != vtuber.Group.ID && vtuber.Group.ID !== 10
+              "
+            />
+            <img
+              draggable="false"
+              class="tag-vtuber-agency__flag"
+              :src="`/assets/flags/${vtuber.Regions?.code.toLowerCase()}.svg`"
+              :alt="vtuber.Regions.name"
+              onerror="this.src='/assets/flags/none.svg'"
+              v-else-if="vtuber.Regions"
+            />
+            <img
+              draggable="false"
+              class="tag-vtuber-agency__flag"
+              src="/assets/flags/none.svg"
+              :alt="vtuber.Region"
+              v-else
+            />
+          </router-link>
+
           <font-awesome-icon
             class="fa-fw"
             icon="skull"
             v-if="vtuber.Status == 'Inactive'"
           />
           <span class="tag-vtuber-agency__hover">{{
-            `${vtuber.Group.ID === 10 ? `Vtuber` : GroupName} ${
-              vtuber.Regions.name
-            } ${vtuber.Status === "Inactive" ? ` (Inactive)` : ""}`
+            `${agencyName} ${vtuber.Status === "Inactive" ? ` (Inactive)` : ""}`
           }}</span>
         </div>
-        <a
-          class="tag-vtuber-live"
-          v-if="
-            vtuber.IsLive.Youtube ||
-            vtuber.IsLive.Twitch ||
-            vtuber.IsLive.BiliBili
-          "
-          :href="liveLink"
-          target="_blank"
-        >
-          <font-awesome-icon
-            :icon="['fab', 'youtube']"
-            class="fa-fw"
-            v-if="vtuber.IsLive.Youtube"
-          />
-          <font-awesome-icon
-            :icon="['fab', 'twitch']"
-            class="fa-fw"
-            v-if="vtuber.IsLive.Twitch"
-          />
-          <font-awesome-icon
-            :icon="['fab', 'bilibili']"
-            class="fa-fw"
-            v-if="vtuber.IsLive.BiliBili"
-          />
-          <span>LIVE</span>
-        </a>
+        <div class="tag-vtuber-link">
+          <a
+            class="tag-vtuber-link__item hover:!text-youtube"
+            :class="{ live: vtuber.IsLive.Youtube }"
+            :href="ytLink"
+            target="_blank"
+            v-if="vtuber.Youtube"
+          >
+            <font-awesome-icon class="fa-fw" :icon="['fab', 'youtube']" />
+          </a>
+          <a
+            class="tag-vtuber-link__item hover:!text-twitch"
+            :class="{ live: vtuber.IsLive.Twitch }"
+            :href="`https://twitch.tv/${vtuber.Twitch.Username}`"
+            target="_blank"
+            v-if="vtuber.Twitch"
+          >
+            <font-awesome-icon class="fa-fw" :icon="['fab', 'twitch']" />
+          </a>
+          <a
+            class="tag-vtuber-link__item hover:!text-bilibili"
+            :class="{ live: vtuber.IsLive.BiliBili }"
+            :href="blLink"
+            target="_blank"
+            v-if="vtuber.BiliBili"
+          >
+            <font-awesome-icon class="fa-fw" :icon="['fab', 'bilibili']" />
+          </a>
+          <a
+            class="tag-vtuber-link__item hover:!text-twitter"
+            :href="`https://twitter.com/${vtuber.Twitter.Username}`"
+            target="_blank"
+            v-if="vtuber.Twitter"
+          >
+            <font-awesome-icon class="fa-fw" :icon="['fab', 'twitter']" />
+          </a>
+        </div>
       </div>
       <router-link :to="`/vtuber/${vtuber.ID}`" class="card-vtuber-image__link">
         <img
           draggable="false"
           class="card-vtuber-image__img"
-          v-if="vtuber.Youtube"
-          v-bind:src="vtuber.Youtube.Avatar.replace('s800', 's360')"
+          :src="avatar"
           referrerpolicy="no-referrer"
           onerror="this.src='/assets/smolame.jpg'"
-          alt="Card image cap"
-        />
-        <img
-          draggable="false"
-          class="card-vtuber-image__img"
-          v-else-if="vtuber.BiliBili"
-          v-bind:src="`${vtuber.BiliBili.Avatar}@360w_360h_1c_1s.jpg`"
-          referrerpolicy="no-referrer"
-          onerror="this.src='/assets/smolame.jpg'"
-          alt="Card image cap"
-        />
-        <img
-          draggable="false"
-          class="card-vtuber-image__img"
-          v-else-if="vtuber.Twitch"
-          v-bind:src="vtuber.Twitch.Avatar"
-          referrerpolicy="no-referrer"
-          onerror="this.src='/assets/smolame.jpg'"
-          alt="Card image cap"
-        />
-        <img
-          draggable="false"
-          class="card-vtuber-image__img"
-          v-else
-          src="/assets/smolame.jpg"
-          alt="Card image cap"
+          :alt="vtuber.EnName"
         />
       </router-link>
-      <div class="vtuber-link">
-        <a
-          :href="`https://youtube.com/channel/${vtuber.Youtube.YoutubeID}`"
-          target="_blank"
-          class="vtuber-link__link hover:!text-youtube"
-          rel="noopener noreferrer"
-          v-if="vtuber.Youtube"
-        >
-          <font-awesome-icon
-            :icon="['fab', 'youtube']"
-            class="fa-fw"
-            rel="noopener noreferrer"
-            v-if="vtuber.Youtube"
-          />
-        </a>
-        <a
-          :href="`https://twitch.tv/${vtuber.Twitch.Username}`"
-          target="_blank"
-          class="vtuber-link__link hover:!text-twitch"
-          rel="noopener noreferrer"
-          v-if="vtuber.Twitch"
-        >
-          <font-awesome-icon
-            :icon="['fab', 'twitch']"
-            class="fa-fw"
-            v-if="vtuber.Twitch"
-          />
-        </a>
-        <a
-          :href="`https://space.bilibili.com/${vtuber.BiliBili.SpaceID}`"
-          target="_blank"
-          class="vtuber-link__link hover:!text-bilibili"
-          rel="noopener noreferrer"
-          v-if="vtuber.BiliBili"
-        >
-          <font-awesome-icon
-            :icon="['fab', 'bilibili']"
-            class="fa-fw"
-            v-if="vtuber.BiliBili"
-          />
-        </a>
-        <a
-          :href="`https://twitter.com/${vtuber.Twitter.Username}`"
-          target="_blank"
-          class="vtuber-link__link hover:!text-twitter"
-          rel="noopener noreferrer"
-          v-if="vtuber.Twitter"
-        >
-          <font-awesome-icon
-            :icon="['fab', 'twitter']"
-            class="fa-fw"
-            v-if="vtuber.Twitter"
-          />
-        </a>
+      <div class="vtuber-link" v-if="type !== 'name' && type !== 'jpname'">
+        <font-awesome-icon
+          class="fa-fw"
+          :icon="['fab', 'youtube']"
+          v-if="type.includes('youtube')"
+        />
+        <font-awesome-icon
+          class="fa-fw"
+          :icon="['fab', 'twitch']"
+          v-if="type.includes('twitch')"
+        />
+        <font-awesome-icon
+          class="fa-fw"
+          :icon="['fab', 'bilibili']"
+          v-if="type.includes('bilibili')"
+        />
+        <font-awesome-icon
+          class="fa-fw"
+          :icon="['fab', 'twitter']"
+          v-if="type.includes('twitter')"
+        />
+        <span>{{ `${countSort} ${textCount}` }}</span>
       </div>
     </div>
     <div class="card-vtuber-name">
       <router-link :to="`/vtuber/${vtuber.ID}`" class="card-vtuber-name__link">
         <h4 class="card-vtuber-name__title">
-          {{ vtuber.EnName }}
+          {{ titleName }}
         </h4>
         <span class="card-vtuber-name__nickname">
           {{ vtuber.NickName.toLowerCase() }}
@@ -173,25 +144,113 @@ import {
 
 library.add(faYoutube, faTwitch, faBilibili, faTwitter, faSkull)
 
+import { useMemberStore } from "@/stores/members.js"
+
 export default {
   props: {
     vtuber: {
       type: Object,
     },
   },
-  async created() {},
   computed: {
-    liveLink() {
-      if (this.vtuber.IsLive.Youtube) return this.vtuber.IsLive.Youtube.URL
-      else if (this.vtuber.IsLive.Twitch) return this.vtuber.IsLive.Twitch.URL
-      else return this.vtuber.IsLive.BiliBili.URL
+    avatar() {
+      return this.vtuber.Youtube
+        ? this.vtuber.Youtube.Avatar.replace("s800", "s360")
+        : this.vtuber.BiliBili
+        ? `${this.vtuber.BiliBili.Avatar}@360w_360h_1c_1s.jpg`
+        : this.vtuber.Twitch
+        ? this.vtuber.Twitch.Avatar
+        : this.vtuber.Twitter
+        ? this.vtuber.Twitter.Avatar
+        : "/assets/smolame.jpg"
     },
-    randomAvatar() {},
     GroupName() {
       return (
         this.vtuber.Group.GroupName.charAt(0).toUpperCase() +
         this.vtuber.Group.GroupName.slice(1).replace("_", " ")
       )
+    },
+    ytLink() {
+      if (this.vtuber.IsLive?.Youtube) return this.vtuber.IsLive.Youtube.URL
+      else if (this.vtuber.Youtube)
+        return `https://youtube.com/channel/${this.vtuber.Youtube.YoutubeID}`
+      else return null
+    },
+    blLink() {
+      if (this.vtuber.IsLive.BiliBili) return this.vtuber.IsLive.BiliBili.URL
+      else if (this.vtuber.BiliBili)
+        return `https://space.bilibili.com/${this.vtuber.BiliBili.SpaceID}`
+      else return null
+    },
+    type() {
+      return useMemberStore().sorting.type
+    },
+    titleName() {
+      if (useMemberStore().sorting.type === "jpname")
+        return this.vtuber.JpName ? this.vtuber.JpName : this.vtuber.EnName
+      else return this.vtuber.EnName
+    },
+    agencyName() {
+      if (this.vtuber.Agency) {
+        if (this.vtuber.Agency.match(/^\$/g))
+          return this.vtuber.Agency.replace(/^\$/, "")
+        else
+          return `${this.vtuber.Agency} (${this.vtuber.Group.GroupName} ${this.vtuber.Region})`
+      } else
+        return `${
+          this.vtuber.Group.ID === 10 ? `Vtuber` : this.vtuber.Group.GroupName
+        } ${this.vtuber.Regions?.name || this.vtuber.Region}`
+    },
+    countSort() {
+      const type = useMemberStore().sorting.type
+
+      if (type === "youtube")
+        return this.vtuber.Youtube
+          ? this.FormatNumber(this.vtuber.Youtube.Subscriber)
+          : 0
+      else if (type === "bilibili")
+        return this.vtuber.BiliBili
+          ? this.FormatNumber(this.vtuber.BiliBili.Followers)
+          : 0
+      else if (type === "twitch")
+        return this.vtuber.Twitch
+          ? this.FormatNumber(this.vtuber.Twitch.Followers)
+          : 0
+      else if (type === "twitter")
+        return this.vtuber.Twitter
+          ? this.FormatNumber(this.vtuber.Twitter.Followers)
+          : 0
+      else if (type === "youtube_views")
+        return this.vtuber.Youtube
+          ? this.FormatNumber(this.vtuber.Youtube.ViwersCount)
+          : 0
+      else if (type === "bilibili_views")
+        return this.vtuber.BiliBili
+          ? this.FormatNumber(this.vtuber.BiliBili.ViwersCount)
+          : 0
+      else return 0
+    },
+    textCount() {
+      const type = useMemberStore().sorting.type
+
+      if (type === "youtube") return "Subscribers"
+      else if (type.includes("views")) return "Views"
+      else return "Followers"
+    },
+  },
+  methods: {
+    FormatNumber(num) {
+      // Ensure number has max 3 significant digits (no rounding up can happen)
+
+      if (num >= 1000000000) return (num / 1000000000).toFixed(2) + "B"
+      else if (num >= 1000000) return (num / 1000000).toFixed(2) + "M"
+      else if (num >= 1000) return (num / 1000).toFixed(2) + "K"
+      else return num
+    },
+    async getVtuberData(id) {
+      await useMemberStore().fetchMembers(id || null)
+      useMemberStore().filterMembers()
+      useMemberStore().sortingMembers()
     },
   },
 }
@@ -221,10 +280,10 @@ export default {
 }
 
 .tag-vtuber {
-  @apply absolute flex select-none items-center rounded-br-md bg-slate-100/80 text-xs dark:bg-slate-500/80;
+  @apply absolute flex w-full select-none items-center justify-between text-sm;
 
   &-agency {
-    @apply flex h-6 cursor-pointer items-center justify-center space-x-2 px-[0.325rem];
+    @apply flex h-6 cursor-pointer items-center justify-center space-x-2 rounded-br-md bg-slate-100/75 px-[0.325rem] dark:bg-slate-500/80;
 
     &__icon {
       @apply w-5 rounded-md object-contain drop-shadow-md;
@@ -249,17 +308,26 @@ export default {
     @apply hidden;
   }
 
-  &-live {
-    @apply flex h-6 items-center space-x-1 rounded-br-md bg-red-500 px-[0.325rem] font-semibold text-white;
+  &-link {
+    @apply flex h-6 items-center overflow-hidden rounded-bl-md bg-slate-100/75 font-semibold text-slate-600 dark:bg-slate-500/80 dark:text-white;
+
+    // check when no child
+    &:empty {
+      @apply px-0;
+    }
+
+    &__item {
+      @apply h-full px-1 py-[3px] transition-colors duration-200 ease-in-out first:pl-[6px] last:pr-[6px] hover:bg-slate-600/20 dark:hover:bg-white/20;
+
+      &.live {
+        @apply bg-red-600 text-white hover:bg-red-300;
+      }
+    }
   }
 }
 
 .vtuber-link {
-  @apply absolute bottom-0 right-0 space-x-1  rounded-tl-md bg-slate-100/80 px-[0.325rem] dark:bg-slate-500/80;
-
-  &__link {
-    @apply inline-block py-[0.125rem] px-1 text-stone-700 transition-colors duration-200 ease-in-out dark:text-slate-50;
-  }
+  @apply absolute bottom-0 right-0 space-x-1 rounded-tl-md bg-slate-100/80 px-[0.325rem] text-sm dark:bg-slate-500/80;
 }
 
 .inactive {

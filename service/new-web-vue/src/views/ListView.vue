@@ -3,242 +3,238 @@ import NavbarList from "../components/MenuFilters/NavbarList.vue"
 import AmeLoading from "../components/AmeComp/AmeLoading.vue"
 import VtuberList from "../components/VtuberList.vue"
 import AmeError from "../components/AmeComp/AmeError.vue"
+import ExtendFilter from "../components/ExtendFilter.vue"
 </script>
 
 <template>
-  <NavbarList
-    :filters="filters"
-    @search="getSearchData"
-    :placeholder="phName"
-    :disable_search="(null_data || !vtubers) && !search_query"
-    :disabled="!vtubers"
-    :error_status="error_status"
-    :groups="groups"
+  <div v-if="advanced_open">
+    <ExtendFilter />
+  </div>
+  <NavbarList />
+  <VtuberList v-if="vtubersCount > 0 && !error_status" />
+  <AmeLoading
+    v-else-if="!query && totalVtubersData < 1 && !error_status"
+    class="!h-screen"
   />
-  <AmeLoading v-if="!vtubers && !error_status" class="!h-screen" />
   <AmeError
-    v-if="null_data && !search_query"
+    v-else-if="vtubersCount < 1 && totalVtubersData > 0 && !error_status"
     type="error"
     img="laptop"
     title="Your filter is incorrect"
     :description="`Check your filter. Or when your vtuber is not available, request ${link_request}`"
   />
   <AmeError
-    v-if="null_data && search_query"
+    v-else-if="query && vtubersCount < 1"
     type="warning"
     img="bugs"
     title="You find worng keyword"
     :description="`When your vtuber/member is not here, your can request ${link_request}, or try another keyword`"
   />
   <AmeError
-    v-if="!vtubers && error_status && error_status === 404"
+    v-else-if="totalVtubersData < 1 && error_status && error_status === 404"
     type="error"
     img="laptop"
     title="Your group is not available"
     :description="`Check another available group, or you can request a group ${link_request}`"
   />
   <AmeError
-    v-if="!vtubers && error_status && error_status !== 404"
+    v-else-if="totalVtubersData < 1 && error_status && error_status !== 404"
     type="error"
     img="lazer"
     title="Something wrong when get request"
     :description="`Waiting for server response, restart your WiFi, or try again later`"
   />
-  <VtuberList
-    :vtubers="vtubers"
-    :search_query="search_query"
-    :groups="groups"
-    v-if="vtubers && vtubers.length > 0"
-    @getPlaceholder="getPlaceholder"
-    @null-data="nullData"
-  />
 </template>
 
 <script>
-import axios from "axios"
-import Config from "../config.json"
-import regionConfig from "../region.json"
+import { useMemberStore } from "@/stores/members.js"
 
 export default {
   data() {
     return {
-      vtubers: null,
-      groups: [],
-      filters: null,
       group_id: null,
-      error_status: null,
-      null_data: false,
-      search_query: null,
-      phName: "",
+      // for menu handler
+      activeListMenu: null,
+      activeSubMenu: null,
+      clickedSubMenu: false,
     }
   },
-  async created() {
-    await this.getGroupData()
+  async mounted() {
+    await this.getVtuberData()
+
+    // add abilty menu
+    this.menuHandler()
 
     this.$watch(
       () => this.$route.params,
-      () => (this.group_id = this.$route.params?.id || null),
-      { immediate: true }
-    )
-
-    this.$watch(
-      () => this.group_id,
-      async () => {
-        if (!this.$route.path.includes("/vtubers")) return
-        this.vtubers = null
-        this.filters = null
-        this.error_status = null
-        this.getPlaceholder()
-        console.log("Running...")
-
-        await this.getVtuberData()
-        if (this.error_status) return
-        this.getFilter()
-      },
-      { immediate: true }
+      async (af, bf) => {
+        if (!af?.id && bf?.id) {
+          await useMemberStore().fetchMembers(null)
+          useMemberStore().filterMembers()
+          useMemberStore().sortingMembers()
+        }
+      }
     )
   },
   computed: {
     link_request() {
-      return `<a href="https://github.com/JustHumanz/Go-Simp/issues/new?assignees=JustHumanz&labels=enhancement&template=add_vtuber.md&title=Add+%5BVtuber+Nickname%5D+from+%5BGroup%2FAgency%5D" target="_blank" class="ame-error-text__link">here</a>`
+      return `<a href="/new-vtuber" id="router-link" class="ame-error-text__link">here</a>`
+    },
+    totalVtubersData() {
+      this.calculateFilters()
+      return useMemberStore().members.data.length
+    },
+    query() {
+      return useMemberStore().members.query
+    },
+    vtubersCount() {
+      this.calculateFilters()
+      if (this.query) return useMemberStore().members.searchedData.length
+      else return useMemberStore().members.filteredData.length
+    },
+    error_status() {
+      return useMemberStore().members.status
+    },
+    advanced_open() {
+      return useMemberStore().menuFilter.open_advanced
     },
   },
   methods: {
     async getVtuberData() {
-      const groupId = this.$route.params.id
-        ? { groupid: this.$route.params.id }
-        : {}
+      const router_before = window.history.state.back || ""
 
-      const groupIdExist = {
-        params: {
-          ...groupId,
-          live: "true",
-        },
-      }
+      if (
+        (!router_before.includes("/vtuber") &&
+          useMemberStore().members.group !== this.$route.params?.id) ||
+        useMemberStore().members.group === -1
+      )
+        await useMemberStore().fetchMembers(this.$route.params?.id || null)
+      useMemberStore().filterMembers()
+      useMemberStore().sortingMembers()
+    },
 
-      const vtuber_data = await axios
-        .get(Config.REST_API + "/v2/members/", {
-          // cancelToken: this.cancelVtubers.token,
-          ...groupIdExist,
-        })
-        .then((response) => {
-          // this.cancelVtubers = null
-          return response.data
-        })
-        .catch((error) => {
-          if (!axios.isCancel(error)) this.error_status = error.response.status
-        })
-      if (!vtuber_data) return
+    menuHandler() {
+      // ON MOUSE DOWN
+      window.addEventListener("mousedown", (e) => {
+        const target = e.target.closest(".navbar-filter-item__link.sub-menu")
 
-      vtuber_data.forEach((vtuber) => {
-        regionConfig.forEach((region) => {
-          if (region.code === vtuber.Region) {
-            vtuber.Regions = region
-          }
-        })
+        if (!target) return
+        if (!this.activeSubMenu || this.activeSubMenu !== target) {
+          this.activeSubMenu = target
+          this.clickedSubMenu = true
+        }
       })
 
-      this.vtubers = vtuber_data
-      console.log("Total vtuber members: " + this.vtubers.length)
-    },
-    async getFilter() {
-      // Get region
-      const region_data = []
+      // on mouse up
+      window.addEventListener("mouseup", async (e) => {
+        if (this.clickedSubMenu) {
+          await new Promise((resolve) => setTimeout(resolve, 300))
+          this.clickedSubMenu = false
+        }
+      })
 
-      let twitch = false
-      let youtube = false
-      let twitter = false
-      let bilibili = false
-      let inactive = false
+      // on click
+      document.addEventListener("click", (e) => {
+        if (e.target.closest(".navbar-filter__link")) {
+          const navbarFilter = e.target.closest(".navbar-filter__link")
 
-      await this.vtubers.forEach((vtuber) => {
-        // loop regionConfig
-        regionConfig.forEach((region) => {
-          if (region.code === vtuber.Region) {
-            // check if region already exist
-            if (region_data.find((region) => region.code === vtuber.Region)) {
-              return
+          const liNavbarFilter = navbarFilter.parentElement
+
+          if (
+            liNavbarFilter.classList.contains("disabled") ||
+            liNavbarFilter.classList.contains("click")
+          ) {
+            this.activeListMenu = null
+            this.activeSubMenu = null
+            this.clickedSubMenu = false
+            navbarFilter.blur()
+            return
+          }
+
+          switch (this.activeListMenu) {
+            case navbarFilter:
+              this.activeListMenu.blur()
+              this.activeListMenu = null
+              break
+            case null:
+              this.activeListMenu = navbarFilter
+              this.activeSubMenu = null
+              this.clickedSubMenu = false
+              break
+            default:
+              this.activeListMenu = navbarFilter
+              this.activeSubMenu = null
+              this.clickedSubMenu = false
+              break
+          }
+        } else if (e.target.closest(".navbar-filter-item__link")) {
+          const navbarFilterItem = e.target.closest(".navbar-filter-item__link")
+
+          if (!navbarFilterItem.classList.contains("sub-menu")) {
+            this.activeListMenu = null
+            navbarFilterItem.blur()
+          } else {
+            const filterSub = e.target.closest(
+              ".navbar-filter-item__link.sub-menu"
+            )
+
+            if (this.activeSubMenu === filterSub && !this.clickedSubMenu) {
+              console.log("closing submenu")
+              this.activeSubMenu.blur()
+              this.activeListMenu.focus()
+              this.activeSubMenu = null
             }
-
-            region_data.push({
-              code: vtuber.Region,
-              name: region.name,
-              flagCode: region.flagCode,
-            })
           }
-        })
+        } else if (e.target.closest(".navbar-submenu-item__link")) {
+          const navbarSubItem = e.target.closest(".navbar-submenu-item__link")
 
-        // Sort region_data from A to Z with toLowerCase
-        region_data.sort((a, b) => {
-          if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
-          if (a.name.toLowerCase() > b.name.toLowerCase()) return 1
-          return 0
-        })
+          this.activeListMenu = null
+          this.activeSubMenu = null
+          navbarSubItem.blur()
+        } else if (e.target.closest(".nav-search")) {
+          if (this.activeListMenu !== null) {
+            console.log("closing menu")
+            this.activeListMenu = null
+            this.activeSubMenu = null
+          }
 
-        if (vtuber.BiliBili) bilibili = true
-        if (vtuber.Twitter) twitter = true
-        if (vtuber.Youtube) youtube = true
-        if (vtuber.Twitch) twitch = true
+          const navbarSearchItem = e.target.closest(".nav-search")
 
-        if (vtuber.Status == "Inactive") inactive = true
+          navbarSearchItem.children[1].focus()
+        } else {
+          if (this.activeListMenu === null) return
+          console.log("closing menu")
+          this.activeListMenu = null
+          this.activeSubMenu = null
+        }
       })
 
-      console.log("Total region: " + region_data.length)
+      // unfocus
+      document.addEventListener("unfocus", (e) => {
+        if (
+          this.activeListMenu &&
+          this.activeListMenu === document.activeElement
+        )
+          this.activeListMenu.blur()
+        else if (
+          !document.activeElement.classList.contains("nav-search__input")
+        )
+          document.activeElement.blur()
 
-      this.filters = {
-        region: region_data,
-        bilibili,
-        twitter,
-        youtube,
-        twitch,
-        inactive,
-      }
-    },
-
-    async getGroupData() {
-      if (this.groups.length > 0) return
-      console.log("Fetching group data...")
-
-      // this.cancelGroups = axios.CancelToken.source()
-
-      const data_groups = await axios
-        .get(Config.REST_API + "/v2/groups/", {
-          // cancelToken: this.cancelGroups.token,
-        })
-        .then((response) => response.data)
-        .catch((error) => {
-          if (!axios.isCancel(error)) this.error_msg = error.message
-        })
-
-      if (this.error_msg) return false
-
-      // sort group data from GroupName
-      data_groups.sort((a, b) => {
-        if (a.GroupName.toLowerCase() < b.GroupName.toLowerCase()) return -1
-        if (a.GroupName.toLowerCase() > b.GroupName.toLowerCase()) return 1
-        return 0
+        this.activeListMenu = null
+        this.activeSubMenu = null
       })
+    },
+    async calculateFilters() {
+      await new Promise((resolve) => setTimeout(resolve, 60))
+      const subMenus = document.querySelectorAll(".navbar-submenu-items")
 
-      // add "all vtubers" in the first position of "groups"
-      data_groups.unshift({
-        GroupName: "All Vtubers",
-        GroupIcon: "",
+      // count children inside each submenu and substract 75
+      subMenus.forEach((subMenu) => {
+        const totalHeight = subMenu.children.length * 32
+        // add --totalHeight in submenu
+        subMenu.style.setProperty("--totalHeight", `${totalHeight}px`)
       })
-
-      this.groups = data_groups
-      console.log(`Total group: ${this.groups.length}`)
-    },
-    getSearchData(q) {
-      this.search_query = q
-    },
-
-    getPlaceholder(name = "") {
-      if (!this.vtubers || name == "") this.phName = "Search Vtubers..."
-      else this.phName = name
-    },
-
-    nullData(bool) {
-      this.null_data = bool
     },
   },
 }

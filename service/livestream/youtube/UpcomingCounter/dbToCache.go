@@ -31,7 +31,7 @@ func CacheChecker() {
 						"agency":  Agency.GroupName,
 						"vtuber":  live.Member.Name,
 					}).Info("Found upcoming on db but not in cache,send it to cache now")
-					err := live.SendToCache(false)
+					err := live.SendToUpcomingCache(false)
 					if err != nil {
 						log.Error(err)
 					}

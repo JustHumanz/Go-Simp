@@ -20,8 +20,12 @@ RUN go build -o fe ../service/frontend/
 #live
 RUN go build -o livebili ../service/livestream/bilibili/live
 RUN go build -o spacebili ../service/livestream/bilibili/space
-RUN go build -o liveyoutube ../service/livestream/youtube/checker
-RUN go build -o liveyoutube_counter ../service/livestream/youtube/counter
+
+RUN go build -o liveyoutube_upcoming_counter ../service/livestream/youtube/UpcomingCounter
+RUN go build -o liveyoutube_upcoming_checker ../service/livestream/youtube/UpcomingChecker
+RUN go build -o liveyoutube_live_tracker ../service/livestream/youtube/LiveTracker
+RUN go build -o liveyoutube_past_tracker ../service/livestream/youtube/PastTracker
+
 RUN go build -o livetwitch ../service/livestream/twitch
 
 #migrate
@@ -34,7 +38,10 @@ RUN go build -o pilot ../service/pilot/
 RUN go build -o api ../service/rest-api/
 
 #subscriber
-RUN go build -o subscriber ../service/subscriber/
+RUN go build -o subscriber_bilibili ../service/subscriber/bilibili
+RUN go build -o subscriber_twitch ../service/subscriber/twitch
+RUN go build -o subscriber_twitter ../service/subscriber/twitter
+RUN go build -o subscriber_youtube ../service/subscriber/youtube
 
 #utility
 RUN go build -o utility ../service/utility/

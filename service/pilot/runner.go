@@ -1,14 +1,21 @@
 package main
 
 import (
+	"encoding/json"
+	"errors"
 	"flag"
+	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/JustHumanz/Go-Simp/pkg/config"
+	"github.com/JustHumanz/Go-Simp/pkg/engine"
 	"github.com/JustHumanz/Go-Simp/pkg/metric"
 	network "github.com/JustHumanz/Go-Simp/pkg/network"
 	pilot "github.com/JustHumanz/Go-Simp/service/pilot/grpc"
+	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	muxlogrus "github.com/pytimer/mux-logrus"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
@@ -23,59 +30,138 @@ func main() {
 
 	metric.Init()
 	lis := network.InitNet()
-	s := pilot.Server{
-		Service: []*pilot.Service{
-			//Fanart
-			{
-				Name: config.TBiliBiliService,
-				//Counter: 1,
-				CronJob: 7, //every 7 minutes
-			},
-			{
-				Name: config.TwitterService,
-				//Counter: 1,
-				CronJob: 10, //every 10 minutes
-			},
-			{
-				Name: config.PixivService,
-				//Counter: 1,
-				CronJob: 7, //every 7 minutes
-			},
+	grpcServer := grpc.NewServer()
+	router := mux.NewRouter()
 
-			//Live
-			{
-				Name: config.SpaceBiliBiliService,
-				//Counter: 1,
-				CronJob: 12, //every 12 minutes
-			},
-			{
-				Name: config.LiveBiliBiliService,
-				//Counter: 1,
-				CronJob: 7, //every 7 minutes
-			},
-			{
-				Name: config.TwitchService,
-				//Counter: 1,
-				CronJob: 10, //every 10 minutes
-			},
-			{
-				Name: config.YoutubeCheckerService,
-				//Counter: 1,
-				CronJob: 5, //every 5 minutes
-			},
-			{
-				Name: config.YoutubeCounterService,
-				//Counter: 1,
-				CronJob: 1, //every 1 minutes
-			},
-		},
+	ServiceName := func(Name string) string {
+		if Name == "checker_youtube" {
+			return config.YoutubeCheckerService
+		} else if Name == "counter_youtube" {
+			return config.YoutubeCounterService
+		} else if Name == "live_youtube" {
+			return config.YoutubeLiveTrackerService
+		} else if Name == "past_youtube" {
+			return config.YoutubePastTrackerService
+		} else if Name == "space_bilibili" {
+			return config.SpaceBiliBiliService
+		} else if Name == "live_bilibili" {
+			return config.LiveBiliBiliService
+		} else if Name == "twitch" {
+			return config.TwitchService
+		} else if Name == "twitter" {
+			return config.TwitterService
+		} else if Name == "tbilibili" {
+			return config.TBiliBiliService
+		} else if Name == "pixiv" {
+			return config.PixivService
+		}
+		return ""
 	}
 
-	grpcServer := grpc.NewServer()
+	router.HandleFunc("/get/{service}/units/", func(w http.ResponseWriter, r *http.Request) {
+		Service := mux.Vars(r)["service"]
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
 
-	pilot.RegisterPilotServiceServer(grpcServer, &s)
+		Data := GetUnitsMetadata(pilot.S, ServiceName(Service))
+		if Data != nil {
+			json.NewEncoder(w).Encode(Data)
+			w.WriteHeader(http.StatusOK)
+		} else {
+			json.NewEncoder(w).Encode(nil)
+			w.WriteHeader(http.StatusNotFound)
+		}
+	}).Methods(http.MethodGet)
+
+	//Admin can delete the unit payload in case the unit is killed or dead but the payload still remaining
+	router.HandleFunc("/delete/{service}/{uuid}/", func(w http.ResponseWriter, r *http.Request) {
+		Service := mux.Vars(r)["service"]
+		UUID := mux.Vars(r)["uuid"]
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
+
+		err := DeleteUnitsMetadata(pilot.S, ServiceName(Service), UUID)
+		if err != nil {
+			json.NewEncoder(w).Encode(map[string]interface{}{
+				"Error":   true,
+				"Message": err.Error(),
+			})
+			w.WriteHeader(http.StatusBadRequest)
+		} else {
+			json.NewEncoder(w).Encode(map[string]interface{}{
+				"Error":   false,
+				"Message": nil,
+			})
+			w.WriteHeader(http.StatusOK)
+		}
+	}).Methods(http.MethodDelete)
+
+	router.Use(muxlogrus.NewLogger().Middleware)
+	go http.ListenAndServe(":8181", engine.LowerCaseURI(router))
+
+	pilot.RegisterPilotServiceServer(grpcServer, &pilot.S)
+
+	go func() {
+		for {
+			for _, Service := range pilot.S.Service {
+				for _, Unit := range Service.Unit {
+					if time.Since(Unit.Metadata.LastUpdate) > 5*time.Second {
+						msg := "Unit not sending heartbeat for 5 sec,Removing unit"
+						log.WithFields(log.Fields{
+							"Service": Service.Name,
+							"UUID":    Unit.UUID,
+						}).Error(msg)
+
+						Service.RemoveUnitFromDeadNode(Unit.UUID)
+
+						pilot.ReportDeadService(msg, Service.Name)
+					}
+				}
+			}
+			time.Sleep(1 * time.Second)
+		}
+	}()
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %s", err)
 	}
+}
+
+func GetUnitsMetadata(s pilot.Server, name string) []pilot.UnitMetadata {
+	for _, v := range s.Service {
+		if v.Name == name {
+			if len(v.Unit) > 0 {
+				Data := []pilot.UnitMetadata{}
+
+				for _, v2 := range v.Unit {
+					Data = append(Data, v2.Metadata)
+				}
+				return Data
+
+			}
+		}
+	}
+	return nil
+}
+
+func DeleteUnitsMetadata(s pilot.Server, Service, UUID string) error {
+	log.WithFields(log.Fields{
+		"Service": Service,
+		"UUID":    UUID,
+	}).Warn("Deleting unit payload")
+
+	for _, v := range s.Service {
+		if v.Name == Service {
+			if len(v.Unit) > 0 {
+				for _, v2 := range v.Unit {
+					if v2.UUID == UUID {
+						v.RemoveUnitFromDeadNode(v2.UUID)
+						fmt.Println(v)
+						return nil
+					}
+				}
+			}
+		}
+	}
+	return errors.New("invalid uuid")
 }

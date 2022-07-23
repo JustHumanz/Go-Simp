@@ -14,6 +14,8 @@ message ServiceMessage {
     string Message = 1;
     string Service = 2;
     string ServiceUUID = 3;
+    string Hostname = 4;
+    int64 Timestamp = 5;
 }
 
 
@@ -22,8 +24,8 @@ message Metric {
   string State = 2;
 }
 
-message Empty {
-
+message Message {
+  string Message = 1;
 }
 
 message RunJob {
@@ -44,7 +46,7 @@ service PilotService {
   //Get agency payload for non scaling service only
   rpc GetAgencyPayload(ServiceMessage) returns (AgencyPayload){}
   
-  rpc HeartBeat(ServiceMessage) returns (stream Empty){}
-  rpc MetricReport(Metric) returns (Empty){}
-  rpc ReportError(ServiceMessage) returns (Empty){}
+  rpc HeartBeat(ServiceMessage) returns (Message){}
+  rpc MetricReport(Metric) returns (Message){}
+  rpc ReportError(ServiceMessage) returns (Message){}
 }

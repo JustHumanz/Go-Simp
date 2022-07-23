@@ -1,0 +1,43 @@
+{
+  "ID": 1,
+  "NickName": "Dummy",
+  "EnName": "Dummy",
+  "JpName": "",
+  "Region": "JP",
+  "Fanbase": "",
+  "Status": "Active",
+  "BiliBili": {
+    "Avatar": "",
+    "Followers": 164242,
+    "LiveID": 22347054,
+    "SpaceID": 623441612,
+    "ViwersCount": 0
+  },
+  "Youtube": {
+    "Avatar": "",
+    "Subscriber": 23700,
+    "ViwersCount": 420097,
+    "YoutubeID": "UC0lIq8G4LgDPlXsDmYSUExw"
+  },
+  "Twitter": {
+    "Avatar": "",
+    "Followers": 19053,
+    "Username": "futamiyarn"
+  },
+  "Twitch": {
+    "Avatar": "https://static-cdn.jtvnw.net/jtv_user_pictures/22073c2b-0662-46c7-93fb-fe081cd90e80-profile_image-300x300.png",
+    "Followers": 55261,
+    "Username": "robocosan_hololive",
+    "ViwersCount": 66959
+  },
+  "Group": {
+    "GroupName": "independent",
+    "ID": 10,
+    "IconURL": "https://cdn.humanz.moe/404.jpg"
+  },
+  "IsLive": {
+    "BiliBili": { "URL": "https://youtube.com/" },
+    "Twitch": { "URL": "https://youtube.com/" },
+    "Youtube": { "URL": "https://youtube.com/" }
+  }
+}

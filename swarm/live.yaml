@@ -19,7 +19,7 @@ services:
     networks:
       - go-simp-net
 
-  youtube:
+  youtube_upcoming_checker:
     image: justhumanz/go-simp-youtube-checker-livestream:${RELEASE_VERSION}
     depends_on:
       - multi_tor
@@ -27,9 +27,9 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
     networks:
       - go-simp-net
-    command: ./liveyoutube -MultiTOR -Tor
+    command: ./liveyoutube_upcoming_checker -MultiTOR -Tor
 
-  youtube_counter:
+  youtube_upcoming_counter:
     image: justhumanz/go-simp-youtube-counter-livestream:${RELEASE_VERSION}
     depends_on:
       - multi_tor
@@ -37,8 +37,28 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
     networks:
       - go-simp-net
-    command: ./liveyoutube_counter -Tor
+    command: ./liveyoutube_upcoming_counter -Tor
     
+  youtube_live_tracker:
+    image: justhumanz/go-simp-youtube-live-tracker-livestream:${RELEASE_VERSION}
+    depends_on:
+      - multi_tor
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+    networks:
+      - go-simp-net
+    command: ./liveyoutube_live_tracker -Tor
+
+  youtube_past_tracker:
+    image: justhumanz/go-simp-youtube-past-tracker-livestream:${RELEASE_VERSION}
+    depends_on:
+      - multi_tor
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+    networks:
+      - go-simp-net
+    command: ./liveyoutube_past_tracker -Tor
+
   twitch:
     image: justhumanz/go-simp-twitch-livestream:${RELEASE_VERSION}
     depends_on:

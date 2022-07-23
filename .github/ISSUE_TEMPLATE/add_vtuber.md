@@ -1,6 +1,6 @@
 ---
-name: Add vtuber request
-about: Add vtuber 
+name: Add vtuber request (Legacy)
+about: Manually request a vtuber in GitHub Issues
 title: "Add [Vtuber Nickname] from [Group/Agency]"
 labels: enhancement
 assignees: 'JustHumanz'

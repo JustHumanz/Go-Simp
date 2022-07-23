@@ -10,29 +10,32 @@ import SortMenu from "./SortMenu.vue"
       <li
         class="navbar-filter group"
         :class="{
-          disabled:
-            (disabled && error_status != 404) ||
-            (error_status && error_status != 404),
+          disabled: !enabledGroups,
         }"
       >
-        <GroupsMenu :groups="groups" />
+        <GroupsMenu />
+      </li>
+      <li class="navbar-filter click" :class="{ disabled: !checkMembers }">
+        <a
+          href="#"
+          class="navbar-filter__link"
+          onclick="return false"
+          @click="refresh"
+        >
+          <font-awesome-icon class="fa-fw" icon="arrow-rotate-right" />
+          <span class="navbar-filter__span-mobile"> Refresh</span>
+        </a>
       </li>
       <li
         class="navbar-filter"
         :class="{
-          disabled:
-            disabled ||
-            error_status ||
-            (filters &&
-              filters.region.length < 2 &&
-              platform.length < 2 &&
-              !filters.inactive),
+          disabled: !enabledFilters,
         }"
       >
-        <FilterMenu :filters="filters" />
+        <FilterMenu />
       </li>
-      <li class="navbar-filter" :class="{ disabled: disabled || error_status }">
-        <SortMenu :filters="filters" />
+      <li class="navbar-filter" :class="{ disabled: !checkFilteredData }">
+        <SortMenu />
       </li>
     </ul>
     <div class="nav-search">
@@ -45,8 +48,8 @@ import SortMenu from "./SortMenu.vue"
         class="nav-search__input"
         @keydown="searchData"
         ref="search_input"
-        :placeholder="placeholder || `Search Vtubers...`"
-        :disabled="disable_search"
+        :placeholder="placeholderSearch"
+        :disabled="!checkFilteredData"
       />
     </div>
   </nav>
@@ -54,89 +57,78 @@ import SortMenu from "./SortMenu.vue"
 
 <script>
 import { library } from "@fortawesome/fontawesome-svg-core"
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
+import {
+  faMagnifyingGlass,
+  faArrowRotateRight,
+} from "@fortawesome/free-solid-svg-icons"
 
-library.add(faMagnifyingGlass)
+library.add(faMagnifyingGlass, faArrowRotateRight)
+
+import { useGroupStore } from "@/stores/groups"
+import { useMemberStore } from "@/stores/members.js"
 
 export default {
-  data() {
-    return {
-      platform: [],
-      search_query: null,
-      err_status: null,
-    }
-  },
-  props: {
-    groups: {
-      type: Array,
-      default: [],
-    },
-    filters: {
-      type: Object,
-      default: null,
-    },
-    placeholder: {
-      type: String,
-      default: "Search Vtubers...",
-    },
-    disable_search: {
-      type: Boolean,
-      default: false,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    error_status: {
-      type: Number,
-      default: null,
-    },
-  },
   async created() {
     this.$watch(
-      () => this.filters,
-      () => {
-        this.platform = []
-
-        if (this.filters) {
-          if (this.filters.youtube) this.platform.push("youtube")
-          if (this.filters.twitch) this.platform.push("twitch")
-          if (this.filters.bilibili) this.platform.push("bilibili")
-        }
-      },
-      { immediate: true }
+      () => this.$route.query,
+      () => (this.$refs.search_input.value = "")
     )
+  },
+  computed: {
+    enabledGroups() {
+      const storeGroup = useGroupStore()
+      const storeMember = useMemberStore()
 
-    // this.$watch(
-    //   () => this.search_query,
-    //   () => {
-    //     window.scrollTo({
-    //       top: 0,
-    //     })
-    //     this.$emit("search", this.search_query)
-    //   },
-    //   { immediate: true }
-    // )
+      return !storeGroup.groups.status && storeMember.members.data.length > 0
+    },
 
-    this.$watch(
-      () => this.$route,
-      (a, b) => {
-        if (
-          a.query.reg !== b.query.reg ||
-          a.query.plat !== b.query.plat ||
-          a.query.inac !== b.query.inac ||
-          a.params.id !== b.params.id
-        ) {
-          this.$refs.search_input.value = ""
-          this.$emit("search", null)
-        }
-      }
-    )
+    enabledFilters() {
+      const filtersMenu = useMemberStore().menuFilter
+
+      return (
+        useMemberStore().members.data.length > 0 &&
+        (filtersMenu.region.length > 1 ||
+          filtersMenu.platform.length > 1 ||
+          filtersMenu.live.length > 1 ||
+          filtersMenu.inactive)
+      )
+    },
+    checkFilteredData() {
+      return useMemberStore().members.filteredData.length > 0
+    },
+    checkMembers() {
+      return useMemberStore().members.data.length > 0
+    },
+    placeholderSearch() {
+      const store = useMemberStore()
+
+      if (!this.checkFilteredData) return "Search Vtubers..."
+
+      let names = store.members.filteredData.filter((member) => {
+        return member.Status === "Active"
+      })
+
+      if (store.sorting.type === "jpname") {
+        names = names
+          .map((member) => member.JpName)
+          .filter((name) => name !== "")
+      } else names = names.map((member) => member.EnName)
+
+      // random one name from allNames
+      const randomName = names[Math.floor(Math.random() * names.length)]
+
+      return randomName || "Search Vtubers..."
+    },
   },
   methods: {
     async searchData() {
       await new Promise((resolve) => setTimeout(resolve, 60))
-      this.$emit("search", this.$refs.search_input.value)
+      useMemberStore().searchMembers(this.$refs.search_input.value)
+    },
+    async refresh() {
+      await useMemberStore().fetchMembers(this.$route.params?.id || null)
+      useMemberStore().filterMembers()
+      useMemberStore().sortingMembers()
     },
   },
 }
@@ -144,11 +136,11 @@ export default {
 
 <style lang="scss">
 .list-nav {
-  @apply fixed top-16 z-10 flex w-screen select-none flex-wrap-reverse items-center justify-center bg-blue-400 py-2 px-5 dark:bg-slate-500 sm:justify-around;
+  @apply sticky top-16 z-10 mb-3 flex w-screen select-none flex-col-reverse flex-wrap-reverse items-center justify-center bg-blue-400 py-2 px-5 dark:bg-slate-500 sm:flex-row sm:justify-around;
 }
 
 .navbar-filters {
-  @apply flex items-center space-x-1 first:mt-2 sm:space-x-2 xs:first:mt-0;
+  @apply flex items-center space-x-1 first:mt-2 sm:space-x-2 sm:first:mt-0;
 }
 
 .navbar-pending {
@@ -171,10 +163,10 @@ export default {
   }
 
   &__span {
-    @apply inline-block xs:hidden;
+    @apply inline-block;
 
-    @media (min-width: 640px) {
-      display: inline-block !important;
+    &-mobile {
+      @apply hidden xs:inline-block;
     }
   }
 
@@ -222,6 +214,7 @@ export default {
   }
 
   &-item {
+    @apply bg-blue-400 dark:bg-slate-700;
     &__img {
       @apply inline-block w-5 min-w-[1.25rem] rounded-md object-contain drop-shadow-md;
     }
@@ -229,6 +222,10 @@ export default {
     &__svg {
       @apply w-6;
     }
+
+    // &__span {
+    //   @apply truncate md:max-w-[125px];
+    // }
 
     &__link {
       @apply flex w-screen items-center space-x-2 px-2 py-1 font-semibold text-white hover:bg-blue-500/60 dark:hover:bg-slate-900/40 sm:w-44;
@@ -247,7 +244,7 @@ export default {
         @apply rotate-0;
       }
       .navbar-submenu-items {
-        @apply flex flex-col;
+        @apply h-[var(--totalHeight)] scale-y-100;
       }
     }
   }
@@ -255,7 +252,8 @@ export default {
 
 .navbar-submenu {
   &-items {
-    @apply hidden;
+    transition-property: transform height;
+    @apply flex h-0 origin-top scale-y-0 flex-col duration-200 ease-in-out;
   }
 
   &-item {
@@ -276,11 +274,15 @@ export default {
     &__svg {
       @apply w-6;
     }
+
+    &__span {
+      @apply truncate md:max-w-[124px];
+    }
   }
 }
 
 .nav-search {
-  @apply relative mx-1 ml-3 inline-block flex-auto hover:-translate-y-px sm:flex-none;
+  @apply relative mx-1 ml-3 inline-block w-full flex-auto hover:-translate-y-px sm:w-auto sm:flex-none;
 
   &:focus-within {
     transform: translate(0, -2px) !important;

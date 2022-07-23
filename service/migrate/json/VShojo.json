@@ -1,170 +1,210 @@
 {
-	"GroupName": "VShojo",
-	"GroupIcon": "https://cdn.humanz.moe/VShojo.png",
-	"GroupChannel": {
-		"Youtube": null,
-		"BiliBili": null
-	},
-	"Members": [
-		{
-			"Name": "Mel",
-			"EN_Name": "Projekt Melody",
-			"JP_Name": "メロディー",
-			"Twitter": {
-				"Twitter_Fanart": "#projektmelodyfanart",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "ProjektMelody"
-			},
-			"Youtube": {
-				"Yt_ID": "UC1yoRdFoFJaCY-AGfD9W0wQ"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "projektmelody"
-			},
-			"Region": "EN",
-			"Fanbase": "Science team members",
-			"Status": "Active"
-		},
-		{
-			"Name": "Nyaniki",
-			"EN_Name": "Nyatasha Nyanners",
-			"JP_Name": "",
-			"Twitter": {
-				"Twitter_Fanart": "#nyanart",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "nyannyanners"
-			},
-			"Youtube": {
-				"Yt_ID": "UCO5Jvsc_sKuZi3MhnJxrlzQ"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "nyanners"
-			},
-			"Region": "US",
-			"Fanbase": "Nyanbers",
-			"Status": "Active"
-		},
-		{
-			"Name": "Silver",
-			"EN_Name": "Silvervale",
-			"JP_Name": "シルバーベール",
-			"Twitter": {
-				"Twitter_Fanart": "#DoodleVale",
-				"Twitter_Lewd": "#LewdleVale",
-				"Twitter_Username": "_Silvervale_"
-			},
-			"Youtube": {
-				"Yt_ID": "UCm8Dj7dQ0oRHXNUXF31kjEw"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "silvervale"
-			},
-			"Region": "US",
-			"Fanbase": "Wolfs",
-			"Status": "Active"
-		},
-		{
-			"Name": "Mousey",
-			"EN_Name": "Ironmouse",
-			"JP_Name": "",
-			"Twitter": {
-				"Twitter_Fanart": "#ironmouseart",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "ironmouse"
-			},
-			"Youtube": {
-				"Yt_ID": "UChgPVLjqugDQpRLWvC7zzig"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "ironmouse"
-			},
-			"Region": "US",
-			"Fanbase": "Precious family",
-			"Status": "Active"
-		},
-		{
-			"Name": "Dragonqueen",
-			"EN_Name": "Zentreya",
-			"JP_Name": "",
-			"Twitter": {
-				"Twitter_Fanart": "#zentreya_art",
-				"Twitter_Lewd": "#zentreNSFW",
-				"Twitter_Username": "zentreya"
-			},
-			"Youtube": {
-				"Yt_ID": "UCVLsPBwDtv7n7FZLiOsvhSQ"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "zentreya"
-			},
-			"Region": "EN",
-			"Fanbase": "Knights",
-			"Status": "Active"
-		},
-		{
-			"Name": "Hime",
-			"EN_Name": "Hime Hajime",
-			"JP_Name": "",
-			"Twitter": {
-				"Twitter_Fanart": "#HimeSketch",
-				"Twitter_Lewd": "",
-				"Twitter_Username": "HimeHajime_VSJ"
-			},
-			"Youtube": {
-				"Yt_ID": "UCRfz2yOn8C7Jg5zq4Xi67-Q"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "hajime"
-			},
-			"Region": "EN",
-			"Fanbase": "Childrens",
-			"Status": "Active"
-		},
-		{
-			"Name": "Froot",
-			"EN_Name": "BSApricot",
-			"JP_Name": "",
-			"Twitter": {
-				"Twitter_Fanart": "#Lichcraft",
-				"Twitter_Lewd": "#Frootloods",
-				"Twitter_Username": "LichVtuber"
-			},
-			"Youtube": {
-				"Yt_ID": "UCtNeQ8cUwvAAhBbVbwfGWpg"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "apricot"
-			},
-			"Region": "US",
-			"Fanbase": "Frootcakes",
-			"Status": "Active"
-		},
-		{
-			"Name": "Vei",
-			"EN_Name": "Veibae",
-			"JP_Name": "",
-			"Twitter": {
-				"Twitter_Fanart": "#veibae",
-				"Twitter_Lewd": "#vei34",
-				"Twitter_Username": "Veibae"
-			},
-			"Youtube": {
-				"Yt_ID": "UCsBFeCb82qOXyUP19nmD9xw"
-			},
-			"BiliBili": null,
-			"Twitch": {
-				"Twitch_Username": "veibae"
-			},
-			"Region": "UK",
-			"Fanbase": "",
-			"Status": "Active"
-		}
-	]
+  "GroupName": "VShojo",
+  "GroupIcon": "https://cdn.humanz.moe/VShojo.png",
+  "GroupChannel": {
+    "Youtube": null,
+    "BiliBili": null
+  },
+  "Members": [
+    {
+      "Name": "Mel",
+      "EN_Name": "Projekt Melody",
+      "JP_Name": "メロディー",
+      "Twitter": {
+        "Twitter_Fanart": "#projektmelodyfanart",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "ProjektMelody"
+      },
+      "Youtube": {
+        "Yt_ID": "UC1yoRdFoFJaCY-AGfD9W0wQ"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "projektmelody"
+      },
+      "Region": "EN",
+      "Fanbase": "Science team members",
+      "Status": "Active"
+    },
+    {
+      "Name": "Nyaniki",
+      "EN_Name": "Nyatasha Nyanners",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#nyanart",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "nyannyanners"
+      },
+      "Youtube": {
+        "Yt_ID": "UCO5Jvsc_sKuZi3MhnJxrlzQ"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "nyanners"
+      },
+      "Region": "US",
+      "Fanbase": "Nyanbers",
+      "Status": "Active"
+    },
+    {
+      "Name": "Silver",
+      "EN_Name": "Silvervale",
+      "JP_Name": "シルバーベール",
+      "Twitter": {
+        "Twitter_Fanart": "#DoodleVale",
+        "Twitter_Lewd": "#LewdleVale",
+        "Twitter_Username": "_Silvervale_"
+      },
+      "Youtube": {
+        "Yt_ID": "UCm8Dj7dQ0oRHXNUXF31kjEw"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "silvervale"
+      },
+      "Region": "US",
+      "Fanbase": "Wolfs",
+      "Status": "Active"
+    },
+    {
+      "Name": "Mousey",
+      "EN_Name": "Ironmouse",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#ironmouseart",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "ironmouse"
+      },
+      "Youtube": {
+        "Yt_ID": "UChgPVLjqugDQpRLWvC7zzig"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "ironmouse"
+      },
+      "Region": "US",
+      "Fanbase": "Precious family",
+      "Status": "Active"
+    },
+    {
+      "Name": "Dragonqueen",
+      "EN_Name": "Zentreya",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#zentreya_art",
+        "Twitter_Lewd": "#zentreNSFW",
+        "Twitter_Username": "zentreya"
+      },
+      "Youtube": {
+        "Yt_ID": "UCVLsPBwDtv7n7FZLiOsvhSQ"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "zentreya"
+      },
+      "Region": "EN",
+      "Fanbase": "Knights",
+      "Status": "Active"
+    },
+    {
+      "Name": "Hime",
+      "EN_Name": "Hime Hajime",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#HimeSketch",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "HimeHajime_VSJ"
+      },
+      "Youtube": {
+        "Yt_ID": "UCRfz2yOn8C7Jg5zq4Xi67-Q"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "hajime"
+      },
+      "Region": "EN",
+      "Fanbase": "Childrens",
+      "Status": "Active"
+    },
+    {
+      "Name": "Froot",
+      "EN_Name": "BSApricot",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#Lichcraft",
+        "Twitter_Lewd": "#Frootloods",
+        "Twitter_Username": "LichVtuber"
+      },
+      "Youtube": {
+        "Yt_ID": "UCtNeQ8cUwvAAhBbVbwfGWpg"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "apricot"
+      },
+      "Region": "US",
+      "Fanbase": "Frootcakes",
+      "Status": "Active"
+    },
+    {
+      "Name": "Vei",
+      "EN_Name": "Veibae",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#veibae",
+        "Twitter_Lewd": "#vei34",
+        "Twitter_Username": "Veibae"
+      },
+      "Youtube": {
+        "Yt_ID": "UCsBFeCb82qOXyUP19nmD9xw"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "veibae"
+      },
+      "Region": "GB",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Aneki",
+      "EN_Name": "Kson",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#ksonART",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "ksononair"
+      },
+      "Youtube": {
+        "Yt_ID": "UC9ruVYPv7yJmV0Rh0NKA-Lw"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "ksonsouchou"
+      },
+      "Region": "JP",
+      "Fanbase": "Kson-Gumi Kanbukai",
+      "Status": "Active"
+    },
+    {
+      "Name": "Nazu-tan",
+      "EN_Name": "Amemiya Nazuna",
+      "JP_Name": "飴宮なずな",
+      "Twitter": {
+        "Twitter_Fanart": "#NananArt",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "AmemiyaNazuna"
+      },
+      "Youtube": {
+        "Yt_ID": "UC5gs8EbpwbfQvrhizJx60TA"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "AmemiyaNazuna"
+      },
+      "Region": "JP",
+      "Fanbase": "Kson-Gumi Kanbukai",
+      "Status": "Active"
+    }
+  ]
 }

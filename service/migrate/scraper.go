@@ -86,6 +86,8 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 		if YtData != nil {
 			continue
 		} else {
+			YtData.GetYtVideoDetail()
+
 			log.WithFields(log.Fields{
 				"Vtuber": Dat.Name,
 			}).Info("New video")
@@ -115,7 +117,7 @@ func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
 			}
 
 			if Item.Snippet.VideoStatus == config.UpcomingStatus {
-				err := NewData.SendToCache(false)
+				err := NewData.SendToUpcomingCache(false)
 				if err != nil {
 					log.WithFields(log.Fields{
 						"Vtuber": Dat.Name,
@@ -293,7 +295,7 @@ func CheckYoutube() {
 			go func(Name database.Member) {
 				if Name.YoutubeID != "" {
 					log.WithFields(log.Fields{
-						"Vtube":        Name.EnName,
+						"Vtube":        Name.Name,
 						"Youtube ID":   Name.YoutubeID,
 						"Vtube Region": Name.Region,
 					}).Info("Checking yt")
@@ -326,7 +328,7 @@ func CheckLiveBiliBili() {
 			if Member.BiliBiliID != 0 {
 				log.WithFields(log.Fields{
 					"Group":   Group.GroupName,
-					"SpaceID": Member.EnName,
+					"SpaceID": Member.BiliBiliID,
 				}).Info("Check Room")
 				var (
 					ScheduledStart time.Time
@@ -517,7 +519,7 @@ func CheckSpaceBiliBili() {
 			if Name[k].BiliBiliID != 0 {
 				log.WithFields(log.Fields{
 					"Group":   Group[z].GroupName,
-					"SpaceID": Name[k].EnName,
+					"SpaceID": Name[k].BiliBiliID,
 				}).Info("Check Space")
 				var (
 					PushVideo SpaceVideo

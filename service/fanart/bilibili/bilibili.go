@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"net/url"
+	"strings"
 	"sync"
 	"time"
 
@@ -91,12 +92,14 @@ type checkBlJob struct {
 
 func ReqRunningJob(client pilot.PilotServiceClient) {
 	Bili := &checkBlJob{}
+	hostname := engine.GetHostname()
 
 	for {
 		res, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
 			Service:     ServiceName,
 			Message:     "Request",
 			ServiceUUID: ServiceUUID,
+			Hostname:    hostname,
 		})
 		if err != nil {
 			log.Error(err)
@@ -214,6 +217,13 @@ func (k *checkBlJob) Run() {
 								"Vtuber": Member.Name,
 							}).Error(err)
 						}
+
+						for _, Ban := range config.GoSimpConf.BannFanartAccount.BiliBili {
+							if strings.EqualFold(Ban, v.Desc.UserProfile.Info.Uname) {
+								continue
+							}
+						}
+
 						if STB.Item.Pictures != nil && v.Desc.Type == 2 { //type 2 is picture post (prob,heheheh)
 							for _, pic := range STB.Item.Pictures {
 								img = append(img, pic.ImgSrc)

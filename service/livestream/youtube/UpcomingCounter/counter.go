@@ -70,10 +70,7 @@ func main() {
 
 	c := cron.New()
 	c.Start()
-	c.AddFunc("@every 0h15m0s", CacheChecker)
-	c.AddFunc("0 */2 * * *", func() {
-		engine.ExTknList = nil
-	})
+	c.AddFunc("@every 1h0m0s", CacheChecker)
 	log.Info("Enable " + ServiceName)
 	go pilot.RunHeartBeat(gRCPconn, ServiceName, ServiceUUID)
 	go ReqRunningJob(gRCPconn)
@@ -91,12 +88,16 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 	YoutubeCounter := &checkYtJob{
 		CekCounter: make(map[string]bool),
 	}
+
+	hostname := engine.GetHostname()
+
 	for {
 
 		res, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
 			Service:     ServiceName,
 			Message:     "Request",
 			ServiceUUID: ServiceUUID,
+			Hostname:    hostname,
 		})
 
 		if err != nil {
@@ -169,9 +170,9 @@ func (i *checkYtJob) Run() {
 									err = Youtube.RemoveUpcomingCache(Key)
 									if err != nil {
 										log.WithFields(log.Fields{
-											"agency":  Group.GroupName,
-											"videoID": Youtube.VideoID,
-											"region":  Youtube.GroupYoutube.Region,
+											"Agency":  Group.GroupName,
+											"VideoID": Youtube.VideoID,
+											"Region":  Youtube.GroupYoutube.Region,
 										}).Error(err)
 									}
 
@@ -180,17 +181,17 @@ func (i *checkYtJob) Run() {
 								}
 
 								log.WithFields(log.Fields{
-									"agency":  Group.GroupName,
-									"videoID": Youtube.VideoID,
-									"region":  Youtube.GroupYoutube.Region,
+									"Agency":  Group.GroupName,
+									"VideoID": Youtube.VideoID,
+									"Region":  Youtube.GroupYoutube.Region,
 								}).Info("Vtuber upcoming schedule deadline,force change to live")
 
 								Data, err := engine.YtAPI([]string{Youtube.VideoID})
 								if err != nil {
 									log.WithFields(log.Fields{
-										"agency":  Group.GroupName,
-										"videoID": Youtube.VideoID,
-										"region":  Youtube.GroupYoutube.Region,
+										"Agency":  Group.GroupName,
+										"VideoID": Youtube.VideoID,
+										"Region":  Youtube.GroupYoutube.Region,
 									}).Error(err)
 
 									gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
@@ -205,9 +206,9 @@ func (i *checkYtJob) Run() {
 										err = Youtube.RemoveUpcomingCache(Key)
 										if err != nil {
 											log.WithFields(log.Fields{
-												"agency":  Group.GroupName,
-												"videoID": Youtube.VideoID,
-												"region":  Youtube.GroupYoutube.Region,
+												"Agency":  Group.GroupName,
+												"VideoID": Youtube.VideoID,
+												"Region":  Youtube.GroupYoutube.Region,
 											}).Error(err)
 										}
 
@@ -217,9 +218,9 @@ func (i *checkYtJob) Run() {
 											Viewers, err := engine.GetWaiting(Youtube.VideoID)
 											if err != nil {
 												log.WithFields(log.Fields{
-													"agency":  Group.GroupName,
-													"videoID": Youtube.VideoID,
-													"region":  Youtube.GroupYoutube.Region,
+													"Agency":  Group.GroupName,
+													"VideoID": Youtube.VideoID,
+													"Region":  Youtube.GroupYoutube.Region,
 												}).Error(err)
 											}
 											Youtube.UpdateViewers(Viewers)
@@ -237,9 +238,9 @@ func (i *checkYtJob) Run() {
 											bit, err := Youtube.MarshalBinary()
 											if err != nil {
 												log.WithFields(log.Fields{
-													"agency":  Group.GroupName,
-													"videoID": Youtube.VideoID,
-													"region":  Youtube.GroupYoutube.Region,
+													"Agency":  Group.GroupName,
+													"VideoID": Youtube.VideoID,
+													"Region":  Youtube.GroupYoutube.Region,
 												}).Error(err)
 											}
 											gRCPconn.MetricReport(context.Background(), &pilot.Metric{
@@ -251,9 +252,9 @@ func (i *checkYtJob) Run() {
 										isMemberOnly, err := regexp.MatchString("(memberonly|member|メン限)", strings.ToLower(Youtube.Title))
 										if err != nil {
 											log.WithFields(log.Fields{
-												"agency":  Group.GroupName,
-												"videoID": Youtube.VideoID,
-												"region":  Youtube.GroupYoutube.Region,
+												"Agency":  Group.GroupName,
+												"VideoID": Youtube.VideoID,
+												"Region":  Youtube.GroupYoutube.Region,
 											}).Error(err)
 										}
 
@@ -265,9 +266,9 @@ func (i *checkYtJob) Run() {
 										err = Youtube.RemoveUpcomingCache(Key)
 										if err != nil {
 											log.WithFields(log.Fields{
-												"agency":  Group.GroupName,
-												"videoID": Youtube.VideoID,
-												"region":  Youtube.GroupYoutube.Region,
+												"Agency":  Group.GroupName,
+												"VideoID": Youtube.VideoID,
+												"Region":  Youtube.GroupYoutube.Region,
 											}).Error(err)
 										}
 
@@ -277,9 +278,9 @@ func (i *checkYtJob) Run() {
 											Viewers, err := engine.GetWaiting(Youtube.VideoID)
 											if err != nil {
 												log.WithFields(log.Fields{
-													"agency":  Group.GroupName,
-													"videoID": Youtube.VideoID,
-													"region":  Youtube.GroupYoutube.Region,
+													"Agency":  Group.GroupName,
+													"VideoID": Youtube.VideoID,
+													"Region":  Youtube.GroupYoutube.Region,
 												}).Error(err)
 											}
 											Youtube.UpdateViewers(Viewers)
@@ -303,9 +304,9 @@ func (i *checkYtJob) Run() {
 											bit, err := Youtube.MarshalBinary()
 											if err != nil {
 												log.WithFields(log.Fields{
-													"agency":  Group.GroupName,
-													"videoID": Youtube.VideoID,
-													"region":  Youtube.GroupYoutube.Region,
+													"Agency":  Group.GroupName,
+													"VideoID": Youtube.VideoID,
+													"Region":  Youtube.GroupYoutube.Region,
 												}).Error(err)
 											}
 											gRCPconn.MetricReport(context.Background(), &pilot.Metric{
@@ -350,7 +351,7 @@ func (i *checkYtJob) Run() {
 									err = Youtube.RemoveUpcomingCache(Key)
 									if err != nil {
 										log.WithFields(log.Fields{
-											"Vtuber":  Member.EnName,
+											"Vtuber":  Member.Name,
 											"Agency":  Group.GroupName,
 											"VideoID": Youtube.VideoID,
 										}).Error(err)
@@ -360,7 +361,7 @@ func (i *checkYtJob) Run() {
 									return
 								}
 								log.WithFields(log.Fields{
-									"Vtuber":  Member.EnName,
+									"Vtuber":  Member.Name,
 									"Agency":  Group.GroupName,
 									"VideoID": Youtube.VideoID,
 								}).Info("Vtuber upcoming schedule deadline,force change to live")
@@ -368,7 +369,7 @@ func (i *checkYtJob) Run() {
 								Data, err := engine.YtAPI([]string{Youtube.VideoID})
 								if err != nil {
 									log.WithFields(log.Fields{
-										"Vtuber":  Member.EnName,
+										"Vtuber":  Member.Name,
 										"Agency":  Group.GroupName,
 										"VideoID": Youtube.VideoID,
 									}).Error(err)
@@ -385,7 +386,7 @@ func (i *checkYtJob) Run() {
 										err = Youtube.RemoveUpcomingCache(Key)
 										if err != nil {
 											log.WithFields(log.Fields{
-												"Vtuber":  Member.EnName,
+												"Vtuber":  Member.Name,
 												"Agency":  Group.GroupName,
 												"VideoID": Youtube.VideoID,
 											}).Error(err)
@@ -397,7 +398,7 @@ func (i *checkYtJob) Run() {
 											Viewers, err := engine.GetWaiting(Youtube.VideoID)
 											if err != nil {
 												log.WithFields(log.Fields{
-													"Vtuber":  Member.EnName,
+													"Vtuber":  Member.Name,
 													"Agency":  Group.GroupName,
 													"VideoID": Youtube.VideoID,
 												}).Error(err)
@@ -414,26 +415,24 @@ func (i *checkYtJob) Run() {
 											SetState(config.YoutubeLive).
 											UpdateYt(config.LiveStatus)
 
-										if Member.BiliBiliRoomID != 0 {
-											LiveBili, err := engine.GetRoomStatus(Member.BiliBiliRoomID)
-											if err != nil {
-												log.WithFields(log.Fields{
-													"Vtuber":  Member.EnName,
-													"Agency":  Group.GroupName,
-													"VideoID": Youtube.VideoID,
-												}).Error(err)
-											}
+										BiliBiliLive := Member.IsBiliBiliLive()
+										TwitchLive := Member.IsTwitchLive()
+										if TwitchLive || BiliBiliLive {
+											log.WithFields(log.Fields{
+												"Agency":   Group.GroupName,
+												"Vtuber":   Member.Name,
+												"Twitch":   TwitchLive,
+												"BiliBili": BiliBiliLive,
+											}).Info("vtuber already have live in other platform,skiping send notif")
 
-											if LiveBili.CheckScheduleLive() {
-												Youtube.SetBiliLive(true).UpdateBiliToLive()
-											}
+											continue
 										}
 
 										if config.GoSimpConf.Metric {
 											bit, err := Youtube.MarshalBinary()
 											if err != nil {
 												log.WithFields(log.Fields{
-													"Vtuber":  Member.EnName,
+													"Vtuber":  Member.Name,
 													"Agency":  Group.GroupName,
 													"VideoID": Youtube.VideoID,
 												}).Error(err)
@@ -448,7 +447,7 @@ func (i *checkYtJob) Run() {
 										isMemberOnly, err := regexp.MatchString("(memberonly|member|メン限)", strings.ToLower(Youtube.Title))
 										if err != nil {
 											log.WithFields(log.Fields{
-												"Vtuber":  Member.EnName,
+												"Vtuber":  Member.Name,
 												"Agency":  Group.GroupName,
 												"VideoID": Youtube.VideoID,
 											}).Error(err)
@@ -462,7 +461,7 @@ func (i *checkYtJob) Run() {
 										err = Youtube.RemoveUpcomingCache(Key)
 										if err != nil {
 											log.WithFields(log.Fields{
-												"Vtuber":  Member.EnName,
+												"Vtuber":  Member.Name,
 												"Agency":  Group.GroupName,
 												"VideoID": Youtube.VideoID,
 											}).Error(err)
@@ -474,7 +473,7 @@ func (i *checkYtJob) Run() {
 											Viewers, err := engine.GetWaiting(Youtube.VideoID)
 											if err != nil {
 												log.WithFields(log.Fields{
-													"Vtuber":  Member.EnName,
+													"Vtuber":  Member.Name,
 													"Agency":  Group.GroupName,
 													"VideoID": Youtube.VideoID,
 												}).Error(err)
@@ -500,7 +499,7 @@ func (i *checkYtJob) Run() {
 											bit, err := Youtube.MarshalBinary()
 											if err != nil {
 												log.WithFields(log.Fields{
-													"Vtuber":  Member.EnName,
+													"Vtuber":  Member.Name,
 													"Agency":  Group.GroupName,
 													"VideoID": Youtube.VideoID,
 												}).Error(err)
@@ -521,7 +520,7 @@ func (i *checkYtJob) Run() {
 									err = Youtube.RemoveUpcomingCache(Key)
 									if err != nil {
 										log.WithFields(log.Fields{
-											"Vtuber":  Member.EnName,
+											"Vtuber":  Member.Name,
 											"Agency":  Group.GroupName,
 											"VideoID": Youtube.VideoID,
 										}).Error(err)

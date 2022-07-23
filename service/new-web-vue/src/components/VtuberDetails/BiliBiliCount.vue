@@ -20,12 +20,12 @@
         </span>
         <span class="card-title">Viewers</span>
       </div>
-      <div class="platform-card">
+      <!-- <div class="platform-card">
         <span class="card-count">
           <CountTo :endVal="bilibili.TotalVideos" />
         </span>
         <span class="card-title">Videos/Archives</span>
-      </div>
+      </div> -->
     </div>
   </div>
   <hr class="m-2" />

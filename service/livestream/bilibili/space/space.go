@@ -100,12 +100,15 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 		VideoIDTMP: make(map[string]string),
 	}
 
+	hostname := engine.GetHostname()
+
 	for {
 
 		res, err := client.RequestRunJobsOfService(context.Background(), &pilot.ServiceMessage{
 			Service:     ServiceName,
 			Message:     "Request",
 			ServiceUUID: ServiceUUID,
+			Hostname:    hostname,
 		})
 		if err != nil {
 			log.Error(err)

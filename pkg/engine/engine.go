@@ -582,8 +582,6 @@ func GetRSS(YtID string, proxy bool) ([]string, error) {
 	return VideoID, nil
 }
 
-var ExTknList []string
-
 //YtAPI Get data from youtube api
 func YtAPI(VideoID []string) (YtData, error) {
 	var (
@@ -594,34 +592,21 @@ func YtAPI(VideoID []string) (YtData, error) {
 	}).Info("Checking from youtubeAPI")
 
 	for i, Token := range config.GoSimpConf.YtToken {
-		if ExTknList != nil {
-			isExhaustion := false
-			for _, v := range ExTknList {
-				if v == Token {
-					isExhaustion = true
-					break
-				}
-			}
-
-			if isExhaustion {
-				continue
-			}
-		}
 		url := "https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id=" + strings.Join(VideoID, ",") + "&key=" + Token
-
 		bdy, curlerr := network.Curl(url, nil)
 		if curlerr != nil {
-			log.Error(curlerr)
-			if curlerr.Error() == "403 Forbidden" {
-				ExTknList = append(ExTknList, Token)
-			} else {
-				time.Sleep(10 * time.Second)
+			if curlerr.Error() == strconv.Itoa(http.StatusForbidden) {
+				var re = regexp.MustCompile(`(?m)(quotaExceeded)`)
+				res := re.FindAllString(string(bdy), -1)
+				if len(res) > 0 {
+					continue
+				}
 			}
+			log.Error(curlerr)
 
 			if i == len(config.GoSimpConf.YtToken)-1 {
 				break
 			}
-			continue
 		}
 
 		err := json.Unmarshal(bdy, &Data)
@@ -759,4 +744,52 @@ func UnMarshalPayload(Payload []byte) []database.Group {
 		log.Error(err)
 	}
 	return agency
+}
+
+func GetHostname() string {
+	hostname, err := os.Hostname()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return hostname
+}
+
+func LowerCaseURI(h http.Handler) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		r.URL.Path = strings.ToLower(r.URL.Path)
+		h.ServeHTTP(w, r)
+	}
+
+	return http.HandlerFunc(fn)
+}
+
+func GetRoomStatus(RoomID int) (getInfoByRoom, error) {
+	var (
+		tmp     getInfoByRoom
+		body    []byte
+		curlerr error
+	)
+
+	if config.GoSimpConf.MultiTOR != "" {
+		body, curlerr = network.CoolerCurl("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id="+strconv.Itoa(RoomID), nil)
+		if curlerr != nil {
+			return getInfoByRoom{}, curlerr
+		}
+	} else {
+		body, curlerr = network.Curl("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id="+strconv.Itoa(RoomID), nil)
+		if curlerr != nil {
+			return getInfoByRoom{}, curlerr
+		}
+	}
+
+	err := json.Unmarshal(body, &tmp)
+	if err != nil {
+		return getInfoByRoom{}, err
+	}
+	return tmp, nil
+}
+
+func CheckVtuberName(Member database.Member, VtuberName string) bool {
+	return strings.EqualFold(Member.Name, VtuberName) || strings.EqualFold(Member.EnName, VtuberName) || strings.EqualFold(Member.JpName, VtuberName)
 }

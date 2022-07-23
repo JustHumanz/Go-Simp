@@ -79,7 +79,7 @@ jobs:
           push: true
           tags: justhumanz/go-simp-bilispace-livestream:${{ github.event.inputs.versionTag }}
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}          
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}           
       
       - name: Build and push live bilibili livestream 
         uses: docker/build-push-action@v2
@@ -88,28 +88,45 @@ jobs:
           push: true
           tags: justhumanz/go-simp-bililive-livestream:${{ github.event.inputs.versionTag }}
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}          
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}           
 
       
       - name: Build and push youtube checker livestream
         uses: docker/build-push-action@v2
         with:
-          context: ./service/livestream/youtube/checker/
+          context: ./service/livestream/youtube/UpcomingChecker/
           push: true
           tags: justhumanz/go-simp-youtube-checker-livestream:${{ github.event.inputs.versionTag }}
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}
-
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}           
       
       - name: Build and push youtube counter livestream
         uses: docker/build-push-action@v2
         with:
-          context: ./service/livestream/youtube/counter/
+          context: ./service/livestream/youtube/UpcomingCounter/
           push: true
           tags: justhumanz/go-simp-youtube-counter-livestream:${{ github.event.inputs.versionTag }}
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}          
-      
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}           
+
+      - name: Build and push youtube PastTracker livestream
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/livestream/youtube/PastTracker/
+          push: true
+          tags: justhumanz/go-simp-youtube-past-tracker-livestream:${{ github.event.inputs.versionTag }}
+          build-args: |
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}      
+
+      - name: Build and push youtube LiveTracker livestream
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/livestream/youtube/LiveTracker/
+          push: true
+          tags: justhumanz/go-simp-youtube-live-tracker-livestream:${{ github.event.inputs.versionTag }}
+          build-args: |
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}      
+
       - name: Build and push twitch livestream
         uses: docker/build-push-action@v2
         with:
@@ -117,29 +134,45 @@ jobs:
           push: true
           tags: justhumanz/go-simp-twitch-livestream:${{ github.event.inputs.versionTag }}
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}          
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}            
 
       ### Subscriber
       
-      - name: Build and push Subscriber
+      - name: Build and push bilibili subs watcher
         uses: docker/build-push-action@v2
         with:
-          context: ./service/subscriber/
+          context: ./service/subscriber/bilibili/
           push: true
-          tags: justhumanz/go-simp-subscriber:${{ github.event.inputs.versionTag }}
+          tags: justhumanz/go-simp-subscriber-bilibili:${{ github.event.inputs.versionTag }}
           build-args: |
             BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}
 
-      ### REST API
-      
-      - name: Build and push rest api
+      - name: Build and push twitch subs watcher
         uses: docker/build-push-action@v2
         with:
-          context: ./service/rest-api/
+          context: ./service/subscriber/twitch/
           push: true
-          tags: justhumanz/go-simp-rest_api-v2:${{ github.event.inputs.versionTag }}
+          tags: justhumanz/go-simp-subscriber-twitch:${{ github.event.inputs.versionTag }}
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}          
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}
+
+      - name: Build and push twitter subs watcher
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/subscriber/twitter/
+          push: true
+          tags: justhumanz/go-simp-subscriber-twitter:${{ github.event.inputs.versionTag }}
+          build-args: |
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}
+
+      - name: Build and push youtube subs watcher
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service/subscriber/youtube/
+          push: true
+          tags: justhumanz/go-simp-subscriber-youtube:${{ github.event.inputs.versionTag }}
+          build-args: |
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}     
 
       ### Frontend
       
@@ -150,34 +183,7 @@ jobs:
           push: true
           tags: justhumanz/go-simp-frontend:${{ github.event.inputs.versionTag }}
           build-args: |
-            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}          
-
-      ### Web admin api
-      
-      - name: Build and push web admin
-        uses: docker/build-push-action@v2
-        with:
-          context: ./service/web-admin-api
-          push: true
-          tags: justhumanz/go-simp-web-admin-api:latest       
-
-      ### Web admin vue
-      
-      - name: Build and push web admin
-        uses: docker/build-push-action@v2
-        with:
-          context: ./service/web-admin-vue
-          push: true
-          tags: justhumanz/go-simp-web-admin-vue:latest                
-
-      ### Go simp web
-      
-      - name: Build and push web admin
-        uses: docker/build-push-action@v2
-        with:
-          context: ./service/new-web-vue
-          push: true
-          tags: justhumanz/go-simp-web-vue-v2:latest      
+            BASE_IMAGE=justhumanz/go-simp:${{ github.sha }}              
 
   deploy:
     needs: build  

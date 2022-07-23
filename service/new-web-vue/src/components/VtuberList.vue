@@ -14,8 +14,6 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
     <font-awesome-icon icon="caret-up" class="fa-fw" />
   </a>
 
-  <div class="pt-24 xs:pt-14" />
-
   <section v-if="$route.params?.id && group" class="group-detail">
     <img
       v-if="group.ID != 10"
@@ -65,70 +63,36 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
     />
   </section>
 
-  <AmeLoading
-    v-if="limitedVtubers.length < searchVtubers.length"
-    class="my-4"
-  />
+  <AmeLoading v-if="limitedVtubers.length < vtubers.length" class="my-4" />
 </template>
 
 <script>
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faCaretUp } from "@fortawesome/free-solid-svg-icons"
-import regionConfig from "../region.json"
+import regionConfig from "../regions.json"
 
 library.add(faCaretUp)
 
+import { useGroupStore } from "@/stores/groups"
+import { useMemberStore } from "@/stores/members.js"
+
 export default {
-  props: {
-    vtubers: {
-      type: Array,
-    },
-    search_query: {
-      type: String,
-      default: null,
-    },
-    groups: {
-      type: Array,
-      default: [],
-    },
-  },
   emits: ["getPlaceholder", "null-data"],
   data() {
     return {
       limitedVtubers: [],
       nullData: false,
       hide_scroll_up: true,
-      group: null,
-      regions: null,
+      regions: regionConfig,
     }
   },
-  async created() {
-    this.regions = regionConfig
+  created() {
+    const store = useMemberStore()
 
     this.$watch(
-      () => this.groups,
+      () => this.vtubers || store.members.query,
       () => {
-        if (this.groups.length > 0 && this.$route.params?.id) {
-          this.group = this.groups.find(
-            (group) => group.ID == this.$route.params.id
-          )
-        }
-      },
-      { immediate: true }
-    )
-
-    this.$watch(
-      () => this.$route.query,
-      async () => {
-        this.limitedVtubers = await this.searchVtubers.slice(0, 30)
-      },
-      { immediate: true }
-    )
-
-    this.$watch(
-      () => this.search_query,
-      async () => {
-        this.limitedVtubers = await this.searchVtubers.slice(0, 30)
+        this.limitedVtubers = this.vtubers.slice(0, 30)
       },
       { immediate: true }
     )
@@ -136,209 +100,19 @@ export default {
     this.ScrollFuncions()
   },
   computed: {
-    filteredVtubers() {
-      let vtuber_data = this.vtubers
-
-      if (!this.$route.path.includes("/vtubers")) return []
-
-      // Filter vtuber.Region from this.$route.query.reg
-      vtuber_data = vtuber_data.filter((vtuber) => {
-        return this.$route.query.reg
-          ? vtuber.Region == this.$route.query.reg
-          : vtuber
-      })
-
-      // Filter platform inside vtuber
-
-      switch (this.$route.query.plat) {
-        case "yt":
-          // Filter when vtuber_data.Youtube is not null
-          vtuber_data = vtuber_data.filter((vtuber) => {
-            return vtuber.Youtube != null
-          })
-          break
-        case "tw":
-          // Filter when vtuber_data.Twitch is not null
-          vtuber_data = vtuber_data.filter((vtuber) => {
-            return vtuber.Twitch != null
-          })
-          break
-        case "bl":
-          // Filter when vtuber_data.BiliBili is not null
-          vtuber_data = vtuber_data.filter((vtuber) => {
-            return vtuber.BiliBili != null
-          })
-          break
-      }
-
-      // Filter when vtuber_data.Status is "Inactive"
-
-      vtuber_data = vtuber_data.filter((vtuber) => {
-        return this.$route.query.inac == "true"
-          ? vtuber.Status === "Inactive"
-          : vtuber
-      })
-
-      console.log("Total after filtered: " + vtuber_data.length)
-
-      this.$emit(
-        "getPlaceholder",
-        vtuber_data.length > 0
-          ? vtuber_data[Math.floor(Math.random() * vtuber_data.length)][
-              "EnName"
-            ]
-          : ""
+    group() {
+      return (
+        useGroupStore().groups.data.find(
+          (group) => group.ID == this.$route.params?.id
+        ) || null
       )
-
-      return vtuber_data
     },
+    vtubers() {
+      const store = useMemberStore()
 
-    sortingVtubers() {
-      // get query.sort when exist
-      let vtuber_data = this.filteredVtubers
-
-      if (!this.$route.path.includes("/vtubers")) return []
-
-      // Sorting vtuber by EnName DESC and lowercase first
-      vtuber_data = vtuber_data.sort((a, b) => {
-        if (a.EnName.toLowerCase() > b.EnName.toLowerCase()) return -1
-        if (a.EnName.toLowerCase() < b.EnName.toLowerCase()) return 1
-        return 0
-      })
-
-      switch (this.$route.query.sort) {
-        case undefined:
-          console.log("Sort by Alphabet")
-          // Sorting vtuber by EnName ASC and lowercase
-          vtuber_data = vtuber_data.sort((a, b) => {
-            if (a.EnName.toLowerCase() < b.EnName.toLowerCase()) return -1
-            if (a.EnName.toLowerCase() > b.EnName.toLowerCase()) return 1
-            return 0
-          })
-          break
-        case "-name":
-          console.log("Sort by Reverse Alphabet")
-          break
-        case "yt":
-          console.log("Sort by Most Youtube Subscriber")
-          // Sorting vtuber by Youtube.Subscriber ASC when exist
-          vtuber_data = vtuber_data.sort((a, b) => {
-            if (a.Youtube) {
-              if (a.Youtube?.Subscriber < b.Youtube?.Subscriber) return 1
-              if (a.Youtube?.Subscriber > b.Youtube?.Subscriber) return -1
-            } else return 1
-            return 0
-          })
-          break
-        case "-yt":
-          console.log("Sort by Least Youtube Subscriber")
-          // Sorting vtuber by Youtube.Subscriber DESC when exist
-          vtuber_data = vtuber_data.sort((a, b) => {
-            if (b.Youtube) {
-              if (a.Youtube?.Subscriber > b.Youtube?.Subscriber) return 1
-              if (a.Youtube?.Subscriber < b.Youtube?.Subscriber) return -1
-            } else return 1
-            return 0
-          })
-          break
-        case "tw":
-          console.log("Sort by Most Twitch Followers")
-          //Sorting vtuber by Twitch.Followers ASC when exist
-          vtuber_data = vtuber_data.sort((a, b) => {
-            if (a.Twitch) {
-              if (a.Twitch?.Followers < b.Twitch?.Followers) return 1
-              if (a.Twitch?.Followers > b.Twitch?.Followers) return -1
-            } else return 1
-            return 0
-          })
-          break
-        case "-tw":
-          console.log("Sort by Least Twitch Followers")
-          //Sorting vtuber by Twitch.Followers DESC when exist
-          vtuber_data = vtuber_data.sort((a, b) => {
-            if (b.Twitch) {
-              if (a.Twitch?.Followers > b.Twitch?.Followers) return 1
-              if (a.Twitch?.Followers < b.Twitch?.Followers) return -1
-            } else return 1
-            return 0
-          })
-          break
-        case "bl":
-          console.log("Sort by Most Bilibili Followers")
-          //Sorting vtuber by BiliBili.Followers ASC when exist
-          vtuber_data = vtuber_data.sort((a, b) => {
-            if (a.BiliBili) {
-              if (a.BiliBili?.Followers < b.BiliBili?.Followers) return 1
-              if (a.BiliBili?.Followers > b.BiliBili?.Followers) return -1
-            } else return 1
-            return 0
-          })
-          break
-        case "-bl":
-          console.log("Sort by Least Bilibili Followers")
-          //Sorting vtuber by BiliBili.Followers DESC when exist
-          vtuber_data = vtuber_data.sort((a, b) => {
-            if (b.BiliBili) {
-              if (a.BiliBili?.Followers > b.BiliBili?.Followers) return 1
-              if (a.BiliBili?.Followers < b.BiliBili?.Followers) return -1
-            } else return 1
-            return 0
-          })
-          break
-        case "twr":
-          console.log("Sort by Most Twitter Followers")
-          //Sorting vtuber by Twitter.Followers ASC when exist
-          vtuber_data = vtuber_data.sort((a, b) => {
-            if (a.Twitter) {
-              if (a.Twitter?.Followers < b.Twitter?.Followers) return 1
-              if (a.Twitter?.Followers > b.Twitter?.Followers) return -1
-            } else return 1
-            return 0
-          })
-          break
-        case "-twr":
-          console.log("Sort by Least Twitter Followers")
-          //Sorting vtuber by Twitter.Followers DESC when exist
-          vtuber_data = vtuber_data.sort((a, b) => {
-            if (b.Twitter) {
-              if (a.Twitter?.Followers > b.Twitter?.Followers) return 1
-              if (a.Twitter?.Followers < b.Twitter?.Followers) return -1
-            } else return 1
-            return 0
-          })
-          break
-      }
-
-      // Sorting vtuber when IsLive.BiliBili is not null (Object), IsLive.Twitch is not null (Object), and IsLive.Youtube is not null (Object)
-      return vtuber_data.sort((a, b) => {
-        if (!a.IsLive.Youtube && b.IsLive.Youtube) return 1
-        if (a.IsLive.Youtube && !b.IsLive.Youtube) return -1
-        if (!a.IsLive.Twitch && b.IsLive.Twitch) return 1
-        if (a.IsLive.Twitch && !b.IsLive.Twitch) return -1
-        if (!a.IsLive.BiliBili && b.IsLive.BiliBili) return 1
-        if (a.IsLive.BiliBili && !b.IsLive.BiliBili) return -1
-        return 0
-      })
-    },
-
-    searchVtubers() {
-      // Filter vtuber.EnName or vtuber.JpName from this.search_query
-      const vtuber_data = this.sortingVtubers.filter((post) => {
-        let EnName = post.EnName.toLowerCase().includes(
-          this.search_query ? this.search_query.toLowerCase() : ""
-        )
-        let JpName
-        if (post.JpName != null) {
-          JpName = post.JpName.toLowerCase().includes(
-            this.search_query ? this.search_query.toLowerCase() : ""
-          )
-        }
-        return EnName || JpName
-      })
-
-      this.nullData = vtuber_data.length === 0
-      this.$emit("null-data", this.nullData)
-      return vtuber_data
+      return store.members.searchedData.length > 0
+        ? store.members.searchedData
+        : store.members.filteredData
     },
   },
   methods: {
@@ -350,10 +124,10 @@ export default {
 
         let vtubers_count = this.limitedVtubers.length
 
-        if (bottomOfWindow && vtubers_count < this.searchVtubers.length) {
+        if (bottomOfWindow && vtubers_count < this.vtubers.length) {
           // count vtubers_count, then add 25 more
           console.log("Extend more data...")
-          this.limitedVtubers = this.searchVtubers.slice(0, vtubers_count + 25)
+          this.limitedVtubers = this.vtubers.slice(0, vtubers_count + 25)
         }
 
         let topOfWindow = window.scrollY <= 0
@@ -382,7 +156,7 @@ export default {
 }
 
 .group-detail {
-  @apply mx-auto mb-3 grid w-[95%] gap-1 rounded-md bg-blue-300 p-2 shadow-md dark:bg-slate-500 sm:w-[85%] md:w-[80%] lg:w-[75%];
+  @apply mx-auto mb-3 grid w-[95%] gap-1 rounded-md bg-slate-200 p-2 shadow-md dark:bg-slate-500 sm:w-[85%] md:w-[80%] lg:w-[75%];
   grid-template-columns: max-content auto;
   grid-template-areas: "image title" "image link";
 
@@ -416,7 +190,7 @@ export default {
 }
 
 .scroll-to-top {
-  @apply fixed bottom-0 right-0 z-[2] m-4 rounded-full bg-sky-400 px-3 pb-2 pt-3 text-2xl
-  text-white shadow-sm shadow-sky-700/50 transition-transform hover:shadow-md dark:bg-slate-800 dark:shadow-slate-100/50;
+  @apply fixed bottom-0 right-0 z-[2] m-4 rounded-full bg-sky-400 px-3 pb-2 pt-3
+  text-2xl text-white shadow-sm shadow-sky-700/50 transition-transform hover:shadow-md dark:bg-slate-800 dark:shadow-slate-100/50 sm:mr-[2.5%] md:mr-[7.5%] lg:mr-[10.5%];
 }
 </style>

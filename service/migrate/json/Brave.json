@@ -22,7 +22,7 @@
 			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "",
-			"Status": "Active"
+			"Status": "Inactive"
 		},
 		{
 			"Name": "Ahopink",
@@ -58,7 +58,7 @@
 			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "",
-			"Status": "Active"
+			"Status": "Inactive"
 		},
 		{
 			"Name": "Harukasu",
@@ -76,7 +76,7 @@
 			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "",
-			"Status": "Active"
+			"Status": "Inactive"
 		},
 		{
 			"Name": "Kokoa",
@@ -274,7 +274,7 @@
 			"Twitch": null,
 			"Region": "JP",
 			"Fanbase": "",
-			"Status": "Active"
+			"Status": "Inactive"
 		}
 	]
 }
