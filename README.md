@@ -9,6 +9,7 @@
 A simple VTuber bot which pings you or your roles if any new Videos, Fanarts, or Livestreams and Upcoming streams of VTubers are posted!   
 for setup see at [Guide](https://github.com/JustHumanz/Go-Simp/blob/master/Guide.md)
 
+<!--
 ## Simple Setup
 First create a channel for this bot,Example `holosimps_channel`  
 then execute `/setup channel-type livestream` and fill the form
@@ -18,7 +19,7 @@ then execute `/setup channel-type livestream` and fill the form
 
 And if you want ping some roles you can execute  
 `/tag-role role-name: <Roleame>`
-
+-->
 
 **Important rule**  
 independent group have strict rule if no one user/roles tagged live/fanart notif will be not send
