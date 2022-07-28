@@ -286,6 +286,78 @@
       "Region": "JP",
       "Fanbase": "RIOFAM",
       "Status": "Active"
+    },
+    {
+      "Name": "Altare",
+      "EN_Name": "Regis Altare",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#WorkofAlt",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "regisaltare"
+      },
+      "Youtube": {
+        "Yt_ID": "UCyxtGMdWlURZ30WSnEjDOQw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Dezmond",
+      "EN_Name": "Magni Dezmond",
+      "JP_Name": "マグニ・デズモンド",
+      "Twitter": {
+        "Twitter_Fanart": "#MagniOpus",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "magnidezmond"
+      },
+      "Youtube": {
+        "Yt_ID": "UC7MMNHR-kf9EN1rXiesMTMw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Syrios",
+      "EN_Name": "Axel Syrios",
+      "JP_Name": "アクセル・シリオス",
+      "Twitter": {
+        "Twitter_Fanart": "#ArtXel",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "axelsyrios"
+      },
+      "Youtube": {
+        "Yt_ID": "UC2hx0xVkMoHGWijwr_lA01w"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Vesper",
+      "EN_Name": "Noir Vesper",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#ScholART",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "noirvesper_en"
+      },
+      "Youtube": {
+        "Yt_ID": "UCDRWSO281bIHYVi-OV3iFYA"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
     }
   ]
 }
