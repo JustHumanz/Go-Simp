@@ -55,7 +55,7 @@ import AmeLoading from "./AmeComp/AmeLoading.vue"
       </span>
     </div>
   </section>
-  <section class="vtuber-list" v-if="!nullData">
+  <section class="vtuber-list" id="vtuber-list" v-if="!nullData">
     <VtuberCard
       v-for="vtuber in limitedVtubers"
       :key="vtuber.ID"
@@ -84,6 +84,7 @@ export default {
       nullData: false,
       hide_scroll_up: true,
       regions: regionConfig,
+      cardContext: null,
     }
   },
   mounted() {
@@ -99,6 +100,7 @@ export default {
 
     this.ScrollFuncions()
     this.rightClick()
+    this.offclick()
   },
   computed: {
     group() {
@@ -146,13 +148,20 @@ export default {
         behavior: "smooth",
       })
     },
-    rightClick() {
-      document.body.addEventListener("contextmenu", (e) => {
-        if (e.target.closest(".card-vtuber")) {
-          e.preventDefault()
-          this.vtuberCardMenu(e.target.closest(".card-vtuber").dataset.id)
-        }
+    offclick() {
+      document.body.addEventListener("click", (e) => {
+        //
       })
+    },
+    rightClick() {
+      document
+        .getElementById("vtuber-list")
+        .addEventListener("contextmenu", (e) => {
+          if (e.target.closest(".card-vtuber")) {
+            e.preventDefault()
+            this.vtuberCardMenu(e.target.closest(".card-vtuber").dataset.id)
+          }
+        })
     },
     vtuberCardMenu(id) {
       console.log(id)
@@ -202,7 +211,7 @@ export default {
 }
 
 .scroll-to-top {
-  @apply fixed bottom-0 right-0 z-[2] m-4 rounded-full bg-sky-400 px-3 pb-2 pt-3
+  @apply fixed bottom-0 right-0 z-[5] m-4 rounded-full bg-sky-400 px-3 pb-2 pt-3
   text-2xl text-white shadow-sm shadow-sky-700/50 transition-transform hover:shadow-md dark:bg-slate-800 dark:shadow-slate-100/50 sm:mr-[2.5%] md:mr-[7.5%] lg:mr-[10.5%];
 }
 </style>

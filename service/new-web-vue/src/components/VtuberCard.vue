@@ -1,132 +1,172 @@
 <template>
-  <div
-    class="card-vtuber"
-    :class="{ inactive: vtuber.Status == 'Inactive' }"
-    :data-id="vtuber.ID"
-  >
-    <div class="card-vtuber-image">
-      <div class="tag-vtuber">
-        <div class="tag-vtuber-agency">
-          <router-link
-            :to="`/vtubers/` + vtuber.Group.ID"
-            @click="getVtuberData(vtuber.Group.ID)"
-          >
-            <img
-              draggable="false"
-              class="tag-vtuber-agency__icon"
-              :src="vtuber.Group.IconURL"
-              :alt="vtuber.Group.GroupName"
-              v-if="
-                $route.params.id != vtuber.Group.ID && vtuber.Group.ID !== 10
-              "
-            />
-            <img
-              draggable="false"
-              class="tag-vtuber-agency__flag"
-              :src="`/assets/flags/${vtuber.Regions?.code.toLowerCase()}.svg`"
-              :alt="vtuber.Regions.name"
-              onerror="this.src='/assets/flags/none.svg'"
-              v-else-if="vtuber.Regions"
-            />
-            <img
-              draggable="false"
-              class="tag-vtuber-agency__flag"
-              src="/assets/flags/none.svg"
-              :alt="vtuber.Region"
-              v-else
-            />
-          </router-link>
+  <div class="container-vtuber">
+    <div
+      class="card-vtuber"
+      :class="{ inactive: vtuber.Status == 'Inactive' }"
+      :data-id="vtuber.ID"
+    >
+      <div class="card-vtuber-image">
+        <div class="tag-vtuber">
+          <div class="tag-vtuber-agency">
+            <router-link
+              :to="`/vtubers/` + vtuber.Group.ID"
+              @click="getVtuberData(vtuber.Group.ID)"
+            >
+              <img
+                draggable="false"
+                class="tag-vtuber-agency__icon"
+                :src="vtuber.Group.IconURL"
+                :alt="vtuber.Group.GroupName"
+                v-if="
+                  $route.params.id != vtuber.Group.ID && vtuber.Group.ID !== 10
+                "
+              />
+              <img
+                draggable="false"
+                class="tag-vtuber-agency__flag"
+                :src="`/assets/flags/${vtuber.Regions?.code.toLowerCase()}.svg`"
+                :alt="vtuber.Regions.name"
+                onerror="this.src='/assets/flags/none.svg'"
+                v-else-if="vtuber.Regions"
+              />
+              <img
+                draggable="false"
+                class="tag-vtuber-agency__flag"
+                src="/assets/flags/none.svg"
+                :alt="vtuber.Region"
+                v-else
+              />
+            </router-link>
 
+            <font-awesome-icon
+              class="fa-fw"
+              icon="skull"
+              v-if="vtuber.Status == 'Inactive'"
+            />
+            <span class="tag-vtuber-agency__hover">{{
+              `${agencyName} ${
+                vtuber.Status === "Inactive" ? ` (Inactive)` : ""
+              }`
+            }}</span>
+          </div>
+          <div class="tag-vtuber-link">
+            <a
+              class="tag-vtuber-link__item hover:!text-youtube"
+              :class="{ live: vtuber.IsLive.Youtube }"
+              :href="ytLink"
+              target="_blank"
+              v-if="vtuber.Youtube"
+            >
+              <font-awesome-icon class="fa-fw" :icon="['fab', 'youtube']" />
+            </a>
+            <a
+              class="tag-vtuber-link__item hover:!text-twitch"
+              :class="{ live: vtuber.IsLive.Twitch }"
+              :href="`https://twitch.tv/${vtuber.Twitch.Username}`"
+              target="_blank"
+              v-if="vtuber.Twitch"
+            >
+              <font-awesome-icon class="fa-fw" :icon="['fab', 'twitch']" />
+            </a>
+            <a
+              class="tag-vtuber-link__item hover:!text-bilibili"
+              :class="{ live: vtuber.IsLive.BiliBili }"
+              :href="blLink"
+              target="_blank"
+              v-if="vtuber.BiliBili"
+            >
+              <font-awesome-icon class="fa-fw" :icon="['fab', 'bilibili']" />
+            </a>
+            <a
+              class="tag-vtuber-link__item hover:!text-twitter"
+              :href="`https://twitter.com/${vtuber.Twitter.Username}`"
+              target="_blank"
+              v-if="vtuber.Twitter"
+            >
+              <font-awesome-icon class="fa-fw" :icon="['fab', 'twitter']" />
+            </a>
+          </div>
+        </div>
+        <router-link
+          :to="`/vtuber/${vtuber.ID}`"
+          class="card-vtuber-image__link"
+        >
+          <img
+            draggable="false"
+            class="card-vtuber-image__img"
+            :src="avatar"
+            referrerpolicy="no-referrer"
+            onerror="this.src='/assets/smolame.jpg'"
+            :alt="vtuber.EnName"
+          />
+        </router-link>
+        <div class="vtuber-link" v-if="type !== 'name' && type !== 'jpname'">
           <font-awesome-icon
             class="fa-fw"
-            icon="skull"
-            v-if="vtuber.Status == 'Inactive'"
+            :icon="['fab', 'youtube']"
+            v-if="type.includes('youtube')"
           />
-          <span class="tag-vtuber-agency__hover">{{
-            `${agencyName} ${vtuber.Status === "Inactive" ? ` (Inactive)` : ""}`
-          }}</span>
-        </div>
-        <div class="tag-vtuber-link">
-          <a
-            class="tag-vtuber-link__item hover:!text-youtube"
-            :class="{ live: vtuber.IsLive.Youtube }"
-            :href="ytLink"
-            target="_blank"
-            v-if="vtuber.Youtube"
-          >
-            <font-awesome-icon class="fa-fw" :icon="['fab', 'youtube']" />
-          </a>
-          <a
-            class="tag-vtuber-link__item hover:!text-twitch"
-            :class="{ live: vtuber.IsLive.Twitch }"
-            :href="`https://twitch.tv/${vtuber.Twitch.Username}`"
-            target="_blank"
-            v-if="vtuber.Twitch"
-          >
-            <font-awesome-icon class="fa-fw" :icon="['fab', 'twitch']" />
-          </a>
-          <a
-            class="tag-vtuber-link__item hover:!text-bilibili"
-            :class="{ live: vtuber.IsLive.BiliBili }"
-            :href="blLink"
-            target="_blank"
-            v-if="vtuber.BiliBili"
-          >
-            <font-awesome-icon class="fa-fw" :icon="['fab', 'bilibili']" />
-          </a>
-          <a
-            class="tag-vtuber-link__item hover:!text-twitter"
-            :href="`https://twitter.com/${vtuber.Twitter.Username}`"
-            target="_blank"
-            v-if="vtuber.Twitter"
-          >
-            <font-awesome-icon class="fa-fw" :icon="['fab', 'twitter']" />
-          </a>
+          <font-awesome-icon
+            class="fa-fw"
+            :icon="['fab', 'twitch']"
+            v-if="type.includes('twitch')"
+          />
+          <font-awesome-icon
+            class="fa-fw"
+            :icon="['fab', 'bilibili']"
+            v-if="type.includes('bilibili')"
+          />
+          <font-awesome-icon
+            class="fa-fw"
+            :icon="['fab', 'twitter']"
+            v-if="type.includes('twitter')"
+          />
+          <span>{{ `${countSort} ${textCount}` }}</span>
         </div>
       </div>
-      <router-link :to="`/vtuber/${vtuber.ID}`" class="card-vtuber-image__link">
-        <img
-          draggable="false"
-          class="card-vtuber-image__img"
-          :src="avatar"
-          referrerpolicy="no-referrer"
-          onerror="this.src='/assets/smolame.jpg'"
-          :alt="vtuber.EnName"
-        />
-      </router-link>
-      <div class="vtuber-link" v-if="type !== 'name' && type !== 'jpname'">
-        <font-awesome-icon
-          class="fa-fw"
-          :icon="['fab', 'youtube']"
-          v-if="type.includes('youtube')"
-        />
-        <font-awesome-icon
-          class="fa-fw"
-          :icon="['fab', 'twitch']"
-          v-if="type.includes('twitch')"
-        />
-        <font-awesome-icon
-          class="fa-fw"
-          :icon="['fab', 'bilibili']"
-          v-if="type.includes('bilibili')"
-        />
-        <font-awesome-icon
-          class="fa-fw"
-          :icon="['fab', 'twitter']"
-          v-if="type.includes('twitter')"
-        />
-        <span>{{ `${countSort} ${textCount}` }}</span>
+      <div class="card-vtuber-name">
+        <router-link
+          :to="`/vtuber/${vtuber.ID}`"
+          class="card-vtuber-name__link"
+        >
+          <h4 class="card-vtuber-name__title">
+            {{ titleName }}
+          </h4>
+          <span class="card-vtuber-name__nickname">
+            {{ vtuber.NickName.toLowerCase() }}
+          </span>
+        </router-link>
       </div>
     </div>
-    <div class="card-vtuber-name">
-      <router-link :to="`/vtuber/${vtuber.ID}`" class="card-vtuber-name__link">
-        <h4 class="card-vtuber-name__title">
-          {{ titleName }}
-        </h4>
-        <span class="card-vtuber-name__nickname">
-          {{ vtuber.NickName.toLowerCase() }}
-        </span>
-      </router-link>
+    <div class="context-menu-vtuber">
+      <div class="context-menu-vtuber__item" @click="copyToClipboard">
+        <font-awesome-icon class="fa-fw" :icon="['fas', 'copy']" />
+        <span>Show Youtube Channel</span>
+      </div>
+      <div class="context-menu-vtuber__item" @click="copyToClipboard">
+        <font-awesome-icon class="fa-fw" :icon="['fas', 'copy']" />
+        <span>Copy Nickname & Group</span>
+      </div>
+      <div class="context-menu-vtuber__item" @click="copyToClipboard">
+        <font-awesome-icon class="fa-fw" :icon="['fas', 'copy']" />
+        <span>Copy Group</span>
+      </div>
+      <div class="context-menu-vtuber__item" @click="copyToClipboard">
+        <font-awesome-icon class="fa-fw" :icon="['fas', 'copy']" />
+        <span>Copy</span>
+      </div>
+      <div class="context-menu-vtuber__item" @click="copyToClipboard">
+        <font-awesome-icon class="fa-fw" :icon="['fas', 'copy']" />
+        <span>Copy</span>
+      </div>
+      <div class="context-menu-vtuber__item" @click="copyToClipboard">
+        <font-awesome-icon class="fa-fw" :icon="['fas', 'copy']" />
+        <span>Copy</span>
+      </div>
+      <div class="context-menu-vtuber__item" @click="copyToClipboard">
+        <font-awesome-icon class="fa-fw" icon="warning" />
+        <span>Send Issues</span>
+      </div>
     </div>
   </div>
 </template>
@@ -134,7 +174,7 @@
 <script>
 // Add font awesome brands youtube, twitch, bilibili, twitter
 import { library } from "@fortawesome/fontawesome-svg-core"
-import { faSkull } from "@fortawesome/free-solid-svg-icons"
+import { faSkull, faCopy, faWarning } from "@fortawesome/free-solid-svg-icons"
 import {
   faYoutube,
   faTwitch,
@@ -142,7 +182,15 @@ import {
   faTwitter,
 } from "@fortawesome/free-brands-svg-icons"
 
-library.add(faYoutube, faTwitch, faBilibili, faTwitter, faSkull)
+library.add(
+  faYoutube,
+  faTwitch,
+  faBilibili,
+  faTwitter,
+  faSkull,
+  faCopy,
+  faWarning
+)
 
 import { useMemberStore } from "@/stores/members.js"
 
@@ -151,6 +199,14 @@ export default {
     vtuber: {
       type: Object,
     },
+  },
+  mounted() {
+    const cardsContainer = document.querySelectorAll(".container-vtuber")
+
+    cardsContainer.forEach((c) => {
+      const card = c.children[0]
+      const contextMenu = c.children[1]
+    })
   },
   computed: {
     avatar() {
@@ -257,6 +313,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.container-vtuber {
+  @apply relative;
+}
 .card-vtuber {
   @apply select-none overflow-hidden rounded-md bg-white shadow-sm transition duration-300 ease-in-out hover:scale-105 hover:bg-slate-100 hover:shadow-md dark:bg-slate-500 dark:shadow-white/5 dark:hover:bg-slate-700;
 
@@ -340,6 +399,14 @@ export default {
     &__img {
       @apply opacity-40 grayscale;
     }
+  }
+}
+
+.context-menu-vtuber {
+  @apply absolute top-0 z-[4] w-full rounded-md bg-slate-700 shadow-md;
+
+  &__item {
+    @apply flex cursor-pointer space-x-1 px-2 py-1.5 text-sm first:pt-2 hover:bg-slate-600/40;
   }
 }
 </style>

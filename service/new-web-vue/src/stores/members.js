@@ -57,6 +57,8 @@ export const useMemberStore = defineStore("members", () => {
 
     members.value.data = []
     members.value.filteredData = []
+    members.value.searchedData = []
+    members.value.query = ""
 
     members.value.group = id
 
