@@ -820,6 +820,28 @@
       "Status": "Active"
     },
     {
+      "Name": "Rushia",
+      "EN_Name": "Uruha Rushia",
+      "JP_Name": "潤羽るしあ",
+      "Twitter": {
+        "Twitter_Fanart": "#絵クロマンサー",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "uruharushia"
+      },
+      "Youtube": {
+        "Yt_ID": "UCl_gCybOJRIgOXw6Qb4qJzQ"
+      },
+      "BiliBili": {
+        "BiliBili_Fanart": "",
+        "BiliBili_ID": 443300418,
+        "BiliRoom_ID": 21545232
+      },
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Inactive"
+    },
+    {
       "Name": "Gura",
       "EN_Name": "Gawr Gura",
       "JP_Name": "がうる・ぐら",
@@ -965,7 +987,7 @@
       "Twitch": null,
       "Region": "EN",
       "Fanbase": "Sanallite",
-      "Status": "Active"
+      "Status": "Inactive"
     },
     {
       "Name": "Konfauna",
