@@ -338,6 +338,7 @@ func addVtuber(w http.ResponseWriter, r *http.Request) {
 		Name     string   `json:"Name"`
 		EnName   string   `json:"EN_Name"`
 		JpName   string   `json:"JP_Name"`
+		GroupID  int      `json:"GroupID"`
 		Twitter  Twitter  `json:"Twitter"`
 		Youtube  Youtube  `json:"Youtube"`
 		BiliBili BiliBili `json:"BiliBili"`
@@ -388,6 +389,7 @@ func patchVtuber(w http.ResponseWriter, r *http.Request) {
 			Name     string   `json:"Name"`
 			EnName   string   `json:"EN_Name"`
 			JpName   string   `json:"JP_Name"`
+			GroupID  int      `json:"GroupID"`
 			Twitter  Twitter  `json:"Twitter"`
 			Youtube  Youtube  `json:"Youtube"`
 			BiliBili BiliBili `json:"BiliBili"`
@@ -400,6 +402,7 @@ func patchVtuber(w http.ResponseWriter, r *http.Request) {
 			Name     string   `json:"Name"`
 			EnName   string   `json:"EN_Name"`
 			JpName   string   `json:"JP_Name"`
+			GroupID  int      `json:"GroupID"`
 			Twitter  Twitter  `json:"Twitter"`
 			Youtube  Youtube  `json:"Youtube"`
 			BiliBili BiliBili `json:"BiliBili"`
