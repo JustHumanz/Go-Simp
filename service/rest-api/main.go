@@ -269,9 +269,11 @@ func main() {
 	})
 	router.HandleFunc("/groups/", getGroup).Methods("GET")
 	router.HandleFunc("/groups/{groupID}", getGroup).Methods("GET")
+	//Yes,you can make a request without any authentication so pls don't abuse the api
+	router.HandleFunc("/group/request/add", addAgency).Methods("POST")
+	router.HandleFunc("/group/request/edit", patchAgency).Methods("PATCH")
 
 	//router.HandleFunc("/prediction/{memberID}", getPrediction).Methods("GET")
-
 	router.HandleFunc("/members/", getMembers).Methods("GET")
 	router.HandleFunc("/members/{memberID}", getMembers).Methods("GET")
 
@@ -328,6 +330,88 @@ func invalidPath(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusBadRequest)
 }
 
+func addAgency(w http.ResponseWriter, r *http.Request) {
+	reqbdy, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Error(err)
+	}
+
+	var newAgency Agency
+	err = json.Unmarshal(reqbdy, &newAgency)
+	if err != nil || newAgency.GroupName == "" || newAgency.Members == nil {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(MessageError{
+			Message: "Invalid request.check your request and payload",
+			Date:    time.Now(),
+		})
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	pldstr, err := json.MarshalIndent(newAgency, "", "    ")
+	if err != nil {
+		log.Error(err)
+	}
+
+	SendPayload(map[string]string{
+		"payload": string(pldstr),
+		"msg":     "New agency request",
+	})
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"error": nil,
+		"msg":   "success",
+	})
+	w.WriteHeader(http.StatusOK)
+}
+
+func patchAgency(w http.ResponseWriter, r *http.Request) {
+	reqbdy, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Error(err)
+	}
+
+	type patch struct {
+		GroupID int
+		Old     Agency
+		New     Agency
+	}
+
+	var PatchAgency patch
+	err = json.Unmarshal(reqbdy, &PatchAgency)
+	if err != nil || PatchAgency.GroupID == 0 || PatchAgency.New.Members != nil || PatchAgency.Old.Members != nil {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(MessageError{
+			Message: "Invalid request.check your request and payload",
+			Date:    time.Now(),
+		})
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	pldstr, err := json.MarshalIndent(PatchAgency, "", "    ")
+	if err != nil {
+		log.Error(err)
+	}
+
+	SendPayload(map[string]string{
+		"payload": string(pldstr),
+		"msg":     "Update Agency",
+	})
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"error": nil,
+		"msg":   "success",
+	})
+	w.WriteHeader(http.StatusOK)
+}
+
 func addVtuber(w http.ResponseWriter, r *http.Request) {
 	reqbdy, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -338,6 +422,7 @@ func addVtuber(w http.ResponseWriter, r *http.Request) {
 		Name     string   `json:"Name"`
 		EnName   string   `json:"EN_Name"`
 		JpName   string   `json:"JP_Name"`
+		GroupID  int      `json:"GroupID"`
 		Twitter  Twitter  `json:"Twitter"`
 		Youtube  Youtube  `json:"Youtube"`
 		BiliBili BiliBili `json:"BiliBili"`
@@ -388,6 +473,7 @@ func patchVtuber(w http.ResponseWriter, r *http.Request) {
 			Name     string   `json:"Name"`
 			EnName   string   `json:"EN_Name"`
 			JpName   string   `json:"JP_Name"`
+			GroupID  int      `json:"GroupID"`
 			Twitter  Twitter  `json:"Twitter"`
 			Youtube  Youtube  `json:"Youtube"`
 			BiliBili BiliBili `json:"BiliBili"`
@@ -400,6 +486,7 @@ func patchVtuber(w http.ResponseWriter, r *http.Request) {
 			Name     string   `json:"Name"`
 			EnName   string   `json:"EN_Name"`
 			JpName   string   `json:"JP_Name"`
+			GroupID  int      `json:"GroupID"`
 			Twitter  Twitter  `json:"Twitter"`
 			Youtube  Youtube  `json:"Youtube"`
 			BiliBili BiliBili `json:"BiliBili"`
