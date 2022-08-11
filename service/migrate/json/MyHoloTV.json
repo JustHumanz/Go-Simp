@@ -81,6 +81,24 @@
 			"Twitch": null,
 			"Region": "PH",
 			"Fanbase": "Athelings",
+			"Status": "Inactive"
+		},
+		{
+			"Name": "HØRI",
+			"EN_Name": "HØRIZON",
+			"JP_Name": "ホリ",
+			"Twitter": {
+				"Twitter_Fanart": "#HORI07_Art",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "HO07RI"
+			},
+			"Youtube": {
+				"Yt_ID": "UCMvc8BlQ7r5gRbz-D2EY0LA"
+			},
+			"BiliBili": null,
+			"Twitch": null,
+			"Region": "TH",
+			"Fanbase": "",
 			"Status": "Active"
 		}
 	]
