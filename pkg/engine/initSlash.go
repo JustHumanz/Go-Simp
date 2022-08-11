@@ -15,20 +15,6 @@ const (
 
 //Start slash command
 func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild *discordgo.Guild) {
-	var (
-		VtuberGroupChoices []*discordgo.ApplicationCommandOptionChoice
-	)
-	for _, v := range GroupsPayload {
-		VtuberGroupChoices = append(VtuberGroupChoices, &discordgo.ApplicationCommandOptionChoice{
-			Name:  v.GroupName,
-			Value: v.ID,
-		})
-
-		//Discord slash command limit is 25 item
-		if len(VtuberGroupChoices) == 24 {
-			break
-		}
-	}
 
 	var (
 		commands = []*discordgo.ApplicationCommand{
@@ -53,10 +39,9 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 										Type:        discordgo.ApplicationCommandOptionChannel,
 									},
 									{
-										Type:        discordgo.ApplicationCommandOptionInteger,
+										Type:        discordgo.ApplicationCommandOptionString,
 										Name:        AgencyOption,
 										Description: "select agency of vtuber",
-										Choices:     VtuberGroupChoices,
 										Required:    true,
 									},
 									{
@@ -109,10 +94,9 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 										Type:        discordgo.ApplicationCommandOptionChannel,
 									},
 									{
-										Type:        discordgo.ApplicationCommandOptionInteger,
+										Type:        discordgo.ApplicationCommandOptionString,
 										Name:        "vtuber-group",
 										Description: "select agency of vtuber",
-										Choices:     VtuberGroupChoices,
 										Required:    true,
 									},
 									{
@@ -135,10 +119,9 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 										Type:        discordgo.ApplicationCommandOptionChannel,
 									},
 									{
-										Type:        discordgo.ApplicationCommandOptionInteger,
+										Type:        discordgo.ApplicationCommandOptionString,
 										Name:        AgencyOption,
 										Description: "select agency of vtuber",
-										Choices:     VtuberGroupChoices,
 										Required:    true,
 									},
 								},
@@ -191,10 +174,9 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 				Options: []*discordgo.ApplicationCommandOption{
 
 					{
-						Type:        discordgo.ApplicationCommandOptionInteger,
+						Type:        discordgo.ApplicationCommandOptionString,
 						Name:        AgencyOption,
 						Description: "Select vtuber GroupName",
-						Choices:     VtuberGroupChoices,
 						Required:    true,
 					},
 					{
@@ -211,10 +193,9 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 				Options: []*discordgo.ApplicationCommandOption{
 
 					{
-						Type:        discordgo.ApplicationCommandOptionInteger,
+						Type:        discordgo.ApplicationCommandOptionString,
 						Name:        AgencyOption,
 						Description: "Select vtuber GroupName",
-						Choices:     VtuberGroupChoices,
 						Required:    true,
 					},
 					{
@@ -271,10 +252,9 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 						Required: true,
 					},
 					{
-						Type:        discordgo.ApplicationCommandOptionInteger,
+						Type:        discordgo.ApplicationCommandOptionString,
 						Name:        AgencyOption,
 						Description: "Select vtuber GroupName",
-						Choices:     VtuberGroupChoices,
 						Required:    true,
 					},
 					{
@@ -308,10 +288,9 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 				Description: "Add you to the tag list if any new fan art or live stream is uploaded",
 				Options: []*discordgo.ApplicationCommandOption{
 					{
-						Type:        discordgo.ApplicationCommandOptionInteger,
+						Type:        discordgo.ApplicationCommandOptionString,
 						Name:        AgencyOption,
 						Description: "select vtuber",
-						Choices:     VtuberGroupChoices,
 						Required:    false,
 					},
 					{
@@ -333,10 +312,9 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 				Description: "delete a vtuber from your tag list",
 				Options: []*discordgo.ApplicationCommandOption{
 					{
-						Type:        discordgo.ApplicationCommandOptionInteger,
+						Type:        discordgo.ApplicationCommandOptionString,
 						Name:        AgencyOption,
 						Description: "select vtuber",
-						Choices:     VtuberGroupChoices,
 						Required:    false,
 					},
 					{
@@ -368,10 +346,9 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 						Required:    true,
 					},
 					{
-						Type:        discordgo.ApplicationCommandOptionInteger,
+						Type:        discordgo.ApplicationCommandOptionString,
 						Name:        AgencyOption,
-						Description: "select vtuber",
-						Choices:     VtuberGroupChoices,
+						Description: "select agency",
 						Required:    false,
 					},
 					{
@@ -399,10 +376,9 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 						Required:    true,
 					},
 					{
-						Type:        discordgo.ApplicationCommandOptionInteger,
+						Type:        discordgo.ApplicationCommandOptionString,
 						Name:        AgencyOption,
-						Description: "select vtuber",
-						Choices:     VtuberGroupChoices,
+						Description: "select agency",
 						Required:    false,
 					},
 					{

@@ -102,18 +102,18 @@ var (
 			state := i.ApplicationCommandData().Options[0].IntValue()
 			Avatar := i.Member.User.AvatarURL("128")
 			Nick := i.Member.User.Username
-			GroupSelected := 0
-			VtuberSelected := ""
+			SelectedAgency := ""
+			SelectedVtuber := ""
 			region := ""
 			status := ""
 
 			for _, v := range i.ApplicationCommandData().Options {
-				if v.Name == "group-name" {
-					GroupSelected = int(v.IntValue())
+				if v.Name == engine.AgencyOption {
+					SelectedAgency = v.StringValue()
 				}
 
 				if v.Name == engine.VtuberOption {
-					VtuberSelected = v.StringValue()
+					SelectedVtuber = v.StringValue()
 				}
 
 				if v.Name == "status" {
@@ -192,18 +192,18 @@ var (
 			}
 
 			for _, v := range GroupsPayload {
-				if v.ID == int64(GroupSelected) {
+				if strings.EqualFold(v.GroupName, SelectedAgency) {
 					Agency = v
-					if VtuberSelected != "" {
+					if SelectedVtuber != "" {
 						for _, v2 := range v.Members {
-							if engine.CheckVtuberName(v2, VtuberSelected) {
+							if engine.CheckVtuberName(v2, SelectedVtuber) {
 								Member = v2
 							}
 						}
 
 						//Retrun invalid vtuber name
 						if Member.IsMemberNill() {
-							SendSimpleMsg(s, i, fmt.Sprintf("Invalid vtuber name %s", VtuberSelected))
+							SendSimpleMsg(s, i, fmt.Sprintf("Invalid vtuber name %s", SelectedVtuber))
 							return
 						}
 					}
@@ -533,12 +533,12 @@ var (
 		"art": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			var embed *discordgo.MessageEmbed
 			var DynamicData DynamicSvr
-			var SelectedAgency int64
+			var SelectedAgency string
 			var SelectedVtuber string
 
 			for _, v := range i.ApplicationCommandData().Options {
 				if v.Name == engine.AgencyOption {
-					SelectedAgency = v.IntValue()
+					SelectedAgency = v.StringValue()
 				}
 
 				if v.Name == engine.VtuberOption {
@@ -636,7 +636,7 @@ var (
 			Agency := database.Group{}
 			VtuberName := database.Member{}
 			for _, v := range GroupsPayload {
-				if v.ID == SelectedAgency {
+				if strings.EqualFold(SelectedAgency, v.GroupName) {
 					Agency = v
 					if SelectedVtuber != "" {
 						for _, k := range v.Members {
@@ -690,12 +690,12 @@ var (
 				var embed *discordgo.MessageEmbed
 				Avatar := i.Member.User.AvatarURL("128")
 				Nick := i.Member.User.Username
-				var SelectedAgency int64
+				var SelectedAgency string
 				var SelectedVtuber string
 
 				for _, v := range i.ApplicationCommandData().Options {
 					if v.Name == engine.AgencyOption {
-						SelectedAgency = v.IntValue()
+						SelectedAgency = v.StringValue()
 					}
 
 					if v.Name == engine.VtuberOption {
@@ -756,7 +756,7 @@ var (
 				Agency := database.Group{}
 				VtuberName := database.Member{}
 				for _, v := range GroupsPayload {
-					if v.ID == SelectedAgency {
+					if strings.EqualFold(SelectedAgency, v.GroupName) {
 						Agency = v
 						if SelectedVtuber != "" {
 							for _, k := range v.Members {
@@ -928,11 +928,11 @@ var (
 			}
 
 			var (
-				Already        []string
-				Done           []string
-				GroupID        int
-				Reminder       int
-				VtuberSelected string
+				Already           []string
+				Done              []string
+				SelectedGroupName string
+				Reminder          int
+				SelectedVtuber    string
 			)
 
 			log.WithFields(log.Fields{
@@ -942,13 +942,13 @@ var (
 
 			for _, v := range i.ApplicationCommandData().Options {
 				if v.Name == engine.AgencyOption {
-					GroupID = int(v.IntValue())
+					SelectedGroupName = v.StringValue()
 				}
 				if v.Name == "reminder" {
 					Reminder = int(v.IntValue())
 				}
 				if v.Name == engine.VtuberOption {
-					VtuberSelected = v.StringValue()
+					SelectedVtuber = v.StringValue()
 				}
 			}
 
@@ -960,7 +960,7 @@ var (
 			One := true
 			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
-					if (GroupID == 0 && engine.CheckVtuberName(v2, VtuberSelected)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
+					if (SelectedGroupName == "" && engine.CheckVtuberName(v2, SelectedVtuber)) || (strings.EqualFold(SelectedGroupName, v.GroupName) && SelectedGroupName != "") {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
 							if (Reminder > 60 && Reminder < 10) && Reminder != 0 {
 								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -1044,10 +1044,10 @@ var (
 		},
 		"del-tag": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			var (
-				Already        []string
-				Done           []string
-				GroupID        int
-				VtuberSelected string
+				Already           []string
+				Done              []string
+				SelectedGroupName string
+				SelectedVtuber    string
 			)
 			One := true
 
@@ -1063,16 +1063,16 @@ var (
 
 			for _, v := range i.ApplicationCommandData().Options {
 				if v.Name == engine.AgencyOption {
-					GroupID = int(v.IntValue())
+					SelectedGroupName = v.StringValue()
 				}
 				if v.Name == engine.VtuberOption {
-					VtuberSelected = v.StringValue()
+					SelectedVtuber = v.StringValue()
 				}
 			}
 
 			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
-					if (GroupID == 0 && engine.CheckVtuberName(v2, VtuberSelected)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
+					if (SelectedGroupName == "" && engine.CheckVtuberName(v2, SelectedVtuber)) || (strings.EqualFold(SelectedGroupName, v.GroupName) && SelectedGroupName != "") {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
 
 							User := &database.UserStruct{
@@ -1174,23 +1174,23 @@ var (
 			}).Info("tag-role")
 
 			var (
-				Already        []string
-				Done           []string
-				GroupID        int
-				Reminder       int
-				VtuberSelected string
-				RoleState      *discordgo.Role
+				Already           []string
+				Done              []string
+				SelectedGroupName string
+				Reminder          int
+				SelectedVtuber    string
+				RoleState         *discordgo.Role
 			)
 
 			for _, v := range i.ApplicationCommandData().Options {
 				if v.Name == engine.AgencyOption {
-					GroupID = int(v.IntValue())
+					SelectedGroupName = v.StringValue()
 				}
 				if v.Name == "reminder" {
 					Reminder = int(v.IntValue())
 				}
 				if v.Name == engine.VtuberOption {
-					VtuberSelected = v.StringValue()
+					SelectedVtuber = v.StringValue()
 				}
 				if v.Name == "role-name" {
 					RoleState = v.RoleValue(nil, "")
@@ -1205,7 +1205,7 @@ var (
 			One := true
 			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
-					if (GroupID == 0 && engine.CheckVtuberName(v2, VtuberSelected)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
+					if (SelectedGroupName == "" && engine.CheckVtuberName(v2, SelectedVtuber)) || (strings.EqualFold(SelectedGroupName, v.GroupName) && SelectedGroupName != "") {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
 							if (Reminder > 60 && Reminder < 10) && Reminder != 0 {
 								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -1315,19 +1315,19 @@ var (
 			}
 
 			var (
-				Already        []string
-				Done           []string
-				GroupID        int
-				VtuberSelected string
-				RoleState      *discordgo.Role
+				Already           []string
+				Done              []string
+				SelectedGroupName string
+				SelectedVtuber    string
+				RoleState         *discordgo.Role
 			)
 
 			for _, v := range i.ApplicationCommandData().Options {
 				if v.Name == engine.AgencyOption {
-					GroupID = int(v.IntValue())
+					SelectedGroupName = v.StringValue()
 				}
 				if v.Name == engine.VtuberOption {
-					VtuberSelected = v.StringValue()
+					SelectedVtuber = v.StringValue()
 				}
 				if v.Name == "role-name" {
 					RoleState = v.RoleValue(nil, "")
@@ -1336,7 +1336,7 @@ var (
 
 			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
-					if (GroupID == 0 && engine.CheckVtuberName(v2, VtuberSelected)) || (GroupID == int(v2.Group.ID) && GroupID != 0) {
+					if (SelectedGroupName == "" && engine.CheckVtuberName(v2, SelectedVtuber)) || (strings.EqualFold(v.GroupName, SelectedGroupName) && SelectedGroupName != "") {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
 
 							User := &database.UserStruct{
@@ -1541,7 +1541,7 @@ var (
 
 						if v2.Name == engine.AgencyOption {
 							for _, v3 := range GroupsPayload {
-								if v3.ID == v2.IntValue() {
+								if strings.EqualFold(v3.GroupName, v.StringValue()) {
 									Group = v3
 									break
 								}
@@ -1619,7 +1619,7 @@ var (
 
 						if v2.Name == engine.AgencyOption {
 							for _, v3 := range GroupsPayload {
-								if v3.ID == v2.IntValue() {
+								if strings.EqualFold(v3.GroupName, v.StringValue()) {
 									Group = v3
 									break
 								}
@@ -1692,7 +1692,7 @@ var (
 
 						if v2.Name == engine.AgencyOption {
 							for _, v3 := range GroupsPayload {
-								if v3.ID == v2.IntValue() {
+								if strings.EqualFold(v.StringValue(), v3.GroupName) {
 									Group = v3
 									break
 								}
