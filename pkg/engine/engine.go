@@ -27,7 +27,11 @@ import (
 	"github.com/pbnjay/memory"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/net/proxy"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
+
+var Cas = cases.Title(language.Und, cases.NoLower)
 
 //GetYtToken Get a valid token
 func GetYtToken() *string {
@@ -44,11 +48,11 @@ func GetYtToken() *string {
 //FixName change to Title format
 func FixName(A string, B string) string {
 	if A != "" && B != "" {
-		return "【" + strings.Title(strings.Join([]string{A, B}, "/")) + "】"
+		return Cas.String("【" + strings.Join([]string{A, B}, "/") + "】")
 	} else if B != "" {
-		return "【" + strings.Title(B) + "】"
+		return "【" + Cas.String(B) + "】"
 	} else {
-		return "【" + strings.Title(A) + "】"
+		return "【" + Cas.String(A) + "】"
 	}
 }
 
