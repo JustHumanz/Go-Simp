@@ -25,6 +25,124 @@
 			"Region": "PH",
 			"Fanbase": "flans",
 			"Status": "Active"
+		},
+		{
+			"Name": "Hanabi",
+			"EN_Name": "Amemachi Hanabi",
+			"JP_Name": "雨街はなび",
+			"Twitter": {
+				"Twitter_Fanart": "#hanabiart",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "amemachihanabi"
+			},
+			"Youtube": {
+				"Yt_ID": "UC8yXRB_jKDeapwQak2i30EA"
+			},
+			"BiliBili": null,
+			"Twitch": null,
+			"Region": "EN",
+			"Fanbase": "",
+			"Status": "Active"
+		},
+		{
+			"Name": "Tsurugi",
+			"EN_Name": "Tsurugi Nen",
+			"JP_Name": "弦稀ネン",
+			"Twitter": {
+				"Twitter_Fanart": "#NenArt",
+				"Twitter_Lewd": "#NENTAI",
+				"Twitter_Username": "tsuruginen"
+			},
+			"Youtube": {
+				"Yt_ID": "UCNUS0XshN1Tf7iLdd0MpPAg"
+			},
+			"BiliBili": null,
+			"Twitch": {
+				"Twitch_Username": "tsuruginen"
+			},
+			"Region": "EN",
+			"Fanbase": "Allnighters",
+			"Status": "Active"
+		},
+		{
+			"Name": "Tomoya",
+			"EN_Name": "Uzuki Tomoya",
+			"JP_Name": "卯月トモヤ",
+			"Twitter": {
+				"Twitter_Fanart": "#Tomoya_rt",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "uzukitomoya"
+			},
+			"Youtube": {
+				"Yt_ID": "UCrJWs9LeZ0LcnHfRxi8OKPQ"
+			},
+			"BiliBili": null,
+			"Twitch": {
+				"Twitch_Username": "uzukitomoya"
+			},
+			"Region": "EN",
+			"Fanbase": "Tomoyachi",
+			"Status": "Active"
+		},
+		{
+			"Name": "Chikafuji",
+			"EN_Name": "Chikafuji Lisa",
+			"JP_Name": "近藤リサ",
+			"Twitter": {
+				"Twitter_Fanart": "#chikafujillust",
+				"Twitter_Lewd": "#L18SA",
+				"Twitter_Username": "chikafujilisa"
+			},
+			"Youtube": {
+				"Yt_ID": "UCdureux7B_V-xhM7tYImASQ"
+			},
+			"BiliBili": null,
+			"Twitch": {
+				"Twitch_Username": "chikafujilisa"
+			},
+			"Region": "EN",
+			"Fanbase": "Sheeple",
+			"Status": "Active"
+		},
+		{
+			"Name": "Chikafuji",
+			"EN_Name": "Chikafuji Lisa",
+			"JP_Name": "近藤リサ",
+			"Twitter": {
+				"Twitter_Fanart": "#kazusketch",
+				"Twitter_Lewd": "",
+				"Twitter_Username": "tetsuyakazune"
+			},
+			"Youtube": {
+				"Yt_ID": "UCALvlEyjxjF5jnheSl0oSxw"
+			},
+			"BiliBili": null,
+			"Twitch": {
+				"Twitch_Username": "tetsuyakazune"
+			},
+			"Region": "EN",
+			"Fanbase": "NightOwls",
+			"Status": "Active"
+		},
+		{
+			"Name": "Aranha",
+			"EN_Name": "Amiya Aranha",
+			"JP_Name": "アミヤ・アラニャ",
+			"Twitter": {
+				"Twitter_Fanart": "#Amiyart",
+				"Twitter_Lewd": "#Amiyallure",
+				"Twitter_Username": "amiyaaranha"
+			},
+			"Youtube": {
+				"Yt_ID": "UCykMWf8B8I7c_jA8FTy2tGw"
+			},
+			"BiliBili": null,
+			"Twitch": {
+				"Twitch_Username": "amiyaaranha"
+			},
+			"Region": "EN",
+			"Fanbase": "Dreamweavers",
+			"Status": "Active"
 		}
 	]
 }
