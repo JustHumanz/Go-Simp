@@ -6,6 +6,10 @@
       {
         "ChannelID": "UCzc8GwjUvecxpjhGtuewYOQ",
         "Region": "ID"
+      },
+      {
+        "ChannelID": "UC3BJY6I0IBn14NTBNnwKncw",
+        "Region": "JP"
       }
     ],
     "BiliBili": null
@@ -134,6 +138,96 @@
       "BiliBili": null,
       "Twitch": null,
       "Region": "ID",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Kou-Rin",
+      "EN_Name": "Kou Rin",
+      "JP_Name": "香鈴",
+      "Twitter": {
+        "Twitter_Fanart": "#こうりんのじゆうちょう",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "KouRin_MAHA5JP"
+      },
+      "Youtube": {
+        "Yt_ID": "UCZdHIwgiWwtXGOUtcEToiTw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Naraku",
+      "EN_Name": "Naraku Kanade",
+      "JP_Name": "七楽 奏",
+      "Twitter": {
+        "Twitter_Fanart": "#奏絵ェ",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "naraku_kanade"
+      },
+      "Youtube": {
+        "Yt_ID": "UCSCX0sQoGjiwooIFaN3hxZw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Alta",
+      "EN_Name": "Alta Il",
+      "JP_Name": "アルタ_イル",
+      "Twitter": {
+        "Twitter_Fanart": "#アルタート",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "Alta_il"
+      },
+      "Youtube": {
+        "Yt_ID": "UC-LsFNFBy1AwPFxbqPUQTEQ"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Moka",
+      "EN_Name": "Otonari Moka",
+      "JP_Name": "音成 モカ",
+      "Twitter": {
+        "Twitter_Fanart": "#絵カチーノ",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "moka_otonari"
+      },
+      "Youtube": {
+        "Yt_ID": "UCyn3sHnu7Q2D4vF7jhd6fzQ"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Gaoh",
+      "EN_Name": "Gaoh Omi",
+      "JP_Name": "雅桜おみ",
+      "Twitter": {
+        "Twitter_Fanart": "#おみつぎもの",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "GaoooHOmi"
+      },
+      "Youtube": {
+        "Yt_ID": "UC23pFx4llMrwDvGJ7DqT87Q"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
     }
