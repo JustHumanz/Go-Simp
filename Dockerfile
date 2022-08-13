@@ -1,5 +1,5 @@
 # build stage
-FROM golang:alpine as build-stage
+FROM golang:1.18-alpine as build-stage
 
 RUN apk --no-cache add git
 RUN export CGO_ENABLED=1
