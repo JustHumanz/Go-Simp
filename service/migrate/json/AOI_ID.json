@@ -63,7 +63,7 @@
       "Twitch": null,
       "Region": "ID",
       "Fanbase": "Harumates",
-      "Status": "Active"
+      "Status": "Inactive"
     },
     {
       "Name": "Adelaide",
@@ -81,7 +81,7 @@
       "Twitch": null,
       "Region": "ID",
       "Fanbase": "FaMillie",
-      "Status": "Active"
+      "Status": "Inactive"
     },
     {
       "Name": "Gita",
@@ -99,7 +99,7 @@
       "Twitch": null,
       "Region": "ID",
       "Fanbase": "SIMPhony",
-      "Status": "Active"
+      "Status": "Inactive"
     }
   ]
 }

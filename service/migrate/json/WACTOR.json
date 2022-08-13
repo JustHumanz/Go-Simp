@@ -94,7 +94,7 @@
       "Twitch": null,
       "Region": "JP",
       "Fanbase": "",
-      "Status": "Active"
+      "Status": "Inactive"
     },
     {
       "Name": "Rui-chan",
@@ -202,7 +202,7 @@
       "Twitch": null,
       "Region": "JP",
       "Fanbase": "Hoshiner",
-      "Status": "Active"
+      "Status": "Inactive"
     },
     {
       "Name": "Pal",
@@ -350,6 +350,28 @@
       "Twitch": null,
       "Region": "JP",
       "Fanbase": "Kuupids",
+      "Status": "Active"
+    },
+    {
+      "Name": "Lea",
+      "EN_Name": "Lea",
+      "JP_Name": "レア",
+      "Twitter": {
+        "Twitter_Fanart": "#Leart",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "Lea_wactor"
+      },
+      "Youtube": {
+        "Yt_ID": "UCLrvv6cTzFRnM4DSfHynS8w"
+      },
+      "BiliBili": {
+        "BiliBili_Fanart": "",
+        "BiliBili_ID": 1589583375,
+        "BiliRoom_ID": 25483301
+      },
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
       "Status": "Active"
     }
   ]
