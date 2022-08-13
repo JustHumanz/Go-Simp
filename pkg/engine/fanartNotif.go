@@ -2,6 +2,7 @@ package engine
 
 import (
 	"context"
+	"strings"
 	"sync"
 	"time"
 
@@ -84,7 +85,7 @@ func SendFanArtNude(Art database.DataFanart, Bot *discordgo.Session) {
 							}).Info("Send pic")
 
 							tmp, err := Bot.ChannelMessageSendEmbed(Channel.ChannelID, NewEmbed().
-								SetAuthor(Cas.String(Art.Group.GroupName), Art.Group.IconURL).
+								SetAuthor(strings.Title(Art.Group.GroupName), Art.Group.IconURL).
 								SetTitle(Art.Author).
 								SetURL(Art.PermanentURL).
 								SetThumbnail(Art.AuthorAvatar).
