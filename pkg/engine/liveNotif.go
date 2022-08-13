@@ -23,7 +23,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 			log.Error(err)
 		}
 		return clr
-	}()
+	}
 
 	getWaitingDur := func(lenChannel int) int {
 		Wait := GetMaxSqlConn()
@@ -39,6 +39,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 	)
 
 	if !Data.Member.IsMemberNill() {
+
 		loc, err := Zawarudo(Data.Member.Region)
 		if err != nil {
 			log.Error(err)
@@ -56,6 +57,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 			Avatar := Data.Member.YoutubeAvatar
 			YtChannel := "https://www.youtube.com/channel/" + Data.Member.YoutubeID + "?sub_confirmation=1"
 			YtURL := "https://www.youtube.com/watch?v=" + Data.VideoID
+			Color := Color()
 
 			var (
 				Timestart time.Time
@@ -80,6 +82,8 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 						Viewers = "???"
 					}
 				}
+
+				UpcominginMinutes = int(time.Until(Timestart).Minutes())
 			)
 
 			if !Data.Schedul.IsZero() {
@@ -90,7 +94,25 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 				Timestart = time.Now()
 			}
 
-			if Status != "reminder" {
+			if Status == "reminder" {
+				if !database.CheckReminderList(User.Member.ID, UpcominginMinutes) {
+					log.WithFields(log.Fields{
+						"VtuberAgency": Data.Group.GroupName,
+						"Vtuber":       Data.Member.Name,
+						"YTChannel":    Data.Member.YoutubeID,
+						"Reminder":     UpcominginMinutes,
+					}).Info("Reminder list was nil")
+
+					return
+				} else {
+					log.WithFields(log.Fields{
+						"VtuberAgency": Data.Group.GroupName,
+						"Vtuber":       Data.Member.Name,
+						"YTChannel":    Data.Member.YoutubeID,
+						"Reminder":     UpcominginMinutes,
+					}).Info("Reminder list not nil")
+				}
+			} else {
 				GetView()
 			}
 
@@ -485,7 +507,6 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 				wgg.Wait()
 
 			} else if Status == "reminder" {
-				UpcominginMinutes := int(time.Until(Timestart).Minutes())
 				if UpcominginMinutes > 10 && UpcominginMinutes < 70 {
 					if database.CheckReminder(UpcominginMinutes) {
 						GetView()
@@ -539,6 +560,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 			loc, _ := time.LoadLocation("Asia/Shanghai")
 			BiliBiliAccount := "https://space.bilibili.com/" + strconv.Itoa(Data.Member.BiliBiliID)
 			BiliBiliURL := "https://live.bilibili.com/" + strconv.Itoa(Data.Member.BiliBiliRoomID)
+			Color := Color()
 
 			BiliBiliRoomID := strconv.Itoa(Data.Member.BiliBiliRoomID)
 			User := &database.UserStruct{
@@ -703,6 +725,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 					Human:    true,
 					Reminder: 0,
 				}
+				Color = Color()
 			)
 
 			view, err := strconv.Atoi(Data.Viewers)
@@ -856,6 +879,8 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 				log.Error(err)
 			}
 
+			Color := Color()
+
 			Views := "???"
 			if view > 100 {
 				Views = NearestThousandFormat(float64(view))
@@ -973,6 +998,7 @@ func SendLiveNotif(Data *database.LiveStream, Bot *discordgo.Session) {
 				YtChannel = "https://www.youtube.com/channel/" + Data.GroupYoutube.YtChannel + "?sub_confirmation=1"
 				YtURL     = "https://www.youtube.com/watch?v=" + Data.VideoID
 				Viewers   string
+				Color     = Color()
 			)
 
 			ChannelData, err := Data.Group.GetChannelByGroup(Data.GroupYoutube.Region)

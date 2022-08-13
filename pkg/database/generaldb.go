@@ -859,6 +859,20 @@ func (Data *DiscordChannel) GetUserList(ctx context.Context) ([]string, error) {
 	return DataUser, nil
 }
 
+func CheckReminderList(Member int64, Reminder int) bool {
+	var count int
+	row := DB.QueryRow("SELECT count(id) FROM Vtuber.User where Reminder != ? and VtuberMember_id = ?", Reminder, Member)
+	err := row.Scan(&count)
+	if err != nil {
+		log.Error(err)
+	}
+
+	if count > 0 {
+		return true
+	}
+	return false
+}
+
 //GetUserReminderList get Reminder tags
 func GetUserReminderList(ChannelIDDiscord int64, Member int64, Reminder int) ([]string, error) {
 	var (
