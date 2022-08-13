@@ -109,7 +109,7 @@ func CheckBiliBili() {
 							log.WithFields(log.Fields{
 								"Agency": Group.GroupName,
 								"Vtuber": Member.Name,
-							})
+							}).Error(curlerr)
 							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 								Message:     curlerr.Error(),
 								Service:     ServiceName,
@@ -123,7 +123,7 @@ func CheckBiliBili() {
 							log.WithFields(log.Fields{
 								"Agency": Group.GroupName,
 								"Vtuber": Member.Name,
-							})
+							}).Error(curlerr)
 							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 								Message:     curlerr.Error(),
 								Service:     ServiceName,
@@ -146,7 +146,7 @@ func CheckBiliBili() {
 							log.WithFields(log.Fields{
 								"Agency": Group.GroupName,
 								"Vtuber": Member.Name,
-							})
+							}).Error(curlerr)
 							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 								Message:     curlerr.Error(),
 								Service:     ServiceName,
@@ -160,7 +160,7 @@ func CheckBiliBili() {
 							log.WithFields(log.Fields{
 								"Agency": Group.GroupName,
 								"Vtuber": Member.Name,
-							})
+							}).Error(curlerr)
 							gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 								Message:     curlerr.Error(),
 								Service:     ServiceName,
@@ -186,7 +186,7 @@ func CheckBiliBili() {
 								log.WithFields(log.Fields{
 									"Agency": Group.GroupName,
 									"Vtuber": Member.Name,
-								})
+								}).Error(curlerr)
 								gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 									Message:     curlerr.Error(),
 									Service:     ServiceName,
@@ -200,7 +200,7 @@ func CheckBiliBili() {
 								log.WithFields(log.Fields{
 									"Agency": Group.GroupName,
 									"Vtuber": Member.Name,
-								})
+								}).Error(curlerr)
 								gRCPconn.ReportError(context.Background(), &pilot.ServiceMessage{
 									Message:     curlerr.Error(),
 									Service:     ServiceName,
@@ -223,7 +223,7 @@ func CheckBiliBili() {
 					log.WithFields(log.Fields{
 						"Agency": Group.GroupName,
 						"Vtuber": Member.Name,
-					})
+					}).Error(err)
 				}
 
 				BiliFollowDB.SetMember(Member).SetGroup(Group).UpdateState(config.BiliLive)
@@ -254,7 +254,7 @@ func CheckBiliBili() {
 										log.WithFields(log.Fields{
 											"Agency": Group.GroupName,
 											"Vtuber": Member.Name,
-										})
+										}).Error(err)
 									}
 
 									Graph := "[View as Graph](" + os.Getenv("PrometheusURL") + "/graph?g0.expr=get_subscriber%7Bstate%3D%22BiliBili%22%2C%20vtuber%3D%22" + Member.Name + "%22%7D&g0.tab=0&g0.stacked=0&g0.range_input=4w)"
