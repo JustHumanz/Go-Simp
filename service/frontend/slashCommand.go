@@ -204,10 +204,25 @@ var (
 						//Retrun invalid vtuber name
 						if Member.IsMemberNill() {
 							SendSimpleMsg(s, i, fmt.Sprintf("Invalid vtuber name %s", SelectedVtuber))
+							log.WithFields(log.Fields{
+								"ChannelID":     i.ChannelID,
+								"SelectedGroup": SelectedVtuber,
+								"State":         "Livestream",
+							}).Warn("Invalid vtuber name")
 							return
 						}
 					}
 				}
+			}
+
+			if Agency.IsNull() {
+				SendSimpleMsg(s, i, fmt.Sprintf("Invalid agency name %s", SelectedAgency))
+				log.WithFields(log.Fields{
+					"ChannelID":     i.ChannelID,
+					"SelectedGroup": SelectedAgency,
+					"State":         "Livestream",
+				}).Warn("Invalid agency name")
+				return
 			}
 
 			if state == 1 {
@@ -633,8 +648,8 @@ var (
 
 			}
 
-			Agency := database.Group{}
-			VtuberName := database.Member{}
+			var Agency database.Group
+			var VtuberName database.Member
 			for _, v := range GroupsPayload {
 				if strings.EqualFold(SelectedAgency, v.GroupName) {
 					Agency = v
@@ -647,10 +662,25 @@ var (
 
 						if VtuberName.IsMemberNill() {
 							SendSimpleMsg(s, i, fmt.Sprintf("Invalid vtuber name %s ", SelectedVtuber))
+							log.WithFields(log.Fields{
+								"ChannelID":     i.ChannelID,
+								"SelectedGroup": SelectedAgency,
+								"State":         "Art",
+							}).Warn("Invalid vtuber name")
 							return
 						}
 					}
 				}
+			}
+
+			if Agency.IsNull() {
+				SendSimpleMsg(s, i, fmt.Sprintf("Invalid agency name %s", SelectedAgency))
+				log.WithFields(log.Fields{
+					"ChannelID":     i.ChannelID,
+					"SelectedGroup": SelectedAgency,
+					"State":         "Art",
+				}).Warn("Invalid agency name")
+				return
 			}
 
 			if !VtuberName.IsMemberNill() {
@@ -667,7 +697,7 @@ var (
 					SendNude(FanArt)
 				}
 
-			} else {
+			} else if !Agency.IsNull() {
 				FanArt, err := Agency.GetRandomFanart()
 				if err != nil {
 					s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -753,8 +783,8 @@ var (
 
 				}
 
-				Agency := database.Group{}
-				VtuberName := database.Member{}
+				var Agency database.Group
+				var VtuberName database.Member
 				for _, v := range GroupsPayload {
 					if strings.EqualFold(SelectedAgency, v.GroupName) {
 						Agency = v
@@ -767,11 +797,25 @@ var (
 
 							if VtuberName.IsMemberNill() {
 								SendSimpleMsg(s, i, fmt.Sprintf("Invalid vtuber name %s", SelectedVtuber))
+								log.WithFields(log.Fields{
+									"ChannelID":     i.ChannelID,
+									"SelectedGroup": SelectedVtuber,
+									"State":         "Lewd",
+								}).Warn("Invalid vtuber name")
 								return
 							}
-
 						}
 					}
+				}
+
+				if Agency.IsNull() {
+					SendSimpleMsg(s, i, fmt.Sprintf("Invalid agency name %s", Agency.GroupName))
+					log.WithFields(log.Fields{
+						"ChannelID":     i.ChannelID,
+						"SelectedGroup": SelectedAgency,
+						"State":         "Lewd",
+					}).Warn("Invalid agency name")
+					return
 				}
 
 				if !VtuberName.IsMemberNill() {
@@ -928,11 +972,11 @@ var (
 			}
 
 			var (
-				Already           []string
-				Done              []string
-				SelectedGroupName string
-				Reminder          int
-				SelectedVtuber    string
+				Already        []string
+				Done           []string
+				SelectedAgency string
+				Reminder       int
+				SelectedVtuber string
 			)
 
 			log.WithFields(log.Fields{
@@ -942,7 +986,7 @@ var (
 
 			for _, v := range i.ApplicationCommandData().Options {
 				if v.Name == engine.AgencyOption {
-					SelectedGroupName = v.StringValue()
+					SelectedAgency = v.StringValue()
 				}
 				if v.Name == "reminder" {
 					Reminder = int(v.IntValue())
@@ -960,7 +1004,7 @@ var (
 			One := true
 			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
-					if (SelectedGroupName == "" && engine.CheckVtuberName(v2, SelectedVtuber)) || (strings.EqualFold(SelectedGroupName, v.GroupName) && SelectedGroupName != "") {
+					if (SelectedAgency == "" && engine.CheckVtuberName(v2, SelectedVtuber)) || (strings.EqualFold(SelectedAgency, v.GroupName) && SelectedAgency != "") {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
 							if (Reminder > 60 && Reminder < 10) && Reminder != 0 {
 								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -1044,10 +1088,10 @@ var (
 		},
 		"del-tag": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			var (
-				Already           []string
-				Done              []string
-				SelectedGroupName string
-				SelectedVtuber    string
+				Already        []string
+				Done           []string
+				SelectedAgency string
+				SelectedVtuber string
 			)
 			One := true
 
@@ -1063,7 +1107,7 @@ var (
 
 			for _, v := range i.ApplicationCommandData().Options {
 				if v.Name == engine.AgencyOption {
-					SelectedGroupName = v.StringValue()
+					SelectedAgency = v.StringValue()
 				}
 				if v.Name == engine.VtuberOption {
 					SelectedVtuber = v.StringValue()
@@ -1072,7 +1116,7 @@ var (
 
 			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
-					if (SelectedGroupName == "" && engine.CheckVtuberName(v2, SelectedVtuber)) || (strings.EqualFold(SelectedGroupName, v.GroupName) && SelectedGroupName != "") {
+					if (SelectedAgency == "" && engine.CheckVtuberName(v2, SelectedVtuber)) || (strings.EqualFold(SelectedAgency, v.GroupName) && SelectedAgency != "") {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
 
 							User := &database.UserStruct{
@@ -1174,17 +1218,17 @@ var (
 			}).Info("tag-role")
 
 			var (
-				Already           []string
-				Done              []string
-				SelectedGroupName string
-				Reminder          int
-				SelectedVtuber    string
-				RoleState         *discordgo.Role
+				Already        []string
+				Done           []string
+				SelectedAgency string
+				Reminder       int
+				SelectedVtuber string
+				RoleState      *discordgo.Role
 			)
 
 			for _, v := range i.ApplicationCommandData().Options {
 				if v.Name == engine.AgencyOption {
-					SelectedGroupName = v.StringValue()
+					SelectedAgency = v.StringValue()
 				}
 				if v.Name == "reminder" {
 					Reminder = int(v.IntValue())
@@ -1205,7 +1249,7 @@ var (
 			One := true
 			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
-					if (SelectedGroupName == "" && engine.CheckVtuberName(v2, SelectedVtuber)) || (strings.EqualFold(SelectedGroupName, v.GroupName) && SelectedGroupName != "") {
+					if (SelectedAgency == "" && engine.CheckVtuberName(v2, SelectedVtuber)) || (strings.EqualFold(SelectedAgency, v.GroupName) && SelectedAgency != "") {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
 							if (Reminder > 60 && Reminder < 10) && Reminder != 0 {
 								s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -1315,16 +1359,16 @@ var (
 			}
 
 			var (
-				Already           []string
-				Done              []string
-				SelectedGroupName string
-				SelectedVtuber    string
-				RoleState         *discordgo.Role
+				Already        []string
+				Done           []string
+				SelectedAgency string
+				SelectedVtuber string
+				RoleState      *discordgo.Role
 			)
 
 			for _, v := range i.ApplicationCommandData().Options {
 				if v.Name == engine.AgencyOption {
-					SelectedGroupName = v.StringValue()
+					SelectedAgency = v.StringValue()
 				}
 				if v.Name == engine.VtuberOption {
 					SelectedVtuber = v.StringValue()
@@ -1336,7 +1380,7 @@ var (
 
 			for _, v := range GroupsPayload {
 				for _, v2 := range v.Members {
-					if (SelectedGroupName == "" && engine.CheckVtuberName(v2, SelectedVtuber)) || (strings.EqualFold(v.GroupName, SelectedGroupName) && SelectedGroupName != "") {
+					if (SelectedAgency == "" && engine.CheckVtuberName(v2, SelectedVtuber)) || (strings.EqualFold(v.GroupName, SelectedAgency) && SelectedAgency != "") {
 						if database.CheckChannelEnable(i.ChannelID, v2.Name, v2.Group.ID) {
 
 							User := &database.UserStruct{
@@ -1548,6 +1592,17 @@ var (
 							}
 						}
 
+						if Group.IsNull() {
+							SendSimpleMsg(s, i, fmt.Sprintf("Invalid agency name %s", Group.GroupName))
+							log.WithFields(log.Fields{
+								"Admin":         Admin,
+								"ChannelID":     i.ChannelID,
+								"SelectedGroup": v2.StringValue(),
+								"State":         "Livestream",
+							}).Warn("Invalid agency name")
+							return
+						}
+
 						log.WithFields(log.Fields{
 							"Admin":     Admin,
 							"ChannelID": i.ChannelID,
@@ -1626,6 +1681,17 @@ var (
 							}
 						}
 
+						if Group.IsNull() {
+							SendSimpleMsg(s, i, fmt.Sprintf("Invalid agency name %s", Group.GroupName))
+							log.WithFields(log.Fields{
+								"Admin":         Admin,
+								"ChannelID":     i.ChannelID,
+								"SelectedGroup": v2.StringValue(),
+								"State":         "Setup",
+							}).Warn("Invalid agency name")
+							return
+						}
+
 						if v2.Name == "lewd" {
 							lewd = v2.BoolValue()
 						}
@@ -1697,6 +1763,17 @@ var (
 									break
 								}
 							}
+						}
+
+						if Group.IsNull() {
+							SendSimpleMsg(s, i, fmt.Sprintf("Invalid agency name %s", Group.GroupName))
+							log.WithFields(log.Fields{
+								"Admin":         Admin,
+								"ChannelID":     i.ChannelID,
+								"SelectedGroup": v2.StringValue(),
+								"State":         "Setup",
+							}).Warn("Invalid agency name")
+							return
 						}
 
 						log.WithFields(log.Fields{
