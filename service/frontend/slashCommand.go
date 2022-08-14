@@ -1541,7 +1541,7 @@ var (
 
 						if v2.Name == engine.AgencyOption {
 							for _, v3 := range GroupsPayload {
-								if strings.EqualFold(v3.GroupName, v.StringValue()) {
+								if strings.EqualFold(v3.GroupName, v2.StringValue()) {
 									Group = v3
 									break
 								}
@@ -1619,7 +1619,7 @@ var (
 
 						if v2.Name == engine.AgencyOption {
 							for _, v3 := range GroupsPayload {
-								if strings.EqualFold(v3.GroupName, v.StringValue()) {
+								if strings.EqualFold(v3.GroupName, v2.StringValue()) {
 									Group = v3
 									break
 								}
@@ -1692,7 +1692,7 @@ var (
 
 						if v2.Name == engine.AgencyOption {
 							for _, v3 := range GroupsPayload {
-								if strings.EqualFold(v.StringValue(), v3.GroupName) {
+								if strings.EqualFold(v3.GroupName, v2.StringValue()) {
 									Group = v3
 									break
 								}
