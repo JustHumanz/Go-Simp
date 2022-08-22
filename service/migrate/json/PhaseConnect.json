@@ -1,0 +1,314 @@
+{
+    "GroupName": "Phase-Connect",
+    "GroupIcon": "https://cdn.humanz.moe/PhaseConnect.png",
+    "GroupChannel": {
+      "Youtube": [
+        {
+          "ChannelID": "UClpOEZoIYhxIY6n5NNGaPbA",
+          "Region": "EN"
+        }
+      ],
+      "BiliBili": null
+    },
+    "Members": [
+      {
+        "Name": "Rinkou",
+        "EN_Name": "Rinkou Ashelia",
+        "JP_Name": "鈴香アシェリア",
+        "Twitter": {
+          "Twitter_Fanart": "#Rinkaku",
+          "Twitter_Lewd": null,
+          "Twitter_Username": "rinkouashelia"
+        },
+        "Youtube": {
+          "Yt_ID": "UCg7sW-h1PUowdiR5K4HlBew"
+        },
+        "BiliBili": null,
+        "Twitch": {
+          "Twitch_Username": "AsheliaRinkou"
+        },
+        "Region": "EN",
+        "Fanbase": "Asheleague",
+        "Status": "Active"
+      },
+      {
+        "Name": "Nasa",
+        "EN_Name": "Utatane Nasa",
+        "JP_Name": "転寝ナサ",
+        "Twitter": {
+          "Twitter_Fanart": "#スピクチャー",
+          "Twitter_Lewd": null,
+          "Twitter_Username": "UtataneNasa"
+        },
+        "Youtube": {
+          "Yt_ID": "UCB7sSUNwh_dXE7ZL3DsGDpw"
+        },
+        "BiliBili": null,
+        "Twitch": {
+          "Twitch_Username": "UtataneNasa"
+        },
+        "Region": "JP",
+        "Fanbase": "Utatanation",
+        "Status": "Active"
+      },
+      {
+        "Name": "Pipkin",
+        "EN_Name": "Pipkin Pippa",
+        "JP_Name": null,
+        "Twitter": {
+          "Twitter_Fanart": "#MMOARTPG",
+          "Twitter_Lewd": null,
+          "Twitter_Username": "pipkinpippa"
+        },
+        "Youtube": {
+          "Yt_ID": "UCJ46YTYBQVXsfsp8-HryoUA"
+        },
+        "BiliBili": null,
+        "Twitch": null,
+        "Region": "EN",
+        "Fanbase": "Capippalist",
+        "Status": "Active"
+      },
+      {
+        "Name": "Maemi",
+        "EN_Name": "Tenma Maemi",
+        "JP_Name": "天満マエミ",
+        "Twitter": {
+          "Twitter_Fanart": "#お酒絵",
+          "Twitter_Lewd": null,
+          "Twitter_Username": "tenmamaemi"
+        },
+        "Youtube": {
+          "Yt_ID": "UC3K7pmiHsNSx1y0tdx2bbCw"
+        },
+        "BiliBili": null,
+        "Twitch": {
+          "Twitch_Username": "tenma"
+        },
+        "Region": "JP",
+        "Fanbase": "kanpainiki",
+        "Status": "Active"
+      },
+      {
+        "Name": "HakuIori",
+        "EN_Name": "Hakushika Iori",
+        "JP_Name": "白鹿いおり",
+        "Twitter": {
+          "Twitter_Fanart": null,
+          "Twitter_Lewd": null,
+          "Twitter_Username": "hakushikaiori"
+        },
+        "Youtube": {
+          "Yt_ID": "UCN5bD1YYapThOeadG7YkBOA"
+        },
+        "BiliBili": null,
+        "Twitch": {
+          "Twitch_Username": "iorihakushika"
+        },
+        "Region": "JP",
+        "Fanbase": null,
+        "Status": "Active"
+      },
+      {
+        "Name": "Uruka",
+        "EN_Name": "Fujikura Uruka",
+        "JP_Name": "藤倉ウルカ",
+        "Twitter": {
+          "Twitter_Fanart": "#urukart",
+          "Twitter_Lewd": null,
+          "Twitter_Username": "fujikurauruka"
+        },
+        "Youtube": {
+          "Yt_ID": "UCjXJYPsKxoJyc-1RPB6dSyw"
+        },
+        "BiliBili": null,
+        "Twitch": {
+          "Twitch_Username": "fujikurauruka"
+        },
+        "Region": "EN",
+        "Fanbase": "Urufugang",
+        "Status": "Active"
+      },
+      {
+        "Name": "Da Michi",
+        "EN_Name": "Michiru",
+        "JP_Name": "紫翠みちる",
+        "Twitter": {
+          "Twitter_Fanart": "#ちるぽすと",
+          "Twitter_Lewd": null,
+          "Twitter_Username": "shisuimichiru"
+        },
+        "Youtube": {
+          "Yt_ID": "UC1cExET9xoWSO9iSnRsW_1Q"
+        },
+        "BiliBili": null,
+        "Twitch": {
+          "Twitch_Username": "michiru_shisui"
+        },
+        "Region": "JP",
+        "Fanbase": "Michildren",
+        "Status": "Active"
+      },
+      {
+        "Name": "Yuri",
+        "EN_Name": "Amaris Yuri",
+        "JP_Name": "アマリス 百合",
+        "Twitter": {
+          "Twitter_Fanart": "#Leopart",
+          "Twitter_Lewd": "#Yuricchi",
+          "Twitter_Username": "amarisyuri"
+        },
+        "Youtube": {
+          "Yt_ID": "UCUC1EIq0MtF-kctHPtQzIjQ"
+        },
+        "BiliBili": null,
+        "Twitch": {
+          "Twitch_Username": "AmarisYuri"
+        },
+        "Region": "EN",
+        "Fanbase": "Famyuri",
+        "Status": "Active"
+      },
+      {
+        "Name": "Lumi667C",
+        "EN_Name": "Kaneko Lumi",
+        "JP_Name": "金子瑠美",
+        "Twitter": {
+          "Twitter_Fanart": "#Lumillust",
+          "Twitter_Lewd": "#Lewdmi",
+          "Twitter_Username": "lumikaneko"
+        },
+        "Youtube": {
+          "Yt_ID": "UCx_zwZuGIS4jxO07kFk8G6Q"
+        },
+        "BiliBili": null,
+        "Twitch": {
+          "Twitch_Username": "kanekolumi"
+        },
+        "Region": "EN",
+        "Fanbase": "LumiNation",
+        "Status": "Active"
+      },
+      {
+        "Name": "Remi",
+        "EN_Name": "Remilia Nephys",
+        "JP_Name": "レミリア・ネフィス",
+        "Twitter": {
+          "Twitter_Fanart": "#remicasso",
+          "Twitter_Lewd": "#rekmilia",
+          "Twitter_Username": "Remilia_Nephys"
+        },
+        "Youtube": {
+          "Yt_ID": "UC-hMwvRuMsQrfgu0DPKLV2A"
+        },
+        "BiliBili": null,
+        "Twitch": {
+          "Twitch_Username": "remilia_nephys"
+        },
+        "Region": "EN",
+        "Fanbase": "Doremu",
+        "Status": "Active"
+      },
+      {
+        "Name": "Airi",
+        "EN_Name": "Chisaka Airi",
+        "JP_Name": "千坂アイリ",
+        "Twitter": {
+          "Twitter_Fanart": "#Airirkgk",
+          "Twitter_Lewd": "#Ecchisaka",
+          "Twitter_Username": "ChisakaAiri"
+        },
+        "Youtube": {
+          "Yt_ID": "UC5qlAhrec6-0J-K3zmhNPPQ"
+        },
+        "BiliBili": null,
+        "Twitch": {
+          "Twitch_Username": "chisakaairi"
+        },
+        "Region": "EN",
+        "Fanbase": "Airiheads",
+        "Status": "Active"
+      },
+      {
+        "Name": "Shiina",
+        "EN_Name": "Amanogawa Shiina",
+        "JP_Name": "天ノ川しいな",
+        "Twitter": {
+          "Twitter_Fanart": "#shiillustration",
+          "Twitter_Lewd": "#shiinaughty",
+          "Twitter_Username": "AmanogawaShiina"
+        },
+        "Youtube": {
+          "Yt_ID": "UCnJNNk45O1QYS2oMRYFKSyw"
+        },
+        "BiliBili": null,
+        "Twitch": {
+          "Twitch_Username": "amanogawashiina"
+        },
+        "Region": "EN",
+        "Fanbase": "Butter Cookies",
+        "Status": "Active"
+      },
+      {
+        "Name": "HimeRie",
+        "EN_Name": "Himemiya Rie",
+        "JP_Name": "姫宮りえ",
+        "Twitter": {
+          "Twitter_Fanart": "#アトりえ",
+          "Twitter_Lewd": "#Riestricted",
+          "Twitter_Username": "HimemiyaRie"
+        },
+        "Youtube": {
+          "Yt_ID": "UCJ4O6PWA47f6XbCgrLQNqEQ"
+        },
+        "BiliBili": null,
+        "Twitch": {
+          "Twitch_Username": "himemiyarie"
+        },
+        "Region": "EN",
+        "Fanbase": "Himebito",
+        "Status": "Active"
+      },
+      {
+        "Name": "Erina",
+        "EN_Name": "Erina Makina",
+        "JP_Name": "エリナ・マキナ",
+        "Twitter": {
+          "Twitter_Fanart": "#MakinArchive",
+          "Twitter_Lewd": "#MakIncognito",
+          "Twitter_Username": "ErinaMakina"
+        },
+        "Youtube": {
+          "Yt_ID": "UCupmjRr7kPgzXKh-cPxxGbg"
+        },
+        "BiliBili": null,
+        "Twitch": {
+          "Twitch_Username": "erinamakina"
+        },
+        "Region": "EN",
+        "Fanbase": "Makinists",
+        "Status": "Active"
+      },
+      {
+        "Name": "Panko",
+        "EN_Name": "Komachi Panko",
+        "JP_Name": "小町ぱんこ",
+        "Twitter": {
+          "Twitter_Fanart": "#paintko",
+          "Twitter_Lewd": "#pankomanko",
+          "Twitter_Username": "komachipanko"
+        },
+        "Youtube": {
+          "Yt_ID": "UCVo_KgPNsDKxHwzib7uarCw"
+        },
+        "BiliBili": null,
+        "Twitch": {
+          "Twitch_Username": "komachipanko"
+        },
+        "Region": "EN",
+        "Fanbase": "Ringodachi",
+        "Status": "Active"
+      }
+    ]
+  }
+  
