@@ -1597,7 +1597,7 @@ var (
 							log.WithFields(log.Fields{
 								"Admin":         Admin,
 								"ChannelID":     i.ChannelID,
-								"SelectedGroup": v2.StringValue(),
+								"SelectedGroup": Group.GroupName,
 								"State":         "Livestream",
 							}).Warn("Invalid agency name")
 							return
@@ -1686,7 +1686,7 @@ var (
 							log.WithFields(log.Fields{
 								"Admin":         Admin,
 								"ChannelID":     i.ChannelID,
-								"SelectedGroup": v2.StringValue(),
+								"SelectedGroup": Group.GroupName,
 								"State":         "Setup",
 							}).Warn("Invalid agency name")
 							return
@@ -1770,7 +1770,7 @@ var (
 							log.WithFields(log.Fields{
 								"Admin":         Admin,
 								"ChannelID":     i.ChannelID,
-								"SelectedGroup": v2.StringValue(),
+								"SelectedGroup": Group.GroupName,
 								"State":         "Setup",
 							}).Warn("Invalid agency name")
 							return
