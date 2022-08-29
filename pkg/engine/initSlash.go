@@ -13,7 +13,7 @@ const (
 	VtuberOption string = "vtuber-name"
 )
 
-//Start slash command
+// Start slash command
 func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild *discordgo.Guild) {
 
 	var (
@@ -95,7 +95,7 @@ func InitSlash(Bot *discordgo.Session, GroupsPayload []database.Group, NewGuild 
 									},
 									{
 										Type:        discordgo.ApplicationCommandOptionString,
-										Name:        "vtuber-group",
+										Name:        AgencyOption,
 										Description: "select agency of vtuber",
 										Required:    true,
 									},

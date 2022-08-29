@@ -1536,10 +1536,12 @@ var (
 
 			Add := func(ChannelData *database.DiscordChannel, Group database.Group) {
 				if ChannelData.ChannelCheck() {
+					errstr := "Already setup `" + Group.GroupName + "`,for add/del region use `Update` command"
+					log.Error(errstr)
 					s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 						Type: discordgo.InteractionResponseChannelMessageWithSource,
 						Data: &discordgo.InteractionResponseData{
-							Content: "Already setup `" + Group.GroupName + "`,for add/del region use `Update` command",
+							Content: errstr,
 						},
 					})
 					return
@@ -1695,28 +1697,30 @@ var (
 						if err != nil {
 							log.Error(err)
 						}
-					}
 
-					ChannelData := &database.DiscordChannel{
-						ChannelID: ChannelID,
-						TypeTag: func() int {
-							if lewd {
-								return 70
-							} else {
-								return 1
-							}
-						}(),
-						LiveOnly:    false,
-						NewUpcoming: false,
-						Dynamic:     false,
-						LiteMode:    false,
-						IndieNotif:  false,
-						Group:       Agency,
-						Region:      Region,
+						lewd = false
 					}
-					Add(ChannelData, Agency)
-
 				}
+
+				ChannelData := &database.DiscordChannel{
+					ChannelID: ChannelID,
+					TypeTag: func() int {
+						if lewd {
+							return 70
+						} else {
+							return 1
+						}
+					}(),
+					LiveOnly:    false,
+					NewUpcoming: false,
+					Dynamic:     false,
+					LiteMode:    false,
+					IndieNotif:  false,
+					Group:       Agency,
+					Region:      Region,
+				}
+
+				Add(ChannelData, Agency)
 
 			} else {
 				lewd := SlashComamnd["lewd"].(bool)
