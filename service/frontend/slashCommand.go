@@ -1536,10 +1536,12 @@ var (
 
 			Add := func(ChannelData *database.DiscordChannel, Group database.Group) {
 				if ChannelData.ChannelCheck() {
+					errstr := "Already setup `" + Group.GroupName + "`,for add/del region use `Update` command"
+					log.Error(errstr)
 					s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 						Type: discordgo.InteractionResponseChannelMessageWithSource,
 						Data: &discordgo.InteractionResponseData{
-							Content: "Already setup `" + Group.GroupName + "`,for add/del region use `Update` command",
+							Content: errstr,
 						},
 					})
 					return
@@ -1570,258 +1572,198 @@ var (
 				"Channel": i.ChannelID,
 			}).Info("setup")
 
+			SlashComamnd := make(map[string]interface{})
+
 			for _, v := range i.ApplicationCommandData().Options[0].Options {
-				var (
-					Channel                                                            *discordgo.Channel
-					Group                                                              database.Group
-					liveonly, newupcoming, dynamic, liteMode, indieNotif, fanart, lewd bool
-					region                                                             string
-				)
-				if v.Name == "livestream" {
-					for _, v2 := range v.Options {
-						if v2.Name == "channel-name" {
-							Channel = v2.ChannelValue(nil)
-						}
-
-						if v2.Name == engine.AgencyOption {
-							for _, v3 := range GroupsPayload {
-								if strings.EqualFold(v3.GroupName, v2.StringValue()) {
-									Group = v3
-									break
-								}
-							}
-						}
-
-						if Group.IsNull() {
-							SendSimpleMsg(s, i, fmt.Sprintf("Invalid agency name %s", Group.GroupName))
-							log.WithFields(log.Fields{
-								"Admin":         Admin,
-								"ChannelID":     i.ChannelID,
-								"SelectedGroup": Group.GroupName,
-								"State":         "Livestream",
-							}).Warn("Invalid agency name")
-							return
-						}
-
-						log.WithFields(log.Fields{
-							"Admin":     Admin,
-							"ChannelID": i.ChannelID,
-							"Group":     Group.GroupName,
-							"State":     "Livestream",
-						}).Info("setup livestream")
-
-						if v2.Name == "liveonly" {
-							liveonly = v2.BoolValue()
-						}
-
-						if v2.Name == "newupcoming" {
-							newupcoming = v2.BoolValue()
-						}
-
-						if v2.Name == "dynamic" {
-							dynamic = v2.BoolValue()
-						}
-
-						if v2.Name == "lite-mode" {
-							liteMode = v2.BoolValue()
-						}
-
-						if v2.Name == "indie-notif" {
-							indieNotif = v2.BoolValue()
-						}
-
-						if v2.Name == "fanart" {
-							fanart = v2.BoolValue()
-						}
+				SlashComamnd["state"] = v.Name
+				for _, Option := range v.Options {
+					if Option.Name == "channel-name" {
+						SlashComamnd[Option.Name] = Option.ChannelValue(nil)
 					}
 
-					for Key, Val := range RegList {
-						if Key == Group.GroupName {
-							region = Val
-						}
+					SlashComamnd[Option.Name] = Option.Value
+
+				}
+			}
+
+			State := SlashComamnd["state"].(string)
+			SelectedAgency := SlashComamnd["group-name"].(string)
+			Agency := database.Group{}
+			Region := ""
+			ChannelID := SlashComamnd["channel-name"].(string)
+
+			for _, agency := range GroupsPayload {
+				if strings.EqualFold(agency.GroupName, SelectedAgency) {
+					Agency = agency
+					break
+				}
+			}
+
+			if Agency.IsNull() {
+				SendSimpleMsg(s, i, fmt.Sprintf("Invalid agency name %s", SelectedAgency))
+				log.WithFields(log.Fields{
+					"Admin":         Admin,
+					"ChannelID":     i.ChannelID,
+					"SelectedGroup": SelectedAgency,
+				}).Warn("Invalid agency name")
+				return
+			}
+
+			FindParm := func(parm string) bool {
+				for k, _ := range SlashComamnd {
+					if k == parm {
+						return SlashComamnd[parm].(bool)
 					}
 
-					ChannelData := &database.DiscordChannel{
-						ChannelID: Channel.ID,
-						TypeTag: func() int {
-							if fanart {
-								return 3
-							} else {
-								return 2
-							}
-						}(),
-						LiveOnly:    liveonly,
-						NewUpcoming: newupcoming,
-						Dynamic:     dynamic,
-						LiteMode:    liteMode,
-						IndieNotif: func() bool {
-							if Group.GroupName != config.Indie {
-								return false
-							}
-							return indieNotif
-						}(),
-						Group:  Group,
-						Region: region,
+				}
+				return false
+			}
+
+			if State == "livestream" {
+				fanart := FindParm("fanart")
+				indieNotif := FindParm("indie-notif")
+
+				liveOnly := SlashComamnd["liveonly"].(bool)
+				newUpComing := SlashComamnd["newupcoming"].(bool)
+				dynamic := SlashComamnd["dynamic"].(bool)
+				liteMode := SlashComamnd["lite-mode"].(bool)
+
+				log.WithFields(log.Fields{
+					"Admin":     Admin,
+					"ChannelID": i.ChannelID,
+					"Group":     Agency.GroupName,
+					"State":     "Livestream",
+				}).Info("setup livestream")
+
+				for Key, Val := range RegList {
+					if Key == Agency.GroupName {
+						Region = Val
+					}
+				}
+
+				ChannelData := &database.DiscordChannel{
+					ChannelID: ChannelID,
+					TypeTag: func() int {
+						if fanart {
+							return 3
+						} else {
+							return 2
+						}
+					}(),
+					LiveOnly:    liveOnly,
+					NewUpcoming: newUpComing,
+					Dynamic:     dynamic,
+					LiteMode:    liteMode,
+					IndieNotif: func() bool {
+						if Agency.GroupName != config.Indie {
+							return false
+						}
+						return indieNotif
+					}(),
+					Group:  Agency,
+					Region: Region,
+				}
+
+				Add(ChannelData, Agency)
+
+			} else if State == "fanart" {
+				lewd := FindParm("lewd")
+
+				log.WithFields(log.Fields{
+					"Admin":     Admin,
+					"ChannelID": i.ChannelID,
+					"Group":     Agency.GroupName,
+					"State":     "Fanart",
+					"Lewd":      lewd,
+				}).Info("setup fanart")
+
+				if lewd {
+					ChannelRaw, err := s.Channel(ChannelID)
+					if err != nil {
+						log.Error(err)
 					}
 
-					Add(ChannelData, Group)
-
-				} else if v.Name == "fanart" {
-					for _, v2 := range v.Options {
-						if v2.Name == "channel-name" {
-							Channel = v2.ChannelValue(nil)
-						}
-
-						if v2.Name == engine.AgencyOption {
-							for _, v3 := range GroupsPayload {
-								if strings.EqualFold(v3.GroupName, v2.StringValue()) {
-									Group = v3
-									break
-								}
-							}
-						}
-
-						if Group.IsNull() {
-							SendSimpleMsg(s, i, fmt.Sprintf("Invalid agency name %s", Group.GroupName))
-							log.WithFields(log.Fields{
-								"Admin":         Admin,
-								"ChannelID":     i.ChannelID,
-								"SelectedGroup": Group.GroupName,
-								"State":         "Setup",
-							}).Warn("Invalid agency name")
-							return
-						}
-
-						if v2.Name == "lewd" {
-							lewd = v2.BoolValue()
-						}
-
-						log.WithFields(log.Fields{
-							"Admin":     Admin,
-							"ChannelID": i.ChannelID,
-							"Group":     Group.GroupName,
-							"State":     "Fanart",
-							"Lewd":      lewd,
-						}).Info("setup fanart")
-
-						if lewd {
-							ChannelRaw, err := s.Channel(Channel.ID)
-							if err != nil {
-								log.Error(err)
-							}
-							if !ChannelRaw.NSFW {
-								err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-									Type: discordgo.InteractionResponseChannelMessageWithSource,
-									Data: &discordgo.InteractionResponseData{
-										Embeds: []*discordgo.MessageEmbed{
-											engine.NewEmbed().
-												SetDescription("i know you horny,but this channel was not a NSFW channel").
-												SetImage(engine.LewdIMG()).MessageEmbed,
-										},
-									},
-								})
-								if err != nil {
-									log.Error(err)
-								}
-							}
-						}
-
-						ChannelData := &database.DiscordChannel{
-							ChannelID: Channel.ID,
-							TypeTag: func() int {
-								if lewd {
-									return 70
-								} else {
-									return 1
-								}
-							}(),
-							LiveOnly:    liveonly,
-							NewUpcoming: newupcoming,
-							Dynamic:     dynamic,
-							LiteMode:    liteMode,
-							IndieNotif: func() bool {
-								if Group.GroupName != config.Indie {
-									return false
-								}
-								return indieNotif
-							}(),
-							Group:  Group,
-							Region: region,
-						}
-						Add(ChannelData, Group)
-					}
-				} else {
-					for _, v2 := range v.Options {
-						if v2.Name == "channel-name" {
-							Channel = v2.ChannelValue(nil)
-						}
-
-						if v2.Name == engine.AgencyOption {
-							for _, v3 := range GroupsPayload {
-								if strings.EqualFold(v3.GroupName, v2.StringValue()) {
-									Group = v3
-									break
-								}
-							}
-						}
-
-						if Group.IsNull() {
-							SendSimpleMsg(s, i, fmt.Sprintf("Invalid agency name %s", Group.GroupName))
-							log.WithFields(log.Fields{
-								"Admin":         Admin,
-								"ChannelID":     i.ChannelID,
-								"SelectedGroup": Group.GroupName,
-								"State":         "Setup",
-							}).Warn("Invalid agency name")
-							return
-						}
-
-						log.WithFields(log.Fields{
-							"Admin":     Admin,
-							"ChannelID": i.ChannelID,
-							"Group":     Group.GroupName,
-							"State":     "Fanart",
-							"Lewd":      lewd,
-						}).Info("setup lewd")
-
-						ChannelRaw, err := s.Channel(Channel.ID)
+					if !ChannelRaw.NSFW {
+						err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+							Type: discordgo.InteractionResponseChannelMessageWithSource,
+							Data: &discordgo.InteractionResponseData{
+								Embeds: []*discordgo.MessageEmbed{
+									engine.NewEmbed().
+										SetDescription("i know you horny,but this channel was not a NSFW channel").
+										SetImage(engine.LewdIMG()).MessageEmbed,
+								},
+							},
+						})
 						if err != nil {
 							log.Error(err)
 						}
-						if !ChannelRaw.NSFW {
-							err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-								Type: discordgo.InteractionResponseChannelMessageWithSource,
-								Data: &discordgo.InteractionResponseData{
-									Embeds: []*discordgo.MessageEmbed{
-										engine.NewEmbed().
-											SetDescription("i know you horny,but this channel was not a NSFW channel").
-											SetImage(engine.LewdIMG()).MessageEmbed,
-									},
-								},
-							})
-							if err != nil {
-								log.Error(err)
-							}
-						}
-						ChannelData := &database.DiscordChannel{
-							ChannelID:   Channel.ID,
-							TypeTag:     69,
-							LiveOnly:    liveonly,
-							NewUpcoming: newupcoming,
-							Dynamic:     dynamic,
-							LiteMode:    liteMode,
-							IndieNotif: func() bool {
-								if Group.GroupName != config.Indie {
-									return false
-								}
-								return indieNotif
-							}(),
-							Group:  Group,
-							Region: region,
-						}
-						Add(ChannelData, Group)
+
+						lewd = false
 					}
 				}
+
+				ChannelData := &database.DiscordChannel{
+					ChannelID: ChannelID,
+					TypeTag: func() int {
+						if lewd {
+							return 70
+						} else {
+							return 1
+						}
+					}(),
+					LiveOnly:    false,
+					NewUpcoming: false,
+					Dynamic:     false,
+					LiteMode:    false,
+					IndieNotif:  false,
+					Group:       Agency,
+					Region:      Region,
+				}
+
+				Add(ChannelData, Agency)
+
+			} else {
+				lewd := SlashComamnd["lewd"].(bool)
+
+				log.WithFields(log.Fields{
+					"Admin":     Admin,
+					"ChannelID": i.ChannelID,
+					"Group":     Agency.GroupName,
+					"State":     "Fanart",
+					"Lewd":      lewd,
+				}).Info("setup lewd")
+
+				ChannelRaw, err := s.Channel(ChannelID)
+				if err != nil {
+					log.Error(err)
+				}
+				if !ChannelRaw.NSFW {
+					err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+						Type: discordgo.InteractionResponseChannelMessageWithSource,
+						Data: &discordgo.InteractionResponseData{
+							Embeds: []*discordgo.MessageEmbed{
+								engine.NewEmbed().
+									SetDescription("i know you horny,but this channel was not a NSFW channel").
+									SetImage(engine.LewdIMG()).MessageEmbed,
+							},
+						},
+					})
+					if err != nil {
+						log.Error(err)
+					}
+				}
+				ChannelData := &database.DiscordChannel{
+					ChannelID:   ChannelID,
+					TypeTag:     69,
+					LiveOnly:    false,
+					NewUpcoming: false,
+					Dynamic:     false,
+					LiteMode:    false,
+					IndieNotif:  false,
+					Group:       Agency,
+					Region:      Region,
+				}
+				Add(ChannelData, Agency)
 			}
 		},
 		"channel-state": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
