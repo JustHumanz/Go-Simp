@@ -8,10 +8,6 @@
         "Region": "JP"
       },
       {
-        "ChannelID": "UCStzBFfjwFYb0qSYHnzFZvw",
-        "Region": "KR"
-      },
-      {
         "ChannelID": "UC-JSeFfovhNsEhftt1WHMvg",
         "Region": "EN"
       }
@@ -2255,6 +2251,122 @@
       "Twitch": null,
       "Region": "EN",
       "Fanbase": "Comfydants",
+      "Status": "Active"
+    },
+    {
+      "Name": "Maria",
+      "EN_Name": "Maria Marionette",
+      "JP_Name": "マリア・マリオネット",
+      "Twitter": {
+        "Twitter_Fanart": "#MariArt",
+        "Twitter_Lewd": "#MariLewd",
+        "Twitter_Username": "MariaMari0nette"
+      },
+      "Youtube": {
+        "Yt_ID": "UCwaS8_S7kMiKA3izlTWHbQg"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "mariamarionette"
+      },
+      "Region": "EN",
+      "Fanbase": "Marippets",
+      "Status": "Active"
+    },
+    {
+      "Name": "KaneKyo",
+      "EN_Name": "Kyo Kaneko",
+      "JP_Name": "金子鏡",
+      "Twitter": {
+        "Twitter_Fanart": "#drawkyo",
+        "Twitter_Lewd": "#kinkykaneko",
+        "Twitter_Username": "KyoKanek0"
+      },
+      "Youtube": {
+        "Yt_ID": "UCsb-1aJgiJXJH2feV-zlZRw"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "KyoKanek0"
+      },
+      "Region": "EN",
+      "Fanbase": "Kyomies",
+      "Status": "Active"
+    },
+    {
+      "Name": "Aia",
+      "EN_Name": "Aia Amare",
+      "JP_Name": "アイア・アマレ",
+      "Twitter": {
+        "Twitter_Fanart": "#AiaAmARTe",
+        "Twitter_Lewd": "#Aiaroused",
+        "Twitter_Username": "AiaAmare"
+      },
+      "Youtube": {
+        "Yt_ID": "UCN68LoM3khS4gdBMiWJO8WA"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "Aiadmirer",
+      "Status": "Active"
+    },
+    {
+      "Name": "Aster",
+      "EN_Name": "Aster Arcadia",
+      "JP_Name": "アスター・アルカディア",
+      "Twitter": {
+        "Twitter_Fanart": "#Arcadiart",
+        "Twitter_Lewd": "#Asterbate",
+        "Twitter_Username": "AsterArcadia"
+      },
+      "Youtube": {
+        "Yt_ID": "UCpzxZW5kghGnO5TmAFJQAVw"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "AsterArcadia"
+      },
+      "Region": "EN",
+      "Fanbase": "Arcadians",
+      "Status": "Active"
+    },
+    {
+      "Name": "Scarle",
+      "EN_Name": "Scarle Yonaguni",
+      "JP_Name": "スカーレ・ヨナグニ",
+      "Twitter": {
+        "Twitter_Fanart": "#ScarleArt",
+        "Twitter_Lewd": "#ScarleLewd",
+        "Twitter_Username": "ScarleYonaguni"
+      },
+      "Youtube": {
+        "Yt_ID": "UCFgXWZOUZA2oYHNr6qDmsTQ"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "scarleyonaguni"
+      },
+      "Region": "EN",
+      "Fanbase": "Scarlings",
+      "Status": "Active"
+    },
+    {
+      "Name": "Risotto",
+      "EN_Name": "Ren Zotto",
+      "JP_Name": "レン・ゾット",
+      "Twitter": {
+        "Twitter_Fanart": "#RenZottoArt",
+        "Twitter_Lewd": "#RentaiZotto",
+        "Twitter_Username": "RenZott0"
+      },
+      "Youtube": {
+        "Yt_ID": "UCKu59gTZ_rdEmerdx5rV4Yg"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "Renvaderz",
       "Status": "Active"
     },
     {

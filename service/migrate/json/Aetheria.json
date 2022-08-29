@@ -1,6 +1,6 @@
 {
-  "GroupName": "CyberLive",
-  "GroupIcon": "https://cdn.humanz.moe/cyberlive.png",
+  "GroupName": "Aetheria",
+  "GroupIcon": "https://cdn.humanz.moe/Aetheria.png",
   "GroupChannel": {
     "Youtube": [
       {
@@ -11,46 +11,6 @@
     "BiliBili": null
   },
   "Members": [
-    {
-      "Name": "Yuri",
-      "EN_Name": "Amaris Yuri",
-      "JP_Name": "アマリス 百合",
-      "Twitter": {
-        "Twitter_Fanart": "#Leopart",
-        "Twitter_Lewd": "#Yuricchi",
-        "Twitter_Username": "amarisyuri"
-      },
-      "Youtube": {
-        "Yt_ID": "UCUC1EIq0MtF-kctHPtQzIjQ"
-      },
-      "BiliBili": null,
-      "Twitch": {
-        "Twitch_Username": "AmarisYuri"
-      },
-      "Region": "EN",
-      "Fanbase": "Famyuri",
-      "Status": "Inactive"
-    },
-    {
-      "Name": "Lumi667C",
-      "EN_Name": "Kaneko Lumi",
-      "JP_Name": "金子瑠美",
-      "Twitter": {
-        "Twitter_Fanart": "#Lumillust",
-        "Twitter_Lewd": "#Lewdmi",
-        "Twitter_Username": "lumikaneko"
-      },
-      "Youtube": {
-        "Yt_ID": "UCx_zwZuGIS4jxO07kFk8G6Q"
-      },
-      "BiliBili": null,
-      "Twitch": {
-        "Twitch_Username": "kanekolumi"
-      },
-      "Region": "EN",
-      "Fanbase": "LumiNation",
-      "Status": "Inactive"
-    },
     {
       "Name": "Seina",
       "EN_Name": "Momozora Seina",

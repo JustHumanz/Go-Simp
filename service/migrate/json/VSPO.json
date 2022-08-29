@@ -248,6 +248,40 @@
       "Youtube": {
         "Yt_ID": "UCD5W21JqNMv_tV9nfjvF9sw"
       }
+    },
+    {
+      "EN_Name": "Nekota Tsuna",
+      "Fanbase": "Tsunatomo",
+      "JP_Name": "猫汰つな",
+      "Name": "Tsuna",
+      "Region": "JP",
+      "BiliBili": null,
+      "Twitch": null,
+      "Twitter": {
+        "Twitter_Fanart": "#ねこたぺすとりー",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "tsuna_nekota"
+      },
+      "Youtube": {
+        "Yt_ID": "UCIjdfjcSaEgdjwbgjxC3ZWg"
+      }
+    },
+    {
+      "EN_Name": "Shiranami Ramune",
+      "Fanbase": "Naminoritai",
+      "JP_Name": "白波らむね",
+      "Name": "Ramune",
+      "Region": "JP",
+      "BiliBili": null,
+      "Twitch": null,
+      "Twitter": {
+        "Twitter_Fanart": "#らむねはいか画",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "Ramune_Shirana3"
+      },
+      "Youtube": {
+        "Yt_ID": "UC61OwuYOVuKkpKnid-43Twg"
+      }
     }
 	]
 }
