@@ -37,7 +37,7 @@ func init() {
 	gRCPconn = pilot.NewPilotServiceClient(network.InitgRPC(config.Pilot))
 }
 
-//Start main youtube module
+// Start main youtube module
 func main() {
 	var (
 		configfile config.ConfigFile
@@ -93,9 +93,10 @@ func ReqRunningJob(client pilot.PilotServiceClient) {
 
 		if res.Run {
 			log.WithFields(log.Fields{
-				"Running":        true,
+				"Running":        res.Run,
 				"UUID":           ServiceUUID,
 				"Agency Payload": res.VtuberMetadata,
+				"IsReverse":      YoutubeChecker.Reverse,
 			}).Info(res.Message)
 
 			YoutubeChecker.agency = engine.UnMarshalPayload(res.VtuberPayload)
