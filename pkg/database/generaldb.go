@@ -1014,6 +1014,9 @@ func CheckVideoIDFromCache(VideoID string) LiveStream {
 	var Live LiveStream
 	val2, err := LiveCache.Get(context.Background(), key).Result()
 	if err == redis.Nil {
+		log.WithFields(log.Fields{
+			"VideoID": VideoID,
+		}).Error("not found in cache")
 		return Live
 	} else if err != nil {
 		log.Fatal(err)
