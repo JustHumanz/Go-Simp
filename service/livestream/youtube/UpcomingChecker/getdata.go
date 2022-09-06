@@ -313,7 +313,7 @@ func StartCheckYT(Group database.Group) {
 						}
 
 						//Send into cache
-						if YoutubeData != nil && YoutubeData.CheckYoutubeToCache() {
+						if YoutubeData != nil {
 							YoutubeData.GetYtVideoDetail()
 							YoutubeData.AddYoutubeToCache(YoutubeData.ID)
 						}

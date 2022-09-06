@@ -397,25 +397,6 @@ func (Data LiveStream) AddYoutubeToCache(id int64) {
 	}
 }
 
-// Check if livestream data was already in cache or not
-func (Data LiveStream) CheckYoutubeToCache() bool {
-	key := fmt.Sprintf("cache-layer-%s", Data.VideoID)
-	log.WithFields(log.Fields{
-		"Key": key,
-	}).Info("Check youtube video in cache")
-
-	_, err := LiveCache.Get(context.Background(), key).Result()
-	if err == redis.Nil {
-		return true
-	} else if err != nil {
-		log.Fatal(err)
-	} else {
-		return false
-	}
-
-	return false
-}
-
 // Check new video or not
 func (Group GroupYtChannel) CheckYoutubeVideo(VideoID string) (*LiveStream, error) {
 	var Data LiveStream
