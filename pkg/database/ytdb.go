@@ -296,7 +296,7 @@ func GetUpcomingFromCache() (map[string]interface{}, error) {
 	return liveData, nil
 }
 
-//Input youtube new video
+// Input youtube new video
 func (Data *LiveStream) InputYt() (int64, error) {
 	if !Data.Member.IsMemberNill() {
 		stmt, err := DB.Prepare(`INSERT INTO Youtube (VideoID,Type,Status,Title,Thumbnails,Description,PublishedAt,ScheduledStart,EndStream,Viewers,Length,VtuberMember_id) values(?,?,?,?,?,?,?,?,?,?,?,?)`)
@@ -341,7 +341,7 @@ func (Data *LiveStream) InputYt() (int64, error) {
 	}
 }
 
-//Check new video or not
+// Check new video or not
 func (Member Member) CheckYoutubeVideo(VideoID string) (*LiveStream, error) {
 	var Data LiveStream
 	rows, err := DB.Query(`SELECT id FROM Vtuber.Youtube Where VideoID=? AND VtuberMember_id=?`, VideoID, Member.ID)
@@ -379,7 +379,7 @@ func (Data *LiveStream) GetYtVideoDetail() {
 	}
 }
 
-//Add new bilibili space video id into cache layer
+// Add new bilibili space video id into cache layer
 func (Data LiveStream) AddYoutubeToCache(id int64) {
 	key := fmt.Sprintf("cache-layer-%s", Data.VideoID)
 	log.WithFields(log.Fields{
@@ -397,7 +397,26 @@ func (Data LiveStream) AddYoutubeToCache(id int64) {
 	}
 }
 
-//Check new video or not
+// Check if livestream data was already in cache or not
+func (Data LiveStream) CheckYoutubeToCache() bool {
+	key := fmt.Sprintf("cache-layer-%s", Data.VideoID)
+	log.WithFields(log.Fields{
+		"Key": key,
+	}).Info("Check youtube video in cache")
+
+	_, err := LiveCache.Get(context.Background(), key).Result()
+	if err == redis.Nil {
+		return true
+	} else if err != nil {
+		log.Fatal(err)
+	} else {
+		return false
+	}
+
+	return false
+}
+
+// Check new video or not
 func (Group GroupYtChannel) CheckYoutubeVideo(VideoID string) (*LiveStream, error) {
 	var Data LiveStream
 	rows, err := DB.Query(`SELECT * FROM GroupVideos Where VideoID=? AND VtuberGroup_id=?`, VideoID, Group.GroupID)
@@ -420,7 +439,7 @@ func (Group GroupYtChannel) CheckYoutubeVideo(VideoID string) (*LiveStream, erro
 	}
 }
 
-//Update youtube data
+// Update youtube data
 func (Data *LiveStream) UpdateYt(Status string) error {
 	_, err := DB.Exec(`Update Youtube set Type=?,Status=?,Title=?,Thumbnails=?,Description=?,PublishedAt=?,ScheduledStart=?,EndStream=?,Viewers=?,Length=? where id=?`, Data.Type, Status, Data.Title, Data.Thumb, Data.Desc, Data.Published, Data.Schedul, Data.End, Data.Viewers, Data.Length, Data.ID)
 	if err != nil {
@@ -429,7 +448,7 @@ func (Data *LiveStream) UpdateYt(Status string) error {
 	return nil
 }
 
-//Update youtube data
+// Update youtube data
 func (Data *LiveStream) UpdateGroupYt(Status string) error {
 	_, err := DB.Exec(`Update GroupVideos set Type=?,Status=?,Title=?,Thumbnails=?,Description=?,PublishedAt=?,ScheduledStart=?,EndStream=?,Viewers=?,Length=? where id=?`, Data.Type, Status, Data.Title, Data.Thumb, Data.Desc, Data.Published, Data.Schedul, Data.End, Data.Viewers, Data.Length, Data.ID)
 	if err != nil {

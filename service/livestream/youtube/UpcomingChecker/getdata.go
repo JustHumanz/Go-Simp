@@ -17,7 +17,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//StartCheckYT Youtube rss and API
+// StartCheckYT Youtube rss and API
 func StartCheckYT(Group database.Group) {
 
 	//check vtuber agency youtube channel
@@ -313,7 +313,7 @@ func StartCheckYT(Group database.Group) {
 						}
 
 						//Send into cache
-						if YoutubeData != nil {
+						if YoutubeData != nil && YoutubeData.CheckYoutubeToCache() {
 							YoutubeData.GetYtVideoDetail()
 							YoutubeData.AddYoutubeToCache(YoutubeData.ID)
 						}
