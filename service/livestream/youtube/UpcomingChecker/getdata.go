@@ -17,7 +17,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//StartCheckYT Youtube rss and API
+// StartCheckYT Youtube rss and API
 func StartCheckYT(Group database.Group) {
 
 	//check vtuber agency youtube channel
@@ -29,7 +29,7 @@ func StartCheckYT(Group database.Group) {
 				"Region":    YtChan.Region,
 			}).Info("Checking agency channel")
 
-			VideoID, err := engine.GetRSS(YtChan.YtChannel, *proxy)
+			VideoID, err := engine.GetRSS(YtChan.YtChannel, *proxy, 5)
 			if err != nil {
 				log.WithFields(log.Fields{
 					"Agency":    Group.GroupName,
@@ -287,7 +287,7 @@ func StartCheckYT(Group database.Group) {
 					"Agency": Group.GroupName,
 				}).Info("Checking Vtuber channel")
 
-				VideoID, err := engine.GetRSS(Member.YoutubeID, *proxy)
+				VideoID, err := engine.GetRSS(Member.YoutubeID, *proxy, 5)
 				if err != nil {
 					log.WithFields(log.Fields{
 						"Vtuber": Member.Name,

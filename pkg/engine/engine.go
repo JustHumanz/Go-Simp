@@ -29,7 +29,7 @@ import (
 	"golang.org/x/net/proxy"
 )
 
-//GetYtToken Get a valid token
+// GetYtToken Get a valid token
 func GetYtToken() *string {
 	for _, Token := range config.GoSimpConf.YtToken {
 		body, err := network.Curl("https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet,liveStreamingDetails,contentDetails&fields=items(snippet(publishedAt,title,description,thumbnails(standard),channelTitle,liveBroadcastContent),liveStreamingDetails(scheduledStartTime,concurrentViewers,actualEndTime),statistics(viewCount),contentDetails(duration))&id=GNkPJvVEm0s&key="+Token, nil)
@@ -41,7 +41,7 @@ func GetYtToken() *string {
 	return nil
 }
 
-//FixName change to Title format
+// FixName change to Title format
 func FixName(A string, B string) string {
 	if A != "" && B != "" {
 		return strings.Title("【" + strings.Join([]string{A, B}, "/") + "】")
@@ -52,7 +52,7 @@ func FixName(A string, B string) string {
 	}
 }
 
-//RanString Random string for tmp file
+// RanString Random string for tmp file
 func RanString() string {
 	rand.Seed(time.Now().UnixNano())
 	chars := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
@@ -65,7 +65,7 @@ func RanString() string {
 	return b.String()
 }
 
-//GetColor Get color from image
+// GetColor Get color from image
 func GetColor(filepath, url string) (int, error) {
 	def := 16770790
 
@@ -365,7 +365,7 @@ func YtFindType(title string) string {
 	}
 }
 
-//GetAuthorAvatar Get twitter avatar
+// GetAuthorAvatar Get twitter avatar
 func GetAuthorAvatar(username string) string {
 	profile, err := InitTwitterScraper().GetProfile(username)
 	if err != nil {
@@ -374,7 +374,7 @@ func GetAuthorAvatar(username string) string {
 	return strings.Replace(profile.Avatar, "normal.jpg", "400x400.jpg", -1)
 }
 
-//GetTwitterFollow Scrapping twitter followers
+// GetTwitterFollow Scrapping twitter followers
 func GetTwitterFollow(UserName string) (twitterscraper.Profile, error) {
 	profile, err := InitTwitterScraper().GetProfile(UserName)
 	if err != nil {
@@ -548,13 +548,13 @@ func RandomNum(min, max int) int {
 	return rand.Intn(max-min) + min
 }
 
-//RemoveTwitterShortLink remove twitter shotlink
+// RemoveTwitterShortLink remove twitter shotlink
 func RemoveTwitterShortLink(text string) string {
 	return regexp.MustCompile(`(?m)^(.*?)https:\/\/t.co\/.+`).ReplaceAllString(text, "${1}$2")
 }
 
-//GetRSS from Channel
-func GetRSS(YtID string, proxy bool) ([]string, error) {
+// GetRSS from Channel
+func GetRSS(YtID string, proxy bool, Limit int) ([]string, error) {
 	var (
 		DataXML YtXML
 		VideoID []string
@@ -563,12 +563,10 @@ func GetRSS(YtID string, proxy bool) ([]string, error) {
 		err     error
 	)
 
+	Data, err = network.Curl(URL, nil)
 	if proxy {
 		Data, err = network.CoolerCurl(URL, nil)
-	} else {
-		Data, err = network.Curl(URL, nil)
 	}
-
 	if err != nil {
 		return nil, err
 	}
@@ -577,12 +575,16 @@ func GetRSS(YtID string, proxy bool) ([]string, error) {
 
 	for i := 0; i < len(DataXML.Entry); i++ {
 		VideoID = append(VideoID, DataXML.Entry[i].VideoId)
+
+		if i == Limit {
+			break
+		}
 	}
 
 	return VideoID, nil
 }
 
-//YtAPI Get data from youtube api
+// YtAPI Get data from youtube api
 func YtAPI(VideoID []string) (YtData, error) {
 	var (
 		Data YtData
@@ -619,7 +621,7 @@ func YtAPI(VideoID []string) (YtData, error) {
 	return YtData{}, errors.New("exhaustion Token")
 }
 
-//GetWaiting get viwers by scraping yt video
+// GetWaiting get viwers by scraping yt video
 func GetWaiting(VideoID string) (string, error) {
 	var (
 		bit     []byte
@@ -646,7 +648,7 @@ func GetWaiting(VideoID string) (string, error) {
 	return config.Ytwaiting, nil
 }
 
-//ParseDuration Parse video duration
+// ParseDuration Parse video duration
 func ParseDuration(str string) time.Duration {
 	durationRegex := regexp.MustCompile(`P(?P<years>\d+Y)?(?P<months>\d+M)?(?P<days>\d+D)?T?(?P<hours>\d+H)?(?P<minutes>\d+M)?(?P<seconds>\d+S)?`)
 	matches := durationRegex.FindStringSubmatch(str)
@@ -684,7 +686,7 @@ func GetMaxSqlConn() int {
 	return a
 }
 
-//Init twitter scrapper with or without proxy
+// Init twitter scrapper with or without proxy
 func InitTwitterScraper() *twitterscraper.Scraper {
 	Scraper := twitterscraper.New()
 	Scraper.SetSearchMode(twitterscraper.SearchLatest)
@@ -697,7 +699,7 @@ func InitTwitterScraper() *twitterscraper.Scraper {
 	return Scraper
 }
 
-//Start bot
+// Start bot
 func StartBot(torTransport bool) *discordgo.Session {
 	i := config.GoSimpConf
 	tmp, err := discordgo.New("Bot " + i.Discord)
@@ -714,7 +716,7 @@ func StartBot(torTransport bool) *discordgo.Session {
 	return tmp
 }
 
-//Get twitch token
+// Get twitch token
 func GetTwitchTkn() *helix.Client {
 	i := config.GoSimpConf
 	TwitchClient, err := helix.NewClient(&helix.Options{

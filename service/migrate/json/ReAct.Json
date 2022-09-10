@@ -21,7 +21,8 @@
             },
             "Youtube": {
               "Yt_ID": "UC4OeUf_KfYRrwksschtRYow"
-            }
+            },
+            "Status": "Active"
         },
         {
             "EN_Name": "Shishigami Leona",
@@ -38,7 +39,8 @@
             },
             "Youtube": {
               "Yt_ID": "UCB1s_IdO-r0nUkY2mXeti-A"
-            }
+            },
+            "Status": "Active"
         },
         {
             "EN_Name": "Amakawa Hano",
@@ -59,7 +61,8 @@
             },
             "Youtube": {
               "Yt_ID": "UCxJ9SJLG7dA00M7VoEe4ltw"
-            }
+            },
+            "Status": "Active"
         },
         {
             "EN_Name": "Himekuma Ribon",
@@ -80,7 +83,8 @@
             },
             "Youtube": {
               "Yt_ID": "UC6HjtF2rHZO8gAsX5FXF-Kg"
-            }
+            },
+            "Status": "Active"
         },
         {
             "EN_Name": "Kashiko Mari",
@@ -97,7 +101,8 @@
             },
             "Youtube": {
               "Yt_ID": "UCfiK42sBHraMBK6eNWtsy7A"
-            }
+            },
+            "Status": "Active"
         }                                        
 	]
 }
