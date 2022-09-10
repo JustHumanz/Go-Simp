@@ -1,0 +1,106 @@
+{
+  "GroupName": "RealCorp",
+  "GroupIcon": "https://cdn.humanz.moe/RealCorpTV.png",
+  "GroupChannel": {
+    "Youtube": null,
+    "BiliBili": null
+  },
+  "Members": [
+    {
+      "Name": "Ezra",
+      "EN_Name": "Ezra Andromyda",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#artdromyda",
+        "Twitter_Lewd": "#ezr18",
+        "Twitter_Username": "EzraAndromyda"
+      },
+      "Youtube": {
+        "Yt_ID": "UC1qnoufcFATZ-ErJI2Os7Ig"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "The Pit Stop",
+      "Status": "Active"
+    },
+    {
+      "Name": "Kokura",
+      "EN_Name": "Kora Kurage",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#kordraw",
+        "Twitter_Lewd": "#korasmut",
+        "Twitter_Username": "KoraKurage"
+      },
+      "Youtube": {
+        "Yt_ID": "UCvZHBIVaHb5To-LRb8hvOFg"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "korakurage"
+      },
+      "Region": "US",
+      "Fanbase": "Jellybeans",
+      "Status": "Active"
+    },
+    {
+      "Name": "Xandworth",
+      "EN_Name": "Xander Fangsworth",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#ArtsWorth",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "FangsworthVT"
+      },
+      "Youtube": {
+        "Yt_ID": "UCoOEer2c2pn2LqPX6skNWtA"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "xanderfangsworth"
+      },
+      "Region": "US",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Zekanis",
+      "EN_Name": "Zekki Kanis",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#DoggiDoodle",
+        "Twitter_Lewd": "#CoomerKanis",
+        "Twitter_Username": "KanisVT"
+      },
+      "Youtube": {
+        "Yt_ID": "UCsGnu_iSik59au_xiQCnGpg"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "zekkikanis"
+      },
+      "Region": "US",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Miravel",
+      "EN_Name": "Mirai Velvet",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#miraisketch",
+        "Twitter_Lewd": "#ratedmirai",
+        "Twitter_Username": "zentreya"
+      },
+      "Youtube": null,
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "miraivelvet"
+      },
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    }
+  ]
+}
