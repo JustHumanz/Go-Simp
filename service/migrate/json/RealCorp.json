@@ -2,7 +2,12 @@
   "GroupName": "RealCorp",
   "GroupIcon": "https://cdn.humanz.moe/RealCorpTV.png",
   "GroupChannel": {
-    "Youtube": null,
+    "Youtube": [
+      {
+        "ChannelID": "UCgc0ekyM5Ac77llr-OWjmlw",
+        "Region": "EN"
+      }
+    ],
     "BiliBili": null
   },
   "Members": [
