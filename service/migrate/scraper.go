@@ -41,7 +41,7 @@ func TwitterFanart() {
 }
 
 func FilterYt(Dat database.Member, wg *sync.WaitGroup) {
-	VideoID, err := engine.GetRSS(Dat.YoutubeID, false)
+	VideoID, err := engine.GetRSS(Dat.YoutubeID, false, 5)
 	if err != nil {
 		log.WithFields(log.Fields{
 			"Vtuber": Dat.Name,

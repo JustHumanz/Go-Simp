@@ -14,7 +14,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//Public variable
+// Public variable
 var (
 	DB            *sql.DB
 	UserTagCache  *redis.Client
@@ -24,7 +24,7 @@ var (
 	FanartCache   *redis.Client
 )
 
-//Start Database session
+// Start Database session
 func Start(configfile config.ConfigFile) {
 	if DB == nil {
 		DB = configfile.CheckSQL()
@@ -62,7 +62,7 @@ func Start(configfile config.ConfigFile) {
 	log.Info("Database module ready")
 }
 
-//GetGroups Get all vtuber groupData
+// GetGroups Get all vtuber groupData
 func GetGroups() ([]Group, error) {
 	rows, err := DB.Query(`SELECT id,VtuberGroupName,VtuberGroupIcon FROM VtuberGroup`)
 	if err != nil {
@@ -93,7 +93,7 @@ func GetGroups() ([]Group, error) {
 	return Data, nil
 }
 
-//Get vtuber agency yt channel
+// Get vtuber agency yt channel
 func GetGroupsYtChannel(i int64) ([]GroupYtChannel, error) {
 	rows, err := DB.Query(`SELECT YoutubeChannel,Region FROM GroupYoutube where VtuberGroup_id=?`, i)
 	if err != nil {
@@ -116,7 +116,7 @@ func GetGroupsYtChannel(i int64) ([]GroupYtChannel, error) {
 	return Data, nil
 }
 
-//GetMembers Get data of Vtuber member
+// GetMembers Get data of Vtuber member
 func GetMembers(GroupID int64) ([]Member, error) {
 	var (
 		list Member
@@ -165,7 +165,7 @@ func GetMembers(GroupID int64) ([]Member, error) {
 	return Data, nil
 }
 
-//GetSubsCount Get subs,follow,view,like data from Subscriber
+// GetSubsCount Get subs,follow,view,like data from Subscriber
 func (Member Member) GetSubsCount() (*MemberSubs, error) {
 	var (
 		Data MemberSubs
@@ -186,61 +186,61 @@ func (Member Member) GetSubsCount() (*MemberSubs, error) {
 	return &Data, nil
 }
 
-//UpdateBiliBiliFollowers update bilibili state
+// UpdateBiliBiliFollowers update bilibili state
 func (Member *MemberSubs) UpdateBiliBiliFollowers(new int) *MemberSubs {
 	Member.BiliFollow = new
 	return Member
 }
 
-//UpdateBiliBiliVideos Add bilibili Videos
+// UpdateBiliBiliVideos Add bilibili Videos
 func (Member *MemberSubs) UpdateBiliBiliVideos(new int) *MemberSubs {
 	Member.BiliVideos = new
 	return Member
 }
 
-//UpdateBiliBiliViewers Add views
+// UpdateBiliBiliViewers Add views
 func (Member *MemberSubs) UpdateBiliBiliViewers(new int) *MemberSubs {
 	Member.BiliViews = new
 	return Member
 }
 
-//UpdateYoutubeSubs update youtube state
+// UpdateYoutubeSubs update youtube state
 func (Member *MemberSubs) UpdateYoutubeSubs(new int) *MemberSubs {
 	Member.YtSubs = new
 	return Member
 }
 
-//UpdateYoutubeVideos Update youtube videos
+// UpdateYoutubeVideos Update youtube videos
 func (Member *MemberSubs) UpdateYoutubeVideos(new int) *MemberSubs {
 	Member.YtVideos = new
 	return Member
 }
 
-//UpdateYoutubeViewers Update youtube views
+// UpdateYoutubeViewers Update youtube views
 func (Member *MemberSubs) UpdateYoutubeViewers(new int) *MemberSubs {
 	Member.YtViews = new
 	return Member
 }
 
-//UpdateTwitterFollowes Update twitter state
+// UpdateTwitterFollowes Update twitter state
 func (Member *MemberSubs) UpdateTwitterFollowes(new int) *MemberSubs {
 	Member.TwFollow = new
 	return Member
 }
 
-//UpdateTwitchFollowes Update Twitch state
+// UpdateTwitchFollowes Update Twitch state
 func (Member *MemberSubs) UpdateTwitchFollowes(new int) *MemberSubs {
 	Member.TwitchFollow = new
 	return Member
 }
 
-//UpdateTwitchViewers Update Twitch state
+// UpdateTwitchViewers Update Twitch state
 func (Member *MemberSubs) UpdateTwitchViewers(new int) *MemberSubs {
 	Member.TwitchViews = new
 	return Member
 }
 
-//UpdateSubs Update Subscriber data
+// UpdateSubs Update Subscriber data
 func (Member *MemberSubs) UpdateSubs() error {
 	if Member.State == config.YoutubeLive {
 		_, err := DB.Exec(`Update Subscriber set Youtube_Subscriber=?,Youtube_Videos=?,Youtube_Views=? Where id=? `, Member.YtSubs, Member.YtVideos, Member.YtViews, Member.ID)
@@ -266,7 +266,7 @@ func (Member *MemberSubs) UpdateSubs() error {
 	return nil
 }
 
-//GetChannelID Get Channel id from Discord ChannelID and VtuberGroupID
+// GetChannelID Get Channel id from Discord ChannelID and VtuberGroupID
 func GetChannelID(DiscordChannelID string, GroupID int64) (int, error) {
 	var ChannelID int
 	err := DB.QueryRow("SELECT id from Channel where DiscordChannelID=? AND VtuberGroup_id=?", DiscordChannelID, GroupID).Scan(&ChannelID)
@@ -276,7 +276,7 @@ func GetChannelID(DiscordChannelID string, GroupID int64) (int, error) {
 	return ChannelID, nil
 }
 
-//Adduser form `tag me command`
+// Adduser form `tag me command`
 func (Data *UserStruct) Adduser() error {
 	ChannelID, err := GetChannelID(Data.Channel_ID, Data.Group.ID)
 	if err != nil {
@@ -305,7 +305,7 @@ func (Data *UserStruct) Adduser() error {
 	}
 }
 
-//SendToCache send messageID to reddis
+// SendToCache send messageID to reddis
 func (Data *UserStruct) SendToCache(MessageID string) error {
 	err := GeneralCache.Set(context.Background(), MessageID, Data, config.AddUserTTL).Err()
 	if err != nil {
@@ -314,7 +314,7 @@ func (Data *UserStruct) SendToCache(MessageID string) error {
 	return nil
 }
 
-//GetChannelMessage get messageID from redis
+// GetChannelMessage get messageID from redis
 func GetChannelMessage(MessageID string) (*UserStruct, error) {
 	var (
 		data UserStruct
@@ -327,7 +327,7 @@ func GetChannelMessage(MessageID string) (*UserStruct, error) {
 	return &data, nil
 }
 
-//UpdateReminder Update reminder time
+// UpdateReminder Update reminder time
 func (Data UserStruct) UpdateReminder() error {
 	ChannelID, err := GetChannelID(Data.Channel_ID, Data.Group.ID)
 	if err != nil {
@@ -345,7 +345,7 @@ func (Data UserStruct) UpdateReminder() error {
 	return nil
 }
 
-//Deluser Delete user from `del` command
+// Deluser Delete user from `del` command
 func (Data UserStruct) Deluser() error {
 	ChannelID, err := GetChannelID(Data.Channel_ID, Data.Group.ID)
 	if err != nil {
@@ -366,7 +366,7 @@ func (Data UserStruct) Deluser() error {
 	}
 }
 
-//CheckUser Check user if already tagged
+// CheckUser Check user if already tagged
 func CheckUser(DiscordID string, MemberID int64, ChannelChannelID int) bool {
 	var tmp int
 	row := DB.QueryRow("SELECT id FROM User WHERE DiscordID=? AND VtuberMember_id=? AND Channel_id=?", DiscordID, MemberID, ChannelChannelID)
@@ -381,7 +381,7 @@ func CheckUser(DiscordID string, MemberID int64, ChannelChannelID int) bool {
 	}
 }
 
-//AddChannel Add new discord channel from `enable` command
+// AddChannel Add new discord channel from `enable` command
 func (Data *DiscordChannel) AddChannel() error {
 	if Data.Dynamic {
 		Data.SetNewUpcoming(false).SetLiveOnly(true)
@@ -409,7 +409,7 @@ func (Data *DiscordChannel) AddChannel() error {
 	return nil
 }
 
-//DelChannel delete discord channel from `disable` command
+// DelChannel delete discord channel from `disable` command
 func (Data *DiscordChannel) DelChannel() error {
 	/*
 		match, err := regexp.MatchString("Unknown|403||Delete|Missing|non-text", errmsg)
@@ -459,7 +459,7 @@ func (Data *DiscordChannel) DelChannel() error {
 	return nil
 }
 
-//UpdateChannel update discord channel type from `update` command
+// UpdateChannel update discord channel type from `update` command
 func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 	var (
 		channeltype int
@@ -557,7 +557,7 @@ func (Data *DiscordChannel) UpdateChannel(UpdateType string) error {
 	return nil
 }
 
-//GetChannelByGroup Get DiscordChannelID from VtuberGroup
+// GetChannelByGroup Get DiscordChannelID from VtuberGroup
 func (Data Group) GetChannelByGroup(Region string) ([]DiscordChannel, error) {
 	var (
 		list        string
@@ -585,7 +585,7 @@ func (Data Group) GetChannelByGroup(Region string) ([]DiscordChannel, error) {
 	return ChannelData, nil
 }
 
-//ChannelCheck Check Discord Channel from VtuberGroup
+// ChannelCheck Check Discord Channel from VtuberGroup
 func (Data *DiscordChannel) ChannelCheck() bool {
 	var tmp int
 	row := DB.QueryRow("SELECT id FROM Channel WHERE VtuberGroup_id=? AND DiscordChannelID=?", Data.Group.ID, Data.ChannelID)
@@ -600,7 +600,7 @@ func (Data *DiscordChannel) ChannelCheck() bool {
 	}
 }
 
-//CheckIfNewChannel Check Discord Channel from VtuberGroup
+// CheckIfNewChannel Check Discord Channel from VtuberGroup
 func CheckIfNewChannel(ChannelID string) bool {
 	var tmp int
 	row := DB.QueryRow("SELECT id FROM Channel WHERE DiscordChannelID=?", ChannelID)
@@ -615,7 +615,7 @@ func CheckIfNewChannel(ChannelID string) bool {
 	}
 }
 
-//CheckChannelEnable Check enable or disable discord channel from `tag,del` command
+// CheckChannelEnable Check enable or disable discord channel from `tag,del` command
 func CheckChannelEnable(ChannelID, VtuberName string, GroupID int64) bool {
 	var DiscordChannelID string
 	row := DB.QueryRow("Select DiscordChannelID FROM Channel Inner join VtuberGroup on VtuberGroup.id = Channel.VtuberGroup_id inner Join VtuberMember on VtuberMember.VtuberGroup_id = VtuberGroup.id Where Channel.DiscordChannelID=? AND (VtuberMember.VtuberName_EN=? OR VtuberMember.VtuberName_JP=? OR VtuberGroup.id=?) group by Channel.id", ChannelID, VtuberName, VtuberName, GroupID)
@@ -630,7 +630,7 @@ func CheckChannelEnable(ChannelID, VtuberName string, GroupID int64) bool {
 	}
 }
 
-//UserStatus Get userinfo(tags) from discord channel
+// UserStatus Get userinfo(tags) from discord channel
 func UserStatus(UserID, Channel string) ([][]string, error) {
 	var (
 		GroupName  string
@@ -662,7 +662,7 @@ func UserStatus(UserID, Channel string) ([][]string, error) {
 	return taglist, nil
 }
 
-//ChannelStatus Get Discord channel status
+// ChannelStatus Get Discord channel status
 func ChannelStatus(ChannelID string) ([]DiscordChannel, error) {
 	var (
 		Data []DiscordChannel
@@ -691,7 +691,7 @@ func ChannelStatus(ChannelID string) ([]DiscordChannel, error) {
 	return Data, nil
 }
 
-//ChannelTag get channel tags from `channel tags` command
+// ChannelTag get channel tags from `channel tags` command
 func ChannelTag(MemberID int64, typetag int, Options string, Reg string) ([]DiscordChannel, error) {
 	var (
 		Data        []DiscordChannel
@@ -765,7 +765,7 @@ func ChannelTag(MemberID int64, typetag int, Options string, Reg string) ([]Disc
 	return Data, nil
 }
 
-//unique Remove dupicate string
+// unique Remove dupicate string
 var unique = func(Slice []string) []string {
 	keys := make(map[string]bool)
 	list := []string{}
@@ -778,7 +778,7 @@ var unique = func(Slice []string) []string {
 	return list
 }
 
-//PushReddis Push DiscordChannel state to reddis
+// PushReddis Push DiscordChannel state to reddis
 func (Data *DiscordChannel) PushReddis() error {
 	err := GeneralCache.LPush(context.Background(), Data.VideoID, Data).Err()
 	if err != nil {
@@ -787,7 +787,7 @@ func (Data *DiscordChannel) PushReddis() error {
 	return nil
 }
 
-//GetLiveNotifMsg get MessageID with live status
+// GetLiveNotifMsg get MessageID with live status
 func GetLiveNotifMsg(Key string) ([]DiscordChannel, error) {
 	var (
 		Data        []DiscordChannel
@@ -809,7 +809,7 @@ func GetLiveNotifMsg(Key string) ([]DiscordChannel, error) {
 	return Data, nil
 }
 
-//GetUserList GetUser tags
+// GetUserList GetUser tags
 func (Data *DiscordChannel) GetUserList(ctx context.Context) ([]string, error) {
 	var (
 		DataUser      []string
@@ -873,7 +873,7 @@ func CheckReminderList(Member int64, Reminder int) bool {
 	return false
 }
 
-//GetUserReminderList get Reminder tags
+// GetUserReminderList get Reminder tags
 func GetUserReminderList(ChannelIDDiscord int64, Member int64, Reminder int) ([]string, error) {
 	var (
 		UserTagsList  []string
@@ -921,7 +921,7 @@ func GetUserReminderList(ChannelIDDiscord int64, Member int64, Reminder int) ([]
 	return UserTagsList, nil
 }
 
-//GetRanChannel get random id channel
+// GetRanChannel get random id channel
 func GetRanChannel() string {
 	var tmp string
 	row := DB.QueryRow("SELECT DiscordChannelID FROM Vtuber.Channel ORDER BY RAND() LIMIT 1")
@@ -932,7 +932,7 @@ func GetRanChannel() string {
 	return tmp
 }
 
-//GetMemberCount get count of member
+// GetMemberCount get count of member
 func GetMemberCount() int {
 	var count int
 	err := DB.QueryRow(`SELECT Count(*) from (Select COUNT(id) FROM Vtuber.User Group by DiscordID) t`).Scan(&count)
@@ -1004,12 +1004,19 @@ func DeleteDeletedUser(users []string) {
 	}
 }
 
-//Check if videoid is exist or not in cache
+// Check if videoid is exist or not in cache
 func CheckVideoIDFromCache(VideoID string) LiveStream {
 	key := fmt.Sprintf("cache-layer-%s", VideoID)
+	log.WithFields(log.Fields{
+		"Key": key,
+	}).Info("Check youtube video in cache")
+
 	var Live LiveStream
 	val2, err := LiveCache.Get(context.Background(), key).Result()
 	if err == redis.Nil {
+		log.WithFields(log.Fields{
+			"VideoID": VideoID,
+		}).Error("not found in cache")
 		return Live
 	} else if err != nil {
 		log.Fatal(err)
