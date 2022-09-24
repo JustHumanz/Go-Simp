@@ -24,7 +24,7 @@ export const useGroupStore = defineStore("groups", () => {
         groups.value.status = error.response.status
       })
 
-    if (err) return false
+    if (err || data_groups == null) return false
 
     // sort group data from GroupName
     data_groups.sort((a, b) => {

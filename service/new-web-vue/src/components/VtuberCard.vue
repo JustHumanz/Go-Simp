@@ -403,7 +403,7 @@ export default {
 }
 
 .context-menu-vtuber {
-  @apply absolute top-0 z-[4] w-full rounded-md bg-slate-700 shadow-md;
+  @apply absolute top-0 z-[4] hidden w-full rounded-md bg-slate-700 shadow-md;
 
   &__item {
     @apply flex cursor-pointer space-x-1 px-2 py-1.5 text-sm first:pt-2 hover:bg-slate-600/40;

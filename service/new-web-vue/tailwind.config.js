@@ -1,12 +1,16 @@
-// eslint-disable-next-line no-undef
+/** @type {import('tailwindcss').Config} */
+const defaultTheme = require("tailwindcss/defaultTheme")
+const colors = require("tailwindcss/colors")
+
 module.exports = {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   darkMode: "class",
   theme: {
+    screens: {
+      xs: "454px",
+      ...defaultTheme.screens,
+    },
     extend: {
-      screens: {
-        xs: "454px",
-      },
       backgroundImage: {
         smolame: "url(/assets/smolame.jpg)",
         rip: "url(/src/assets/rip.svg)",
@@ -42,6 +46,12 @@ module.exports = {
         twitch: "#a970ff",
         twitter: "#1da1f2",
         pixiv: "#0096fa",
+        // 60 30 1
+        rules: {
+          10: colors.blue[700],
+          30: colors.blue[400],
+          60: colors.white,
+        },
       },
 
       brightness: {
