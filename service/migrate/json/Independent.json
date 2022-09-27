@@ -1097,6 +1097,26 @@
       "Region": "EN",
       "Fanbase": "",
       "Status": "Active"
+    },
+    {
+      "Name": "Shylily",
+      "EN_Name": "Shylily",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#shylilyart",
+        "Twitter_Lewd": "#shylilynsfw",
+        "Twitter_Username": "shylilytwitch"
+      },
+      "Youtube": {
+        "Yt_ID": "UCFnXTeBpJRPSN6QmWz_uDgQ"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "shylily"
+      },
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
     }
   ]
 }
