@@ -103,6 +103,24 @@
               "Yt_ID": "UCfiK42sBHraMBK6eNWtsy7A"
             },
             "Status": "Active"
+        },
+        {
+            "EN_Name": "Usuwa Suu",
+            "Fanbase": "",
+            "JP_Name": "稀羽すう",
+            "Name": "Suu",
+            "Region": "JP",
+            "BiliBili": null,
+            "Twitch": null,
+            "Twitter": {
+              "Twitter_Fanart": "#usuwart",
+              "Twitter_Lewd": "",
+              "Twitter_Username": "usuwasuu"
+            },
+            "Youtube": {
+              "Yt_ID": "UCeqIMtLuGc3YgwkhEaG8oDg"
+            },
+            "Status": "Active"
         }                                        
 	]
 }

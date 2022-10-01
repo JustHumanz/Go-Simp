@@ -1117,6 +1117,24 @@
       "Region": "EN",
       "Fanbase": "",
       "Status": "Active"
+    },
+    {
+      "Name": "Rully",
+      "EN_Name": "Umino Rully",
+      "JP_Name": "海乃ルリィ",
+      "Twitter": {
+        "Twitter_Fanart": "#海乃アトリエ",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "uminorully"
+      },
+      "Youtube": {
+        "Yt_ID": "UCZ1U2ZUTDYmZFo6qr7q5ItA"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
     }
   ]
 }
