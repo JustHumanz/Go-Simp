@@ -1097,6 +1097,44 @@
       "Region": "EN",
       "Fanbase": "",
       "Status": "Active"
+    },
+    {
+      "Name": "Shylily",
+      "EN_Name": "Shylily",
+      "JP_Name": "",
+      "Twitter": {
+        "Twitter_Fanart": "#shylilyart",
+        "Twitter_Lewd": "#shylilynsfw",
+        "Twitter_Username": "shylilytwitch"
+      },
+      "Youtube": {
+        "Yt_ID": "UCFnXTeBpJRPSN6QmWz_uDgQ"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "shylily"
+      },
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Rully",
+      "EN_Name": "Umino Rully",
+      "JP_Name": "海乃ルリィ",
+      "Twitter": {
+        "Twitter_Fanart": "#海乃アトリエ",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "uminorully"
+      },
+      "Youtube": {
+        "Yt_ID": "UCZ1U2ZUTDYmZFo6qr7q5ItA"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
     }
   ]
 }

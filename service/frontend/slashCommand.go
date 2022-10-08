@@ -2133,10 +2133,12 @@ var (
 
 					tmp, err := strconv.Atoi(m.Content)
 					if err != nil {
+						log.Error(err, " Clear register")
 						_, err := s.ChannelMessageSend(m.ChannelID, "Worng input ID")
 						if err != nil {
 							log.Error(err)
 						}
+						Clear(Register)
 						return
 					} else {
 						for _, ChannelState := range Register.ChannelStates {
