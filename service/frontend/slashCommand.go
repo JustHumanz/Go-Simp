@@ -1964,264 +1964,275 @@ var (
 			}
 		},
 		"channel-update": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			Admin, err := MemberHasPermission(i.GuildID, i.Member.User.ID)
-			if err != nil {
-				log.Error(err)
-			}
-			if !Admin {
-				s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-					Type: discordgo.InteractionResponseChannelMessageWithSource,
-					Data: &discordgo.InteractionResponseData{
-						Content: "You don't have permission to enable/disable/update,make sure you have `Manage Channels` Role permission",
-					},
-				})
-				return
-			}
 
-			Channel := i.ApplicationCommandData().Options[0].ChannelValue(nil)
-
-			var (
-				Typestr     string
-				LiveOnly    = config.No
-				NewUpcoming = config.No
-				Dynamic     = config.No
-				LiteMode    = config.No
-				Indie       = ""
-				Region      = "All"
-			)
-			ChannelData, err := database.ChannelStatus(Channel.ID)
-			if err != nil {
-				log.Error(err)
-			}
-
-			log.WithFields(log.Fields{
-				"User":    i.Member.User.Username,
-				"Channel": Channel.ID,
-			}).Info("channel-Update")
-
-			err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{
-					Flags:   1 << 6,
-					Content: "Processing",
+					Content: "This feature still in maintenance,for alternative use web version for updating channels",
 				},
 			})
-			if err != nil {
-				log.Error(err)
-			}
 
-			if len(ChannelData) > 0 {
-				for _, Channel := range ChannelData {
-					if Channel.Region != "" {
-						Region = Channel.Region
-					}
-
-					if Channel.IsFanart() {
-						Typestr = "FanArt"
-					}
-
-					if Channel.IsLive() {
-						Typestr = "Live"
-					}
-
-					if Channel.IsFanart() && Channel.IsLive() {
-						Typestr = "FanArt & Livestream"
-					}
-
-					if Channel.IsLewd() {
-						Typestr = "Lewd"
-					}
-
-					if Channel.IsLewd() && Channel.IsFanart() {
-						Typestr = "FanArt & Lewd"
-					}
-
-					if Channel.LiveOnly {
-						LiveOnly = config.Ok
-					}
-
-					if Channel.NewUpcoming {
-						NewUpcoming = config.Ok
-					}
-
-					if Channel.Dynamic {
-						Dynamic = config.Ok
-					}
-
-					if Channel.LiteMode {
-						LiteMode = config.Ok
-					}
-
-					if Channel.Group.GroupName == config.Indie {
-						if Channel.IndieNotif {
-							Indie = config.Ok
-						} else if Channel.Group.GroupName != config.Indie {
-							Indie = "-"
-						} else {
-							Indie = config.No
-						}
-						Channel.Group.RemoveNillIconURL()
-
-						_, err = s.ChannelMessageSendEmbed(i.ChannelID, engine.NewEmbed().
-							SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
-							SetThumbnail(Channel.Group.IconURL).
-							SetDescription("Channel States of "+Channel.Group.GroupName).
-							SetTitle("ID "+strconv.Itoa(int(Channel.ID))).
-							AddField("Type", Typestr).
-							AddField("LiveOnly", LiveOnly).
-							AddField("Dynamic", Dynamic).
-							AddField("Upcoming", NewUpcoming).
-							AddField("Lite", LiteMode).
-							AddField("Regions", Region).
-							AddField("Independent notif", Indie).
-							InlineAllFields().MessageEmbed)
-						if err != nil {
-							log.Error(err)
-						}
-					} else {
-						_, err = s.ChannelMessageSendEmbed(i.ChannelID, engine.NewEmbed().
-							SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
-							SetThumbnail(Channel.Group.IconURL).
-							SetDescription("Channel States of "+Channel.Group.GroupName).
-							SetTitle("ID "+strconv.Itoa(int(Channel.ID))).
-							AddField("Type", Typestr).
-							AddField("LiveOnly", LiveOnly).
-							AddField("Dynamic", Dynamic).
-							AddField("Upcoming", NewUpcoming).
-							AddField("Lite", LiteMode).
-							AddField("Regions", Region).
-							InlineAllFields().MessageEmbed)
-						if err != nil {
-							log.Error(err)
-						}
-					}
-				}
-			} else {
-				_, err := s.ChannelMessageSendEmbed(i.ChannelID, engine.NewEmbed().
-					SetTitle("404 Not found,use `/setup` first").
-					SetThumbnail(config.GoSimpIMG).
-					SetImage(engine.NotFoundIMG()).MessageEmbed)
+			/*
+				Admin, err := MemberHasPermission(i.GuildID, i.Member.User.ID)
 				if err != nil {
 					log.Error(err)
 				}
-				return
-			}
+				if !Admin {
+					s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+						Type: discordgo.InteractionResponseChannelMessageWithSource,
+						Data: &discordgo.InteractionResponseData{
+							Content: "You don't have permission to enable/disable/update,make sure you have `Manage Channels` Role permission",
+						},
+					})
+					return
+				}
 
-			AdminID := i.Member.User.ID
-			Register := &ChannelRegister{
-				AdminID:       AdminID,
-				State:         UpdateState,
-				ChannelStates: ChannelData,
-			}
-			_, err = s.ChannelMessageSend(i.ChannelID, "Select ID : ")
-			if err != nil {
-				log.Error(err)
-			}
-			Counter := 0
-			Bot.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
-				fmt.Println(strings.HasPrefix(m.Content, config.GoSimpConf.BotPrefix.General), m.Content)
-				if m.Author.ID == Register.AdminID && Register.State == UpdateState && strings.HasPrefix(m.Content, config.GoSimpConf.BotPrefix.General) {
-					Counter++
-					if strings.ToLower(m.Content) == "exit" {
-						_, err := s.ChannelMessageSend(m.ChannelID, "exiting update state,bye")
-						if err != nil {
-							log.Error(err)
+				Channel := i.ApplicationCommandData().Options[0].ChannelValue(nil)
+
+				var (
+					Typestr     string
+					LiveOnly    = config.No
+					NewUpcoming = config.No
+					Dynamic     = config.No
+					LiteMode    = config.No
+					Indie       = ""
+					Region      = "All"
+				)
+				ChannelData, err := database.ChannelStatus(Channel.ID)
+				if err != nil {
+					log.Error(err)
+				}
+
+				log.WithFields(log.Fields{
+					"User":    i.Member.User.Username,
+					"Channel": Channel.ID,
+				}).Info("channel-Update")
+
+				err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Flags:   1 << 6,
+						Content: "Processing",
+					},
+				})
+				if err != nil {
+					log.Error(err)
+				}
+
+				if len(ChannelData) > 0 {
+					for _, Channel := range ChannelData {
+						if Channel.Region != "" {
+							Region = Channel.Region
 						}
 
-						Clear(Register)
-						return
-					}
-
-					if len(strings.Split(m.Content, ">")) == 0 {
-						_, err := s.ChannelMessageSend(m.ChannelID, "Empty id")
-						if err != nil {
-							log.Error(err)
+						if Channel.IsFanart() {
+							Typestr = "FanArt"
 						}
-						return
-					}
 
-					AgencyID := strings.Split(m.Content, ">")[1]
-					tmp, err := strconv.Atoi(AgencyID)
-					if err != nil {
-						log.Error(err, " Clearing register")
-						_, err := s.ChannelMessageSend(m.ChannelID, "Wrong input ID")
-						if err != nil {
-							log.Error(err)
+						if Channel.IsLive() {
+							Typestr = "Live"
 						}
-						Clear(Register)
-						return
-					} else {
-						for _, ChannelState := range Register.ChannelStates {
-							if int(ChannelState.ID) == tmp {
-								Register.SetChannel(ChannelState)
-							}
+
+						if Channel.IsFanart() && Channel.IsLive() {
+							Typestr = "FanArt & Livestream"
 						}
-						if Register.ChannelState.ID != 0 {
-							Register.SetChannelID(m.ChannelID)
-							_, err := s.ChannelMessageSend(m.ChannelID, "You selectd `"+Register.ChannelState.Group.GroupName+"` with ID `"+strconv.Itoa(int(Register.ChannelState.ID))+"`")
-							if err != nil {
-								log.Error(err)
-							}
 
-							tableString := &strings.Builder{}
-							table := tablewriter.NewWriter(tableString)
-							table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
-							table.SetCenterSeparator("|")
+						if Channel.IsLewd() {
+							Typestr = "Lewd"
+						}
 
-							table.SetHeader([]string{"Menu"})
-							table.Append([]string{"Update Channel state"})
-							table.Append([]string{"Add region in this channel"})
-							table.Append([]string{"Delete region in this channel"})
+						if Channel.IsLewd() && Channel.IsFanart() {
+							Typestr = "FanArt & Lewd"
+						}
 
-							if Register.ChannelState.TypeTag == 2 || Register.ChannelState.TypeTag == 3 {
-								table.Append([]string{"Change Livestream state"})
-							}
+						if Channel.LiveOnly {
+							LiveOnly = config.Ok
+						}
 
-							table.Render()
-							MsgText, err := s.ChannelMessageSend(m.ChannelID, "```"+tableString.String()+"```")
-							if err != nil {
-								log.Error(err)
-							}
+						if Channel.NewUpcoming {
+							NewUpcoming = config.Ok
+						}
 
-							if Register.ChannelState.TypeTag == 2 || Register.ChannelState.TypeTag == 3 {
-								err = engine.Reacting(map[string]string{
-									"ChannelID": m.ChannelID,
-									"State":     "Menu2",
-									"MessageID": MsgText.ID,
-								}, s)
-								if err != nil {
-									log.Error(err)
-								}
+						if Channel.Dynamic {
+							Dynamic = config.Ok
+						}
+
+						if Channel.LiteMode {
+							LiteMode = config.Ok
+						}
+
+						if Channel.Group.GroupName == config.Indie {
+							if Channel.IndieNotif {
+								Indie = config.Ok
+							} else if Channel.Group.GroupName != config.Indie {
+								Indie = "-"
 							} else {
-								err = engine.Reacting(map[string]string{
-									"ChannelID": m.ChannelID,
-									"State":     "Menu",
-									"MessageID": MsgText.ID,
-								}, s)
-								if err != nil {
-									log.Error(err)
-								}
+								Indie = config.No
+							}
+							Channel.Group.RemoveNillIconURL()
+
+							_, err = s.ChannelMessageSendEmbed(i.ChannelID, engine.NewEmbed().
+								SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+								SetThumbnail(Channel.Group.IconURL).
+								SetDescription("Channel States of "+Channel.Group.GroupName).
+								SetTitle("ID "+strconv.Itoa(int(Channel.ID))).
+								AddField("Type", Typestr).
+								AddField("LiveOnly", LiveOnly).
+								AddField("Dynamic", Dynamic).
+								AddField("Upcoming", NewUpcoming).
+								AddField("Lite", LiteMode).
+								AddField("Regions", Region).
+								AddField("Independent notif", Indie).
+								InlineAllFields().MessageEmbed)
+							if err != nil {
+								log.Error(err)
 							}
 						} else {
-							_, err := s.ChannelMessageSend(m.ChannelID, "Channel ID not found")
+							_, err = s.ChannelMessageSendEmbed(i.ChannelID, engine.NewEmbed().
+								SetAuthor(i.Member.User.Username, i.Member.User.AvatarURL("128")).
+								SetThumbnail(Channel.Group.IconURL).
+								SetDescription("Channel States of "+Channel.Group.GroupName).
+								SetTitle("ID "+strconv.Itoa(int(Channel.ID))).
+								AddField("Type", Typestr).
+								AddField("LiveOnly", LiveOnly).
+								AddField("Dynamic", Dynamic).
+								AddField("Upcoming", NewUpcoming).
+								AddField("Lite", LiteMode).
+								AddField("Regions", Region).
+								InlineAllFields().MessageEmbed)
 							if err != nil {
 								log.Error(err)
 							}
-							if Counter == 5 {
-								Clear(Register)
+						}
+					}
+				} else {
+					_, err := s.ChannelMessageSendEmbed(i.ChannelID, engine.NewEmbed().
+						SetTitle("404 Not found,use `/setup` first").
+						SetThumbnail(config.GoSimpIMG).
+						SetImage(engine.NotFoundIMG()).MessageEmbed)
+					if err != nil {
+						log.Error(err)
+					}
+					return
+				}
+
+				AdminID := i.Member.User.ID
+				Register := &ChannelRegister{
+					AdminID:       AdminID,
+					State:         UpdateState,
+					ChannelStates: ChannelData,
+				}
+
+				_, err = s.ChannelMessageSend(i.ChannelID, "Select ID : ")
+				if err != nil {
+					log.Error(err)
+				}
+
+				Counter := 0
+				Bot.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
+					if m.Author.ID == Register.AdminID && Register.State == UpdateState && strings.HasPrefix(m.Content, config.GoSimpConf.BotPrefix.General) {
+						Counter++
+						if strings.ToLower(m.Content) == "exit" {
+							_, err := s.ChannelMessageSend(m.ChannelID, "exiting update state,bye")
+							if err != nil {
+								log.Error(err)
+							}
+
+							Clear(Register)
+							return
+						}
+
+						if len(strings.Split(m.Content, ">")) == 0 {
+							_, err := s.ChannelMessageSend(m.ChannelID, "Empty id")
+							if err != nil {
+								log.Error(err)
 							}
 							return
 						}
-					}
-				}
-			})
 
-			Bot.AddHandler(func(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
-				if Register != nil && Register.AdminID == m.UserID {
-					EmojiUpdate(Register, s, m)
-					EmojiHandler(Register, s, m)
-				}
-			})
+						AgencyID := strings.Split(m.Content, ">")[1]
+						tmp, err := strconv.Atoi(AgencyID)
+						if err != nil {
+							log.Error(err, " Clearing register")
+							_, err := s.ChannelMessageSend(m.ChannelID, "Wrong input ID")
+							if err != nil {
+								log.Error(err)
+							}
+							Clear(Register)
+							return
+						} else {
+							for _, ChannelState := range Register.ChannelStates {
+								if int(ChannelState.ID) == tmp {
+									Register.SetChannel(ChannelState)
+								}
+							}
+							if Register.ChannelState.ID != 0 {
+								Register.SetChannelID(m.ChannelID)
+								_, err := s.ChannelMessageSend(m.ChannelID, "You selectd `"+Register.ChannelState.Group.GroupName+"` with ID `"+strconv.Itoa(int(Register.ChannelState.ID))+"`")
+								if err != nil {
+									log.Error(err)
+								}
+
+								tableString := &strings.Builder{}
+								table := tablewriter.NewWriter(tableString)
+								table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+								table.SetCenterSeparator("|")
+
+								table.SetHeader([]string{"Menu"})
+								table.Append([]string{"Update Channel state"})
+								table.Append([]string{"Add region in this channel"})
+								table.Append([]string{"Delete region in this channel"})
+
+								if Register.ChannelState.TypeTag == 2 || Register.ChannelState.TypeTag == 3 {
+									table.Append([]string{"Change Livestream state"})
+								}
+
+								table.Render()
+								MsgText, err := s.ChannelMessageSend(m.ChannelID, "```"+tableString.String()+"```")
+								if err != nil {
+									log.Error(err)
+								}
+
+								if Register.ChannelState.TypeTag == 2 || Register.ChannelState.TypeTag == 3 {
+									err = engine.Reacting(map[string]string{
+										"ChannelID": m.ChannelID,
+										"State":     "Menu2",
+										"MessageID": MsgText.ID,
+									}, s)
+									if err != nil {
+										log.Error(err)
+									}
+								} else {
+									err = engine.Reacting(map[string]string{
+										"ChannelID": m.ChannelID,
+										"State":     "Menu",
+										"MessageID": MsgText.ID,
+									}, s)
+									if err != nil {
+										log.Error(err)
+									}
+								}
+							} else {
+								_, err := s.ChannelMessageSend(m.ChannelID, "Channel ID not found")
+								if err != nil {
+									log.Error(err)
+								}
+								if Counter == 5 {
+									Clear(Register)
+								}
+								return
+							}
+						}
+					}
+				})
+
+				Bot.AddHandler(func(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
+					if Register != nil && Register.AdminID == m.UserID {
+						EmojiUpdate(Register, s, m)
+						EmojiHandler(Register, s, m)
+					}
+				})
+			*/
 		},
 		"channel-delete": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			Admin, err := MemberHasPermission(i.GuildID, i.Member.User.ID)
