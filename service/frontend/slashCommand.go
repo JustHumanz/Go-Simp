@@ -2119,22 +2119,31 @@ var (
 			}
 			Counter := 0
 			Bot.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
-				if m.Author.ID == Register.AdminID && Register.State == UpdateState {
+				if m.Author.ID == Register.AdminID && Register.State == UpdateState && strings.HasPrefix(m.Content, "vtbot>") {
 					Counter++
 					if strings.ToLower(m.Content) == "exit" {
+						_, err := s.ChannelMessageSend(m.ChannelID, "exiting update state,bye")
+						if err != nil {
+							log.Error(err)
+						}
+
 						Clear(Register)
 						return
 					}
 
-					tableString := &strings.Builder{}
-					table := tablewriter.NewWriter(tableString)
-					table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
-					table.SetCenterSeparator("|")
+					if len(strings.Split(m.Content, ">")) == 0 {
+						_, err := s.ChannelMessageSend(m.ChannelID, "Empty id")
+						if err != nil {
+							log.Error(err)
+						}
+						return
+					}
 
-					tmp, err := strconv.Atoi(m.Content)
+					AgencyID := strings.Split(m.Content, ">")[1]
+					tmp, err := strconv.Atoi(AgencyID)
 					if err != nil {
-						log.Error(err, " Clear register")
-						_, err := s.ChannelMessageSend(m.ChannelID, "Worng input ID")
+						log.Error(err, " Clearing register")
+						_, err := s.ChannelMessageSend(m.ChannelID, "Wrong input ID")
 						if err != nil {
 							log.Error(err)
 						}
@@ -2152,6 +2161,12 @@ var (
 							if err != nil {
 								log.Error(err)
 							}
+
+							tableString := &strings.Builder{}
+							table := tablewriter.NewWriter(tableString)
+							table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+							table.SetCenterSeparator("|")
+
 							table.SetHeader([]string{"Menu"})
 							table.Append([]string{"Update Channel state"})
 							table.Append([]string{"Add region in this channel"})
