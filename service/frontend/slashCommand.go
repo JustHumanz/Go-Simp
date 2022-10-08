@@ -2119,7 +2119,8 @@ var (
 			}
 			Counter := 0
 			Bot.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
-				if m.Author.ID == Register.AdminID && Register.State == UpdateState && strings.HasPrefix(m.Content, "vtbot>") {
+				fmt.Println(strings.HasPrefix(m.Content, config.GoSimpConf.BotPrefix.General), m.Content)
+				if m.Author.ID == Register.AdminID && Register.State == UpdateState && strings.HasPrefix(m.Content, config.GoSimpConf.BotPrefix.General) {
 					Counter++
 					if strings.ToLower(m.Content) == "exit" {
 						_, err := s.ChannelMessageSend(m.ChannelID, "exiting update state,bye")
