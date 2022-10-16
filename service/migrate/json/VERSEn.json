@@ -1,0 +1,105 @@
+{
+	"GroupName": "VERSEn",
+	"GroupIcon": "https://cdn.humanz.moe/Verse.png",
+	"GroupChannel": {
+        "Youtube": [
+            {
+              "ChannelID": "UCXPSFGZZrJ0tQEeP7R2jRqQ",
+              "Region": "JP"
+            }
+          ],
+          "BiliBili": null
+	},
+	"Members": [
+        {
+            "EN_Name": "Maru Nanamona",
+            "Fanbase": "",
+            "JP_Name": "マル・ナナモナ",
+            "Name": "Nanamona",
+            "Region": "JP",
+            "Status": "Active",
+            "BiliBili": null,
+            "Twitch": null,
+            "Twitter": {
+              "Twitter_Fanart": "#ななもなーと",
+              "Twitter_Lewd": "",
+              "Twitter_Username": "nanamona_mr"
+            },
+            "Youtube": {
+              "Yt_ID": "UCOg01LJmZF9UnwFbly73CVw"
+            }
+        },
+        {
+            "EN_Name": "Hitoshiro Itsuki",
+            "Fanbase": "",
+            "JP_Name": "ヒトシロ・イツキ",
+            "Name": "Itsuki",
+            "Region": "JP",
+            "Status": "Active",
+            "BiliBili": null,
+            "Twitch": null,
+            "Twitter": {
+              "Twitter_Fanart": "#彩色イツキ",
+              "Twitter_Lewd": "",
+              "Twitter_Username": "itsuki_htsr"
+            },
+            "Youtube": {
+              "Yt_ID": "UCi3aT9cC6YyC0BnOpm2XBEw"
+            }
+        },
+        {
+            "EN_Name": "Kagase Uno",
+            "Fanbase": "",
+            "JP_Name": "カガセ・ウノ",
+            "Name": "Uno",
+            "Region": "JP",
+            "Status": "Active",
+            "BiliBili": null,
+            "Twitch": null,
+            "Twitter": {
+              "Twitter_Fanart": "#draw4uno",
+              "Twitter_Lewd": "",
+              "Twitter_Username": "uno_kgs"
+            },
+            "Youtube": {
+              "Yt_ID": "UCLfAsY3iMUAF2vvDxvIjymQ"
+            }
+        },
+        {
+            "EN_Name": "Alba Sera",
+            "Fanbase": "",
+            "JP_Name": "アルバ・セラ",
+            "Name": "AlbaSera",
+            "Region": "JP",
+            "Status": "Active",
+            "BiliBili": null,
+            "Twitch": null,
+            "Twitter": {
+              "Twitter_Fanart": "#アルバむ",
+              "Twitter_Lewd": "",
+              "Twitter_Username": "sera_alb"
+            },
+            "Youtube": {
+              "Yt_ID": "UCvXsXmpMKthJuX8XHbsnOjQ"
+            }
+        },
+        {
+            "EN_Name": "Kashi Otoha",
+            "Fanbase": "",
+            "JP_Name": "カシ・オトハ",
+            "Name": "Otoha",
+            "Region": "JP",
+            "Status": "Active",
+            "BiliBili": null,
+            "Twitch": null,
+            "Twitter": {
+              "Twitter_Fanart": "#カシノート",
+              "Twitter_Lewd": "",
+              "Twitter_Username": "otoha_ks"
+            },
+            "Youtube": {
+              "Yt_ID": "UCYcnLc0n1ryBDZeGWQTVJ_g"
+            }
+        }
+	]
+}
