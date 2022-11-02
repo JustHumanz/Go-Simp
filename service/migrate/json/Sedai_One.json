@@ -1,0 +1,33 @@
+{
+	"GroupName": "SedaiOne",
+	"GroupIcon": "https://yt3.ggpht.com/TM8MPy_9GzETME-ONX_6xR3tDLSuAo7bSxq8hXwLBx6NNpkPN9VuZCKVoGik9BS-guv_Nf3Cig=s176-c-k-c0x00ffffff-no-rj",
+	"GroupChannel": {
+        "Youtube": [
+            {
+              "ChannelID": "UC2ypPxrCeddOpFLD3lOeGoA",
+              "Region": "JP"
+            }
+          ],
+          "BiliBili": null
+	},
+	"Members": [
+        {
+            "Name": "Anastasia",
+            "EN_Name": "Anastasia White",
+            "JP_Name": "アナスタシア・ホワイト",
+            "Twitter": {
+              "Twitter_Fanart": "#AnaWhiteArt",
+              "Twitter_Lewd": "#AnaWhiteNSFW",
+              "Twitter_Username": "AnaWhiteCh"
+            },
+            "Youtube": {
+              "Yt_ID": "UCHtQPKLeHqOPKbIIOfsoWEQ"
+            },
+            "BiliBili": null,
+            "Twitch": null,
+            "Region": "MX",
+            "Fanbase": "Marineros",
+            "Status": "Active"
+        }
+	]
+}

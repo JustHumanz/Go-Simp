@@ -7,6 +7,96 @@
 	},
 	"Members": [
         {
+            "EN_Name": "Shishigami Leona",
+            "Fanbase": "Gaumaruzu",
+            "JP_Name": "獅子神レオナ",
+            "Name": "Leona",
+            "Region": "JP",
+            "BiliBili": null,
+            "Twitch": null,
+            "Twitter": {
+              "Twitter_Fanart": "#レオナアート",
+              "Twitter_Lewd": "",
+              "Twitter_Username": "LeonaShishigami"
+            },
+            "Youtube": {
+              "Yt_ID": "UCB1s_IdO-r0nUkY2mXeti-A"
+            },
+            "Status": "Active"
+        },
+        {
+          "EN_Name": "Mizugame Mia",
+          "Fanbase": "Miatomo",
+          "JP_Name": "水瓶ミア",
+          "Name": "MizuMia",
+          "Region": "JP",
+          "BiliBili": null,
+          "Twitch": null,
+          "Twitter": {
+            "Twitter_Fanart": "#ミアとも",
+            "Twitter_Lewd": "",
+            "Twitter_Username": "Mia_Mizugame"
+          },
+          "Youtube": {
+            "Yt_ID": "UCpPuEfqwYbpn7e2jWdQeWew"
+          },
+          "Status": "Active"
+        },
+        {
+          "EN_Name": "Sumeragi Rose",
+          "Fanbase": "",
+          "JP_Name": "皇ロゼ",
+          "Name": "Rose",
+          "Region": "JP",
+          "BiliBili": null,
+          "Twitch": null,
+          "Twitter": {
+            "Twitter_Fanart": "#皇ギャラリー",
+            "Twitter_Lewd": "",
+            "Twitter_Username": "Rose_Sumeragi"
+          },
+          "Youtube": {
+            "Yt_ID": "UCVbRXkQP-LumaBzfw-wsrrg"
+          },
+          "Status": "Active"
+        },
+        {
+          "EN_Name": "Makoh Lisa",
+          "Fanbase": "Lisa no Gumi",
+          "JP_Name": "魔光リサ",
+          "Name": "Lisa",
+          "Region": "JP",
+          "BiliBili": null,
+          "Twitch": null,
+          "Twitter": {
+            "Twitter_Fanart": "#リサへ",
+            "Twitter_Lewd": "#リサのオカズ",
+            "Twitter_Username": "Lisa_Makoh"
+          },
+          "Youtube": {
+            "Yt_ID": "UCDrG8pzkq_cCCLcN5wgrzNw"
+          },
+          "Status": "Active"
+        },
+        {
+          "EN_Name": "Usami Yuno",
+          "Fanbase": "",
+          "JP_Name": "宇佐美ユノ",
+          "Name": "Yuno",
+          "Region": "JP",
+          "BiliBili": null,
+          "Twitch": null,
+          "Twitter": {
+            "Twitter_Fanart": "#ユノ活",
+            "Twitter_Lewd": "",
+            "Twitter_Username": "yuno_usami"
+          },
+          "Youtube": {
+            "Yt_ID": "UCJQMHCFjVZOVRYafR6gY04Q"
+          },
+          "Status": "Active"
+        },
+        {
             "EN_Name": "Hanabasami Kyo",
             "Fanbase": "",
             "JP_Name": "花鋏キョウ",
@@ -25,22 +115,190 @@
             "Status": "Active"
         },
         {
-            "EN_Name": "Shishigami Leona",
-            "Fanbase": "",
-            "JP_Name": "獅子神レオナ",
-            "Name": "Leona",
-            "Region": "JP",
-            "BiliBili": null,
-            "Twitch": null,
-            "Twitter": {
-              "Twitter_Fanart": "#レオナアート",
-              "Twitter_Lewd": "",
-              "Twitter_Username": "LeonaShishigami"
-            },
-            "Youtube": {
-              "Yt_ID": "UCB1s_IdO-r0nUkY2mXeti-A"
-            },
-            "Status": "Active"
+          "EN_Name": "Kazami Mikan",
+          "Fanbase": "",
+          "JP_Name": "風海みかん",
+          "Name": "Mikan",
+          "Region": "JP",
+          "BiliBili": null,
+          "Twitch": null,
+          "Twitter": {
+            "Twitter_Fanart": "#みかんの図鑑",
+            "Twitter_Lewd": "",
+            "Twitter_Username": "Kazami_Mikan83"
+          },
+          "Youtube": {
+            "Yt_ID": "UCa5g-Q_NT2COXiSS55bwXVQ"
+          },
+          "Status": "Active"
+        },
+        {
+          "EN_Name": "Kashiko Mari",
+          "Fanbase": "",
+          "JP_Name": "かしこまり",
+          "Name": "KashikoMari",
+          "Region": "JP",
+          "BiliBili": null,
+          "Twitch": null,
+          "Twitter": {
+            "Twitter_Fanart": "#まりんちゅアート",
+            "Twitter_Lewd": "",
+            "Twitter_Username": "kashikomari_ch"
+          },
+          "Youtube": {
+            "Yt_ID": "UCfiK42sBHraMBK6eNWtsy7A"
+          },
+          "Status": "Active"
+        },
+        {
+          "EN_Name": "Nono Ayamo",
+          "Fanbase": "",
+          "JP_Name": "彩雲のの",
+          "Name": "Ayamo",
+          "Region": "JP",
+          "BiliBili": null,
+          "Twitch": null,
+          "Twitter": {
+            "Twitter_Fanart": "#あやもののーと",
+            "Twitter_Lewd": "",
+            "Twitter_Username": "Nono_Ayamo"
+          },
+          "Youtube": {
+            "Yt_ID": "UCtKH7ZHAJ7TcTjyiLJRHhvg"
+          },
+          "Status": "Active"
+        },
+        {
+          "EN_Name": "Usuwa Suu",
+          "Fanbase": "",
+          "JP_Name": "稀羽すう",
+          "Name": "Suu",
+          "Region": "JP",
+          "BiliBili": null,
+          "Twitch": null,
+          "Twitter": {
+            "Twitter_Fanart": "#usuwart",
+            "Twitter_Lewd": "",
+            "Twitter_Username": "usuwasuu"
+          },
+          "Youtube": {
+            "Yt_ID": "UCeqIMtLuGc3YgwkhEaG8oDg"
+          },
+          "Status": "Active"
+        },
+        {
+          "EN_Name": "Inuki Matoi",
+          "Fanbase": "",
+          "JP_Name": "射貫まとい",
+          "Name": "Matoi",
+          "Region": "JP",
+          "BiliBili": null,
+          "Twitch": null,
+          "Twitter": {
+            "Twitter_Fanart": "#まといアート",
+            "Twitter_Lewd": "#なにわのどすけべ",
+            "Twitter_Username": "matoi_inuki"
+          },
+          "Youtube": {
+            "Yt_ID": "UCFrH3bfn7gDeV29wrHHM80g"
+          },
+          "Status": "Active"
+        },
+        {
+          "EN_Name": "Himekuma Ribon",
+          "Fanbase": "",
+          "JP_Name": "姫熊りぼん",
+          "Name": "Ribon",
+          "Region": "JP",
+          "BiliBili": {
+            "BiliBili_Fanart": "",
+            "BiliBili_ID": 482515509,
+            "BiliRoom_ID": 21693691
+          },
+          "Twitch": null,
+          "Twitter": {
+            "Twitter_Fanart": "#くまの自由帳",
+            "Twitter_Lewd": "",
+            "Twitter_Username": "sb_ribon_"
+          },
+          "Youtube": {
+            "Yt_ID": "UC6HjtF2rHZO8gAsX5FXF-Kg"
+          },
+          "Status": "Active"
+        },
+        {
+          "EN_Name": "Marumochi Tsukimi",
+          "Fanbase": "",
+          "JP_Name": "丸餅つきみ",
+          "Name": "Tsukimi",
+          "Region": "JP",
+          "BiliBili": null,
+          "Twitch": null,
+          "Twitter": {
+            "Twitter_Fanart": "#まるみ絵",
+            "Twitter_Lewd": "",
+            "Twitter_Username": "tukimi_marumoti"
+          },
+          "Youtube": {
+            "Yt_ID": "UCTEZGNJDqv-isWSPRsEhnRA"
+          },
+          "Status": "Active"
+        },
+        {
+          "EN_Name": "Nekono Yukino",
+          "Fanbase": "",
+          "JP_Name": "猫乃ユキノ",
+          "Name": "Yukinon",
+          "Region": "JP",
+          "BiliBili": null,
+          "Twitch": {
+            "Twitch_Username": "nekonoyukin0"
+          },
+          "Twitter": {
+            "Twitter_Fanart": "#YUKINONART",
+            "Twitter_Lewd": "#YUKINONR18",
+            "Twitter_Username": "nekonoyukin0"
+          },
+          "Youtube": {
+            "Yt_ID": "UCoFEbNyIRUS26-hf2AucwFw"
+          },
+          "Status": "Active"
+        },
+        {
+          "EN_Name": "Kulaku Lie",
+          "Fanbase": "",
+          "JP_Name": "九楽ライ",
+          "Name": "Lie",
+          "Region": "JP",
+          "BiliBili": null,
+          "Twitch": null,
+          "Twitter": {
+            "Twitter_Fanart": "#ライjpg",
+            "Twitter_Lewd": "",
+            "Twitter_Username": "LieKulaku"
+          },
+          "Youtube": {
+            "Yt_ID": "UCxLgvntienV0kwNLxrbcmyQ"
+          },
+          "Status": "Active"
+        },
+        {
+          "EN_Name": "Yumekawa Kanau",
+          "Fanbase": "",
+          "JP_Name": "夢川かなう",
+          "Name": "Kanau",
+          "Region": "JP",
+          "BiliBili": null,
+          "Twitch": null,
+          "Twitter": {
+            "Twitter_Fanart": "#夢川描いたよ",
+            "Twitter_Lewd": "",
+            "Twitter_Username": "Kanau_Yumekawa"
+          },
+          "Youtube": {
+            "Yt_ID": "UC8jskpQfW9fn2NLK3PdaGdg"
+          },
+          "Status": "Active"
         },
         {
             "EN_Name": "Amakawa Hano",
@@ -65,62 +323,112 @@
             "Status": "Active"
         },
         {
-            "EN_Name": "Himekuma Ribon",
-            "Fanbase": "",
-            "JP_Name": "姫熊りぼん",
-            "Name": "Ribon",
-            "Region": "JP",
-            "BiliBili": {
-              "BiliBili_Fanart": "",
-              "BiliBili_ID": 482515509,
-              "BiliRoom_ID": 21693691
-            },
-            "Twitch": null,
-            "Twitter": {
-              "Twitter_Fanart": "#くまの自由帳",
-              "Twitter_Lewd": "",
-              "Twitter_Username": "sb_ribon_"
-            },
-            "Youtube": {
-              "Yt_ID": "UC6HjtF2rHZO8gAsX5FXF-Kg"
-            },
-            "Status": "Active"
+          "EN_Name": "Tsukushi Aria",
+          "Fanbase": "",
+          "JP_Name": "月紫アリア",
+          "Name": "Aria",
+          "Region": "JP",
+          "BiliBili": null,
+          "Twitch": null,
+          "Twitter": {
+            "Twitter_Fanart": "#ありあづくし",
+            "Twitter_Lewd": "",
+            "Twitter_Username": "tsukushi_aria"
+          },
+          "Youtube": {
+            "Yt_ID": "UC5XQhzMH08PgWa4Zp02Gcsw"
+          },
+          "Status": "Active"
+      },
+      {
+        "EN_Name": "Kuryu Isana",
+        "Fanbase": "",
+        "JP_Name": "紅龍イサナ",
+        "Name": "Isana",
+        "Region": "JP",
+        "BiliBili": null,
+        "Twitch": null,
+        "Twitter": {
+          "Twitter_Fanart": "#紅龍特攻絵",
+          "Twitter_Lewd": "#くりゅうみりゅな",
+          "Twitter_Username": "IsanaKuryu"
         },
-        {
-            "EN_Name": "Kashiko Mari",
-            "Fanbase": "",
-            "JP_Name": "かしこまり",
-            "Name": "KashikoMari",
-            "Region": "JP",
-            "BiliBili": null,
-            "Twitch": null,
-            "Twitter": {
-              "Twitter_Fanart": "#まりんちゅアート",
-              "Twitter_Lewd": "",
-              "Twitter_Username": "kashikomari_ch"
-            },
-            "Youtube": {
-              "Yt_ID": "UCfiK42sBHraMBK6eNWtsy7A"
-            },
-            "Status": "Active"
+        "Youtube": {
+          "Yt_ID": "UC01dI90qNB6RhCt1tdXnQAg"
         },
-        {
-            "EN_Name": "Usuwa Suu",
-            "Fanbase": "",
-            "JP_Name": "稀羽すう",
-            "Name": "Suu",
-            "Region": "JP",
-            "BiliBili": null,
-            "Twitch": null,
-            "Twitter": {
-              "Twitter_Fanart": "#usuwart",
-              "Twitter_Lewd": "",
-              "Twitter_Username": "usuwasuu"
-            },
-            "Youtube": {
-              "Yt_ID": "UCeqIMtLuGc3YgwkhEaG8oDg"
-            },
-            "Status": "Active"
-        }                                        
+        "Status": "Active"
+      },
+      {
+        "EN_Name": "Bisui Syuka",
+        "Fanbase": "",
+        "JP_Name": "美睡シュカ",
+        "Name": "Syukaa",
+        "Region": "JP",
+        "BiliBili": null,
+        "Twitch": null,
+        "Twitter": {
+          "Twitter_Fanart": "#いばらの森の美術館",
+          "Twitter_Lewd": "",
+          "Twitter_Username": "SyukaBisui"
+        },
+        "Youtube": {
+          "Yt_ID": "UCY5jwnUvdsrsfqsMQWHau-w"
+        },
+        "Status": "Active"
+      },
+      {
+        "EN_Name": "Coucourua Creil",
+        "Fanbase": "",
+        "JP_Name": "ククルア・クレイユ",
+        "Name": "Creil",
+        "Region": "JP",
+        "BiliBili": null,
+        "Twitch": null,
+        "Twitter": {
+          "Twitter_Fanart": "#ククルアート",
+          "Twitter_Lewd": "",
+          "Twitter_Username": "CoucouruaCreil"
+        },
+        "Youtube": {
+          "Yt_ID": "UCIueYPQm6sk8oaKxq0hSjyQ"
+        },
+        "Status": "Active"
+      },
+      {
+          "EN_Name": "Otogi Nemu",
+          "Fanbase": "Nemu-tai",
+          "JP_Name": "音伽ねむ",
+          "Name": "Nemu",
+          "Region": "JP",
+          "BiliBili": null,
+          "Twitch": null,
+          "Twitter": {
+            "Twitter_Fanart": "#ねむの絵本",
+            "Twitter_Lewd": "",
+            "Twitter_Username": "NemuOtogi"
+          },
+          "Youtube": {
+            "Yt_ID": "UCi6nuuHhOj_usxkjlcHdRXw"
+          },
+          "Status": "Active"
+      },
+      {
+        "EN_Name": "Mikoshi Taran",
+        "Fanbase": "Shokubutsu",
+        "JP_Name": "神輿たらん",
+        "Name": "Taran",
+        "Region": "JP",
+        "BiliBili": null,
+        "Twitch": null,
+        "Twitter": {
+          "Twitter_Fanart": "#絵たらんです",
+          "Twitter_Lewd": "",
+          "Twitter_Username": "TaranMikoshi"
+        },
+        "Youtube": {
+          "Yt_ID": "UCShDuyxe-cDewxtcPbBmi_Q"
+        },
+        "Status": "Active"
+      }                            
 	]
 }

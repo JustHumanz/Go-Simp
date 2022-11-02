@@ -1135,6 +1135,22 @@
       "Region": "JP",
       "Fanbase": "",
       "Status": "Active"
+    },
+    {
+      "Name": "Tarutaru",
+      "EN_Name": "Tauru Umieru",
+      "JP_Name": "",
+      "Twitter": null,
+      "Youtube": null,
+      "BiliBili": {
+        "BiliBili_Fanart": "Taruart",
+        "BiliBili_ID": 610601708,
+        "BiliRoom_ID": 22850475
+      },
+      "Twitch": null,
+      "Region": "CN",
+      "Fanbase": "",
+      "Status": "Active"
     }
   ]
 }
