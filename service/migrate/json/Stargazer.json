@@ -1,0 +1,73 @@
+{
+  "GroupName": "Stargazer",
+  "GroupIcon": "https://cdn.humanz.moe/Stargazer.png",
+  "GroupChannel": {
+    "Youtube": [
+      {
+        "ChannelID": "UC8P-mhhivkGBHDeO3OV-Iyw",
+        "Region": "KR"
+      }
+    ],
+    "BiliBili": null
+  },
+  "Members": [
+    {
+      "Name": "Chie",
+      "EN_Name": "Abune Chie",
+      "JP_Name": "危險ちえ",
+      "Twitter": {
+        "Twitter_Fanart": "#chie_art",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "Abune_Chie"
+      },
+      "Youtube": {
+        "Yt_ID": "UCANBdbmjINHCt8Xl_wdKjtA"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "abunechie"
+      },
+      "Region": "KR",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Chorin",
+      "EN_Name": "Yu Chorin",
+      "JP_Name": "ゆちょりん",
+      "Twitter": {
+        "Twitter_Fanart": "#Yucho_art",
+        "Twitter_Lewd": "#Yucho_Sensitive",
+        "Twitter_Username": "Yuchorin_ch"
+      },
+      "Youtube": null,
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "yuchorinchan"
+      },
+      "Region": "KR",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Hero",
+      "EN_Name": "He-ro",
+      "JP_Name": "ヒーロー",
+      "Twitter": {
+        "Twitter_Fanart": "#He_RoArt",
+        "Twitter_Lewd": "#She_RoArt",
+        "Twitter_Username": "HERO_Vtuber"
+      },
+      "Youtube": {
+        "Yt_ID": "UCciznQP3Wsc7RHozgbnWK8g"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "hero_vtuber"
+      },
+      "Region": "KR",
+      "Fanbase": "",
+      "Status": "Active"
+    }
+  ]
+}
