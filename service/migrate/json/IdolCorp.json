@@ -176,6 +176,24 @@
         "Region": "EN",
         "Fanbase": "Sheebs",
         "Status": "Active"
+      },
+      {
+        "Name": "Fuyoclover",
+        "EN_Name": "Fuyo Cloverfield",
+        "JP_Name": null,
+        "Twitter": {
+          "Twitter_Fanart": "#Fartistic",
+          "Twitter_Lewd": "",
+          "Twitter_Username": "FuyoCloverfield"
+        },
+        "Youtube": {
+          "Yt_ID": "UC8zgKaS8LiyL28mdhRC2nBg"
+        },
+        "BiliBili": null,
+        "Twitch": null,
+        "Region": "EN",
+        "Fanbase": null,
+        "Status": "Active"
       }
     ]
   }
