@@ -1,0 +1,200 @@
+{
+    "GroupName": "Idol Corp",
+    "GroupIcon": "https://cdn.humanz.moe/IdolCorp.png",
+    "GroupChannel": {
+      "Youtube": [
+        {
+          "ChannelID": "UCRMs0dRR4MEnCftyk6l1tvQ",
+          "Region": "EN"
+        }
+      ],
+      "BiliBili": null
+    },
+    "Members": [
+      {
+        "Name": "Suika",
+        "EN_Name": "Emi Suika",
+        "JP_Name": null,
+        "Twitter": {
+          "Twitter_Fanart": "#suemiart",
+          "Twitter_Lewd": "",
+          "Twitter_Username": "suikaemi"
+        },
+        "Youtube": {
+          "Yt_ID": "UC-E-oMwc7SHuiK5gT_ule8Q"
+        },
+        "BiliBili": null,
+        "Twitch": null,
+        "Region": "HE",
+        "Fanbase": "Watermelons",
+        "Status": "Inactive"
+      },
+      {
+        "Name": "Sparkz",
+        "EN_Name": "Neo Sparkles",
+        "JP_Name": null,
+        "Twitter": {
+          "Twitter_Fanart": "#SparklezGallery",
+          "Twitter_Lewd": "",
+          "Twitter_Username": "NeoSparkles"
+        },
+        "Youtube": {
+          "Yt_ID": "UCaksHmr89krw-g9EaktdjBw"
+        },
+        "BiliBili": null,
+        "Twitch": null,
+        "Region": "HE",
+        "Fanbase": "Sparks",
+        "Status": "Active"
+      },
+      {
+        "Name": "Qutie",
+        "EN_Name": "Kattarina Qutie",
+        "JP_Name": null,
+        "Twitter": {
+          "Twitter_Fanart": "#qtart",
+          "Twitter_Lewd": "",
+          "Twitter_Username": "kattarina_qutie"
+        },
+        "Youtube": {
+          "Yt_ID": "UCMmy_EmxnYQ8aar8fNZrumw"
+        },
+        "BiliBili": null,
+        "Twitch": null,
+        "Region": "HE",
+        "Fanbase": "Quties",
+        "Status": "Active"
+      },
+      {
+        "Name": "Nikkii",
+        "EN_Name": "Nikki Rei",
+        "JP_Name": null,
+        "Twitter": {
+          "Twitter_Fanart": "#NikkiReiART",
+          "Twitter_Lewd": "",
+          "Twitter_Username": "nikki_rei_idol"
+        },
+        "Youtube": {
+          "Yt_ID": "UCBnmfjpmhGxao6v54fIIMUA"
+        },
+        "BiliBili": null,
+        "Twitch": null,
+        "Region": "HE",
+        "Fanbase": "Bonkers",
+        "Status": "Active"
+      },
+      {
+        "Name": "LiliSinz",
+        "EN_Name": "Lily Sin",
+        "JP_Name": null,
+        "Twitter": {
+          "Twitter_Fanart": "#LilyRT",
+          "Twitter_Lewd": "",
+          "Twitter_Username": "Lily_Sin_idol"
+        },
+        "Youtube": {
+          "Yt_ID": "UCE-Cjd6k8VUMI2hdfHYwCfg"
+        },
+        "BiliBili": null,
+        "Twitch": null,
+        "Region": "HE",
+        "Fanbase": "Sinners",
+        "Status": "Active"
+      },
+      {
+        "Name": "Yuyu",
+        "EN_Name": "Yuko Yurei",
+        "JP_Name": null,
+        "Twitter": {
+          "Twitter_Fanart": "#bootifulart",
+          "Twitter_Lewd": "",
+          "Twitter_Username": "YureiYuko"
+        },
+        "Youtube": {
+          "Yt_ID": "UCcIcMRVpNqWQn4WnDhRASAw"
+        },
+        "BiliBili": null,
+        "Twitch": null,
+        "Region": "EN",
+        "Fanbase": "Boobros",
+        "Status": "Active"
+      },
+      {
+        "Name": "Junaa",
+        "EN_Name": "Juna Unagi",
+        "JP_Name": null,
+        "Twitter": {
+          "Twitter_Fanart": "#EELustration",
+          "Twitter_Lewd": "",
+          "Twitter_Username": "JunaUnagi"
+        },
+        "Youtube": {
+          "Yt_ID": "UCTFCSCPvqjXEs3zq91aeOVg"
+        },
+        "BiliBili": null,
+        "Twitch": {
+          "Twitch_Username": "junaunagi"
+        },
+        "Region": "EN",
+        "Fanbase": "FamEely",
+        "Status": "Active"
+      },
+      {
+        "Name": "PrinceRin",
+        "EN_Name": "Rin Penrose",
+        "JP_Name": null,
+        "Twitter": {
+          "Twitter_Fanart": "#inkpaintrose",
+          "Twitter_Lewd": "",
+          "Twitter_Username": "rinpenrose"
+        },
+        "Youtube": {
+          "Yt_ID": "UCpZIbzoEC_3rZglErpQkbDg"
+        },
+        "BiliBili": null,
+        "Twitch": null,
+        "Region": "EN",
+        "Fanbase": null,
+        "Status": "Active"
+      },
+      {
+        "Name": "Pochiwan",
+        "EN_Name": "Pochi Wanmaru",
+        "JP_Name": null,
+        "Twitter": {
+          "Twitter_Fanart": "#Wanart",
+          "Twitter_Lewd": "",
+          "Twitter_Username": "pochiwanmaru"
+        },
+        "Youtube": {
+          "Yt_ID": "UCP0csSl19lOSNwJGCFsJqAQ"
+        },
+        "BiliBili": null,
+        "Twitch": {
+          "Twitch_Username": "pochiwanmaru"
+        },
+        "Region": "EN",
+        "Fanbase": "Sheebs",
+        "Status": "Active"
+      },
+      {
+        "Name": "Fuyoclover",
+        "EN_Name": "Fuyo Cloverfield",
+        "JP_Name": null,
+        "Twitter": {
+          "Twitter_Fanart": "#Fartistic",
+          "Twitter_Lewd": "",
+          "Twitter_Username": "FuyoCloverfield"
+        },
+        "Youtube": {
+          "Yt_ID": "UC8zgKaS8LiyL28mdhRC2nBg"
+        },
+        "BiliBili": null,
+        "Twitch": null,
+        "Region": "EN",
+        "Fanbase": null,
+        "Status": "Active"
+      }
+    ]
+  }
+  
