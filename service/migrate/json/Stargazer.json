@@ -40,7 +40,9 @@
         "Twitter_Lewd": "#Yucho_Sensitive",
         "Twitter_Username": "Yuchorin_ch"
       },
-      "Youtube": null,
+      "Youtube": {
+        "Yt_ID": "UC-s5vxXTaXyFLw8CZtzl_Fw"
+      },
       "BiliBili": null,
       "Twitch": {
         "Twitch_Username": "yuchorinchan"

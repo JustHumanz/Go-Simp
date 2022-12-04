@@ -1,0 +1,28 @@
+{
+  "GroupName": "nullptr::live",
+  "GroupIcon": "https://cdn.humanz.moe/nullptrlive.png",
+  "GroupChannel": {
+    "Youtube": null,
+    "BiliBili": null
+  },
+  "Members": [
+    {
+      "Name": "Linya",
+      "EN_Name": "Asahi Lina",
+      "JP_Name": "朝日リナ",
+      "Twitter": {
+        "Twitter_Fanart": "#AsahiLinArt",
+        "Twitter_Lewd": "",
+        "Twitter_Username": "LinaAsahi"
+      },
+      "Youtube": {
+        "Yt_ID": "UCwkfNQzKwICfPKs6V0ZUFZQ"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "JP",
+      "Fanbase": "",
+      "Status": "Active"
+    }
+  ]
+}
