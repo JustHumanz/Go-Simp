@@ -2370,6 +2370,116 @@
       "Status": "Active"
     },
     {
+      "Name": "Doppio",
+      "EN_Name": "Doppio Dropscythe",
+      "JP_Name": "ドッピオ・ドロップサイト",
+      "Twitter": {
+        "Twitter_Fanart": "#Dropsights",
+        "Twitter_Lewd": "#Dropshy",
+        "Twitter_Username": "D_Dropscythe"
+      },
+      "Youtube": {
+        "Yt_ID": "UCy91xBlY_Brh3bnHxKtjrrg"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Zaion",
+      "EN_Name": "Zaion LanZa",
+      "JP_Name": "ランザー罪恩",
+      "Twitter": {
+        "Twitter_Fanart": "#ZaiOnPaper",
+        "Twitter_Lewd": "#ZaiOnTop",
+        "Twitter_Username": "ZaionLanZa"
+      },
+      "Youtube": {
+        "Yt_ID": "UCIairB9UMDvqSKfMdv1jmjg"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Hexwire",
+      "EN_Name": "Hex Haywire",
+      "JP_Name": "ヘックス・へイワイヤー",
+      "Twitter": {
+        "Twitter_Fanart": "#HexCode",
+        "Twitter_Lewd": "#HeXXX",
+        "Twitter_Username": "HexHaywire"
+      },
+      "Youtube": {
+        "Yt_ID": "UCz_ZRw6ak4Foy8zZy0kEprQ"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Melokyo",
+      "EN_Name": "Meloco Kyoran",
+      "JP_Name": "狂蘭メロコ",
+      "Twitter": {
+        "Twitter_Fanart": "#Melocopic",
+        "Twitter_Lewd": "#Melocoom",
+        "Twitter_Username": "MelocoKyoran"
+      },
+      "Youtube": {
+        "Yt_ID": "UChKXd7oqD18qiIYBoRIHTlw"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Vermil",
+      "EN_Name": "Ver Vermillion",
+      "JP_Name": "ドッピオ・ドロップサイト",
+      "Twitter": {
+        "Twitter_Fanart": "#LouVer",
+        "Twitter_Lewd": "#VerOppa",
+        "Twitter_Username": "Ver_Vermillion"
+      },
+      "Youtube": {
+        "Yt_ID": "UCO8WcDsF5znr-qsXlzZNpqg"
+      },
+      "BiliBili": null,
+      "Twitch": {
+        "Twitch_Username": "Ver_Vermillion"
+      },
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
+      "Name": "Kotoka",
+      "EN_Name": "Kotoka Torahime",
+      "JP_Name": "虎姫コトカ",
+      "Twitter": {
+        "Twitter_Fanart": "#kotosmetic",
+        "Twitter_Lewd": "#kotoxrated",
+        "Twitter_Username": "KotokaTorahime"
+      },
+      "Youtube": {
+        "Yt_ID": "UCggO2c1unS-oLwTLT0ICywg"
+      },
+      "BiliBili": null,
+      "Twitch": null,
+      "Region": "EN",
+      "Fanbase": "",
+      "Status": "Active"
+    },
+    {
       "Name": "Yukie",
       "EN_Name": "Yukie",
       "JP_Name": "ユキエ",
